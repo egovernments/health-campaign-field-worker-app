@@ -19,17 +19,19 @@ import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
+import 'package:digit_data_model/models/entities/hf_referral.dart';
+
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
@@ -44,11 +46,82 @@ import '../widgets/error_screen.dart';
 import 'error_boundary.dart';
 
 @RoutePage()
-class AuthenticatedPageWrapper extends StatelessWidget {
-  AuthenticatedPageWrapper({super.key});
+class AuthenticatedPageWrapper extends StatefulWidget {
+  const AuthenticatedPageWrapper({super.key});
 
+  @override
+  State<AuthenticatedPageWrapper> createState() =>
+      _AuthenticatedPageWrapperState();
+}
+
+class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
   final StreamController<bool> _drawerVisibilityController =
       StreamController.broadcast();
+
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+  bool _isOfflineDialogShowing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen(_handleConnectivityChange);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    _drawerVisibilityController.close();
+    super.dispose();
+  }
+
+  void _handleConnectivityChange(List<ConnectivityResult> result) {
+    final isOnline = result.contains(ConnectivityResult.wifi) ||
+        result.contains(ConnectivityResult.mobile);
+    final isOffline = !isOnline;
+
+    if (isOffline && !_isOfflineDialogShowing && mounted) {
+      _showNoInternetDialog();
+    } else if (!isOffline && _isOfflineDialogShowing && mounted) {
+      _dismissNoInternetDialog();
+    }
+  }
+
+  void _showNoInternetDialog() {
+    _isOfflineDialogShowing = true;
+    showCustomPopup(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => Popup(
+        title: AppLocalizations.of(context).translate(
+          i18.common.connectionLabel,
+        ),
+        description: AppLocalizations.of(context).translate(
+          i18.common.connectionContent,
+        ),
+        actions: [
+          DigitButton(
+            label: AppLocalizations.of(context).translate(
+              i18.common.coreCommonOk,
+            ),
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              _isOfflineDialogShowing = false;
+            },
+            type: DigitButtonType.primary,
+            size: DigitButtonSize.large,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _dismissNoInternetDialog() {
+    if (_isOfflineDialogShowing) {
+      Navigator.of(context, rootNavigator: true).pop();
+      _isOfflineDialogShowing = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +152,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   return const SizedBox.shrink();
                                 } else {
                                   LocalizationParams()
-                                      .setCode([selectedBoundary.code!]);
+                                      .setCode([selectedBoundary.code!, i18.common.coreCommonSubmit]);
                                   final boundaryName =
                                       AppLocalizations.of(context).translate(
                                     selectedBoundary.code ??
@@ -223,6 +296,24 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         ),
                       ),
                       BlocProvider(
+                        create: (ctx) => HFReferralDownSyncBloc(
+                          bandwidthCheckRepository: BandwidthCheckRepository(
+                            DioClient().dio,
+                            bandwidthPath:
+                                envConfig.variables.checkBandwidthApiPath,
+                          ),
+                          hfReferralLocalRepository: ctx.read<
+                              LocalRepository<HFReferralModel,
+                                  HFReferralSearchModel>>(),
+                          hfReferralRemoteRepository: ctx.read<
+                              RemoteRepository<HFReferralModel,
+                                  HFReferralSearchModel>>(),
+                          downSyncLocalRepository: ctx.read<
+                              LocalRepository<DownsyncModel,
+                                  DownsyncSearchModel>>(),
+                        ),
+                      ),
+                      BlocProvider(
                         create: (_) => ServiceBloc(
                           const ServiceEmptyState(),
                           serviceDataRepository: context
@@ -244,6 +335,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                     switch (context.router.topRoute.name) {
                                       case ProjectSelectionRoute.name:
                                       case BoundarySelectionRoute.name:
+                                      case PermissionsRoute.name:
                                         shouldShowDrawer = false;
                                         break;
                                       default:
@@ -355,10 +447,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   onPressed: () async {
                     final connectivityResult =
                         await (Connectivity().checkConnectivity());
-                    final isOnline = connectivityResult.firstOrNull ==
-                            ConnectivityResult.wifi ||
-                        connectivityResult.firstOrNull ==
-                            ConnectivityResult.mobile;
+                    final isOnline =
+                        connectivityResult.contains(ConnectivityResult.wifi) ||
+                            connectivityResult.contains(ConnectivityResult.mobile);
 
                     if (isOnline) {
                       if (context.mounted) {
@@ -424,6 +515,14 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   .translate(i18.common.coreCommonLogout),
               onLogOut: () {
                 context.read<BoundaryBloc>().add(const BoundaryResetEvent());
+                context.read<LocalizationBloc>().add(
+                      LocalizationEvent.onLoadLocalization(
+                        module: Constants.homeLocalizationModules.join(','),
+                        tenantId: envConfig.variables.tenantId,
+                        locale: AppSharedPreferences().getSelectedLocale ?? '',
+                        path: Constants.localizationApiPath,
+                      ),
+                    );
                 context.read<AuthBloc>().add(const AuthLogoutEvent());
               },
               footer: PoweredByDigit(
@@ -452,70 +551,72 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   (ele) => ele.value.toString() == e.value.toString(),
                 );
 
-                /// TODO: NEED TO EXTRACT THIS AS UTIL FUNCTION
-                String? dynamicModule;
-                final isInRegistrationFlow = context.router.current.name
-                    .contains(RegistrationDeliveryWrapperRoute.name);
-
-                if (isInRegistrationFlow) {
-                  final prefs = await SharedPreferences.getInstance();
-                  final schemaJsonRaw = prefs.getString('app_config_schemas');
-
-                  if (schemaJsonRaw != null) {
-                    final allSchemas =
-                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                    final projectId = context.selectedProject.referenceID;
-
-                    // Initialize empty list to collect modules
-                    final List<String> modules = [];
-
-                    // Handle registrationflow
-                    final registrationSchemaEntry =
-                        allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
-                    final registrationSchemaData =
-                        registrationSchemaEntry?['data'];
-                    final registrationFlowName = registrationSchemaData?['name']
-                        ?.toString()
-                        .toLowerCase();
-                    if (registrationFlowName != null && projectId != null) {
-                      modules.add('hcm-$registrationFlowName-$projectId');
-                    }
-
-                    // Handle deliveryflow
-                    final deliverySchemaEntry =
-                        allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
-                    final deliverySchemaData = deliverySchemaEntry?['data'];
-                    final deliveryFlowName =
-                        deliverySchemaData?['name']?.toString().toLowerCase();
-                    if (deliveryFlowName != null && projectId != null) {
-                      modules.add('hcm-$deliveryFlowName-$projectId');
-                    }
-
-                    // Combine into a single string
-                    dynamicModule = modules.join(',');
-                  }
-                }
-
-                final staticModules = localizationModulesList.interfaces
-                    .where(
-                        (element) => element.type == Modules.localizationModule)
-                    .map((e) => e.name.toString())
-                    .followedBy([
-                  'hcm-boundary-${envConfig.variables.hierarchyType}'
-                ]).join(',');
-
-                final combinedModules = dynamicModule != null
-                    ? '$dynamicModule,$staticModules'
-                    : staticModules;
-
-                context
-                    .read<LocalizationBloc>()
-                    .add(LocalizationEvent.onLoadLocalization(
-                      module: combinedModules,
-                      tenantId: appConfig.tenantId ?? "default",
-                      locale: e.value.toString(),
-                      path: Constants.localizationApiPath,
-                    ));
+                /// TODO: NEED TO CHECK HOW CAN WE UPDATE THE LOCALIZATION BASED ON THE FLOW
+                // String? dynamicModule;
+                // final isInRegistrationFlow = context.router.current.name
+                //     .contains(RegistrationDeliveryWrapperRoute.name);
+                //
+                // if (isInRegistrationFlow) {
+                //   final prefs = await SharedPreferences.getInstance();
+                //   final schemaJsonRaw = prefs.getString('app_config_schemas');
+                //
+                //   if (schemaJsonRaw != null) {
+                //     final allSchemas =
+                //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                //     final projectId = context.selectedProject.referenceID;
+                //
+                //     // Initialize empty list to collect modules
+                //     final List<String> modules = [];
+                //
+                //     // Handle registrationflow
+                //     final registrationSchemaEntry =
+                //         allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+                //     final registrationSchemaData =
+                //         registrationSchemaEntry?['data'];
+                //     final registrationFlowName = registrationSchemaData?['name']
+                //         ?.toString()
+                //         .toLowerCase();
+                //     if (registrationFlowName != null && projectId != null) {
+                //       modules.add('hcm-$registrationFlowName-$projectId');
+                //     }
+                //
+                //     // Handle deliveryflow
+                //     final deliverySchemaEntry =
+                //         allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+                //     final deliverySchemaData = deliverySchemaEntry?['data'];
+                //     final deliveryFlowName =
+                //         deliverySchemaData?['name']?.toString().toLowerCase();
+                //     if (deliveryFlowName != null && projectId != null) {
+                //       modules.add('hcm-$deliveryFlowName-$projectId');
+                //     }
+                //
+                //     // Combine into a single string
+                //     dynamicModule = modules.join(',');
+                //   }
+                // }
+                //
+                // final staticModules = localizationModulesList.interfaces
+                //     .where((element) =>
+                //         element.type == Modules.localizationModule &&
+                //         Constants.homeLocalizationModules
+                //             .contains(element.name.toString()))
+                //     .map((e) => e.name.toString())
+                //     .followedBy([
+                //   'hcm-boundary-${envConfig.variables.hierarchyType}'
+                // ]).join(',');
+                //
+                // final combinedModules = dynamicModule != null
+                //     ? '$dynamicModule,$staticModules'
+                //     : staticModules;
+                //
+                // context
+                //     .read<LocalizationBloc>()
+                //     .add(LocalizationEvent.onLoadLocalization(
+                //       module: combinedModules,
+                //       tenantId: appConfig.tenantId ?? "default",
+                //       locale: e.value.toString(),
+                //       path: Constants.localizationApiPath,
+                //     ));
 
                 context.read<LocalizationBloc>().add(
                       OnUpdateLocalizationIndexEvent(

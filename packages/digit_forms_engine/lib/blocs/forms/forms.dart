@@ -67,7 +67,6 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     on<FormsLoadEvent>(_onLoad);
     on<FormsUpdateFieldEvent>(_onUpdateField);
     on<FormsUpdateEvent>(_handleUpdateForm);
-    on<FormsClearFieldEvent>(_onClearField);
     on<FormsClearPageEvent>(_onClearPage);
     on<FormsClearFormEvent>(_onClearForm);
     on<FormsSubmitEvent>(_onSubmit);
@@ -125,12 +124,19 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   /// The field is identified by the key parameter and can be in any page of the schema.
   void _onUpdateField(FormsUpdateFieldEvent event, FormsStateEmitter emit) {
     final schema = state.cachedSchemas[event.schemaKey];
-    if (schema == null) return;
+    if (schema == null) {
+      debugPrint('FORMS_BLOC: _onUpdateField - schema NOT FOUND for key=${event.schemaKey}');
+      return;
+    }
 
     final form = ReactiveForm.of(event.context) as FormGroup;
 
-    form.control(event.key).value = event.value;
+    // Skip if control doesn't exist (hidden field without includeInForm: true)
+    if (form.contains(event.key)) {
+      form.control(event.key).value = event.value;
+    }
 
+    bool found = false;
     final updatedPages = {
       for (final entry in schema.pages.entries)
         entry.key: entry.value.copyWith(
@@ -139,11 +145,15 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
               : {
                   for (final prop in entry.value.properties!.entries)
                     prop.key: prop.key == event.key
-                        ? prop.value.copyWith(value: event.value)
+                        ? (() {
+                            found = true;
+                            return prop.value.copyWith(value: event.value);
+                          })()
                         : prop.value,
                 },
         )
     };
+    debugPrint('FORMS_BLOC: _onUpdateField - schema=${event.schemaKey}, key=${event.key}, value=${event.value}, found=$found, pageKeys=${schema.pages.keys.toList()}');
 
     final updatedSchema = schema.copyWith(pages: updatedPages);
 
@@ -166,17 +176,6 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       cachedSchemas: updatedSchemas,
       initialSchemas: state.initialSchemas,
     ));
-  }
-
-  /// Clear a specific field by setting its value to null.
-  ///
-  /// This method delegates to _onUpdateField with a null value.
-  void _onClearField(FormsClearFieldEvent event, FormsStateEmitter emit) {
-    // add(FormsUpdateFieldEvent(
-    //   schemaKey: event.schemaKey,
-    //   key: event.key,
-    //   value: null,
-    // ));
   }
 
   /// Clear all fields on a single page by setting their values to null.
@@ -255,6 +254,8 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       }
     }
 
+    debugPrint('FORMS_BLOC: _onSubmit - schemaKey=${event.schemaKey}, formData=$outputData');
+
     emit(FormsSubmittedState(
       schema: schema,
       formData: outputData,
@@ -301,14 +302,6 @@ class FormsEvent with _$FormsEvent {
     required SchemaObject schema,
     required String schemaKey,
   }) = FormsUpdateEvent;
-
-  /// Clear a specific field (sets value to null).
-  ///
-  /// This event clears the value of a specific field by setting it to null.
-  const factory FormsEvent.clearField({
-    required String schemaKey,
-    required String key,
-  }) = FormsClearFieldEvent;
 
   /// Clear all fields on a single page.
   ///

@@ -1,17 +1,18 @@
 library app_utils;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
 import 'package:attendance_management/attendance_management.dart';
-import 'package:complaints/complaints.dart';
-import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:crypto/crypto.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
-import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -19,37 +20,35 @@ import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:inventory_management/inventory_management.init.dart'
-    as inventory_mappers;
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart'
-    as referral_reconciliation_mappers;
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/registration_delivery.init.dart'
-    as registration_delivery_mappers;
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/localization/localization.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
+import '../blocs/localization/app_localization.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
 import 'environment_config.dart';
 import 'extensions/extensions.dart';
+import 'i18_key_constants.dart' as i18;
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -105,8 +104,8 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
-      connectivityResult.firstOrNull == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.contains(ConnectivityResult.wifi) ||
+      connectivityResult.contains(ConnectivityResult.mobile);
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 
@@ -234,6 +233,59 @@ Future<bool> getIsConnected() async {
   } on SocketException catch (_) {
     return false;
   }
+}
+
+void triggerSilentHFReferralDownSync({
+  required BuildContext context,
+  required List<AppConfiguration> appConfiguration,
+  required String projectId,
+  required String boundaryCode,
+  required String boundaryName,
+}) {
+  final bloc = context.read<HFReferralDownSyncBloc>();
+
+  late StreamSubscription<HFReferralDownSyncState> subscription;
+  subscription = bloc.stream.listen((state) {
+    state.maybeWhen(
+      orElse: () {},
+      getBatchSize: (batchSize, _, __, ___, ____) {
+        bloc.add(
+          HFReferralDownSyncCheckTotalCountEvent(
+            projectId: projectId,
+            boundaryCode: boundaryCode,
+            pendingSyncCount: 0,
+            boundaryName: boundaryName,
+            batchSize: batchSize,
+          ),
+        );
+      },
+      dataFound: (initialServerCount, batchSize, offset, lastSyncedTime) {
+        bloc.add(
+          HFReferralDownSyncStartEvent(
+            projectId: projectId,
+            boundaryCode: boundaryCode,
+            batchSize: batchSize,
+            initialServerCount: initialServerCount,
+            boundaryName: boundaryName,
+          ),
+        );
+      },
+      success: (_) => subscription.cancel(),
+      failed: () => subscription.cancel(),
+      totalCountCheckFailed: () => subscription.cancel(),
+      pendingSync: () => subscription.cancel(),
+    );
+  });
+
+  bloc.add(
+    HFReferralDownSyncGetBatchSizeEvent(
+      appConfiguration: appConfiguration,
+      projectId: projectId,
+      boundaryCode: boundaryCode,
+      pendingSyncCount: 0,
+      boundaryName: boundaryName,
+    ),
+  );
 }
 
 void showDownloadDialog(
@@ -477,18 +529,46 @@ initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => data_model_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
-    Future(() => referral_reconciliation_mappers.initializeMappers()),
-    Future(() => inventory_mappers.initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
-    Future(() => registration_delivery_mappers.initializeMappers()),
     Future(() => dss_mappers.initializeMappers()),
-    Future(() => survey_form_mappers.initializeMappers()),
-    Future(() => complaints_mappers.initializeMappers())
+    Future(() => survey_form_mappers.initializeMappers())
   ];
   await Future.wait(initializations);
 }
 
 void attemptSyncUp(BuildContext context) async {
+  // Check for internet connectivity first
+  final connectivityResult = await Connectivity().checkConnectivity();
+  final isOnline = connectivityResult.contains(ConnectivityResult.wifi) ||
+      connectivityResult.contains(ConnectivityResult.mobile);
+
+  if (!isOnline) {
+    if (context.mounted) {
+      showCustomPopup(
+        context: context,
+        builder: (ctx) => Popup(
+          title: AppLocalizations.of(context).translate(
+            i18.common.connectionLabel,
+          ),
+          description: AppLocalizations.of(context).translate(
+            i18.common.connectionContent,
+          ),
+          actions: [
+            DigitButton(
+              label: AppLocalizations.of(context).translate(
+                i18.common.coreCommonOk,
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
+            ),
+          ],
+        ),
+      );
+    }
+    return;
+  }
+
   await LocalSecureStore.instance.setManualSyncTrigger(true);
 
   if (context.mounted) {
@@ -524,8 +604,7 @@ void attemptSyncUp(BuildContext context) async {
               context.read<
                   LocalRepository<AttendanceLogModel,
                       AttendanceLogSearchModel>>(),
-              context.read<
-                  LocalRepository<UserActionModel, UserActionSearchModel>>(),
+              context.read<UserActionLocalRepository>(),
             ],
             remoteRepositories: [
               // INFO : Need to add repo repo of package Here
@@ -557,8 +636,7 @@ void attemptSyncUp(BuildContext context) async {
               context.read<
                   RemoteRepository<AttendanceLogModel,
                       AttendanceLogSearchModel>>(),
-              context.read<
-                  RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+              context.read<UserActionRemoteRepository>(),
             ],
           ),
         );
@@ -671,6 +749,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'navigateTo': pageMap['navigateTo'] is Map<String, dynamic>
             ? pageMap['navigateTo']
             : null,
+        'visibilityCondition': pageMap['visibilityCondition'],
+        'conditionalNavigateTo': pageMap['conditionalNavigateTo']
       };
 
       if (type == 'template') {
@@ -713,4 +793,46 @@ Future<void> triggerLocalizationIfUpdated({
         locale: AppSharedPreferences().getSelectedLocale!,
         path: Constants.localizationApiPath,
       ));
+}
+
+Future<Set<String>> generateUniqueMaterialNoteNumber({
+  required String loggedInUserId,
+  required bool returnCombinedIds,
+}) async {
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+  String androidId = androidInfo.serialNumber == 'unknown'
+      ? androidInfo.id.replaceAll('.', '')
+      : androidInfo.serialNumber;
+
+  int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+  String combinedId = '$loggedInUserId$androidId$timestamp';
+
+  // Generate SHA-256 hash
+  List<int> bytes = utf8.encode(combinedId);
+  Digest sha256Hash = sha256.convert(bytes);
+
+  // Convert the hash to a 12-character string and make it uppercase
+  String hashString = sha256Hash.toString();
+  String uniqueId = hashString.substring(0, 12).toUpperCase();
+
+  // Add a hyphen every 4 characters
+  String formattedUniqueId = uniqueId.replaceAllMapped(
+    RegExp(r'.{1,4}'),
+    (match) => '${match.group(0)}-',
+  );
+
+  // Remove the last hyphen
+  formattedUniqueId =
+      formattedUniqueId.substring(0, formattedUniqueId.length - 1);
+
+  if (kDebugMode) {
+    print('uniqueId : $formattedUniqueId');
+  }
+
+  return returnCombinedIds
+      ? {formattedUniqueId, combinedId}
+      : {formattedUniqueId};
 }

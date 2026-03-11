@@ -1,7 +1,26 @@
 import 'package:attendance_management/attendance_management.dart';
-import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
-import 'package:complaints/complaints.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/hf_referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/household.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/household_member.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/pgr_service.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/project_beneficiary.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/side_effect.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/stock.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/stock_reconciliation.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/task.dart';
+import 'package:digit_data_model/data/repositories/package_repository/oplog/oplog.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/hf_referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/household.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/household_member.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/pgr_service.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/project_beneficiary.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/side_effect.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock_reconciliation.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/task.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
@@ -10,11 +29,8 @@ import 'package:digit_location_tracker/location_tracker.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
@@ -87,6 +103,40 @@ class Constants {
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
+  // Modules to load initially (fetch from server and cache locally)
+  static const List<String> initialLocalizationModules = [
+    'digit-privacy-policy',
+    'hcm-login',
+    'hcm-common',
+    'hcm-scanner',
+    'hcm-peer-to-peer',
+    'hcm-transit-post',
+    'hcm-attendance',
+    'hcm-dashboard'
+  ];
+
+  // Modules to load when inside packages
+  static const List<String> packageLocalizationModules = [
+    'hcm-common',
+    'hcm-login',
+    'hcm-scanner',
+    'hcm-peer-to-peer',
+    'hcm-transit-post',
+    'hcm-attendance',
+    'hcm-dashboard'
+  ];
+
+  // Modules to load on home page and logout
+  static const List<String> homeLocalizationModules = [
+    'hcm-login',
+    'hcm-common',
+    'digit-privacy-policy',
+    'hcm-scanner',
+    'hcm-peer-to-peer',
+    'hcm-transit-post',
+    'hcm-attendance',
+    'hcm-dashboard'
+  ];
   static const String surveyFormPreviewDateFormat = 'dd MMMM yyyy';
   static const String defaultDateFormat = 'dd/MM/yyyy';
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
@@ -100,6 +150,14 @@ class Constants {
 
   static RegExp mobileNumberRegExp =
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
+
+  static const String healthFacility = 'Health Facility';
+  static const String lgaBoundaryLevel = 'LGA';
+  static const String provincialBoundaryLevel = 'Provincia';
+  static const String centralFacility = 'Central Facility';
+  static const String stateBoundaryLevel = 'State';
+  static const String stateFacility = 'State Facility';
+  static const String lgaFacility = 'LGA Facility';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -177,7 +235,7 @@ class Constants {
     final config = appConfigs.firstOrNull;
 
     final enableCrashlytics =
-        config?.firebaseConfig?.enableCrashlytics ?? false;
+        config?.firebaseConfig?.enableCrashlytics ?? false; // TODO: Remove hardcoding and uncomment above
     if (enableCrashlytics) {
       firebase_services.initialize(
         options: DefaultFirebaseOptions.currentPlatform,
@@ -293,24 +351,18 @@ class Constants {
         entityMapper: EntityMapper(),
         errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
         hierarchyType: envConfig.variables.hierarchyType);
-    RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
-    ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
-    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
-    ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
-    InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
     LocationTrackerSingleton()
         .setTenantId(tenantId: envConfig.variables.tenantId);
     TransitPostSingleton().setTenantId(envConfig.variables.tenantId);
+    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     SyncServiceSingleton().setData(
       syncDownRetryCount: envConfig.variables.syncDownRetryCount,
       persistenceConfiguration: PersistenceConfiguration.offlineFirst,
       entityMapper: SyncServiceMapper(),
     );
     SyncServiceSingleton().setRegistries(SyncServiceRegistry());
-    SyncServiceSingleton().registries?.registerSyncRegistries({
-      DataModelType.complaints: (remote) => CustomSyncRegistry(remote),
-      DataModelType.userAction: (remote) => CustomSyncRegistry(remote),
-    });
+    SyncServiceSingleton().registries?.registerSyncRegistries(
+        {DataModelType.complaints: (remote) => CustomSyncRegistry(remote)});
   }
 }
 

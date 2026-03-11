@@ -1,0 +1,765 @@
+// create a singleton class for RegistrationDelivery package where set data and get data methods are defined
+
+import 'dart:convert';
+
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
+import 'package:digit_flow_builder/utils/interpolation.dart';
+import 'package:flutter/material.dart';
+
+import 'function_registry.dart';
+
+class FlowBuilderSingleton {
+  static final FlowBuilderSingleton _singleton =
+      FlowBuilderSingleton._internal();
+
+  factory FlowBuilderSingleton() {
+    return _singleton;
+  }
+
+  FlowBuilderSingleton._internal();
+
+  String? _tenantId;
+  String? _loggedInUserUuid;
+  UserModel? _loggedInUser;
+  double? _maxRadius;
+  String? _projectId;
+  BeneficiaryType? _beneficiaryType;
+  ProjectTypeModel? _projectType;
+  ProjectModel? _selectedProject;
+  BoundaryModel? _boundaryModel;
+  PersistenceConfiguration? _persistenceConfiguration = PersistenceConfiguration
+      .offlineFirst; // Default to offline first persistence configuration
+  Map<String, TemplateConfig>? _templateConfigs;
+  List<Map<String, dynamic>>?
+      _userRoles; // User roles from app level (e.g., [{"code": "WAREHOUSE_MANAGER", "name": "Warehouse Manager"}])
+
+  void setBoundary({required BoundaryModel boundary}) {
+    _boundaryModel = boundary;
+  }
+
+  void setPersistenceConfiguration(
+      {required PersistenceConfiguration persistenceConfiguration}) {
+    _persistenceConfiguration = persistenceConfiguration;
+  }
+
+  void setInitialData({
+    required String loggedInUserUuid,
+    required double maxRadius,
+    required String projectId,
+    required BeneficiaryType selectedBeneficiaryType,
+    required ProjectTypeModel? projectType,
+    required ProjectModel selectedProject,
+    required UserModel? loggedInUser,
+    List<Map<String, dynamic>>? userRoles,
+  }) {
+    _loggedInUserUuid = loggedInUserUuid;
+    _maxRadius = maxRadius;
+    _projectId = projectId;
+    _beneficiaryType = selectedBeneficiaryType;
+    _projectType = projectType;
+    _selectedProject = selectedProject;
+    _loggedInUser = loggedInUser;
+    _userRoles = userRoles;
+  }
+
+  void setUserRoles(List<Map<String, dynamic>>? userRoles) {
+    _userRoles = userRoles;
+  }
+
+  void setTenantId(String tenantId) {
+    _tenantId = tenantId;
+  }
+
+  void setTemplateConfigs(Map<String, TemplateConfig> templateConfigs) {
+    _templateConfigs = templateConfigs;
+  }
+
+  String? get tenantId => _tenantId;
+
+  String? get loggedInUserUuid => _loggedInUserUuid;
+
+  double? get maxRadius => _maxRadius;
+
+  String? get projectId => _projectId;
+
+  BeneficiaryType? get beneficiaryType => _beneficiaryType;
+
+  ProjectTypeModel? get projectType => _projectType;
+
+  ProjectModel? get selectedProject => _selectedProject;
+
+  BoundaryModel? get boundary => _boundaryModel;
+
+  PersistenceConfiguration? get persistenceConfiguration =>
+      _persistenceConfiguration;
+
+  UserModel? get loggedInUser => _loggedInUser;
+
+  Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
+
+  List<Map<String, dynamic>>? get userRoles => _userRoles;
+}
+
+/// TODO: WILL REMOVE THIS FUNCTION ALSO : TEMPORARY
+Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
+  try {
+    final transformed = <String, dynamic>{
+      'name': inputJson['name'],
+      'version': inputJson['version'],
+      'pages': <String, dynamic>{},
+      'summary': inputJson['summary'],
+      'templates': <String, dynamic>{},
+    };
+
+    for (final page in inputJson['pages'] as List<dynamic>) {
+      final pageMap = page as Map<String, dynamic>;
+      final pageKey = pageMap['page'];
+      final type = pageMap['type'];
+
+      final Map<String, dynamic> properties = {};
+
+      for (final prop in pageMap['properties'] as List<dynamic>) {
+        final property = prop as Map<String, dynamic>;
+        final fieldName = property['fieldName'];
+        if (fieldName != null) {
+          properties[fieldName] = Map<String, dynamic>.from(property);
+        }
+      }
+
+      final transformedPage = <String, dynamic>{
+        'label': pageMap['label'],
+        'order': pageMap['order'],
+        'type': pageMap['type'],
+        'format': pageMap['format'],
+        'description': pageMap['description'],
+        'actionLabel': pageMap['actionLabel'],
+        'properties': properties,
+        'value': pageMap['value'],
+        'required': pageMap['required'],
+        'hidden': pageMap['hidden'],
+        'helpText': pageMap['helpText'],
+        'innerLabel': pageMap['innerLabel'],
+        'validations': pageMap['validations'],
+        'tooltip': pageMap['tooltip'],
+        'startDate': pageMap['startDate'],
+        'endDate': pageMap['endDate'],
+        'readOnly': pageMap['readOnly'],
+        'charCount': pageMap['charCount'],
+        'systemDate': pageMap['systemDate'],
+        'isMultiSelect': pageMap['isMultiSelect'],
+        'includeInForm': pageMap['includeInForm'],
+        'includeInSummary': pageMap['includeInSummary'],
+        'autoEnable': pageMap['autoEnable'],
+        'prefixText': pageMap['prefixText'],
+        'suffixText': pageMap['suffixText'],
+        'navigateTo': pageMap['navigateTo'] is Map<String, dynamic>
+            ? pageMap['navigateTo']
+            : null,
+        'visibilityCondition': pageMap['visibilityCondition'],
+        'conditionalNavigateTo': pageMap['conditionalNavigateTo'],
+        'showAlertPopUp': pageMap['showAlertPopUp'],
+        'multiEntityConfig': pageMap['multiEntityConfig'],
+        'preventScreenCapture': pageMap['preventScreenCapture'],
+        'submitCondition': pageMap['submitCondition'],
+      };
+
+      if (type == 'template') {
+        (transformed['templates'] as Map<String, dynamic>)[pageKey] =
+            transformedPage;
+      } else {
+        (transformed['pages'] as Map<String, dynamic>)[pageKey] =
+            transformedPage;
+      }
+    }
+
+    return transformed;
+  } catch (e, stackTrace) {
+    // Log and rethrow to propagate error to the outer try-catch
+    debugPrint('Error inside transformJson: $e');
+    debugPrint('$stackTrace');
+    rethrow;
+  }
+}
+
+/// Existing method kept as-is for UI string binding
+dynamic resolveValue(dynamic value, dynamic contextData,
+    {Map<String, dynamic>? widgetData, String? screenKey}) {
+  final resolved = resolveValueRaw(value, contextData,
+      widgetData: widgetData, screenKey: screenKey);
+  return resolved;
+}
+
+/// New method: resolves strings with multiple placeholders
+/// Also supports localization keys mixed with templates, e.g.:
+/// "HF_REFERRAL_INBOX_DATE {{ fn:formatDate(Model.date) }}"
+/// Where "HF_REFERRAL_INBOX_DATE" is a localization key
+String resolveTemplate(
+  String template,
+  dynamic contextData, {
+  String? screenKey,
+  dynamic localization,
+  CrudStateData? stateData,
+  Map<String, dynamic>? widgetData,
+}) {
+  if (!template.contains('{{')) {
+    // No template placeholders, try to translate as localization key
+    if (localization != null) {
+      return _translateWithLocalization(template, localization);
+    }
+    return template;
+  }
+
+  // Find all {{placeholder}} patterns in the string
+  final placeholderRegex = RegExp(r'\{\{(.+?)\}\}');
+  final matches = placeholderRegex.allMatches(template);
+
+  String result = template;
+
+  // First, translate the non-placeholder parts if localization is provided
+  if (localization != null) {
+    // Split template by placeholders and translate each part
+    int lastEnd = 0;
+    final buffer = StringBuffer();
+
+    for (final match in matches) {
+      // Get text before this placeholder and translate it
+      final textBefore = template.substring(lastEnd, match.start);
+      if (textBefore.trim().isNotEmpty) {
+        buffer.write(_translateWithLocalization(textBefore, localization));
+      } else {
+        buffer.write(textBefore);
+      }
+      // Keep the placeholder as-is for now
+      buffer.write(match.group(0));
+      lastEnd = match.end;
+    }
+
+    // Translate any remaining text after the last placeholder
+    if (lastEnd < template.length) {
+      final textAfter = template.substring(lastEnd);
+      if (textAfter.trim().isNotEmpty) {
+        buffer.write(_translateWithLocalization(textAfter, localization));
+      } else {
+        buffer.write(textAfter);
+      }
+    }
+
+    result = buffer.toString();
+  }
+
+  // Now resolve all placeholders
+  for (final match in matches) {
+    final fullPlaceholder = match.group(0)!;
+    final placeholder = match.group(1)!.trim();
+
+    // Use existing resolveValueRaw to resolve the individual placeholder
+    final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData,
+        screenKey: screenKey, stateData: stateData, widgetData: widgetData);
+
+    // Replace the placeholder in the result string
+    // For null values, use the string "null" so expressions like "x != null" work
+    final valueStr = resolvedValue == null ? 'null' : resolvedValue.toString();
+    result = result.replaceAll(fullPlaceholder, valueStr);
+  }
+
+  return _translateWithLocalization(result, localization);
+}
+
+/// Helper to translate using localization (supports FlowBuilderLocalization)
+String _translateWithLocalization(String text, dynamic localization) {
+  final trimmed = text.trim();
+  if (trimmed.isEmpty) return text;
+
+  try {
+    final translated = localization.translate(trimmed);
+    // Preserve original whitespace
+    if (text.startsWith(' ') || text.endsWith(' ')) {
+      final leadingSpace = text.startsWith(' ') ? ' ' : '';
+      final trailingSpace = text.endsWith(' ') ? ' ' : '';
+      return '$leadingSpace$translated$trailingSpace';
+    }
+    return translated;
+  } catch (_) {
+    return text;
+  }
+}
+
+/// New method: returns actual type (int, double, bool, list, map, entity, etc.)
+dynamic resolveValueRaw(dynamic value, dynamic contextData,
+    {Map<String, dynamic>? widgetData,
+    String? screenKey,
+    CrudStateData? stateData}) {
+  if (value is String) {
+    if (!value.startsWith('{{') || !value.endsWith('}}')) {
+      return value; // <-- direct return
+    }
+    final interpolationRegex = RegExp(r'^\{\{(.+?)\}\}$');
+    final match = interpolationRegex.firstMatch(value.trim());
+    if (match != null) {
+      var path = match.group(1)!.trim();
+
+      // Check if contextData is a structured evaluation context (has nested keys)
+      final isStructuredContext = contextData is Map &&
+          (contextData.containsKey('contextData') ||
+              contextData.containsKey('currentItem') ||
+              contextData.containsKey('itemData') ||
+              contextData.containsKey('parentData') ||
+              contextData.containsKey('formData'));
+
+      // Handle itemData. prefix (new unified naming)
+      if (path.startsWith('itemData.')) {
+        if (isStructuredContext && contextData.containsKey('itemData')) {
+          final innerPath = path.substring('itemData.'.length);
+          return _resolvePath(contextData['itemData'], innerPath);
+        }
+        path = path.substring('itemData.'.length);
+      }
+
+      // Handle parentData. prefix (new unified naming)
+      if (path.startsWith('parentData.')) {
+        if (isStructuredContext && contextData.containsKey('parentData')) {
+          final innerPath = path.substring('parentData.'.length);
+          return _resolvePath(contextData['parentData'], innerPath);
+        }
+        path = path.substring('parentData.'.length);
+      }
+
+      // Handle formData. prefix (new unified naming)
+      if (path.startsWith('formData.')) {
+        if (isStructuredContext && contextData.containsKey('formData')) {
+          final innerPath = path.substring('formData.'.length);
+          return _resolvePath(contextData['formData'], innerPath);
+        }
+        path = path.substring('formData.'.length);
+      }
+
+      // Handle currentItem. prefix (for table row conditions) - legacy
+      if (path.startsWith('currentItem.')) {
+        if (isStructuredContext && contextData.containsKey('currentItem')) {
+          final innerPath = path.substring('currentItem.'.length);
+          return _resolvePath(contextData['currentItem'], innerPath);
+        }
+        // Fallback: strip prefix and resolve from root
+        path = path.substring('currentItem.'.length);
+      }
+
+      // Handle contextData. prefix
+      if (path.startsWith('contextData.')) {
+        if (isStructuredContext && contextData.containsKey('contextData')) {
+          // Resolve from nested contextData map
+          final innerPath = path.substring('contextData.'.length);
+          return _resolvePath(contextData['contextData'], innerPath);
+        }
+        // Legacy behavior: strip prefix and resolve from root
+        path = path.substring('contextData.'.length);
+      }
+
+      // Handle item. prefix - legacy (maps to itemData)
+      if (path.startsWith('item.')) {
+        if (isStructuredContext && contextData.containsKey('item')) {
+          final innerPath = path.substring('item.'.length);
+          return _resolvePath(contextData['item'], innerPath);
+        }
+        // Legacy behavior: strip prefix and resolve from root
+        path = path.substring('item.'.length);
+      }
+
+      // Handle widgetData. prefix (for filter selections, etc.)
+      if (path.startsWith('widgetData.')) {
+        if (isStructuredContext && contextData.containsKey('widgetData')) {
+          final innerPath = path.substring('widgetData.'.length);
+          return _resolvePath(contextData['widgetData'], innerPath);
+        }
+        // Fallback to widgetData parameter
+        path = path.substring('widgetData.'.length);
+        return widgetData != null ? _resolvePath(widgetData, path) : null;
+      }
+
+      // Handle singleton access
+      if (path.startsWith('singleton.')) {
+        path = path.substring('singleton.'.length);
+        return _resolvePath(singletonToMap(), path);
+      }
+
+      // Handle functions like {{ fn:max(tasks.0.dose, 2) }}
+      if (path.startsWith('fn')) {
+        final fnRegex = RegExp(r'fn:(\w+)\((.*?)\)');
+        final fnMatch = fnRegex.firstMatch(path);
+        if (fnMatch != null) {
+          final fnName = fnMatch.group(1)!;
+          final argsExpr = fnMatch.group(2) ?? '';
+
+          final resolvedArgs = argsExpr.trim().isEmpty
+              ? <dynamic>[]
+              : argsExpr.split(',').map((rawArg) {
+                  final trimmed = rawArg.trim();
+
+                  // Check if it's a quoted literal (string)
+                  if (trimmed.startsWith("'") || trimmed.startsWith('"')) {
+                    // Raw literal string
+                    final unquoted =
+                        trimmed.replaceAll(RegExp(r"""^['"]|['"]$"""), '');
+                    return unquoted;
+                  }
+
+                  // Check if it's a number
+                  final numValue = num.tryParse(trimmed);
+                  if (numValue != null) {
+                    return numValue;
+                  }
+
+                  // Otherwise, treat as a variable/path to resolve
+                  // This includes: simple variables (selectedFacility),
+                  // dotted paths (item.field), and prefixed paths (navigation.x)
+                  final placeholder = '{{ $trimmed }}';
+                  final resolved = resolveValueRaw(placeholder, contextData,
+                      widgetData: widgetData,
+                      screenKey: screenKey,
+                      stateData: stateData);
+                  return resolved;
+                }).toList();
+
+          return FunctionRegistry.call(
+            fnName,
+            resolvedArgs,
+            stateData ?? CrudStateData({}, []),
+          );
+        }
+      }
+
+      // Check widgetData for unprefixed simple variables first
+      // This handles cases like {{fn:isEmpty(selectedReconFacility)}} where
+      // selectedReconFacility is a widget data field (dropdown selection)
+      if (widgetData != null && !path.contains('.')) {
+        final widgetValue = widgetData[path];
+        if (widgetValue != null) {
+          return widgetValue;
+        }
+      }
+
+      // Also check widgetData for dotted paths that might exist there
+      if (widgetData != null && path.contains('.')) {
+        final widgetValue = _resolvePath(widgetData, path);
+        if (widgetValue != null) {
+          return widgetValue;
+        }
+      }
+
+      // Normal path resolution from contextData
+      return _resolvePath(contextData, path);
+    }
+    return value;
+  }
+  return value;
+}
+
+/// Helper: Convert FlowBuilderSingleton into a Map<String, dynamic>
+Map<String, dynamic> singletonToMap() {
+  final s = FlowBuilderSingleton();
+  return {
+    "tenantId": s.tenantId,
+    "loggedInUserUuid": s.loggedInUserUuid,
+    "maxRadius": s.maxRadius,
+    "projectId": s.projectId,
+    "beneficiaryType": s.beneficiaryType,
+    "projectType": s.projectType?.toJson(),
+    "selectedProject": s.selectedProject?.toJson(),
+    "boundary": s.boundary?.toJson(),
+    "persistenceConfiguration": s.persistenceConfiguration?.toString(),
+    "loggedInUser": s.loggedInUser?.toJson(),
+    "userRoles": s.userRoles,
+    "templateConfigs":
+        s.templateConfigs?.map((k, v) => MapEntry(k, v.toJson())),
+  };
+}
+
+/// Utility to resolve "contextData.householdModel.clientReferenceId" like paths
+dynamic _resolvePath(dynamic root, String path) {
+  var parts = path.split('.');
+
+  dynamic current = root;
+  for (var i = 0; i < parts.length; i++) {
+    final part = parts[i];
+
+    // ✅ If current is JSON string, decode it into Map/List
+    if (current is String &&
+        (current.trim().startsWith('{') || current.trim().startsWith('['))) {
+      try {
+        current = jsonDecode(current);
+      } catch (_) {
+        return null; // invalid JSON, stop
+      }
+    }
+
+    // Handle array index like members[0]
+    final listMatch = RegExp(r'^(\w+)\[(\d+)\]$').firstMatch(part);
+    if (listMatch != null) {
+      final key = listMatch.group(1)!;
+      final index = int.parse(listMatch.group(2)!);
+
+      if (current is Map && current.containsKey(key)) {
+        final listVal = current[key];
+        if (listVal is List && index < listVal.length) {
+          current = listVal[index];
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    }
+    // Normal map lookup - handle both Map<String, dynamic> and Map<dynamic, dynamic>
+    else if (current is Map) {
+      if (!current.containsKey(part)) {
+        return null;
+      }
+      current = current[part];
+
+      // Special case: if current is a List<AdditionalField> and there are more parts
+      // convert to a map for easier access
+      if (current is List && i < parts.length - 1) {
+        try {
+          // Check if this is a List<AdditionalField> by checking first element
+          if (current.isNotEmpty &&
+              current.first is Map &&
+              (current.first as Map).containsKey('key') &&
+              (current.first as Map).containsKey('value')) {
+            // Convert List<AdditionalField> to Map<String, dynamic>
+            final fieldsMap = <String, dynamic>{};
+            for (var field in current) {
+              if (field is Map && field['key'] != null) {
+                fieldsMap[field['key'].toString()] = field['value'];
+              }
+            }
+            current = fieldsMap;
+          }
+        } catch (_) {
+          // If conversion fails, continue with normal processing
+        }
+      }
+    }
+    // List access
+    else if (current is List) {
+      // Handle .length property access
+      if (part == 'length') {
+        current = current.length;
+        continue;
+      }
+
+      // Handle 'first' and 'last' keywords
+      if (part == 'first') {
+        if (current.isEmpty) return null;
+        current = current.first;
+        continue;
+      }
+      if (part == 'last') {
+        if (current.isEmpty) return null;
+        current = current.last;
+        continue;
+      }
+
+      final idx = int.tryParse(part);
+      if (idx != null) {
+        if (idx < 0 || idx >= current.length) return null;
+        current = current[idx];
+      } else {
+        // Check if this is a List<AdditionalField> and we're looking for a key
+        try {
+          if (current.isNotEmpty &&
+              current.first is Map &&
+              (current.first as Map).containsKey('key') &&
+              (current.first as Map).containsKey('value')) {
+            // Search for the field with matching key
+            for (var field in current) {
+              if (field is Map && field['key'] == part) {
+                current = field['value'];
+                break;
+              }
+            }
+            continue;
+          }
+        } catch (_) {
+          // Fall through to type-based search
+        }
+
+        // Type-based search
+        dynamic foundItem;
+        for (var item in current) {
+          try {
+            // Use getEntityTypeName for EntityModel, fallback to runtimeType for others
+            final typeString = item is EntityModel
+                ? getEntityTypeName(item).toLowerCase()
+                : item.runtimeType.toString().toLowerCase();
+            if (typeString == part.toLowerCase()) {
+              foundItem = item;
+              break;
+            }
+          } catch (e) {
+            // Ignore
+          }
+        }
+
+        if (foundItem != null) {
+          current = foundItem;
+        } else {
+          return null;
+        }
+      }
+    }
+    // EntityModel access
+    else if (current is EntityModel) {
+      final map = current.toMap();
+      if (map.containsKey(part)) {
+        current = map[part];
+      } else {
+        return null;
+      }
+    }
+    // If it's an object (like EntityModel), try .toJson()
+    else {
+      try {
+        if (current.toJson() is Map<String, dynamic>) {
+          final map = current.toJson() as Map<String, dynamic>;
+          current = map[part];
+        } else {
+          return null;
+        }
+      } catch (_) {
+        return null;
+      }
+    }
+  }
+  if (current is List) {
+    return current;
+  }
+  if (current is EntityModel) {
+    return current;
+  }
+  if (current is num) {
+    return current;
+  }
+  if (current is Map) {
+    return current;
+  }
+  return current?.toString();
+}
+
+Map<String, dynamic> flattenFormData(Map<String, dynamic> data,
+    {String parentKey = ''}) {
+  final Map<String, dynamic> flatMap = {};
+
+  data.forEach((key, value) {
+    final newKey = parentKey.isEmpty ? key : '$parentKey.$key';
+
+    if (value is Map<String, dynamic>) {
+      // Recursively flatten nested maps
+      flatMap.addAll(flattenFormData(value, parentKey: newKey));
+    } else {
+      // Replace null with empty string
+      flatMap[newKey] = value ?? '';
+    }
+  });
+
+  return flatMap;
+}
+
+/// Resolves static localization keys from input string.
+/// Static parts (outside of {{}}) are translated using localization.
+/// Dynamic parts (inside {{}}) are preserved as-is.
+String resolveStaticString(
+  dynamic input,
+  dynamic localization,
+) {
+  if (input is! String) return input?.toString() ?? '';
+
+  final regex = RegExp(r'{{.*?}}');
+  final buffer = StringBuffer();
+  int lastIndex = 0;
+
+  for (final match in regex.allMatches(input)) {
+    // Static part before {{ }}
+    final staticPart = input.substring(lastIndex, match.start).trim();
+    if (staticPart.isNotEmpty) {
+      final translated = _tryTranslate(staticPart, localization);
+      buffer.write(translated);
+      buffer.write(' ');
+    }
+
+    // Dynamic part → keep as-is
+    buffer.write(input.substring(match.start, match.end));
+    buffer.write(' ');
+
+    lastIndex = match.end;
+  }
+
+  // Remaining static part
+  if (lastIndex < input.length) {
+    final remaining = input.substring(lastIndex).trim();
+    if (remaining.isNotEmpty) {
+      final translated = _tryTranslate(remaining, localization);
+      buffer.write(translated);
+    }
+  }
+
+  return buffer.toString().trim();
+}
+
+/// Helper to safely translate using localization
+String _tryTranslate(String key, dynamic localization) {
+  if (localization == null) return key;
+  try {
+    return localization.translate(key) ?? key;
+  } catch (_) {
+    return key;
+  }
+}
+
+/// Generates a unique instance ID for a page
+/// Format: {screenType}_{pageName}_{timestamp}
+String generateInstanceId(String pageName) {
+  return '${pageName}_${DateTime.now().millisecondsSinceEpoch}';
+}
+
+/// Gets instanceId from navigationParams or generates a new one
+String getOrGenerateInstanceId(
+  Map<String, dynamic>? navigationParams,
+  String pageName,
+) {
+  return navigationParams?['_instanceId'] as String? ??
+      generateInstanceId(pageName);
+}
+
+/// Creates a composite key from pageName and instanceId
+/// Format: {pageName}::{instanceId}
+String createCompositeKey(String pageName, String instanceId) {
+  return '$pageName::$instanceId';
+}
+
+/// Returns the type name of an EntityModel as a string.
+/// This function uses `is` checks instead of runtimeType.toString()
+/// to ensure it works correctly in release mode with obfuscation enabled.
+String getEntityTypeName(EntityModel entity) {
+  if (entity is HouseholdModel) return 'HouseholdModel';
+  if (entity is IndividualModel) return 'IndividualModel';
+  if (entity is HouseholdMemberModel) return 'HouseholdMemberModel';
+  if (entity is ProjectBeneficiaryModel) return 'ProjectBeneficiaryModel';
+  if (entity is TaskModel) return 'TaskModel';
+  if (entity is ProjectFacilityModel) return 'ProjectFacilityModel';
+  if (entity is ProductVariantModel) return 'ProductVariantModel';
+  if (entity is StockModel) return 'StockModel';
+  if (entity is PgrServiceModel) return 'PgrServiceModel';
+  if (entity is StockReconciliationModel) return 'StockReconciliationModel';
+  if (entity is HFReferralModel) return 'HFReferralModel';
+  if (entity is ReferralModel) return 'ReferralModel';
+  if (entity is IdentifierModel) return 'IdentifierModel';
+  if (entity is AddressModel) return 'AddressModel';
+  if (entity is SideEffectModel) return 'SideEffectModel';
+  if (entity is FacilityModel) return 'FacilityModel';
+  if (entity is ProjectTypeModel) return 'ProjectTypeModel';
+  if (entity is PgrComplaintModel) return 'PgrComplaintModel';
+  if (entity is PgrAddressModel) return 'PgrAddressModel';
+  // Fallback for unknown types - use runtimeType (may not work with obfuscation)
+  return entity.runtimeType.toString();
+}

@@ -6,7 +6,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 
-class ProjectResourceRemoteRepository extends RemoteRepository<ProjectResourceModel, ProjectResourceSearchModel> {
+class ProjectResourceRemoteRepository
+    extends RemoteRepository<ProjectResourceModel, ProjectResourceSearchModel> {
   ProjectResourceRemoteRepository(
     super.dio, {
     required super.actionMap,
@@ -16,10 +17,11 @@ class ProjectResourceRemoteRepository extends RemoteRepository<ProjectResourceMo
 
   @override
   FutureOr<List<ProjectResourceModel>> search(
-      ProjectResourceSearchModel query, {
-        int? offSet,
-        int? limit,
-      }) async {
+    ProjectResourceSearchModel query, {
+    int? offSet,
+    int? limit,
+    int? lastChangedSince,
+  }) async {
     Response response;
 
     try {
@@ -36,15 +38,15 @@ class ProjectResourceRemoteRepository extends RemoteRepository<ProjectResourceMo
             data: entityName == 'User'
                 ? query.toMap()
                 : {
-              isPlural
-                  ? entityNamePlural
-                  : entityName == 'ServiceDefinition'
-                  ? 'ServiceDefinitionCriteria'
-                  : entityName == 'Downsync'
-                  ? 'DownsyncCriteria'
-                  : entityName:
-              isPlural ? [query.toMap()] : query.toMap(),
-            },
+                    isPlural
+                            ? entityNamePlural
+                            : entityName == 'ServiceDefinition'
+                                ? 'ServiceDefinitionCriteria'
+                                : entityName == 'Downsync'
+                                    ? 'DownsyncCriteria'
+                                    : entityName:
+                        isPlural ? [query.toMap()] : query.toMap(),
+                  },
           );
         },
       );
@@ -75,9 +77,9 @@ class ProjectResourceRemoteRepository extends RemoteRepository<ProjectResourceMo
     }
 
     final entityResponse = await responseMap[
-    (isSearchResponsePlural || entityName == 'ServiceDefinition')
-        ? entityNamePlural
-        : entityName];
+        (isSearchResponsePlural || entityName == 'ServiceDefinition')
+            ? entityNamePlural
+            : entityName];
 
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
@@ -90,8 +92,9 @@ class ProjectResourceRemoteRepository extends RemoteRepository<ProjectResourceMo
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
     var mapperRes = <ProjectResourceModel>[];
     try {
-      mapperRes =
-          entityList.map((e) => MapperContainer.globals.fromMap<ProjectResourceModel>(e)).toList();
+      mapperRes = entityList
+          .map((e) => MapperContainer.globals.fromMap<ProjectResourceModel>(e))
+          .toList();
     } catch (e) {
       rethrow;
     }

@@ -20,6 +20,7 @@ class FacilityRemoteRepository
     FacilitySearchModel query, {
     int? offSet,
     int? limit,
+    int? lastChangedSince,
   }) async {
     int defaultBatchSize = limit ?? 100; // Default batch size for fetching data
     int currentOffset = offSet ?? 0;

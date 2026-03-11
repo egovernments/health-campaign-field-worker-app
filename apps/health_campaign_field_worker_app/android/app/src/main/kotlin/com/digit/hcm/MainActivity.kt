@@ -75,10 +75,10 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-        // Register the receiver for location updates, with proper export settings for Android 13+
+        // Register the receiver for location updates (not exported - internal use only)
         val filter = IntentFilter("LocationUpdate")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(locationReceiver, filter, Context.RECEIVER_EXPORTED)
+            registerReceiver(locationReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
         } else {
             registerReceiver(locationReceiver, filter)
         }

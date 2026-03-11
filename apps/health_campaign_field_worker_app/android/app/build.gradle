@@ -25,7 +25,7 @@ if (flutterVersionName == null) {
 
 
 android {
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -53,9 +53,17 @@ android {
     }
 
     buildTypes {
+        debug {
+            debuggable true
+        }
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // TODO: For production release, replace signingConfigs.debug with signingConfigs.release
+            // 1. Generate keystore: keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias
+            // 2. Create android/key.properties with storePassword, keyPassword, keyAlias, storeFile
+            // 3. Add signingConfigs.release block and reference it here
             signingConfig signingConfigs.debug
         }
     }
@@ -67,6 +75,12 @@ android {
             }
         }
     }
+}
+
+// Exclude sqlite3_flutter_libs since sqlcipher_flutter_libs is used as a drop-in replacement
+// Both share the same Android package (eu.simonbinder.sqlite3_flutter_libs) causing duplicate class errors
+configurations.all {
+    exclude module: 'sqlite3_flutter_libs'
 }
 
 flutter {

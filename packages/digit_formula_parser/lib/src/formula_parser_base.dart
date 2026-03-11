@@ -22,14 +22,32 @@ class FormulaParser {
         _isReservedWordsUsed = true;
         _reservedWordsUsed.add(key);
       } else {
-        // Handle empty string values by wrapping them in quotes
-        String replacementValue;
+        // ⭐ FIX: Handle different value types appropriately
+        String safeValue;
+
         if (value == null || value.toString().isEmpty) {
-          replacementValue = '""';
+          safeValue = '""';
+        } else if (value is num || value == "null") {
+          safeValue = value.toString(); // keep raw numbers
+        } else if (value is bool) {
+          safeValue =
+              value.toString().toUpperCase(); // TRUE or FALSE (unquoted)
+        } else if (value.toString().toLowerCase() == 'true' ||
+            value.toString().toLowerCase() == 'false') {
+          // ⭐ Convert string boolean to actual boolean
+          safeValue =
+              value.toString().toUpperCase(); // TRUE or FALSE (unquoted)
         } else {
-          replacementValue = value.toString();
+          final clean = value.toString().replaceAll('"', '');
+          safeValue = '"$clean"'; // wrap strings in quotes
         }
-        tempExp = tempExp.replaceAll(key, replacementValue);
+
+        // Use case-insensitive matching to handle case mismatches between
+        // schema fieldNames and expression variable names
+        tempExp = tempExp.replaceAll(
+          RegExp(r'\b' + RegExp.escape(key) + r'\b', caseSensitive: false),
+          safeValue,
+        );
       }
     });
 

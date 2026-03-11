@@ -87,23 +87,6 @@ const _$ButtonTypeEnumMap = {
   ButtonType.elevated: 'elevated',
 };
 
-_$ShowAlertPopUpImpl _$$ShowAlertPopUpImplFromJson(Map<String, dynamic> json) =>
-    _$ShowAlertPopUpImpl(
-      title: json['title'] as String,
-      description: json['description'] as String?,
-      primaryActionLabel: json['primaryActionLabel'] as String,
-      secondaryActionLabel: json['secondaryActionLabel'] as String,
-    );
-
-Map<String, dynamic> _$$ShowAlertPopUpImplToJson(
-        _$ShowAlertPopUpImpl instance) =>
-    <String, dynamic>{
-      'title': instance.title,
-      'description': instance.description,
-      'primaryActionLabel': instance.primaryActionLabel,
-      'secondaryActionLabel': instance.secondaryActionLabel,
-    };
-
 _$ActionItemSchemaImpl _$$ActionItemSchemaImplFromJson(
         Map<String, dynamic> json) =>
     _$ActionItemSchemaImpl(

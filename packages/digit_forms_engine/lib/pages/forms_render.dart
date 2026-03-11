@@ -17,9 +17,13 @@ import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../widgets/localized.dart';
+import '../helper/form_builder_helper.dart';
+import '../helper/validator_helper.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
+import '../utils/screen_protection_manager.dart';
 import '../utils/utils.dart';
+import '../widgets/multi_entity_tab_view.dart';
 
 @RoutePage()
 class FormsRenderPage extends LocalizedStatefulWidget {
@@ -29,6 +33,7 @@ class FormsRenderPage extends LocalizedStatefulWidget {
   final List<Map<String, Widget>>? customComponents;
   final bool isSummary;
   final bool isEdit;
+  final Map<String, dynamic>? navigationParams;
 
   const FormsRenderPage({
     super.key,
@@ -38,6 +43,7 @@ class FormsRenderPage extends LocalizedStatefulWidget {
     @QueryParam() this.isEdit = false,
     this.customComponents,
     this.defaultValues,
+    this.navigationParams,
     @QueryParam() this.isSummary = false,
   });
 
@@ -46,7 +52,39 @@ class FormsRenderPage extends LocalizedStatefulWidget {
 }
 
 class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
+  bool _hasInitializedProtection = false;
   bool _isSubmitting = false;
+
+  /// GlobalKey to access MultiEntityTabViewState for programmatic tab navigation
+  final GlobalKey<MultiEntityTabViewState> _multiEntityTabKey =
+      GlobalKey<MultiEntityTabViewState>();
+
+  /// Unique identifier for this form page instance in the protection manager
+  String get _protectionPageId =>
+      'form_${widget.currentSchemaKey}_${widget.pageName}';
+
+  @override
+  void initState() {
+    super.initState();
+    // Register with protection manager with initial false state
+    // Will be updated once we know the actual preventScreenCapture value from schema
+    ScreenProtectionManager().registerPage(_protectionPageId, false);
+  }
+
+  @override
+  void dispose() {
+    // Unregister from protection manager
+    ScreenProtectionManager().unregisterPage(_protectionPageId);
+    super.dispose();
+  }
+
+  /// Update screen protection based on the current page's preventScreenCapture flag
+  void _updateScreenProtection(bool? preventScreenCapture) {
+    // Update the protection manager with the actual protection requirement
+    ScreenProtectionManager()
+        .updatePageProtection(_protectionPageId, preventScreenCapture == true);
+    _hasInitializedProtection = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +102,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
           final schema = schemaObject.pages[widget.pageName];
 
+          // Update screen protection based on current page's preventScreenCapture flag (only once)
+          if (!_hasInitializedProtection) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _updateScreenProtection(schema?.preventScreenCapture);
+            });
+          }
+
           if (schema == null) {
             return const Center(child: Text('Form not found'));
           }
@@ -72,332 +117,1030 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               schemaObject.pages.keys.toList().indexOf(widget.pageName);
           final showcaseKeys = <GlobalKey>[];
 
+          // Register pages for cross-page validation
+          registerPagesForValidation(
+              widget.currentSchemaKey, schemaObject.pages);
+
+          // Register navigation params for dynamic validation values
+          if (widget.navigationParams != null) {
+            registerNavigationParams(
+                widget.currentSchemaKey, widget.navigationParams!);
+          }
+
+          // Check if this page should render as multi-entity tabs
+          if (schema.multiEntityConfig != null) {
+            return _buildMultiEntityTabPage(context, schema, schemaObject);
+          }
+
           return Provider<Map<String, dynamic>>.value(
             value: widget.defaultValues ?? {},
             child: ReactiveFormBuilder(
-              form: () {
-                final formGroup = fb.group(
-                  JsonForms.getFormControls(
-                    schema,
-                    defaultValues: widget.defaultValues ?? {},
-                  ),
-                );
-
-                // Set up cross-field validation context
-                JsonForms.setupValidationContext(formGroup, schema);
-
-                return formGroup;
-              },
-              builder: (context, formGroup, child) => ScrollableContent(
-                enableFixedDigitButton: true,
-                header: const Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(spacer2),
-                      child: BackNavigationHelpHeaderWidget(
-                        showBackNavigation: true,
+                form: () => fb.group(
+                      JsonForms.getFormControls(
+                        schema,
+                        defaultValues: widget.defaultValues ?? {},
+                        schemaKey: widget.currentSchemaKey,
                       ),
                     ),
-                    SizedBox.shrink()
-                  ],
-                ),
-                footer: DigitCard(
-                  margin: const EdgeInsets.only(top: spacer2),
-                  children: [
-                    ReactiveFormConsumer(
-                      builder: (context, formGroup, child) => DigitButton(
-                        isDisabled: _isSubmitting,
-                        label: (index) < schemaObject.pages.length - 1
-                            ? localizations
-                                .translate(schema.actionLabel ?? 'Next')
-                            : localizations
-                                .translate(schema.actionLabel ?? 'Submit'),
-                        onPressed: () async {
-                          // Prevent multiple simultaneous submissions
-                          if (_isSubmitting) return;
+                builder: (context, formGroup, child) {
+                  return ScrollableContent(
+                    enableFixedDigitButton: true,
+                    header: const Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(spacer2),
+                          child: BackNavigationHelpHeaderWidget(
+                            showBackNavigation: true,
+                          ),
+                        ),
+                        SizedBox.shrink()
+                      ],
+                    ),
+                    footer: DigitCard(
+                      margin: const EdgeInsets.only(top: spacer2),
+                      children: [
+                        ReactiveFormConsumer(
+                          builder: (context, formGroup, child) => DigitButton(
+                            label: (index) < schemaObject.pages.length - 1
+                                ? localizations
+                                    .translate(schema.actionLabel ?? 'Next')
+                                : localizations
+                                    .translate(schema.actionLabel ?? 'Submit'),
+                            onPressed: () async {
+                              // Prevent multiple simultaneous submissions
+                              if (_isSubmitting) return;
 
-                          // Set flag synchronously FIRST to block rapid taps
-                          _isSubmitting = true;
+                              // Set flag synchronously FIRST to block rapid taps
+                              _isSubmitting = true;
 
-                          // Then update UI
-                          setState(() {});
+                              // Then update UI
+                              setState(() {});
 
-                          // Add small delay to allow custom component to update schema data
-                          await Future.delayed(
-                              const Duration(milliseconds: 200));
+                              // Add small delay to allow custom component to update schema data
+                              await Future.delayed(
+                                  const Duration(milliseconds: 200));
 
-                          // 1. Get visible keys only (skip hidden fields)
-                          final currentKeys = schema.properties?.entries
-                                  .where((entry) {
-                                    final isVisible = !isHidden(entry.value);
-                                    final includeInForm =
-                                        entry.value.includeInForm == true;
-                                    return isVisible || includeInForm;
-                                  })
-                                  .map((entry) => entry.key)
-                                  .toList() ??
-                              [];
+                              // 1. Get visible keys only (skip hidden fields and fields with visibility conditions)
+                              final currentKeys = schema.properties?.entries
+                                      .where((entry) {
+                                        final isStaticHidden =
+                                            isHidden(entry.value);
+                                        final includeInForm =
+                                            entry.value.includeInForm == true;
 
-                          // 2. Mark all visible controls as touched and revalidate
-                          for (final key in currentKeys) {
-                            final control = formGroup.control(key);
-                            control.markAsTouched();
-                            // control.updateValueAndValidity();
-                          }
+                                        // Check if field is hidden by visibility condition
+                                        final hasDynamicVisibility =
+                                            entry.value.visibilityCondition !=
+                                                null;
+                                        bool isDynamicallyHidden = false;
 
-                          final hasErrors = currentKeys.any((key) {
-                            final control = formGroup.control(key);
-                            return control.errors.isNotEmpty;
-                          });
+                                        if (hasDynamicVisibility) {
+                                          final formState =
+                                              context.read<FormsBloc>().state;
+                                          final currentPageKey =
+                                              widget.pageName;
+                                          final currentSchemaKey =
+                                              widget.currentSchemaKey;
 
-                          if (hasErrors) {
-                            _isSubmitting = false;
-                            setState(() {});
-                            return;
-                          }
+                                          final values =
+                                              buildVisibilityEvaluationContext(
+                                            currentPageKey: currentPageKey,
+                                            currentForm: formGroup,
+                                            pages: formState
+                                                .cachedSchemas[
+                                                    currentSchemaKey]!
+                                                .pages,
+                                            navigationParams:
+                                                widget.navigationParams,
+                                          );
 
-                          // 3. Check validity of just the visible controls
-                          final isCurrentPageValid = currentKeys
-                              .every((key) => formGroup.control(key).valid);
+                                          isDynamicallyHidden =
+                                              !evaluateVisibilityExpression(
+                                            entry.value.visibilityCondition!
+                                                .expression,
+                                            values,
+                                          );
+                                        }
 
-                          if (!isCurrentPageValid) {
-                            _isSubmitting = false;
-                            setState(() {});
-                            return;
-                          }
-                          ;
+                                        final isVisible = !isStaticHidden &&
+                                            !isDynamicallyHidden;
+                                        return isVisible || includeInForm;
+                                      })
+                                      .map((entry) => entry.key)
+                                      // Filter out keys that don't have a corresponding form control
+                                      .where((key) => formGroup.contains(key))
+                                      .toList() ??
+                                  [];
 
-                          // 4. Proceed with value extraction and state update
-                          final values = JsonForms.getFormValues(
-                            formGroup,
-                            schema,
-                          );
+                              // 2. Mark all visible controls as touched and revalidate
+                              for (final key in currentKeys) {
+                                final control = formGroup.control(key);
+                                control.markAsTouched();
+                                // control.updateValueAndValidity();
+                              }
 
-                          final updatedPropertySchema = schema.copyWith(
-                            properties: Map.fromEntries(
-                              schema.properties?.entries.map(
-                                    (e) => values.containsKey(e.key)
-                                        ? MapEntry(
-                                            e.key,
-                                            e.value.copyWith(
-                                              value: values[e.key],
+                              final hasErrors = currentKeys.any((key) {
+                                final control = formGroup.control(key);
+                                return control.errors.isNotEmpty;
+                              });
+
+                              if (hasErrors) {
+                                _isSubmitting = false;
+                                setState(() {});
+                                return;
+                              }
+
+                              // 3. Check validity of just the visible controls
+                              final isCurrentPageValid = currentKeys
+                                  .every((key) => formGroup.control(key).valid);
+
+                              if (!isCurrentPageValid) {
+                                _isSubmitting = false;
+                                setState(() {});
+                                return;
+                              }
+
+                              // 4. Proceed with value extraction and state update
+                              final values = JsonForms.getFormValues(
+                                formGroup,
+                                schema,
+                              );
+
+                              // Update existing properties and add entity-specific fields
+                              final updatedProperties =
+                                  Map<String, PropertySchema>.from(
+                                schema.properties?.map(
+                                      (key, prop) => values.containsKey(key)
+                                          ? MapEntry(
+                                              key,
+                                              prop.copyWith(
+                                                value: values[key],
+                                              ),
+                                            )
+                                          : MapEntry(key, prop),
+                                    ) ??
+                                    {},
+                              );
+
+                              // Add entity-specific fields (e.g., fieldName_item_0) that aren't in the schema
+                              for (final entry in values.entries) {
+                                if (entry.key.contains('_item_') &&
+                                    !updatedProperties.containsKey(entry.key)) {
+                                  // Create a minimal property schema for the entity-specific field
+                                  updatedProperties[entry.key] = PropertySchema(
+                                    type: PropertySchemaType.string,
+                                    value: entry.value,
+                                    hidden: true,
+                                    // Hide from UI rendering
+                                    includeInForm: true, // Include in form data
+                                  );
+                                }
+                              }
+
+                              final updatedPropertySchema = schema.copyWith(
+                                properties: updatedProperties,
+                              );
+
+                              context.read<FormsBloc>().add(
+                                    FormsUpdateEvent(
+                                      schemaKey: widget.currentSchemaKey,
+                                      schema: schemaObject.copyWith(
+                                        pages: Map.fromEntries(
+                                          schemaObject.pages.entries.map(
+                                            (entry) => MapEntry(
+                                              entry.key,
+                                              entry.key == widget.pageName
+                                                  ? updatedPropertySchema
+                                                  : entry.value,
                                             ),
-                                          )
-                                        : MapEntry(e.key, e.value),
-                                  ) ??
-                                  [],
-                            ),
-                          );
-
-                          context.read<FormsBloc>().add(
-                                FormsUpdateEvent(
-                                  schemaKey: widget.currentSchemaKey,
-                                  schema: schemaObject.copyWith(
-                                    pages: Map.fromEntries(
-                                      schemaObject.pages.entries.map(
-                                        (entry) => MapEntry(
-                                          entry.key,
-                                          entry.key == widget.pageName
-                                              ? updatedPropertySchema
-                                              : entry.value,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              );
+                                  );
 
-                          if ((index) < schemaObject.pages.length - 1) {
-                            // Path 1: Navigate to next page
-                            // Set synchronously to prevent race condition
-                            context.router
-                                .push(FormsRenderRoute(
-                              isEdit: widget.isEdit,
-                              customComponents: widget.customComponents,
-                              currentSchemaKey: widget.currentSchemaKey,
-                              pageName: schemaObject.pages.entries
-                                  .elementAt(index + 1)
-                                  .key,
-                              defaultValues: widget.defaultValues,
-                            ))
-                                .then((_) {
-                              if (mounted)
-                                setState(() => _isSubmitting = false);
-                            });
-                          } else {
-                            if (schemaObject.summaryDetails != null &&
-                                schemaObject.summaryDetails!.show) {
-                              context.router
-                                  .push(FormsRenderRoute(
-                                customComponents: widget.customComponents,
-                                currentSchemaKey: widget.currentSchemaKey,
-                                pageName: '',
-                                isEdit: widget.isEdit,
-                                isSummary: true,
-                                defaultValues: widget.defaultValues,
-                              ))
-                                  .then((_) {
-                                if (mounted)
-                                  setState(() => _isSubmitting = false);
-                              });
-                            } else {
-                              if (schemaObject.showAlertPopUp != null) {
-                                showCustomPopup(
-                                  context: context,
-                                  builder: (BuildContext ctx) => Popup(
-                                      title: localizations.translate(
-                                          schemaObject.showAlertPopUp!.title),
-                                      description: localizations.translate(
-                                          schemaObject.showAlertPopUp!
-                                                  .description ??
-                                              ""),
-                                      actions: [
-                                        DigitButton(
-                                            label: localizations.translate(
-                                                schemaObject.showAlertPopUp!
-                                                    .primaryActionLabel),
-                                            onPressed: () async {
-                                              context.read<FormsBloc>().add(
-                                                  FormsSubmitEvent(
-                                                      isEdit: widget.isEdit,
-                                                      schemaKey: widget
-                                                          .currentSchemaKey));
-                                              // Pop all form pages (FormsRenderRoute)
-                                              Navigator.of(
-                                                ctx,
-                                                rootNavigator: true,
-                                              ).pop();
-                                              context.router.popUntil((route) {
-                                                return route.settings.name !=
-                                                    FormsRenderRoute.name;
-                                              });
-                                            },
-                                            type: DigitButtonType.primary,
-                                            size: DigitButtonSize.large),
-                                        DigitButton(
-                                            label: localizations.translate(
-                                                schemaObject.showAlertPopUp!
-                                                    .secondaryActionLabel),
-                                            onPressed: () {
-                                              Navigator.of(
-                                                ctx,
-                                                rootNavigator: true,
-                                              ).pop();
-                                            },
-                                            type: DigitButtonType.secondary,
-                                            size: DigitButtonSize.large)
-                                      ]),
+                              final currentPage =
+                                  schemaObject.pages.entries.elementAt(index);
+
+                              // Check submitCondition - if true, submit form directly
+                              final submitCondition =
+                                  currentPage.value.submitCondition;
+                              if (submitCondition != null) {
+                                final submitEvalContext =
+                                    buildVisibilityEvaluationContext(
+                                  currentPageKey: widget.pageName,
+                                  currentForm: formGroup,
+                                  pages: schemaObject.pages,
+                                  navigationParams: widget.navigationParams,
                                 );
-                              } else {
-                                // Path 4: Submit directly without popup
-                                context.read<FormsBloc>().add(FormsSubmitEvent(
-                                    isEdit: widget.isEdit,
-                                    schemaKey: widget.currentSchemaKey));
+                                // Add isEdit to context
+                                submitEvalContext['isEdit'] = widget.isEdit;
 
-                                // Pop all form pages (FormsRenderRoute)
-                                context.router.popUntil((route) {
-                                  return route.settings.name !=
-                                      FormsRenderRoute.name;
-                                });
+                                final shouldSubmit =
+                                    evaluateVisibilityExpression(
+                                  submitCondition.expression,
+                                  submitEvalContext,
+                                );
+
+                                if (shouldSubmit) {
+                                  context.read<FormsBloc>().add(
+                                      FormsSubmitEvent(
+                                          isEdit: widget.isEdit,
+                                          schemaKey: widget.currentSchemaKey));
+                                  // Pop all form pages
+                                  context.router.popUntil((route) {
+                                    return route.settings.name !=
+                                        FormsRenderRoute.name;
+                                  });
+                                  return;
+                                }
                               }
-                            }
-                          }
-                        },
-                        type: DigitButtonType.primary,
-                        size: DigitButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
-                      ),
-                    ),
-                  ],
-                ),
-                children: [
-                  DigitCard(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.symmetric(horizontal: spacer2),
-                    children: [
-                      if (schema.label != null) ...[
-                        Text(
-                          resolveTemplateVariables(
-                            localizations.translate(schema.label!),
-                            formValues: getFormValues(formGroup, schema),
-                            defaultValues: widget.defaultValues,
-                            allPageValues: _getAllPageValues(
-                                state.cachedSchemas[widget.currentSchemaKey]!,
-                                currentFormGroup: formGroup,
-                                currentSchema: schema),
+
+                              final conditionalNavigateList =
+                                  currentPage.value.conditionalNavigateTo;
+
+                              // Evaluate conditionalNavigateTo (if present)
+                              if (conditionalNavigateList != null) {
+                                for (final conditionItem
+                                    in conditionalNavigateList) {
+                                  final condition = conditionItem.condition;
+                                  final navigateTo = conditionItem.navigateTo;
+
+                                  final formState =
+                                      context.read<FormsBloc>().state;
+                                  final currentPageKey = widget.pageName;
+
+                                  final currentSchemaKey =
+                                      widget.currentSchemaKey;
+
+                                  final values =
+                                      buildVisibilityEvaluationContext(
+                                    currentPageKey: currentPageKey,
+                                    currentForm: formGroup,
+                                    pages: formState
+                                        .cachedSchemas[currentSchemaKey]!.pages,
+                                    navigationParams: widget.navigationParams,
+                                  );
+
+                                  // Evaluate condition - use direct isEdit check for isEdit conditions
+                                  // since FormulaParser doesn't handle dot notation well
+                                  bool isConditionTrue;
+                                  if (condition == 'isEdit == true' ||
+                                      condition ==
+                                          'navigation.isEdit == true') {
+                                    isConditionTrue = widget.isEdit == true;
+                                  } else if (condition == 'isEdit == false' ||
+                                      condition ==
+                                          'navigation.isEdit == false') {
+                                    isConditionTrue = widget.isEdit == false;
+                                  } else {
+                                    isConditionTrue = evaluateSingleCondition(
+                                        condition, values);
+                                  }
+
+                                  if (isConditionTrue) {
+                                    final targetPageName =
+                                        navigateTo.name as String?;
+                                    final targetPageType =
+                                        navigateTo.type as String?;
+
+                                    // Handle form navigation
+                                    if (targetPageName != null &&
+                                        targetPageType == 'form') {
+                                      context.router.push(FormsRenderRoute(
+                                        isEdit: widget.isEdit,
+                                        customComponents:
+                                            widget.customComponents,
+                                        currentSchemaKey:
+                                            widget.currentSchemaKey,
+                                        pageName: targetPageName,
+                                        defaultValues: widget.defaultValues,
+                                        navigationParams:
+                                            widget.navigationParams,
+                                      ));
+                                      _isSubmitting = false;
+                                      return; // Skip default logic
+                                    }
+
+                                    // Handle direct form submission (skip remaining pages)
+                                    if (targetPageType == 'submit') {
+                                      context.read<FormsBloc>().add(
+                                          FormsSubmitEvent(
+                                              isEdit: widget.isEdit,
+                                              schemaKey:
+                                                  widget.currentSchemaKey));
+                                      // Pop all form pages
+                                      context.router.popUntil((route) {
+                                        return route.settings.name !=
+                                            FormsRenderRoute.name;
+                                      });
+                                      return; // Skip default logic
+                                    }
+                                  }
+                                }
+                              }
+
+                              final pages = schemaObject.pages;
+                              final currentPageKey =
+                                  pages.entries.elementAt(index).key;
+                              final currentOrder =
+                                  pages[currentPageKey]?.order ?? 0;
+
+// Find the next page with an integer order > currentOrder.floor()
+                              final nextPageEntry = pages.entries.where((e) {
+                                final order = e.value.order;
+                                return order != null &&
+                                    order > currentOrder &&
+                                    order % 1 ==
+                                        0; // Only integers (e.g. 6.0, not 5.1)
+                              }).toList()
+                                ..sort((a, b) =>
+                                    a.value.order!.compareTo(b.value.order!));
+
+                              if (nextPageEntry.isNotEmpty) {
+                                context.router.push(FormsRenderRoute(
+                                    isEdit: widget.isEdit,
+                                    customComponents: widget.customComponents,
+                                    currentSchemaKey: widget.currentSchemaKey,
+                                    pageName: nextPageEntry.first.key,
+                                    defaultValues: widget.defaultValues,
+                                    navigationParams: widget.navigationParams));
+                                _isSubmitting = false;
+                              } else {
+                                if (schemaObject.summary) {
+                                  context.router.push(FormsRenderRoute(
+                                      customComponents: widget.customComponents,
+                                      currentSchemaKey: widget.currentSchemaKey,
+                                      pageName: '',
+                                      isEdit: widget.isEdit,
+                                      isSummary: true,
+                                      defaultValues: widget.defaultValues,
+                                      navigationParams:
+                                          widget.navigationParams));
+                                  _isSubmitting = false;
+                                } else {
+                                  final contextValue =
+                                      buildVisibilityEvaluationContext(
+                                    currentPageKey: currentPageKey,
+                                    currentForm: formGroup,
+                                    pages: schemaObject.pages,
+
+                                    /// TODO: fix hardcode not null condition
+                                  );
+                                  if (schema.showAlertPopUp != null) {
+                                    showCustomPopup(
+                                      context: context,
+                                      builder: (BuildContext ctx) => Popup(
+                                          title: localizations.translate(
+                                              _resolveTemplate(
+                                                  schema.showAlertPopUp!.title,
+                                                  schema.showAlertPopUp
+                                                      ?.conditions,
+                                                  contextValue)!),
+                                          description: localizations.translate(
+                                              _resolveTemplate(
+                                                      translateIfPresent(
+                                                          schema.showAlertPopUp
+                                                              ?.description,
+                                                          localizations),
+                                                      schema.showAlertPopUp
+                                                          ?.conditions,
+                                                      contextValue) ??
+                                                  ""),
+
+                                          /// FIXME: need to send null as empty string will take space
+                                          actions: [
+                                            DigitButton(
+                                                label: localizations.translate(
+                                                    schema.showAlertPopUp!
+                                                        .primaryActionLabel),
+                                                onPressed: () {
+                                                  context.read<FormsBloc>().add(
+                                                      FormsSubmitEvent(
+                                                          isEdit: widget.isEdit,
+                                                          schemaKey: widget
+                                                              .currentSchemaKey));
+                                                  // Pop all form pages (FormsRenderRoute)
+                                                  Navigator.of(
+                                                    ctx,
+                                                    rootNavigator: true,
+                                                  ).pop();
+                                                  context.router
+                                                      .popUntil((route) {
+                                                    return route
+                                                            .settings.name !=
+                                                        FormsRenderRoute.name;
+                                                  });
+                                                },
+                                                type: DigitButtonType.primary,
+                                                size: DigitButtonSize.large),
+                                            DigitButton(
+                                                label: localizations.translate(
+                                                    schema.showAlertPopUp!
+                                                        .secondaryActionLabel),
+                                                onPressed: () {
+                                                  Navigator.of(
+                                                    ctx,
+                                                    rootNavigator: true,
+                                                  ).pop();
+                                                  _isSubmitting = false;
+                                                  setState(() {});
+                                                },
+                                                type: DigitButtonType.secondary,
+                                                size: DigitButtonSize.large)
+                                          ]),
+                                    ).then((_) {
+                                      // Reset flag if popup dismissed without submitting
+                                      // (e.g. tapping outside the popup)
+                                      if (_isSubmitting) {
+                                        _isSubmitting = false;
+                                        setState(() {});
+                                      }
+                                    });
+                                  } else {
+                                    context.read<FormsBloc>().add(
+                                        FormsSubmitEvent(
+                                            isEdit: widget.isEdit,
+                                            schemaKey:
+                                                widget.currentSchemaKey));
+                                    // Pop all form pages (FormsRenderRoute)
+
+                                    /// FIXME: NOT BACKWARD COMPATIBLE
+                                    context.router.popUntil((route) {
+                                      return route.settings.name !=
+                                          FormsRenderRoute.name;
+                                    });
+                                  }
+                                }
+                              }
+                            },
+                            type: DigitButtonType.primary,
+                            size: DigitButtonSize.large,
+                            mainAxisSize: MainAxisSize.max,
                           ),
+                        ),
+                      ],
+                    ),
+                    children: [
+                      DigitCard(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: spacer2,
+                        ),
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                height: 0,
+                              ),
+                              if (schema.label != null) ...[
+                                Text(
+                                  localizations.translate(schema.label!),
+                                  style: Theme.of(context)
+                                      .digitTextTheme(context)
+                                      .headingXl
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorTheme
+                                              .primary
+                                              .primary2),
+                                ),
+                                if (schema.description != null &&
+                                    translateIfPresent(schema.description,
+                                            localizations) !=
+                                        null &&
+                                    localizations
+                                        .translate(schema.description!)
+                                        .trim()
+                                        .isNotEmpty) ...[
+                                  const SizedBox(
+                                    height: spacer1,
+                                  ),
+                                  Text(
+                                    localizations
+                                        .translate(schema.description!),
+                                    style: Theme.of(context)
+                                        .digitTextTheme(context)
+                                        .bodyS
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorTheme
+                                                .text
+                                                .secondary),
+                                  ),
+                                ],
+                              ],
+                            ],
+                          ),
+                          JsonForms(
+                            propertySchema: schema,
+                            pageName: widget.pageName,
+                            currentSchemaKey: widget.currentSchemaKey,
+                            childrens: widget.customComponents,
+                            navigationParams: widget.navigationParams,
+                            defaultValues: const {
+                              // 'locality': context.boundary.code,
+                            },
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: spacer2,
+                      ),
+                      Center(
+                        child: Text(
+                          'version ${schemaObject.version}',
                           style: Theme.of(context)
                               .digitTextTheme(context)
-                              .headingXl
+                              .bodyXS
                               .copyWith(
                                   color: Theme.of(context)
                                       .colorTheme
-                                      .primary
-                                      .primary2),
+                                      .text
+                                      .disabled),
                         ),
-                        if (schema.description != null &&
-                            translateIfPresent(
-                                    schema.description, localizations) !=
-                                null &&
-                            translateIfPresent(
-                                    schema.description, localizations)!
-                                .isNotEmpty) ...[
-                          Text(
-                            resolveTemplateVariables(
-                              localizations.translate(schema.description!),
-                              formValues: getFormValues(formGroup, schema),
-                              defaultValues: widget.defaultValues,
-                              allPageValues: _getAllPageValues(
-                                  state.cachedSchemas[widget.currentSchemaKey]!,
-                                  currentFormGroup: formGroup,
-                                  currentSchema: schema),
-                            ),
-                            style: Theme.of(context)
-                                .digitTextTheme(context)
-                                .bodyS
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .colorTheme
-                                        .text
-                                        .secondary),
-                          ),
-                        ],
-                      ],
-                      JsonForms(
-                        propertySchema: schema,
-                        childrens: widget.customComponents,
-                        defaultValues: const {
-                          // 'locality': context.boundary.code,
-                        },
-                        pageName: widget.pageName,
-                        currentSchemaKey: widget.currentSchemaKey,
                       )
                     ],
-                  ),
-                  const SizedBox(
-                    height: spacer2,
-                  ),
-                  Center(
-                    child: Text(
-                      'version ${schemaObject.version}',
-                      style: Theme.of(context)
-                          .digitTextTheme(context)
-                          .bodyXS
-                          .copyWith(
-                              color:
-                                  Theme.of(context).colorTheme.text.disabled),
-                    ),
-                  )
-                ],
-              ),
-            ),
+                  );
+                }),
           );
         },
       ),
     );
   }
 
+  String? _resolveTemplate(
+    String? template,
+    List<AlertCondition>? conditions,
+    Map<String, dynamic> contextValues,
+  ) {
+    if (conditions == null || conditions.isEmpty) {
+      return template;
+    }
+
+    // Find matching condition
+    for (final condition in conditions) {
+      // simple check: if contextValues contain a truthy match
+      final isConditionTrue =
+          evaluateSingleCondition(condition.expression, contextValues);
+
+      if (isConditionTrue) {
+        return template?.replaceAll("{value}", condition.value);
+      }
+
+      if (condition.expression == "DEFAULT") {
+        return template?.replaceAll("{value}", condition.value);
+      }
+    }
+
+    // fallback: return template unchanged
+    return template;
+  }
+
+  /// Builds a multi-entity tab page for capturing same fields for multiple entities.
+  Widget _buildMultiEntityTabPage(
+    BuildContext context,
+    PropertySchema schema,
+    SchemaObject schemaObject,
+  ) {
+    final config = schema.multiEntityConfig!;
+
+    // Get entities from the source page
+    final sourcePage = schemaObject.pages[config.sourcePageKey];
+    final sourceFieldValue =
+        sourcePage?.properties?[config.sourceFieldKey]?.value;
+
+    // Parse entities (could be List, dot-separated string, etc.)
+    final List<dynamic> entities = _parseEntities(sourceFieldValue);
+
+    if (entities.isEmpty) {
+      return Scaffold(
+        body: Center(
+          child: Text(
+            localizations.translate('No entities selected'),
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      );
+    }
+
+    final index = schemaObject.pages.keys.toList().indexOf(widget.pageName);
+
+    return Scaffold(
+      body: Provider<Map<String, dynamic>>.value(
+        value: widget.defaultValues ?? {},
+        child: ReactiveFormBuilder(
+          form: () => fb.group(
+            _buildMultiEntityFormControls(schema, entities),
+          ),
+          builder: (context, formGroup, child) {
+            return ScrollableContent(
+              enableFixedDigitButton: true,
+              header: const Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(spacer2),
+                    child: BackNavigationHelpHeaderWidget(
+                      showBackNavigation: true,
+                    ),
+                  ),
+                  SizedBox.shrink()
+                ],
+              ),
+              footer: DigitCard(
+                margin: const EdgeInsets.only(top: spacer2),
+                children: [
+                  ReactiveFormConsumer(
+                    builder: (context, formGroup, child) => DigitButton(
+                      label: (index) < schemaObject.pages.length - 1
+                          ? localizations
+                              .translate(schema.actionLabel ?? 'Next')
+                          : localizations
+                              .translate(schema.actionLabel ?? 'Submit'),
+                      onPressed: () async {
+                        // Prevent multiple simultaneous submissions
+                        if (_isSubmitting) return;
+
+                        // Set flag synchronously FIRST to block rapid taps
+                        _isSubmitting = true;
+
+                        // Then update UI
+                        setState(() {});
+
+                        // Add small delay to allow custom component to update schema data
+                        await Future.delayed(const Duration(milliseconds: 200));
+
+                        // Mark all controls as touched
+                        formGroup.markAllAsTouched();
+
+                        if (!formGroup.valid) {
+                          // Find the first tab with errors
+                          int? firstErrorTabIndex;
+                          for (int i = 0; i < entities.length; i++) {
+                            final entitySuffix = '_item_$i';
+                            final hasErrorInTab =
+                                formGroup.controls.entries.any(
+                              (entry) =>
+                                  entry.key.endsWith(entitySuffix) &&
+                                  entry.value.errors.isNotEmpty,
+                            );
+                            if (hasErrorInTab) {
+                              firstErrorTabIndex = i;
+                              break;
+                            }
+                          }
+
+                          // Navigate to the tab with errors
+                          if (firstErrorTabIndex != null) {
+                            _multiEntityTabKey.currentState
+                                ?.goToTab(firstErrorTabIndex);
+                          }
+
+                          // Show error toast
+                          final errorMessage = localizations
+                              .translate('CORE_COMMON_VALIDATION_ERROR');
+                          Toast.showToast(
+                            context,
+                            message:
+                                errorMessage == 'CORE_COMMON_VALIDATION_ERROR'
+                                    ? 'CORE_COMMON_VALIDATION_ERROR'
+                                    : errorMessage,
+                            type: ToastType.error,
+                          );
+
+                          _isSubmitting = false;
+                          setState(() {});
+                          return;
+                        }
+
+                        // Extract values and update schema
+                        final values =
+                            JsonForms.getFormValues(formGroup, schema);
+
+                        // Update existing properties and add entity-specific fields
+                        final updatedProperties =
+                            Map<String, PropertySchema>.from(
+                          schema.properties?.map(
+                                (key, prop) => values.containsKey(key)
+                                    ? MapEntry(
+                                        key,
+                                        prop.copyWith(
+                                          value: values[key],
+                                        ),
+                                      )
+                                    : MapEntry(key, prop),
+                              ) ??
+                              {},
+                        );
+
+                        // Add entity-specific fields (e.g., fieldName_item_0) that aren't in the schema
+                        for (final entry in values.entries) {
+                          if (entry.key.contains('_item_') &&
+                              !updatedProperties.containsKey(entry.key)) {
+                            // Create a minimal property schema for the entity-specific field
+                            updatedProperties[entry.key] = PropertySchema(
+                              type: PropertySchemaType.string,
+                              value: entry.value,
+                              hidden: true, // Hide from UI rendering
+                              includeInForm: true, // Include in form data
+                            );
+                          }
+                        }
+
+                        final updatedPropertySchema = schema.copyWith(
+                          properties: updatedProperties,
+                        );
+
+                        context.read<FormsBloc>().add(
+                              FormsUpdateEvent(
+                                schemaKey: widget.currentSchemaKey,
+                                schema: schemaObject.copyWith(
+                                  pages: Map.fromEntries(
+                                    schemaObject.pages.entries.map(
+                                      (entry) => MapEntry(
+                                        entry.key,
+                                        entry.key == widget.pageName
+                                            ? updatedPropertySchema
+                                            : entry.value,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+
+                        // Navigate to next page or submit
+                        final pages = schemaObject.pages;
+                        final currentPageKey =
+                            pages.entries.elementAt(index).key;
+                        final currentOrder = pages[currentPageKey]?.order ?? 0;
+
+                        final nextPageEntry = pages.entries.where((e) {
+                          final order = e.value.order;
+                          return order != null &&
+                              order > currentOrder &&
+                              order % 1 == 0;
+                        }).toList()
+                          ..sort((a, b) =>
+                              a.value.order!.compareTo(b.value.order!));
+
+                        if (nextPageEntry.isNotEmpty) {
+                          context.router.push(FormsRenderRoute(
+                            isEdit: widget.isEdit,
+                            customComponents: widget.customComponents,
+                            currentSchemaKey: widget.currentSchemaKey,
+                            pageName: nextPageEntry.first.key,
+                            defaultValues: widget.defaultValues,
+                            navigationParams: widget.navigationParams,
+                          ));
+                          _isSubmitting = false;
+                        } else {
+                          context.read<FormsBloc>().add(
+                                FormsSubmitEvent(
+                                  isEdit: widget.isEdit,
+                                  schemaKey: widget.currentSchemaKey,
+                                ),
+                              );
+                          context.router.popUntil((route) {
+                            return route.settings.name != FormsRenderRoute.name;
+                          });
+                        }
+                      },
+                      type: DigitButtonType.primary,
+                      size: DigitButtonSize.large,
+                      mainAxisSize: MainAxisSize.max,
+                    ),
+                  ),
+                ],
+              ),
+              children: [
+                DigitCard(
+                  margin: const EdgeInsets.symmetric(horizontal: spacer2),
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (schema.label != null) ...[
+                          Text(
+                            localizations.translate(schema.label!),
+                            style: Theme.of(context)
+                                .digitTextTheme(context)
+                                .headingXl
+                                .copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                          if (schema.description != null) ...[
+                            const SizedBox(height: spacer1),
+                            Text(
+                              localizations.translate(schema.description!),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ],
+                          const SizedBox(height: spacer2),
+                        ],
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.6,
+                          child: entities.length == 1
+                              ? _buildSingleEntityForm(schema, entities[0])
+                              : MultiEntityTabView(
+                                  key: _multiEntityTabKey,
+                                  schema: schema,
+                                  pageName: widget.pageName,
+                                  currentSchemaKey: widget.currentSchemaKey,
+                                  entities: entities,
+                                  customComponents: widget.customComponents,
+                                  navigationParams: widget.navigationParams,
+                                ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Builds a form for a single entity without tabs.
+  Widget _buildSingleEntityForm(PropertySchema schema, dynamic entity) {
+    // Create a schema with renamed fields for the single entity (index 0)
+    final entitySchema = _createSchemaForEntity(schema, 0);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(spacer2),
+      child: JsonForms(
+        propertySchema: entitySchema,
+        pageName: widget.pageName,
+        currentSchemaKey: widget.currentSchemaKey,
+        childrens: widget.customComponents,
+        navigationParams: {
+          ...?widget.navigationParams,
+          'currentEntityIndex': 0,
+          'currentEntity': entity,
+        },
+        defaultValues: widget.defaultValues ?? {},
+      ),
+    );
+  }
+
+  /// Creates a modified schema where field names include the entity index suffix.
+  PropertySchema _createSchemaForEntity(
+      PropertySchema schema, int entityIndex) {
+    final originalProperties = schema.properties ?? {};
+    final modifiedProperties = <String, PropertySchema>{};
+    final entitySuffix = '_item_$entityIndex';
+
+    for (final entry in originalProperties.entries) {
+      final fieldName = entry.key;
+      final fieldSchema = entry.value;
+
+      // Skip fields that have any entity suffix (e.g., _item_0, _item_1)
+      // These are pre-created entity-specific fields handled separately
+      if (RegExp(r'_item_\d+$').hasMatch(fieldName)) {
+        // Only include if it matches THIS entity's suffix
+        if (fieldName.endsWith(entitySuffix)) {
+          modifiedProperties[fieldName] = fieldSchema;
+        }
+        continue;
+      }
+
+      // Skip readonly/hidden fields from renaming
+      final shouldRename = fieldSchema.readOnly != true &&
+          fieldSchema.hidden != true &&
+          !fieldName.startsWith('_') &&
+          fieldName != 'id';
+
+      if (shouldRename) {
+        // Check if a pre-created field with custom validation exists for this entity
+        final targetFieldName = '$fieldName$entitySuffix';
+        if (originalProperties.containsKey(targetFieldName)) {
+          // Skip - the pre-created field will be added when we iterate to it
+          continue;
+        } else {
+          // Rename field for this entity
+          modifiedProperties[targetFieldName] = fieldSchema;
+        }
+      } else {
+        // Keep as-is
+        modifiedProperties[fieldName] = fieldSchema;
+      }
+    }
+
+    return schema.copyWith(properties: modifiedProperties);
+  }
+
+  /// Parses entities from various value formats.
+  List<dynamic> _parseEntities(dynamic value) {
+    if (value == null) return [];
+
+    if (value is List) return value;
+
+    if (value is String && value.contains('.')) {
+      return value.split('.').where((s) => s.trim().isNotEmpty).toList();
+    }
+
+    if (value is String && value.isNotEmpty) {
+      return [value];
+    }
+
+    return [];
+  }
+
+  /// Builds form controls for all entities (all tabs).
+  Map<String, AbstractControl<dynamic>> _buildMultiEntityFormControls(
+    PropertySchema schema,
+    List<dynamic> entities,
+  ) {
+    final Map<String, AbstractControl<dynamic>> controls = {};
+    final originalProperties = schema.properties ?? {};
+
+    debugPrint(
+        'FormsRender: Building form controls for ${entities.length} entities');
+    debugPrint(
+        'FormsRender: Original properties: ${originalProperties.keys.toList()}');
+
+    // Create controls for each entity
+    for (int i = 0; i < entities.length; i++) {
+      final entitySuffix = '_item_$i';
+
+      for (final entry in originalProperties.entries) {
+        final fieldName = entry.key;
+        final fieldSchema = entry.value;
+
+        // Skip fields that have any entity suffix (e.g., _item_0, _item_1)
+        // These are pre-created entity-specific fields handled separately
+        if (RegExp(r'_item_\d+$').hasMatch(fieldName)) {
+          // Only create control if it matches THIS entity's suffix
+          if (fieldName.endsWith(entitySuffix) &&
+              !controls.containsKey(fieldName)) {
+            controls[fieldName] = buildFormControl(
+              fieldName,
+              fieldSchema,
+              schema,
+              defaultValues: widget.defaultValues,
+              schemaKey: widget.currentSchemaKey,
+            );
+            debugPrint(
+                'FormsRender: Created control for pre-created field: $fieldName');
+          }
+          continue;
+        }
+
+        // Skip readonly/hidden fields from renaming
+        final shouldRename = fieldSchema.readOnly != true &&
+            fieldSchema.hidden != true &&
+            !fieldName.startsWith('_') &&
+            fieldName != 'id';
+
+        if (shouldRename) {
+          final suffixedFieldName = '$fieldName$entitySuffix';
+          // Check if a pre-created field exists for this entity
+          if (originalProperties.containsKey(suffixedFieldName)) {
+            // Skip - the pre-created field control will be added when we iterate to it
+            continue;
+          }
+          controls[suffixedFieldName] = buildFormControl(
+            suffixedFieldName,
+            fieldSchema,
+            schema,
+            defaultValues: widget.defaultValues,
+            schemaKey: widget.currentSchemaKey,
+          );
+        } else {
+          // Only add once (not per entity)
+          if (!controls.containsKey(fieldName)) {
+            controls[fieldName] = buildFormControl(
+              fieldName,
+              fieldSchema,
+              schema,
+              defaultValues: widget.defaultValues,
+              schemaKey: widget.currentSchemaKey,
+            );
+          }
+        }
+      }
+    }
+
+    debugPrint('FormsRender: Final controls: ${controls.keys.toList()}');
+    return controls;
+  }
+
   Widget _buildSummaryPage(BuildContext context, SchemaObject schemaObject) {
+    final shownPages = schemaObject.pages.entries.where((entry) {
+      final pageSchema = entry.value;
+
+      final values = pageSchema.properties?.values.map((field) => field.value);
+
+      return values?.any((v) => v != null && v.toString().trim().isNotEmpty) ??
+          false;
+    }).toList();
+
     return ScrollableContent(
         enableFixedDigitButton: true,
         header: const Padding(
@@ -409,7 +1152,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           children: [
             DigitButton(
               mainAxisSize: MainAxisSize.max,
-              isDisabled: _isSubmitting,
               label: localizations.translate('CORE_COMMON_SUBMIT'),
               onPressed: () async {
                 // Prevent multiple simultaneous submissions
@@ -421,61 +1163,17 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                 // Then update UI
                 setState(() {});
 
-                // Add small delay to allow custom components to update
-                await Future.delayed(const Duration(milliseconds: 100));
+                // Add small delay to allow custom component to update schema data
+                await Future.delayed(const Duration(milliseconds: 200));
 
-                if (schemaObject.showAlertPopUp != null) {
-                  showCustomPopup(
-                    context: context,
-                    builder: (BuildContext ctx) => Popup(
-                        title: localizations
-                            .translate(schemaObject.showAlertPopUp!.title),
-                        description: localizations.translate(
-                            schemaObject.showAlertPopUp!.description ?? ""),
-                        actions: [
-                          DigitButton(
-                              label: localizations.translate(schemaObject
-                                  .showAlertPopUp!.primaryActionLabel),
-                              onPressed: () async {
-                                context.read<FormsBloc>().add(FormsSubmitEvent(
-                                    isEdit: widget.isEdit,
-                                    schemaKey: widget.currentSchemaKey));
-                                // Pop all form pages (FormsRenderRoute)
-                                Navigator.of(
-                                  ctx,
-                                  rootNavigator: true,
-                                ).pop();
-                                context.router.popUntil((route) {
-                                  return route.settings.name !=
-                                      FormsRenderRoute.name;
-                                });
-                              },
-                              type: DigitButtonType.primary,
-                              size: DigitButtonSize.large),
-                          DigitButton(
-                              label: localizations.translate(schemaObject
-                                  .showAlertPopUp!.secondaryActionLabel),
-                              onPressed: () {
-                                Navigator.of(
-                                  ctx,
-                                  rootNavigator: true,
-                                ).pop();
-                              },
-                              type: DigitButtonType.secondary,
-                              size: DigitButtonSize.large)
-                        ]),
-                  );
-                } else {
-                  // Direct submit without popup
-                  context.read<FormsBloc>().add(FormsSubmitEvent(
-                      isEdit: widget.isEdit,
-                      schemaKey: widget.currentSchemaKey));
+                context.read<FormsBloc>().add(FormsSubmitEvent(
+                    schemaKey: widget.currentSchemaKey, isEdit: widget.isEdit));
 
-                  // Pop all form pages (FormsRenderRoute)
-                  context.router.popUntil((route) {
-                    return route.settings.name != FormsRenderRoute.name;
-                  });
-                }
+                // Pop all form pages (FormsRenderRoute)
+                /// FIXME: NOT BACKWARD COMPATIBLE
+                context.router.popUntil((route) {
+                  return route.settings.name != FormsRenderRoute.name;
+                });
               },
               type: DigitButtonType.primary,
               size: DigitButtonSize.large,
@@ -483,58 +1181,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           ],
         ),
         children: [
-          if (schemaObject.summaryDetails != null) ...[
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    resolveTemplateVariables(
-                      localizations
-                          .translate(schemaObject.summaryDetails!.heading),
-                      defaultValues: widget.defaultValues,
-                      allPageValues: _getAllPageValues(schemaObject),
-                    ),
-                    style: Theme.of(context)
-                        .digitTextTheme(context)
-                        .headingXl
-                        .copyWith(
-                            color:
-                                Theme.of(context).colorTheme.primary.primary2),
-                  ),
-                  if (schemaObject.summaryDetails?.description != null &&
-                      translateIfPresent(
-                              schemaObject.summaryDetails!.description,
-                              localizations) !=
-                          null &&
-                      translateIfPresent(
-                              schemaObject.summaryDetails!.description,
-                              localizations)!
-                          .isNotEmpty) ...[
-                    Text(
-                      resolveTemplateVariables(
-                        localizations.translate(
-                            schemaObject.summaryDetails!.description!),
-                        defaultValues: widget.defaultValues,
-                        allPageValues: _getAllPageValues(schemaObject),
-                      ),
-                      style: Theme.of(context)
-                          .digitTextTheme(context)
-                          .bodyS
-                          .copyWith(
-                              color:
-                                  Theme.of(context).colorTheme.text.secondary),
-                    ),
-                  ],
-                ],
-              ),
-            )
-          ],
-          for (final entry in schemaObject.pages.entries)
+          for (final entry in shownPages)
             DigitCard(
-              width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.all(spacer2),
               children: [
                 LabelValueSummary(
@@ -565,10 +1213,12 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
   List<LabelValueItem> _renderSummaryLabelValueItems(PropertySchema schema) {
     final properties = schema.properties ?? {};
-    final dateFormatter = DateFormat('dd MMM yyyy');
+    final currentLocale = Localizations.localeOf(context).toString();
+    final dateFormatter = DateFormat('dd MMM yyyy', currentLocale);
 
     return properties.entries
-        .where((entry) => entry.value.includeInSummary != false)
+        .where((entry) =>
+            entry.value.includeInSummary != false && entry.value.hidden != true)
         .map((entry) {
       final label = localizations.translate(entry.value.label ?? entry.key);
       final rawValue = entry.value.value;
@@ -586,6 +1236,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
             .join(', ');
       } else if (rawValue is DateTime) {
         displayValue = dateFormatter.format(rawValue);
+      } else if (rawValue is String && isDateTime(rawValue)) {
+        displayValue = dateFormatter.format(DateTime.parse(rawValue));
       } else if (rawValue is String && isDateLike(rawValue)) {
         try {
           final parsed = parseDate(rawValue);
@@ -611,87 +1263,5 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         padding: const EdgeInsets.symmetric(vertical: spacer1),
       );
     }).toList();
-  }
-
-  Map<String, dynamic> _getAllPageValues(SchemaObject schemaObject,
-      {FormGroup? currentFormGroup, PropertySchema? currentSchema}) {
-    final Map<String, dynamic> allValues = {};
-
-    // First add all saved page values from the schema
-    for (final entry in schemaObject.pages.entries) {
-      final pageKey = entry.key;
-      final pageSchema = entry.value;
-
-      if (pageSchema.properties != null) {
-        for (final propEntry in pageSchema.properties!.entries) {
-          final propKey = propEntry.key;
-          final propValue = propEntry.value.value;
-
-          // Store with page prefix
-          allValues['$pageKey.$propKey'] = propValue;
-
-          // Also store without page prefix for direct access
-          allValues[propKey] = propValue;
-
-          // Handle object type properties that may contain nested data
-          if (propValue is Map<String, dynamic>) {
-            // If the value itself is a map, add its nested properties
-            for (final nestedEntry in propValue.entries) {
-              // Store nested values with full path
-              allValues['$pageKey.$propKey.${nestedEntry.key}'] =
-                  nestedEntry.value;
-              allValues['$propKey.${nestedEntry.key}'] = nestedEntry.value;
-
-              // Also check for deeply nested objects
-              if (nestedEntry.value is Map<String, dynamic>) {
-                final deepMap = nestedEntry.value as Map<String, dynamic>;
-                for (final deepEntry in deepMap.entries) {
-                  allValues[
-                          '$pageKey.$propKey.${nestedEntry.key}.${deepEntry.key}'] =
-                      deepEntry.value;
-                  allValues['$propKey.${nestedEntry.key}.${deepEntry.key}'] =
-                      deepEntry.value;
-                }
-              }
-            }
-          }
-
-          // Also check if this property has nested schema properties
-          if (propEntry.value.type == PropertySchemaType.object &&
-              propEntry.value.properties != null) {
-            // Handle nested object properties from schema definition
-            for (final nestedEntry in propEntry.value.properties!.entries) {
-              final nestedKey = nestedEntry.key;
-              final nestedValue = nestedEntry.value.value;
-              // Store nested values with full path
-              allValues['$pageKey.$propKey.$nestedKey'] = nestedValue;
-              allValues['$propKey.$nestedKey'] = nestedValue;
-            }
-          }
-        }
-      }
-    }
-
-    // Override with current form values if provided (these are live values from the current form)
-    if (currentFormGroup != null && currentSchema != null) {
-      final currentValues = getFormValues(currentFormGroup, currentSchema);
-      for (final entry in currentValues.entries) {
-        allValues[entry.key] = entry.value;
-        // Also add with page prefix for the current page
-        allValues['${widget.pageName}.${entry.key}'] = entry.value;
-
-        // If the value is a map, add nested entries
-        if (entry.value is Map<String, dynamic>) {
-          final nestedMap = entry.value as Map<String, dynamic>;
-          for (final nestedEntry in nestedMap.entries) {
-            allValues['${entry.key}.${nestedEntry.key}'] = nestedEntry.value;
-            allValues['${widget.pageName}.${entry.key}.${nestedEntry.key}'] =
-                nestedEntry.value;
-          }
-        }
-      }
-    }
-
-    return allValues;
   }
 }

@@ -1,67 +1,59 @@
+## 0.0.1
+
+- Dynamic form rendering engine based on JSON schema
+- Multi-page form support with automatic navigation
+- Support for multiple field types: text, dropdown, date, latLng, locality, scanner, and more
+- Validation support using reactive_forms
+- Form state management using BLoC pattern
+- Summary page generation
+- Localization support
+- Theming support via digit_ui_components
+- Added mobile number format support for string type fields
+- Fixed min and maxLength validation skipping for empty strings
+- Added dependency field logic
+- Integrated formula parser for conditional visibility and validation
+- Fixed issue with multiple submit buttons
+- Added support for multiple scanning
+- Added validation for scanning
+- Added dynamic validator resolver context
+
 ## 0.0.12-dev
 
 - Added dynamic validator resolver context
 
 ## 0.0.11-dev
 
-- Updated scanner to support multiple scanning
-- added validation for scanning
+- Added support for multiple scanning
+- Added validation for scanning
 
 ## 0.0.10-dev
 
-- Fixed issue related to multiple submit button
+- Fixed issue with multiple submit buttons
 
 ## 0.0.8-dev
 
 - Added dependency field logic
-- Added formula parser to validate dependency
+- Integrated formula parser for conditional visibility and validation
 
 ## 0.0.4-dev
 
-### BugFix
-- Removed min and maxLength validation for empty string
-
+- Fixed min and maxLength validation skipping for empty strings
 
 ## 0.0.3-dev
 
-### Added
-- Added mobile number for type string
+- Added mobile number format support for string type fields
 
 ## 0.0.2-dev
 
-### Added
 - Dynamic form rendering engine based on JSON schema
-- Page configuration with map-based pages (keyed by page name)
-- Support for multiple field types: `text`, `dropdown`, `latLng`, `locality`, etc.
-- Validation support using `reactive_forms`
-- Built-in navigation and page order logic
-- Integration-ready with `FormsBloc` for loading and managing form state
-- Theming support via `digit_ui_components`
-- Custom format handling for scanner, location picker, and more
-- Form state management using BLoC pattern
 - Multi-page form support with automatic navigation
-- Conditional validation
-- Form submission with data collection and summary generation
-
-### Technical Features
-- JSON-driven form configuration
-- Automatic form control generation
-- Field-level and page-level validation
-- Custom widget builders for different field types
+- Support for multiple field types: text, dropdown, date, latLng, locality, scanner, and more
+- Validation support using reactive_forms
+- Form state management using BLoC pattern
+- Summary page generation
 - Localization support
-- Responsive design with digit_ui_components theming
-- Type-safe form data handling
-- Memory-efficient form state management
+- Theming support via digit_ui_components
 
 ## 0.0.1-dev
 
-### Initial Development Release
-- Dynamic form rendering engine based on JSON schema
-- Page configuration now supports **map-based pages** (keyed by page name)
-- Field types supported:
-    - `text`, `dropdown`, `latLng`, `locality`, etc.
-- Validation support using `reactive_forms`
-- Built-in navigation and page order logic
-- Integration-ready with `FormsBloc` for loading and managing form state
-- Theming support via `digit_ui_components`
-- Custom format handling for scanner, location picker, and more
+- Initial development release

@@ -1,0 +1,77 @@
+import 'package:digit_flow_builder/widgets/implementations/action_popup_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/back_link.dart';
+import 'package:digit_flow_builder/widgets/implementations/expandable_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/proximity_search_widget.dart';
+
+import 'flow_widget_interface.dart';
+import 'implementations/button_widget.dart';
+import 'implementations/card_widget.dart';
+import 'implementations/column_widget.dart';
+import 'implementations/dropdown_widget.dart';
+import 'implementations/filter_widget.dart';
+import 'implementations/icon_widget.dart';
+import 'implementations/info_card_widget.dart';
+import 'implementations/label_pair_list_widget.dart';
+import 'implementations/list_view_widget.dart';
+import 'implementations/menu_card_widget.dart';
+import 'implementations/panel_card_widget.dart';
+import 'implementations/qr_scanner_widget.dart';
+import 'implementations/qr_view_widget.dart';
+import 'implementations/radio.dart';
+import 'implementations/row_widget.dart';
+import 'implementations/search_bar_widget.dart';
+import 'implementations/selection_card.dart';
+import 'implementations/switch_widget.dart';
+import 'implementations/table_widget.dart';
+import 'implementations/tag_widget.dart';
+import 'implementations/text_input_widget.dart';
+import 'implementations/text_widget.dart';
+
+/// Registers all available flow widgets
+class WidgetRegistration {
+  static bool _initialized = false;
+
+  /// Initialize and register all widgets
+  static void initialize() {
+    if (_initialized) return;
+
+    // Register all widget implementations
+    FlowWidgetFactory.register(ActionPopupWidget());
+    FlowWidgetFactory.register(ButtonWidget());
+    FlowWidgetFactory.register(TextWidget());
+    FlowWidgetFactory.register(TextInputWidget());
+    FlowWidgetFactory.register(IconWidget());
+    FlowWidgetFactory.register(CardWidget());
+    FlowWidgetFactory.register(MenuCardWidget());
+    FlowWidgetFactory.register(TableWidget());
+    FlowWidgetFactory.register(SearchBarWidget());
+    FlowWidgetFactory.register(SelectionCardWidget());
+    FlowWidgetFactory.register(ColumnWidget());
+    FlowWidgetFactory.register(RowWidget());
+    FlowWidgetFactory.register(DropdownWidget());
+    FlowWidgetFactory.register(RadioWidget());
+    FlowWidgetFactory.register(FilterWidget());
+    FlowWidgetFactory.register(InfoCardWidget());
+    FlowWidgetFactory.register(SwitchWidget());
+    FlowWidgetFactory.register(TagWidget());
+    FlowWidgetFactory.register(PanelCardWidget());
+    FlowWidgetFactory.register(ListViewWidget());
+    FlowWidgetFactory.register(LabelPairListWidget());
+    FlowWidgetFactory.register(BackLinkWidget());
+    FlowWidgetFactory.register(QrViewWidget());
+    FlowWidgetFactory.register(QRScannerWidget());
+    FlowWidgetFactory.register(ActionPopupWidget());
+    FlowWidgetFactory.register(ProximitySearchWidget());
+    FlowWidgetFactory.register(ExpandableWidget());
+
+    _initialized = true;
+  }
+
+  /// Check if widgets are initialized
+  static bool get isInitialized => _initialized;
+
+  /// Reset registration (mainly for testing)
+  static void reset() {
+    _initialized = false;
+  }
+}

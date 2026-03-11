@@ -1,7 +1,6 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/models/entities/service.dart';
 
 import '../../blocs/peer_to_peer/peer_to_peer.dart';

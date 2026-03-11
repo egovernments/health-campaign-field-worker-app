@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/language_selection_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -131,9 +136,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                                 value.value.toString(),
                               );
                             },
-                            onLanguageSubmit: () => context.router.push(
-                              LoginRoute(),
-                            ),
+                            onLanguageSubmit: () => _checkDeviceRamAndProceed(),
                             languageSubmitLabel: AppLocalizations.of(context)
                                 .translate(i18.common.coreCommonContinue),
                           )
@@ -155,10 +158,20 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     String locale,
   ) {
     setState(() {});
+
+    final filteredModules = localizationModulesList
+        .where((element) =>
+            element.type == Modules.localizationModule &&
+            Constants.homeLocalizationModules.contains(element.name.toString()))
+        .map((e) => e.name.toString())
+        .followedBy([
+          'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()}'
+        ])
+        .join(',');
+
     context.read<LocalizationBloc>().add(
           LocalizationEvent.onLoadLocalization(
-            module:
-                'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.map((e) => e.name.toString()).join(',').toString()}',
+            module: filteredModules,
             tenantId: tenantId,
             locale: locale,
             path: Constants.localizationApiPath,
@@ -171,5 +184,83 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
             code: locale,
           ),
         );
+  }
+
+  /// Check device RAM and show warning dialog if below 2GB, then proceed
+  Future<void> _checkDeviceRamAndProceed() async {
+    if (!Platform.isAndroid) {
+      // Not Android, proceed directly
+      context.router.push(LoginRoute());
+      return;
+    }
+
+    try {
+      final file = File('/proc/meminfo');
+      final contents = await file.readAsString();
+      final lines = contents.split('\n');
+
+      for (final line in lines) {
+        if (line.startsWith('MemTotal:')) {
+          // Extract RAM value in kB
+          final match = RegExp(r'(\d+)').firstMatch(line);
+          if (match != null) {
+            final ramKb = int.tryParse(match.group(1) ?? '0') ?? 0;
+            final ramGb = ramKb / (1024 * 1024); // Convert to GB
+
+            if (ramGb < envConfig.variables.minRamThresholdGb && mounted) {
+              // Show warning dialog for low RAM
+              _showLowRamWarningDialog();
+              return;
+            }
+          }
+          break;
+        }
+      }
+
+      // RAM is sufficient, proceed to login
+      if (mounted) {
+        context.router.push(LoginRoute());
+      }
+    } catch (e) {
+      debugPrint('Error checking RAM: $e');
+      // On error, proceed anyway
+      if (mounted) {
+        context.router.push(LoginRoute());
+      }
+    }
+  }
+
+  /// Show warning dialog for low RAM devices
+  void _showLowRamWarningDialog() {
+    final localizations = AppLocalizations.of(context);
+
+    showCustomPopup(
+      context: context,
+      builder: (popupContext) => Popup(
+        title: localizations.translate(i18.common.lowRamWarningTitle),
+        description: localizations.translate(i18.common.lowRamWarningDesc),
+        type: PopUpType.alert,
+        inlineActions: true,
+        actions: [
+          DigitButton(
+            label: localizations.translate(i18.common.coreCommonContinue),
+            onPressed: () {
+              Navigator.of(popupContext, rootNavigator: true).pop();
+              context.router.push(LoginRoute());
+            },
+            type: DigitButtonType.primary,
+            size: DigitButtonSize.large,
+          ),
+          DigitButton(
+            label: localizations.translate(i18.common.coreCommonGoback),
+            onPressed: () {
+              Navigator.of(popupContext, rootNavigator: true).pop();
+            },
+            type: DigitButtonType.secondary,
+            size: DigitButtonSize.large,
+          ),
+        ],
+      ),
+    );
   }
 }

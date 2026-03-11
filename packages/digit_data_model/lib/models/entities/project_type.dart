@@ -100,8 +100,10 @@ class DeliveryDoseCriteria with DeliveryDoseCriteriaMappable {
 class DeliveryProductVariant with DeliveryProductVariantMappable {
   final int? quantity;
   final String productVariantId;
+  final String name;
   DeliveryProductVariant({
     this.quantity,
     required this.productVariantId,
+    required this.name,
   });
 }

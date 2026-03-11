@@ -27,6 +27,27 @@ const stockDetailsIssuedShowcase = StockDetailsIssuedShowcase();
 const selectSurveyFormShowcase = SelectSurveyFormShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
+const stockReconciliationMetrics = StockReconciliationMetrics();
+
+class StockReconciliationMetrics {
+  const StockReconciliationMetrics();
+
+  String get stockMetrics => 'STOCK_METRICS';
+
+  String get dateOfReconciliation => 'STOCK_RECONCILIATION_DATE';
+
+  String get stockReceived => 'STOCK_RECONCILIATION_STOCK_RECEIVED';
+
+  String get stockIssued => 'STOCK_RECONCILIATION_STOCK_ISSUED';
+
+  String get stockReturned => 'STOCK_RECONCILIATION_STOCK_RETURNED';
+
+  String get stockLost => 'STOCK_RECONCILIATION_STOCK_LOST';
+
+  String get stockDamaged => 'STOCK_RECONCILIATION_STOCK_DAMAGED';
+
+  String get stockOnHand => 'STOCK_RECONCILIATION_STOCK_ON_HAND';
+}
 
 const surveyFormDataShowcase = SurveyFormDataShowcase();
 const surveyFormListShowcase = SurveyFormListShowcase();
@@ -36,11 +57,13 @@ const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
 const nonMobileUser = NonMobileUser();
+const databaseError = DatabaseError();
 
 class Common {
   const Common();
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
+  String get permissionContinue => 'PERMISSION_CONTINUE';
 
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
@@ -57,6 +80,15 @@ class Common {
   String get coreCommonSave => 'CORE_COMMON_SAVE';
 
   String get coreCommonCancel => 'CORE_COMMON_CANCEL';
+
+  String get coreCommonDelete => 'CORE_COMMON_DELETE';
+
+  String get coreCommonQuantityDistributed => 'CORE_COMMON_QUANTITY_DISTRIBUTED';
+
+  String get coreCommonDeleteResource => 'CORE_COMMON_DELETE_RESOURCE';
+
+  String get coreCommonDeleteResourceConfirmation =>
+      'CORE_COMMON_DELETE_RESOURCE_CONFIRMATION';
 
   String get corecommonRequired => 'CORE_COMMON_REQUIRED';
 
@@ -144,9 +176,37 @@ class Common {
   String get locationCapturing => 'CAPTURING_LOCATION';
 
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
+
   String get coreCommonError => 'CORE_COMMON_UNKNOWN_ERROR_OCCURRED';
+
   String get coreCommonErrorDescription =>
       'CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION';
+
+  String get permissionsAlert => 'PERMISSIONS_ALERT';
+
+  String get enablePermissionCheckbox =>
+      'ENABLE_PERMISSION_CHECKBOX';
+
+  String get allowPermissions => 'CORE_COMMON_ALLOW_PERMISSIONS';
+
+  String get grantPermission => 'GRANT_PERMISSION';
+
+  String get permissionDeniedOpenSettings => 'PERMISSION_DENIED_OPEN_SETTINGS';
+
+  String get openSettings => 'OPEN_SETTINGS';
+
+  String get permissionNotGranted => 'CORE_COMMON_PERMISSION_NOT_GRANTED';
+
+  String get permissionGranted => 'CORE_COMMON_PERMISSION_GRANTED';
+
+  String get lowRamWarning => 'CORE_COMMON_LOW_RAM_WARNING';
+
+  String get lowRamWarningTitle => 'CORE_COMMON_LOW_RAM_WARNING_TITLE';
+
+  String get lowRamWarningDesc => 'CORE_COMMON_LOW_RAM_WARNING_DESC';
+
+  String get allowBackgroundActivityDesc =>
+      'PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY';
 
   String get qrInventory => 'QR_INVENTORY';
 
@@ -162,10 +222,6 @@ class HomeShowcase {
 
   String get distributorBeneficiaries {
     return 'DISTRIBUTOR_HOME_SHOWCASE_BENEFICIARIES';
-  }
-
-  String get distributionPoint {
-    return 'DISTRIBUTOR_HOME_SHOWCASE_DISTRIBUTION';
   }
 
   String get distributorFileComplaint {
@@ -375,6 +431,7 @@ class Login {
   String get actionLabel => 'LOGIN_ACTION_LABEL';
 
   String get unableToLoginText => 'UNABLE_TO_LOGIN';
+
   String get qrLogin => 'QR_LOGIN';
 }
 
@@ -558,8 +615,6 @@ class Home {
   const Home();
 
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
-
-  String get distributionLabel => 'HOME_DISTRIBUTION_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
 
@@ -1189,4 +1244,14 @@ class NonMobileUser {
   String get showQrCodeBtnLabel => 'NON_MOBILE_USER_QR_BTN_LABEL';
 
   String get showQrCodeLabel => 'NON_MOBILE_USER_QR_LABEL';
+}
+
+class DatabaseError {
+  const DatabaseError();
+
+  String get databaseErrorTitle => 'DATABASE_ERROR_TITLE';
+
+  String get databaseErrorMessage => 'DATABASE_ERROR_MESSAGE';
+
+  String get closeAppButton => 'DATABASE_ERROR_CLOSE_APP';
 }

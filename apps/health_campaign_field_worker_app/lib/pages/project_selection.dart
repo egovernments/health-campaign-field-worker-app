@@ -10,10 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 
 import '../blocs/auth/auth.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/project/project.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
+import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
@@ -77,7 +79,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               final projectSelected = state.selectedProject;
 
               if (syncDialogRoute?.isActive ?? false) {
-                Navigator.of(context).removeRoute(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true).removeRoute(syncDialogRoute!);
               }
 
               if (error != null) {
@@ -97,7 +99,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                           ? (cxt) {
                               if (syncDialogRoute != null &&
                                   syncDialogRoute!.isActive) {
-                                Navigator.of(cxt).removeRoute(syncDialogRoute!);
+                                Navigator.of(cxt, rootNavigator: true).removeRoute(syncDialogRoute!);
                               }
                               context
                                   .read<ProjectBloc>()
@@ -106,7 +108,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                           : (cxt) {
                               if (syncDialogRoute != null &&
                                   syncDialogRoute!.isActive) {
-                                Navigator.of(cxt).removeRoute(syncDialogRoute!);
+                                Navigator.of(cxt, rootNavigator: true).removeRoute(syncDialogRoute!);
                               }
                               cxt.read<ProjectBloc>().add(
                                     ProjectSelectProjectEvent(
@@ -121,14 +123,14 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                       ),
                       action: (context) {
                         if (syncDialogRoute?.isActive ?? false) {
-                          Navigator.of(context).removeRoute(syncDialogRoute!);
+                          Navigator.of(context, rootNavigator: true).removeRoute(syncDialogRoute!);
                         }
                       },
                     ),
                   ),
                 );
 
-                Navigator.of(context).push(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true).push(syncDialogRoute!);
 
                 return;
               } else if (state.loading) {
@@ -143,7 +145,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   ),
                 );
 
-                Navigator.of(context).push(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true).push(syncDialogRoute!);
               }
 
               final selectedProject = state.selectedProject;
@@ -242,8 +244,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     await triggerLocalizationIfUpdated(
       context: context,
       locale: AppSharedPreferences().getSelectedLocale!,
-      moduleKey: 'REGISTRATIONFLOW,DELIVERYFLOW',
-
+      moduleKey:
+          'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,CLOSEHOUSEHOLD,COMPLAINTS,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,CHECKLIST',
       /// TODO: NEED TO MOVE CONSTANT FILE
       projectReferenceId: context.selectedProject.referenceID ?? '',
     );
@@ -253,9 +255,18 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);
+      context
+          .read<LocalizationBloc>()
+          .add(LocalizationEvent.onLoadLocalization(
+        module: 'hcm-permissionhandler-${context.selectedProject.referenceID}',
+        tenantId: envConfig.variables.tenantId,
+        locale: AppSharedPreferences()
+            .getSelectedLocale!,
+        path: Constants.localizationApiPath,
+      ));
       if (mounted) {
         context.router.replaceAll([
-          BoundarySelectionRoute(),
+          const PermissionsRoute(),
         ]);
       }
     } catch (e) {

@@ -1,0 +1,82 @@
+name: digit_flow_builder
+description: "A JSON-driven dynamic UI rendering framework that builds complete screens and workflows from configuration. Flow configs are registered in `FlowRegistry` by the host application, and the framework renders forms or templates, handles user actions (search, create, update, delete, navigate), and manages state — all without writing screen-level code."
+version: 0.0.1
+homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_flow_builder
+repository: https://github.com/egovernments/health-campaign-field-worker-app
+issue_tracker: https://github.com/egovernments/health-campaign-field-worker-app/issues
+documentation: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_flow_builder#readme
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  digit_crud_bloc: ^0.0.1
+  digit_data_converter: ^0.0.1
+  digit_forms_engine: ^0.0.1
+  digit_ui_components: ^0.3.0
+  flutter_bloc: ^8.1.5
+  auto_route: ^8.1.3
+  digit_data_model: ^1.3.0
+  digit_formula_parser: ^1.2.0
+  collection: ^1.18.0
+  intl: ^0.19.0
+  qr_flutter: ^4.1.0
+  screen_protector: ^1.4.1
+  digit_scanner: ^1.0.7+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  freezed: ^2.1.0+1
+  json_serializable: ^6.4.0
+  drift_dev: ^2.14.1
+  bloc_test: ^9.1.0
+  mocktail: ^1.0.2
+  build_runner: ^2.4.11
+  dart_mappable_builder:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: master
+      path: ./packages/dart_mappable_builder
+  auto_route_generator: ^8.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+# To add assets to your package, add an assets section, like this:
+# assets:
+#   - images/a_dot_burr.jpeg
+#   - images/a_dot_ham.jpeg
+#
+# For details regarding assets in packages, see
+# https://flutter.dev/assets-and-images/#from-packages
+#
+# An image asset can refer to one or more resolution-specific "variants", see
+# https://flutter.dev/assets-and-images/#resolution-aware
+
+# To add custom fonts to your package, add a fonts section here,
+# in this "flutter" section. Each entry in this list should have a
+# "family" key with the font family name, and a "fonts" key with a
+# list giving the asset and other descriptors for the font. For
+# example:
+# fonts:
+#   - family: Schyler
+#     fonts:
+#       - asset: fonts/Schyler-Regular.ttf
+#       - asset: fonts/Schyler-Italic.ttf
+#         style: italic
+#   - family: Trajan Pro
+#     fonts:
+#       - asset: fonts/TrajanPro.ttf
+#       - asset: fonts/TrajanPro_Bold.ttf
+#         weight: 700
+#
+# For details regarding fonts in packages, see
+# https://flutter.dev/custom-fonts/#from-packages

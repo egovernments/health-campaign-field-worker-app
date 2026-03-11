@@ -28,7 +28,14 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   Widget build(BuildContext context) {
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
-    final inputFormatter = getPatternFormatter(validations);
+    final patternFormatter = getPatternFormatter(validations);
+    final noEmojiFilter = FilteringTextInputFormatter.allow(
+      RegExp(r'[\x00-\x7F]'), // ASCII only (0-127)
+    );
+    final formatters = [
+      noEmojiFilter,
+      if (patternFormatter != null) patternFormatter,
+    ];
 
     return ReactiveFormConsumer(
       builder: (context, formGroup, child) {
@@ -56,7 +63,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
                 form.control(formControlName).value = value;
               },
               errorMessage: field.errorText,
-              inputFormatters: inputFormatter != null ? [inputFormatter] : null,
+              inputFormatters: formatters,
             ),
           ),
         );

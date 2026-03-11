@@ -28,6 +28,7 @@ class JsonSchemaCheckboxBuilder extends JsonSchemaBuilder<bool> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             DigitCheckbox(
+              capitalizeFirstLetter: false,
               isRequired: isRequired ?? false,
               readOnly: readOnly,
               label: label,

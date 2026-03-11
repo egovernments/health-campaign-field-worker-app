@@ -1,0 +1,434 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DIGIT Flow Builder Configuration Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "initialPage": {
+      "type": "string"
+    },
+    "project": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number"
+    },
+    "disabled": {
+      "type": "boolean"
+    },
+    "isSelected": {
+      "type": "boolean"
+    },
+    "flows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "screenType": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "heading": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "project": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "isSelected": {
+            "type": "boolean"
+          },
+          "header": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "format": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format"
+              ],
+              "additionalProperties": true
+            }
+          },
+          "footer": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "format": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format"
+              ],
+              "additionalProperties": true
+            }
+          },
+          "body": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "format": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format"
+              ],
+              "additionalProperties": true
+            }
+          },
+          "wrapperConfig": {
+            "type": "object",
+            "properties": {
+              "wrapperName": {
+                "type": "string"
+              },
+              "rootEntity": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "wrapperName",
+              "rootEntity"
+            ],
+            "additionalProperties": true
+          },
+          "pages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "page": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "order": {
+                  "type": "number"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "actionLabel": {
+                  "type": "string"
+                },
+                "navigateTo": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "key": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "value"
+                        ],
+                        "additionalProperties": true
+                      }
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "type"
+                  ],
+                  "additionalProperties": true
+                },
+                "properties": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "order": {
+                        "type": "number"
+                      },
+                      "value": {
+                        "type": "string"
+                      },
+                      "format": {
+                        "type": "string"
+                      },
+                      "hidden": {
+                        "type": "boolean"
+                      },
+                      "tooltip": {
+                        "type": "string"
+                      },
+                      "helpText": {
+                        "type": "string"
+                      },
+                      "infoText": {
+                        "type": "string"
+                      },
+                      "readOnly": {
+                        "type": "boolean"
+                      },
+                      "fieldName": {
+                        "type": "string"
+                      },
+                      "deleteFlag": {
+                        "type": "boolean"
+                      },
+                      "innerLabel": {
+                        "type": "string"
+                      },
+                      "systemDate": {
+                        "type": "boolean"
+                      },
+                      "errorMessage": {
+                        "type": "string"
+                      },
+                      "isMultiSelect": {
+                        "type": "boolean"
+                      },
+                      "includeInForm": {
+                        "type": "boolean"
+                      },
+                      "includeInSummary": {
+                        "type": "boolean"
+                      },
+                      "schemaCode": {
+                        "type": "string"
+                      },
+                      "validations": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string"
+                            },
+                            "value": {},
+                            "message": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "type"
+                          ],
+                          "additionalProperties": true
+                        }
+                      },
+                      "enums": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "code",
+                            "name"
+                          ],
+                          "additionalProperties": true
+                        }
+                      },
+                      "visibilityCondition": {
+                        "type": "object",
+                        "properties": {
+                          "expression": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "expression"
+                        ],
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "label",
+                      "order",
+                      "format",
+                      "fieldName"
+                    ],
+                    "additionalProperties": true
+                  }
+                },
+                "showAlertPopUp": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "primaryActionLabel": {
+                      "type": "string"
+                    },
+                    "secondaryActionLabel": {
+                      "type": "string"
+                    },
+                    "conditions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "expression": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "expression",
+                          "value"
+                        ],
+                        "additionalProperties": true
+                      }
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "required": [
+                "page",
+                "type",
+                "label",
+                "order",
+                "properties"
+              ],
+              "additionalProperties": true
+            }
+          },
+          "initActions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "actionType": {
+                  "type": "string"
+                },
+                "properties": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "required": [
+                "actionType",
+                "properties"
+              ],
+              "additionalProperties": true
+            }
+          },
+          "onAction": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "actionType": {
+                  "type": "string"
+                },
+                "properties": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "condition": {
+                  "type": "object",
+                  "properties": {
+                    "expression": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": true
+                },
+                "actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "actionType": {
+                        "type": "string"
+                      },
+                      "properties": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "actionType",
+                      "properties"
+                    ],
+                    "additionalProperties": true
+                  }
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "screenType",
+          "name"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  "required": [
+    "name",
+    "flows"
+  ],
+  "additionalProperties": true
+}
