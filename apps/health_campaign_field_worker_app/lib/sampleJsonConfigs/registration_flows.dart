@@ -974,7 +974,8 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
                     "format": "button",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
+                    "visible":
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -986,11 +987,13 @@ final dynamic sampleFlows = {
                             },
                             {
                               "key": "HouseholdClientReferenceId",
-                              "value": "{{item.member.0.householdClientReferenceId}}"
+                              "value":
+                                  "{{item.member.0.householdClientReferenceId}}"
                             },
                             {
                               "key": "ProjectBeneficiaryClientReferenceId",
-                              "value": "{{item.projectBeneficiary.0.clientReferenceId}}"
+                              "value":
+                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
                             }
                           ],
                           "name": "UNABLETODELIVER",
@@ -1288,10 +1291,7 @@ final dynamic sampleFlows = {
           "heading": "UNABLETODELIVERY_FLOW_SCREEN_HEADING",
           "summary": false,
           "version": 1,
-          "navigateTo": {
-            "name": "household-overview",
-            "type": "template"
-          },
+          "navigateTo": {"name": "household-overview", "type": "template"},
           "properties": [
             {
               "type": "string",
@@ -1315,26 +1315,18 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "UNABLETODELIVERY_FLOW_reason_REQUIRED_ERROR_MESSAGE"
+                  "message":
+                      "UNABLETODELIVERY_FLOW_reason_REQUIRED_ERROR_MESSAGE"
                 }
               ],
               "enums": [
-                {
-                  "code": "BENEFICIARY_DIED",
-                  "name": "BENEFICIARY_DIED"
-                },
+                {"code": "BENEFICIARY_DIED", "name": "BENEFICIARY_DIED"},
                 {
                   "code": "BENEFICIARY_MIGRATED",
                   "name": "BENEFICIARY_MIGRATED"
                 },
-                {
-                  "code": "BENEFICIARY_ABSENT",
-                  "name": "BENEFICIARY_ABSENT"
-                },
-                {
-                  "code": "BENEFICIARY_REFUSED",
-                  "name": "BENEFICIARY_REFUSED"
-                }
+                {"code": "BENEFICIARY_ABSENT", "name": "BENEFICIARY_ABSENT"},
+                {"code": "BENEFICIARY_REFUSED", "name": "BENEFICIARY_REFUSED"}
               ],
               "errorMessage": ""
             },
@@ -1375,10 +1367,7 @@ final dynamic sampleFlows = {
                 "value": "BENEFICIARY_ABSENT_STATUS",
                 "expression": "unableToDeliver.reason == BENEFICIARY_ABSENT"
               },
-              {
-                "value": "BENEFICIARY_REFUSED_STATUS",
-                "expression": "DEFAULT"
-              }
+              {"value": "BENEFICIARY_REFUSED_STATUS", "expression": "DEFAULT"}
             ],
             "description": "UNABLETODELIVER_FLOWT_ALERT_DESCRIPTION",
             "primaryActionLabel": "UNABLETODELIVER_FLOW_ACTION_SUBMIT",
@@ -1408,9 +1397,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {
-                  "message": "Failed to fetch config."
-                }
+                "properties": {"message": "Failed to fetch config."}
               }
             ],
             "configName": "unableToDeliverConfig"
@@ -1423,9 +1410,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {
-                  "message": "Failed to create household."
-                }
+                "properties": {"message": "Failed to create household."}
               }
             ]
           }
@@ -1448,9 +1433,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {
-                  "message": "Navigation failed."
-                }
+                "properties": {"message": "Navigation failed."}
               }
             ],
             "navigationMode": "popUntilAndPush",
@@ -3308,10 +3291,7 @@ final dynamic sampleFlows = {
                     "value":
                         "{{navigation.ProjectBeneficiaryClientReferenceId}}"
                   },
-                  {
-                    "key": "status",
-                    "value": "INELIGIBLE"
-                  }
+                  {"key": "status", "value": "INELIGIBLE"}
                 ],
                 "onError": [
                   {
