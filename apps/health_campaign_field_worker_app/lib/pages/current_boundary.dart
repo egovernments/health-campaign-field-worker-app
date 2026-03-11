@@ -71,7 +71,7 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: boundaries.length,
                     separatorBuilder: (_, __) =>
-                        const SizedBox(height: spacer1),
+                        const SizedBox(height: spacer4),
                     itemBuilder: (context, index) {
                       final boundary = boundaries[index];
 
@@ -123,6 +123,7 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: spacer2),
                       Text(
                         localizations.translate(
                           i18.common.wantToChooseAnotherBoundary,
@@ -137,7 +138,7 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         type: DigitButtonType.secondary,
                         size: DigitButtonSize.medium,
-                        prefixIcon: Icons.file_copy_sharp,
+                        prefixIcon: Icons.location_on_outlined,
                         label: localizations.translate(
                           i18.common.chooseAnotherBoundary,
                         ),
