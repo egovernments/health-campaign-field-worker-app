@@ -337,29 +337,55 @@ void initializeFunctionRegistry() {
     bool recordedSideEffect = false;
 
     if (tasks.isNotEmpty) {
-      final item = tasks.last;
+      // Get currentRunningCycle from third argument if provided
+      final currentRunningCycle = args.length > 2
+          ? int.tryParse(args[2]?.toString() ?? '')
+          : null;
 
-      Map<String, dynamic> lastTask;
+      for (final item in tasks) {
+        Map<String, dynamic> task;
 
-      if (item is Map<String, dynamic>) {
-        lastTask = item;
-      } else {
-        try {
-          lastTask = (item as dynamic).toMap() as Map<String, dynamic>;
-        } catch (_) {
+        if (item is Map<String, dynamic>) {
+          task = item;
+        } else {
           try {
-            lastTask = (item as dynamic).toJson() as Map<String, dynamic>;
+            task = (item as dynamic).toMap() as Map<String, dynamic>;
           } catch (_) {
-            lastTask = <String, dynamic>{};
+            try {
+              task = (item as dynamic).toJson() as Map<String, dynamic>;
+            } catch (_) {
+              continue;
+            }
           }
         }
-      }
 
-      if (lastTask['status'] == TaskStatus.ineligible ||
-          lastTask['status'] == TaskStatus.beneficiaryDied ||
-          lastTask['status'] == TaskStatus.beneficiaryMigrated ||
-          lastTask['status'] == TaskStatus.beneficiaryAbsent ||
-          lastTask['status'] == TaskStatus.beneficiaryRefused) return false;
+        // BENEFICIARY_DIED returns false immediately regardless of cycle
+        if (task['status'] == TaskStatus.beneficiaryDied) return false;
+
+        // For other ineligible statuses, only check tasks matching the current cycle
+        if (currentRunningCycle != null) {
+          final additionalFields = task['additionalFields'];
+          final fields = additionalFields is Map
+              ? additionalFields['fields'] as List?
+              : null;
+          int? taskCycleIndex;
+          if (fields != null) {
+            for (final field in fields) {
+              if (field is Map && field['key'] == 'cycleIndex') {
+                taskCycleIndex =
+                    int.tryParse(field['value']?.toString() ?? '');
+                break;
+              }
+            }
+          }
+          if (taskCycleIndex != currentRunningCycle) continue;
+        }
+
+        if (task['status'] == TaskStatus.ineligible ||
+            task['status'] == TaskStatus.beneficiaryMigrated ||
+            task['status'] == TaskStatus.beneficiaryAbsent ||
+            task['status'] == TaskStatus.beneficiaryRefused) return false;
+      }
     }
 
     if (tasks.isNotEmpty && sideEffects.isNotEmpty) {
@@ -423,12 +449,12 @@ void initializeFunctionRegistry() {
       }
     }
 
-    if (lastTask == null) return '';
+    if (lastTask == null) return TaskStatus.ineligible.toString();
 
     // Get and normalize the status
     final status = lastTask['status']?.toString().trim().toUpperCase() ?? '';
 
-    if (status.isEmpty) return '';
+    if (status.isEmpty) return TaskStatus.ineligible.toString();
 
     // Return the status string for ineligible/non-delivered statuses
     if (status == TaskStatus.ineligible ||
