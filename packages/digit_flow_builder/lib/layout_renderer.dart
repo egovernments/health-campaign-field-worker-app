@@ -305,7 +305,6 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                               color: Theme.of(context).colorTheme.alert.info
                             ),
                             type: TagType.monochrome,
-                            // isStroke: true,
                             customIcon: Icon(Icons.location_on_outlined, color: Theme.of(context).colorTheme.alert.info, size: 16,),
                             themeData: TagThemeData(
                               monochromeBackgroundColor: Theme.of(context).colorTheme.alert.infoBg,
