@@ -406,12 +406,12 @@ void initializeFunctionRegistry() {
       }
     }
 
-    if (lastTask == null) return '';
+    if (lastTask == null) return TaskStatus.ineligible.toString();
 
     // Get and normalize the status
     final status = lastTask['status']?.toString().trim().toUpperCase() ?? '';
 
-    if (status.isEmpty) return '';
+    if (status.isEmpty) return TaskStatus.ineligible.toString();
 
     // Return the status string for ineligible/non-delivered statuses
     if (status == TaskStatus.ineligible ||
