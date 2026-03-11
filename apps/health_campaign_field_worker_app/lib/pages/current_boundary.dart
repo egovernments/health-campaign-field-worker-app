@@ -38,14 +38,13 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
 
         return Scaffold(
           body: ScrollableContent(
-            backgroundColor: Colors.white,
             header: const BackNavigationHelpHeaderWidget(
               showHelp: false,
             ),
             slivers: [
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  padding: const EdgeInsets.only(left: spacer4, right: spacer4, top: spacer2, bottom: spacer4),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -60,7 +59,6 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: spacer2),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
