@@ -76,9 +76,10 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      path: "../../packages/attendance_management"
-      relative: true
-    source: path
+      name: attendance_management
+      sha256: "4cff17a4188f05010fffc0f853549ec09d035581f3409b058e0952a6999f427c"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.6"
   audioplayers:
     dependency: transitive
@@ -532,30 +533,34 @@ packages:
   digit_crud_bloc:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_crud_bloc"
-      relative: true
-    source: path
+      name: digit_crud_bloc
+      sha256: "13109a2052f63385c5c9e64b87ac403cc3c9a5b1e9d7ce7c1341202bf55351c5"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1"
   digit_data_converter:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_converter"
-      relative: true
-    source: path
+      name: digit_data_converter
+      sha256: "6763a67b6dffa4b6820a7f010488741d32cf39d3d414b45883bbe62a4aad729d"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1"
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
+      name: digit_data_model
+      sha256: d59c5082ff5ad8ddb7ee87c0e150efa1a1de031034713d73d0bae9a0393ba95a
+      url: "https://pub.dev"
+    source: hosted
     version: "1.3.0"
   digit_dss:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_dss"
-      relative: true
-    source: path
+      name: digit_dss
+      sha256: "6594aa88e2d6e328be33291967c949b07afabffa4159985480b792637e2812bb"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.5"
   digit_firebase_services:
     dependency: "direct main"
@@ -568,23 +573,26 @@ packages:
   digit_flow_builder:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_flow_builder"
-      relative: true
-    source: path
+      name: digit_flow_builder
+      sha256: "9839767ad6b8a1bbfd6596a06ad5501de23e6fb1de7b4e9b5c3368c7c70b457a"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1"
   digit_forms_engine:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_forms_engine"
-      relative: true
-    source: path
+      name: digit_forms_engine
+      sha256: c5faf078d30b8284da196387c7a1b5ae1d5c31a9c3ed6e6c93d9c1cfd4fd1cce
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1"
   digit_formula_parser:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../../packages/digit_formula_parser"
-      relative: true
-    source: path
+      name: digit_formula_parser
+      sha256: "5d1d09c302ae05c88bb3b283b51dc5dd95eaf8917b3ea2a5df7ea8603a54b330"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.2.0"
   digit_location_tracker:
     dependency: "direct main"
@@ -597,25 +605,27 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
+      name: digit_scanner
+      sha256: f16f7842fc434036695bc0b48e57537918a548ebfd980bde3699e31af4ea33f4
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.7+1"
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_showcase"
-      relative: true
-    source: path
-    version: "1.0.2+1"
+      name: digit_showcase
+      sha256: c1810508f03bece3310b136d36d80265c39ec8cca89384b7a1f1fd0a2132b3c5
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: fa61ba8e61ec32aa4f2d8eb195ffda1ac40ae3201aa90eadff0eeca5fbfa9cc5
+      sha256: "42938eca25479a36a0aaf585b242e1820b4d19678b71bc31c6e49ab93dc32437"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.3.0+2"
   dio:
     dependency: "direct main"
     description:
@@ -2084,9 +2094,10 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      path: "../../packages/survey_form"
-      relative: true
-    source: path
+      name: survey_form
+      sha256: cf21e96580062cca65cd1ade3b45fcdf91d97a7e9f98741af5495381535b3126
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.4"
   sync_http:
     dependency: transitive
@@ -2170,10 +2181,11 @@ packages:
   transit_post:
     dependency: "direct main"
     description:
-      path: "../../packages/transit_post"
-      relative: true
-    source: path
-    version: "1.0.0"
+      name: transit_post
+      sha256: eadb301228c45da17814b82170c0120422b3da5c05bbce1f64582f7d186ea3b2
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   type_plus:
     dependency: transitive
     description:
@@ -2431,5 +2443,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.4.3 <4.0.0"
+  dart: ">=3.4.3 <3.9.0"
   flutter: ">=3.22.0"
