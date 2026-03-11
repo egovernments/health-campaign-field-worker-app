@@ -50,6 +50,10 @@ class RefreshSearchExecutor extends ActionExecutor {
     final compositeKey =
         crudCtx?.compositeKey ?? getEffectiveCompositeKey(context, contextData);
 
+    debugPrint('REFRESH_SEARCH: execute() called - direction=$direction, '
+        'crudCtx=${crudCtx != null}, compositeKey=$compositeKey, '
+        'contextData keys=${contextData.keys}');
+
     if (compositeKey == null) {
       debugPrint('REFRESH_SEARCH: No composite key found, cannot refresh');
       return contextData;
@@ -57,12 +61,14 @@ class RefreshSearchExecutor extends ActionExecutor {
 
     // Check if there are any accumulated filters for this screen
     final hasFilters = SearchStateManager().hasFiltersForScreen(compositeKey);
+    debugPrint('REFRESH_SEARCH: hasFilters=$hasFilters for compositeKey=$compositeKey');
 
     if (!hasFilters) {
       debugPrint('REFRESH_SEARCH: No accumulated filters for screen, skipping');
       return contextData;
     }
 
+    debugPrint('REFRESH_SEARCH: Calling _executeWithBidirectionalPagination');
     // Execute with bidirectional pagination support
     return _executeWithBidirectionalPagination(
       context,
@@ -80,11 +86,16 @@ class RefreshSearchExecutor extends ActionExecutor {
     String direction,
     Map<String, dynamic>? paginationConfig,
   ) async {
+    debugPrint('REFRESH_SEARCH: _executeWithBidirectionalPagination ENTERED - '
+        'compositeKey=$compositeKey, direction=$direction');
+
     final stateManager = SearchStateManager();
     const paginationKey = '_pagination';
 
     // Get config for default pagination settings
-    final config = FlowRegistry.getByName(compositeKey.split('::').last);
+    final screenName = compositeKey.split('::').first;
+    debugPrint('REFRESH_SEARCH: Looking up FlowRegistry with screenName=$screenName');
+    final config = FlowRegistry.getByName(screenName);
     final defaultPaginationConfig =
         config?['wrapperConfig']?['searchConfig']?['pagination'];
     final defaultLimit = defaultPaginationConfig?['limit'] as int? ?? 10;
@@ -177,11 +188,10 @@ class RefreshSearchExecutor extends ActionExecutor {
               ?.cast<String>() ??
           [],
       pagination: PaginationParams(offset: offset, limit: limit),
-      filterLogic: MultiTableFilterLogic.and,
     );
 
     // Set mode in registry - FlowCrudBloc.onTransition will handle it
-    final registryKey = compositeKey.split('::').last;
+    final registryKey = compositeKey.split('::').first;
     FlowCrudStateRegistry().setScrollDirection(registryKey, direction);
     FlowCrudStateRegistry().setPaginationInfo(
       registryKey,

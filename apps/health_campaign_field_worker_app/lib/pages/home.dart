@@ -906,11 +906,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                       to: 'task',
                       localKey: 'clientReferenceId',
                       foreignKey: 'projectBeneficiaryClientReferenceId'),
+
                   const RelationshipMapping(
-                      from: 'projectBeneficiary',
-                      to: 'referral',
-                      localKey: 'clientReferenceId',
-                      foreignKey: 'projectBeneficiaryClientReferenceId'),
+                      from: 'identifier',
+                      to: 'hFReferral',
+                      localKey: 'identifierId',
+                      foreignKey: 'beneficiaryId'),
+
                   // Conditional mapping
                   if (FlowBuilderSingleton().beneficiaryType ==
                       BeneficiaryType.household)
@@ -1584,7 +1586,7 @@ void setPackagesSingleton(BuildContext context) {
                     .map((e) => e.code.snakeCase.toUpperCase())
                     .toList();
               }),
-          checklistTypes: (appConfiguration.checklistTypes ??[])
+          checklistTypes: (appConfiguration.checklistTypes ?? [])
               .map((e) => e.code)
               .toList(),
         );
