@@ -94,7 +94,7 @@ class AppConfiguration {
   late PrivacyPolicy? privacyPolicyConfig;
 
   @Name('STOCK_THRESHOLD_CONFIG')
-  late StockThresholdConfig? stockThresholdConfig;
+  StockThresholdConfig? stockThresholdConfig;
 }
 
 @embedded
