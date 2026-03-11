@@ -299,7 +299,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Tag(
-                            label: localizations.translate(FlowBuilderSingleton().boundary?.name ?? ""),
+                            label: localizations.translate(FlowBuilderSingleton().boundary?.code ?? ""),
                             isIcon: true,
                             customTextStyle: Theme.of(context).digitTextTheme(context).bodyS.copyWith(
                               color: Theme.of(context).colorTheme.alert.info
