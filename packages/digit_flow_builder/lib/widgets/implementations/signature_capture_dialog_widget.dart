@@ -32,7 +32,13 @@ class SignatureCaptureWidget extends ResolvedFlowWidget {
       fieldName: json['fieldName'] ?? 'signature',
       onActions: (data) async {
         final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
-        await resolved.executeActions(actionsList, context);
+        var modifiedActionsList = actionsList.map((e) {
+          if (e["actionType"] == "MARK_ATTENDANCE") {
+            e["properties"]["signatureData"] = data['signatureData'];
+          }
+          return e;
+        }).toList();
+        await resolved.executeActions(modifiedActionsList, context);
       },
       resolved: resolved,
     );

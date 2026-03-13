@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../utils/flow_widget_state.dart';
-import '../flow_widget_interface.dart';
 import '../resolved_flow_widget.dart';
 
 /// A date picker widget for TEMPLATE screens.
@@ -151,7 +150,7 @@ class DateWidget extends ResolvedFlowWidget {
       date.year,
       date.month,
       date.day,
-      0,
+      9,
       0,
       0,
     );
@@ -159,10 +158,10 @@ class DateWidget extends ResolvedFlowWidget {
       date.year,
       date.month,
       date.day,
-      23,
-      59,
-      59,
-      999,
+      18,
+      0,
+      0,
+      0,
     );
     final dateState = {
       'date': date.toIso8601String(),
