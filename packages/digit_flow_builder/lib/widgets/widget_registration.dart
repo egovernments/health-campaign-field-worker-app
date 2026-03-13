@@ -6,6 +6,7 @@ import 'package:digit_flow_builder/widgets/implementations/date_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/expandable_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/expanded_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/icon_button_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/label_toggle_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/progress_bar_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/proximitySearch_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/signature_capture_dialog_widget.dart';
@@ -77,7 +78,7 @@ class WidgetRegistration {
     FlowWidgetFactory.register(DateWidget());
     FlowWidgetFactory.register(ProgressBarWidget());
     FlowWidgetFactory.register(SignatureCaptureWidget());
-
+    FlowWidgetFactory.register(LabeledToggleWidget());
     _initialized = true;
   }
 
