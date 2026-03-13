@@ -1,3 +1,11 @@
+## 0.0.1
+
+- Added OR condition support to SQL query builder
+- Fixed service.isInitialized error
+- Added multi-table filter support
+- Updated query builder for search of list
+- Added SQL ordering support
+
 ## 0.0.3-dev
 
 - Fixed query for count fetching
