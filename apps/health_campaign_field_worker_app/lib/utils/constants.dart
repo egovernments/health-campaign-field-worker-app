@@ -1,5 +1,7 @@
-import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/utils/utils.dart';
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data/repositories/local/attendance_logs.dart';
+import 'package:digit_data_model/data/repositories/local/attendance_register.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/hf_referral.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/household.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/household_member.dart';
@@ -11,6 +13,8 @@ import 'package:digit_data_model/data/repositories/package_repository/local/stoc
 import 'package:digit_data_model/data/repositories/package_repository/local/stock_reconciliation.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/task.dart';
 import 'package:digit_data_model/data/repositories/package_repository/oplog/oplog.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/attendance_logs.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/attendance_register.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/hf_referral.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/household.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/household_member.dart';
@@ -234,8 +238,8 @@ class Constants {
     final appConfigs = await isar.appConfigurations.where().findAll();
     final config = appConfigs.firstOrNull;
 
-    final enableCrashlytics =
-        config?.firebaseConfig?.enableCrashlytics ?? false; // TODO: Remove hardcoding and uncomment above
+    final enableCrashlytics = config?.firebaseConfig?.enableCrashlytics ??
+        false; // TODO: Remove hardcoding and uncomment above
     if (enableCrashlytics) {
       firebase_services.initialize(
         options: DefaultFirebaseOptions.currentPlatform,

@@ -1,6 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/models/entities/scanned_individual_data.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
+import 'package:digit_data_model/models/entities/scanned_individual_data.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/digit_tab_bar_theme.dart';

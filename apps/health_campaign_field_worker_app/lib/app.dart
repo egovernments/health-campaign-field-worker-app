@@ -1,6 +1,7 @@
-import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
@@ -172,7 +173,7 @@ class MainApplicationState extends State<MainApplication>
                                       widget.client, widget.sql),
                                   widget.sql)
                                 ..add(
-  LocalizationEvent.onLoadLocalization(
+                                  LocalizationEvent.onLoadLocalization(
                                     module:
                                         "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule && Constants.initialLocalizationModules.contains(element.name.toString())).map((e) => e.name.toString()).join(',')}",
                                     tenantId: envConfig.variables.tenantId,
