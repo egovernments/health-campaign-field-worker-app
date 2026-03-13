@@ -1,10 +1,12 @@
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../utils/interpolation.dart';
+import '../../utils/widget_parsers.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
@@ -32,7 +34,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
     final screenKey = resolved.screenKey;
     final compositeKey = resolved.compositeKey;
 
-    Map<String, Color> colorMap = {'green': Colors.green};
+    String padding = props['padding'] ?? 'spacer2';
 
     return DigitButton(
       mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
@@ -68,6 +70,13 @@ class ActionPopupWidget extends ResolvedFlowWidget {
       },
       type: _parseButtonType(props['type']),
       size: _parseButtonSize(props['size']),
+      digitButtonThemeData: DigitButtonThemeData(
+        DigitButtonColor: colorMap[props["color"]],
+        radius: BorderRadius.circular(spacer3),
+        largeRadius: BorderRadius.circular(spacer3),
+        smallMediumRadius: BorderRadius.circular(spacer3),
+        padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
+      ),
       iconColor: colorMap[props["color"]],
       textColor: colorMap[props["color"]],
       suffixIcon: props['suffixIcon'] != null
@@ -217,4 +226,6 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         return MainAxisAlignment.start;
     }
   }
+
+  Map<String, Color> colorMap = {'green': Colors.green};
 }

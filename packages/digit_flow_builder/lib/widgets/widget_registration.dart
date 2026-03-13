@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:digit_flow_builder/widgets/implementations/action_popup_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/back_link.dart';
-import 'package:digit_flow_builder/widgets/implementations/date_row_picker_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/date_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/expandable_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/expanded_widget.dart';
@@ -11,7 +10,6 @@ import 'package:digit_flow_builder/widgets/implementations/progress_bar_widget.d
 import 'package:digit_flow_builder/widgets/implementations/proximitySearch_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/signature_capture_dialog_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/sized_box_widget.dart';
-import 'package:digit_flow_builder/widgets/implementations/visibility_widget.dart';
 
 import 'flow_widget_interface.dart';
 import 'implementations/button_widget.dart';
@@ -76,11 +74,10 @@ class WidgetRegistration {
     FlowWidgetFactory.register(ExpandedWidget());
     FlowWidgetFactory.register(SizedBoxWidget());
     FlowWidgetFactory.register(IconsButtonWidget());
-    FlowWidgetFactory.register(DateRowPickerWidget());
     FlowWidgetFactory.register(DateWidget());
     FlowWidgetFactory.register(ProgressBarWidget());
     FlowWidgetFactory.register(SignatureCaptureWidget());
-    FlowWidgetFactory.register(VisibilityWidget());
+
     _initialized = true;
   }
 

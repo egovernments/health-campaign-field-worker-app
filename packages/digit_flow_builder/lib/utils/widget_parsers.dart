@@ -152,7 +152,8 @@ class WidgetParsers {
   ///   json['properties'],
   /// );
   /// ```
-  static Widget wrapWithBottomGap(Widget child, Map<String, dynamic>? properties) {
+  static Widget wrapWithBottomGap(
+      Widget child, Map<String, dynamic>? properties) {
     if (properties == null) return child;
 
     final bottomGap = properties['bottomGap'];
@@ -165,5 +166,36 @@ class WidgetParsers {
       padding: EdgeInsets.only(bottom: gap),
       child: child,
     );
+  }
+
+  static double parseSize(String? size) {
+    switch (size) {
+      case 'spacer1':
+        return spacer1;
+      case 'spacer2':
+        return spacer2;
+      case 'spacer3':
+        return spacer3;
+      case 'spacer4':
+        return spacer4;
+      case 'spacer5':
+        return spacer5;
+      case 'spacer6':
+        return spacer6;
+      case 'spacer7':
+        return spacer7;
+      case 'spacer8':
+        return spacer8;
+      case 'spacer9':
+        return spacer9;
+      case 'spacer10':
+        return spacer10;
+      case 'spacer11':
+        return spacer11;
+      case 'spacer12':
+        return spacer12;
+      default:
+        return 0;
+    }
   }
 }

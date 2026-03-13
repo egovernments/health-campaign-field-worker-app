@@ -1,4 +1,5 @@
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
@@ -18,7 +19,7 @@ class ButtonWidget extends ResolvedFlowWidget {
   ) {
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
 
-    Map<String, Color> colorMap = {'green': Colors.green};
+    String padding = props['padding'] ?? 'spacer2';
 
     return WidgetParsers.wrapWithBottomGap(
       DigitButton(
@@ -34,6 +35,18 @@ class ButtonWidget extends ResolvedFlowWidget {
         },
         type: WidgetParsers.parseButtonType(props['type']),
         size: WidgetParsers.parseButtonSize(props['size']),
+        digitButtonThemeData: DigitButtonThemeData(
+          primaryDigitButtonColor: DigitButtonThemeData.defaultTheme(context)
+              .primaryDigitButtonColor,
+          DigitButtonColor: colorMap[props["color"]] ??
+              DigitButtonThemeData.defaultTheme(context).DigitButtonColor,
+          disabledColor:
+              DigitButtonThemeData.defaultTheme(context).disabledColor,
+          radius: BorderRadius.circular(spacer3),
+          largeRadius: BorderRadius.circular(spacer3),
+          smallMediumRadius: BorderRadius.circular(spacer3),
+          padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
+        ),
         iconColor: colorMap[props["color"]],
         textColor: colorMap[props["color"]],
         mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
@@ -49,4 +62,6 @@ class ButtonWidget extends ResolvedFlowWidget {
       props,
     );
   }
+
+  Map<String, Color> colorMap = {'green': Colors.green};
 }

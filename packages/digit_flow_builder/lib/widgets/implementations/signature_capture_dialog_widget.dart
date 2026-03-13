@@ -22,12 +22,6 @@ class SignatureCaptureWidget extends ResolvedFlowWidget {
     void Function(ActionConfig) onAction,
     ResolvedWidgetContext resolved,
   ) {
-    // Get actions from JSON config
-    List<Map<String, dynamic>> actionsList = [];
-    if (json['onAction'] != null) {
-      actionsList = List<Map<String, dynamic>>.from(json['onAction']);
-    }
-
     return SignatureCapture(
       individualName: json['individualName'] ?? '',
       captureSignatureLabel: json['captureSignatureLabel'] ?? '',
@@ -36,7 +30,10 @@ class SignatureCaptureWidget extends ResolvedFlowWidget {
       signatureRequiredLabel: json['signatureRequiredLabel'] ?? '',
       existingSignatureLabel: json['existingSignatureLabel'],
       fieldName: json['fieldName'] ?? 'signature',
-      actions: actionsList,
+      onActions: (data) async {
+        final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
+        await resolved.executeActions(actionsList, context);
+      },
       resolved: resolved,
     );
   }
@@ -52,7 +49,7 @@ class SignatureCapture extends StatefulWidget {
   final String signatureRequiredLabel;
   final Uint8List? existingSignatureLabel;
   final String fieldName;
-  final List<Map<String, dynamic>> actions;
+  final Function onActions;
   final ResolvedWidgetContext resolved;
 
   const SignatureCapture({
@@ -62,7 +59,7 @@ class SignatureCapture extends StatefulWidget {
     required this.clearSignatureLabel,
     required this.saveSignatureLabel,
     required this.signatureRequiredLabel,
-    required this.actions,
+    required this.onActions,
     required this.resolved,
     this.existingSignatureLabel,
     this.fieldName = 'signature',
@@ -177,7 +174,11 @@ class _SignatureCaptureState extends State<SignatureCapture> {
         // Convert signature bytes to base64 for JSON transport
         final signatureBase64 = base64Encode(signatureBytes);
 
-        await widget.resolved.executeActions(widget.actions, context);
+        // Call onActions callback with signature data
+        widget.onActions({
+          'fieldName': widget.fieldName,
+          'signatureData': signatureBase64,
+        });
       }
     } catch (e) {
       debugPrint('Error saving signature: $e');

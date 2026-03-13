@@ -54,35 +54,35 @@ class DateWidget extends ResolvedFlowWidget {
 
       // Parse start date
       DateTime? startDate;
-      final startDateRaw = resolved.resolveText(json['startDate']);
-      if (startDateRaw != null) {
-        if (startDateRaw is int) {
-          startDate =
-              DateTime.fromMillisecondsSinceEpoch(int.parse(startDateRaw));
-        } else if (startDateRaw is String) {
-          startDate = DateTime.tryParse(startDateRaw);
-        }
+      String startDateRaw = resolved.resolveText(json['startDate']);
+      int? startDateRawInt = int.tryParse(startDateRaw);
+      if (startDateRawInt != null) {
+        startDate = DateTime.fromMillisecondsSinceEpoch(startDateRawInt);
       }
-
       // Parse end date
       DateTime? endDate;
-      final endDateRaw = resolved.resolveText(json['endDate']);
-      if (endDateRaw != null) {
-        if (endDateRaw is int) {
-          endDate = DateTime.fromMillisecondsSinceEpoch(int.parse(endDateRaw));
-        } else if (endDateRaw is String) {
-          endDate = DateTime.tryParse(endDateRaw);
-        }
+      String endDateRaw = resolved.resolveText(json['endDate']);
+      int? endDateRawInt = int.tryParse(endDateRaw);
+      if (endDateRawInt != null) {
+        endDate = DateTime.fromMillisecondsSinceEpoch(endDateRawInt);
       }
 
       // Current Date
       DateTime currentDate = DateTime.now();
       final currentDateRaw = resolved.resolveText(json['currentDate']);
-      if (currentDateRaw is int) {
-        currentDate =
-            DateTime.fromMillisecondsSinceEpoch(int.parse(currentDateRaw));
+      final currentDateRawInt = int.tryParse(currentDateRaw);
+      if (currentDateRawInt != null) {
+        currentDate = DateTime.fromMillisecondsSinceEpoch(currentDateRawInt);
       } else {
         currentDate = DateTime.tryParse(currentDateRaw) ?? currentDate;
+      }
+
+      // Initialize widgetData with today's date on first render
+      if (state.widgetData[fieldKey] == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final dateState = _getDateState(currentDate);
+          state.updateWidgetData(fieldKey, dateState);
+        });
       }
 
       return Column(
@@ -118,31 +118,7 @@ class DateWidget extends ResolvedFlowWidget {
 
               if (parsedDate == null) return;
 
-              // Calculate start of day (entry time) and end of day (exit time)
-              final startOfDay = DateTime(
-                parsedDate.year,
-                parsedDate.month,
-                parsedDate.day,
-                0,
-                0,
-                0,
-              );
-              final endOfDay = DateTime(
-                parsedDate.year,
-                parsedDate.month,
-                parsedDate.day,
-                23,
-                59,
-                59,
-                999,
-              );
-
-              // Store as structured object with date, entryTime, and exitTime
-              final dateState = {
-                'date': parsedDate.toIso8601String(),
-                'entryTime': startOfDay.millisecondsSinceEpoch,
-                'exitTime': endOfDay.millisecondsSinceEpoch,
-              };
+              final dateState = _getDateState(parsedDate);
               state.updateWidgetData(fieldKey, dateState);
 
               // Dispatch selectDate action for internal handling
@@ -168,5 +144,31 @@ class DateWidget extends ResolvedFlowWidget {
         ],
       );
     });
+  }
+
+  Map<String, Object> _getDateState(DateTime date) {
+    final startOfDay = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      0,
+      0,
+      0,
+    );
+    final endOfDay = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      23,
+      59,
+      59,
+      999,
+    );
+    final dateState = {
+      'date': date.toIso8601String(),
+      'entryTime': startOfDay.millisecondsSinceEpoch,
+      'exitTime': endOfDay.millisecondsSinceEpoch,
+    };
+    return dateState;
   }
 }
