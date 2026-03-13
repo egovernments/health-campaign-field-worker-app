@@ -619,11 +619,10 @@ final jsonConfig = {
           "referenceId": "__context:projectId",
           "referenceIdType": "__value:PROJECT",
           "quantity": "lessExcessDetails.quantity",
-          "transactionType":
-              "__switch:__context:stockEntryType:{LESS:__value:DISPATCHED,EXCESS:__value:RECEIVED}",
+          "transactionType": "__value:RECEIVED",
           "transactionReason": "lessExcessDetails.reasonForLessExcess",
-          "senderId": "__value:null",
-          "senderType": "__value:null",
+          "senderId": "lessExcessDetails.facilityFromWhich",
+          "senderType": "__value:WAREHOUSE",
           "receiverId": "warehouseDetails.facilityToWhich",
           "receiverType": "__value:WAREHOUSE",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -633,7 +632,7 @@ final jsonConfig = {
             "sku": "lessExcessDetails.productVariant.sku",
             "mrnNumber": "__context:mrnNumber",
             "stockEntryType": "__context:stockEntryType",
-            "reasonForLessExcess": "lessExcessDetails.reasonForLessExcess"
+            "adjustmentReason": "lessExcessDetails.reasonForLessExcess"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -673,6 +672,10 @@ final jsonConfig = {
                 "stockRecon.stockReconciliationCard.stockMetrics.stockLost",
             "stockDamaged":
                 "stockRecon.stockReconciliationCard.stockMetrics.stockDamaged",
+            "stockExcess":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockExcess",
+            "stockLess":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockLess",
             "stockInHand":
                 "stockRecon.stockReconciliationCard.stockMetrics.stockInHand"
           },

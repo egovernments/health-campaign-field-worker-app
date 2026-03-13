@@ -1497,9 +1497,59 @@ final dynamic sampleInventoryFlows = {
               "enums": []
             },
             {
+              "type": "dynamic",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich",
+              "order": 3,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "Select the facility from which the stock is being received",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "facilityFromWhich",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                },
+                {
+                  "type": "facilityHierarchy",
+                  "value": {
+                    "hierarchyMapping": {
+                      "State": {
+                        "forReceipt": ["Central Facility"],
+                        "forIssue": ["LGA Facility"]
+                      },
+                      "LGA": {
+                        "forReceipt": ["State Facility"],
+                        "forIssue": ["Health Facility"]
+                      },
+                      "Health Facility": {
+                        "forReceipt": ["LGA Facility"],
+                        "forIssue": ["DELIVERY_TEAM"]
+                      }
+                    },
+                    "useTransactionType": true
+                  },
+                  "message": ""
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "includeInForm": true,
+              "enums": []
+            },
+            {
               "type": "string",
               "label": "INVENTORY_QUANTITY_LABEL",
-              "order": 3,
+              "order": 4,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -1530,7 +1580,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "INVENTORY_REASON_FOR_LESS_EXCESS_LABEL",
-              "order": 4,
+              "order": 5,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -1581,7 +1631,7 @@ final dynamic sampleInventoryFlows = {
             "data": [
               {
                 "key": "stockEntryType",
-                "value": "{{lessExcessDetails.recordType}}"
+                "value": "{{formData.lessExcessDetails.recordType}}"
               },
               {
                 "key": "mrnNumber",
