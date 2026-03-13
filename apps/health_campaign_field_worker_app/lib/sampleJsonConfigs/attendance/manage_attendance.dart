@@ -92,7 +92,6 @@ final dynamic manageAttendanceFlow = {
       "hidden": false,
       "fieldName": "listView",
       "properties": {"spacing": "spacer4"},
-      // "visibilityCondition": "{{ context.AttendanceWrapper.empty }}",
       "child": {
         "type": "template",
         "format": "card",

@@ -146,6 +146,11 @@ final dynamic markAttendanceFlow = {
         "mainAxisAlignment": "center"
       },
       "onAction": [
+        {"actionType": "SUBMIT_ATTENDANCE", "properties": {}},
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {"entity": "AttendanceLogModel"}
+        },
         {
           "actionType": "NAVIGATION",
           "properties": {
@@ -365,7 +370,6 @@ final dynamic markAttendanceFlow = {
                               "signatureRequiredLabel":
                                   "MARK_ATTENDANCE_SIGNATURE_REQUIRED_LABEL",
                               "onAction": [
-                                {"actionType": "CLOSE_POPUP", "properties": {}},
                                 {
                                   "actionType": "MARK_ATTENDANCE",
                                   "properties": {
@@ -378,10 +382,11 @@ final dynamic markAttendanceFlow = {
                                       {
                                         "key": "registerId",
                                         "value": "{{item.entity.registerId}}"
-                                      }
+                                      },
                                     ]
                                   }
                                 },
+                                {"actionType": "CLOSE_POPUP", "properties": {}},
                               ]
                             }
                           ],
@@ -417,10 +422,10 @@ final dynamic markAttendanceFlow = {
                               {
                                 "key": "registerId",
                                 "value": "{{item.entity.registerId}}"
-                              }
+                              },
                             ]
                           }
-                        }
+                        },
                       ]
                     }
                   }

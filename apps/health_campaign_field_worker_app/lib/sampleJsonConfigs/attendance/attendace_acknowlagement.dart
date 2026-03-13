@@ -1,5 +1,7 @@
 var attendanceAcknowledgementFlow = {
+  "screenType": "TEMPLATE",
   "name": "attendanceAcknowledgement",
+  "heading": "ATTENDANCE_SUBMITTED_SUCCESS_MSG",
   "header": [
     {
       "label": "Back",
@@ -7,35 +9,31 @@ var attendanceAcknowledgementFlow = {
       "onAction": [
         {
           "actionType": "BACK_NAVIGATION",
-          "properties": {"name": "complaintInbox", "type": "TEMPLATE"}
+          "properties": {"name": "manageAttendance", "type": "TEMPLATE"}
         }
       ],
       "mandatory": true
     }
   ],
-  "heading": "",
-  "screenType": "TEMPLATE",
-  "description": "",
   "body": [
     {
       "type": "template",
-      "label": "ATTENDANCE_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_LABEL",
+      "label": "ATTENDANCE_SUBMITTED_SUCCESS_MSG",
       "format": "panelCard",
-      "heading": "ATTENDANCE_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_LABEL",
+      "heading": "ATTENDANCE_SUBMITTED_SUCCESS_MSG",
       "fieldName": "attendanceSuccess",
       "mandatory": true,
       "properties": {"type": "success"},
-      "description":
-          "ATTENDANCE_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_DESCRIPTION",
+      "description": "ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT",
       "primaryAction": {
         "type": "template",
-        "label": "ATTENDANCE_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_ACTION_LABEL",
+        "label": "GO_TO_ATTENDANCE_REGISTERS",
         "format": "button",
         "hidden": false,
         "onAction": [
           {
             "actionType": "NAVIGATION",
-            "properties": {"name": "attendanceInbox", "type": "TEMPLATE"}
+            "properties": {"name": "manageAttendance", "type": "TEMPLATE"}
           }
         ],
         "fieldName": "backToAttendance",

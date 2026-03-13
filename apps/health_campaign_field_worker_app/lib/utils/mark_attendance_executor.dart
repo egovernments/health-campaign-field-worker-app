@@ -8,6 +8,7 @@ import 'package:digit_flow_builder/action_handler/action_config.dart';
 import 'package:digit_flow_builder/action_handler/action_handler.dart';
 import 'package:digit_flow_builder/action_handler/executors/action_executor.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
+import 'package:digit_flow_builder/utils/context_utility.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -41,14 +42,14 @@ class MarkAttendanceExecutor extends ActionExecutor {
     final individualId = resolved['individualId']?.toString();
     final registerId = resolved['registerId']?.toString();
     final status = (action.properties['status'] as num?)?.toDouble() ?? 1.0;
+    final signatureData = action.properties['signatureData'] as String?;
 
     if (individualId == null || individualId.isEmpty) return contextData;
 
     // Locate the screen's state in the registry
-    final screenKey = getEffectiveScreenKey(context, contextData);
-    final compositeKey = contextData['_compositeKey']?.toString() ??
-        getCompositeKey(context, screenKey: screenKey) ??
-        screenKey ??
+    final instanceId = contextData['navigation']['_instanceId']?.toString();
+    // final screenKey = getEffectiveScreenKey(context, contextData);
+    final compositeKey = "markAttendance::$instanceId"
         '';
 
     final currentState = FlowCrudStateRegistry().get(compositeKey);
@@ -76,6 +77,7 @@ class MarkAttendanceExecutor extends ActionExecutor {
       'status': finalStatus,
       'registerId': registerId,
       'individualId': individualId,
+      'signatureData': signatureData,
     };
     widgetData['attendanceCollection'] = collection;
 
@@ -89,7 +91,8 @@ class MarkAttendanceExecutor extends ActionExecutor {
 }
 
 /// Reads widgetData.attendanceCollection and builds AttendanceLogModel entities
-/// (ENTRY + EXIT per individual), mirroring _onSaveAsDraft logic.
+/// (ENTRY + EXIT per individual), mirroring _onSaveAsDraft / submitAttendanceDetails logic.
+/// Searches for existing logs to reuse clientReferenceId (dedup on re-submit).
 /// Puts entities in contextData['entities'] for the next CREATE_EVENT action.
 class SubmitAttendanceExecutor extends ActionExecutor {
   @override
@@ -128,6 +131,21 @@ class SubmitAttendanceExecutor extends ActionExecutor {
     final userUuid = FlowBuilderSingleton().loggedInUser?.uuid ?? '';
     final now = DateTime.now().millisecondsSinceEpoch;
 
+    // Search existing logs for this register to reuse clientReferenceId (dedup)
+    // Mirrors submitAttendanceDetails logic from AttendanceIndividualBloc
+    List<AttendanceLogModel> existingLogs = [];
+    if (registerId.isNotEmpty) {
+      try {
+        final repo = context
+            .repository<AttendanceLogModel, AttendanceLogSearchModel>(context);
+        existingLogs = await repo.search(
+          AttendanceLogSearchModel(registerId: registerId),
+        );
+      } catch (_) {
+        // If repository lookup fails, proceed without dedup
+      }
+    }
+
     final List<EntityModel> entities = [];
 
     for (final entry in attendanceCollection.entries) {
@@ -139,14 +157,18 @@ class SubmitAttendanceExecutor extends ActionExecutor {
       if (markStatus == -1) continue; // skip unmarked
 
       final isPresent = markStatus >= 1.0;
+      final signatureData = data['signatureData'] as String?;
       final logStatus = isPresent
           ? EnumValues.active.toValue()
           : EnumValues.inactive.toValue();
 
+      // Build additionalDetails matching _onSaveAsDraft
       final additionalDetails = <String, dynamic>{
         if (boundaryCode.isNotEmpty)
           EnumValues.boundaryCode.toValue(): boundaryCode,
+        if (signatureData != null) 'signatureData': signatureData,
       };
+
       final clientAudit = ClientAuditDetails(
         createdBy: userUuid,
         createdTime: now,
@@ -160,9 +182,31 @@ class SubmitAttendanceExecutor extends ActionExecutor {
         lastModifiedTime: now,
       );
 
+      // Reuse clientReferenceId from existing log if present (dedup)
+      // Mirrors submitAttendanceDetails: match on individualId + registerId + type + time
+      final existingEntryLog = existingLogs
+          .where((l) =>
+              l.individualId == individualId &&
+              l.registerId == registerId &&
+              l.type == EnumValues.entry.toValue() &&
+              l.time == entryTime &&
+              l.clientReferenceId != null)
+          .toList();
+
+      final existingExitLog = existingLogs
+          .where((l) =>
+              l.individualId == individualId &&
+              l.registerId == registerId &&
+              l.type == EnumValues.exit.toValue() &&
+              l.time == exitTime &&
+              l.clientReferenceId != null)
+          .toList();
+
       // ENTRY log
       entities.add(AttendanceLogModel(
-        clientReferenceId: IdGen.i.identifier,
+        clientReferenceId: existingEntryLog.isNotEmpty
+            ? existingEntryLog.last.clientReferenceId!
+            : IdGen.i.identifier,
         individualId: individualId,
         registerId: registerId,
         tenantId: tenantId,
@@ -178,7 +222,9 @@ class SubmitAttendanceExecutor extends ActionExecutor {
 
       // EXIT log
       entities.add(AttendanceLogModel(
-        clientReferenceId: IdGen.i.identifier,
+        clientReferenceId: existingExitLog.isNotEmpty
+            ? existingExitLog.last.clientReferenceId!
+            : IdGen.i.identifier,
         individualId: individualId,
         registerId: registerId,
         tenantId: tenantId,

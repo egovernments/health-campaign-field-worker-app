@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:collection/collection.dart';
 
-import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:attendance_management/utils/utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
