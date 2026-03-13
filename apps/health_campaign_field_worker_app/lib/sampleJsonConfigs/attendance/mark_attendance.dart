@@ -235,6 +235,15 @@ final dynamic markAttendanceFlow = {
       ]
     },
     {
+      "type": "template",
+      "format": "labeledToggle",
+      "visible": true,
+      "value": "{{widgetData.labeledToggleValue}}",
+      "activeLabel": "Morning Session",
+      "inactiveLabel": "Afternoon Session",
+      "onAction": []
+    },
+    {
       "data": "AttendanceWrapper",
       "dataSource": "attendees",
       "type": "template",
