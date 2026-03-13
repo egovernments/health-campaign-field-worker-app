@@ -1,7 +1,7 @@
 final dynamic markAttendanceFlow = {
   "screenType": "TEMPLATE",
   "name": "markAttendance",
-  "heading": "MARK_ATTENDANCE",
+  "heading": "LABEL_MARK_ATTENDANCE",
   "initActions": [
     {
       "actionType": "SEARCH_EVENT",
@@ -44,6 +44,34 @@ final dynamic markAttendanceFlow = {
         "name": "attendance",
         "type": "SEARCH_EVENT"
       }
+    },
+    {
+      "actionType": "SEARCH_EVENT",
+      "properties": {
+        "data": [
+          {
+            "key": "tenantId",
+            "value": "{{singleton.selectedProject.tenantId}}",
+            "operation": "equals"
+          }
+        ],
+        "name": "individual",
+        "type": "SEARCH_EVENT"
+      }
+    },
+    {
+      "actionType": "SEARCH_EVENT",
+      "properties": {
+        "data": [
+          {
+            "key": "tenantId",
+            "value": "{{singleton.selectedProject.tenantId}}",
+            "operation": "equals"
+          }
+        ],
+        "name": "name",
+        "type": "SEARCH_EVENT"
+      }
     }
   ],
   "wrapperConfig": {
@@ -52,7 +80,14 @@ final dynamic markAttendanceFlow = {
       {
         "name": "attendees",
         "entity": "AttendeeModel",
-        "match": {"field": "registerId", "equalsFrom": "id"}
+        "match": {"field": "registerId", "equalsFrom": "id"},
+        "relations": [
+          {
+            "name": "individual",
+            "entity": "IndividualModel",
+            "match": {"field": "id", "equalsFrom": "individualId"},
+          }
+        ]
       },
       {
         "name": "attendanceLog",
@@ -63,7 +98,13 @@ final dynamic markAttendanceFlow = {
     "rootEntity": "AttendanceRegisterModel",
     "wrapperName": "AttendanceWrapper",
     "searchConfig": {
-      "select": ["attendanceRegister", "attendee", "attendance"],
+      "select": [
+        "attendanceRegister",
+        "attendee",
+        "attendance",
+        "individual",
+        "name"
+      ],
       "primary": "attendanceRegister"
     }
   },
@@ -71,7 +112,7 @@ final dynamic markAttendanceFlow = {
     {
       "format": "backLink",
       "type": "template",
-      "label": "MARK_ATTENDANCE_BACK_BUTTON_LABEL",
+      "label": "CORE_COMMON_BACK",
       "onAction": [
         {"actionType": "BACK_NAVIGATION", "properties": {}}
       ]
@@ -79,28 +120,25 @@ final dynamic markAttendanceFlow = {
   ],
   "footer": [
     {
+      "visible": "{{fn:isSameDay(widgetData.selectedAttendanceDate.date)}}",
       "format": "button",
       "type": "template",
       "fieldName": "createReferral",
-      "label": "MARK_ATTENDANCE_PRIMARY_ACTION_LABEL",
+      "label": "BUTTON_MARK_ATTENDANCE",
+      "prefixIcon": "QrCodeScanner",
       "properties": {
         "type": "primary",
         "size": "large",
         "mainAxisSize": "max",
         "mainAxisAlignment": "center"
       },
-      "onAction": [
-        {
-          "actionType": "NAVIGATION",
-          "properties": {"type": "FORM", "name": "REFERRAL_CREATE", "data": []}
-        }
-      ]
+      "onAction": []
     },
     {
-      "format": "qrScanner",
+      "format": "button",
       "type": "template",
-      "fieldName": "scanQr",
-      "label": "MARK_ATTENDANCE_SECONDARY_ACTION_LABEL",
+      "fieldName": "submitAttendance",
+      "label": "CORE_COMMON_SUBMIT",
       "properties": {
         "type": "secondary",
         "size": "large",
@@ -109,8 +147,11 @@ final dynamic markAttendanceFlow = {
       },
       "onAction": [
         {
-          "actionType": "SEARCH_EVENT",
-          "properties": {"type": "FORM", "name": "COMPLAINT_CREATE", "data": []}
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "TEMPLATE",
+            "name": "attendanceAcknowledgement"
+          }
         }
       ]
     }
@@ -123,7 +164,7 @@ final dynamic markAttendanceFlow = {
       "label": "MARK_ATTENDANCE_DATE",
       "innerLabel": "Select date",
       "startDate": "{{contextData.0.AttendanceRegisterModel.startDate}}",
-      "endDate": "{{contextData.0.AttendanceRegisterModel.endDate}}",
+      "endDate": "{{fn:todayDate()}}",
       "onAction": []
     },
     {
@@ -140,7 +181,7 @@ final dynamic markAttendanceFlow = {
           "child": {
             "type": "template",
             "format": "searchBar",
-            "label": "MARK_ATTENDANCE_SEARCH_BY_NAME",
+            "label": "CORE_COMMON_SEARCH_BY_NAME_OR_ID",
             "fieldName": "searchBar",
             "onAction": [
               {
@@ -166,7 +207,8 @@ final dynamic markAttendanceFlow = {
         },
         {
           "type": "template",
-          "format": "expanded",
+          "format": "sizedBox",
+          "width": 100.0,
           "child": {
             "type": "template",
             "format": "actionPopup",
@@ -175,8 +217,9 @@ final dynamic markAttendanceFlow = {
             "fieldName": "filterButton",
             "properties": {
               "type": "secondary",
-              "size": "large",
+              "size": "small",
               "mainAxisAlignment": "center",
+              "padding": "spacer4",
               "popupConfig": {
                 "title": "MARK_ATTENDANCE_FILTER_TITLE",
                 "description": "MARK_ATTENDANCE_FILTER_DESC",
@@ -202,6 +245,7 @@ final dynamic markAttendanceFlow = {
       "child": {
         "type": "template",
         "format": "card",
+        "visible": "{{fn:isActiveAttendee(item.entity.denrollmentDate)}}",
         "children": [
           {
             "type": "template",
@@ -216,46 +260,36 @@ final dynamic markAttendanceFlow = {
                 {
                   "type": "template",
                   "format": "textTemplate",
-                  "value": "{{item.tag}}",
+                  "value": "{{item.entity.tag}}",
                   "properties": {"style": "headingS"}
                 },
               ]
             },
           },
-          {
-            "type": "template",
-            "format": "textTemplate",
-            "value": "Target Achievement",
-          },
-          {
-            "type": "template",
-            "format": "row",
-            "properties": {
-              "mainAxisAlignment": 'stretch',
-            },
-            "children": [
-              {
-                "type": "template",
-                "format": "expanded",
-                "child": {
-                  "type": "template",
-                  "format": "progressBar",
-                  "valueColor": "green",
-                  "value": 0.4,
-                },
-              },
-              {
-                "type": "template",
-                "format": "sizedBox",
-                "width": 4.0,
-              },
-              {
-                "type": "template",
-                "format": "textTemplate",
-                "value": "40%",
-              },
-            ]
-          },
+          // {
+          //   "type": "template",
+          //   "format": "textTemplate",
+          //   "value": "Target Achievement",
+          // },
+          // {
+          //   "type": "template",
+          //   "format": "row",
+          //   "properties": {
+          //     "mainAxisAlignment": 'stretch',
+          //   },
+          //   "children": [
+          //     {
+          //       "type": "template",
+          //       "format": "expanded",
+          //       "child": {
+          //         "type": "template",
+          //         "format": "progressBar",
+          //         "valueColor": "green",
+          //         "value": 0.4,
+          //       },
+          //     },
+          //   ]
+          // },
           {
             "type": "template",
             "format": "card",
@@ -264,8 +298,8 @@ final dynamic markAttendanceFlow = {
               {
                 "type": "template",
                 "format": "textTemplate",
-                "value": "{{widgetData.selectedAttendanceDate.entryTime}}",
-                "properties": {"style": "headingM"}
+                "value": "{{item.individual.0.name.givenName}}",
+                "properties": {"style": "bodyS"}
               },
               {
                 "type": "template",
@@ -275,200 +309,113 @@ final dynamic markAttendanceFlow = {
                     "type": "template",
                     "format": "textTemplate",
                     "value":
-                        "{{fn:attendanceStatus(contextData.0.attendanceLog, item.individualId, widgetData.selectedAttendanceDate.entryTime)}}",
+                        "{{fn:attendanceStatus(contextData.0.attendanceLog, item.entity.individualId, widgetData.selectedAttendanceDate.entryTime, widgetData.attendanceCollection)}}",
                   },
                 ]
               },
               {
                 "type": "template",
-                "format": "visibility",
-                "visible": true,
-                "child": {
-                  "type": "template",
-                  "format": "row",
-                  "properties": {
-                    "mainAxisAlignment": "spaceBetween",
-                  },
-                  "children": [
-                    {
+                "format": "row",
+                "properties": {
+                  "mainAxisAlignment": "spaceBetween",
+                },
+                "children": [
+                  {
+                    "type": "template",
+                    "format": "expanded",
+                    "child": {
                       "type": "template",
-                      "format": "expanded",
-                      "child": {
-                        "type": "template",
-                        "format": "actionPopup",
-                        "label": "MARK_ATTENDANCE_PRESENT",
+                      "format": "actionPopup",
+                      "label": "PRESENT",
+                      "prefixIcon": "Check",
+                      "fieldName": "markPresentPopup",
+                      "properties": {
+                        "color": "green",
+                        "type": "secondary",
+                        "size": "small",
+                        "mainAxisAlignment": "center",
                         "prefixIcon": "Check",
-                        "fieldName": "markPresentPopup",
-                        "properties": {
-                          "color": "green",
-                          "type": "secondary",
-                          "size": "large",
-                          "mainAxisAlignment": "center",
-                          "prefixIcon": "Check",
-                          "popupConfig": {
-                            "title": "MARK_ATTENDANCE_CONFIRM_TITLE",
-                            "description":
-                                "MARK_ATTENDANCE_CONFIRM_PRESENT_DESC",
-                            "titleIcon": "CheckCircle",
-                            "showCloseButton": true,
-                            "barrierDismissible": true,
-                            "body": [
-                              {
-                                "type": "template",
-                                "format": "signatureCapture",
-                                "fieldName": "signature",
-                                "individualName": "individualName",
-                                "captureSignatureLabel":
-                                    "MARK_ATTENDANCE_CAPTURE_SIGNATURE_LABEL",
-                                "clearSignatureLabel":
-                                    "MARK_ATTENDANCE_CLEAR_SIGNATURE_LABEL",
-                                "saveSignatureLabel":
-                                    "MARK_ATTENDANCE_SAVE_SIGNATURE_LABEL",
-                                "signatureRequiredLabel":
-                                    "MARK_ATTENDANCE_SIGNATURE_REQUIRED_LABEL",
-                                "onAction": [
-                                  {
-                                    "actionType": "FETCH_TRANSFORMER_CONFIG",
-                                    "properties": {
-                                      "configName": "markAttendancePresent",
-                                      "data": [
-                                        {
-                                          "key": "individualId",
-                                          "value": "{{item.individualId}}"
-                                        },
-                                        {
-                                          "key": "registerId",
-                                          "value": "{{item.registerId}}"
-                                        },
-                                        {"key": "status", "value": 1.0},
-                                        {
-                                          "key": "isSingleSession",
-                                          "value":
-                                              "{{fn:isSingleSession(item.AttendanceRegisterModel.additionalDetails.sessions)}}"
-                                        },
-                                        {
-                                          "key": "entryTime",
-                                          "value":
-                                              "{{widgetData.selectedAttendanceDate.entryTime}}"
-                                        },
-                                        {
-                                          "key": "exitTime",
-                                          "value":
-                                              "{{widgetData.selectedAttendanceDate.exitTime}}"
-                                        },
-                                        {
-                                          "key": "additionalFields",
-                                          "value": {
-                                            "version": 1,
-                                            "fields": [
-                                              {
-                                                "key": "isMarkedManually",
-                                                "value": true
-                                              }
-                                            ]
-                                          }
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  {
-                                    "actionType": "CREATE_EVENT",
-                                    "properties": {
-                                      "entity": "AttendanceLogModel"
-                                    }
-                                  },
-                                  {
-                                    "actionType": "CLOSE_POPUP",
-                                    "properties": {}
-                                  },
-                                  {
-                                    "actionType": "SHOW_TOAST",
-                                    "properties": {
-                                      "message":
-                                          "MARK_ATTENDANCE_PRESENT_SUCCESS",
-                                      "type": "success"
-                                    }
-                                  }
-                                ]
-                              }
-                            ],
-                            "onAction": []
-                          }
-                        },
-                      },
-                    },
-                    {"type": "template", "format": "sizedBox", "width": 8.0},
-                    {
-                      "type": "template",
-                      "format": "expanded",
-                      "child": {
-                        "type": "template",
-                        "format": "button",
-                        "label": "MARK_ATTENDANCE_ABSENT",
-                        "prefixIcon": "Close",
-                        "properties": {
-                          "type": "secondary",
-                          "size": "large",
-                          "mainAxisAlignment": "center"
-                        },
-                        "onAction": [
-                          {
-                            "actionType": "FETCH_TRANSFORMER_CONFIG",
-                            "properties": {
-                              "configName": "markAttendanceAbsent",
-                              "data": [
+                        "popupConfig": {
+                          "title": "MARK_ATTENDANCE_CONFIRM_TITLE",
+                          "description": "MARK_ATTENDANCE_CONFIRM_PRESENT_DESC",
+                          "titleIcon": "CheckCircle",
+                          "showCloseButton": true,
+                          "barrierDismissible": true,
+                          "body": [
+                            {
+                              "type": "template",
+                              "format": "signatureCapture",
+                              "fieldName": "signature",
+                              "individualName": "individualName",
+                              "captureSignatureLabel":
+                                  "MARK_ATTENDANCE_CAPTURE_SIGNATURE_LABEL",
+                              "clearSignatureLabel":
+                                  "MARK_ATTENDANCE_CLEAR_SIGNATURE_LABEL",
+                              "saveSignatureLabel":
+                                  "MARK_ATTENDANCE_SAVE_SIGNATURE_LABEL",
+                              "signatureRequiredLabel":
+                                  "MARK_ATTENDANCE_SIGNATURE_REQUIRED_LABEL",
+                              "onAction": [
+                                {"actionType": "CLOSE_POPUP", "properties": {}},
                                 {
-                                  "key": "individualId",
-                                  "value": "{{item.individualId}}"
-                                },
-                                {
-                                  "key": "registerId",
-                                  "value": "{{item.registerId}}"
-                                },
-                                {"key": "status", "value": 0.0},
-                                {
-                                  "key": "isSingleSession",
-                                  "value":
-                                      "{{fn:isSingleSession(item.AttendanceRegisterModel.additionalDetails.sessions)}}"
-                                },
-                                {
-                                  "key": "entryTime",
-                                  "value":
-                                      "{{widgetData.selectedAttendanceDate.entryTime}}"
-                                },
-                                {
-                                  "key": "exitTime",
-                                  "value":
-                                      "{{widgetData.selectedAttendanceDate.exitTime}}"
-                                },
-                                {
-                                  "key": "additionalFields",
-                                  "value": {
-                                    "version": 1,
-                                    "fields": [
-                                      {"key": "isMarkedManually", "value": true}
+                                  "actionType": "MARK_ATTENDANCE",
+                                  "properties": {
+                                    "status": 1.0,
+                                    "data": [
+                                      {
+                                        "key": "individualId",
+                                        "value": "{{item.entity.individualId}}"
+                                      },
+                                      {
+                                        "key": "registerId",
+                                        "value": "{{item.entity.registerId}}"
+                                      }
                                     ]
                                   }
-                                }
+                                },
                               ]
                             }
-                          },
-                          {
-                            "actionType": "CREATE_EVENT",
-                            "properties": {"entity": "AttendanceLogModel"}
-                          },
-                          {
-                            "actionType": "SHOW_TOAST",
-                            "properties": {
-                              "message": "MARK_ATTENDANCE_ABSENT_SUCCESS",
-                              "type": "success"
-                            }
+                          ],
+                          "onAction": []
+                        }
+                      },
+                    },
+                  },
+                  {"type": "template", "format": "sizedBox", "width": 8.0},
+                  {
+                    "type": "template",
+                    "format": "expanded",
+                    "child": {
+                      "type": "template",
+                      "format": "button",
+                      "label": "ABSENT",
+                      "prefixIcon": "Close",
+                      "properties": {
+                        "type": "secondary",
+                        "size": "small",
+                        "mainAxisAlignment": "center"
+                      },
+                      "onAction": [
+                        {
+                          "actionType": "MARK_ATTENDANCE",
+                          "properties": {
+                            "status": 0.0,
+                            "data": [
+                              {
+                                "key": "individualId",
+                                "value": "{{item.entity.individualId}}"
+                              },
+                              {
+                                "key": "registerId",
+                                "value": "{{item.entity.registerId}}"
+                              }
+                            ]
                           }
-                        ]
-                      }
+                        }
+                      ]
                     }
-                  ]
-                }
+                  }
+                ]
               }
             ]
           }

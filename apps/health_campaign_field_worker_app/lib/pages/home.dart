@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:collection/collection.dart';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
@@ -33,7 +34,6 @@ import 'package:transit_post/router/transit_post_router.gm.dart';
 import 'package:transit_post/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
-import '../blocs/attendance_curd_service.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/localization.dart';
 import '../data/local_store/app_shared_preferences.dart';
@@ -55,6 +55,7 @@ import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
+import '../utils/mark_attendance_executor.dart';
 import '../utils/utils.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
@@ -107,8 +108,91 @@ class _HomePageState extends LocalizedState<HomePage> {
     _registerCustomComponents();
   }
 
+  // Helper function matching hasLogWithType logic
+  bool _hasLogWithType(attendanceLog, DateTime date, String type) {
+    final logTime = type == 'ENTRY'
+        ? DateTime(date.year, date.month, date.day, 9).millisecondsSinceEpoch
+        : DateTime(date.year, date.month, date.day, 18).millisecondsSinceEpoch;
+
+    if (attendanceLog == null) return false;
+
+    return attendanceLog.any((element) {
+      final elementTime = element.time;
+      final elementType = element.type?.toString();
+      return elementTime == logTime && elementType == type;
+    });
+  }
+
+  bool _hasLogActiveStatus(attendanceLog, DateTime date, String type) {
+    final logTime = type == 'ENTRY'
+        ? DateTime(date.year, date.month, date.day, 9).millisecondsSinceEpoch
+        : DateTime(date.year, date.month, date.day, 18).millisecondsSinceEpoch;
+
+    if (attendanceLog == null) return false;
+
+    return attendanceLog.any((element) {
+      final elementTime = element.time;
+      final elementType = element.type?.toString();
+      final elementStatus = element.status;
+      if (elementStatus == null) return false;
+      if (elementTime == logTime && elementType == type) {
+        return elementStatus == 'ACTIVE';
+      }
+      return false;
+    });
+  }
+
+  double _attendanceStatus(List<dynamic>? attendanceLogs, String? individualId,
+      DateTime selectedDate, Map? attendanceCollection) {
+    // Check in-memory collection first — gives instant UI feedback after mark click
+    if (attendanceCollection != null && individualId != null) {
+      final entry = attendanceCollection[individualId];
+      if (entry is Map) {
+        return (entry['status'] as num?)?.toDouble() ?? -1.0;
+      }
+    }
+
+    if (attendanceLogs == null || individualId == null) return -1.0;
+
+    // Fall back to stored attendanceLog from DB
+    final filteredAttendanceLogs = attendanceLogs
+        .where((attendanceLog) =>
+            attendanceLog.individualId?.toString() == individualId)
+        .toList();
+
+    if (filteredAttendanceLogs.isEmpty) return -1.0;
+
+    // Process attendanceLog if it exists and is a List
+
+    final hasMorningLog =
+        _hasLogWithType(filteredAttendanceLogs, selectedDate, 'ENTRY');
+    final hasEveningLog =
+        _hasLogWithType(filteredAttendanceLogs, selectedDate, 'EXIT');
+    if (hasMorningLog && hasEveningLog) {
+      final morningLogActive =
+          _hasLogActiveStatus(filteredAttendanceLogs, selectedDate, 'ENTRY');
+      final eveningActive =
+          _hasLogActiveStatus(filteredAttendanceLogs, selectedDate, 'EXIT');
+
+      if (morningLogActive && eveningActive) {
+        return 1.0; // present
+      } else if (!morningLogActive && !eveningActive) {
+        return 0.0; // absent
+      } else {
+        return 0.5; // half day
+      }
+    }
+    return -1.0;
+  }
+
   /// Register custom components for forms engine
   void _registerCustomComponents() {
+// Register attendance executors
+    ActionHandler.registry
+        .register('MARK_ATTENDANCE', MarkAttendanceExecutor());
+    ActionHandler.registry
+        .register('SUBMIT_ATTENDANCE', SubmitAttendanceExecutor());
+
     // Example 1: Register a dynamic resource card with multi-page state access
     CustomComponentRegistry().registerBuilder(
       'resourceCard',
@@ -377,6 +461,201 @@ class _HomePageState extends LocalizedState<HomePage> {
       return facilityFromWhich == 'Delivery Team' ? 'STAFF' : 'WAREHOUSE';
     });
 
+    /// Registers a function to calculate completed attendance days.
+    ///
+    /// - **Function Name**: `'calculateCompletedDays'`
+    /// - **Arguments**: A list where:
+    ///   - First element is the AttendanceRegisterModel or its Map representation.
+    ///   - Second element (optional) is the attendance logs list from wrapper relations (List<AttendanceLogModel> or List<Map>).
+    /// - **Returns**: A formatted string like `"3/5"` representing completed/total days.
+    ///
+    /// This function handles both:
+    /// 1. Model's attendanceLog field (List<Map<DateTime, bool>>?) - legacy format
+    /// 2. Wrapper's attendanceLog relation (List<AttendanceLogModel>) - raw attendance records
+    FunctionRegistry.register('calculateCompletedDays', (args, stateData) {
+      if (args.isEmpty || args.first == null) return '0/0';
+
+      final attendanceRegister = args.first;
+
+      // Check for attendance logs passed as second argument (from wrapper relations)
+      dynamic attendanceLog;
+      if (args.length > 1 && args[1] != null) {
+        attendanceLog = args[1];
+      } else {
+        // Fallback: try to get from model's attendanceLog field
+        try {
+          attendanceLog = attendanceRegister.attendanceLog;
+        } catch (_) {
+          attendanceLog = null;
+        }
+      }
+
+      // Get startDate and endDate from register
+      int? startDate;
+      int? endDate;
+      try {
+        startDate = attendanceRegister is Map
+            ? attendanceRegister['startDate'] as int?
+            : attendanceRegister.startDate as int?;
+        endDate = attendanceRegister is Map
+            ? attendanceRegister['endDate'] as int?
+            : attendanceRegister.endDate as int?;
+      } catch (_) {
+        startDate = null;
+        endDate = null;
+      }
+
+      // Process attendanceLog if it exists and is a List
+      if (attendanceLog != null) {
+        // Check if this is raw AttendanceLogModel data (has 'time' and 'type' fields)
+        // final isRawLogData = attendanceLog.isNotEmpty;
+
+        if (startDate != null && endDate != null) {
+          // Calculate completed days using hasLogWithType logic
+          final startDateTime = DateTime.fromMillisecondsSinceEpoch(startDate);
+          final endDateTime = DateTime.fromMillisecondsSinceEpoch(endDate);
+          final daysDifference = endDateTime.difference(startDateTime).inDays;
+          final totalDays = daysDifference + 1;
+
+          var completedDays = 0;
+
+          // Check each day for completed attendance (both ENTRY and EXIT)
+          for (int i = 0; i <= daysDifference; i++) {
+            final currentDate = startDateTime.add(Duration(days: i));
+            final hasMorningLog =
+                _hasLogWithType(attendanceLog, currentDate, 'ENTRY');
+            final hasEveningLog =
+                _hasLogWithType(attendanceLog, currentDate, 'EXIT');
+            if (hasMorningLog && hasEveningLog) {
+              completedDays++;
+            }
+          }
+
+          return '$completedDays/$totalDays';
+        } else {
+          // Legacy format: List<Map<DateTime, bool>>
+          var completedDays = 0;
+          final totalDays = attendanceLog.length;
+
+          for (final element in attendanceLog) {
+            if (element is Map && element.containsValue(true)) {
+              completedDays++;
+            }
+          }
+
+          return '$completedDays/$totalDays';
+        }
+      }
+
+      return '0/0';
+    });
+
+    FunctionRegistry.register('filterAttendeesByTeam', (args, stateData) {
+      if (args.isEmpty || args.first == null) return null;
+
+      final item = args.first;
+      List<dynamic>? attendees;
+
+      try {
+        attendees = item.attendees;
+      } catch (_) {
+        attendees = null;
+      }
+
+      return attendees;
+    });
+
+    FunctionRegistry.register('todayDate', (args, stateData) {
+      return DateTime.now().millisecondsSinceEpoch.toString();
+    });
+
+    FunctionRegistry.register('isActiveAttendee', (args, stateData) {
+      if (args.isEmpty) return true;
+      final denrollmentDate = args.first;
+      if (denrollmentDate == null) return true;
+      final deDate = denrollmentDate is int
+          ? denrollmentDate
+          : int.tryParse(denrollmentDate.toString());
+      if (deDate == null) return true;
+      return deDate >= DateTime.now().millisecondsSinceEpoch;
+    });
+
+    FunctionRegistry.register('isAbsentMarked', (args, stateData) {
+      List<dynamic>? attendanceLogs = args.isNotEmpty ? args[0] : null;
+      String? individualId = args.length > 1 ? args[1]?.toString() : null;
+      int? selectedDateRaw =
+          args.length > 2 ? int.tryParse(args[2]?.toString() ?? '') : null;
+      Map? attendanceCollection = args.length > 3 ? args[3] as Map? : null;
+
+      DateTime selectedDate = selectedDateRaw != null
+          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
+          : DateTime.now();
+
+      double status = _attendanceStatus(
+          attendanceLogs, individualId, selectedDate, attendanceCollection);
+      if (status == -1.0) {
+        return false;
+      } else if (status == 1.0) {
+        return false;
+      } else if (status == 0.0) {
+        return true;
+      }
+    });
+
+    // Update attendanceStatus to also check in-memory collection (4th arg)
+    FunctionRegistry.register('attendanceStatus', (args, stateData) {
+      List<dynamic>? attendanceLogs = args.isNotEmpty ? args[0] : null;
+      String? individualId = args.length > 1 ? args[1]?.toString() : null;
+      int? selectedDateRaw =
+          args.length > 2 ? int.tryParse(args[2]?.toString() ?? '') : null;
+      Map? attendanceCollection = args.length > 3 ? args[3] as Map? : null;
+
+      DateTime selectedDate = selectedDateRaw != null
+          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
+          : DateTime.now();
+
+      String attendanceUnmarked = 'ATTENDANCE_UNMARKED';
+      String markAsPresent = 'MARK_AS_PRESENT';
+      String markedAsAbsent = 'MARK_AS_ABSENT';
+      double status = _attendanceStatus(
+          attendanceLogs, individualId, selectedDate, attendanceCollection);
+      if (status == -1.0) {
+        return attendanceUnmarked;
+      } else if (status == 1.0) {
+        return markAsPresent;
+      } else if (status == 0.0) {
+        return markedAsAbsent;
+      }
+    });
+
+    FunctionRegistry.register('isSameDay', (args, stateData) {
+      if (args.isEmpty || args.first == null) return false;
+
+      final date = args.first;
+      if (date is! String) return false;
+
+      final now = DateTime.now();
+      final dateTime = DateTime.parse(date);
+      bool isSameDay = dateTime.year == now.year &&
+          dateTime.month == now.month &&
+          dateTime.day == now.day;
+      return isSameDay;
+    });
+
+    FunctionRegistry.register('isNotSameDay', (args, stateData) {
+      if (args.isEmpty || args.first == null) return false;
+
+      final date = args.first;
+      if (date is! String) return false;
+
+      final now = DateTime.now();
+      final dateTime = DateTime.parse(date);
+      bool isSameDay = dateTime.year == now.year &&
+          dateTime.month == now.month &&
+          dateTime.day == now.day;
+      return !isSameDay;
+    });
+
     // Helper to extract stockEntryType from additionalFields array
     String getStockEntryTypeFromFields(dynamic fields) {
       if (fields == null) return '';
@@ -389,6 +668,24 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
       return '';
     }
+
+    FunctionRegistry.register('showOpenRegisterButton', (args, stateData) {
+      if (args.isEmpty || args.first == null) return false;
+
+      var register = args.isNotEmpty ? args[0] : null;
+      if (register == null) return false;
+
+      var attendanceRegisters = args.length > 1 ? args[1] : null;
+
+      if (attendanceRegisters == null ||
+          (attendanceRegisters is List && attendanceRegisters.isEmpty)) {
+        return false;
+      }
+
+      return register.startDate != null &&
+          register.endDate != null &&
+          register.endDate! > DateTime.now().millisecondsSinceEpoch;
+    });
 
     // First page (viewTransaction) - shows sender for RECEIPT/RETURNED, receiver for ISSUED/DAMAGED/LOSS
     FunctionRegistry.register('getFirstPagePartyLabel', (args, stateData) {
@@ -1343,6 +1640,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                     localKey: 'id',
                     foreignKey: 'registerId',
                   ),
+                  RelationshipMapping(
+                    from: 'attendee',
+                    to: 'individual',
+                    localKey: 'individualId',
+                    foreignKey: 'id',
+                  ),
+                  RelationshipMapping(
+                    from: 'individual',
+                    to: 'name',
+                    localKey: 'clientReferenceId',
+                    foreignKey: 'individualClientReferenceId',
+                  ),
                 ],
                 nestedModelMappings: const [
                   NestedModelMapping(
@@ -1356,8 +1665,17 @@ class _HomePageState extends LocalizedState<HomePage> {
                       ),
                     },
                   ),
-                  // Note: 'attendanceLog' on AttendanceRegisterModel is List<Map<DateTime, bool>>?,
-                  // not List<AttendanceLogModel>?. Use wrapper relations for attendance data instead.
+                  NestedModelMapping(
+                    rootModel: 'individual',
+                    fields: {
+                      'name': NestedFieldMapping(
+                        table: 'name',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'individualClientReferenceId',
+                        type: NestedMappingType.one,
+                      ),
+                    },
+                  ),
                 ],
                 searchEntityRepository: context.read<SearchEntityRepository>(),
               ),

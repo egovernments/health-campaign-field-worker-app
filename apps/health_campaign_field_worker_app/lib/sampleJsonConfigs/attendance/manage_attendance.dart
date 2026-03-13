@@ -1,7 +1,7 @@
 final dynamic manageAttendanceFlow = {
   "screenType": "TEMPLATE",
   "name": "manageAttendance",
-  "heading": "MANAGE_ATTENDANCE",
+  "heading": "ATTENDANCE_REGISTAR_LABEL",
   "initActions": [
     {
       "actionType": "SEARCH_EVENT",
@@ -10,6 +10,11 @@ final dynamic manageAttendanceFlow = {
           {
             "key": "tenantId",
             "value": "{{singleton.selectedProject.tenantId}}",
+            "operation": "equals"
+          },
+          {
+            "key": "referenceId",
+            "value": "{{singleton.selectedProject.id}}",
             "operation": "equals"
           }
         ],
@@ -39,12 +44,13 @@ final dynamic manageAttendanceFlow = {
             "key": "tenantId",
             "value": "{{singleton.selectedProject.tenantId}}",
             "operation": "equals"
-          }
+          },
+          {"key": "uploadToServer", "value": true, "operation": "equals"}
         ],
         "name": "attendance",
         "type": "SEARCH_EVENT"
       }
-    }
+    },
   ],
   "wrapperConfig": {
     "filters": [],
@@ -52,7 +58,7 @@ final dynamic manageAttendanceFlow = {
       {
         "name": "attendees",
         "entity": "AttendeeModel",
-        "match": {"field": "registerId", "equalsFrom": "id"}
+        "match": {"field": "registerId", "equalsFrom": "id"},
       },
       {
         "name": "attendanceLog",
@@ -71,7 +77,7 @@ final dynamic manageAttendanceFlow = {
     {
       "format": "backLink",
       "type": "template",
-      "label": "MANAGE_ATTENDANCE_BACK_BUTTON_LABEL",
+      "label": "CORE_COMMON_BACK",
       "onAction": [
         {"actionType": "BACK_NAVIGATION", "properties": {}}
       ]
@@ -90,36 +96,40 @@ final dynamic manageAttendanceFlow = {
       "child": {
         "type": "template",
         "format": "card",
+        "fieldName": "registerCard",
         "children": [
           {
             "data": [
               {
-                "key": "CAMPAIGN_NAME",
+                "key": "CAMPAIGN_NAME_LABEL",
                 "value":
                     "{{item.AttendanceRegisterModel.additionalDetails.campaignName}}",
               },
               {
-                "key": "EVENT_TYPE",
+                "key": "EVENT_TYPE_LABEL",
                 "value":
                     "{{item.AttendanceRegisterModel.additionalDetails.eventType}}",
               },
-              {"key": "STAFF_COUNT", "value": "{{fn:length(item.attendees)}}"},
               {
-                "key": "START_DATE",
+                "key": "STAFF_COUNT_LABEL",
+                "value": "{{fn:length(item.attendees)}}"
+              },
+              {
+                "key": "START_DATE_LABEL",
                 "value":
                     "{{fn:formatDate(item.AttendanceRegisterModel.startDate, 'date', dd MMM yyyy)}}"
               },
               {
-                "key": "END_DATE",
+                "key": "END_DATE_LABEL",
                 "value":
                     "{{fn:formatDate(item.AttendanceRegisterModel.endDate, 'date', dd MMM yyyy)}}"
               },
               {
-                "key": "STATUS",
+                "key": "STATUS_LABEL",
                 "value": "{{item.AttendanceRegisterModel.status}}"
               },
               {
-                "key": "ATTENDANCE_COMPLETION",
+                "key": "ATTENDANCE_COMPLETION_LABEL",
                 "value":
                     "{{fn:calculateCompletedDays(item.AttendanceRegisterModel, item.attendanceLog)}}"
               }
@@ -130,8 +140,10 @@ final dynamic manageAttendanceFlow = {
           },
           {
             "type": "template",
-            "label": "COMPLAINT_DETAILS_VIEW_ACTION_LABEL",
+            "label": "ATTENDANCE_OPEN_REGISTER",
             "format": "button",
+            "visible":
+                "{{fn:showOpenRegisterButton(item.AttendanceRegisterModel, contextData.0)}}",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -156,7 +168,6 @@ final dynamic manageAttendanceFlow = {
             }
           }
         ],
-        "fieldName": "complaintCard"
       },
     },
   ]
