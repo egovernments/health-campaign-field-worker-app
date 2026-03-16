@@ -92,13 +92,15 @@ class ScannerComparisonUtils {
     final config = findComparisonConfig(schema, fieldName);
     if (config == null) return false;
 
-    // Build merged navigation params that include values from ALL schema pages.
-    // This is needed because facility fields (e.g., facilityFromWhich, facilityToWhich)
-    // are filled on earlier form pages and stored in the cached schema, not in
-    // the navigation params or current page's form values.
+    // Build merged params from three sources (lowest to highest priority):
+    // 1. allSchemaValues — facility fields cached from earlier pages
+    // 2. formValues — current page's form control values (covers same-page
+    //    fields or values not yet flushed to the schema cache)
+    // 3. navigationParams — explicit navigation data (highest priority)
     final allSchemaValues = extractAllSchemaValues(schema);
     final mergedNavParams = <String, dynamic>{
       ...allSchemaValues,
+      ...formValues,
       ...navigationParams,
     };
 

@@ -1545,7 +1545,7 @@ final dynamic sampleInventoryFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "includeInForm": true,
-              "enums": []
+              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
             },
             {
               "type": "string",
