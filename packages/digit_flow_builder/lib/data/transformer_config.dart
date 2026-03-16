@@ -670,6 +670,39 @@ final jsonConfig = {
       },
     }
   },
+  "stockLessExcess": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "warehouseDetails.facilityToWhich",
+          "productVariantId": "lessExcessDetails.productVariant.id",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "lessExcessDetails.quantity",
+          "transactionType": "__value:RECEIVED",
+          "transactionReason": "lessExcessDetails.reasonForLessExcess",
+          "senderId": "lessExcessDetails.facilityFromWhich",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "warehouseDetails.facilityToWhich",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "sku": "lessExcessDetails.productVariant.sku",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "adjustmentReason": "lessExcessDetails.reasonForLessExcess"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "warehouseDetails.dateOfEntry"
+        }
+      }
+    }
+  },
   "stockReconciliation": {
     "fallbackModel": "StockReconciliationModel",
     "models": {
@@ -701,6 +734,10 @@ final jsonConfig = {
                 "stockRecon.stockReconciliationCard.stockMetrics.stockLost",
             "stockDamaged":
                 "stockRecon.stockReconciliationCard.stockMetrics.stockDamaged",
+            "stockExcess":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockExcess",
+            "stockLess":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockLess",
             "stockInHand":
                 "stockRecon.stockReconciliationCard.stockMetrics.stockInHand"
           },

@@ -875,7 +875,8 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "{{fn:getInEligibleStatus(item.task)}}",
                     "format": "tag",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false",
+                    "visible":
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false",
                     "fieldName": "notEligible",
                     "properties": {"tagType": "error"}
                   },
@@ -991,7 +992,8 @@ final dynamic sampleFlows = {
                             },
                             {
                               "key": "ProjectBeneficiaryClientReferenceId",
-                              "value": "{{item.projectBeneficiary.0.clientReferenceId}}"
+                              "value":
+                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
                             },
                             {
                               "key": "cycleIndex",
@@ -1242,19 +1244,12 @@ final dynamic sampleFlows = {
         ],
         "computed": {
           "currentRunningCycle": {
-            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
             "order": 1,
             "where": [
-              {
-                "left": "{{startDate}}",
-                "right": "{{now}}",
-                "operator": "lt"
-              },
-              {
-                "left": "{{endDate}}",
-                "right": "{{now}}",
-                "operator": "gt"
-              }
+              {"left": "{{startDate}}", "right": "{{now}}", "operator": "lt"},
+              {"left": "{{endDate}}", "right": "{{now}}", "operator": "gt"}
             ],
             "select": "{{id}}",
             "default": -1,
@@ -1416,10 +1411,7 @@ final dynamic sampleFlows = {
                 "key": "ProjectBeneficiaryClientReferenceId",
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
               },
-              {
-                "key": "cycleIndex",
-                "value": "{{navigation.cycleIndex}}"
-              }
+              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"}
             ],
             "onError": [
               {
@@ -3856,6 +3848,13 @@ final dynamic sampleFlows = {
               "fieldName": "scanner",
               "mandatory": false,
               "showLabel": false,
+              "comparisonConfig": {
+                "model": "projectBeneficiary",
+                "extractKey": "tag",
+                "extractFrom": "column",
+                "filters": [],
+                "errorMessage": "BENEFICIARY_TAG_ALREADY_ASSIGNED"
+              },
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
@@ -5018,6 +5017,13 @@ final dynamic sampleFlows = {
               "validations": [],
               "errorMessage": "",
               "isMultiSelect": false,
+              "comparisonConfig": {
+                "model": "projectBeneficiary",
+                "extractKey": "tag",
+                "extractFrom": "column",
+                "filters": [],
+                "errorMessage": "BENEFICIARY_TAG_ALREADY_ASSIGNED"
+              },
               "includeInSummary": true
             }
           ],

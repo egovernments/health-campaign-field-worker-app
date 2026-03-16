@@ -71,6 +71,9 @@ class PropertySchema with _$PropertySchema {
     // Submit condition for pages - when true, form submits directly instead of navigating to next page
     @JsonKey(fromJson: _visibilityConditionOrNull)
     VisibilityCondition? submitCondition,
+    // Comparison config for scanner fields - enables duplicate detection against historical data
+    @JsonKey(fromJson: _comparisonConfigOrNull)
+    ComparisonConfig? comparisonConfig,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -200,6 +203,37 @@ class MultiEntityConfig with _$MultiEntityConfig {
       _$MultiEntityConfigFromJson(json);
 }
 
+@freezed
+class ComparisonConfig with _$ComparisonConfig {
+  @JsonSerializable(explicitToJson: true, includeIfNull: false)
+  const factory ComparisonConfig({
+    required String model, // table to search (e.g., "stock", "projectBeneficiary")
+    required String extractKey, // field to match scanned value against
+    @Default('additionalFields')
+    String extractFrom, // "additionalFields" or "column"
+    @Default([]) List<ComparisonFilter> filters,
+    String? errorMessage, // Localization key for the error message
+  }) = _ComparisonConfig;
+
+  factory ComparisonConfig.fromJson(Map<String, dynamic> json) =>
+      _$ComparisonConfigFromJson(json);
+}
+
+@freezed
+class ComparisonFilter with _$ComparisonFilter {
+  @JsonSerializable(explicitToJson: true, includeIfNull: false)
+  const factory ComparisonFilter({
+    required String key, // DB column name (e.g., "senderId")
+    required String value, // default template (e.g., "{{navigation.facilityFromWhich}}")
+    @Default('equals') String operation,
+    String? switchOn, // template for conditional switch (e.g., "{{navigation.stockEntryType}}")
+    Map<String, String>? cases, // conditional overrides (e.g., {"ISSUED": "{{navigation.facilityToWhich}}"})
+  }) = _ComparisonFilter;
+
+  factory ComparisonFilter.fromJson(Map<String, dynamic> json) =>
+      _$ComparisonFilterFromJson(json);
+}
+
 String? _stringOrNull(dynamic value) {
   return value is String ? value : null;
 }
@@ -285,6 +319,13 @@ ShowAlertPopUp? _showAlertOrNull(dynamic value) {
 MultiEntityConfig? _multiEntityConfigOrNull(dynamic value) {
   if (value is Map && value.isNotEmpty) {
     return MultiEntityConfig.fromJson(Map<String, dynamic>.from(value));
+  }
+  return null;
+}
+
+ComparisonConfig? _comparisonConfigOrNull(dynamic value) {
+  if (value is Map && value.isNotEmpty) {
+    return ComparisonConfig.fromJson(Map<String, dynamic>.from(value));
   }
   return null;
 }

@@ -68,6 +68,8 @@ class StockCalculationUtils {
     double stockReturned = 0;
     double stockLost = 0;
     double stockDamaged = 0;
+    double stockExcess = 0;
+    double stockLess = 0;
 
     for (final stock in filteredStock) {
       final transactionType = stock.transactionType?.toUpperCase() ?? '';
@@ -81,11 +83,18 @@ class StockCalculationUtils {
       final isReceiver = stock.receiverId == facilityId;
       final isSender = stock.senderId == facilityId;
 
-      // Stock Received: This facility is the receiver AND transactionType == RECEIVED
+      // Stock Received/Excess/Less: This facility is the receiver AND transactionType == RECEIVED
+      // Both LESS and EXCESS use RECEIVED transactionType, differentiated by stockEntryType
       if (isReceiver && transactionType == 'RECEIVED') {
         if (transactionReason == 'RETURNED' ||
             stockEntryType == 'RETURNED') {
           stockReturned += quantity;
+        } else if (stockEntryType == 'EXCESS') {
+          // Stock Excess: recorded via less/excess flow
+          stockExcess += quantity;
+        } else if (stockEntryType == 'LESS') {
+          // Stock Less: recorded via less/excess flow
+          stockLess += quantity;
         } else if (transactionReason.isEmpty ||
             transactionReason == 'RECEIVED') {
           stockReceived += quantity;
@@ -131,9 +140,9 @@ class StockCalculationUtils {
       }
     }
 
-    // Stock in hand = (received + returned) - (issued + damaged + lost)
-    final stockInHand = (stockReceived + stockReturned) -
-        (stockIssued + stockDamaged + stockLost);
+    // Stock in hand = (received + returned + excess) - (issued + damaged + lost + less)
+    final stockInHand = (stockReceived + stockReturned + stockExcess) -
+        (stockIssued + stockDamaged + stockLost + stockLess);
 
     return {
       'stockReceived': stockReceived,
@@ -141,6 +150,8 @@ class StockCalculationUtils {
       'stockReturned': stockReturned,
       'stockLost': stockLost,
       'stockDamaged': stockDamaged,
+      'stockExcess': stockExcess,
+      'stockLess': stockLess,
       'stockInHand': stockInHand,
     };
   }
@@ -182,6 +193,8 @@ class StockCalculationUtils {
         'stockReturned': 0,
         'stockLost': 0,
         'stockDamaged': 0,
+        'stockExcess': 0,
+        'stockLess': 0,
         'stockInHand': 0,
       };
 
