@@ -152,6 +152,8 @@ class ScannerComparisonUtils {
     }
 
     // 6. For "additionalFields" match: compare scanned value
+    // Normalize the scanned value so key ordering doesn't matter
+    final normalizedScanned = _normalizeBarcode(scannedValue);
     for (final entity in entities) {
       try {
         final additionalFields = (entity as dynamic).additionalFields;
@@ -160,7 +162,8 @@ class ScannerComparisonUtils {
           if (field.key == config.extractKey && field.value != null) {
             final existingValues =
                 extractComparisonValues(field.value.toString());
-            if (existingValues.contains(scannedValue)) {
+            if (existingValues.contains(scannedValue) ||
+                existingValues.contains(normalizedScanned)) {
               return true;
             }
           }
@@ -250,6 +253,11 @@ class ScannerComparisonUtils {
 
       if (isNewFormat) {
         // New format: key:value|key:value
+        // Also emit a key-sorted normalized form for order-insensitive matching
+        final normalized = _normalizeBarcode(trimmed);
+        if (normalized != trimmed) {
+          values.add(normalized);
+        }
         for (final pair in trimmed.split('|')) {
           final colonIdx = pair.indexOf(':');
           if (colonIdx > 0) {
@@ -285,5 +293,18 @@ class ScannerComparisonUtils {
       }
     }
     return values;
+  }
+
+  /// Normalizes a new-format barcode by sorting key-value pairs by AI code.
+  ///
+  /// Ensures `01:GTIN|10:BATCH|17:EXPIRY` and `01:GTIN|17:EXPIRY|10:BATCH`
+  /// produce the same string for order-insensitive comparison.
+  static String _normalizeBarcode(String barcode) {
+    if (!barcode.contains('|') && !RegExp(r'^\d{2}:').hasMatch(barcode)) {
+      return barcode;
+    }
+    final pairs = barcode.split('|').map((p) => p.trim()).toList();
+    pairs.sort();
+    return pairs.join('|');
   }
 }
