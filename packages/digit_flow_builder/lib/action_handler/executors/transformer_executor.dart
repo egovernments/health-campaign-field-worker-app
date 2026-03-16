@@ -196,9 +196,21 @@ class TransformerExecutor extends ActionExecutor {
           dedupedExistingModels.map((m) => getEntityTypeName(m)).toSet();
       debugPrint('TRANSFORMER: existingModelTypes=$existingModelTypes');
 
+      // Read createEntities from action properties — these model types should be
+      // created fresh even in edit mode (e.g., creating ProjectBeneficiaryModel
+      // while updating HouseholdModel). updateEntitiesFromForm already handles
+      // creating models that are in the config but missing from existingModels.
+      final createEntities =
+          (action.properties['createEntities'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toSet() ??
+          <String>{};
+
       final filteredConfig = Map<String, dynamic>.from(transformerConfig)
-        ..removeWhere((key, value) => !existingModelTypes.contains(key));
-      debugPrint('TRANSFORMER: filteredConfig keys=${filteredConfig.keys}');
+        ..removeWhere((key, value) =>
+            !existingModelTypes.contains(key) && !createEntities.contains(key));
+      debugPrint(
+          'TRANSFORMER: filteredConfig keys=${filteredConfig.keys}, createEntities=$createEntities');
 
       try {
         entities = formEntityMapper.updateEntitiesFromForm(

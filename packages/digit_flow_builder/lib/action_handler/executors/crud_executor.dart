@@ -20,7 +20,36 @@ class CrudExecutor extends ActionExecutor {
     Map<String, dynamic> contextData,
   ) async {
     final entities = contextData['entities'];
-    context.read<CrudBloc>().add(CrudEventCreate(entities: entities));
+    if (entities == null || entities is! List || entities.isEmpty) {
+      debugPrint('CREATE_EVENT: No entities found in contextData');
+      return contextData;
+    }
+
+    var entityList = entities.whereType<EntityModel>().toList();
+
+    // Filter by entity type if specified, otherwise send all (backward compatible)
+    final entityFilter = action.properties['entity'] as String?;
+    if (entityFilter != null && entityFilter.isNotEmpty) {
+      final allowedTypes = entityFilter
+          .split(',')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toSet();
+
+      entityList = entityList
+          .where((e) => allowedTypes.contains(getEntityTypeName(e)))
+          .toList();
+
+      debugPrint(
+          'CREATE_EVENT: Filtered to ${entityList.length} entities of types: $allowedTypes');
+    }
+
+    if (entityList.isEmpty) {
+      debugPrint('CREATE_EVENT: No entities after filtering');
+      return contextData;
+    }
+
+    context.read<CrudBloc>().add(CrudEventCreate(entities: entityList));
     return contextData;
   }
 }
