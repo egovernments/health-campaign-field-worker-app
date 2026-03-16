@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:digit_flow_builder/widgets/implementations/action_popup_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/back_link.dart';
+import 'package:digit_flow_builder/widgets/implementations/check_box_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/date_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/expandable_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/expanded_widget.dart';
@@ -79,6 +80,7 @@ class WidgetRegistration {
     FlowWidgetFactory.register(ProgressBarWidget());
     FlowWidgetFactory.register(SignatureCaptureWidget());
     FlowWidgetFactory.register(LabeledToggleWidget());
+    FlowWidgetFactory.register(CheckBoxWidget());
     _initialized = true;
   }
 

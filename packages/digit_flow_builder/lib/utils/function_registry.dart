@@ -1128,37 +1128,4 @@ void initializeFunctionRegistry() {
 
     return true;
   });
-
-  /// Registers a function to check if attendance is single session mode.
-  ///
-  /// - **Function Name**: `'isSingleSession'`
-  /// - **Arguments**: A list where the first element is the sessions value from
-  ///   AttendanceRegisterModel.additionalDetails.sessions
-  /// - **Returns**: `true` if single session (sessions != 2), `false` if double session (sessions == 2).
-  ///
-  /// This function is used in attendance marking to determine if the register
-  /// operates in single session mode (one entry/exit per day) or double session mode
-  /// (morning and evening sessions).
-  FunctionRegistry.register("isSingleSession", (args, stateData) {
-    // If no argument provided, default to single session
-    if (args.isEmpty || args.first == null) {
-      return true;
-    }
-
-    final sessionsValue = args.first;
-
-    // Try to parse as int
-    int? sessions;
-    if (sessionsValue is int) {
-      sessions = sessionsValue;
-    } else if (sessionsValue is num) {
-      sessions = sessionsValue.toInt();
-    } else if (sessionsValue is String) {
-      sessions = int.tryParse(sessionsValue);
-    }
-
-    // If sessions is 2, it's double session mode (return false)
-    // Otherwise, it's single session mode (return true)
-    return sessions != 2;
-  });
 }

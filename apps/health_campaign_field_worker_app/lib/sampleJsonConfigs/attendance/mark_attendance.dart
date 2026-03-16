@@ -135,7 +135,7 @@ final dynamic markAttendanceFlow = {
       "onAction": []
     },
     {
-      "format": "button",
+      "format": "actionPopup",
       "type": "template",
       "fieldName": "submitAttendance",
       "label": "CORE_COMMON_SUBMIT",
@@ -143,22 +143,49 @@ final dynamic markAttendanceFlow = {
         "type": "secondary",
         "size": "large",
         "mainAxisSize": "max",
-        "mainAxisAlignment": "center"
-      },
-      "onAction": [
-        {"actionType": "SUBMIT_ATTENDANCE", "properties": {}},
-        {
-          "actionType": "CREATE_EVENT",
-          "properties": {"entity": "AttendanceLogModel"}
-        },
-        {
-          "actionType": "NAVIGATION",
-          "properties": {
-            "type": "TEMPLATE",
-            "name": "attendanceAcknowledgement"
-          }
+        "mainAxisAlignment": "center",
+        "popupConfig": {
+          "title": "MARK_ATTENDANCE_FILTER_TITLE",
+          "description": "MARK_ATTENDANCE_FILTER_DESC",
+          "showCloseButton": true,
+          "barrierDismissible": true,
+          "body": [
+            {
+              "type": "template",
+              "format": "textInput",
+              "fieldName": "COMMENT",
+              "inputType": "multiline",
+            },
+            {
+              "format": "button",
+              "type": "template",
+              "fieldName": "createReferral",
+              "label": "BUTTON_MARK_ATTENDANCE",
+              "properties": {
+                "type": "primary",
+                "size": "large",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              },
+              "onAction": [
+                {"actionType": "SUBMIT_ATTENDANCE", "properties": {}},
+                {
+                  "actionType": "CREATE_EVENT",
+                  "properties": {"entity": "AttendanceLogModel"}
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "type": "TEMPLATE",
+                    "name": "attendanceAcknowledgement"
+                  }
+                }
+              ]
+            },
+          ],
         }
-      ]
+      },
+      "onAction": []
     }
   ],
   "body": [
@@ -231,7 +258,24 @@ final dynamic markAttendanceFlow = {
                 "titleIcon": "FilterAlt",
                 "showCloseButton": true,
                 "barrierDismissible": true,
-                "body": [],
+                "body": [
+                  {
+                    "type": "template",
+                    "format": "row",
+                    "children": [
+                      {
+                        "type": "template",
+                        "format": "checkbox",
+                        "value": true,
+                      },
+                      {
+                        "type": "template",
+                        "format": "textTemplate",
+                        "value": "Show only absentees"
+                      }
+                    ]
+                  }
+                ],
                 "onAction": []
               }
             },
@@ -242,7 +286,8 @@ final dynamic markAttendanceFlow = {
     {
       "type": "template",
       "format": "labeledToggle",
-      "visible": true,
+      "visible":
+          "{{fn:isNotSingleSession(contextData.0.AttendanceRegisterModel)}}",
       "value": "{{widgetData.labeledToggleValue}}",
       "activeLabel": "Morning Session",
       "inactiveLabel": "Afternoon Session",
@@ -330,6 +375,8 @@ final dynamic markAttendanceFlow = {
               {
                 "type": "template",
                 "format": "row",
+                "visible":
+                    "{{fn:isLogNotMarked(item.entity.individualId, widgetData.selectedAttendanceDate.entryTime, contextData.0.attendanceLog)}}",
                 "properties": {
                   "mainAxisAlignment": "spaceBetween",
                 },

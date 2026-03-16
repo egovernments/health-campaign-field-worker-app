@@ -142,8 +142,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
   }
 
-  double _attendanceStatus(List<dynamic>? attendanceLogs, String? individualId,
-      DateTime selectedDate, Map? attendanceCollection) {
+  double _attendanceStatus(
+      String? individualId, DateTime selectedDate, Map? attendanceCollection) {
     // Check in-memory collection first — gives instant UI feedback after mark click
     if (attendanceCollection != null && individualId != null) {
       final entry = attendanceCollection[individualId];
@@ -151,7 +151,11 @@ class _HomePageState extends LocalizedState<HomePage> {
         return (entry['status'] as num?)?.toDouble() ?? -1.0;
       }
     }
+    return -1.0;
+  }
 
+  double _attendanceLogsStatus(String? individualId, DateTime selectedDate,
+      List<dynamic>? attendanceLogs) {
     if (attendanceLogs == null || individualId == null) return -1.0;
 
     // Fall back to stored attendanceLog from DB
@@ -580,19 +584,41 @@ class _HomePageState extends LocalizedState<HomePage> {
       return deDate >= DateTime.now().millisecondsSinceEpoch;
     });
 
-    FunctionRegistry.register('isAbsentMarked', (args, stateData) {
-      List<dynamic>? attendanceLogs = args.isNotEmpty ? args[0] : null;
-      String? individualId = args.length > 1 ? args[1]?.toString() : null;
+    FunctionRegistry.register('isLogNotMarked', (args, stateData) {
+      String? individualId = args.isNotEmpty ? args[0] : null;
       int? selectedDateRaw =
-          args.length > 2 ? int.tryParse(args[2]?.toString() ?? '') : null;
-      Map? attendanceCollection = args.length > 3 ? args[3] as Map? : null;
+          args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') : null;
+      List<dynamic>? attendanceLogs =
+          args.length > 2 ? args[2] as List<dynamic>? : null;
+      bool? filter = args.length > 3 ? args[3] as bool? : null;
 
       DateTime selectedDate = selectedDateRaw != null
           ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
           : DateTime.now();
 
-      double status = _attendanceStatus(
-          attendanceLogs, individualId, selectedDate, attendanceCollection);
+      double status =
+          _attendanceLogsStatus(individualId, selectedDate, attendanceLogs);
+      bool isLogNotMarked = status == -1.0;
+      if (filter != null) {
+        return filter
+            ? isLogNotMarked
+            : true; // If filter is true, return isLogNotMarked; if false, ignore and return true
+      }
+      return isLogNotMarked;
+    });
+
+    FunctionRegistry.register('isAbsentMarked', (args, stateData) {
+      String? individualId = args.isNotEmpty ? args[0] : null;
+      int? selectedDateRaw =
+          args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') : null;
+      Map? attendanceCollection = args.length > 2 ? args[2] as Map? : null;
+
+      DateTime selectedDate = selectedDateRaw != null
+          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
+          : DateTime.now();
+
+      double status =
+          _attendanceStatus(individualId, selectedDate, attendanceCollection);
       if (status == -1.0) {
         return false;
       } else if (status == 1.0) {
@@ -617,14 +643,16 @@ class _HomePageState extends LocalizedState<HomePage> {
       String attendanceUnmarked = 'ATTENDANCE_UNMARKED';
       String markAsPresent = 'MARK_AS_PRESENT';
       String markedAsAbsent = 'MARK_AS_ABSENT';
-      double status = _attendanceStatus(
-          attendanceLogs, individualId, selectedDate, attendanceCollection);
-      if (status == -1.0) {
-        return attendanceUnmarked;
-      } else if (status == 1.0) {
+      double status =
+          _attendanceStatus(individualId, selectedDate, attendanceCollection);
+      double logsStatus =
+          _attendanceLogsStatus(individualId, selectedDate, attendanceLogs);
+      if (status == 1.0 || logsStatus == 1.0) {
         return markAsPresent;
-      } else if (status == 0.0) {
+      } else if (status == 0.0 || logsStatus == 0.0) {
         return markedAsAbsent;
+      } else if (status == -1.0 || logsStatus == -1.0) {
+        return attendanceUnmarked;
       }
     });
 
@@ -685,6 +713,29 @@ class _HomePageState extends LocalizedState<HomePage> {
       return register.startDate != null &&
           register.endDate != null &&
           register.endDate! > DateTime.now().millisecondsSinceEpoch;
+    });
+
+    /// Registers a function to check if attendance is single session mode.
+    ///
+    /// - **Function Name**: `'isSingleSession'`
+    /// - **Arguments**: A list where the first element is the sessions value from
+    ///   AttendanceRegisterModel.additionalDetails.sessions
+    /// - **Returns**: `true` if single session (sessions != 2), `false` if double session (sessions == 2).
+    ///
+    /// This function is used in attendance marking to determine if the register
+    /// operates in single session mode (one entry/exit per day) or double session mode
+    /// (morning and evening sessions).
+    FunctionRegistry.register("isNotSingleSession", (args, stateData) {
+      // If no argument provided, default to single session
+      if (args.isEmpty || args.first == null) {
+        return true;
+      }
+
+      final registerModel = args.first;
+
+      var isSingleSession = registerModel.additionalDetails?["sessions"] != 2;
+
+      return !isSingleSession;
     });
 
     // First page (viewTransaction) - shows sender for RECEIPT/RETURNED, receiver for ISSUED/DAMAGED/LOSS
