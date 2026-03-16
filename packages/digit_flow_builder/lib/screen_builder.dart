@@ -257,6 +257,7 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
         // Include _instanceId to ensure FormsRenderPage can use it as key for fresh FormGroup
         final mergedNavParams = <String, dynamic>{
           ...?widget.navigationParams,
+          ...?registryNavParams,
           if (instanceId != null) '_instanceId': instanceId,
         };
 

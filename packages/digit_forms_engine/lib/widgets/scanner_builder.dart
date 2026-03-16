@@ -220,8 +220,8 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                         // Scanner page will parse and dispatch to bloc in initState
                         final provider = ScannerComparisonProvider.of(context);
                         final registry = ScannerComparisonRegistry();
-                        final dupeFn = provider?.duplicateCheckFn ?? registry.duplicateCheckFn;
-                        final dupeErrFn = provider?.duplicateErrorMessage ?? registry.duplicateErrorMessage;
+                        final dupeFn = provider != null ? provider.duplicateCheckFn : registry.duplicateCheckFn;
+                        final dupeErrFn = provider != null ? provider.duplicateErrorMessage : registry.duplicateErrorMessage;
                         final duplicateCheckFn = dupeFn != null
                             ? (String scannedValue) => dupeFn(
                                   formControlName, scannedValue, form.value)
@@ -285,8 +285,8 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                             // Use displayQrCodes which already has the parsed data
                             final provider2 = ScannerComparisonProvider.of(context);
                             final registry2 = ScannerComparisonRegistry();
-                            final dupeFn2 = provider2?.duplicateCheckFn ?? registry2.duplicateCheckFn;
-                            final dupeErrFn2 = provider2?.duplicateErrorMessage ?? registry2.duplicateErrorMessage;
+                            final dupeFn2 = provider2 != null ? provider2.duplicateCheckFn : registry2.duplicateCheckFn;
+                            final dupeErrFn2 = provider2 != null ? provider2.duplicateErrorMessage : registry2.duplicateErrorMessage;
                             final duplicateCheckFn2 = dupeFn2 != null
                                 ? (String scannedValue) => dupeFn2(
                                       formControlName, scannedValue, form.value)
@@ -321,8 +321,8 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                           );
                       final provider3 = ScannerComparisonProvider.of(context);
                       final registry3 = ScannerComparisonRegistry();
-                      final dupeFn3 = provider3?.duplicateCheckFn ?? registry3.duplicateCheckFn;
-                      final dupeErrFn3 = provider3?.duplicateErrorMessage ?? registry3.duplicateErrorMessage;
+                      final dupeFn3 = provider3 != null ? provider3.duplicateCheckFn : registry3.duplicateCheckFn;
+                      final dupeErrFn3 = provider3 != null ? provider3.duplicateErrorMessage : registry3.duplicateErrorMessage;
                       final duplicateCheckFn3 = dupeFn3 != null
                           ? (String scannedValue) => dupeFn3(
                                 formControlName, scannedValue, form.value)

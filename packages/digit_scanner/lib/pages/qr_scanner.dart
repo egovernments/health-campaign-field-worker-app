@@ -523,7 +523,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
     if (widget.effectiveIsGS1code) {
       return fb.group(<String, Object>{
         _manualGtinFormKey: FormControl<String>(
-          validators: [Validators.required],
+          validators: [
+            Validators.required,
+            Validators.pattern(r'^\d{14}$'),
+          ],
         ),
         _manualCodeFormKey: FormControl<String>(
           validators: [Validators.required],
@@ -630,7 +633,14 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                     return;
                                   }
                                 } catch (_) {
-                                  // Allow scan to proceed if check fails
+                                  Toast.showToast(
+                                    context,
+                                    type: ToastType.error,
+                                    message: localizations.translate(
+                                        i18.scanner.duplicateCheckFailed),
+                                    sentenceCaseEnabled: false,
+                                  );
+                                  return;
                                 }
                               }
 
@@ -748,7 +758,14 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                     return;
                                   }
                                 } catch (_) {
-                                  // Allow scan to proceed if check fails
+                                  Toast.showToast(
+                                    context,
+                                    type: ToastType.error,
+                                    message: localizations.translate(
+                                        i18.scanner.duplicateCheckFailed),
+                                    sentenceCaseEnabled: false,
+                                  );
+                                  return;
                                 }
                               }
 
@@ -828,6 +845,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 'required': (object) =>
                                     localizations.translate(
                                       i18.scanner.gtinRequired,
+                                    ),
+                                'pattern': (object) =>
+                                    localizations.translate(
+                                      i18.scanner.gtinPatternError,
                                     ),
                               },
                               builder: (field) {
@@ -1011,7 +1032,14 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                   return;
                                 }
                               } catch (_) {
-                                // Allow scan to proceed if check fails
+                                Toast.showToast(
+                                  context,
+                                  type: ToastType.error,
+                                  message: localizations.translate(
+                                      i18.scanner.duplicateCheckFailed),
+                                  sentenceCaseEnabled: false,
+                                );
+                                return;
                               }
                             }
 

@@ -2,6 +2,19 @@ import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:flutter/foundation.dart';
 
+/// Thrown when a duplicate check cannot complete due to infrastructure issues
+/// (e.g., CrudService not initialized, DB query failure, entity parse error).
+///
+/// Callers should treat this as "check inconclusive" and block the scan
+/// rather than allowing it to proceed unchecked.
+class DuplicateCheckException implements Exception {
+  final String message;
+  const DuplicateCheckException(this.message);
+
+  @override
+  String toString() => 'DuplicateCheckException: $message';
+}
+
 /// Utility class for scanner duplicate detection via DB queries.
 ///
 /// Used by [ScannerComparisonProvider] in screen_builder to perform
@@ -116,48 +129,45 @@ class ScannerComparisonUtils {
     if (resolvedFilters.isEmpty) return false;
 
     // 4. Execute search
-    try {
-      final service = CrudBlocSingleton().crudService;
-      if (!service.isInitialized) return false;
+    final service = CrudBlocSingleton().crudService;
+    if (!service.isInitialized) {
+      throw const DuplicateCheckException('CrudService not initialized');
+    }
 
-      final (results, _) = await service.searchEntities(
-        query: GlobalSearchParameters(
-          filters: resolvedFilters,
-          select: [config.model],
-          primaryModel: config.model,
-        ),
-      );
+    final (results, _) = await service.searchEntities(
+      query: GlobalSearchParameters(
+        filters: resolvedFilters,
+        select: [config.model],
+        primaryModel: config.model,
+      ),
+    );
 
-      final entities = results[config.model] ?? [];
+    final entities = results[config.model] ?? [];
 
-      // 5. For "column" match: any result = duplicate
-      if (config.extractFrom == 'column') {
-        return entities.isNotEmpty;
-      }
+    // 5. For "column" match: any result = duplicate
+    if (config.extractFrom == 'column') {
+      return entities.isNotEmpty;
+    }
 
-      // 6. For "additionalFields" match: compare scanned value
-      for (final entity in entities) {
-        try {
-          final additionalFields = (entity as dynamic).additionalFields;
-          if (additionalFields == null) continue;
-          for (final field in additionalFields.fields) {
-            if (field.key == config.extractKey && field.value != null) {
-              final existingValues =
-                  extractComparisonValues(field.value.toString());
-              if (existingValues.contains(scannedValue)) {
-                return true;
-              }
+    // 6. For "additionalFields" match: compare scanned value
+    for (final entity in entities) {
+      try {
+        final additionalFields = (entity as dynamic).additionalFields;
+        if (additionalFields == null) continue;
+        for (final field in additionalFields.fields) {
+          if (field.key == config.extractKey && field.value != null) {
+            final existingValues =
+                extractComparisonValues(field.value.toString());
+            if (existingValues.contains(scannedValue)) {
+              return true;
             }
           }
-        } catch (_) {
-          continue;
         }
+      } catch (e) {
+        throw DuplicateCheckException('Entity parse failed: $e');
       }
-      return false;
-    } catch (e) {
-      debugPrint('Duplicate check failed: $e');
-      return false;
     }
+    return false;
   }
 
   /// Resolves filter value, handling switchOn/cases for conditional values.
@@ -221,22 +231,54 @@ class ScannerComparisonUtils {
   /// Uses serial number (AI 21) when available, otherwise uses the full
   /// serialized barcode string as the comparison fingerprint.
   ///
-  /// Format: `01:GTIN|10:BATCH|17:EXPIRY|21:SERIAL;01:GTIN|...`
+  /// Supports both new format (`01:GTIN|10:BATCH|17:EXPIRY|21:SERIAL`)
+  /// and legacy format (`GTIN,SERIAL,BATCH,EXPIRY`). For legacy entries,
+  /// a normalized new-format string is also emitted so cross-format
+  /// matching works correctly.
   static List<String> extractComparisonValues(String serializedData) {
     final values = <String>[];
     for (final barcode in serializedData.split(';')) {
-      if (barcode.trim().isEmpty) continue;
+      final trimmed = barcode.trim();
+      if (trimmed.isEmpty) continue;
       // Always add the full barcode string for full-match comparison
-      values.add(barcode.trim());
-      // Also add serial number (AI 21) separately if present
-      for (final pair in barcode.split('|')) {
-        final colonIdx = pair.indexOf(':');
-        if (colonIdx > 0) {
-          final key = pair.substring(0, colonIdx).trim();
-          final value = pair.substring(colonIdx + 1).trim();
-          if (key == '21' && value.isNotEmpty) {
-            values.add(value);
+      values.add(trimmed);
+
+      final isNewFormat =
+          trimmed.contains('|') || RegExp(r'^\d{2}:').hasMatch(trimmed);
+
+      if (isNewFormat) {
+        // New format: key:value|key:value
+        for (final pair in trimmed.split('|')) {
+          final colonIdx = pair.indexOf(':');
+          if (colonIdx > 0) {
+            final key = pair.substring(0, colonIdx).trim();
+            final value = pair.substring(colonIdx + 1).trim();
+            if (key == '21' && value.isNotEmpty) {
+              values.add(value);
+            }
           }
+        }
+      } else {
+        // Legacy format: GTIN,SERIAL,BATCH,EXPIRY (positional)
+        final parts = trimmed.split(',');
+        final gtin = parts.isNotEmpty ? parts[0].trim() : '';
+        final serial = parts.length > 1 ? parts[1].trim() : '';
+        final batch = parts.length > 2 ? parts[2].trim() : '';
+        final expiry = parts.length > 3 ? parts[3].trim() : '';
+
+        // Extract serial for serial-based matching
+        if (serial.isNotEmpty) {
+          values.add(serial);
+        }
+        // Emit a normalized new-format string so a new-format scan
+        // can match against this legacy DB row
+        final normalized = <String>[];
+        if (gtin.isNotEmpty) normalized.add('01:$gtin');
+        if (expiry.isNotEmpty) normalized.add('17:$expiry');
+        if (batch.isNotEmpty) normalized.add('10:$batch');
+        if (serial.isNotEmpty) normalized.add('21:$serial');
+        if (normalized.isNotEmpty) {
+          values.add(normalized.join('|'));
         }
       }
     }

@@ -2,11 +2,18 @@ import 'package:flutter/widgets.dart';
 
 /// Singleton registry that stores the duplicate check callback.
 /// This survives across route pushes (unlike InheritedWidget).
+///
+/// Tracks the owning [State] so that a disposing provider only clears
+/// the registry when it still owns it, preventing a newer provider's
+/// callbacks from being wiped by an older provider's dispose.
 class ScannerComparisonRegistry {
   static final ScannerComparisonRegistry _instance =
       ScannerComparisonRegistry._internal();
   factory ScannerComparisonRegistry() => _instance;
   ScannerComparisonRegistry._internal();
+
+  /// The [State] that last registered callbacks. Used to guard [clearIfOwner].
+  Object? _owner;
 
   Future<bool> Function(
     String fieldName,
@@ -16,9 +23,28 @@ class ScannerComparisonRegistry {
 
   String? Function(String fieldName)? duplicateErrorMessage;
 
-  void clear() {
-    duplicateCheckFn = null;
-    duplicateErrorMessage = null;
+  /// Registers callbacks and records [owner] as the current owner.
+  void register({
+    required Object owner,
+    required Future<bool> Function(
+      String fieldName,
+      String scannedValue,
+      Map<String, dynamic> formValues,
+    )? duplicateCheckFn,
+    required String? Function(String fieldName)? duplicateErrorMessage,
+  }) {
+    _owner = owner;
+    this.duplicateCheckFn = duplicateCheckFn;
+    this.duplicateErrorMessage = duplicateErrorMessage;
+  }
+
+  /// Clears callbacks only if [owner] is still the current owner.
+  void clearIfOwner(Object owner) {
+    if (_owner == owner) {
+      _owner = null;
+      duplicateCheckFn = null;
+      duplicateErrorMessage = null;
+    }
   }
 }
 
@@ -74,14 +100,16 @@ class _ScannerComparisonProviderState extends State<ScannerComparisonProvider> {
   }
 
   void _registerCallbacks() {
-    ScannerComparisonRegistry().duplicateCheckFn = widget.duplicateCheckFn;
-    ScannerComparisonRegistry().duplicateErrorMessage =
-        widget.duplicateErrorMessage;
+    ScannerComparisonRegistry().register(
+      owner: this,
+      duplicateCheckFn: widget.duplicateCheckFn,
+      duplicateErrorMessage: widget.duplicateErrorMessage,
+    );
   }
 
   @override
   void dispose() {
-    ScannerComparisonRegistry().clear();
+    ScannerComparisonRegistry().clearIfOwner(this);
     super.dispose();
   }
 

@@ -247,6 +247,7 @@ final dynamic sampleInventoryFlows = {
                 "name": "RECORDLESSEXCESS",
                 "data": [
                   {"key": "stockEntryType", "value": "LESS_EXCESS"},
+                  {"key": "transactionType", "value": "RECEIVED"},
                   {
                     "key": "mrnNumber",
                     "value": "{{fn:generateUniqueMaterialNoteNumber()}}"

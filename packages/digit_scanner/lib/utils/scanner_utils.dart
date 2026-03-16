@@ -150,7 +150,9 @@ class DigitScannerUtils {
                   return;
                 }
               } catch (_) {
-                // Allow scan to proceed if check fails
+                await handleError(localizations
+                    .translate(i18.scanner.duplicateCheckFailed));
+                return;
               }
             }
 
@@ -212,7 +214,9 @@ class DigitScannerUtils {
                 return;
               }
             } catch (_) {
-              // Allow scan to proceed if check fails
+              await handleError(localizations
+                  .translate(i18.scanner.duplicateCheckFailed));
+              return;
             }
           }
 
