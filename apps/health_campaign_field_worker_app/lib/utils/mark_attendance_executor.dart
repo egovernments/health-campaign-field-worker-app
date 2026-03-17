@@ -15,80 +15,80 @@ import 'package:flutter/material.dart';
 
 /// Stores individual attendance mark in widgetData.attendanceCollection,
 /// replicating _onIndividualAttendanceMark toggle logic.
-class MarkAttendanceExecutor extends ActionExecutor {
-  @override
-  bool canHandle(String actionType) => actionType == 'MARK_ATTENDANCE';
+// class MarkAttendanceExecutor extends ActionExecutor {
+//   @override
+//   bool canHandle(String actionType) => actionType == 'MARK_ATTENDANCE';
 
-  @override
-  Future<Map<String, dynamic>> execute(
-    ActionConfig action,
-    BuildContext context,
-    Map<String, dynamic> contextData,
-  ) async {
-    // Resolve individualId and registerId from the data array using contextData
-    final Map<String, dynamic> resolved = {};
-    final extraData = action.properties['data'] as List<dynamic>?;
-    if (extraData != null) {
-      for (final entry in extraData) {
-        final key = entry['key'] as String;
-        final valuePath = entry['value'];
-        final resolvedValue = valuePath is String
-            ? resolveValue(valuePath, contextData)
-            : valuePath;
-        if (resolvedValue != null) resolved[key] = resolvedValue;
-      }
-    }
+//   @override
+//   Future<Map<String, dynamic>> execute(
+//     ActionConfig action,
+//     BuildContext context,
+//     Map<String, dynamic> contextData,
+//   ) async {
+//     // Resolve individualId and registerId from the data array using contextData
+//     final Map<String, dynamic> resolved = {};
+//     final extraData = action.properties['data'] as List<dynamic>?;
+//     if (extraData != null) {
+//       for (final entry in extraData) {
+//         final key = entry['key'] as String;
+//         final valuePath = entry['value'];
+//         final resolvedValue = valuePath is String
+//             ? resolveValue(valuePath, contextData)
+//             : valuePath;
+//         if (resolvedValue != null) resolved[key] = resolvedValue;
+//       }
+//     }
 
-    final individualId = resolved['individualId']?.toString();
-    final registerId = resolved['registerId']?.toString();
-    final status = (action.properties['status'] as num?)?.toDouble() ?? 1.0;
-    final signatureData = action.properties['signatureData'] as String?;
+//     final individualId = resolved['individualId']?.toString();
+//     final registerId = resolved['registerId']?.toString();
+//     final status = (action.properties['status'] as num?)?.toDouble() ?? 1.0;
+//     final signatureData = action.properties['signatureData'] as String?;
 
-    if (individualId == null || individualId.isEmpty) return contextData;
+//     if (individualId == null || individualId.isEmpty) return contextData;
 
-    // Locate the screen's state in the registry
-    final instanceId = contextData['navigation']['_instanceId']?.toString();
-    // final screenKey = getEffectiveScreenKey(context, contextData);
-    final compositeKey = "markAttendance::$instanceId"
-        '';
+//     // Locate the screen's state in the registry
+//     final instanceId = contextData['navigation']['_instanceId']?.toString();
+//     // final screenKey = getEffectiveScreenKey(context, contextData);
+//     final compositeKey = "markAttendance::$instanceId"
+//         '';
 
-    final currentState = FlowCrudStateRegistry().get(compositeKey);
-    final widgetData =
-        Map<String, dynamic>.from(currentState?.widgetData ?? {});
-    final collection = Map<String, dynamic>.from(
-      widgetData['attendanceCollection'] as Map? ?? {},
-    );
+//     final currentState = FlowCrudStateRegistry().get(compositeKey);
+//     final widgetData =
+//         Map<String, dynamic>.from(currentState?.widgetData ?? {});
+//     final collection = Map<String, dynamic>.from(
+//       widgetData['attendanceCollection'] as Map? ?? {},
+//     );
 
-    // Toggle logic matching _onIndividualAttendanceMark
-    final existing = collection[individualId];
-    final currentStatus =
-        existing is Map ? (existing['status'] as num?)?.toDouble() : null;
+//     // Toggle logic matching _onIndividualAttendanceMark
+//     final existing = collection[individualId];
+//     final currentStatus =
+//         existing is Map ? (existing['status'] as num?)?.toDouble() : null;
 
-    final double finalStatus;
-    if (currentStatus == null || currentStatus == -1) {
-      finalStatus = status;
-    } else if (currentStatus == 1.0 && status == 1.0) {
-      finalStatus = 1.0; // already present, keep present
-    } else {
-      finalStatus = status;
-    }
+//     final double finalStatus;
+//     if (currentStatus == null || currentStatus == -1) {
+//       finalStatus = status;
+//     } else if (currentStatus == 1.0 && status == 1.0) {
+//       finalStatus = 1.0; // already present, keep present
+//     } else {
+//       finalStatus = status;
+//     }
 
-    collection[individualId] = {
-      'status': finalStatus,
-      'registerId': registerId,
-      'individualId': individualId,
-      'signatureData': signatureData,
-    };
-    widgetData['attendanceCollection'] = collection;
+//     collection[individualId] = {
+//       'status': finalStatus,
+//       'registerId': registerId,
+//       'individualId': individualId,
+//       'signatureData': signatureData,
+//     };
+//     widgetData['attendanceCollection'] = collection;
 
-    // Triggers ValueListenable rebuild → widget refreshes immediately
-    FlowCrudStateRegistry().update(
-      compositeKey,
-      (currentState ?? const FlowCrudState()).copyWith(widgetData: widgetData),
-    );
-    return contextData;
-  }
-}
+//     // Triggers ValueListenable rebuild → widget refreshes immediately
+//     FlowCrudStateRegistry().update(
+//       compositeKey,
+//       (currentState ?? const FlowCrudState()).copyWith(widgetData: widgetData),
+//     );
+//     return contextData;
+//   }
+// }
 
 /// Reads widgetData.attendanceCollection and builds AttendanceLogModel entities
 /// (ENTRY + EXIT per individual), mirroring _onSaveAsDraft / submitAttendanceDetails logic.
@@ -104,10 +104,15 @@ class SubmitAttendanceExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    final screenKey = getEffectiveScreenKey(context, contextData);
-    final compositeKey = contextData['_compositeKey']?.toString() ??
-        getCompositeKey(context, screenKey: screenKey) ??
-        screenKey ??
+    // final screenKey = getEffectiveScreenKey(context, contextData);
+    // final compositeKey = contextData['_compositeKey']?.toString() ??
+    //     getCompositeKey(context, screenKey: screenKey) ??
+    //     screenKey ??
+    //     '';
+
+    // Locate the screen's state in the registry
+    final instanceId = contextData['navigation']['_instanceId']?.toString();
+    final compositeKey = "markAttendance::$instanceId"
         '';
 
     final currentState = FlowCrudStateRegistry().get(compositeKey);
@@ -117,6 +122,8 @@ class SubmitAttendanceExecutor extends ActionExecutor {
     if (attendanceCollection == null || attendanceCollection.isEmpty) {
       return contextData;
     }
+
+    final comment = widgetData['COMMENT'] as String?;
 
     final selectedDate = widgetData['selectedAttendanceDate'] as Map?;
     final entryTime = (selectedDate?['entryTime'] as num?)?.toInt() ?? 0;
@@ -167,6 +174,7 @@ class SubmitAttendanceExecutor extends ActionExecutor {
         if (boundaryCode.isNotEmpty)
           EnumValues.boundaryCode.toValue(): boundaryCode,
         if (signatureData != null) 'signatureData': signatureData,
+        if (comment != null && comment.isNotEmpty) 'comment': comment,
       };
 
       final clientAudit = ClientAuditDetails(
