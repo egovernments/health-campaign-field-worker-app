@@ -11,6 +11,7 @@ import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
+import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/data/digit_crud_service.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
@@ -485,15 +486,31 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
 
       // For warehouse managers and other roles, get facility from wrapper data
-      if (stateData == null) return '';
-
       try {
         // Get facility list from stateData - CrudStateData has modelMap property
         List<Map<String, dynamic>>? projectFacilities;
 
         // stateData is CrudStateData which has modelMap: Map<String, List<Map<String, dynamic>>>
-        if (stateData.modelMap != null) {
-          projectFacilities = stateData.modelMap['ProjectFacilityModel'];
+        if (stateData?.modelMap != null) {
+          projectFacilities = stateData!.modelMap['ProjectFacilityModel'];
+        }
+
+        // Fallback: read from manageStock page's state
+        if (projectFacilities == null || projectFacilities.isEmpty) {
+          final manageStockState =
+              FlowCrudStateRegistry().get('manageStock');
+          final base = manageStockState?.base;
+          if (base is CrudStateLoaded) {
+            final pfModels = base.results['projectFacility'];
+            if (pfModels != null && pfModels.isNotEmpty) {
+              projectFacilities = pfModels
+                  .whereType<ProjectFacilityModel>()
+                  .map((pf) => <String, dynamic>{
+                        'facilityId': pf.facilityId,
+                      })
+                  .toList();
+            }
+          }
         }
 
         if (projectFacilities == null || projectFacilities.isEmpty) {
@@ -501,7 +518,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         }
 
         // Return first facility ID (user's assigned facility)
-        // Note: Could be enhanced to filter by boundary type if needed
         for (var facility in projectFacilities) {
           final facilityId = facility['facilityId']?.toString() ?? '';
           if (facilityId.isNotEmpty) {
@@ -513,6 +529,51 @@ class _HomePageState extends LocalizedState<HomePage> {
       } catch (e) {
         debugPrint('getUserFacilityId error: $e');
         return '';
+      }
+    });
+
+    // Get list of project facilities for dropdown selection
+    // Reads from manageStock page state in FlowCrudStateRegistry
+    FunctionRegistry.register('getProjectFacilities', (args, stateData) {
+      try {
+        // Try current page's stateData first
+        List<Map<String, dynamic>>? projectFacilities;
+        if (stateData?.modelMap != null) {
+          projectFacilities = stateData!.modelMap['ProjectFacilityModel'];
+        }
+
+        // Fallback: read from manageStock page's state
+        if (projectFacilities == null || projectFacilities.isEmpty) {
+          final manageStockState =
+              FlowCrudStateRegistry().get('manageStock');
+          final base = manageStockState?.base;
+          if (base is CrudStateLoaded) {
+            final pfModels = base.results['projectFacility'];
+            if (pfModels != null && pfModels.isNotEmpty) {
+              projectFacilities = pfModels
+                  .whereType<ProjectFacilityModel>()
+                  .map((pf) => <String, dynamic>{
+                        'facilityId': pf.facilityId,
+                      })
+                  .toList();
+            }
+          }
+        }
+
+        if (projectFacilities == null || projectFacilities.isEmpty) {
+          return <Map<String, dynamic>>[];
+        }
+
+        return projectFacilities
+            .map((pf) => {
+                  'code': pf['facilityId']?.toString() ?? '',
+                  'name': 'FAC_${pf['facilityId']?.toString() ?? ''}',
+                })
+            .where((item) => item['code']!.isNotEmpty)
+            .toList();
+      } catch (e) {
+        debugPrint('getProjectFacilities error: $e');
+        return <Map<String, dynamic>>[];
       }
     });
 

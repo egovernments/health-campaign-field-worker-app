@@ -71,6 +71,8 @@ class PropertySchema with _$PropertySchema {
     // Submit condition for pages - when true, form submits directly instead of navigating to next page
     @JsonKey(fromJson: _visibilityConditionOrNull)
     VisibilityCondition? submitCondition,
+    // Secondary action button label (e.g., "Decline" button alongside "Accept")
+    String? secondaryActionLabel,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>

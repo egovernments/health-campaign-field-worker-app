@@ -65,6 +65,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       multiEntityConfig: _multiEntityConfigOrNull(json['multiEntityConfig']),
       preventScreenCapture: json['preventScreenCapture'] as bool?,
       submitCondition: _visibilityConditionOrNull(json['submitCondition']),
+      secondaryActionLabel: json['secondaryActionLabel'] as String?,
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -124,6 +125,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('multiEntityConfig', instance.multiEntityConfig?.toJson());
   writeNotNull('preventScreenCapture', instance.preventScreenCapture);
   writeNotNull('submitCondition', instance.submitCondition?.toJson());
+  writeNotNull('secondaryActionLabel', instance.secondaryActionLabel);
   return val;
 }
 

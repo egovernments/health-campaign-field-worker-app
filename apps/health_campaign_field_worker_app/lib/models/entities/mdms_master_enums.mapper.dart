@@ -83,6 +83,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.dashboardConfig;
       case "TRANSIT_POST_TYPE":
         return MasterEnums.transitPostType;
+      case "BOUNDARY_RELATIONSHIP":
+        return MasterEnums.boundaryRelationShip;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -149,6 +151,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "dashboardConfig";
       case MasterEnums.transitPostType:
         return "TRANSIT_POST_TYPE";
+      case MasterEnums.boundaryRelationShip:
+        return "BOUNDARY_RELATIONSHIP";
     }
   }
 }

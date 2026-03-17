@@ -1,3 +1,4 @@
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_flow_builder/blocs/search_state_manager.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
@@ -199,11 +200,46 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
       final schemaKey = config['name'] ?? '';
       final defaultValues = config['defaultValues'] as Map<String, dynamic>?;
 
+      // Build secondary action callback from screen-level onSecondaryAction
+      final secondaryActions =
+          config['onSecondaryAction'] as List<dynamic>?;
+      VoidCallback? onSecondaryAction;
+      if (secondaryActions != null) {
+        onSecondaryAction = () {
+          final navParams = {
+            ...?widget.navigationParams,
+          };
+
+          // Get entities from registry - try base results first, then stateWrapper
+          final registryState = FlowCrudStateRegistry().get(_compositeKey);
+          List<dynamic> entities = [];
+          final base = registryState?.base;
+          if (base is CrudStateLoaded) {
+            for (final entityList in base.results.values) {
+              entities.addAll(entityList);
+            }
+          }
+          if (entities.isEmpty) {
+            entities = registryState?.stateWrapper ?? [];
+          }
+
+          ActionHandler.executeActions(
+            secondaryActions,
+            context,
+            {
+              'navigation': navParams,
+              'entities': entities,
+            },
+          );
+        };
+      }
+
       return _FormScreenWrapper(
         schemaKey: schemaKey,
         defaultValues: defaultValues,
         navigationParams: widget.navigationParams,
         compositeKey: _compositeKey,
+        onSecondaryAction: onSecondaryAction,
       );
     } else if (screenType == 'TEMPLATE') {
       return LayoutRendererPage(
@@ -221,12 +257,14 @@ class _FormScreenWrapper extends LocalizedStatefulWidget {
   final Map<String, dynamic>? defaultValues;
   final Map<String, dynamic>? navigationParams;
   final String compositeKey;
+  final VoidCallback? onSecondaryAction;
 
   const _FormScreenWrapper({
     required this.schemaKey,
     this.defaultValues,
     this.navigationParams,
     required this.compositeKey,
+    this.onSecondaryAction,
   });
 
   @override
@@ -281,6 +319,7 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
               navigationParams: mergedNavParams,
               currentSchemaKey: widget.schemaKey,
               isEdit: isEdit,
+              onSecondaryAction: widget.onSecondaryAction,
               // Pass custom components from registry with enhanced state access
               customComponents: _buildCustomComponents(
                 context,

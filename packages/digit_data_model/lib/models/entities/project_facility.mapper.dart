@@ -35,6 +35,10 @@ class ProjectFacilitySearchModelMapper
   static String? _$tenantId(ProjectFacilitySearchModel v) => v.tenantId;
   static const Field<ProjectFacilitySearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+  static List<String>? _$boundaryTypes(ProjectFacilitySearchModel v) =>
+      v.boundaryTypes;
+  static const Field<ProjectFacilitySearchModel, List<String>>
+      _f$boundaryTypes = Field('boundaryTypes', _$boundaryTypes, opt: true);
   static String? _$boundaryCode(ProjectFacilitySearchModel v) => v.boundaryCode;
   static const Field<ProjectFacilitySearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -54,6 +58,7 @@ class ProjectFacilitySearchModelMapper
     #facilityId: _f$facilityId,
     #projectId: _f$projectId,
     #tenantId: _f$tenantId,
+    #boundaryTypes: _f$boundaryTypes,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -75,6 +80,7 @@ class ProjectFacilitySearchModelMapper
         facilityId: data.dec(_f$facilityId),
         projectId: data.dec(_f$projectId),
         tenantId: data.dec(_f$tenantId),
+        boundaryTypes: data.dec(_f$boundaryTypes),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -140,12 +146,15 @@ abstract class ProjectFacilitySearchModelCopyWith<
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get facilityId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get projectId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get boundaryTypes;
   @override
   $R call(
       {List<String>? id,
       List<String>? facilityId,
       List<String>? projectId,
       String? tenantId,
+      List<String>? boundaryTypes,
       String? boundaryCode});
   ProjectFacilitySearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -184,17 +193,27 @@ class _ProjectFacilitySearchModelCopyWithImpl<$R, $Out>
               (v) => call(projectId: v))
           : null;
   @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get boundaryTypes => $value.boundaryTypes != null
+          ? ListCopyWith(
+              $value.boundaryTypes!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(boundaryTypes: v))
+          : null;
+  @override
   $R call(
           {Object? id = $none,
           Object? facilityId = $none,
           Object? projectId = $none,
           Object? tenantId = $none,
+          Object? boundaryTypes = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (facilityId != $none) #facilityId: facilityId,
         if (projectId != $none) #projectId: projectId,
         if (tenantId != $none) #tenantId: tenantId,
+        if (boundaryTypes != $none) #boundaryTypes: boundaryTypes,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -204,6 +223,7 @@ class _ProjectFacilitySearchModelCopyWithImpl<$R, $Out>
           facilityId: data.get(#facilityId, or: $value.facilityId),
           projectId: data.get(#projectId, or: $value.projectId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
+          boundaryTypes: data.get(#boundaryTypes, or: $value.boundaryTypes),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override

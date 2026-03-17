@@ -142,15 +142,24 @@ class StockDownsyncService {
       transactionType: [TransactionType.dispatched.toValue()],
     );
 
-    final stockEntries = await stockRemoteRepository.search(
-      stockSearchModel,
-      limit: 10,
-      offSet: 0,
-      lastChangedSince: lastChangedSince,
-    );
+    const limit = 10;
+    int offSet = 0;
 
-    if (stockEntries.isNotEmpty) {
-      await stockLocalRepository.bulkCreate(stockEntries);
+    while (true) {
+      final stockEntries = await stockRemoteRepository.search(
+        stockSearchModel,
+        limit: limit,
+        offSet: offSet,
+        lastChangedSince: lastChangedSince,
+      );
+
+      if (stockEntries.isNotEmpty) {
+        await stockLocalRepository.bulkCreate(stockEntries);
+      }
+
+      if (stockEntries.length < limit) break;
+
+      offSet += limit;
     }
   }
 }

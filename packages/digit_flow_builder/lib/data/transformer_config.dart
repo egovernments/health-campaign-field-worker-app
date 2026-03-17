@@ -670,6 +670,45 @@ final jsonConfig = {
       },
     }
   },
+  "stockReceipt": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "id": "stockReceiptDetails.id",
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "__context:userFacilityId",
+          "productVariantId": "__context:productVariantId",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "stockReceiptDetails.quantity",
+          "waybillNumber": "stockReceiptDetails.wayBillNumber",
+          "transactionType": "__context:transactionType",
+          "transactionReason": "__value:RECEIVED",
+          "senderId": "__context:senderFacilityId",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "__context:userFacilityId",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "sku": "__context:sku",
+            "batchNumber": "stockReceiptDetails.batchNumber",
+            "expiryDate": "stockReceiptDetails.expiryDate",
+            "comments": "stockReceiptDetails.comment",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "primaryRole": "__context:primaryRole",
+            "secondaryRole": "__context:secondaryRole"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "__value:DATETIME.NOW"
+        }
+      },
+    }
+  },
   "stockReconciliation": {
     "fallbackModel": "StockReconciliationModel",
     "models": {

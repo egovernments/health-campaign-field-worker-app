@@ -86,7 +86,8 @@ mixin _$PropertySchema {
       throw _privateConstructorUsedError; // Submit condition for pages - when true, form submits directly instead of navigating to next page
   @JsonKey(fromJson: _visibilityConditionOrNull)
   VisibilityCondition? get submitCondition =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // Secondary action button label (e.g., "Decline" button alongside "Accept")
+  String? get secondaryActionLabel => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -149,7 +150,8 @@ abstract class $PropertySchemaCopyWith<$Res> {
       MultiEntityConfig? multiEntityConfig,
       bool? preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull)
-      VisibilityCondition? submitCondition});
+      VisibilityCondition? submitCondition,
+      String? secondaryActionLabel});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
@@ -214,6 +216,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? multiEntityConfig = freezed,
     Object? preventScreenCapture = freezed,
     Object? submitCondition = freezed,
+    Object? secondaryActionLabel = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -384,6 +387,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.submitCondition
           : submitCondition // ignore: cast_nullable_to_non_nullable
               as VisibilityCondition?,
+      secondaryActionLabel: freezed == secondaryActionLabel
+          ? _value.secondaryActionLabel
+          : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -518,7 +525,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       MultiEntityConfig? multiEntityConfig,
       bool? preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull)
-      VisibilityCondition? submitCondition});
+      VisibilityCondition? submitCondition,
+      String? secondaryActionLabel});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -587,6 +595,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? multiEntityConfig = freezed,
     Object? preventScreenCapture = freezed,
     Object? submitCondition = freezed,
+    Object? secondaryActionLabel = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -757,6 +766,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.submitCondition
           : submitCondition // ignore: cast_nullable_to_non_nullable
               as VisibilityCondition?,
+      secondaryActionLabel: freezed == secondaryActionLabel
+          ? _value.secondaryActionLabel
+          : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -811,7 +824,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       @JsonKey(fromJson: _showAlertOrNull) this.showAlertPopUp,
       @JsonKey(fromJson: _multiEntityConfigOrNull) this.multiEntityConfig,
       this.preventScreenCapture,
-      @JsonKey(fromJson: _visibilityConditionOrNull) this.submitCondition})
+      @JsonKey(fromJson: _visibilityConditionOrNull) this.submitCondition,
+      this.secondaryActionLabel})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
@@ -978,10 +992,13 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   @JsonKey(fromJson: _visibilityConditionOrNull)
   final VisibilityCondition? submitCondition;
+// Secondary action button label (e.g., "Decline" button alongside "Accept")
+  @override
+  final String? secondaryActionLabel;
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel)';
   }
 
   @override
@@ -1061,7 +1078,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.preventScreenCapture, preventScreenCapture) ||
                 other.preventScreenCapture == preventScreenCapture) &&
             (identical(other.submitCondition, submitCondition) ||
-                other.submitCondition == submitCondition));
+                other.submitCondition == submitCondition) &&
+            (identical(other.secondaryActionLabel, secondaryActionLabel) ||
+                other.secondaryActionLabel == secondaryActionLabel));
   }
 
   @JsonKey(ignore: true)
@@ -1109,7 +1128,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         showAlertPopUp,
         multiEntityConfig,
         preventScreenCapture,
-        submitCondition
+        submitCondition,
+        secondaryActionLabel
       ]);
 
   @JsonKey(ignore: true)
@@ -1178,7 +1198,8 @@ abstract class _PropertySchema implements PropertySchema {
       final MultiEntityConfig? multiEntityConfig,
       final bool? preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull)
-      final VisibilityCondition? submitCondition}) = _$PropertySchemaImpl;
+      final VisibilityCondition? submitCondition,
+      final String? secondaryActionLabel}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -1284,6 +1305,8 @@ abstract class _PropertySchema implements PropertySchema {
   @override // Submit condition for pages - when true, form submits directly instead of navigating to next page
   @JsonKey(fromJson: _visibilityConditionOrNull)
   VisibilityCondition? get submitCondition;
+  @override // Secondary action button label (e.g., "Decline" button alongside "Accept")
+  String? get secondaryActionLabel;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
