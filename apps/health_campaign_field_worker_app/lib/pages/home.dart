@@ -8,6 +8,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/enum_values.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -191,9 +193,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
   /// Register custom components for forms engine
   void _registerCustomComponents() {
-// Register attendance executors
-    ActionHandler.registry
-        .register('MARK_ATTENDANCE', MarkAttendanceExecutor());
+    // Register attendance executors
     ActionHandler.registry
         .register('SUBMIT_ATTENDANCE', SubmitAttendanceExecutor());
 
@@ -628,6 +628,22 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
     });
 
+    FunctionRegistry.register('attendanceLogStatus', (args, stateData) {
+      String? individualId = args.isNotEmpty ? args[0] : null;
+      int? selectedDateRaw =
+          args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') : null;
+      List<dynamic>? attendanceLogs =
+          args.length > 2 ? args[2] as List<dynamic>? : null;
+
+      DateTime selectedDate = selectedDateRaw != null
+          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
+          : DateTime.now();
+
+      double status =
+          _attendanceLogsStatus(individualId, selectedDate, attendanceLogs);
+      return status; // 1.0 for present, 0.0 for absent, 0.5 for half day, -1.0 for unmarked
+    });
+
     // Update attendanceStatus to also check in-memory collection (4th arg)
     FunctionRegistry.register('attendanceStatus', (args, stateData) {
       List<dynamic>? attendanceLogs = args.isNotEmpty ? args[0] : null;
@@ -736,6 +752,143 @@ class _HomePageState extends LocalizedState<HomePage> {
       var isSingleSession = registerModel.additionalDetails?["sessions"] != 2;
 
       return !isSingleSession;
+    });
+
+    FunctionRegistry.register("attendeeFilterByTeam", (args, stateData) {
+      // If no argument provided, default to single session
+      if (args.isEmpty || args.first == null) return null;
+
+      final attendees = args.first;
+      final teamName = args.length > 1 ? args[1]?.toString() : null;
+      List filteredAttendees = attendees;
+
+      return filteredAttendees;
+    });
+
+    /// Builds AttendanceLogModel entities (ENTRY + EXIT per individual) from
+    /// attendanceCollection, mirroring _onSaveAsDraft / submitAttendanceDetails.
+    /// Reuses clientReferenceId from existing logs for dedup on re-submit.
+    ///
+    /// Args:
+    ///  - args[0]: attendanceCollection (Map<individualId, {status, signatureData, ...}>)
+    ///  - args[1]: selectedDate (Map with 'entryTime' and 'exitTime' as epoch millis)
+    ///  - args[2]: registerId (String)
+    ///  - args[3]: existingLogs (List<AttendanceLogModel>) - optional, for dedup
+    ///
+    /// Returns: List<AttendanceLogModel> entities ready for CREATE action.
+    FunctionRegistry.register('submitAttendance', (args, stateData) {
+      if (args.isEmpty || args.first == null) return <EntityModel>[];
+
+      final attendanceCollection = args[0] as Map?;
+      if (attendanceCollection == null || attendanceCollection.isEmpty) {
+        return <EntityModel>[];
+      }
+
+      final selectedDate = args.length > 1 ? args[1] as Map? : null;
+      final entryTime = (selectedDate?['entryTime'] as num?)?.toInt() ?? 0;
+      final exitTime = (selectedDate?['exitTime'] as num?)?.toInt() ?? 0;
+
+      final registerId = args.length > 2 ? args[2]?.toString() ?? '' : '';
+      final List<dynamic> existingLogs =
+          args.length > 3 && args[3] is List ? args[3] as List : [];
+
+      final tenantId = FlowBuilderSingleton().selectedProject?.tenantId ?? '';
+      final boundaryCode = AttendanceSingleton().boundary?.code ?? '';
+      final userUuid = FlowBuilderSingleton().loggedInUser?.uuid ?? '';
+      final now = DateTime.now().millisecondsSinceEpoch;
+
+      final List<EntityModel> entities = [];
+
+      for (final entry in attendanceCollection.entries) {
+        final individualId = entry.key.toString();
+        final data = entry.value as Map?;
+        if (data == null) continue;
+
+        final markStatus = (data['status'] as num?)?.toDouble() ?? -1;
+        if (markStatus == -1) continue; // skip unmarked
+
+        final isPresent = markStatus >= 1.0;
+        final signatureData = data['signatureData'] as String?;
+        final logStatus = isPresent
+            ? EnumValues.active.toValue()
+            : EnumValues.inactive.toValue();
+
+        final additionalDetails = <String, dynamic>{
+          if (boundaryCode.isNotEmpty)
+            EnumValues.boundaryCode.toValue(): boundaryCode,
+          if (signatureData != null) 'signatureData': signatureData,
+        };
+
+        final clientAudit = ClientAuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+        final audit = AuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+
+        // Reuse clientReferenceId from existing log if present (dedup)
+        final existingEntryLog = existingLogs
+            .where((l) =>
+                l.individualId == individualId &&
+                l.registerId == registerId &&
+                l.type == EnumValues.entry.toValue() &&
+                l.time == entryTime &&
+                l.clientReferenceId != null)
+            .toList();
+
+        final existingExitLog = existingLogs
+            .where((l) =>
+                l.individualId == individualId &&
+                l.registerId == registerId &&
+                l.type == EnumValues.exit.toValue() &&
+                l.time == exitTime &&
+                l.clientReferenceId != null)
+            .toList();
+
+        // ENTRY log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingEntryLog.isNotEmpty
+              ? existingEntryLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.entry.toValue(),
+          status: logStatus,
+          time: entryTime,
+          uploadToServer: true,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+
+        // EXIT log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingExitLog.isNotEmpty
+              ? existingExitLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.exit.toValue(),
+          status: logStatus,
+          time: exitTime,
+          uploadToServer: true,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+      }
+
+      return entities;
     });
 
     // First page (viewTransaction) - shows sender for RECEIPT/RETURNED, receiver for ISSUED/DAMAGED/LOSS
