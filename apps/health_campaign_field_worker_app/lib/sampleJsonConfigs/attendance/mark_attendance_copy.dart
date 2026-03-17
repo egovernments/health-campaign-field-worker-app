@@ -120,7 +120,7 @@ final dynamic markAttendanceFlow = {
   ],
   "footer": [
     {
-      // "visible": "{{fn:isSameDay(widgetData.selectedAttendanceDate.date)}}",
+      "visible": "{{fn:isSameDay(widgetData.selectedAttendanceDate.date)}}",
       "format": "button",
       "type": "template",
       "fieldName": "createReferral",
@@ -135,7 +135,7 @@ final dynamic markAttendanceFlow = {
       "onAction": []
     },
     {
-      "format": "button",
+      "format": "actionPopup",
       "type": "template",
       "fieldName": "submitAttendance",
       "label": "CORE_COMMON_SUBMIT",
@@ -144,77 +144,49 @@ final dynamic markAttendanceFlow = {
         "size": "large",
         "mainAxisSize": "max",
         "mainAxisAlignment": "center",
-      },
-      "onAction": [
-        {"actionType": "CLOSE_POPUP", "properties": {}},
-        {"actionType": "SUBMIT_ATTENDANCE", "properties": {}},
-        {
-          "actionType": "CREATE_EVENT",
-          "properties": {"entity": "AttendanceLogModel"}
-        },
-        {
-          "actionType": "NAVIGATION",
-          "properties": {
-            "type": "TEMPLATE",
-            "name": "attendanceAcknowledgement"
-          }
+        "popupConfig": {
+          "title": "MARK_ATTENDANCE_FILTER_TITLE",
+          "description": "MARK_ATTENDANCE_FILTER_DESC",
+          "showCloseButton": true,
+          "barrierDismissible": true,
+          "body": [
+            {
+              "type": "template",
+              "format": "textInput",
+              "fieldName": "COMMENT",
+              "inputType": "multiline",
+            },
+            {
+              "format": "button",
+              "type": "template",
+              "fieldName": "createReferral",
+              "label": "BUTTON_MARK_ATTENDANCE",
+              "properties": {
+                "type": "primary",
+                "size": "large",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              },
+              "onAction": [
+                {"actionType": "SUBMIT_ATTENDANCE", "properties": {}},
+                {
+                  "actionType": "CREATE_EVENT",
+                  "properties": {"entity": "AttendanceLogModel"}
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "type": "TEMPLATE",
+                    "name": "attendanceAcknowledgement"
+                  }
+                }
+              ]
+            },
+          ],
         }
-      ]
-    },
-    // {
-    //   "format": "actionPopup",
-    //   "type": "template",
-    //   "fieldName": "submitAttendance",
-    //   "label": "CORE_COMMON_SUBMIT",
-    //   "properties": {
-    //     "type": "secondary",
-    //     "size": "large",
-    //     "mainAxisSize": "max",
-    //     "mainAxisAlignment": "center",
-    //     "popupConfig": {
-    //       "title": "MARK_ATTENDANCE_FILTER_TITLE",
-    //       "description": "MARK_ATTENDANCE_FILTER_DESC",
-    //       "showCloseButton": true,
-    //       "barrierDismissible": true,
-    //       "body": [
-    //         {
-    //           "type": "template",
-    //           "format": "textInput",
-    //           "fieldName": "COMMENT",
-    //           "inputType": "multiline",
-    //         },
-    //         {
-    //           "format": "button",
-    //           "type": "template",
-    //           "fieldName": "createReferral",
-    //           "label": "BUTTON_MARK_ATTENDANCE",
-    //           "properties": {
-    //             "type": "primary",
-    //             "size": "large",
-    //             "mainAxisSize": "max",
-    //             "mainAxisAlignment": "center"
-    //           },
-    //           "onAction": [
-    //             {"actionType": "CLOSE_POPUP", "properties": {}},
-    //             {"actionType": "SUBMIT_ATTENDANCE", "properties": {}},
-    //             {
-    //               "actionType": "CREATE_EVENT",
-    //               "properties": {"entity": "AttendanceLogModel"}
-    //             },
-    //             {
-    //               "actionType": "NAVIGATION",
-    //               "properties": {
-    //                 "type": "TEMPLATE",
-    //                 "name": "attendanceAcknowledgement"
-    //               }
-    //             }
-    //           ]
-    //         },
-    //       ],
-    //     }
-    //   },
-    //   "onAction": []
-    // }
+      },
+      "onAction": []
+    }
   ],
   "body": [
     {
@@ -299,7 +271,7 @@ final dynamic markAttendanceFlow = {
                       {
                         "type": "template",
                         "format": "textTemplate",
-                        "value": "UNMARKED_ATTENDANCE_ONLY",
+                        "value": "Show only absentees"
                       }
                     ]
                   }
@@ -331,75 +303,8 @@ final dynamic markAttendanceFlow = {
       "properties": {"spacing": "spacer4"},
       "child": {
         "type": "template",
-        "format": "markAttendanceCard",
-        "fieldName": "makeAttendanceCard",
+        "format": "card",
         "visible": "{{fn:isActiveAttendee(item.entity.denrollmentDate)}}",
-        "groupByTeam": false,
-        "signatureCapture": true,
-        "scanQrCode": true,
-        "proofOfWork": false,
-        "statusMapping": {
-          "-1.0": "ATTENDANCE_UNMARKED",
-          "0.0": "MARK_AS_ABSENT",
-          "1.0": "MARK_AS_PRESENT",
-        },
-        "buttons": [
-          {
-            "label": "PRESENT",
-            "color": "green",
-            "prefixIcon": "Check",
-          },
-          {
-            "label": "ABSENT",
-            "color": "red",
-            "prefixIcon": "Close",
-          }
-        ],
-        "attendanceData": {
-          "attendanceLogStatus":
-              "{{fn:attendanceLogStatus(item.entity.individualId, widgetData.selectedAttendanceDate.entryTime, contextData.0.attendanceLog)}}"
-        },
-        "popupConfig": {
-          "title": "MARK_ATTENDANCE_CONFIRM_TITLE",
-          "description": "MARK_ATTENDANCE_CONFIRM_PRESENT_DESC",
-          "titleIcon": "CheckCircle",
-          "showCloseButton": true,
-          "barrierDismissible": true,
-          "body": [
-            {
-              "type": "template",
-              "format": "signatureCapture",
-              "fieldName": "signature",
-              "individualName": "individualName",
-              "captureSignatureLabel":
-                  "MARK_ATTENDANCE_CAPTURE_SIGNATURE_LABEL",
-              "clearSignatureLabel": "MARK_ATTENDANCE_CLEAR_SIGNATURE_LABEL",
-              "saveSignatureLabel": "MARK_ATTENDANCE_SAVE_SIGNATURE_LABEL",
-              "signatureRequiredLabel":
-                  "MARK_ATTENDANCE_SIGNATURE_REQUIRED_LABEL",
-              "onAction": [
-                {
-                  "actionType": "MARK_ATTENDANCE",
-                  "properties": {
-                    "status": 1.0,
-                    "data": [
-                      {
-                        "key": "individualId",
-                        "value": "{{item.entity.individualId}}"
-                      },
-                      {
-                        "key": "registerId",
-                        "value": "{{item.entity.registerId}}"
-                      },
-                    ]
-                  }
-                },
-                {"actionType": "CLOSE_POPUP", "properties": {}},
-              ]
-            }
-          ],
-          "onAction": []
-        },
         "children": [
           {
             "type": "template",
@@ -578,6 +483,7 @@ final dynamic markAttendanceFlow = {
             ]
           }
         ],
+        "fieldName": "complaintCard",
       }
     }
   ]
