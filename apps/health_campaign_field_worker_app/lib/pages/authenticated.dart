@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -19,7 +18,6 @@ import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
@@ -31,12 +29,15 @@ import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
+import '../blocs/push_notification/push_notification.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/downsync/downsync.dart';
+import '../models/entities/notification_data.dart';
 import '../models/entities/roles_type.dart';
+import '../notification_handlers/notification_handler.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
@@ -264,23 +265,35 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                         create: (_) => FormsBloc(),
                       ),
                     ],
-                    child: ErrorBoundary(builder: (context, error) {
-                      return error != null
-                          ? const ErrorScreen()
-                          : AutoRouter(
-                              navigatorObservers: () => [
-                                AuthenticatedRouteObserver(
-                                  onNavigated: () {
-                                    bool shouldShowDrawer;
-                                    switch (context.router.topRoute.name) {
-                                      case ProjectSelectionRoute.name:
-                                      case BoundarySelectionRoute.name:
-                                      case PermissionsRoute.name:
-                                        shouldShowDrawer = false;
-                                        break;
-                                      default:
-                                        shouldShowDrawer = true;
-                                    }
+                    child: BlocListener<PushNotificationBloc,
+                        PushNotificationState>(
+                      listener: (context, state) {
+                        if (state is PushNotificationTappedState) {
+                          final notificationData =
+                              NotificationData.fromMap(state.data);
+
+                          NotificationHandlerFactory
+                              .getHandler(notificationData.notificationType)
+                              ?.handle(context, notificationData.payload);
+                        }
+                      },
+                      child: ErrorBoundary(builder: (context, error) {
+                        return error != null
+                            ? const ErrorScreen()
+                            : AutoRouter(
+                                navigatorObservers: () => [
+                                  AuthenticatedRouteObserver(
+                                    onNavigated: () {
+                                      bool shouldShowDrawer;
+                                      switch (context.router.topRoute.name) {
+                                        case ProjectSelectionRoute.name:
+                                        case BoundarySelectionRoute.name:
+                                        case PermissionsRoute.name:
+                                          shouldShowDrawer = false;
+                                          break;
+                                        default:
+                                          shouldShowDrawer = true;
+                                      }
 
                                     _drawerVisibilityController
                                         .add(shouldShowDrawer);
@@ -290,6 +303,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                             );
                     }),
                   ),
+                ),
                 ),
               );
             },
@@ -387,9 +401,9 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   onPressed: () async {
                     final connectivityResult =
                         await (Connectivity().checkConnectivity());
-                    final isOnline =
-                        connectivityResult.contains(ConnectivityResult.wifi) ||
-                            connectivityResult.contains(ConnectivityResult.mobile);
+                    final isOnline = connectivityResult
+                            .contains(ConnectivityResult.wifi) ||
+                        connectivityResult.contains(ConnectivityResult.mobile);
 
                     if (isOnline) {
                       if (context.mounted) {

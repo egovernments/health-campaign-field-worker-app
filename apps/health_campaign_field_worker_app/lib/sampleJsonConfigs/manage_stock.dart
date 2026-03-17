@@ -1218,6 +1218,18 @@ final dynamic sampleInventoryFlows = {
           }
         },
         {
+          "actionType": "UPDATE_STOCK_BALANCE",
+          "properties": {
+            "entity": "STOCK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to update stock balance."}
+              }
+            ]
+          }
+        },
+        {
           "actionType": "NAVIGATION",
           "properties": {
             "type": "TEMPLATE",

@@ -873,7 +873,7 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
-                    "label": "{{fn:getInEligibleStatus(item.task)}}",
+                    "label": "NOT_ELIGIBLE",
                     "format": "tag",
                     "visible":
                         "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false",
@@ -3309,8 +3309,7 @@ final dynamic sampleFlows = {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
                         "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  },
-                  {"key": "status", "value": "INELIGIBLE"}
+                  }
                 ],
                 "onError": [
                   {
@@ -3672,6 +3671,7 @@ final dynamic sampleFlows = {
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
+              "includeInForm": true,
               "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
               "systemDate": false,
               "validations": [
@@ -4932,6 +4932,10 @@ final dynamic sampleFlows = {
               "readOnly": false,
               "required": true,
               "fieldName": "gender",
+              "enums": [
+                {"code": "MALE", "name": "MALE"},
+                {"code": "FEMALE", "name": "Female"}
+              ],
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",

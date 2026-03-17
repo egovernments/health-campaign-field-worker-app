@@ -87,7 +87,8 @@ class Common {
 
   String get coreCommonDelete => 'CORE_COMMON_DELETE';
 
-  String get coreCommonQuantityDistributed => 'CORE_COMMON_QUANTITY_DISTRIBUTED';
+  String get coreCommonQuantityDistributed =>
+      'CORE_COMMON_QUANTITY_DISTRIBUTED';
 
   String get coreCommonDeleteResource => 'CORE_COMMON_DELETE_RESOURCE';
 
@@ -198,8 +199,7 @@ class Common {
 
   String get permissionsAlert => 'PERMISSIONS_ALERT';
 
-  String get enablePermissionCheckbox =>
-      'ENABLE_PERMISSION_CHECKBOX';
+  String get enablePermissionCheckbox => 'ENABLE_PERMISSION_CHECKBOX';
 
   String get allowPermissions => 'CORE_COMMON_ALLOW_PERMISSIONS';
 
@@ -252,6 +252,10 @@ class HomeShowcase {
 
   String get distributorSyncData {
     return 'DISTRIBUTOR_HOME_SHOWCASE_SYNC_DATA';
+  }
+
+  String get stockSyncData {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_STOCK_SYNC_DATA';
   }
 
   String get warehouseManagerManageStock {
@@ -638,6 +642,8 @@ class Home {
 
   String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
 
+  String get stockSyncDataLabel => 'HOME_STOCK_SYNC_DATA_LABEL';
+
   String get callbackLabel => 'HOME_CALL_BACK_LABEL';
 
   String get fileComplaint => 'HOME_FILE_COMPLAINT';
@@ -675,6 +681,10 @@ class Home {
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
+
+  String get stockBalanceLabel => 'HOME_STOCK_BALANCE_LABEL';
+
+  String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
 }
 
 class DataShare {

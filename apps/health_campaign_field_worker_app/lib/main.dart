@@ -5,11 +5,12 @@ import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-import 'package:flutter/foundation.dart';
 import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -18,6 +19,7 @@ import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/secure_store/secure_store.dart';
 import 'data/remote_client.dart';
+import 'notification_service.dart';
 import 'pages/error_boundary.dart';
 import 'router/app_router.dart';
 import 'utils/background_service.dart';
@@ -96,6 +98,16 @@ void main() async {
   _sql = LocalSqlDataStore(encryptionKey: encryptionKey);
 
   await initializeService(_dio, _isar);
+
+  // Register FCM background message handler
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+  // Initialize FCM and retrieve token early
+  final notificationService = NotificationService();
+  await notificationService.init();
+  final fcmToken = await notificationService.initializeFCM();
+  debugPrint('FCM Token at startup: $fcmToken');
+
   runApp(MainApplication(
     appRouter: AppRouter(),
     isar: _isar,

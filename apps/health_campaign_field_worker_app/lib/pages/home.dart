@@ -53,6 +53,7 @@ import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
+import '../utils/stock_downsync.dart';
 import '../utils/utils.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
@@ -65,6 +66,7 @@ import '../widgets/progress_bar/beneficiary_progress.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
+import '../widgets/stock_balance/stock_balance_card.dart';
 import '../widgets/stock_reconciliation/stock_reconciliation_card.dart';
 import '../widgets/task_functions.dart';
 
@@ -622,6 +624,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                   showcaseFor: showcaseKeys.toSet().toList(),
                 ),
               ),
+              // Show stock balance card for users with stock management access
+              if (state.actionsWrapper.actions
+                  .map((e) => e.displayName)
+                  .contains(i18.home.manageStockLabel))
+                const StockBalanceCard(),
               skipProgressBar
                   ? const SizedBox.shrink()
                   : homeShowcaseData.distributorProgressBar.buildWith(
@@ -1259,6 +1266,27 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.buildWith(
+          child: HomeItemCard(
+        icon: Icons.sync_alt,
+        label: i18.home.stockSyncDataLabel,
+        onPressed: () async {
+          final stockService = StockDownsyncService(
+            localSecureStore: LocalSecureStore.instance,
+            projectFacilityLocalRepository: context.read<
+                LocalRepository<ProjectFacilityModel,
+                    ProjectFacilitySearchModel>>(),
+            facilityLocalRepository: context
+                .read<LocalRepository<FacilityModel, FacilitySearchModel>>(),
+            stockRemoteRepository:
+                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+            stockLocalRepository:
+                context.read<LocalRepository<StockModel, StockSearchModel>>(),
+          );
+
+          await stockService.execute(context);
+        },
+      )),
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.buildWith(
         child: HomeItemCard(
@@ -1430,6 +1458,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       //     customIcon: Constants.beneficiaryIdDownload,
       //   ),
       // ),
+
       i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
           child: HomeItemCard(
         icon: Icons.vaccines_outlined,
@@ -1488,6 +1517,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel,
       i18.home.dashboard,
       // i18.home.beneficiaryIdLabel, // TODO: Uncomment when beneficiary downsync is implemented
+      i18.home.faceRegistrationLabel,
       i18.home.dataShare,
       i18.home.db,
     ];
@@ -1509,6 +1539,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
+    filteredLabels.add(i18.home.stockSyncDataLabel);
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 

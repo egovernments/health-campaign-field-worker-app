@@ -83,8 +83,94 @@ class UserActionLocalRepository
   DataModelType get type => DataModelType.userAction;
 
   @override
-  FutureOr<List<UserActionModel>> search(UserActionSearchModel query) {
-    // TODO: implement search
-    throw UnimplementedError();
+  FutureOr<List<UserActionModel>> search(UserActionSearchModel query) async {
+    return retryLocalCallOperation<List<UserActionModel>>(() async {
+      final selectQuery = sql.select(sql.userAction).join([]);
+      final results = await (selectQuery
+            ..where(
+              buildAnd(
+                [
+                  if (query.clientReferenceId != null &&
+                      query.clientReferenceId!.isNotEmpty)
+                    sql.userAction.clientReferenceId.isIn(
+                      query.clientReferenceId!,
+                    ),
+                ],
+              ),
+            ))
+          .get();
+
+      return results.map((e) {
+        final data = e.readTable(sql.userAction);
+
+        final createdBy = data.auditCreatedBy;
+        final createdTime = data.auditCreatedTime;
+
+        UserActionAdditionalFields? additionalFields;
+        if (data.additionalFields != null) {
+          additionalFields = UserActionAdditionalFieldsMapper.fromJson(
+            data.additionalFields!,
+          );
+        }
+
+        return UserActionModel(
+          id: data.id,
+          tenantId: data.tenantId,
+          projectId: data.projectId,
+          boundaryCode: data.boundaryCode,
+          action: data.action,
+          clientReferenceId: data.clientReferenceId,
+          latitude: double.tryParse(data.latitude) ?? 0.0,
+          longitude: double.tryParse(data.longitude) ?? 0.0,
+          locationAccuracy: double.tryParse(data.locationAccuracy) ?? 0.0,
+          isSync: data.isSync,
+          timestamp: data.timestamp,
+          nonRecoverableError: data.nonRecoverableError,
+          rowVersion: data.rowVersion,
+          beneficiaryTag: data.beneficiaryTag,
+          resourceTag: data.resourceTag,
+          additionalFields: additionalFields,
+          isDeleted: data.isDeleted ?? false,
+          auditDetails: createdTime == null || createdBy == null
+              ? null
+              : AuditDetails(
+                  createdTime: createdTime,
+                  createdBy: createdBy,
+                  lastModifiedBy: data.auditModifiedBy,
+                  lastModifiedTime: data.auditModifiedTime,
+                ),
+          clientAuditDetails:
+              data.clientCreatedTime == null || data.clientCreatedBy == null
+                  ? null
+                  : ClientAuditDetails(
+                      createdTime: data.clientCreatedTime!,
+                      createdBy: data.clientCreatedBy!,
+                      lastModifiedBy: data.clientModifiedBy,
+                      lastModifiedTime: data.clientModifiedTime,
+                    ),
+        );
+      }).toList();
+    });
+  }
+
+  @override
+  FutureOr<void> update(
+    UserActionModel entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.update,
+  }) async {
+    return retryLocalCallOperation(() async {
+      await sql.batch((batch) {
+        batch.update(
+          sql.userAction,
+          entity.companion,
+          where: (table) => table.clientReferenceId.equals(
+            entity.clientReferenceId,
+          ),
+        );
+      });
+
+      return super.update(entity, createOpLog: createOpLog);
+    });
   }
 }
