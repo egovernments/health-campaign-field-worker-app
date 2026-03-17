@@ -145,6 +145,8 @@ class Scanner {
 
   String get resourceAlreadyScanned => 'RESOURCES_ALREADY_SCANNED';
 
+  String get duplicateCheckFailed => 'DUPLICATE_CHECK_FAILED';
+
   String get invalidBarcode => 'INVALID_BARCODE';
 
   String get manualCodeDescription => 'MANUAL_CODE_DESC';
@@ -171,6 +173,10 @@ class Scanner {
 
   String get barCodeExpiry => 'BARCODE_EXPIRY_DATE';
 
+  String get barCodeGtin => 'BARCODE_GTIN';
+  String get gtinRequired => 'BARCODE_GTIN_REQUIRED';
+
+  String get gtinPatternError => 'BARCODE_GTIN_MUST_BE_14_DIGITS';
   String get batchNoRequired => 'BARCODE_BATCH_NO_REQUIRED';
   String get serialNoRequired => 'BARCODE_SERIAL_NO_REQUIRED';
   String get expiryDateRequired => 'BARCODE_EXPIRY_DATE_REQUIRED';

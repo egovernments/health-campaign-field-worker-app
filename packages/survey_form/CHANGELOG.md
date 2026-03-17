@@ -1,4 +1,4 @@
-## 1.0.3+1
+## 1.0.4
 
 * Bug fix:
     * Added missing serviceClientReferenceId during checklist submit

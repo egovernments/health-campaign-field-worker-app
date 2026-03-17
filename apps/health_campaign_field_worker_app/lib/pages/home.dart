@@ -154,13 +154,15 @@ class _HomePageState extends LocalizedState<HomePage> {
     CustomComponentRegistry().registerBuilder(
       'facilityToWhich',
       (context, stateAccessor) {
-        // Access data from RECORDSTOCK form (where formData is stored by NAVIGATION executor)
         final stockData = stateAccessor.getPageData('manageStock');
 
-        // Build your component with access to all this data
+        // Use stateAccessor.currentPageName which is set by the screen builder
+        // to the active form's schemaKey (e.g., 'RECORDSTOCK' or 'RECORDLESSEXCESS')
+        final schemaName = stateAccessor.currentPageName;
+
         return FacilityCard(
           stateData: stockData,
-          schemaName: 'RECORDSTOCK',
+          schemaName: schemaName,
           formKey: 'facilityToWhich',
           dependantFormKey: 'teamCode',
         );
@@ -169,13 +171,14 @@ class _HomePageState extends LocalizedState<HomePage> {
     CustomComponentRegistry().registerBuilder(
       'facilityFromWhich',
       (context, stateAccessor) {
-        // Access data from RECORDSTOCK form (where formData is stored by NAVIGATION executor)
         final stockData = stateAccessor.getPageData('manageStock');
 
-        // Build your component with access to all this data
+        // Use stateAccessor.currentPageName for the active form's schemaKey
+        final schemaName = stateAccessor.currentPageName;
+
         return FacilityCard(
           stateData: stockData,
-          schemaName: 'RECORDSTOCK',
+          schemaName: schemaName,
           formKey: 'facilityFromWhich',
           dependantFormKey: 'deliveryTeam',
         );
@@ -191,6 +194,18 @@ class _HomePageState extends LocalizedState<HomePage> {
         return ProductSelectionCard(
           stateData: stockData,
           pageSchema: 'RECORDSTOCK',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'productVariant',
+      (context, stateAccessor) {
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        return ProductSelectionCard(
+          stateData: stockData,
+          pageSchema: 'RECORDLESSEXCESS',
+          formKey: 'productVariant',
         );
       },
     );
@@ -357,6 +372,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         'returned': 'RETURNED',
         'damage': 'DAMAGED',
         'loss': 'LOSS',
+        'excess': 'EXCESS',
+        'less': 'LESS',
       };
       return entryTypes[reportType] ?? '';
     });
@@ -913,11 +930,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                       to: 'task',
                       localKey: 'clientReferenceId',
                       foreignKey: 'projectBeneficiaryClientReferenceId'),
+
                   const RelationshipMapping(
-                      from: 'projectBeneficiary',
-                      to: 'referral',
-                      localKey: 'clientReferenceId',
-                      foreignKey: 'projectBeneficiaryClientReferenceId'),
+                      from: 'identifier',
+                      to: 'hFReferral',
+                      localKey: 'identifierId',
+                      foreignKey: 'beneficiaryId'),
+
                   // Conditional mapping
                   if (FlowBuilderSingleton().beneficiaryType ==
                       BeneficiaryType.household)
@@ -1615,6 +1634,9 @@ void setPackagesSingleton(BuildContext context) {
                     .map((e) => e.code.snakeCase.toUpperCase())
                     .toList();
               }),
+          checklistTypes: (appConfiguration.checklistTypes ?? [])
+              .map((e) => e.code)
+              .toList(),
         );
 
         DashboardSingleton().setInitialData(

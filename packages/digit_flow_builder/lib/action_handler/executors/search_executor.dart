@@ -421,12 +421,22 @@ class SearchExecutor extends ActionExecutor {
       }
     }
 
+    // Get primaryModel and select from config
+    final primaryModel = config?['wrapperConfig']?['searchConfig']?['primary'];
+    final select = (config?['wrapperConfig']?['searchConfig']?['select'] as List?)
+            ?.cast<String>() ??
+        [];
+
+    // If no config available (e.g., on form pages), skip the search
+    if (primaryModel == null || select.isEmpty) {
+      debugPrint('SEARCH_EVENT: No searchConfig in config, skipping search. primaryModel=$primaryModel, select=$select');
+      return contextData;
+    }
+
     final searchParams = GlobalSearchParameters(
       filters: filters,
-      primaryModel: config?['wrapperConfig']['searchConfig']['primary'],
-      select: (config?['wrapperConfig']?['searchConfig']?['select'] as List?)
-              ?.cast<String>() ??
-          [],
+      primaryModel: primaryModel,
+      select: select,
       pagination: pagination,
       orderBy: orderBy,
       filterLogic: filterLogic,

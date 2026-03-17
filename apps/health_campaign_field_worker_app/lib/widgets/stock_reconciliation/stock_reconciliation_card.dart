@@ -60,6 +60,8 @@ class _StockReconciliationCardState
     'stockReturned': 0,
     'stockLost': 0,
     'stockDamaged': 0,
+    'stockExcess': 0,
+    'stockLess': 0,
     'stockInHand': 0,
   };
 
@@ -355,6 +357,22 @@ class _StockReconciliationCardState
                             i18.stockReconciliationMetrics.stockDamaged),
                         value:
                             _stockMetrics['stockDamaged']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockExcess),
+                        value:
+                            _stockMetrics['stockExcess']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockLess),
+                        value:
+                            _stockMetrics['stockLess']!.toStringAsFixed(0),
                         labelFlex: 5,
                       ),
                       const DigitDivider(),
