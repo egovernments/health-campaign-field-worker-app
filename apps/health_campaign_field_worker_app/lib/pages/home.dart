@@ -686,18 +686,15 @@ class _HomePageState extends LocalizedState<HomePage> {
       return isSameDay;
     });
 
-    FunctionRegistry.register('isNotSameDay', (args, stateData) {
+    FunctionRegistry.register('allAttendanceSelected', (args, stateData) {
       if (args.isEmpty || args.first == null) return false;
 
-      final date = args.first;
-      if (date is! String) return false;
+      final attendee = args.first;
+      final attendanceCollection = args.length > 1 ? args[1] as Map? : null;
 
-      final now = DateTime.now();
-      final dateTime = DateTime.parse(date);
-      bool isSameDay = dateTime.year == now.year &&
-          dateTime.month == now.month &&
-          dateTime.day == now.day;
-      return !isSameDay;
+      if (attendee is! List || attendanceCollection is! Map) return true;
+
+      return attendee.length != attendanceCollection.length;
     });
 
     // Helper to extract stockEntryType from additionalFields array
@@ -776,7 +773,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     ///  - args[3]: existingLogs (List<AttendanceLogModel>) - optional, for dedup
     ///
     /// Returns: List<AttendanceLogModel> entities ready for CREATE action.
-    FunctionRegistry.register('submitAttendance', (args, stateData) {
+    FunctionRegistry.register('attendanceLogEntities', (args, stateData) {
       if (args.isEmpty || args.first == null) return <EntityModel>[];
 
       final attendanceCollection = args[0] as Map?;

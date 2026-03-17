@@ -1,7 +1,7 @@
 var attendanceAcknowledgementFlow = {
   "screenType": "TEMPLATE",
   "name": "attendanceAcknowledgement",
-  "heading": "ATTENDANCE_SUBMITTED_SUCCESS_MSG",
+  "heading": "ATTENDANCE_SUBMITTED",
   "header": [
     {
       "label": "Back",
@@ -33,7 +33,12 @@ var attendanceAcknowledgementFlow = {
         "onAction": [
           {
             "actionType": "NAVIGATION",
-            "properties": {"name": "manageAttendance", "type": "TEMPLATE"}
+            "properties": {
+              "name": "manageAttendance",
+              "type": "TEMPLATE",
+              "navigationMode": "popUntilAndPush",
+              "popUntilPageName": "manageAttendance",
+            }
           }
         ],
         "fieldName": "backToAttendance",
