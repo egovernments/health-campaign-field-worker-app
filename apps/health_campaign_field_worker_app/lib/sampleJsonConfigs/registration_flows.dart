@@ -807,7 +807,7 @@ final dynamic sampleFlows = {
                         "type": "template",
                         "label": "REGISTRATION_EDIT_INDIVIDUAL_BUTTON_LABEL",
                         "format": "button",
-                        // "disabled":
+                        "disabled":
                             "{{fn:disableEdit(item.task, item.hFReferral)}}==true",
                         "onAction": [
                           {
@@ -5768,7 +5768,8 @@ final dynamic sampleFlows = {
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [{
+              "validations": [
+                {
                   "type": "pattern",
                   "value": "^\\d+",
                   "message": "PINCODE_ONLY_NUMBERS"
