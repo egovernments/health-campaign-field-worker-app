@@ -1,70 +1,42 @@
+import 'dart:convert';
+
 enum NotificationType {
-  stockSync;
+  stock('STOCK'),
+  referral('REFERRAL');
+
+  final String value;
+  const NotificationType(this.value);
 
   static NotificationType? fromValue(String? value) {
-    switch (value) {
-      case 'stock_sync':
-        return NotificationType.stockSync;
-      default:
-        return null;
-    }
-  }
-
-  String toValue() {
-    switch (this) {
-      case NotificationType.stockSync:
-        return 'stock_sync';
-    }
-  }
-}
-
-enum NotificationScreenName {
-  home,
-  profile;
-
-  static NotificationScreenName? fromValue(String? value) {
-    switch (value) {
-      case 'home':
-        return NotificationScreenName.home;
-      case 'profile':
-        return NotificationScreenName.profile;
-      default:
-        return null;
-    }
-  }
-
-  String toValue() {
-    switch (this) {
-      case NotificationScreenName.home:
-        return 'home';
-      case NotificationScreenName.profile:
-        return 'profile';
-    }
+    if (value == null) return null;
+    return NotificationType.values.cast<NotificationType?>().firstWhere(
+          (e) => e!.value == value,
+          orElse: () => null,
+        );
   }
 }
 
 class NotificationData {
-  final NotificationScreenName screenName;
   final NotificationType? notificationType;
+  final Map<String, dynamic> payload;
 
   const NotificationData({
-    required this.screenName,
     this.notificationType,
+    this.payload = const {},
   });
 
   factory NotificationData.fromMap(Map<String, dynamic> data) {
-    return NotificationData(
-      screenName: NotificationScreenName.fromValue(data['screen']) ??
-          NotificationScreenName.home,
-      notificationType: NotificationType.fromValue(data['notificationType']),
-    );
-  }
+    Map<String, dynamic> decodedPayload = {};
+    try {
+      if (data['payload'] is String) {
+        decodedPayload =
+            jsonDecode(data['payload']) as Map<String, dynamic>;
+      }
+    } catch (_) {}
 
-  Map<String, dynamic> toMap() {
-    return {
-      'screen': screenName.toValue(),
-      if (notificationType != null)
-        'notificationType': notificationType!.toValue(),
-    };
+    return NotificationData(
+      notificationType: NotificationType.fromValue(data['notificationType']),
+      payload: decodedPayload,
+    );
   }
 }
