@@ -712,7 +712,7 @@ class _BoundarySelectionPageState
                                                       sentenceCaseEnabled:
                                                           false,
                                                       maxItems: appConfiguration
-                                                          .boundaryLastLevelMaxSelection ?? 3,
+                                                          .boundaryLastLevelMaxSelection ?? 1,
                                                       maxItemWarningCallback: () {
                                                         Toast.showToast(
                                                           context,
