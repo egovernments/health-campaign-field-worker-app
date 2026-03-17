@@ -558,6 +558,68 @@ final jsonConfig = {
       }
     }
   },
+  "unableToDeliverConfig": {
+    "fallbackModel": "TaskModel",
+    "models": {
+      "TaskModel": {
+        "mappings": {
+          "id": "taskDetails.id",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
+          "projectBeneficiaryClientReferenceId":
+          "__context:ProjectBeneficiaryClientReferenceId",
+          "createdBy": "__context:userId",
+          "status": "unableToDeliver.reason",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "plannedStartDate": "taskDetails.plannedStartDate",
+          "plannedEndDate": "taskDetails.plannedEndDate",
+          "actualStartDate": "taskDetails.actualStartDate",
+          "actualEndDate": "taskDetails.actualEndDate",
+          "createdDate": "__generate:timestamp",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "address.latLng[0]",
+            "longitude": "address.latLng[1]",
+            "locationAccuracy": "address.latLng[1]",
+            "addressLine1": "address.addressLine1",
+            "addressLine2": "address.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "type": "__value:PERMANENT",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion"
+            },
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "additionalFields": {
+            "doseIndex": "__context:doseIndex",
+            "cycleIndex": "__context:cycleIndex",
+            "comment": "unableToDeliver.comment"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        }
+      }
+    }
+  },
   "stock": {
     "fallbackModel": "StockModel",
     "multiEntityField": "stockDetails.productdetail",
@@ -608,6 +670,39 @@ final jsonConfig = {
       },
     }
   },
+  "stockLessExcess": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "warehouseDetails.facilityToWhich",
+          "productVariantId": "lessExcessDetails.productVariant.id",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "lessExcessDetails.quantity",
+          "transactionType": "__value:RECEIVED",
+          "transactionReason": "lessExcessDetails.reasonForLessExcess",
+          "senderId": "lessExcessDetails.facilityFromWhich",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "warehouseDetails.facilityToWhich",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "sku": "lessExcessDetails.productVariant.sku",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "adjustmentReason": "lessExcessDetails.reasonForLessExcess"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "warehouseDetails.dateOfEntry"
+        }
+      }
+    }
+  },
   "stockReconciliation": {
     "fallbackModel": "StockReconciliationModel",
     "models": {
@@ -639,6 +734,10 @@ final jsonConfig = {
                 "stockRecon.stockReconciliationCard.stockMetrics.stockLost",
             "stockDamaged":
                 "stockRecon.stockReconciliationCard.stockMetrics.stockDamaged",
+            "stockExcess":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockExcess",
+            "stockLess":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockLess",
             "stockInHand":
                 "stockRecon.stockReconciliationCard.stockMetrics.stockInHand"
           },
@@ -939,6 +1038,7 @@ final jsonConfig = {
     "models": {
       "HFReferralModel": {
         "mappings": {
+          "localityCode": "__context:selectedBoundaryCode",
           "id": "referralDetails.id",
           "tenantId": "__context:tenantId",
           "name": "referralDetails.nameOfChild",
@@ -948,13 +1048,17 @@ final jsonConfig = {
           "beneficiaryId": "referralDetails.beneficiaryId",
           "referralCode": "referralDetails.referralCode",
           "nationalLevelId": "referralDetails.nationalLevelId",
-          "symptom": "referralDetails.referralReason",
+          "symptom":
+              "__switch:navigation.isEdit:{true:navigation.referralSymptom,default:referralDetails.referralReason}",
           "nonRecoverableError": "referralDetails.nonRecoverable",
-          "clientReferenceId": "__generate:uuid",
-          "rowVersion": "meta.rowVersion",
+          "clientReferenceId":
+              "__switch:navigation.isEdit:{true:navigation.clientReferenceId,default:__generate:uuid}",
+          "rowVersion":
+              "__switch:navigation.isEdit:{true:navigation.rowVersion,default:meta.rowVersion}",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            // Static field mappings
             "boundaryCode": "facilityDetails.administrativeUnit",
             "referralCycle": "referralDetails.referralCycle",
             "gender": "referralDetails.gender",
@@ -963,34 +1067,44 @@ final jsonConfig = {
             "dateOfEvaluation": "facilityDetails.dateOfEvaluation",
             "referredBy": "facilityDetails.referredByKey",
             "hfCoordinator": "facilityDetails.hfCoordinator",
+            // Checklist fields from side effect pages (sideEffectSick, sideEffectFever,
+            // sideEffectFromCurrentCycle, sideEffectFromPreviousCycle) are automatically
+            // captured as unmapped fields and merged into additionalFields via fallbackModel.
           }
         }
       }
     },
   },
   "referralBeneficaryCreate": {
-    "fallbackModel": "ReferralModel",
+    "fallbackModel": "HFReferralModel",
     "models": {
-      "ReferralModel": {
+      "HFReferralModel": {
         "mappings": {
+          "tenantId": "__context:tenantId",
+          "projectId": "__context:projectId",
+          "projectFacilityId":
+              //"__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}"
+              "__switch:referBeneficiary.healthFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.healthFacility}",
+          "beneficiaryId": "__context:selectedIndividualIdentifierId",
+          "referralCode": "__context:selectedIndividualClientReferenceId",
+          "name": "__context:selectedIndividualName",
+          "symptom": "referBeneficiary.referralReason",
           "nonRecoverableError": "referral.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "rowVersion": "meta.rowVersion",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
-          "projectId": "__context:projectId",
-          "projectBeneficiaryClientReferenceId":
-              "__context:ProjectBeneficiaryClientReferenceId",
-          "recipientType":
-              "__switch:referBeneficiary.healthFacility:{Community Health Worker:STAFF,default:__value:FACILITY}",
-          "recipientId":
-              "__switch:referBeneficiary.healthFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.healthFacility}",
-          "referrerId": "__context:userUUID",
-          "reasons": "collect:referBeneficiary.referralReason",
-          "tenantId": "__context:tenantId",
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
-            "boundaryCode": "facilityDetails.administrativeUnit",
-            "referralComments": "referBeneficiary.referralComments"
+            // Explicit field mappings matching ReferralReconEnums/ReferralReconAdditionalFields
+            "boundaryCode": "facilityDetails.administrativeArea",
+            "referredBy": "__context:userUUID",
+            "referralComments": "referBeneficiary.referralComments",
+            "nameOfReferral": "__context:selectedIndividualName",
+            "referralCycle": "__context:cycleIndex",
+            "gender": "__context:selectedIndividualGender",
+            "ageInMonths": "__context:selectedIndividualAgeInMonths",
+            "dateOfEvaluation": "__value:DATETIME.NOW"
           }
         }
       }

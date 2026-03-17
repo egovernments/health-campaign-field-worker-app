@@ -124,7 +124,10 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   /// The field is identified by the key parameter and can be in any page of the schema.
   void _onUpdateField(FormsUpdateFieldEvent event, FormsStateEmitter emit) {
     final schema = state.cachedSchemas[event.schemaKey];
-    if (schema == null) return;
+    if (schema == null) {
+      debugPrint('FORMS_BLOC: _onUpdateField - schema NOT FOUND for key=${event.schemaKey}');
+      return;
+    }
 
     final form = ReactiveForm.of(event.context) as FormGroup;
 
@@ -133,6 +136,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       form.control(event.key).value = event.value;
     }
 
+    bool found = false;
     final updatedPages = {
       for (final entry in schema.pages.entries)
         entry.key: entry.value.copyWith(
@@ -141,11 +145,15 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
               : {
                   for (final prop in entry.value.properties!.entries)
                     prop.key: prop.key == event.key
-                        ? prop.value.copyWith(value: event.value)
+                        ? (() {
+                            found = true;
+                            return prop.value.copyWith(value: event.value);
+                          })()
                         : prop.value,
                 },
         )
     };
+    debugPrint('FORMS_BLOC: _onUpdateField - schema=${event.schemaKey}, key=${event.key}, value=${event.value}, found=$found, pageKeys=${schema.pages.keys.toList()}');
 
     final updatedSchema = schema.copyWith(pages: updatedPages);
 
@@ -245,6 +253,8 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         outputData[entry.key] = pageValues;
       }
     }
+
+    debugPrint('FORMS_BLOC: _onSubmit - schemaKey=${event.schemaKey}, formData=$outputData');
 
     emit(FormsSubmittedState(
       schema: schema,

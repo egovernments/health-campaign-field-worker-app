@@ -34,7 +34,9 @@ import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/localization/localization.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
@@ -329,6 +331,149 @@ void showDownloadDialog(
                   label: model.secondaryButtonLabel ?? '',
                   onPressed: () async {
                     await LocalSecureStore.instance.setManualSyncTrigger(false);
+                    if (context.mounted) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.replaceAll([HomeRoute()]);
+                    }
+                  },
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.medium),
+          ],
+        ),
+      );
+    case DigitProgressDialogType.inProgress:
+      showCustomPopup(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => Popup(title: "", additionalWidgets: [
+          StreamBuilder<DownloadProgressData>(
+            stream: downloadProgressController?.stream,
+            initialData: initialProgressData,
+            builder: (context, snapshot) {
+              final data = snapshot.data;
+              final progress = data?.progress ?? 0;
+              final totalCount = data?.totalCount ?? model.totalCount ?? 0;
+              final syncedCount = data?.syncedCount ?? 0;
+              final boundaryName = data?.boundaryName ?? '';
+              final currentIndex = data?.currentIndex ?? 0;
+              final totalBoundaries = data?.totalBoundaries ?? 1;
+
+              return ProgressIndicatorContainer(
+                label: boundaryName.isNotEmpty
+                    ? '$boundaryName (${currentIndex + 1}/$totalBoundaries)'
+                    : '',
+                prefixLabel: '$syncedCount',
+                suffixLabel: '$totalCount',
+                value: progress,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).colorTheme.primary.primary1,
+                ),
+                subLabel: model.title,
+              );
+            },
+          ),
+        ]),
+      );
+    default:
+      return;
+  }
+}
+
+void showHFReferralDownloadDialog(
+  BuildContext context, {
+  required DownloadBeneficiary model,
+  required DigitProgressDialogType dialogType,
+  bool isPop = true,
+  StreamController<DownloadProgressData>? downloadProgressController,
+  DownloadProgressData? initialProgressData,
+}) {
+  if (isPop) {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  switch (dialogType) {
+    case DigitProgressDialogType.failed:
+    case DigitProgressDialogType.checkFailed:
+      DigitSyncDialog.show(
+        context,
+        type: DialogType.failed,
+        label: model.title,
+        primaryAction: DigitDialogActions(
+          label: model.primaryButtonLabel ?? '',
+          action: (ctx) {
+            if (dialogType == DigitProgressDialogType.failed ||
+                dialogType == DigitProgressDialogType.checkFailed) {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.read<HFReferralDownSyncBloc>().add(
+                    HFReferralDownSyncGetBatchSizeEvent(
+                      appConfiguration: [model.appConfiguartion!],
+                      projectId: context.projectId,
+                      boundaries: model.boundaries,
+                      pendingSyncCount: model.pendingSyncCount ?? 0,
+                    ),
+                  );
+            } else {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.router.replaceAll([HomeRoute()]);
+            }
+          },
+        ),
+        secondaryAction: DigitDialogActions(
+          label: model.secondaryButtonLabel ?? '',
+          action: (ctx) {
+            Navigator.of(context, rootNavigator: true).pop();
+            context.router.replaceAll([HomeRoute()]);
+          },
+        ),
+      );
+    case DigitProgressDialogType.dataFound:
+    case DigitProgressDialogType.pendingSync:
+    case DigitProgressDialogType.insufficientStorage:
+      showCustomPopup(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => Popup(
+          title: model.title,
+          titleIcon: Icon(
+            dialogType == DigitProgressDialogType.insufficientStorage
+                ? Icons.warning
+                : Icons.info_outline_rounded,
+            color: dialogType == DigitProgressDialogType.insufficientStorage
+                ? Theme.of(context).colorTheme.alert.error
+                : Theme.of(context).colorTheme.text.primary,
+          ),
+          description: model.content,
+          actions: [
+            DigitButton(
+                label: model.primaryButtonLabel ?? '',
+                onPressed: () {
+                  if (dialogType == DigitProgressDialogType.pendingSync) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.replaceAll([HomeRoute()]);
+                  } else {
+                    if ((model.totalCount ?? 0) > 0) {
+                      context.read<HFReferralDownSyncBloc>().add(
+                            HFReferralDownSyncDownloadAllEvent(
+                              projectId: context.projectId,
+                              boundaries: model.boundaries,
+                              batchSize: model.batchSize ?? 1,
+                              boundaryCounts: model.boundaryCounts,
+                            ),
+                          );
+                    } else {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.read<HFReferralDownSyncBloc>().add(
+                            const HFReferralDownSyncResetStateEvent(),
+                          );
+                    }
+                  }
+                },
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.medium),
+            if (model.secondaryButtonLabel != null)
+              DigitButton(
+                  label: model.secondaryButtonLabel ?? '',
+                  onPressed: () async {
                     if (context.mounted) {
                       Navigator.of(context, rootNavigator: true).pop();
                       context.router.replaceAll([HomeRoute()]);

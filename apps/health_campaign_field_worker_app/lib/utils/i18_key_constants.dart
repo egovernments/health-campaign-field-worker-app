@@ -46,6 +46,10 @@ class StockReconciliationMetrics {
 
   String get stockDamaged => 'STOCK_RECONCILIATION_STOCK_DAMAGED';
 
+  String get stockExcess => 'STOCK_RECONCILIATION_STOCK_EXCESS';
+
+  String get stockLess => 'STOCK_RECONCILIATION_STOCK_LESS';
+
   String get stockOnHand => 'STOCK_RECONCILIATION_STOCK_ON_HAND';
 }
 

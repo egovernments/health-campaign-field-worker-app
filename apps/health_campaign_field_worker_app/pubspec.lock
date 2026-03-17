@@ -527,14 +527,14 @@ packages:
       path: "../../packages/digit_crud_bloc"
       relative: true
     source: path
-    version: "0.0.3-dev"
+    version: "0.0.1"
   digit_data_converter:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_converter"
       relative: true
     source: path
-    version: "0.0.4-dev"
+    version: "0.0.1"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -577,7 +577,7 @@ packages:
       path: "../../packages/digit_formula_parser"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   digit_location_tracker:
     dependency: "direct main"
     description:
@@ -604,10 +604,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "42938eca25479a36a0aaf585b242e1820b4d19678b71bc31c6e49ab93dc32437"
+      sha256: dca1305d280dd65250beb0a9bbb9d6d04cc8f848e7134c5ebc5839ec75acd785
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0+2"
+    version: "0.3.0+3"
   dio:
     dependency: "direct main"
     description:
