@@ -34,7 +34,8 @@ class FormEntityMapper {
 
           if (listData is List && listData.isNotEmpty) {
             // Apply skipFirst - skip the first N items
-            final startIndex = skipFirst < listData.length ? skipFirst : listData.length;
+            final startIndex =
+                skipFirst < listData.length ? skipFirst : listData.length;
 
             // Create one model instance for each item in the list (after skipping)
             for (int index = startIndex; index < listData.length; index++) {
@@ -296,8 +297,7 @@ class FormEntityMapper {
                 : formValue;
 
             // Track the path as used so it's not treated as unmapped
-            usedPaths
-                .add(sourcePath.split('.').last.split('[').first);
+            usedPaths.add(sourcePath.split('.').last.split('[').first);
           }
         }
       }
@@ -560,7 +560,6 @@ class FormEntityMapper {
     // Remove "collect:" prefix
     final pathWithoutPrefix = sourcePath.replaceFirst('collect:', '');
 
-
     // Resolve the full path to get the value
     final resolvedValue =
         getValueFromMapping(pathWithoutPrefix, formValues, modelName, context);
@@ -626,13 +625,11 @@ class FormEntityMapper {
     // If listSource is defined, use it to fetch a list and map each item
     final nestedListSourcePath = listConfig['listSource'] as String?;
     if (nestedListSourcePath != null) {
-
       final listData = getValueFromMapping(
           nestedListSourcePath, formValues, listModelName, context,
           listItemIndex: listItemIndex, listSourcePath: listSourcePath);
 
       if (listData is List) {
-
         final mappings = listConfig['mappings'] as Map<String, dynamic>;
         final items = <Map<String, dynamic>>[];
         for (int i = 0; i < listData.length; i++) {
@@ -641,7 +638,6 @@ class FormEntityMapper {
           Map<String, dynamic> itemMap;
           if (item is Map<String, dynamic>) {
             itemMap = item;
-
           } else {
             // Try to call toMap() on any object that has it
             try {
@@ -649,11 +645,9 @@ class FormEntityMapper {
               itemMap = toMapResult is Map<String, dynamic>
                   ? toMapResult
                   : Map<String, dynamic>.from(toMapResult as Map);
-
             } catch (e) {
               // Object doesn't have toMap method, use empty map
               itemMap = <String, dynamic>{};
-
             }
           }
 
@@ -870,7 +864,8 @@ class FormEntityMapper {
         print('   fullPath: "$fullPath"');
 
         // Debug: check what the list item looks like
-        final listItem = _getValueFromPath(context, '$contextPath[$listItemIndex]');
+        final listItem =
+            _getValueFromPath(context, '$contextPath[$listItemIndex]');
         print('   listItem type: ${listItem?.runtimeType}');
         if (listItem is Map) {
           print('   listItem keys: ${listItem.keys}');
@@ -1019,14 +1014,13 @@ class FormEntityMapper {
       final keyValue = getValueFromMapping(
           keyInstruction, data, currentModel, context,
           listItemIndex: listItemIndex, listSourcePath: listSourcePath);
-      if (keyValue == null) {
-        throw Exception(
-            'Key value "$keyInstruction" resolved to null in __switch');
-      }
 
       final mapping = _parseSwitchMapping(mappingString);
-      final resolvedInstruction =
-          mapping[keyValue.toString()] ?? mapping['default'];
+
+      // When key resolves to null, fall through to default case
+      final resolvedInstruction = keyValue != null
+          ? (mapping[keyValue.toString()] ?? mapping['default'])
+          : mapping['default'];
 
       if (resolvedInstruction == null) {
         throw Exception(
@@ -1236,6 +1230,9 @@ class FormEntityMapper {
     void extractUnmapped(Map<String, dynamic> data) {
       data.forEach((key, value) {
         if (usedPaths.contains(key)) return;
+        // Skip navigation params — they are control data (e.g., isEdit),
+        // not entity fields, and should never be stored in additionalFields.
+        if (key == 'navigation') return;
         if (value is Map<String, dynamic>) {
           extractUnmapped(value);
         } else {
