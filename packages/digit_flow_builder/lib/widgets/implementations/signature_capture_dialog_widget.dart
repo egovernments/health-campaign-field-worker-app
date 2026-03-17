@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
@@ -32,16 +33,86 @@ class SignatureCaptureWidget extends ResolvedFlowWidget {
       fieldName: json['fieldName'] ?? 'signature',
       onActions: (data) async {
         final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
-        var modifiedActionsList = actionsList.map((e) {
-          if (e["actionType"] == "MARK_ATTENDANCE") {
-            e["properties"]["signatureData"] = data['signatureData'];
-          }
-          return e;
-        }).toList();
-        await resolved.executeActions(modifiedActionsList, context);
+        final actionData = actionsList
+                .any((e) => e["actionType"] == "MARK_ATTENDANCE")
+            ? actionsList.firstWhere(
+                    (e) => e["actionType"] == "MARK_ATTENDANCE")["properties"]
+                ["data"]
+            : null;
+        final inividualId =
+            actionData.firstWhere((e) => e['key'] == 'individualId')['value'];
+        final registerId =
+            actionData.firstWhere((e) => e['key'] == 'registerId')['value'];
+
+        Map<String, dynamic> attendanceData = {
+          'individualId': resolved.resolveText(inividualId),
+          'registerId': resolved.resolveText(registerId),
+          'status': 1.0,
+          'signatureData': data['signatureData'],
+        };
+        _markAttendance(
+          attendanceData,
+          resolved.compositeKey,
+        );
+        await resolved.executeActions(actionsList, context);
       },
       resolved: resolved,
     );
+  }
+
+  Future<void> _markAttendance(
+    Map<String, dynamic> data,
+    String? compositeKey,
+  ) async {
+    final individualId = data['individualId']?.toString();
+    final registerId = data['registerId']?.toString();
+    final status = (data['status'] as num?)?.toDouble() ?? 1.0;
+    final signatureData = data['signatureData'] as String?;
+
+    if (individualId == null || individualId.isEmpty) return;
+    if (compositeKey == null) return;
+
+    final currentState = FlowCrudStateRegistry().get(compositeKey);
+    final widgetData =
+        Map<String, dynamic>.from(currentState?.widgetData ?? {});
+
+    final collection = Map<String, dynamic>.from(
+      widgetData['attendanceCollection'] as Map? ?? {},
+    );
+
+    // Toggle logic matching _onIndividualAttendanceMark
+    final existing = collection[individualId];
+    final currentStatus =
+        existing is Map ? (existing['status'] as num?)?.toDouble() : null;
+
+    final double finalStatus;
+    if (currentStatus == null || currentStatus == -1) {
+      finalStatus = status;
+    } else if (currentStatus == 1.0 && status == 1.0) {
+      finalStatus = 1.0; // already present, keep present
+    } else {
+      finalStatus = status;
+    }
+
+    collection[individualId] = {
+      'status': finalStatus,
+      'registerId': registerId,
+      'individualId': individualId,
+      'signatureData': signatureData,
+    };
+    widgetData['attendanceCollection'] = collection;
+
+    if (currentState != null) {
+      final updatedState = currentState.copyWith(
+        widgetData: widgetData,
+      );
+      FlowCrudStateRegistry().update(compositeKey, updatedState);
+    } else {
+      final newState = FlowCrudState(
+        widgetData: widgetData,
+      );
+      FlowCrudStateRegistry().update(compositeKey, newState);
+    }
   }
 }
 

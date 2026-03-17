@@ -72,8 +72,6 @@ class DateWidget extends ResolvedFlowWidget {
       final currentDateRawInt = int.tryParse(currentDateRaw);
       if (currentDateRawInt != null) {
         currentDate = DateTime.fromMillisecondsSinceEpoch(currentDateRawInt);
-      } else {
-        currentDate = DateTime.tryParse(currentDateRaw) ?? currentDate;
       }
 
       // Initialize widgetData with today's date on first render
