@@ -128,11 +128,16 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     final attendaceLog =
         stateData?.modelMap['attendanceLog'] as List<dynamic>? ?? [];
 
+    bool signatureCapture = json['signatureCapture'] as bool? ?? false;
+
     final statusMapping = json['statusMapping'] as Map<String, dynamic>? ?? {};
     final buttons = json['buttons'] as List<dynamic>? ?? [];
 
     // final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final popupConfig = json['popupConfig'] as Map<String, dynamic>?;
+
+    final signatureButtonLabel =
+        json['signatureButtonLabel'] as String? ?? 'SIGNATURE_BUTTON_LABEL';
 
     final presentButtonLabel = buttons.first["label"];
     final presentButtonColor = buttons.first["color"] ?? 'green';
@@ -163,7 +168,9 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
         ),
-        if (attendanceLogStatus == "-1.0" && !_isSameDate(compositeKey))
+        if (attendanceLogStatus == "-1.0" &&
+            !_isSameDate(compositeKey) &&
+            signatureCapture == false)
           Row(
             children: [
               Expanded(
@@ -171,34 +178,12 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   label: presentButtonLabel,
                   onPressed: () async {
-                    // Trigger configured actions if any
-                    if (json['onAction'] != null && json['onAction'] is List) {
-                      final actionsList =
-                          List<Map<String, dynamic>>.from(json['onAction']);
-
-                      for (var raw in actionsList) {
-                        final action = ActionConfig.fromJson(raw);
-                        onAction(action);
-                      }
-                    }
-
-                    // Show popup if popupConfig is provided
-                    if (popupConfig != null) {
-                      // Execute onOpenAction before showing popup
-                      final onOpenActions =
-                          popupConfig['onOpenAction'] as List<dynamic>?;
-                      if (onOpenActions != null) {
-                        for (var raw in onOpenActions) {
-                          if (raw is Map<String, dynamic>) {
-                            final action = ActionConfig.fromJson(raw);
-                            onAction(action);
-                          }
-                        }
-                      }
-
-                      await _showActionPopup(context, popupConfig, onAction,
-                          screenKey, stateData, item, listIndex, compositeKey);
-                    }
+                    Map<String, dynamic> data = {
+                      "individualId": item['entity']?.individualId,
+                      "registerId": item['entity']?.registerId,
+                      "status": 1.0, // 1.0 for present
+                    };
+                    _markAttendance(data, compositeKey);
                   },
                   type: _getAttendanceStatus(
                               item['entity']?.individualId, compositeKey) ==
@@ -264,7 +249,101 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
                 ),
               ),
             ],
-          )
+          ),
+        if (attendanceLogStatus == "-1.0" &&
+            !_isSameDate(compositeKey) &&
+            signatureCapture == true)
+          Expanded(
+            child: DigitButton(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              label: signatureButtonLabel,
+              onPressed: () async {
+                // Trigger configured actions if any
+                if (json['onAction'] != null && json['onAction'] is List) {
+                  final actionsList =
+                      List<Map<String, dynamic>>.from(json['onAction']);
+
+                  for (var raw in actionsList) {
+                    final action = ActionConfig.fromJson(raw);
+                    onAction(action);
+                  }
+                }
+
+                // Show popup if popupConfig is provided
+                if (popupConfig != null) {
+                  // Execute onOpenAction before showing popup
+                  final onOpenActions =
+                      popupConfig['onOpenAction'] as List<dynamic>?;
+                  if (onOpenActions != null) {
+                    for (var raw in onOpenActions) {
+                      if (raw is Map<String, dynamic>) {
+                        final action = ActionConfig.fromJson(raw);
+                        onAction(action);
+                      }
+                    }
+                  }
+
+                  await _showActionPopup(context, popupConfig, onAction,
+                      screenKey, stateData, item, listIndex, compositeKey);
+                }
+              },
+              type: _getAttendanceStatus(
+                          item['entity']?.individualId, compositeKey) !=
+                      -1.0
+                  ? DigitButtonType.primary
+                  : DigitButtonType.secondary,
+              size: DigitButtonSize.small,
+              digitButtonThemeData: DigitButtonThemeData(
+                primaryDigitButtonColor:
+                    DigitButtonThemeData.defaultTheme(context)
+                        .primaryDigitButtonColor,
+                DigitButtonColor: (_getAttendanceStatus(
+                                item['entity']?.individualId, compositeKey) ==
+                            1.0
+                        ? colorMap[presentButtonColor]
+                        : colorMap[absentButtonColor]) ??
+                    DigitButtonThemeData.defaultTheme(context).DigitButtonColor,
+                disabledColor:
+                    DigitButtonThemeData.defaultTheme(context).disabledColor,
+                radius: BorderRadius.circular(spacer3),
+                largeRadius: BorderRadius.circular(spacer3),
+                smallMediumRadius: BorderRadius.circular(spacer3),
+                padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
+              ),
+              prefixIcon: _getAttendanceStatus(
+                          item['entity']?.individualId, compositeKey) !=
+                      -1.0
+                  ? DigitIconMapping.getIcon("Check")
+                  : DigitIconMapping.getIcon("Edit"),
+            ),
+          ),
+        // DigitButton(
+        //   label: localizations.translate(i18.attendance.signatureButtonLabel),
+        //   prefixIcon: signatureCaptured ? Icons.check_circle : Icons.draw,
+        //   onPressed: onCaptureSignature!,
+        //   mainAxisSize: MainAxisSize.max,
+        //   type: signatureCaptured
+        //       ? DigitButtonType.primary
+        //       : DigitButtonType.secondary,
+        //   size: DigitButtonSize.small,
+        //   textColor: signatureCaptured
+        //       ? theme.colorTheme.paper.primary
+        //       : theme.colorTheme.primary.primary2,
+        //   iconColor: signatureCaptured
+        //       ? theme.colorTheme.paper.primary
+        //       : theme.colorTheme.primary.primary2,
+        //   digitButtonThemeData: DigitButtonThemeData(
+        //     DigitButtonColor: signatureCaptured
+        //         ? theme.colorTheme.alert.success
+        //         : theme.colorTheme.primary.primary2,
+        //     borderWidth: 1.2,
+        //     radius: BorderRadius.circular(spacer1),
+        //     padding: const EdgeInsets.symmetric(
+        //       horizontal: spacer3,
+        //       vertical: spacer2,
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

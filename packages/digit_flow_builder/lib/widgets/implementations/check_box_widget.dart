@@ -17,7 +17,14 @@ class CheckBoxWidget extends ResolvedFlowWidget {
   ) {
     var rawValue = json['value'];
     var value = resolved.resolveText(rawValue.toString()) == 'true';
+
     return WidgetStateContext.reactive(context, (ctx, state) {
+      // Initialize widgetData with today's date on first render
+      if (state.widgetData["checkboxValue"] == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          state.updateWidgetData("checkboxValue", true);
+        });
+      }
       return Checkbox(
         checkColor: Colors.white,
         value: state.widgetData["checkboxValue"] ?? value,
