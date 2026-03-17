@@ -29,17 +29,16 @@ import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.da
 import '../blocs/push_notification/push_notification.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
-import '../data/local_store/secure_store/secure_store.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/downsync/downsync.dart';
 import '../models/entities/notification_data.dart';
 import '../models/entities/roles_type.dart';
+import '../notification_handlers/notification_handler.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
-import '../utils/stock_downsync.dart';
 import '../utils/utils.dart';
 import '../widgets/error_screen.dart';
 import 'error_boundary.dart';
@@ -119,27 +118,6 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     if (_isOfflineDialogShowing) {
       Navigator.of(context, rootNavigator: true).pop();
       _isOfflineDialogShowing = false;
-    }
-  }
-
-  void _triggerStockDownsync(BuildContext context) {
-    try {
-      final stockService = StockDownsyncService(
-        localSecureStore: LocalSecureStore.instance,
-        projectFacilityLocalRepository: context.read<
-            LocalRepository<ProjectFacilityModel,
-                ProjectFacilitySearchModel>>(),
-        facilityLocalRepository:
-            context.read<LocalRepository<FacilityModel, FacilitySearchModel>>(),
-        stockRemoteRepository:
-            context.read<RemoteRepository<StockModel, StockSearchModel>>(),
-        stockLocalRepository:
-            context.read<LocalRepository<StockModel, StockSearchModel>>(),
-      );
-
-      stockService.execute(context);
-    } catch (e) {
-      debugPrint('Stock downsync on notification tap failed: $e');
     }
   }
 
@@ -335,19 +313,9 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                           final notificationData =
                               NotificationData.fromMap(state.data);
 
-                          if (notificationData.notificationType ==
-                              NotificationType.stockSync) {
-                            _triggerStockDownsync(context);
-                          }
-
-                          switch (notificationData.screenName) {
-                            case NotificationScreenName.home:
-                              context.router.replaceAll([HomeRoute()]);
-                              break;
-                            case NotificationScreenName.profile:
-                              context.router.push(ProfileRoute());
-                              break;
-                          }
+                          NotificationHandlerFactory
+                              .getHandler(notificationData.notificationType)
+                              ?.handle(context, notificationData.payload);
                         }
                       },
                       child: ErrorBoundary(builder: (context, error) {
