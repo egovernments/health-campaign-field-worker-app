@@ -1605,7 +1605,7 @@ final dynamic sampleInventoryFlows = {
         {
           "format": "dropdownTemplate",
           "fieldName": "selectedFacility",
-          "label": "INVENTORY_SELECT_FACILITY_LABEL",
+          "label": "Select Facility",
           "valueKey": "code",
           "displayKey": "name",
           "source": "{{fn:getProjectFacilities()}}",
