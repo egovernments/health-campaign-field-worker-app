@@ -63,6 +63,7 @@ import '../widgets/inventory/custom_facility_widgets.dart';
 import '../widgets/inventory/custom_product_selection_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/progress_bar/beneficiary_progress.dart';
+import '../widgets/progress_bar/hf_referral_progress.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
@@ -641,6 +642,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                         ),
                       ),
                     ),
+              /////   hfreferral progress matrics
+              if (state.actionsWrapper.actions
+                  .map((e) => e.displayName)
+                  .contains(i18.home.beneficiaryReferralLabel))
+                HFReferralProgressBar(
+                  label: localizations.translate(
+                    i18.home.progressIndicatorTitle,
+                  ),
+                  prefixLabel: localizations.translate(
+                    i18.common.progressIndicatorPrefixLabelHFReferral,
+                  ),
+                ),
             ],
           ),
           footer: Padding(
@@ -1014,11 +1027,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                     final data = allSchemas['REGISTRATION'];
 
                     final registrationDeliveryData = data?['data'];
-                    final flowsData =
-                        (registrationDeliveryData['flows'] as List<dynamic>?)
-                                ?.map((e) => Map<String, dynamic>.from(e as Map))
-                                .toList() ??
-                            [];
+                    final flowsData = (registrationDeliveryData['flows']
+                                as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
                     FlowRegistry.setConfig(flowsData);
                     NavigationRegistry.setupNavigation(ctx);
 
@@ -1031,7 +1044,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                         sampleFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
-                      FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+                      FlowBuilderHomeRoute(
+                          pageName: sampleFlows["initialPage"]),
                     );
                   }
                 } catch (e) {

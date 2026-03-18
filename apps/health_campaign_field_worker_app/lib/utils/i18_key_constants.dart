@@ -225,6 +225,8 @@ class Common {
   String get qrInventory => 'QR_INVENTORY';
 
   String get qrAttendance => 'QR_ATTENDANCE';
+
+  String get progressIndicatorPrefixLabelHFReferral => 'PROGRESS_INDICATOR_PREFIX_LABEL_HFREFERRAL';
 }
 
 class HomeShowcase {
