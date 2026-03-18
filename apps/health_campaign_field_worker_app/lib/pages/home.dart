@@ -18,6 +18,7 @@ import 'package:digit_flow_builder/data/digit_crud_service.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
+import 'package:digit_flow_builder/widgets/flow_widget_interface.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -59,6 +60,7 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
 import '../utils/mark_attendance_executor.dart';
 import '../utils/utils.dart';
+import '../widgets/attendance/attendance_qr_scanner_button.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
 import '../widgets/header/back_navigation_help_header.dart';
@@ -196,6 +198,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     // Register attendance executors
     ActionHandler.registry
         .register('SUBMIT_ATTENDANCE', SubmitAttendanceExecutor());
+
+    FlowWidgetFactory.register(AttendanceQrScannerButton());
 
     // Example 1: Register a dynamic resource card with multi-page state access
     CustomComponentRegistry().registerBuilder(
@@ -2158,7 +2162,6 @@ void setPackagesSingleton(BuildContext context) {
                   })
               .toList(),
         );
-
         AttendanceSingleton().setInitialData(
           project: context.selectedProject,
           loggedInIndividualId: context.loggedInIndividualId ?? '',

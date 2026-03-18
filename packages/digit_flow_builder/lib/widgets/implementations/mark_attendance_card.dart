@@ -214,8 +214,6 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
                             "individualId": item['entity']?.individualId,
                             "registerId": item['entity']?.registerId,
                             "status": 1.0, // 1.0 for present
-                            "isMarkedManually":
-                                true, // indicate manual marking for present
                           };
                           _markAttendance(data, compositeKey);
                         },
@@ -256,8 +254,6 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
                             "individualId": item['entity']?.individualId,
                             "registerId": item['entity']?.registerId,
                             "status": 0.0, // 0.0 for absent
-                            "isMarkedManually":
-                                true, // indicate manual marking for absent
                           };
                           _markAttendance(data, compositeKey);
                         },

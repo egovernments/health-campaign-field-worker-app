@@ -123,7 +123,7 @@ final dynamic markAttendanceFlow = {
   "footer": [
     {
       "visible": "{{fn:isSameDay(widgetData.selectedAttendanceDate.date)}}",
-      "format": "button",
+      "format": "attendanceQRScannerButton",
       "type": "template",
       "fieldName": "createReferral",
       "label": "SCAN_QR_CODE",
@@ -134,7 +134,12 @@ final dynamic markAttendanceFlow = {
         "mainAxisSize": "max",
         "mainAxisAlignment": "center"
       },
-      "onAction": []
+      "onAction": [
+        // {
+        //   "actionType": "NAVIGATION",
+        //   "properties": {"type": "TEMPLATE", "name": "attendanceQrScanner"}
+        // }
+      ]
     },
     {
       "format": "button",
@@ -312,6 +317,64 @@ final dynamic markAttendanceFlow = {
                         "type": "template",
                         "format": "textTemplate",
                         "value": "UNMARKED_ATTENDANCE_ONLY",
+                      }
+                    ]
+                  },
+                  {
+                    "type": "template",
+                    "format": "row",
+                    "children": [
+                      {
+                        "type": "template",
+                        "format": "expanded",
+                        "child": {
+                          "type": "template",
+                          "format": "button",
+                          "label": "CLEAR",
+                          "prefixIcon": "Close",
+                          "properties": {
+                            "type": "secondary",
+                            "size": "small",
+                            "mainAxisAlignment": "center"
+                          },
+                          "onAction": [
+                            {"actionType": "CLOSE_POPUP", "properties": {}},
+                            {
+                              "actionType": "CLEAR_STATE",
+                              "properties": {
+                                "widgetKeys": ["checkboxValue", "searchBar"],
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "template",
+                        "format": "expanded",
+                        "child": {
+                          "type": "template",
+                          "format": "button",
+                          "label": "APPLY_FILTER",
+                          "prefixIcon": "Close",
+                          "properties": {
+                            "type": "primary",
+                            "size": "small",
+                            "mainAxisAlignment": "center"
+                          },
+                          "onAction": [
+                            {"actionType": "CLOSE_POPUP", "properties": {}},
+                            // {
+                            //   "actionType": "SEARCH_EVENT",
+                            //   "properties": {
+                            //     "data": [
+                            //       {
+                            //         "key": "givenName",
+                            //         "value": "{{widgetData.searchBar}}",
+                            //         "operation": "contains",
+                            //         "root": "name"
+                            //       }
+                          ]
+                        }
                       }
                     ]
                   }
