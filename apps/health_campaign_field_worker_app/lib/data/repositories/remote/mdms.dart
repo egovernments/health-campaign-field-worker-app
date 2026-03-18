@@ -185,6 +185,10 @@ class MdmsRepository {
       ..maxRadius = appConfig?.maxRadius
       ..boundaryLastLevelMaxSelection =
           appConfig?.boundaryLastLevelMaxSelection
+      // TODO: Populate stockThresholdConfig from MDMS when available
+      ..stockThresholdConfig = (StockThresholdConfig()
+        ..minThreshold = 0
+        ..maxThreshold = 0)
       ..backgroundServiceConfig = backgroundServiceConfig
       ..firebaseConfig = firebaseConfig;
 

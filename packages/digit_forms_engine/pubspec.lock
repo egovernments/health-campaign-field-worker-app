@@ -375,7 +375,7 @@ packages:
       path: "../digit_formula_parser"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   digit_scanner:
     dependency: "direct main"
     description:
@@ -387,10 +387,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: b82d5636feae0e04111d1e4282945e55865b2586e121583d315f08b4233773de
+      sha256: dca1305d280dd65250beb0a9bbb9d6d04cc8f848e7134c5ebc5839ec75acd785
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0+1"
+    version: "0.3.0+3"
   dotted_border:
     dependency: transitive
     description:
