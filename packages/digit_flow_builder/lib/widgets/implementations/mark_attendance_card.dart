@@ -39,11 +39,16 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     final listIndex = resolved.state.listIndex;
     final screenKey = resolved.screenKey;
 
-    final item = crudCtx?.item ?? {};
+    // final item = crudCtx?.item ?? {};
 
-    final attendanceData =
-        json['attendanceData'] as Map<String, dynamic>? ?? {};
-    final attendanceLogStatusRaw = attendanceData['attendanceLogStatus'];
+    final attendees = stateData?.modelMap['attendees'] as List<dynamic>? ?? [];
+    final teams = _getTeams(attendees);
+    final individuals =
+        stateData?.modelMap['individual'] as List<dynamic>? ?? [];
+    final attendaceLog =
+        stateData?.modelMap['attendanceLog'] as List<dynamic>? ?? [];
+
+    final attendanceLogStatusRaw = json['attendanceLogStatus'];
     String? attendanceLogStatus = attendanceLogStatusRaw != null
         ? resolved.resolveText(attendanceLogStatusRaw.toString())
         : "-1.0";
@@ -58,56 +63,78 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     return _getUnmarkedAttendance(compositeKey,
             attendanceLogStatus) // Show card only if checkbox is checked
         ? const SizedBox.shrink()
-        : groupByTeam
-            ? DigitCard(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.all(5),
-                spacing: spacing,
-                cardType: WidgetParsers.parseCardType(
-                    json['properties']?['type']?.toString() ?? 'primary'),
-                onPressed: () {
-                  if (json['onAction'] != null) {
-                    final actionsList =
-                        List<Map<String, dynamic>>.from(json['onAction']);
-                    final currentEvalContext = resolved.getFreshEvalContext();
-
-                    for (var actionJson in actionsList) {
-                      final action = resolved.resolveAction(
-                          actionJson, currentEvalContext);
-                      onAction(action);
-                    }
-                  }
-                },
+        : Builder(builder: (context) {
+            if (groupByTeam) {
+              return Column(
                 children: [
-                    Text(
-                      item['entity']?.tag ?? '',
-                      style: Theme.of(context).digitTextTheme(context).headingM,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
-                    _attendeeCard(
-                        context,
-                        spacing,
-                        item,
-                        compositeKey,
-                        attendanceLogStatus,
-                        json,
-                        onAction,
-                        screenKey,
-                        stateData,
-                        listIndex),
-                  ])
-            : _attendeeCard(
-                context,
-                spacing,
-                item,
-                compositeKey,
-                attendanceLogStatus,
-                json,
-                onAction,
-                screenKey,
-                stateData,
-                listIndex);
+                  for (var teamKey in teams.keys.toList())
+                    DigitCard(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.all(5),
+                        spacing: spacing,
+                        cardType: WidgetParsers.parseCardType(
+                            json['properties']?['type']?.toString() ??
+                                'primary'),
+                        onPressed: () {
+                          if (json['onAction'] != null) {
+                            final actionsList = List<Map<String, dynamic>>.from(
+                                json['onAction']);
+                            final currentEvalContext =
+                                resolved.getFreshEvalContext();
+
+                            for (var actionJson in actionsList) {
+                              final action = resolved.resolveAction(
+                                  actionJson, currentEvalContext);
+                              onAction(action);
+                            }
+                          }
+                        },
+                        children: [
+                          Text(
+                            teamKey ?? '',
+                            style: Theme.of(context)
+                                .digitTextTheme(context)
+                                .headingM,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                          Column(
+                            children: [
+                              for (var item in teams[teamKey] ?? [])
+                                _attendeeCard(
+                                    context,
+                                    spacing,
+                                    item,
+                                    compositeKey,
+                                    attendanceLogStatus,
+                                    json,
+                                    onAction,
+                                    screenKey,
+                                    stateData,
+                                    listIndex),
+                            ],
+                          ),
+                        ])
+                ],
+              );
+            }
+            return Column(
+              children: [
+                for (var item in attendees)
+                  _attendeeCard(
+                      context,
+                      spacing,
+                      item,
+                      compositeKey,
+                      attendanceLogStatus,
+                      json,
+                      onAction,
+                      screenKey,
+                      stateData,
+                      listIndex),
+              ],
+            );
+          });
   }
 
   Widget _attendeeCard(
@@ -122,12 +149,6 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     stateData,
     listIndex,
   ) {
-    final attendees = stateData?.modelMap['attendees'] as List<dynamic>? ?? [];
-    final individuals =
-        stateData?.modelMap['individual'] as List<dynamic>? ?? [];
-    final attendaceLog =
-        stateData?.modelMap['attendanceLog'] as List<dynamic>? ?? [];
-
     bool signatureCapture = json['signatureCapture'] as bool? ?? false;
 
     final statusMapping = json['statusMapping'] as Map<String, dynamic>? ?? {};
@@ -348,25 +369,8 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     );
   }
 
-  dynamic _resolveNestedField(Map<String, dynamic> item, String fieldPath) {
-    final parts = fieldPath.split('.');
-    dynamic current = item;
-
-    for (final part in parts) {
-      if (current == null) return null;
-      if (current is Map) {
-        current = current[part];
-      } else if (current is EntityModel) {
-        try {
-          current = current.toMap()[part];
-        } catch (_) {
-          return null;
-        }
-      } else {
-        return null;
-      }
-    }
-    return current;
+  _getTeams(List<dynamic> attendees) {
+    return groupBy(attendees, (e) => e['entity'].tag);
   }
 
   Map<String, Color> colorMap = {

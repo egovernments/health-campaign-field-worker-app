@@ -334,93 +334,89 @@ final dynamic markAttendanceFlow = {
       "inactiveLabel": "Afternoon Session",
       "onAction": []
     },
+    // {
+    //   "data": "AttendanceWrapper",
+    //   "dataSource": "attendees",
+    //   "type": "template",
+    //   "format": "listView",
+    //   "hidden": false,
+    //   "fieldName": "listView",
+    //   "properties": {"spacing": "spacer4"},
+    //   "child":
+    // }
     {
-      "data": "AttendanceWrapper",
-      "dataSource": "attendees",
       "type": "template",
-      "format": "listView",
-      "hidden": false,
-      "fieldName": "listView",
-      "properties": {"spacing": "spacer4"},
-      "child": {
-        "type": "template",
-        "format": "markAttendanceCard",
-        "fieldName": "makeAttendanceCard",
-        "visible": "{{fn:isActiveAttendee(item.entity.denrollmentDate)}}",
-        "groupByTeam": false,
-        "signatureCapture": true,
-        "scanQrCode": true,
-        "proofOfWork": false,
-        "statusMapping": {
-          "-1.0": "ATTENDANCE_UNMARKED",
-          "0.0": "MARK_AS_ABSENT",
-          "1.0": "MARK_AS_PRESENT",
+      "format": "markAttendanceCard",
+      "fieldName": "makeAttendanceCard",
+      "visible": "{{fn:isActiveAttendee(item.entity.denrollmentDate)}}",
+      "groupByTeam": false,
+      "signatureCapture": true,
+      "scanQrCode": true,
+      "proofOfWork": false,
+      "statusMapping": {
+        "-1.0": "ATTENDANCE_UNMARKED",
+        "0.0": "MARK_AS_ABSENT",
+        "1.0": "MARK_AS_PRESENT",
+      },
+      "buttons": [
+        {
+          "label": "PRESENT",
+          "color": "green",
+          "prefixIcon": "Check",
         },
-        "buttons": [
+        {
+          "label": "ABSENT",
+          "color": "red",
+          "prefixIcon": "Close",
+        }
+      ],
+      "attendanceLogStatus":
+          "{{fn:attendanceLogStatus(item.entity.individualId, widgetData.selectedAttendanceDate.entryTime, contextData.0.attendanceLog)}}",
+      "popupConfig": {
+        "title": "MARK_ATTENDANCE_CONFIRM_TITLE",
+        "description": "MARK_ATTENDANCE_CONFIRM_PRESENT_DESC",
+        "titleIcon": "CheckCircle",
+        "showCloseButton": true,
+        "barrierDismissible": true,
+        "body": [
           {
-            "label": "PRESENT",
-            "color": "green",
-            "prefixIcon": "Check",
-          },
-          {
-            "label": "ABSENT",
-            "color": "red",
-            "prefixIcon": "Close",
+            "type": "template",
+            "format": "signatureCapture",
+            "fieldName": "signature",
+            "individualName": "individualName",
+            "existingSignatureData":
+                "{{fn:getAttendeeSignature(item.entity.individualId, contextData.0.attendanceLog)}}",
+            "compareSignatureLabel": "MARK_ATTENDANCE_COMPARE_SIGNATURE_LABEL",
+            "presentSignatureLabel": "MARK_ATTENDANCE_PRESENT_SIGNATURE_LABEL",
+            "absentSignatureLabel": "MARK_ATTENDANCE_ABSENT_SIGNATURE_LABEL",
+            "captureSignatureLabel": "MARK_ATTENDANCE_CAPTURE_SIGNATURE_LABEL",
+            "clearSignatureLabel": "MARK_ATTENDANCE_CLEAR_SIGNATURE_LABEL",
+            "saveSignatureLabel": "MARK_ATTENDANCE_SAVE_SIGNATURE_LABEL",
+            "signatureRequiredLabel":
+                "MARK_ATTENDANCE_SIGNATURE_REQUIRED_LABEL",
+            "onAction": [
+              {
+                "actionType": "MARK_ATTENDANCE",
+                "properties": {
+                  "status": 1.0,
+                  "data": [
+                    {
+                      "key": "individualId",
+                      "value": "{{item.entity.individualId}}"
+                    },
+                    {
+                      "key": "registerId",
+                      "value": "{{item.entity.registerId}}"
+                    },
+                  ]
+                }
+              },
+              {"actionType": "CLOSE_POPUP", "properties": {}},
+            ]
           }
         ],
-        "attendanceData": {
-          "attendanceLogStatus":
-              "{{fn:attendanceLogStatus(item.entity.individualId, widgetData.selectedAttendanceDate.entryTime, contextData.0.attendanceLog)}}"
-        },
-        "popupConfig": {
-          "title": "MARK_ATTENDANCE_CONFIRM_TITLE",
-          "description": "MARK_ATTENDANCE_CONFIRM_PRESENT_DESC",
-          "titleIcon": "CheckCircle",
-          "showCloseButton": true,
-          "barrierDismissible": true,
-          "body": [
-            {
-              "type": "template",
-              "format": "signatureCapture",
-              "fieldName": "signature",
-              "individualName": "individualName",
-              "existingSignatureData":
-                  "{{fn:getAttendeeSignature(item.entity.individualId, contextData.0.attendanceLog)}}",
-              "compareSignatureLabel":
-                  "MARK_ATTENDANCE_COMPARE_SIGNATURE_LABEL",
-              "presentSignatureLabel":
-                  "MARK_ATTENDANCE_PRESENT_SIGNATURE_LABEL",
-              "absentSignatureLabel": "MARK_ATTENDANCE_ABSENT_SIGNATURE_LABEL",
-              "captureSignatureLabel":
-                  "MARK_ATTENDANCE_CAPTURE_SIGNATURE_LABEL",
-              "clearSignatureLabel": "MARK_ATTENDANCE_CLEAR_SIGNATURE_LABEL",
-              "saveSignatureLabel": "MARK_ATTENDANCE_SAVE_SIGNATURE_LABEL",
-              "signatureRequiredLabel":
-                  "MARK_ATTENDANCE_SIGNATURE_REQUIRED_LABEL",
-              "onAction": [
-                {
-                  "actionType": "MARK_ATTENDANCE",
-                  "properties": {
-                    "status": 1.0,
-                    "data": [
-                      {
-                        "key": "individualId",
-                        "value": "{{item.entity.individualId}}"
-                      },
-                      {
-                        "key": "registerId",
-                        "value": "{{item.entity.registerId}}"
-                      },
-                    ]
-                  }
-                },
-                {"actionType": "CLOSE_POPUP", "properties": {}},
-              ]
-            }
-          ],
-          "onAction": []
-        },
-      }
+        "onAction": []
+      },
     }
   ]
 };
