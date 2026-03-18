@@ -4,6 +4,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_flow_builder/action_handler/action_config.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/layout_renderer.dart';
+import 'package:digit_flow_builder/utils/flow_widget_state.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_flow_builder/utils/widget_parsers.dart';
 import 'package:digit_flow_builder/widget_registry.dart';
@@ -42,16 +43,13 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     // final item = crudCtx?.item ?? {};
 
     final attendees = stateData?.modelMap['attendees'] as List<dynamic>? ?? [];
-    final teams = _getTeams(attendees);
-    final individuals =
-        stateData?.modelMap['individual'] as List<dynamic>? ?? [];
-    final attendaceLog =
+    final attendanceLog =
         stateData?.modelMap['attendanceLog'] as List<dynamic>? ?? [];
 
-    final attendanceLogStatusRaw = json['attendanceLogStatus'];
-    String? attendanceLogStatus = attendanceLogStatusRaw != null
-        ? resolved.resolveText(attendanceLogStatusRaw.toString())
-        : "-1.0";
+    // final attendanceLogStatusRaw = json['attendanceLogStatus'];
+    // String attendanceLogStatus = attendanceLogStatusRaw != null
+    //     ? resolved.resolveText(attendanceLogStatusRaw.toString())
+    //     : "-1.0";
 
     bool groupByTeam = json['groupByTeam'] as bool? ?? false;
 
@@ -60,95 +58,100 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     final double? spacing =
         spacingValue is num ? spacingValue.toDouble() : null;
 
-    return _getUnmarkedAttendance(compositeKey,
-            attendanceLogStatus) // Show card only if checkbox is checked
-        ? const SizedBox.shrink()
-        : Builder(builder: (context) {
-            if (groupByTeam) {
-              return Column(
-                children: [
-                  for (var teamKey in teams.keys.toList())
-                    DigitCard(
-                        width: MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.all(5),
-                        spacing: spacing,
-                        cardType: WidgetParsers.parseCardType(
-                            json['properties']?['type']?.toString() ??
-                                'primary'),
-                        onPressed: () {
-                          if (json['onAction'] != null) {
-                            final actionsList = List<Map<String, dynamic>>.from(
-                                json['onAction']);
-                            final currentEvalContext =
-                                resolved.getFreshEvalContext();
+    return WidgetStateContext.reactive(context, (ctx, state) {
+      String? searchBar = state.widgetData['searchBar'] as String?;
+      if (state.widgetData["checkboxValue"] == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          state.updateWidgetData("checkboxValue", true);
+        });
+      }
+      final selectedAttendanceDate =
+          state.widgetData['selectedAttendanceDate'] as Map<String, dynamic>? ??
+              {};
+      List<dynamic> filteredAttendees = attendees.where((e) {
+        if (searchBar == null || searchBar.length < 2) return true;
+        String name =
+            e['individual']?.first.name.givenName?.toLowerCase() ?? '';
+        return name.contains(searchBar.toLowerCase());
+      }).toList();
+      final teams = _getTeams(filteredAttendees);
+      return Builder(builder: (context) {
+        if (groupByTeam) {
+          return Column(
+            children: [
+              for (var teamKey in teams.keys.toList())
+                DigitCard(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.all(5),
+                    spacing: spacing,
+                    cardType: WidgetParsers.parseCardType(
+                        json['properties']?['type']?.toString() ?? 'primary'),
+                    onPressed: () {
+                      if (json['onAction'] != null) {
+                        final actionsList =
+                            List<Map<String, dynamic>>.from(json['onAction']);
+                        final currentEvalContext =
+                            resolved.getFreshEvalContext();
 
-                            for (var actionJson in actionsList) {
-                              final action = resolved.resolveAction(
-                                  actionJson, currentEvalContext);
-                              onAction(action);
-                            }
-                          }
-                        },
+                        for (var actionJson in actionsList) {
+                          final action = resolved.resolveAction(
+                              actionJson, currentEvalContext);
+                          onAction(action);
+                        }
+                      }
+                    },
+                    children: [
+                      Text(
+                        teamKey ?? '',
+                        style:
+                            Theme.of(context).digitTextTheme(context).headingM,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      Column(
                         children: [
-                          Text(
-                            teamKey ?? '',
-                            style: Theme.of(context)
-                                .digitTextTheme(context)
-                                .headingM,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                          Column(
-                            children: [
-                              for (var item in teams[teamKey] ?? [])
-                                _attendeeCard(
-                                    context,
-                                    spacing,
-                                    item,
-                                    compositeKey,
-                                    attendanceLogStatus,
-                                    json,
-                                    onAction,
-                                    screenKey,
-                                    stateData,
-                                    listIndex),
-                            ],
-                          ),
-                        ])
-                ],
-              );
-            }
-            return Column(
-              children: [
-                for (var item in attendees)
-                  _attendeeCard(
-                      context,
-                      spacing,
-                      item,
-                      compositeKey,
-                      attendanceLogStatus,
-                      json,
-                      onAction,
-                      screenKey,
-                      stateData,
-                      listIndex),
-              ],
-            );
-          });
+                          for (var item in teams[teamKey] ?? [])
+                            _attendeeCard(
+                                context,
+                                spacing,
+                                item,
+                                compositeKey,
+                                attendanceLog,
+                                json,
+                                onAction,
+                                screenKey,
+                                stateData,
+                                listIndex,
+                                selectedAttendanceDate),
+                        ],
+                      ),
+                    ])
+            ],
+          );
+        }
+        return Column(
+          children: [
+            for (var item in filteredAttendees)
+              _attendeeCard(
+                  context,
+                  spacing,
+                  item,
+                  compositeKey,
+                  attendanceLog,
+                  json,
+                  onAction,
+                  screenKey,
+                  stateData,
+                  listIndex,
+                  selectedAttendanceDate),
+          ],
+        );
+      });
+    });
   }
 
-  Widget _attendeeCard(
-    context,
-    spacing,
-    item,
-    compositeKey,
-    attendanceLogStatus,
-    json,
-    onAction,
-    screenKey,
-    stateData,
-    listIndex,
-  ) {
+  Widget _attendeeCard(context, spacing, item, compositeKey, attendanceLog,
+      json, onAction, screenKey, stateData, listIndex, selectedAttendanceDate) {
     bool signatureCapture = json['signatureCapture'] as bool? ?? false;
 
     final statusMapping = json['statusMapping'] as Map<String, dynamic>? ?? {};
@@ -168,205 +171,204 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     final absentButtonColor = buttons.last["color"] ?? 'red';
     final absentButtonPrefixIcon = buttons.last["prefixIcon"];
 
-    String padding = 'spacer2';
-    return DigitCard(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.all(5),
-      spacing: spacing,
-      cardType: WidgetParsers.parseCardType(
-          json['properties']?['type']?.toString() ?? 'primary'),
-      children: [
-        Text(
-          item['individual']?.first.name.givenName ?? '',
-          style: Theme.of(context).digitTextTheme(context).headingS,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-        ),
-        Text(
-          _getAttendanceStatusText(item['entity']?.individualId, compositeKey,
-              attendanceLogStatus, statusMapping),
-          style: Theme.of(context).digitTextTheme(context).bodyS,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-        ),
-        if (attendanceLogStatus == "-1.0" &&
-            !_isSameDate(compositeKey) &&
-            signatureCapture == false)
-          Row(
-            children: [
-              Expanded(
-                child: DigitButton(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  label: presentButtonLabel,
-                  onPressed: () async {
-                    Map<String, dynamic> data = {
-                      "individualId": item['entity']?.individualId,
-                      "registerId": item['entity']?.registerId,
-                      "status": 1.0, // 1.0 for present
-                    };
-                    _markAttendance(data, compositeKey);
-                  },
-                  type: _getAttendanceStatus(
-                              item['entity']?.individualId, compositeKey) ==
-                          1.0
-                      ? DigitButtonType.primary
-                      : DigitButtonType.secondary,
-                  size: DigitButtonSize.small,
-                  digitButtonThemeData: DigitButtonThemeData(
-                    primaryDigitButtonColor:
-                        DigitButtonThemeData.defaultTheme(context)
-                            .primaryDigitButtonColor,
-                    DigitButtonColor: colorMap[presentButtonColor] ??
-                        DigitButtonThemeData.defaultTheme(context)
-                            .DigitButtonColor,
-                    disabledColor: DigitButtonThemeData.defaultTheme(context)
-                        .disabledColor,
-                    radius: BorderRadius.circular(spacer3),
-                    largeRadius: BorderRadius.circular(spacer3),
-                    smallMediumRadius: BorderRadius.circular(spacer3),
-                    padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
-                  ),
-                  prefixIcon: presentButtonPrefixIcon != null
-                      ? DigitIconMapping.getIcon(presentButtonPrefixIcon)
-                      : null,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: DigitButton(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  label: absentButtonLabel,
-                  onPressed: () async {
-                    Map<String, dynamic> data = {
-                      "individualId": item['entity']?.individualId,
-                      "registerId": item['entity']?.registerId,
-                      "status": 0.0, // 0.0 for absent
-                    };
-                    _markAttendance(data, compositeKey);
-                  },
-                  type: _getAttendanceStatus(
-                              item['entity']?.individualId, compositeKey) ==
-                          0.0
-                      ? DigitButtonType.primary
-                      : DigitButtonType.secondary,
-                  size: DigitButtonSize.small,
-                  digitButtonThemeData: DigitButtonThemeData(
-                    primaryDigitButtonColor:
-                        DigitButtonThemeData.defaultTheme(context)
-                            .primaryDigitButtonColor,
-                    DigitButtonColor: colorMap[absentButtonColor] ??
-                        DigitButtonThemeData.defaultTheme(context)
-                            .DigitButtonColor,
-                    disabledColor: DigitButtonThemeData.defaultTheme(context)
-                        .disabledColor,
-                    radius: BorderRadius.circular(spacer3),
-                    largeRadius: BorderRadius.circular(spacer3),
-                    smallMediumRadius: BorderRadius.circular(spacer3),
-                    padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
-                  ),
-                  prefixIcon: absentButtonPrefixIcon != null
-                      ? DigitIconMapping.getIcon(absentButtonPrefixIcon)
-                      : null,
-                ),
-              ),
-            ],
-          ),
-        if (attendanceLogStatus == "-1.0" &&
-            !_isSameDate(compositeKey) &&
-            signatureCapture == true)
-          Expanded(
-            child: DigitButton(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              label: signatureButtonLabel,
-              onPressed: () async {
-                // Trigger configured actions if any
-                if (json['onAction'] != null && json['onAction'] is List) {
-                  final actionsList =
-                      List<Map<String, dynamic>>.from(json['onAction']);
-
-                  for (var raw in actionsList) {
-                    final action = ActionConfig.fromJson(raw);
-                    onAction(action);
-                  }
-                }
-
-                // Show popup if popupConfig is provided
-                if (popupConfig != null) {
-                  // Execute onOpenAction before showing popup
-                  final onOpenActions =
-                      popupConfig['onOpenAction'] as List<dynamic>?;
-                  if (onOpenActions != null) {
-                    for (var raw in onOpenActions) {
-                      if (raw is Map<String, dynamic>) {
-                        final action = ActionConfig.fromJson(raw);
-                        onAction(action);
-                      }
-                    }
-                  }
-
-                  await _showActionPopup(context, popupConfig, onAction,
-                      screenKey, stateData, item, listIndex, compositeKey);
-                }
-              },
-              type: _getAttendanceStatus(
-                          item['entity']?.individualId, compositeKey) !=
-                      -1.0
-                  ? DigitButtonType.primary
-                  : DigitButtonType.secondary,
-              size: DigitButtonSize.small,
-              digitButtonThemeData: DigitButtonThemeData(
-                primaryDigitButtonColor:
-                    DigitButtonThemeData.defaultTheme(context)
-                        .primaryDigitButtonColor,
-                DigitButtonColor: (_getAttendanceStatus(
-                                item['entity']?.individualId, compositeKey) ==
-                            1.0
-                        ? colorMap[presentButtonColor]
-                        : colorMap[absentButtonColor]) ??
-                    DigitButtonThemeData.defaultTheme(context).DigitButtonColor,
-                disabledColor:
-                    DigitButtonThemeData.defaultTheme(context).disabledColor,
-                radius: BorderRadius.circular(spacer3),
-                largeRadius: BorderRadius.circular(spacer3),
-                smallMediumRadius: BorderRadius.circular(spacer3),
-                padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
-              ),
-              prefixIcon: _getAttendanceStatus(
-                          item['entity']?.individualId, compositeKey) !=
-                      -1.0
-                  ? DigitIconMapping.getIcon("Check")
-                  : DigitIconMapping.getIcon("Edit"),
-            ),
-          ),
-        // DigitButton(
-        //   label: localizations.translate(i18.attendance.signatureButtonLabel),
-        //   prefixIcon: signatureCaptured ? Icons.check_circle : Icons.draw,
-        //   onPressed: onCaptureSignature!,
-        //   mainAxisSize: MainAxisSize.max,
-        //   type: signatureCaptured
-        //       ? DigitButtonType.primary
-        //       : DigitButtonType.secondary,
-        //   size: DigitButtonSize.small,
-        //   textColor: signatureCaptured
-        //       ? theme.colorTheme.paper.primary
-        //       : theme.colorTheme.primary.primary2,
-        //   iconColor: signatureCaptured
-        //       ? theme.colorTheme.paper.primary
-        //       : theme.colorTheme.primary.primary2,
-        //   digitButtonThemeData: DigitButtonThemeData(
-        //     DigitButtonColor: signatureCaptured
-        //         ? theme.colorTheme.alert.success
-        //         : theme.colorTheme.primary.primary2,
-        //     borderWidth: 1.2,
-        //     radius: BorderRadius.circular(spacer1),
-        //     padding: const EdgeInsets.symmetric(
-        //       horizontal: spacer3,
-        //       vertical: spacer2,
-        //     ),
-        //   ),
-        // ),
-      ],
+    final attendanceLogStatus = _getAttendanceLogsStatus(
+      item['entity']?.individualId,
+      selectedAttendanceDate?['entryTime'],
+      attendanceLog,
     );
+
+    String padding = 'spacer2';
+    return _getUnmarkedAttendance(compositeKey, attendanceLogStatus)
+        ? const SizedBox.shrink()
+        : DigitCard(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.all(5),
+            spacing: spacing,
+            cardType: WidgetParsers.parseCardType(
+                json['properties']?['type']?.toString() ?? 'primary'),
+            children: [
+              Text(
+                item['individual']?.first.name.givenName ?? '',
+                style: Theme.of(context).digitTextTheme(context).headingS,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              Text(
+                _getAttendanceStatusText(item['entity']?.individualId,
+                    compositeKey, attendanceLogStatus, statusMapping),
+                style: Theme.of(context).digitTextTheme(context).bodyS,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              if (attendanceLogStatus == -1.0 &&
+                  !_isSameDate(compositeKey) &&
+                  signatureCapture == false)
+                Row(
+                  children: [
+                    Expanded(
+                      child: DigitButton(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        label: presentButtonLabel,
+                        onPressed: () async {
+                          Map<String, dynamic> data = {
+                            "individualId": item['entity']?.individualId,
+                            "registerId": item['entity']?.registerId,
+                            "status": 1.0, // 1.0 for present
+                            "isMarkedManually":
+                                true, // indicate manual marking for present
+                          };
+                          _markAttendance(data, compositeKey);
+                        },
+                        type: _getAttendanceStatus(item['entity']?.individualId,
+                                    compositeKey) ==
+                                1.0
+                            ? DigitButtonType.primary
+                            : DigitButtonType.secondary,
+                        size: DigitButtonSize.small,
+                        digitButtonThemeData: DigitButtonThemeData(
+                          primaryDigitButtonColor:
+                              DigitButtonThemeData.defaultTheme(context)
+                                  .primaryDigitButtonColor,
+                          DigitButtonColor: colorMap[presentButtonColor] ??
+                              DigitButtonThemeData.defaultTheme(context)
+                                  .DigitButtonColor,
+                          disabledColor:
+                              DigitButtonThemeData.defaultTheme(context)
+                                  .disabledColor,
+                          radius: BorderRadius.circular(spacer3),
+                          largeRadius: BorderRadius.circular(spacer3),
+                          smallMediumRadius: BorderRadius.circular(spacer3),
+                          padding:
+                              EdgeInsets.all(WidgetParsers.parseSize(padding)),
+                        ),
+                        prefixIcon: presentButtonPrefixIcon != null
+                            ? DigitIconMapping.getIcon(presentButtonPrefixIcon)
+                            : null,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: DigitButton(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        label: absentButtonLabel,
+                        onPressed: () async {
+                          Map<String, dynamic> data = {
+                            "individualId": item['entity']?.individualId,
+                            "registerId": item['entity']?.registerId,
+                            "status": 0.0, // 0.0 for absent
+                            "isMarkedManually":
+                                true, // indicate manual marking for absent
+                          };
+                          _markAttendance(data, compositeKey);
+                        },
+                        type: _getAttendanceStatus(item['entity']?.individualId,
+                                    compositeKey) ==
+                                0.0
+                            ? DigitButtonType.primary
+                            : DigitButtonType.secondary,
+                        size: DigitButtonSize.small,
+                        digitButtonThemeData: DigitButtonThemeData(
+                          primaryDigitButtonColor:
+                              DigitButtonThemeData.defaultTheme(context)
+                                  .primaryDigitButtonColor,
+                          DigitButtonColor: colorMap[absentButtonColor] ??
+                              DigitButtonThemeData.defaultTheme(context)
+                                  .DigitButtonColor,
+                          disabledColor:
+                              DigitButtonThemeData.defaultTheme(context)
+                                  .disabledColor,
+                          radius: BorderRadius.circular(spacer3),
+                          largeRadius: BorderRadius.circular(spacer3),
+                          smallMediumRadius: BorderRadius.circular(spacer3),
+                          padding:
+                              EdgeInsets.all(WidgetParsers.parseSize(padding)),
+                        ),
+                        prefixIcon: absentButtonPrefixIcon != null
+                            ? DigitIconMapping.getIcon(absentButtonPrefixIcon)
+                            : null,
+                      ),
+                    ),
+                  ],
+                ),
+              if (attendanceLogStatus == -1.0 &&
+                  !_isSameDate(compositeKey) &&
+                  signatureCapture == true)
+                Expanded(
+                  child: DigitButton(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    label: signatureButtonLabel,
+                    onPressed: () async {
+                      // Trigger configured actions if any
+                      if (json['onAction'] != null &&
+                          json['onAction'] is List) {
+                        final actionsList =
+                            List<Map<String, dynamic>>.from(json['onAction']);
+
+                        for (var raw in actionsList) {
+                          final action = ActionConfig.fromJson(raw);
+                          onAction(action);
+                        }
+                      }
+
+                      // Show popup if popupConfig is provided
+                      if (popupConfig != null) {
+                        // Execute onOpenAction before showing popup
+                        final onOpenActions =
+                            popupConfig['onOpenAction'] as List<dynamic>?;
+                        if (onOpenActions != null) {
+                          for (var raw in onOpenActions) {
+                            if (raw is Map<String, dynamic>) {
+                              final action = ActionConfig.fromJson(raw);
+                              onAction(action);
+                            }
+                          }
+                        }
+
+                        await _showActionPopup(
+                            context,
+                            popupConfig,
+                            onAction,
+                            screenKey,
+                            stateData,
+                            item,
+                            listIndex,
+                            compositeKey);
+                      }
+                    },
+                    type: _getAttendanceStatus(
+                                item['entity']?.individualId, compositeKey) !=
+                            -1.0
+                        ? DigitButtonType.primary
+                        : DigitButtonType.secondary,
+                    size: DigitButtonSize.small,
+                    digitButtonThemeData: DigitButtonThemeData(
+                      primaryDigitButtonColor:
+                          DigitButtonThemeData.defaultTheme(context)
+                              .primaryDigitButtonColor,
+                      DigitButtonColor: (_getAttendanceStatus(
+                                      item['entity']?.individualId,
+                                      compositeKey) ==
+                                  1.0
+                              ? colorMap[presentButtonColor]
+                              : colorMap[absentButtonColor]) ??
+                          DigitButtonThemeData.defaultTheme(context)
+                              .DigitButtonColor,
+                      disabledColor: DigitButtonThemeData.defaultTheme(context)
+                          .disabledColor,
+                      radius: BorderRadius.circular(spacer3),
+                      largeRadius: BorderRadius.circular(spacer3),
+                      smallMediumRadius: BorderRadius.circular(spacer3),
+                      padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
+                    ),
+                    prefixIcon: _getAttendanceStatus(
+                                item['entity']?.individualId, compositeKey) !=
+                            -1.0
+                        ? DigitIconMapping.getIcon("Check")
+                        : DigitIconMapping.getIcon("Edit"),
+                  ),
+                ),
+            ],
+          );
   }
 
   _getTeams(List<dynamic> attendees) {
@@ -465,6 +467,86 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     );
   }
 
+  _getAttendanceLogsStatus(
+      String? individualId, int? selectedDateRaw, attendanceLogs) {
+    {
+      DateTime selectedDate = selectedDateRaw != null
+          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
+          : DateTime.now();
+
+      double status =
+          _attendanceLogsStatus(individualId, selectedDate, attendanceLogs);
+      return status; // 1.0 for present, 0.0 for absent, 0.5 for half day, -1.0 for unmarked
+    }
+  }
+
+  double _attendanceLogsStatus(String? individualId, DateTime selectedDate,
+      List<dynamic>? attendanceLogs) {
+    if (attendanceLogs == null || individualId == null) return -1.0;
+
+    // Fall back to stored attendanceLog from DB
+    final filteredAttendanceLogs = attendanceLogs
+        .where((attendanceLog) => attendanceLog["individualId"] == individualId)
+        .toList();
+
+    if (filteredAttendanceLogs.isEmpty) return -1.0;
+
+    // Process attendanceLog if it exists and is a List
+
+    final hasMorningLog =
+        _hasLogWithType(filteredAttendanceLogs, selectedDate, 'ENTRY');
+    final hasEveningLog =
+        _hasLogWithType(filteredAttendanceLogs, selectedDate, 'EXIT');
+    if (hasMorningLog && hasEveningLog) {
+      final morningLogActive =
+          _hasLogActiveStatus(filteredAttendanceLogs, selectedDate, 'ENTRY');
+      final eveningActive =
+          _hasLogActiveStatus(filteredAttendanceLogs, selectedDate, 'EXIT');
+
+      if (morningLogActive && eveningActive) {
+        return 1.0; // present
+      } else if (!morningLogActive && !eveningActive) {
+        return 0.0; // absent
+      } else {
+        return 0.5; // half day
+      }
+    }
+    return -1.0;
+  }
+
+  bool _hasLogWithType(attendanceLog, DateTime date, String type) {
+    final logTime = type == 'ENTRY'
+        ? DateTime(date.year, date.month, date.day, 9).millisecondsSinceEpoch
+        : DateTime(date.year, date.month, date.day, 18).millisecondsSinceEpoch;
+
+    if (attendanceLog == null) return false;
+
+    return attendanceLog.any((element) {
+      final elementTime = element["time"];
+      final elementType = element["type"]?.toString();
+      return elementTime == logTime && elementType == type;
+    });
+  }
+
+  bool _hasLogActiveStatus(attendanceLog, DateTime date, String type) {
+    final logTime = type == 'ENTRY'
+        ? DateTime(date.year, date.month, date.day, 9).millisecondsSinceEpoch
+        : DateTime(date.year, date.month, date.day, 18).millisecondsSinceEpoch;
+
+    if (attendanceLog == null) return false;
+
+    return attendanceLog.any((element) {
+      final elementTime = element["time"];
+      final elementType = element["type"]?.toString();
+      final elementStatus = element["status"];
+      if (elementStatus == null) return false;
+      if (elementTime == logTime && elementType == type) {
+        return elementStatus == 'ACTIVE';
+      }
+      return false;
+    });
+  }
+
   bool _isSameDate(String? compositeKey) {
     if (compositeKey == null) return false;
     final currentState = FlowCrudStateRegistry().get(compositeKey);
@@ -481,23 +563,23 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
   }
 
   bool _getUnmarkedAttendance(
-      String? compositeKey, String attendanceLogStatus) {
+      String? compositeKey, double attendanceLogStatus) {
     if (compositeKey == null) return false;
     final currentState = FlowCrudStateRegistry().get(compositeKey);
     final widgetData =
         Map<String, dynamic>.from(currentState?.widgetData ?? {});
     final checkboxValue = widgetData['checkboxValue'];
-    if (checkboxValue == true && attendanceLogStatus != "-1.0") {
+    if (checkboxValue == true && attendanceLogStatus != -1.0) {
       return true; // already marked, hide card
     }
     return false; // show card if not marked
   }
 
   String _getAttendanceStatusText(String? individualId, String? compositeKey,
-      String attendanceLogStatus, Map<String, dynamic> statusMapping) {
+      double attendanceLogStatus, Map<String, dynamic> statusMapping) {
     final status = _getAttendanceStatus(individualId, compositeKey);
-    if (attendanceLogStatus != "-1.0") {
-      return statusMapping[attendanceLogStatus] ?? '';
+    if (attendanceLogStatus != -1.0) {
+      return statusMapping[attendanceLogStatus.toString()] ?? '';
     }
     return statusMapping[status.toString()] ??
         ''; // default to empty string if not marked
@@ -534,6 +616,7 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     final individualId = data['individualId']?.toString();
     final registerId = data['registerId']?.toString();
     final status = (data['status'] as num?)?.toDouble() ?? 1.0;
+    final isMarkedManually = data['isMarkedManually'] as bool? ?? false;
     final signatureData = data['signatureData'] as String?;
 
     if (individualId == null || individualId.isEmpty) return;
@@ -565,6 +648,7 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
       'status': finalStatus,
       'registerId': registerId,
       'individualId': individualId,
+      'isMarkedManually': isMarkedManually,
       'signatureData': signatureData,
     };
     widgetData['attendanceCollection'] = collection;

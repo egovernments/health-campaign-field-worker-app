@@ -126,7 +126,7 @@ final dynamic markAttendanceFlow = {
       "format": "button",
       "type": "template",
       "fieldName": "createReferral",
-      "label": "BUTTON_MARK_ATTENDANCE",
+      "label": "SCAN_QR_CODE",
       "prefixIcon": "QrCodeScanner",
       "properties": {
         "type": "primary",
@@ -140,7 +140,7 @@ final dynamic markAttendanceFlow = {
       "format": "button",
       "type": "template",
       "fieldName": "submitAttendance",
-      "label": "CORE_COMMON_SUBMIT",
+      "label": "SAVE_AND_SUBMIT",
       "disabled":
           "{{fn:allAttendanceSelected(contextData.0.attendees, widgetData.attendanceCollection)}}",
       "properties": {
@@ -150,7 +150,6 @@ final dynamic markAttendanceFlow = {
         "mainAxisAlignment": "center",
       },
       "onAction": [
-        {"actionType": "CLOSE_POPUP", "properties": {}},
         {"actionType": "SUBMIT_ATTENDANCE", "properties": {}},
         {
           "actionType": "CREATE_EVENT",
@@ -252,24 +251,24 @@ final dynamic markAttendanceFlow = {
           "child": {
             "type": "template",
             "format": "searchBar",
-            "label": "CORE_COMMON_SEARCH_BY_NAME_OR_ID",
+            "label": "CORE_COMMON_SEARCH",
             "fieldName": "searchBar",
             "onAction": [
-              {
-                "actionType": "SEARCH_EVENT",
-                "properties": {
-                  "data": [
-                    {
-                      "key": "givenName",
-                      "value": "{{widgetData.searchBar}}",
-                      "operation": "contains",
-                      "root": "name"
-                    }
-                  ],
-                  "name": "name",
-                  "type": "SEARCH_EVENT"
-                }
-              }
+              // {
+              //   "actionType": "SEARCH_EVENT",
+              //   "properties": {
+              //     "data": [
+              //       {
+              //         "key": "givenName",
+              //         "value": "{{widgetData.searchBar}}",
+              //         "operation": "contains",
+              //         "root": "name"
+              //       }
+              //     ],
+              //     "name": "name",
+              //     "type": "SEARCH_EVENT"
+              //   }
+              // }
             ]
           },
         },
@@ -348,10 +347,10 @@ final dynamic markAttendanceFlow = {
       "type": "template",
       "format": "markAttendanceCard",
       "fieldName": "makeAttendanceCard",
-      "visible": "{{fn:isActiveAttendee(item.entity.denrollmentDate)}}",
-      "groupByTeam": false,
+      // "visible": "{{fn:isActiveAttendee(item.entity.denrollmentDate)}}",
+      "groupByTeam": true,
       "signatureCapture": true,
-      "scanQrCode": true,
+      "scanQrCode": false,
       "proofOfWork": false,
       "statusMapping": {
         "-1.0": "ATTENDANCE_UNMARKED",
@@ -371,7 +370,7 @@ final dynamic markAttendanceFlow = {
         }
       ],
       "attendanceLogStatus":
-          "{{fn:attendanceLogStatus(item.entity.individualId, widgetData.selectedAttendanceDate.entryTime, contextData.0.attendanceLog)}}",
+          "{{fn:attendanceLogStatus(contextData.0.attendees., widgetData.selectedAttendanceDate.entryTime, contextData.0.attendanceLog)}}",
       "popupConfig": {
         "title": "MARK_ATTENDANCE_CONFIRM_TITLE",
         "description": "MARK_ATTENDANCE_CONFIRM_PRESENT_DESC",
@@ -385,7 +384,7 @@ final dynamic markAttendanceFlow = {
             "fieldName": "signature",
             "individualName": "individualName",
             "existingSignatureData":
-                "{{fn:getAttendeeSignature(item.entity.individualId, contextData.0.attendanceLog)}}",
+                "{{fn:getAttendeeSignature(contextData.0.attendee.entity.individualId, contextData.0.attendanceLog)}}",
             "compareSignatureLabel": "MARK_ATTENDANCE_COMPARE_SIGNATURE_LABEL",
             "presentSignatureLabel": "MARK_ATTENDANCE_PRESENT_SIGNATURE_LABEL",
             "absentSignatureLabel": "MARK_ATTENDANCE_ABSENT_SIGNATURE_LABEL",
