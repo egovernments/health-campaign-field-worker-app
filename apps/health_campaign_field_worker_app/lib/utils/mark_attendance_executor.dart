@@ -126,8 +126,14 @@ class SubmitAttendanceExecutor extends ActionExecutor {
     final comment = widgetData['COMMENT'] as String?;
 
     final selectedDate = widgetData['selectedAttendanceDate'] as Map?;
+    final attendanceManualData = widgetData['attendanceManualData'] as Map?;
+
     final entryTime = (selectedDate?['entryTime'] as num?)?.toInt() ?? 0;
     final exitTime = (selectedDate?['exitTime'] as num?)?.toInt() ?? 0;
+
+    final isManualScan = attendanceManualData?['isManualScan'] as String?;
+    final reason = attendanceManualData?['reason'] as String?;
+    final reasonComment = attendanceManualData?['reasonComment'] as String?;
 
     // registerId comes from navigation params set by NAVIGATION action
     final navParams =
@@ -164,7 +170,6 @@ class SubmitAttendanceExecutor extends ActionExecutor {
       if (markStatus == -1) continue; // skip unmarked
 
       final isPresent = markStatus >= 1.0;
-      final isMarkedManually = data['isMarkedManually'] as bool? ?? false;
       final signatureData = data['signatureData'] as String?;
       final logStatus = isPresent
           ? EnumValues.active.toValue()
@@ -176,7 +181,10 @@ class SubmitAttendanceExecutor extends ActionExecutor {
           EnumValues.boundaryCode.toValue(): boundaryCode,
         if (signatureData != null) 'signatureData': signatureData,
         if (comment != null && comment.isNotEmpty) 'comment': comment,
-        if (isMarkedManually) 'isMarkedManually': isMarkedManually,
+        if (isManualScan != null) 'isMarkedManually': isManualScan,
+        if (reason != null && reason.isNotEmpty) 'manualMarkingReason': reason,
+        if (reasonComment != null && reasonComment.isNotEmpty)
+          'manualMarkingComment': reasonComment,
       };
 
       final clientAudit = ClientAuditDetails(

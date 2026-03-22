@@ -8,7 +8,6 @@ import 'package:digit_flow_builder/widgets/implementations/expandable_widget.dar
 import 'package:digit_flow_builder/widgets/implementations/expanded_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/icon_button_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/label_toggle_widget.dart';
-import 'package:digit_flow_builder/widgets/implementations/mark_attendance_card.dart';
 import 'package:digit_flow_builder/widgets/implementations/progress_bar_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/proximitySearch_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/signature_capture_dialog_widget.dart';
@@ -82,7 +81,6 @@ class WidgetRegistration {
     FlowWidgetFactory.register(SignatureCaptureWidget());
     FlowWidgetFactory.register(LabeledToggleWidget());
     FlowWidgetFactory.register(CheckBoxWidget());
-    FlowWidgetFactory.register(MarkAttendanceCard());
     _initialized = true;
   }
 

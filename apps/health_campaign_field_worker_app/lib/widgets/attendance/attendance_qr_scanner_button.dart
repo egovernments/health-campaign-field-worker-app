@@ -6,6 +6,7 @@ import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/utils/widget_parsers.dart';
 import 'package:digit_flow_builder/widget_registry.dart';
 import 'package:digit_flow_builder/widgets/resolved_flow_widget.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
 import 'package:flutter/material.dart';
@@ -103,44 +104,25 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
             };
             _markAttendance(data, compositeKey);
             onSelected(scannedData);
-            // context.read<AttendanceIndividualBloc>().add(
-            //       AttendanceMarkEvent(
-            //           individualId: getIndividualId(user),
-            //           registerId: widget.registerModel.id,
-            //           status: 1.0,
-            //           isSingleSession: widget.registerModel.additionalDetails?[
-            //                   EnumValues.sessions.toValue()] !=
-            //               2,
-            //           entryTime: entryTime,
-            //           exitTime: exitTime,
-            //           additionalFields:
-            //               AttendeeAdditionalFields(version: 1, fields: [
-            //             if (scannedData.manualEntry != null ||
-            //                 markManualAttendance == true)
-            //               AdditionalField(
-            //                   'isMarkedManually', scannedData.manualEntry),
-            //             if (scannedData.manualEntry == null &&
-            //                 scannedData.manualEntry == false)
-            //               AdditionalField(
-            //                   'qrCreatedTime', scannedData.qrCreatedTime)
-            //           ])),
-            //     );
           } else {
             // Toast.showToast(context,
             //     message: localizations.translate(
             //       result.errorMessage!,
             //     ),
             //     type: ToastType.error);
-            // context.read<DigitScannerBloc>().add(
-            //       const DigitScannerEvent.handleScanner(
-            //         barCode: [],
-            //         qrCode: [],
-            //       ),
-            //     );
+            context.read<DigitScannerBloc>().add(
+                  const DigitScannerEvent.handleScanner(
+                    barCode: [],
+                    qrCode: [],
+                  ),
+                );
           }
         },
       ),
     ));
+    if (manual != null) {
+      _manualDataEntry(manual, compositeKey);
+    }
   }
 
   _getIndividualId(
@@ -150,6 +132,31 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
         .individualId!;
 
     return id;
+  }
+
+  Future<void> _manualDataEntry(
+    Map<String, dynamic> data,
+    String? compositeKey,
+  ) async {
+    if (compositeKey == null) return;
+
+    final currentState = FlowCrudStateRegistry().get(compositeKey);
+    final widgetData =
+        Map<String, dynamic>.from(currentState?.widgetData ?? {});
+
+    widgetData["attendanceManualData"] = data;
+
+    if (currentState != null) {
+      final updatedState = currentState.copyWith(
+        widgetData: widgetData,
+      );
+      FlowCrudStateRegistry().update(compositeKey, updatedState);
+    } else {
+      final newState = FlowCrudState(
+        widgetData: widgetData,
+      );
+      FlowCrudStateRegistry().update(compositeKey, newState);
+    }
   }
 
   Future<void> _markAttendance(

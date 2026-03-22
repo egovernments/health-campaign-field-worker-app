@@ -152,8 +152,10 @@ final dynamic manageAttendanceFlow = {
                   "data": [
                     {
                       "key": "registerId",
-                      "value": "{{item.AttendanceRegisterModel.id}}"
-                    }
+                      "value": "{{ item.AttendanceRegisterModel.id }}"
+                    },
+                    {"key": "entryTime", "value": "{{fn:entryTime()}}"},
+                    {"key": "exitTime", "value": "{{fn:exitTime()}}"},
                   ]
                 }
               }

@@ -61,6 +61,7 @@ import '../utils/least_level_boundary_singleton.dart';
 import '../utils/mark_attendance_executor.dart';
 import '../utils/utils.dart';
 import '../widgets/attendance/attendance_qr_scanner_button.dart';
+import '../widgets/attendance/mark_attendance_card.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
 import '../widgets/header/back_navigation_help_header.dart';
@@ -199,6 +200,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     ActionHandler.registry
         .register('SUBMIT_ATTENDANCE', SubmitAttendanceExecutor());
 
+    FlowWidgetFactory.register(MarkAttendanceCard());
     FlowWidgetFactory.register(AttendanceQrScannerButton());
 
     // Example 1: Register a dynamic resource card with multi-page state access
@@ -467,6 +469,44 @@ class _HomePageState extends LocalizedState<HomePage> {
       if (args.isEmpty) return 'WAREHOUSE';
       final facilityFromWhich = args.first?.toString() ?? '';
       return facilityFromWhich == 'Delivery Team' ? 'STAFF' : 'WAREHOUSE';
+    });
+
+    FunctionRegistry.register('entryTime', (args, stateData) {
+      DateTime today = DateTime.now();
+      if (args.isNotEmpty && args.first != null) {
+        today = DateTime.fromMillisecondsSinceEpoch(
+            int.tryParse(args.first.toString()) ??
+                today.millisecondsSinceEpoch);
+      }
+      final startOfDay = DateTime(
+        today.year,
+        today.month,
+        today.day,
+        9,
+        0,
+        0,
+      );
+      return startOfDay.millisecondsSinceEpoch;
+    });
+
+    FunctionRegistry.register('exitTime', (args, stateData) {
+      DateTime today = DateTime.now();
+      if (args.isNotEmpty && args.first != null) {
+        today = DateTime.fromMillisecondsSinceEpoch(
+            int.tryParse(args.first.toString()) ??
+                today.millisecondsSinceEpoch);
+      }
+
+      final endOfDay = DateTime(
+        today.year,
+        today.month,
+        today.day,
+        18,
+        0,
+        0,
+        0,
+      );
+      return endOfDay.millisecondsSinceEpoch;
     });
 
     /// Registers a function to calculate completed attendance days.
@@ -1859,17 +1899,17 @@ class _HomePageState extends LocalizedState<HomePage> {
                   ),
                 ],
                 nestedModelMappings: const [
-                  NestedModelMapping(
-                    rootModel: 'attendanceRegister',
-                    fields: {
-                      'attendees': NestedFieldMapping(
-                        table: 'attendee',
-                        localKey: 'id',
-                        foreignKey: 'registerId',
-                        type: NestedMappingType.many,
-                      ),
-                    },
-                  ),
+                  // NestedModelMapping(
+                  //   rootModel: 'attendanceRegister',
+                  //   fields: {
+                  //     'attendees': NestedFieldMapping(
+                  //       table: 'attendee',
+                  //       localKey: 'id',
+                  //       foreignKey: 'registerId',
+                  //       type: NestedMappingType.many,
+                  //     ),
+                  //   },
+                  // ),
                   NestedModelMapping(
                     rootModel: 'individual',
                     fields: {

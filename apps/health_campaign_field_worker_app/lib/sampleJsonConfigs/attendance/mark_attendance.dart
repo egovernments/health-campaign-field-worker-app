@@ -11,6 +11,16 @@ final dynamic markAttendanceFlow = {
             "key": "tenantId",
             "value": "{{singleton.selectedProject.tenantId}}",
             "operation": "equals"
+          },
+          {
+            "key": "referenceId",
+            "value": "{{singleton.selectedProject.id}}",
+            "operation": "equals"
+          },
+          {
+            "key": "id",
+            "value": "{{navigationData.registerId}}",
+            "operation": "equals"
           }
         ],
         "name": "attendanceRegister",
@@ -24,6 +34,16 @@ final dynamic markAttendanceFlow = {
           {
             "key": "tenantId",
             "value": "{{singleton.selectedProject.tenantId}}",
+            "operation": "equals"
+          },
+          {
+            "key": "referenceId",
+            "value": "{{singleton.selectedProject.id}}",
+            "operation": "equals"
+          },
+          {
+            "key": "registerId",
+            "value": "{{navigationData.registerId}}",
             "operation": "equals"
           }
         ],
@@ -237,7 +257,7 @@ final dynamic markAttendanceFlow = {
         {
           "actionType": "CLEAR_STATE",
           "properties": {
-            "widgetKeys": ["attendanceCollection"],
+            "widgetKeys": ["attendanceCollection", "attendanceManualData"],
           }
         }
       ]
@@ -420,20 +440,42 @@ final dynamic markAttendanceFlow = {
         "0.0": "MARK_AS_ABSENT",
         "1.0": "MARK_AS_PRESENT",
       },
-      "buttons": [
-        {
+      "components": {
+        "presentButton": {
+          "type": "template",
+          "format": "button",
           "label": "PRESENT",
-          "color": "green",
-          "prefixIcon": "Check",
-        },
-        {
-          "label": "ABSENT",
-          "color": "red",
           "prefixIcon": "Close",
+          "properties": {
+            "type": "secondary",
+            "size": "small",
+            "color": "green",
+            "mainAxisAlignment": "center"
+          },
+        },
+        "absentButton": {
+          "type": "template",
+          "format": "button",
+          "label": "ABSENT",
+          "prefixIcon": "Close",
+          "properties": {
+            "type": "secondary",
+            "size": "small",
+            "color": "red",
+            "mainAxisAlignment": "center"
+          },
+        },
+        "signatureButton": {
+          "type": "template",
+          "format": "button",
+          "label": "SIGNATURE",
+          "properties": {
+            "type": "secondary",
+            "size": "small",
+            "mainAxisAlignment": "center"
+          },
         }
-      ],
-      "attendanceLogStatus":
-          "{{fn:attendanceLogStatus(contextData.0.attendees., widgetData.selectedAttendanceDate.entryTime, contextData.0.attendanceLog)}}",
+      },
       "popupConfig": {
         "title": "MARK_ATTENDANCE_CONFIRM_TITLE",
         "description": "MARK_ATTENDANCE_CONFIRM_PRESENT_DESC",
