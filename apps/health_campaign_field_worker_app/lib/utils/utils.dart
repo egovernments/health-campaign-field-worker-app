@@ -35,7 +35,9 @@ import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
+import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/localization/localization.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
@@ -231,6 +233,59 @@ Future<bool> getIsConnected() async {
   } on SocketException catch (_) {
     return false;
   }
+}
+
+void triggerSilentHFReferralDownSync({
+  required BuildContext context,
+  required List<AppConfiguration> appConfiguration,
+  required String projectId,
+  required String boundaryCode,
+  required String boundaryName,
+}) {
+  final bloc = context.read<HFReferralDownSyncBloc>();
+
+  late StreamSubscription<HFReferralDownSyncState> subscription;
+  subscription = bloc.stream.listen((state) {
+    state.maybeWhen(
+      orElse: () {},
+      getBatchSize: (batchSize, _, __, ___, ____) {
+        bloc.add(
+          HFReferralDownSyncCheckTotalCountEvent(
+            projectId: projectId,
+            boundaryCode: boundaryCode,
+            pendingSyncCount: 0,
+            boundaryName: boundaryName,
+            batchSize: batchSize,
+          ),
+        );
+      },
+      dataFound: (initialServerCount, batchSize, offset, lastSyncedTime) {
+        bloc.add(
+          HFReferralDownSyncStartEvent(
+            projectId: projectId,
+            boundaryCode: boundaryCode,
+            batchSize: batchSize,
+            initialServerCount: initialServerCount,
+            boundaryName: boundaryName,
+          ),
+        );
+      },
+      success: (_) => subscription.cancel(),
+      failed: () => subscription.cancel(),
+      totalCountCheckFailed: () => subscription.cancel(),
+      pendingSync: () => subscription.cancel(),
+    );
+  });
+
+  bloc.add(
+    HFReferralDownSyncGetBatchSizeEvent(
+      appConfiguration: appConfiguration,
+      projectId: projectId,
+      boundaryCode: boundaryCode,
+      pendingSyncCount: 0,
+      boundaryName: boundaryName,
+    ),
+  );
 }
 
 void showDownloadDialog(

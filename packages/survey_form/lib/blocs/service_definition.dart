@@ -26,9 +26,22 @@ class ServiceDefinitionBloc
       ServiceDefinitionFetchEvent event,
       ServiceDefinitionEmitter emit,
       ) async {
+    final projectName = SurveyFormSingleton().projectName;
+    final roles = SurveyFormSingleton().roles as List;
+    final checklistTypes = SurveyFormSingleton().checklistTypes;
+
+    // Construct exact codes: {projectName}.{checklistType}.{ROLE}
+    final List<String> codes = [];
+    for (final role in roles) {
+      for (final checklistType in checklistTypes) {
+        codes.add('$projectName.$checklistType.$role');
+      }
+    }
+
     final results = await serviceDefinitionDataRepository.search(
       ServiceDefinitionSearchModel(
         tenantId: SurveyFormSingleton().tenantId,
+        code: codes.isNotEmpty ? codes : null,
       ),
     );
     emit(ServiceDefinitionServiceFetchedState(

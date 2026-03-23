@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
+import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../localization_context.dart';
 import '../resolved_flow_widget.dart';
@@ -32,9 +33,13 @@ class PanelCardWidget extends ResolvedFlowWidget {
 
     final localization = LocalizationContext.maybeOf(context);
 
-    // Label/description need navigation context, so resolve manually here
-    final label = resolved.resolveText(json['label'] ?? '');
-    final description = resolved.resolveText(json['description'] ?? '');
+    // Label/description need navigation context, so resolve with enriched evalContext
+    final label = resolveTemplate(json['label'] ?? '', evalContext,
+        localization: localization, screenKey: resolved.screenKey,
+        stateData: resolved.stateData);
+    final description = resolveTemplate(json['description'] ?? '', evalContext,
+        localization: localization, screenKey: resolved.screenKey,
+        stateData: resolved.stateData);
 
     Map<String, dynamic>? primaryAction = json['primaryAction'];
     Map<String, dynamic>? secondaryAction = json['secondaryAction'];

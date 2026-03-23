@@ -1,5 +1,4 @@
 import 'package:digit_data_converter/src/transformer_service.dart';
-import 'package:digit_data_converter/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:flutter/material.dart';
@@ -103,12 +102,24 @@ class TransformerExecutor extends ActionExecutor {
     // Update state with composite key if available, fallback to config name
     FlowCrudStateRegistry().update(compositeKey ?? config?["name"], flowState);
 
-    // Check if this is edit mode
+    // Check if this is edit mode (supports both isEdit and isUpdate flags)
     final navigationParams = contextData['navigation'] is Map
         ? Map<String, dynamic>.from(contextData['navigation'] as Map)
         : null;
     final isEdit = navigationParams?['isEdit'] == true ||
-        navigationParams?['isEdit'] == 'true';
+        navigationParams?['isEdit'] == 'true' ||
+        navigationParams?['isUpdate'] == true ||
+        navigationParams?['isUpdate'] == 'true';
+
+    // Add navigation params to formValuesToUse so that __switch:navigation.* directives can resolve
+    if (navigationParams != null && navigationParams.isNotEmpty) {
+      formValuesToUse = {
+        ...formValuesToUse ?? {},
+        'navigation': navigationParams,
+      };
+      debugPrint(
+          'TRANSFORMER: Added navigation params to formValues: $navigationParams');
+    }
 
     // Check if we should force create new entities even in edit mode
     // This is useful for inventory where edit prefills form but submits as new entities
@@ -121,7 +132,7 @@ class TransformerExecutor extends ActionExecutor {
     // 2. From navigation params in registry (stored by NAVIGATION executor)
     List<EntityModel>? existingModels;
 
-    // First try contextData (from REVERSE_TRANSFORM in same action chain)
+    // First try contextData['existingModels'] (from REVERSE_TRANSFORM in same action chain)
     if (contextData['existingModels'] != null) {
       final contextModels = contextData['existingModels'];
       if (contextModels is List) {
@@ -131,9 +142,23 @@ class TransformerExecutor extends ActionExecutor {
       }
     }
 
+    // If no existingModels, try contextData['entities'] (from SEARCH_EVENT with awaitResults)
+    // This is useful when a search is done before the transformer to fetch the entity for update
+    if ((existingModels == null || existingModels.isEmpty) &&
+        isEdit &&
+        contextData['entities'] != null) {
+      final searchedEntities = contextData['entities'];
+      if (searchedEntities is List) {
+        existingModels = searchedEntities.whereType<EntityModel>().toList();
+        debugPrint(
+            'TRANSFORMER: Found entities from SEARCH_EVENT for update: ${existingModels.length}');
+      }
+    }
+
     // If not in contextData, try registry navigation params
     if (existingModels == null || existingModels.isEmpty) {
-      debugPrint('TRANSFORMER: screenKey from args: $screenKey, compositeKey: $compositeKey');
+      debugPrint(
+          'TRANSFORMER: screenKey from args: $screenKey, compositeKey: $compositeKey');
 
       // Try multiple key formats - the navigation executor stores with FORM:: prefix
       final keysToTry = <String?>[
