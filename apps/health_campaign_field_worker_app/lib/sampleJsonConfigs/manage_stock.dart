@@ -10,7 +10,6 @@ final dynamic sampleInventoryFlows = {
       "screenType": "TEMPLATE",
       "name": "manageStock",
       "heading": "APP_CONFIG_INVENTORY_manageStock_HEADING",
-      "description": "",
       "header": [
         {
           "format": "backLink",
