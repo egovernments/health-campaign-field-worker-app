@@ -834,30 +834,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final getSelectedProject = await localSecureStore.selectedProject;
 
-    // try {
-    //   final stockDownsyncService = StockDownsyncService(
-    //     localSecureStore: localSecureStore,
-    //     projectFacilityLocalRepository: projectFacilityLocalRepository,
-    //     facilityLocalRepository: facilityLocalRepository,
-    //     stockRemoteRepository: stockRemoteRepository,
-    //     stockLocalRepository: stockLocalRepository,
-    //   );
-    //   await stockDownsyncService.execute(event.model, context);
-    //
-    //   emit(state.copyWith(
-    //     selectedProject: event.model,
-    //     loading: false,
-    //     syncError: null,
-    //     projectType: getSelectedProjectType,
-    //     selectedCycle: currentRunningCycle,
-    //   ));
-    // } catch (_) {
-    //   emit(state.copyWith(
-    //     loading: false,
-    //     projects: [],
-    //     syncError: ProjectSyncErrorType.projectFacilities,
-    //   ));
-    // }
+    emit(state.copyWith(
+      selectedProject: getSelectedProject,
+      loading: false,
+      syncError: null,
+    ));
   }
 
   Future<void> storeSchema(dynamic schemaJson) async {
