@@ -16,8 +16,7 @@ class LabeledToggleWidget extends ResolvedFlowWidget {
     void Function(ActionConfig) onAction,
     ResolvedWidgetContext resolved,
   ) {
-    final rawValue = json['value'] as String;
-    final value = resolved.resolveText(rawValue) == 'true';
+    final value = json['value'] as bool? ?? false;
     final activeLabel = json['activeLabel'] as String;
     final inactiveLabel = json['inactiveLabel'] as String;
 

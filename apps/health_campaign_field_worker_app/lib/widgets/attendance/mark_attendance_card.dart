@@ -18,6 +18,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/digit_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
@@ -44,6 +45,10 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     final attendees = stateData?.modelMap['attendees'] as List<dynamic>? ?? [];
     final attendanceLog =
         stateData?.modelMap['attendanceLog'] as List<dynamic>? ?? [];
+
+    Map<String, dynamic> attendanceMarkInfo =
+        json['components']?['attendanceMarkInfo'] as Map<String, dynamic>? ??
+            {};
 
     bool groupByTeam = json['groupByTeam'] as bool? ?? false;
 
@@ -76,9 +81,13 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
       // UI Rendering
       return Builder(builder: (context) {
         if (filterAttendanceLogs.isNotEmpty && checkboxValue == true) {
-          return const Center(
-            child: Text("Attendance already marked for the selected date"),
-          );
+          return Padding(
+              padding: const EdgeInsets.all(8),
+              child: InfoCard(
+                  title: attendanceMarkInfo['title'] ?? '',
+                  type: InfoType.info,
+                  capitalizedLetter: false,
+                  description: attendanceMarkInfo['description'] ?? ''));
         }
         if (groupByTeam) {
           return Column(
@@ -153,12 +162,14 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
 
   Widget _attendeeCard(context, item, compositeKey, filterAttendanceLogs, json,
       onAction, screenKey, stateData, listIndex) {
+    bool scanQrCode = json['scanQrCode'] as bool? ?? false;
     bool signatureCapture = json['signatureCapture'] as bool? ?? false;
 
-    Map<String, dynamic> statusMapping =
-        json['statusMapping'] as Map<String, dynamic>? ?? {};
     Map<String, dynamic> components =
         json['components'] as Map<String, dynamic>? ?? {};
+
+    Map<String, dynamic> statusMapping =
+        components['statusMapping'] as Map<String, dynamic>? ?? {};
 
     // final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final popupConfig = json['popupConfig'] as Map<String, dynamic>?;
@@ -214,7 +225,7 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
           maxLines: 2,
         ),
         if (attendanceLogStatus == -1.0 &&
-            _allowManualAttendance(compositeKey) &&
+            _allowManualAttendance(compositeKey, scanQrCode) &&
             signatureCapture == false)
           Row(
             children: [
@@ -296,7 +307,7 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
             ],
           ),
         if (attendanceLogStatus == -1.0 &&
-            _allowManualAttendance(compositeKey) &&
+            _allowManualAttendance(compositeKey, scanQrCode) &&
             signatureCapture == true)
           Expanded(
             child: DigitButton(
@@ -501,13 +512,16 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     }
   }
 
-  bool _allowManualAttendance(String? compositeKey) {
+  bool _allowManualAttendance(String? compositeKey, bool scanQrCode) {
     if (compositeKey == null) return false;
     final currentState = FlowCrudStateRegistry().get(compositeKey);
     final widgetData =
         Map<String, dynamic>.from(currentState?.widgetData ?? {});
     final selectedDate = widgetData['selectedAttendanceDate'] as Map?;
     final attendanceManualData = widgetData['attendanceManualData'] as Map?;
+    if (scanQrCode == false) {
+      return true; // if not scanning QR code, allow manual marking regardless of date or existing data
+    }
     if (attendanceManualData != null) {
       return true; // if there's manual data, allow marking (don't hide buttons)
     }

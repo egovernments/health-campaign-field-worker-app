@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/utils/flow_widget_state.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -114,6 +115,7 @@ class _CompareSignatureState extends State<CompareSignature> {
     var attendanceLogs = widget.resolved.stateData?.modelMap['attendanceLog']
             as List<dynamic>? ??
         [];
+    if (attendanceLogs.isEmpty) return null;
     List log = attendanceLogs
         .where(
           (log) =>
@@ -122,11 +124,14 @@ class _CompareSignatureState extends State<CompareSignature> {
         )
         .toList();
     if (log.isNotEmpty) {
-      var additionalDetails = log.firstWhere((log) =>
-              log['additionalDetails'] != null &&
-              log['additionalDetails']
-                  .containsKey('signatureData'))['additionalDetails']
-          as Map<String, dynamic>?;
+      var filterLogs = log.firstWhereOrNull((log) {
+        return log['additionalDetails'] != null &&
+            log['additionalDetails'].containsKey('signatureData');
+      });
+
+      if (filterLogs == null) return null;
+      var additionalDetails = filterLogs['additionalDetails'] ?? null;
+
       var signatureData = additionalDetails != null
           ? additionalDetails['signatureData'] as String?
           : null;
@@ -216,7 +221,7 @@ class _CompareSignatureState extends State<CompareSignature> {
             child: DigitCard(children: [
               Image.memory(
                 base64Decode(widget.signatureData),
-                height: 100,
+                height: existingSignatureData == null ? 200 :  100,
                 fit: BoxFit.contain,
               ),
             ]),

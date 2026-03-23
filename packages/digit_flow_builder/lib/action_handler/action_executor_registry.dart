@@ -5,6 +5,7 @@ import 'executors/action_executor.dart';
 import 'executors/navigation_executor.dart';
 import 'executors/back_navigation_executor.dart';
 import 'executors/crud_executor.dart';
+import 'executors/open_popup_executor.dart';
 import 'executors/search_executor.dart';
 import 'executors/refresh_search_executor.dart';
 import 'executors/transformer_executor.dart';
@@ -15,7 +16,8 @@ import 'executors/reverse_transformer_executor.dart';
 
 /// Registry for managing action executors
 class ActionExecutorRegistry {
-  static final ActionExecutorRegistry _instance = ActionExecutorRegistry._internal();
+  static final ActionExecutorRegistry _instance =
+      ActionExecutorRegistry._internal();
 
   factory ActionExecutorRegistry() => _instance;
 
@@ -39,6 +41,7 @@ class ActionExecutorRegistry {
     register('CLEAR_STATE', ClearStateExecutor());
     register('OPEN_SCANNER', OpenScannerExecutor());
     register('REVERSE_TRANSFORM', ReverseTransformerExecutor());
+    register('OPEN_POPUP', OpenPopupExecutor());
     register('CLOSE_POPUP', ClosePopupExecutor());
   }
 

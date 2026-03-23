@@ -719,7 +719,14 @@ class _HomePageState extends LocalizedState<HomePage> {
     FunctionRegistry.register('isSameDay', (args, stateData) {
       if (args.isEmpty || args.first == null) return false;
 
-      final date = args.first;
+      final date = args.first['date'];
+      final entryTime = args.first['entryTime'];
+      final attendanceLogs = args.length > 1 ? args[1] as List? : null;
+      final filterAttendanceLogs = attendanceLogs?.where((log) {
+        final logTime = log.time;
+        if (logTime == null) return false;
+        return logTime == entryTime;
+      }).toList();
       if (date is! String) return false;
 
       final now = DateTime.now();
@@ -727,7 +734,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       bool isSameDay = dateTime.year == now.year &&
           dateTime.month == now.month &&
           dateTime.day == now.day;
-      return isSameDay;
+      return isSameDay && (filterAttendanceLogs ?? []).isEmpty;
     });
 
     FunctionRegistry.register('allAttendanceSelected', (args, stateData) {
@@ -804,6 +811,34 @@ class _HomePageState extends LocalizedState<HomePage> {
       List filteredAttendees = attendees;
 
       return filteredAttendees;
+    });
+
+    FunctionRegistry.register("getMissedDays", (args, stateData) {
+      List attendanceLog =
+          (args.isEmpty || args.first == null) ? [] : args.first;
+
+      String missedDays = ""; // Initialize the missedDays string
+
+      // Get current date
+      DateTime nowTime = DateTime.now();
+      DateTime currentDate = DateTime(nowTime.year, nowTime.month, nowTime.day);
+
+      // Check if attendance log exists
+      if (attendanceLog.isNotEmpty) {
+        // Iterate through attendance log entries
+        for (var entry in attendanceLog) {
+          // Check each entry for missed attendance
+          entry.forEach((key, value) {
+            if (value == false && key.isBefore(currentDate)) {
+              // Add missed day to missedDays string
+              missedDays += "${key.day}/${key.month}/${key.year} \n";
+            }
+          });
+        }
+      }
+
+      // Return missed attendance days with description
+      return "MISSED_ATTENDANCE_DESCRIPTION\n$missedDays";
     });
 
     /// Builds AttendanceLogModel entities (ENTRY + EXIT per individual) from

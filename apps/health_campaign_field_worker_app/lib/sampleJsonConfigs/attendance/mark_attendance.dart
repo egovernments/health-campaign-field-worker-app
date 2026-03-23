@@ -92,7 +92,50 @@ final dynamic markAttendanceFlow = {
         "name": "name",
         "type": "SEARCH_EVENT"
       }
-    }
+    },
+    // {
+    //   "actionType": "OPEN_POPUP",
+    //   "properties": {
+    //     "popupConfig": {
+    //       "title": "ACTION_REQUIRED",
+    //       "showCloseButton": true,
+    //       "barrierDismissible": true,
+    //       "body": [
+    //         {
+    //           "type": "template",
+    //           "format": "card",
+    //           "children": [
+    //             {
+    //               "type": "template",
+    //               "format": "textTemplate",
+    //               "value": "MISSED_ATTENDANCE_INFO",
+    //             },
+    //             {
+    //               "type": "template",
+    //               "format": "textTemplate",
+    //               "value": "{{fn:getMissedDays(contextData.0.attendanceLog)}}",
+    //             },
+    //           ]
+    //         },
+    //         {
+    //           "format": "button",
+    //           "type": "template",
+    //           "fieldName": "dateChangeProceed",
+    //           "label": "DATE_CHANGE_PROCEED",
+    //           "properties": {
+    //             "type": "primary",
+    //             "size": "large",
+    //             "mainAxisSize": "max",
+    //             "mainAxisAlignment": "center"
+    //           },
+    //           "onAction": [
+    //             {"actionType": "CLOSE_POPUP", "properties": {}},
+    //           ]
+    //         },
+    //       ],
+    //     }
+    //   }
+    // },
   ],
   "wrapperConfig": {
     "filters": [],
@@ -117,8 +160,6 @@ final dynamic markAttendanceFlow = {
     ],
     "rootEntity": "AttendanceRegisterModel",
     "wrapperName": "AttendanceWrapper",
-    // "groupByType": true,
-    // "groupBy": "tag",
     "searchConfig": {
       "select": [
         "attendanceRegister",
@@ -142,7 +183,8 @@ final dynamic markAttendanceFlow = {
   ],
   "footer": [
     {
-      "visible": "{{fn:isSameDay(widgetData.selectedAttendanceDate.date)}}",
+      "visible":
+          "{{fn:isSameDay(widgetData.selectedAttendanceDate, contextData.0.attendanceLog)}}",
       "format": "attendanceQRScannerButton",
       "type": "template",
       "fieldName": "createReferral",
@@ -154,12 +196,7 @@ final dynamic markAttendanceFlow = {
         "mainAxisSize": "max",
         "mainAxisAlignment": "center"
       },
-      "onAction": [
-        // {
-        //   "actionType": "NAVIGATION",
-        //   "properties": {"type": "TEMPLATE", "name": "attendanceQrScanner"}
-        // }
-      ]
+      "onAction": []
     },
     {
       "format": "button",
@@ -175,18 +212,61 @@ final dynamic markAttendanceFlow = {
         "mainAxisAlignment": "center",
       },
       "onAction": [
-        {"actionType": "SUBMIT_ATTENDANCE", "properties": {}},
+        // {"actionType": "SUBMIT_ATTENDANCE", "properties": {}},
+        // {
+        //   "actionType": "CREATE_EVENT",
+        //   "properties": {"entity": "AttendanceLogModel"}
+        // },
         {
-          "actionType": "CREATE_EVENT",
-          "properties": {"entity": "AttendanceLogModel"}
-        },
-        {
-          "actionType": "NAVIGATION",
+          "actionType": "OPEN_POPUP",
           "properties": {
-            "type": "TEMPLATE",
-            "name": "attendanceAcknowledgement"
+            "popupConfig": {
+              "title": "CONFIRMATION_LABEL",
+              "showCloseButton": true,
+              "barrierDismissible": true,
+              "body": [
+                {
+                  "type": "template",
+                  "format": "textTemplate",
+                  "value": 'COMMENT_KEY'
+                },
+                {
+                  "type": "template",
+                  "format": "textInput",
+                  "fieldName": "COMMENT",
+                  "inputType": "multiline",
+                },
+                {
+                  "format": "button",
+                  "type": "template",
+                  "fieldName": "createReferral",
+                  "label": "PROCEED_BUTTON",
+                  "properties": {
+                    "type": "primary",
+                    "size": "large",
+                    "mainAxisSize": "max",
+                    "mainAxisAlignment": "center"
+                  },
+                  "onAction": [
+                    {"actionType": "CLOSE_POPUP", "properties": {}},
+                    {"actionType": "SUBMIT_ATTENDANCE", "properties": {}},
+                    {
+                      "actionType": "CREATE_EVENT",
+                      "properties": {"entity": "AttendanceLogModel"}
+                    },
+                    {
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "type": "TEMPLATE",
+                        "name": "attendanceAcknowledgement"
+                      }
+                    }
+                  ]
+                },
+              ],
+            }
           }
-        }
+        },
       ]
     },
     // {
@@ -278,23 +358,7 @@ final dynamic markAttendanceFlow = {
             "format": "searchBar",
             "label": "CORE_COMMON_SEARCH",
             "fieldName": "searchBar",
-            "onAction": [
-              // {
-              //   "actionType": "SEARCH_EVENT",
-              //   "properties": {
-              //     "data": [
-              //       {
-              //         "key": "givenName",
-              //         "value": "{{widgetData.searchBar}}",
-              //         "operation": "contains",
-              //         "root": "name"
-              //       }
-              //     ],
-              //     "name": "name",
-              //     "type": "SEARCH_EVENT"
-              //   }
-              // }
-            ]
+            "onAction": []
           },
         },
         {
@@ -383,16 +447,6 @@ final dynamic markAttendanceFlow = {
                           },
                           "onAction": [
                             {"actionType": "CLOSE_POPUP", "properties": {}},
-                            // {
-                            //   "actionType": "SEARCH_EVENT",
-                            //   "properties": {
-                            //     "data": [
-                            //       {
-                            //         "key": "givenName",
-                            //         "value": "{{widgetData.searchBar}}",
-                            //         "operation": "contains",
-                            //         "root": "name"
-                            //       }
                           ]
                         }
                       }
@@ -406,40 +460,23 @@ final dynamic markAttendanceFlow = {
         },
       ]
     },
-    {
-      "type": "template",
-      "format": "labeledToggle",
-      "visible":
-          "{{fn:isNotSingleSession(contextData.0.AttendanceRegisterModel)}}",
-      "value": "{{widgetData.labeledToggleValue}}",
-      "activeLabel": "Morning Session",
-      "inactiveLabel": "Afternoon Session",
-      "onAction": []
-    },
     // {
-    //   "data": "AttendanceWrapper",
-    //   "dataSource": "attendees",
     //   "type": "template",
-    //   "format": "listView",
-    //   "hidden": false,
-    //   "fieldName": "listView",
-    //   "properties": {"spacing": "spacer4"},
-    //   "child":
-    // }
+    //   "format": "labeledToggle",
+    //   "visible":
+    //       "{{fn:isNotSingleSession(contextData.0.AttendanceRegisterModel)}}",
+    //   "activeLabel": "Morning Session",
+    //   "inactiveLabel": "Afternoon Session",
+    //   "onAction": []
+    // },
     {
       "type": "template",
       "format": "markAttendanceCard",
       "fieldName": "makeAttendanceCard",
-      // "visible": "{{fn:isActiveAttendee(item.entity.denrollmentDate)}}",
-      "groupByTeam": true,
-      "signatureCapture": true,
-      "scanQrCode": false,
+      "groupByTeam": false,
+      "signatureCapture": false,
+      "scanQrCode": true,
       "proofOfWork": false,
-      "statusMapping": {
-        "-1.0": "ATTENDANCE_UNMARKED",
-        "0.0": "MARK_AS_ABSENT",
-        "1.0": "MARK_AS_PRESENT",
-      },
       "components": {
         "presentButton": {
           "type": "template",
@@ -474,6 +511,15 @@ final dynamic markAttendanceFlow = {
             "size": "small",
             "mainAxisAlignment": "center"
           },
+        },
+        "statusMapping": {
+          "-1.0": "ATTENDANCE_UNMARKED",
+          "0.0": "MARK_AS_ABSENT",
+          "1.0": "MARK_AS_PRESENT",
+        },
+        "attendanceMarkInfo": {
+          "title": "MARK_ATTENDANCE_INFO_TITLE",
+          "description": "MARK_ATTENDANCE_INFO_DESC",
         }
       },
       "popupConfig": {
