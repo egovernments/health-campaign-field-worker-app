@@ -141,15 +141,26 @@ class WidgetStateContext {
   static WidgetStateContext of(BuildContext context) {
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final compositeKey = crudCtx?.compositeKey ??
-        getCompositeKey(context, screenKey: screenKey);
+    final compositeKey =
+        crudCtx?.compositeKey ?? getCompositeKey(context, screenKey: screenKey);
     final registryState =
         compositeKey != null ? FlowCrudStateRegistry().get(compositeKey) : null;
+
+    // Fetch navigation params and include in contextData
+    final key = compositeKey ?? screenKey;
+    final navigationParams = key != null
+        ? FlowCrudStateRegistry().getNavigationParams(key) ??
+            FlowCrudStateRegistry()
+                .getNavigationParams(screenKey?.split('::').last ?? '')
+        : null;
+
+    final rawContextData = crudCtx?.stateData?.rawState;
+    final enrichedContextData = rawContextData;
 
     return WidgetStateContext(
       itemData: crudCtx?.item,
       parentData: _resolveParentData(crudCtx),
-      contextData: crudCtx?.stateData?.rawState,
+      contextData: enrichedContextData,
       formData: registryState?.formData ?? {},
       widgetData: registryState?.widgetData ?? {},
       modelMap: crudCtx?.stateData?.modelMap ?? {},
@@ -182,8 +193,8 @@ class WidgetStateContext {
   static ValueListenable<FlowCrudState?> listen(BuildContext context) {
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final compositeKey = crudCtx?.compositeKey ??
-        getCompositeKey(context, screenKey: screenKey);
+    final compositeKey =
+        crudCtx?.compositeKey ?? getCompositeKey(context, screenKey: screenKey);
     return FlowCrudStateRegistry().listen(compositeKey ?? '');
   }
 
@@ -256,8 +267,8 @@ class WidgetStateContext {
   ) {
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final compositeKey = crudCtx?.compositeKey ??
-        getCompositeKey(context, screenKey: screenKey);
+    final compositeKey =
+        crudCtx?.compositeKey ?? getCompositeKey(context, screenKey: screenKey);
 
     if (compositeKey == null) {
       return builder(context, of(context));

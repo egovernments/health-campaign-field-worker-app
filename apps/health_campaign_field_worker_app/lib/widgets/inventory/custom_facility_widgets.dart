@@ -65,7 +65,7 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
 
     // Wrap with ValueListenableBuilder to rebuild when state changes
     return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen('FORM::RECORDSTOCK'),
+      valueListenable: FlowCrudStateRegistry().listen('FORM::${widget.schemaName}'),
       builder: (context, flowState, _) {
         return _FacilityCardContent(
           formKey: widget.formKey,
@@ -212,15 +212,15 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
     final showDeliveryTeamOption = isDistributor && !isWareHouseMgr;
 
     // Try to get wrapper data from multiple sources
-    // First try the passed stateData, then try RECORDSTOCK state directly
+    // First try the passed stateData, then try current form state directly
     var wrapperData = widget.stateData?.stateWrapper;
 
     // If stateData wrapper is null, try to get from FlowCrudStateRegistry
     if (wrapperData == null) {
-      final recordStockState =
-          FlowCrudStateRegistry().get('FORM::RECORDSTOCK') ??
-              FlowCrudStateRegistry().get('RECORDSTOCK');
-      wrapperData = recordStockState?.stateWrapper;
+      final formState =
+          FlowCrudStateRegistry().get('FORM::${widget.pageSchema}') ??
+              FlowCrudStateRegistry().get(widget.pageSchema);
+      wrapperData = formState?.stateWrapper;
     }
 
     // Extract ProjectFacilityModel from wrapper data
@@ -251,10 +251,10 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
         widget.fieldSchema.label ?? widget.fieldSchema.innerLabel;
 
     // Get transaction type from navigation params for hierarchy filtering
-    // Try multiple screen key patterns to find navigation params
+    // Try current form's navigation params
     final navigationParams =
-        FlowCrudStateRegistry().getNavigationParams('FORM::RECORDSTOCK') ??
-            FlowCrudStateRegistry().getNavigationParams('RECORDSTOCK') ??
+        FlowCrudStateRegistry().getNavigationParams('FORM::${widget.pageSchema}') ??
+            FlowCrudStateRegistry().getNavigationParams(widget.pageSchema) ??
             {};
     final transactionType =
         navigationParams['transactionType']?.toString() ?? '';

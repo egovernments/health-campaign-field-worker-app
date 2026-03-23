@@ -66,6 +66,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       preventScreenCapture: json['preventScreenCapture'] as bool?,
       submitCondition: _visibilityConditionOrNull(json['submitCondition']),
       secondaryActionLabel: json['secondaryActionLabel'] as String?,
+      comparisonConfig: _comparisonConfigOrNull(json['comparisonConfig']),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -126,6 +127,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('preventScreenCapture', instance.preventScreenCapture);
   writeNotNull('submitCondition', instance.submitCondition?.toJson());
   writeNotNull('secondaryActionLabel', instance.secondaryActionLabel);
+  writeNotNull('comparisonConfig', instance.comparisonConfig?.toJson());
   return val;
 }
 
@@ -320,3 +322,66 @@ Map<String, dynamic> _$$MultiEntityConfigImplToJson(
       'sourcePageKey': instance.sourcePageKey,
       'sourceFieldKey': instance.sourceFieldKey,
     };
+
+_$ComparisonConfigImpl _$$ComparisonConfigImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ComparisonConfigImpl(
+      model: json['model'] as String,
+      extractKey: json['extractKey'] as String,
+      extractFrom: json['extractFrom'] as String? ?? 'additionalFields',
+      filters: (json['filters'] as List<dynamic>?)
+              ?.map((e) => ComparisonFilter.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      errorMessage: json['errorMessage'] as String?,
+    );
+
+Map<String, dynamic> _$$ComparisonConfigImplToJson(
+    _$ComparisonConfigImpl instance) {
+  final val = <String, dynamic>{
+    'model': instance.model,
+    'extractKey': instance.extractKey,
+    'extractFrom': instance.extractFrom,
+    'filters': instance.filters.map((e) => e.toJson()).toList(),
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('errorMessage', instance.errorMessage);
+  return val;
+}
+
+_$ComparisonFilterImpl _$$ComparisonFilterImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ComparisonFilterImpl(
+      key: json['key'] as String,
+      value: json['value'] as String,
+      operation: json['operation'] as String? ?? 'equals',
+      switchOn: json['switchOn'] as String?,
+      cases: (json['cases'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
+    );
+
+Map<String, dynamic> _$$ComparisonFilterImplToJson(
+    _$ComparisonFilterImpl instance) {
+  final val = <String, dynamic>{
+    'key': instance.key,
+    'value': instance.value,
+    'operation': instance.operation,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('switchOn', instance.switchOn);
+  writeNotNull('cases', instance.cases);
+  return val;
+}

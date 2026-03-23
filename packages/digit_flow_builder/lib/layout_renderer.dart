@@ -45,6 +45,10 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
   // reset scroll trigger flags so the next scroll to edge can trigger.
   List<dynamic>? _lastWrapper;
 
+  // Cached from _handleScrollNotification for use in the deferred
+  // _executeScrollActions Timer callback.
+  String? _currentCompositeKey;
+
   // Scroll listener configuration (parsed from config)
   late final String _triggerMode;
   late final double _threshold;
@@ -70,8 +74,9 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
     // For bidirectional mode, we have separate actions for up and down
     // For backwards compatibility, 'onScroll' is treated as 'onScrollDown'
     if (_triggerMode == 'bidirectional') {
-      _onScrollDownActions = scrollListenerConfig['onScrollDown'] as List<dynamic>? ??
-          scrollListenerConfig['onScroll'] as List<dynamic>?;
+      _onScrollDownActions =
+          scrollListenerConfig['onScrollDown'] as List<dynamic>? ??
+              scrollListenerConfig['onScroll'] as List<dynamic>?;
       _onScrollUpActions = scrollListenerConfig['onScrollUp'] as List<dynamic>?;
     } else {
       _onScrollDownActions = scrollListenerConfig['onScroll'] as List<dynamic>?;
@@ -86,15 +91,23 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
   }
 
   /// Handles scroll notifications from the page
-  bool _handleScrollNotification(ScrollNotification notification, String compositeKey) {
+  bool _handleScrollNotification(
+      ScrollNotification notification, String compositeKey) {
     // Only handle scroll updates, not start/end
     if (notification is! ScrollUpdateNotification) return false;
 
     final metrics = notification.metrics;
 
     // Skip if not scrollable or already loading
-    final isLoading = FlowCrudStateRegistry().get(compositeKey)?.isLoading ?? false;
+    final isLoading =
+        FlowCrudStateRegistry().get(compositeKey)?.isLoading ?? false;
+    debugPrint('ScrollListener: ScrollUpdate - maxExtent=${metrics.maxScrollExtent}, '
+        'pixels=${metrics.pixels}, isLoading=$isLoading, triggerMode=$_triggerMode, '
+        'compositeKey=$compositeKey');
     if (metrics.maxScrollExtent == 0 || isLoading) return false;
+
+    // Cache for the deferred Timer callback in _executeScrollActions
+    _currentCompositeKey = compositeKey;
 
     if (_triggerMode == 'bidirectional') {
       _handleBidirectionalScroll(metrics);
@@ -106,26 +119,35 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
   }
 
   void _handleBidirectionalScroll(ScrollMetrics metrics) {
+    final maxExtent = metrics.maxScrollExtent;
+
+    // When content barely overflows the viewport (small cards), the normal
+    // buffer-based trigger zone is unreachable.  Auto-trigger DOWN so more
+    // data loads until there is enough scroll room for normal interaction.
+    if (maxExtent > 0 && maxExtent < 200) {
+      if (!_hasTriggeredAtBottom && _onScrollDownActions != null) {
+        debugPrint(
+            'ScrollListener: Auto-triggering DOWN (small extent: ${maxExtent.toInt()}px)');
+        _hasTriggeredAtBottom = true;
+        _triggerScrollActions('down');
+      }
+      return; // Skip normal logic — not enough room for buffer zones
+    }
+
     const buffer = 50.0; // pixels from edge to trigger load
     const resetBuffer = 150.0; // pixels from edge to reset trigger flag
 
     // Check if near bottom
-    final nearBottom = metrics.pixels >= (metrics.maxScrollExtent - buffer);
+    final nearBottom = metrics.pixels >= (maxExtent - buffer);
     // Check if near top
     final nearTop = metrics.pixels <= buffer;
-
-    // Debug: Log scroll state periodically
-    debugPrint('ScrollState: pixels=${metrics.pixels.toInt()}, max=${metrics.maxScrollExtent.toInt()}, '
-        'nearTop=$nearTop, nearBottom=$nearBottom, '
-        'triggeredTop=$_hasTriggeredAtTop, triggeredBottom=$_hasTriggeredAtBottom, '
-        'hasUpActions=${_onScrollUpActions != null}');
 
     // Trigger load down when reaching bottom
     if (nearBottom && !_hasTriggeredAtBottom && _onScrollDownActions != null) {
       debugPrint('ScrollListener: Triggering scroll DOWN');
       _hasTriggeredAtBottom = true;
       _triggerScrollActions('down');
-    } else if (!nearBottom && metrics.pixels < (metrics.maxScrollExtent - resetBuffer)) {
+    } else if (!nearBottom && metrics.pixels < (maxExtent - resetBuffer)) {
       // Reset bottom trigger when scrolled away from bottom (past resetBuffer)
       _hasTriggeredAtBottom = false;
     }
@@ -145,15 +167,27 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
     // Skip if no scroll actions configured
     if (_onScrollDownActions == null || _onScrollDownActions.isEmpty) return;
 
+    final maxExtent = metrics.maxScrollExtent;
+
+    // Auto-load more content when scroll extent is very small.
+    if (maxExtent > 0 && maxExtent < 200) {
+      if (!_hasTriggeredAtBottom) {
+        debugPrint(
+            'ScrollListener: Auto-triggering DOWN (small extent: ${maxExtent.toInt()}px)');
+        _hasTriggeredAtBottom = true;
+        _triggerScrollActions('down');
+      }
+      return;
+    }
+
     bool shouldTrigger = false;
 
     if (_triggerMode == 'end') {
-      // Trigger when reaching the end (with small buffer)
       const buffer = 50.0; // pixels from bottom
-      shouldTrigger = metrics.pixels >= (metrics.maxScrollExtent - buffer);
+      shouldTrigger = metrics.pixels >= (maxExtent - buffer);
     } else if (_triggerMode == 'threshold') {
       // Trigger when scroll position exceeds threshold percentage
-      final scrollPercentage = metrics.pixels / metrics.maxScrollExtent;
+      final scrollPercentage = metrics.pixels / maxExtent;
       shouldTrigger = scrollPercentage >= _threshold;
     }
 
@@ -161,7 +195,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
     if (shouldTrigger && !_hasTriggeredAtBottom) {
       _hasTriggeredAtBottom = true;
       _triggerScrollActions('down');
-    } else if (!shouldTrigger && metrics.pixels < (metrics.maxScrollExtent - 150.0)) {
+    } else if (!shouldTrigger && metrics.pixels < (maxExtent - 150.0)) {
       // Reset trigger flag when scrolled away from bottom (150px buffer)
       _hasTriggeredAtBottom = false;
     }
@@ -173,13 +207,18 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
 
     // Debounce the action execution
     _debounceTimer = Timer(Duration(milliseconds: _debounceMs), () {
+      if (!mounted) return;
       _executeScrollActions(direction);
     });
   }
 
   void _executeScrollActions(String direction) {
-    final scrollActions = direction == 'up' ? _onScrollUpActions : _onScrollDownActions;
+    final scrollActions =
+        direction == 'up' ? _onScrollUpActions : _onScrollDownActions;
     if (scrollActions == null || scrollActions.isEmpty) return;
+
+    debugPrint(
+        'ScrollListener: _executeScrollActions direction=$direction, compositeKey=$_currentCompositeKey');
 
     // Execute all configured scroll actions with direction context
     // Loading state is managed by FlowCrudBloc
@@ -196,6 +235,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
         ActionHandler.execute(action, context, {
           'wrappers': const [],
           'scrollDirection': direction,
+          if (_currentCompositeKey != null)
+            '_compositeKey': _currentCompositeKey,
         });
       }
     }
@@ -216,7 +257,9 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
     final screenKey =
         getScreenKeyFromArgs(context) ?? context.router.currentPath;
     // Use widget.compositeKey if provided (from ScreenBuilder), otherwise fallback to computing it
-    final compositeKey = widget.compositeKey ?? getCompositeKey(context, screenKey: screenKey) ?? screenKey;
+    final compositeKey = widget.compositeKey ??
+        getCompositeKey(context, screenKey: screenKey) ??
+        screenKey;
 
     return ValueListenableBuilder(
       valueListenable: FlowCrudStateRegistry().listen(compositeKey),
@@ -244,17 +287,39 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
         return LocalizationContext(
           localization: localizations,
           child: NotificationListener<ScrollNotification>(
-            onNotification: (notification) => _handleScrollNotification(notification, compositeKey),
+            onNotification: (notification) =>
+                _handleScrollNotification(notification, compositeKey),
             child: Stack(
               children: [
                 Scaffold(
                   body: ScrollableContent(
-                  header: headers.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                              top: spacer4, left: spacer4),
-                          child: Row(
-                            children: headers
+                    header: headers.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                                top: spacer4, left: spacer4),
+                            child: Row(
+                              children: headers
+                                  .map((e) => LayoutMapper.map(
+                                        preprocessConfigWithState(e, stateData),
+                                        stateData,
+                                        context,
+                                        screenKey: screenKey,
+                                        (action) {
+                                          ActionHandler.execute(
+                                              action, context, {
+                                            'wrappers': const [],
+                                            '_compositeKey': compositeKey,
+                                          });
+                                        },
+                                      ))
+                                  .toList(),
+                            ),
+                          )
+                        : null,
+                    enableFixedDigitButton: actions.isNotEmpty ? true : false,
+                    footer: actions.isNotEmpty
+                        ? DigitCard(
+                            children: actions
                                 .map((e) => LayoutMapper.map(
                                       preprocessConfigWithState(e, stateData),
                                       stateData,
@@ -268,109 +333,93 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                       },
                                     ))
                                 .toList(),
-                          ),
-                        )
-                      : null,
-                  enableFixedDigitButton: actions.isNotEmpty ? true : false,
-                  footer: actions.isNotEmpty
-                      ? DigitCard(
-                          children: actions
-                              .map((e) => LayoutMapper.map(
-                                    preprocessConfigWithState(e, stateData),
-                                    stateData,
-                                    context,
-                                    screenKey: screenKey,
-                                    (action) {
-                                      ActionHandler.execute(action, context, {
-                                        'wrappers': const [],
-                                        '_compositeKey': compositeKey,
-                                      });
-                                    },
-                                  ))
-                              .toList(),
-                        )
-                      : null,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(spacer4),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DigitTextBlock(
-                            padding: EdgeInsets.zero,
-                            heading: (widget.config['heading'] != null &&
-                                    localizations
-                                        .translate(widget.config['heading']).trim()
-                                        .isNotEmpty)
-                                ? localizations
-                                    .translate(widget.config['heading'])
-                                : null,
-                            headingStyle: Theme.of(context)
-                                .digitTextTheme(context)
-                                .headingXl
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .colorTheme
-                                        .primary
-                                        .primary2),
-                            description: (widget.config['description'] !=
-                                        null &&
-                                    localizations
-                                        .translate(widget.config['description']).trim()
-                                        .isNotEmpty)
-                                ? localizations
-                                    .translate(widget.config['description'])
-                                : null,
-                          ),
-                          const SizedBox(height: 16),
-                          ...body
-                              .map((e) {
-                                final processed =
-                                    preprocessConfigWithState(e, stateData);
-
-                                return CrudItemContext(
-                                  stateData: stateData,
-                                  screenKey: screenKey,
-                                  compositeKey: compositeKey,
-                                  child: LayoutMapper.map(
-                                    processed,
-                                    stateData,
-                                    context,
-                                    (action) {
-                                      ActionHandler.execute(action, context, {
-                                        'wrappers': const [],
-                                        '_compositeKey': compositeKey,
-                                      });
-                                    },
-                                    compositeKey: compositeKey,
-                                  ),
-                                );
-                              })
-                              .expand((widget) => [
-                                    widget,
-                                    const SizedBox(height: 16),
-                                  ])
-                              .toList()
-                            ..removeLast(),
-                          // Scroll loading indicator at bottom of content
-                          if (_showLoadingIndicator && isLoading)
-                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16.0),
-                              child: Center(
-                                child: DigitLoaders.inlineLoader(),
-                              ),
+                          )
+                        : null,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(spacer4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DigitTextBlock(
+                              padding: EdgeInsets.zero,
+                              heading: (widget.config['heading'] != null &&
+                                      localizations
+                                          .translate(widget.config['heading'])
+                                          .trim()
+                                          .isNotEmpty)
+                                  ? localizations
+                                      .translate(widget.config['heading'])
+                                  : null,
+                              headingStyle: Theme.of(context)
+                                  .digitTextTheme(context)
+                                  .headingXl
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorTheme
+                                          .primary
+                                          .primary2),
+                              description: (widget.config['description'] !=
+                                          null &&
+                                      localizations
+                                          .translate(
+                                              widget.config['description'])
+                                          .trim()
+                                          .isNotEmpty)
+                                  ? localizations
+                                      .translate(widget.config['description'])
+                                  : null,
                             ),
-                        ],
-                      ),
-                    )
-                  ],
+                            const SizedBox(height: 16),
+                            ...body
+                                .map((e) {
+                                  final processed =
+                                      preprocessConfigWithState(e, stateData);
+
+                                  return CrudItemContext(
+                                    stateData: stateData,
+                                    screenKey: screenKey,
+                                    compositeKey: compositeKey,
+                                    child: LayoutMapper.map(
+                                      processed,
+                                      stateData,
+                                      context,
+                                      (action) {
+                                        ActionHandler.execute(action, context, {
+                                          'wrappers': const [],
+                                          '_compositeKey': compositeKey,
+                                        });
+                                      },
+                                      compositeKey: compositeKey,
+                                    ),
+                                  );
+                                })
+                                .expand((widget) => [
+                                      widget,
+                                      const SizedBox(height: 16),
+                                    ])
+                                .toList()
+                              ..removeLast(),
+                            // Scroll loading indicator at bottom of content
+                            if (_showLoadingIndicator && isLoading)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16.0),
+                                child: Center(
+                                  child: DigitLoaders.inlineLoader(),
+                                ),
+                              ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              // Loading overlay when search/CRUD operation is in progress
-              if (isLoading) DigitLoaders.inlineLoader(),
-            ],
+                // Loading overlay when search/CRUD operation is in progress
+                if (isLoading) DigitLoaders.inlineLoader(),
+              ],
+            ),
           ),
-        ),
         );
       },
     );
@@ -451,7 +500,8 @@ class LayoutMapper {
     String? screenKey,
     String? compositeKey,
   }) {
-    final effectiveScreenKey = screenKey ?? CrudItemContext.of(context)?.screenKey;
+    final effectiveScreenKey =
+        screenKey ?? CrudItemContext.of(context)?.screenKey;
     final effectiveCompositeKey = compositeKey ??
         CrudItemContext.of(context)?.compositeKey ??
         effectiveScreenKey;
