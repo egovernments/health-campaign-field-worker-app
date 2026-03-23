@@ -39,49 +39,29 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
   }
 
   void _loadThresholds() {
-    try {
-      context.read<AppInitializationBloc>().state.maybeWhen(
-            initialized: (appConfiguration, _, __) {
-              try {
-                final config = appConfiguration.stockThresholdConfig;
-                if (config != null &&
-                    config.minThreshold > 0 &&
-                    config.maxThreshold > 0) {
-                  _minThreshold = config.minThreshold;
-                  _maxThreshold = config.maxThreshold;
-                }
-              } catch (_) {
-                // stockThresholdConfig not initialized — use defaults
-              }
-            },
-            orElse: () {},
-          );
-    } catch (_) {}
+    // Uses default thresholds: _minThreshold = 100, _maxThreshold = 500
   }
 
   Future<void> _loadData() async {
     try {
       // Get project facilities
       final projectFacilityRepo = context.read<
-          LocalRepository<ProjectFacilityModel,
-              ProjectFacilitySearchModel>>();
+          LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
       final projectFacilities = await projectFacilityRepo.search(
         ProjectFacilitySearchModel(projectId: [context.projectId]),
       );
 
       // Get facility details for names
-      final facilityIds =
-          projectFacilities.map((pf) => pf.facilityId).toList();
-      final facilityRepo = context
-          .read<LocalRepository<FacilityModel, FacilitySearchModel>>();
+      final facilityIds = projectFacilities.map((pf) => pf.facilityId).toList();
+      final facilityRepo =
+          context.read<LocalRepository<FacilityModel, FacilitySearchModel>>();
       final facilities = await facilityRepo.search(
         FacilitySearchModel(id: facilityIds),
       );
 
       // Get project resources to know which product variants
       final projectResourceRepo = context.read<
-          LocalRepository<ProjectResourceModel,
-              ProjectResourceSearchModel>>();
+          LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>>();
       final projectResources = await projectResourceRepo.search(
         ProjectResourceSearchModel(projectId: [context.projectId]),
       );
@@ -94,8 +74,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
 
       // Get product variant details for display names
       final productVariantRepo = context.read<
-          LocalRepository<ProductVariantModel,
-              ProductVariantSearchModel>>();
+          LocalRepository<ProductVariantModel, ProductVariantSearchModel>>();
       final productVariants = await productVariantRepo.search(
         ProductVariantSearchModel(id: productVariantIds),
       );
@@ -246,8 +225,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
                   .toList(),
               selectedOption: _selectedFacility != null
                   ? DropdownItem(
-                      name:
-                          localizations.translate(_selectedFacility!.id),
+                      name: localizations.translate(_selectedFacility!.id),
                       code: _selectedFacility!.id,
                     )
                   : null,
@@ -276,9 +254,8 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         ..._productVariants.map((product) {
           final balance = _stockBalances[product.id] ?? 0.0;
           final color = _getColorForBalance(balance);
-          final progress = _maxThreshold > 0
-              ? min(balance / _maxThreshold, 1.0)
-              : 0.0;
+          final progress =
+              _maxThreshold > 0 ? min(balance / _maxThreshold, 1.0) : 0.0;
           final displayName =
               localizations.translate(product.sku ?? product.id);
 

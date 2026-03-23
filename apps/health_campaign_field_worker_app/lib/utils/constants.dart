@@ -24,6 +24,7 @@ import 'package:digit_data_model/data/repositories/package_repository/remote/sto
 import 'package:digit_data_model/data/repositories/package_repository/remote/task.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
+// import 'package:digit_face_verification/digit_face_verification.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
     as firebase_services;
 import 'package:digit_location_tracker/location_tracker.dart';
@@ -34,8 +35,11 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
+// import 'package:transit_post/data/repositories/local/face_auth_event.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
+// import 'package:transit_post/data/repositories/oplog/face_auth_event_oplog.dart';
 import 'package:transit_post/data/repositories/oplog/oplog.dart';
+// import 'package:transit_post/data/repositories/remote/face_auth_event.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 import 'package:transit_post/utils/utils.dart';
 
@@ -93,6 +97,8 @@ class Constants {
           RowVersionListSchema,
           DashboardConfigSchemaListSchema,
           DashboardResponseSchema,
+          // FaceEmbeddingSchema,
+          // FaceEnrollmentProfileSchema,
         ],
         name: 'HCM',
         inspector: true,
@@ -225,6 +231,7 @@ class Constants {
       LocationTrackerLocalBaseRepository(
           sql, LocationTrackerOpLogManager(isar)),
       UserActionLocalRepository(sql, UserActionOpLogManager(isar)),
+      // FaceAuthEventLocalRepository(sql, FaceAuthEventOpLogManager(isar)),
     ];
   }
 
@@ -236,14 +243,15 @@ class Constants {
     final config = appConfigs.firstOrNull;
 
     // Always initialize Firebase Core (required for FCM, analytics, etc.)
-    await firebase_services.initializeFirebaseCore(
+    await firebase_services.initialize(
       options: DefaultFirebaseOptions.currentPlatform,
-    );
+    );  
 
     final enableCrashlytics =
         config?.firebaseConfig?.enableCrashlytics ?? false;
     if (enableCrashlytics) {
-      await firebase_services.initializeCrashlytics(
+      await firebase_services.initialize(
+        options: DefaultFirebaseOptions.currentPlatform,
         onErrorMessage: (value) {
           AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
         },
@@ -322,6 +330,8 @@ class Constants {
           LocationTrackerRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.userAction)
           UserActionRemoteRepository(dio, actionMap: actions),
+        // if (value == DataModelType.faceAuthEvent)
+        //   FaceAuthEventRemoteRepository(dio, actionMap: actions),
       ]);
     }
 

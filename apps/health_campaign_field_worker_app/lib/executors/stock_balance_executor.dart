@@ -20,220 +20,220 @@ class StockBalanceExecutor extends ActionExecutor {
 
   @override
   Future<Map<String, dynamic>> execute(
-    ActionConfig action,
-    BuildContext context,
-    Map<String, dynamic> contextData,
+  ActionConfig action,
+  BuildContext context,
+  Map<String, dynamic> contextData,
   ) async {
-    try {
-      final entities = contextData['entities'];
-      if (entities == null || entities is! List || entities.isEmpty) {
-        debugPrint('UPDATE_STOCK_BALANCE: No entities found');
-        return contextData;
-      }
+  try {
+  final entities = contextData['entities'];
+  if (entities == null || entities is! List || entities.isEmpty) {
+  debugPrint('UPDATE_STOCK_BALANCE: No entities found');
+  return contextData;
+  }
 
-      final projectId = FlowBuilderSingleton().projectId;
-      final boundaryCode = FlowBuilderSingleton().boundary?.code;
+  final projectId = FlowBuilderSingleton().projectId;
+  final boundaryCode = FlowBuilderSingleton().boundary?.code;
 
-      if (projectId == null || boundaryCode == null) {
-        debugPrint('UPDATE_STOCK_BALANCE: Missing projectId or boundaryCode');
-        return contextData;
-      }
+  if (projectId == null || boundaryCode == null) {
+  debugPrint('UPDATE_STOCK_BALANCE: Missing projectId or boundaryCode');
+  return contextData;
+  }
 
-      // Auto-detect entity type from the entities in contextData,
-      // falling back to the action config property if present
-      final hasStock = entities.any((e) => e is StockModel);
-      final hasTask = entities.any((e) => e is TaskModel);
-      final entityType = action.properties['entity'] as String?;
+  // Auto-detect entity type from the entities in contextData,
+  // falling back to the action config property if present
+  final hasStock = entities.any((e) => e is StockModel);
+  final hasTask = entities.any((e) => e is TaskModel);
+  final entityType = action.properties['entity'] as String?;
 
-      if (hasStock || entityType == 'STOCK') {
-        await _handleStockEntity(context, entities, projectId, boundaryCode);
-      }
-      if (hasTask || entityType == 'TASK') {
-        await _handleTaskEntity(context, entities, projectId, boundaryCode);
-      }
-    } catch (e, stackTrace) {
-      debugPrint('UPDATE_STOCK_BALANCE error: $e');
-      debugPrint('Stack trace: $stackTrace');
-    }
+  if (hasStock || entityType == 'STOCK') {
+  await _handleStockEntity(context, entities, projectId, boundaryCode);
+  }
+  if (hasTask || entityType == 'TASK') {
+  await _handleTaskEntity(context, entities, projectId, boundaryCode);
+  }
+  } catch (e, stackTrace) {
+  debugPrint('UPDATE_STOCK_BALANCE error: $e');
+  debugPrint('Stack trace: $stackTrace');
+  }
 
-    return contextData;
+  return contextData;
   }
 
   Future<void> _handleStockEntity(
-    BuildContext context,
-    List<dynamic> entities,
-    String projectId,
-    String boundaryCode,
+  BuildContext context,
+  List<dynamic> entities,
+  String projectId,
+  String boundaryCode,
   ) async {
-    final stockEntities =
-        entities.whereType<StockModel>().toList();
-    if (stockEntities.isEmpty) return;
+  final stockEntities =
+  entities.whereType<StockModel>().toList();
+  if (stockEntities.isEmpty) return;
 
-    final userActionRepo = context.read<UserActionLocalRepository>();
+  final userActionRepo = context.read<UserActionLocalRepository>();
 
-    for (final stock in stockEntities) {
-      final productVariantId = stock.productVariantId;
-      if (productVariantId == null) continue;
+  for (final stock in stockEntities) {
+    final productVariantId = stock.productVariantId;
+    if (productVariantId == null) continue;
 
-      // Determine the facility this stock affects
-      // For received stock, the facility is the receiver
-      // For dispatched/loss/damaged stock, the facility is the sender
-      final transactionType = stock.transactionType?.toUpperCase() ?? '';
-      String? facilityId;
-      if (transactionType == 'RECEIVED') {
-        facilityId = stock.receiverId;
-      } else {
-        facilityId = stock.senderId;
-      }
-
-      if (facilityId == null) continue;
-
-      await _updateStockBalance(
-        context: context,
-        userActionRepo: userActionRepo,
-        facilityId: facilityId,
-        productVariantId: productVariantId,
-        projectId: projectId,
-        boundaryCode: boundaryCode,
-      );
+    // Determine the facility this stock affects
+    // For received stock, the facility is the receiver
+    // For dispatched/loss/damaged stock, the facility is the sender
+    final transactionType = stock.transactionType?.toUpperCase() ?? '';
+    String? facilityId;
+    if (transactionType == 'RECEIVED') {
+  facilityId = stock.receiverId;
+    } else {
+  facilityId = stock.senderId;
     }
+
+    if (facilityId == null) continue;
+
+    await _updateStockBalance(
+  context: context,
+  userActionRepo: userActionRepo,
+  facilityId: facilityId,
+  productVariantId: productVariantId,
+  projectId: projectId,
+  boundaryCode: boundaryCode,
+    );
+  }
   }
 
   Future<void> _handleTaskEntity(
-    BuildContext context,
-    List<dynamic> entities,
-    String projectId,
-    String boundaryCode,
+  BuildContext context,
+  List<dynamic> entities,
+  String projectId,
+  String boundaryCode,
   ) async {
-    final taskEntities = entities.whereType<TaskModel>().toList();
-    if (taskEntities.isEmpty) return;
+  final taskEntities = entities.whereType<TaskModel>().toList();
+  if (taskEntities.isEmpty) return;
 
-    final userActionRepo = context.read<UserActionLocalRepository>();
+  final userActionRepo = context.read<UserActionLocalRepository>();
 
-    for (final task in taskEntities) {
-      final resources = task.resources;
-      if (resources == null || resources.isEmpty) continue;
+  for (final task in taskEntities) {
+    final resources = task.resources;
+    if (resources == null || resources.isEmpty) continue;
 
-      for (final resource in resources) {
-        final productVariantId = resource.productVariantId;
-        if (productVariantId == null) continue;
+    for (final resource in resources) {
+  final productVariantId = resource.productVariantId;
+  if (productVariantId == null) continue;
 
-        // For task delivery, the facility is the current user's facility
-        // Get facility from project facilities
-        final projectFacilityRepo = context.read<
-            LocalRepository<ProjectFacilityModel,
-                ProjectFacilitySearchModel>>();
-        final projectFacilities = await projectFacilityRepo.search(
-          ProjectFacilitySearchModel(projectId: [projectId]),
-        );
+  // For task delivery, the facility is the current user's facility
+  // Get facility from project facilities
+  final projectFacilityRepo = context.read<
+  LocalRepository<ProjectFacilityModel,
+  ProjectFacilitySearchModel>>();
+  final projectFacilities = await projectFacilityRepo.search(
+    ProjectFacilitySearchModel(projectId: [projectId]),
+  );
 
-        if (projectFacilities.isEmpty) continue;
+  if (projectFacilities.isEmpty) continue;
 
-        // Use the first facility (or find the relevant one)
-        final facilityId = projectFacilities.first.facilityId;
+  // Use the first facility (or find the relevant one)
+  final facilityId = projectFacilities.first.facilityId;
 
-        await _updateStockBalance(
-          context: context,
-          userActionRepo: userActionRepo,
-          facilityId: facilityId,
-          productVariantId: productVariantId,
-          projectId: projectId,
-          boundaryCode: boundaryCode,
-        );
-      }
+  await _updateStockBalance(
+    context: context,
+    userActionRepo: userActionRepo,
+    facilityId: facilityId,
+    productVariantId: productVariantId,
+    projectId: projectId,
+    boundaryCode: boundaryCode,
+  );
     }
+  }
   }
 
   Future<void> _updateStockBalance({
-    required BuildContext context,
-    required UserActionLocalRepository userActionRepo,
-    required String facilityId,
-    required String productVariantId,
-    required String projectId,
-    required String boundaryCode,
+  required BuildContext context,
+  required UserActionLocalRepository userActionRepo,
+  required String facilityId,
+  required String productVariantId,
+  required String projectId,
+  required String boundaryCode,
   }) async {
-    final balanceKey = 'stock_balance_${facilityId}_$productVariantId';
+  final balanceKey = 'stock_balance_${facilityId}_$productVariantId';
 
-    // Search for existing stock balance UserAction
-    final existingBalances = await userActionRepo.search(
-      UserActionSearchModel(
-        clientReferenceId: [balanceKey],
-      ),
-    );
+  // Search for existing stock balance UserAction
+  final existingBalances = await userActionRepo.search(
+    UserActionSearchModel(
+  clientReferenceId: [balanceKey],
+    ),
+  );
 
-    // Calculate the current balance from stock transactions
-    final stockRepo =
-        context.read<LocalRepository<StockModel, StockSearchModel>>();
+  // Calculate the current balance from stock transactions
+  final stockRepo =
+  context.read<LocalRepository<StockModel, StockSearchModel>>();
 
-    final receivedStocks = await stockRepo.search(
-      StockSearchModel(receiverId: [facilityId]),
-    );
-    final sentStocks = await stockRepo.search(
-      StockSearchModel(senderId: facilityId),
-    );
+  final receivedStocks = await stockRepo.search(
+    StockSearchModel(receiverId: [facilityId]),
+  );
+  final sentStocks = await stockRepo.search(
+    StockSearchModel(senderId: facilityId),
+  );
 
-    // Deduplicate by clientReferenceId
-    final allStocksMap = <String, StockModel>{};
-    for (final stock in receivedStocks) {
-      allStocksMap[stock.clientReferenceId] = stock;
-    }
-    for (final stock in sentStocks) {
-      allStocksMap[stock.clientReferenceId] = stock;
-    }
-    final allStocks = allStocksMap.values.toList();
+  // Deduplicate by clientReferenceId
+  final allStocksMap = <String, StockModel>{};
+  for (final stock in receivedStocks) {
+    allStocksMap[stock.clientReferenceId] = stock;
+  }
+  for (final stock in sentStocks) {
+    allStocksMap[stock.clientReferenceId] = stock;
+  }
+  final allStocks = allStocksMap.values.toList();
 
-    final metrics = StockCalculationUtils.calculateStockMetrics(
-      stockList: allStocks,
-      facilityId: facilityId,
-      productId: productVariantId,
-    );
-    final balance = metrics['stockInHand'] ?? 0.0;
+  final metrics = StockCalculationUtils.calculateStockMetrics(
+    stockList: allStocks,
+    facilityId: facilityId,
+    productId: productVariantId,
+  );
+  final balance = metrics['stockInHand'] ?? 0.0;
 
-    final now = DateTime.now().millisecondsSinceEpoch;
-    final loggedInUserUuid = FlowBuilderSingleton().loggedInUserUuid ?? '';
-    final existing = existingBalances.isNotEmpty ? existingBalances.first : null;
+  final now = DateTime.now().millisecondsSinceEpoch;
+  final loggedInUserUuid = FlowBuilderSingleton().loggedInUserUuid ?? '';
+  final existing = existingBalances.isNotEmpty ? existingBalances.first : null;
 
-    // Always update (upsert) — never create a new UserAction
-    final balanceAction = UserActionModel(
-      clientReferenceId: balanceKey,
-      action: 'STOCK_BALANCE',
-      projectId: projectId,
-      boundaryCode: boundaryCode,
-      latitude: 0.0,
-      longitude: 0.0,
-      locationAccuracy: 0.0,
-      isSync: false,
-      timestamp: now,
-      id: existing?.id,
-      rowVersion: existing?.rowVersion,
-      tenantId: existing?.tenantId,
-      nonRecoverableError: false,
-      additionalFields: UserActionAdditionalFields(
-        version: 1,
-        fields: [
-          AdditionalField('balance', balance.toString()),
-          AdditionalField('facilityId', facilityId),
-          AdditionalField('productVariantId', productVariantId),
-        ],
-      ),
-      // auditDetails is required for oplog creation — must not be null
-      auditDetails: existing?.auditDetails ??
-          AuditDetails(
-            createdBy: loggedInUserUuid,
-            createdTime: now,
-          ),
-      clientAuditDetails: ClientAuditDetails(
-        createdBy: existing?.clientAuditDetails?.createdBy ?? loggedInUserUuid,
-        createdTime: existing?.clientAuditDetails?.createdTime ?? now,
-        lastModifiedBy: loggedInUserUuid,
-        lastModifiedTime: now,
-      ),
-    );
+  // Always update (upsert) — never create a new UserAction
+  final balanceAction = UserActionModel(
+    clientReferenceId: balanceKey,
+    action: 'STOCK_BALANCE',
+    projectId: projectId,
+    boundaryCode: boundaryCode,
+    latitude: 0.0,
+    longitude: 0.0,
+    locationAccuracy: 0.0,
+    isSync: false,
+    timestamp: now,
+    id: existing?.id,
+    rowVersion: existing?.rowVersion,
+    tenantId: existing?.tenantId,
+    nonRecoverableError: false,
+    additionalFields: UserActionAdditionalFields(
+  version: 1,
+  fields: [
+    AdditionalField('balance', balance.toString()),
+    AdditionalField('facilityId', facilityId),
+    AdditionalField('productVariantId', productVariantId),
+  ],
+    ),
+    // auditDetails is required for oplog creation — must not be null
+    auditDetails: existing?.auditDetails ??
+    AuditDetails(
+  createdBy: loggedInUserUuid,
+  createdTime: now,
+    ),
+    clientAuditDetails: ClientAuditDetails(
+  createdBy: existing?.clientAuditDetails?.createdBy ?? loggedInUserUuid,
+  createdTime: existing?.clientAuditDetails?.createdTime ?? now,
+  lastModifiedBy: loggedInUserUuid,
+  lastModifiedTime: now,
+    ),
+  );
 
-    await userActionRepo.update(balanceAction);
+  await userActionRepo.update(balanceAction);
 
-    debugPrint(
-      'UPDATE_STOCK_BALANCE: Updated balance for $facilityId/$productVariantId = $balance',
-    );
+  debugPrint(
+    'UPDATE_STOCK_BALANCE: Updated balance for $facilityId/$productVariantId = $balance',
+  );
   }
 }
