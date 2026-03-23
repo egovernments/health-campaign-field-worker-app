@@ -1,7 +1,7 @@
 final dynamic sampleInventoryFlows = {
   "name": "INVENTORY",
   "initialPage": "manageStock",
-  "project": "CMP-2026-02-25-000161",
+  "project": "CMP-2026-03-17-000196",
   "version": 1,
   "disabled": false,
   "isSelected": true,
@@ -9,12 +9,12 @@ final dynamic sampleInventoryFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "manageStock",
-      "heading": "INVENTORY_MANAGE_STOCK_HEADING",
-      "description": "INVENTORY_MANAGE_STOCK_DESCRIPTION",
+      "heading": "APP_CONFIG_INVENTORY_manageStock_HEADING",
+      "description": "",
       "header": [
         {
           "format": "backLink",
-          "label": "CORE_COMMON_BACK",
+          "label": "APP_CONFIG_INVENTORY_manageStock_BACK_BUTTON_LABEL",
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
@@ -23,7 +23,7 @@ final dynamic sampleInventoryFlows = {
       "footer": [
         {
           "format": "button",
-          "label": "INVENTORY_VIEW_TRANSACTIONS_LABEL",
+          "label": "APP_CONFIG_INVENTORY_manageStock_VIEW_TRANSACTIONS_FOOTER_BUTTON_LABEL",
           "properties": {
             "type": "primary",
             "size": "large",
@@ -87,8 +87,8 @@ final dynamic sampleInventoryFlows = {
       "body": [
         {
           "format": "menu_card",
-          "heading": "INVENTORY_RECORD_STOCK_RECEIPT_HEADING",
-          "description": "INVENTORY_RECORD_STOCK_RECEIPT_DESCRIPTION",
+          "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
+          "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RECEIVED_AT_THE_WAREHOUSE_DESCRIPTION",
           "icon": 'FileUpload',
           "onAction": [
             {
@@ -120,8 +120,8 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
-          "heading": "INVENTORY_RECORD_STOCK_ISSUED_HEADING",
-          "description": "INVENTORY_RECORD_STOCK_ISSUED_DESCRIPTION",
+          "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
+          "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION",
           "icon": 'FileDownload',
           "onAction": [
             {
@@ -168,8 +168,8 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
-          "heading": "INVENTORY_STOCK_RETURNED_HEADING",
-          "description": "INVENTORY_STOCK_RETURNED_DESCRIPTION",
+          "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RETURNED_HEADING",
+          "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RETURNED_TO_THE_WAREHOUSE_DESCRIPTION",
           "icon": 'Restore',
           "onAction": [
             {
@@ -193,9 +193,9 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
-          "heading": "INVENTORY_STOCK_DAMAGED_HEADING",
+          "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_DAMAGED_HEADING",
           "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}} == false",
-          "description": "INVENTORY_STOCK_DAMAGED_DESCRIPTION",
+          "description": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_DAMAGED_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
           "icon": 'Store',
           "onAction": [
             {
@@ -219,8 +219,8 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
-          "heading": "INVENTORY_STOCK_LOSS_HEADING",
-          "description": "INVENTORY_STOCK_LOSS_DESCRIPTION",
+          "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
+          "description": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_LOST_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
           "icon": 'Store',
           "onAction": [
             {
@@ -391,7 +391,7 @@ final dynamic sampleInventoryFlows = {
     {
       "screenType": "FORM",
       "name": "RECORDSTOCK",
-      "project": "CMP-2025-08-04-004846",
+      "project": "CMP-2026-03-17-000196",
       "version": 1,
       "disabled": false,
       "isSelected": true,
