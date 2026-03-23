@@ -24,6 +24,9 @@ class StockDownsyncService {
 
   final LocalRepository<StockModel, StockSearchModel> stockLocalRepository;
 
+  final LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>
+      projectResourceLocalRepository;
+
   bool _isRunning = false;
 
   StockDownsyncService({
@@ -32,6 +35,7 @@ class StockDownsyncService {
     required this.facilityLocalRepository,
     required this.stockRemoteRepository,
     required this.stockLocalRepository,
+    required this.projectResourceLocalRepository,
   });
 
   /// ======================================================
@@ -78,6 +82,16 @@ class StockDownsyncService {
 
       final boundaryType = context.selectedProject.address?.boundaryType;
 
+      // Get product variant IDs from project resources
+      final projectResources = await projectResourceLocalRepository.search(
+        ProjectResourceSearchModel(projectId: [context.selectedProject.id]),
+      );
+      final productVariantIds = projectResources
+          .map((pr) => pr.resource.productVariantId)
+          .whereType<String>()
+          .toSet()
+          .toList();
+
       if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
         List<String> receiverIds =
             projectFacilities.map((e) => e.facilityId).toList();
@@ -86,7 +100,7 @@ class StockDownsyncService {
         //     .where((e) => facilityIdUsageMap[e] == Constants.healthFacility)
         //     .toList();
 
-        await _processStock(receiverIds, lastChangedSince);
+        await _processStock(receiverIds, lastChangedSince, productVariantIds);
       } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
         List<String> receiverIds =
             projectFacilities.map((e) => e.facilityId).toList();
@@ -95,11 +109,11 @@ class StockDownsyncService {
         //     .where((e) => facilityIdUsageMap[e] == Constants.lgaFacility)
         //     .toList();
 
-        await _processStock(receiverIds, lastChangedSince);
+        await _processStock(receiverIds, lastChangedSince, productVariantIds);
       } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
         final receiverIds = [userObject.uuid];
 
-        await _processStock(receiverIds, lastChangedSince);
+        await _processStock(receiverIds, lastChangedSince, productVariantIds);
       }
     } catch (e) {
       rethrow;
@@ -134,12 +148,13 @@ class StockDownsyncService {
   /// STOCK PROCESSING
   /// ======================================================
   Future<void> _processStock(
-      List<String> receiverIds, int? lastChangedSince) async {
+      List<String> receiverIds, int? lastChangedSince, List<String> productVariantIds) async {
     if (receiverIds.isEmpty) return;
 
     final stockSearchModel = StockSearchModel(
       receiverId: receiverIds,
       transactionType: [TransactionType.dispatched.toValue()],
+      productVariantId: productVariantIds.isNotEmpty ? productVariantIds : null,
     );
 
     const limit = 10;

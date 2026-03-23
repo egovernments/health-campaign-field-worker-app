@@ -577,6 +577,44 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
     });
 
+    // Get product variant IDs from project resources
+    FunctionRegistry.register('getProjectProductVariantIds', (args, stateData) {
+      try {
+        List<Map<String, dynamic>>? productVariants;
+        if (stateData?.modelMap != null) {
+          productVariants = stateData!.modelMap['ProductVariantModel'];
+        }
+
+        // Fallback: read from manageStock page's state
+        if (productVariants == null || productVariants.isEmpty) {
+          final manageStockState =
+              FlowCrudStateRegistry().get('manageStock');
+          final base = manageStockState?.base;
+          if (base is CrudStateLoaded) {
+            final pvModels = base.results['productVariant'];
+            if (pvModels != null && pvModels.isNotEmpty) {
+              productVariants = pvModels
+                  .whereType<ProductVariantModel>()
+                  .map((pv) => <String, dynamic>{'id': pv.id})
+                  .toList();
+            }
+          }
+        }
+
+        if (productVariants == null || productVariants.isEmpty) {
+          return '';
+        }
+
+        return productVariants
+            .map((pv) => pv['id']?.toString() ?? '')
+            .where((id) => id.isNotEmpty)
+            .join(',');
+      } catch (e) {
+        debugPrint('getProjectProductVariantIds error: $e');
+        return '';
+      }
+    });
+
     // Get facility name from facility ID
     FunctionRegistry.register('getFacilityName', (args, stateData) {
       if (args.isEmpty) return '';
@@ -1308,6 +1346,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<RemoteRepository<StockModel, StockSearchModel>>(),
             stockLocalRepository:
                 context.read<LocalRepository<StockModel, StockSearchModel>>(),
+            projectResourceLocalRepository: context.read<
+                LocalRepository<ProjectResourceModel,
+                    ProjectResourceSearchModel>>(),
           );
 
           await stockService.execute(context);

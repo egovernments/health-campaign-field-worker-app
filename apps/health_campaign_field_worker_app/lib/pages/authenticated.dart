@@ -135,6 +135,9 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
             context.read<RemoteRepository<StockModel, StockSearchModel>>(),
         stockLocalRepository:
             context.read<LocalRepository<StockModel, StockSearchModel>>(),
+        projectResourceLocalRepository: context.read<
+            LocalRepository<ProjectResourceModel,
+                ProjectResourceSearchModel>>(),
       );
 
       stockService.execute(context);

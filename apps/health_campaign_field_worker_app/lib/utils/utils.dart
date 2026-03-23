@@ -34,13 +34,13 @@ import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
-import '../blocs/localization/app_localization.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';

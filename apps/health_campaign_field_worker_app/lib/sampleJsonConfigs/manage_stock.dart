@@ -1573,8 +1573,8 @@ final dynamic sampleInventoryFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "incomingTransactions",
-      "heading": "Incoming Transactions",
-      "description": "Incoming Transactions which can be accepted or rejected",
+      "heading": "INVENTORY_INCOMING_TRANSACTIONS_HEADING",
+      "description": "INVENTORY_INCOMING_TRANSACTIONS_DESCRIPTION",
       "header": [
         {
           "format": "backLink",
@@ -1605,7 +1605,7 @@ final dynamic sampleInventoryFlows = {
         {
           "format": "dropdownTemplate",
           "fieldName": "selectedFacility",
-          "label": "Select Facility",
+          "label": "INVENTORY_SELECT_FACILITY_LABEL",
           "valueKey": "code",
           "displayKey": "name",
           "source": "{{fn:getProjectFacilities()}}",
@@ -1631,18 +1631,23 @@ final dynamic sampleInventoryFlows = {
                     "key": "additionalFields",
                     "value": "\"key\":\"status\"",
                     "operation": "notContains"
+                  },
+                  {
+                    "key": "productVariantId",
+                    "value": "{{fn:getProjectProductVariantIds()}}",
+                    "operation": "in"
                   }
                 ]
               }
             }
           ]
         },
-        // {
-        //   "format": "infoCard",
-        //   "hidden": "{{ context.stock.isNotEmpty }}",
-        //   "label": "INVENTORY_NO_INCOMING_TRANSACTIONS_LABEL",
-        //   "description": "INVENTORY_NO_INCOMING_TRANSACTIONS_DESCRIPTION"
-        // },
+        {
+          "format": "infoCard",
+          "hidden": "{{ context.stock.isNotEmpty }}",
+          "label": "INVENTORY_NO_INCOMING_TRANSACTIONS_LABEL",
+          "description": "INVENTORY_NO_INCOMING_TRANSACTIONS_DESCRIPTION"
+        },
         {
           "format": "listView",
           "hidden": "{{ context.stock.isEmpty }}",
@@ -1696,7 +1701,7 @@ final dynamic sampleInventoryFlows = {
                     "format": "tag",
                     "type":
                         "{{fn:getTransactionStatusType(item.items[0].transactionType)}}",
-                    "label": "Received"
+                    "label": "{{item.items[0].transactionType}}"
                   }
                 ]
               },
@@ -1712,7 +1717,7 @@ final dynamic sampleInventoryFlows = {
               },
               {
                 "format": "button",
-                "label": "Accept",
+                "label": "INVENTORY_ACKNOWLEDGE_RECEIPT_LABEL",
                 "visible": "{{item.items[0].transactionType == 'DISPATCHED'}}",
                 "properties": {
                   "type": "primary",
@@ -1770,7 +1775,7 @@ final dynamic sampleInventoryFlows = {
               },
               {
                 "format": "button",
-                "label": "View",
+                "label": "INVENTORY_VIEW_DETAILS_LABEL",
                 "visible": "{{item.items[0].transactionType != 'DISPATCHED'}}",
                 "properties": {
                   "type": "secondary",
@@ -1799,7 +1804,7 @@ final dynamic sampleInventoryFlows = {
     {
       "screenType": "FORM",
       "name": "stockReceiptDetails",
-      "heading": "Stock Receipt Details",
+      "heading": "INVENTORY_STOCK_RECEIPT_DETAILS_HEADING",
       "description": "",
       "version": 1,
       "header": [
@@ -1952,16 +1957,16 @@ final dynamic sampleInventoryFlows = {
       "pages": [
         {
           "page": "stockReceiptDetails",
-          "label": "Stock Receipt",
+          "label": "INVENTORY_STOCK_RECEIPT_DETAILS_HEADING",
           "order": 1,
           "type": "object",
           "description": "",
-          "actionLabel": "Accept",
-          "secondaryActionLabel": "Reject",
+          "actionLabel": "INVENTORY_ACCEPT_STOCK_LABEL",
+          "secondaryActionLabel": "INVENTORY_DECLINE_STOCK_LABEL",
           "properties": [
             {
               "type": "string",
-              "label": "Resource",
+              "label": "INVENTORY_RESOURCE_LABEL",
               "order": 1,
               "value": "{{sku}}",
               "format": "text",
@@ -1970,7 +1975,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "MRN",
+              "label": "INVENTORY_MATERIAL_ISSUE_NUMBER_LABEL",
               "order": 2,
               "value": "{{mrnNumber}}",
               "format": "text",
@@ -1979,7 +1984,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "Received",
+              "label": "INVENTORY_RECEIVED_FROM_LABEL",
               "order": 3,
               "value": "{{senderFacilityId}}",
               "format": "text",
@@ -1988,7 +1993,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "WayBill",
+              "label": "INVENTORY_WAYBILL_NUMBER_LABEL",
               "order": 4,
               "value": "",
               "format": "text",
@@ -2009,7 +2014,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "Batch Number",
+              "label": "INVENTORY_BATCH_NUMBER_LABEL",
               "order": 5,
               "value": "",
               "format": "text",
@@ -2030,7 +2035,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "Expiry",
+              "label": "INVENTORY_EXPIRY_LABEL",
               "order": 6,
               "value": "",
               "format": "date",
@@ -2057,7 +2062,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "Quantity",
+              "label": "INVENTORY_QUANTITY_SENT_BY_WAREHOUSE_LABEL",
               "order": 7,
               "value": "",
               "format": "text",
@@ -2089,7 +2094,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "Comments",
+              "label": "INVENTORY_COMMENTS_LABEL",
               "order": 8,
               "value": "",
               "format": "textArea",

@@ -108,97 +108,6 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
   bool _initialized = false;
   bool _formControlUpdated = false;
 
-  /// Extracts facilityHierarchy validation config from field schema
-  Map<String, dynamic>? _getFacilityHierarchyConfig() {
-    final validations = widget.fieldSchema.validations;
-    if (validations == null || validations.isEmpty) return null;
-
-    for (final validation in validations) {
-      if (validation.type == 'facilityHierarchy' && validation.value != null) {
-        return validation.value as Map<String, dynamic>;
-      }
-    }
-    return null;
-  }
-
-  /// Gets the current user's facility level based on their role
-  String _getCurrentUserFacilityLevel() {
-    final isDistributor = context.loggedInUserRoles
-        .where(
-          (role) => role.code == RolesType.distributor.toValue(),
-    )
-        .toList()
-        .isNotEmpty;
-    final isWareHouseMgr = context.loggedInUserRoles
-        .where(
-            (role) => role.code == RolesType.warehouseManager.toValue())
-        .toList()
-        .isNotEmpty;
-
-    // Determine facility level based on role
-    // Warehouse Manager (LGA level) > Distributor (Health Facility level)
-    if (isWareHouseMgr) {
-      return 'LGA'; // Warehouse managers are at LGA level
-    } else if (isDistributor) {
-      return 'Health Facility'; // Distributors operate from Health Facility
-    }
-    // Default to Health Facility for supervisors and other roles
-    return 'Health Facility';
-  }
-
-  /// Filters facilities based on hierarchy config and transaction type
-  List<DropdownItem> _filterFacilitiesByHierarchy(
-    List<DropdownItem> allFacilities,
-    Map<String, dynamic> hierarchyConfig,
-    String transactionType,
-  ) {
-    final hierarchyMapping =
-        hierarchyConfig['hierarchyMapping'] as Map<String, dynamic>?;
-    final useTransactionType =
-        hierarchyConfig['useTransactionType'] as bool? ?? false;
-
-    if (hierarchyMapping == null) return allFacilities;
-
-    final currentLevel = _getCurrentUserFacilityLevel();
-    final levelConfig = hierarchyMapping[currentLevel] as Map<String, dynamic>?;
-
-    if (levelConfig == null) return allFacilities;
-
-    // Determine which facility types to show based on transaction type
-    List<dynamic> allowedTypes = [];
-    if (useTransactionType) {
-      if (transactionType == 'RECEIVED' || transactionType == 'RECEIPT') {
-        allowedTypes = levelConfig['forReceipt'] as List<dynamic>? ?? [];
-      } else if (transactionType == 'DISPATCHED' ||
-          transactionType == 'ISSUED') {
-        allowedTypes = levelConfig['forIssue'] as List<dynamic>? ?? [];
-      } else {
-        // For RETURNED, DAMAGED, LOSS - show all relevant facilities
-        allowedTypes = [
-          ...(levelConfig['forReceipt'] as List<dynamic>? ?? []),
-          ...(levelConfig['forIssue'] as List<dynamic>? ?? []),
-        ];
-      }
-    }
-
-    if (allowedTypes.isEmpty) return allFacilities;
-
-    // Check if DELIVERY_TEAM is in allowed types
-    final allowDeliveryTeam = allowedTypes.contains('DELIVERY_TEAM');
-
-    // Filter facilities - for now return all since actual facility type filtering
-    // would require additional metadata about each facility's type
-    // This can be enhanced when facility type info is available
-    return allFacilities.where((facility) {
-      // Always include Delivery Team if allowed
-      if (facility.code == 'Delivery Team') {
-        return allowDeliveryTeam;
-      }
-      // Include all other facilities for now (can be enhanced with type filtering)
-      return true;
-    }).toList();
-  }
-
   @override
   void initState() {
     super.initState();
@@ -292,15 +201,13 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
     final isDistributor = context.loggedInUserRoles
         .where(
           (role) => role.code == RolesType.distributor.toValue(),
-    )
+        )
         .toList()
         .isNotEmpty;
     final isWareHouseMgr = context.loggedInUserRoles
-        .where(
-            (role) => role.code == RolesType.warehouseManager.toValue())
+        .where((role) => role.code == RolesType.warehouseManager.toValue())
         .toList()
         .isNotEmpty;
-
 
     final showDeliveryTeamOption = isDistributor && !isWareHouseMgr;
 
@@ -355,6 +262,26 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
     debugPrint(
         'FacilityCard: Transaction type for filtering: $transactionType');
 
+    // Filter facilities by facilityLevel based on transaction type
+    final filteredFacilities = projectFacilities.where((e) {
+          final model = e as ProjectFacilityModel;
+          final facilityLevel = model.additionalFields?.fields
+              .where((f) => f.key == 'facilityLevel')
+              .firstOrNull
+              ?.value;
+
+          // If no facilityLevel (e.g. from ProjectFacilities list), always include
+          if (facilityLevel == null) return true;
+
+          if (transactionType == 'DISPATCHED' || transactionType == 'ISSUED') {
+            return facilityLevel == 'child';
+          }
+
+          // For other transaction types, show all
+          return true;
+        }).toList() ??
+        [];
+
     // Build facility list with Delivery Team option if applicable
     var facilities = <DropdownItem>[];
 
@@ -367,26 +294,13 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
     }
 
     // Add actual facilities
-    facilities.addAll(projectFacilities?.map((e) {
-          final model = e as ProjectFacilityModel;
-          return DropdownItem(
-            code: model.facilityId,
-            name: widget.localizations.translate('FAC_${model.facilityId}'),
-          );
-        }).toList() ??
-        []);
-
-    // Apply facility hierarchy filtering if configured
-    final hierarchyConfig = _getFacilityHierarchyConfig();
-    if (hierarchyConfig != null && transactionType.isNotEmpty) {
-      facilities = _filterFacilitiesByHierarchy(
-        facilities,
-        hierarchyConfig,
-        transactionType,
+    facilities.addAll(filteredFacilities.map((e) {
+      final model = e as ProjectFacilityModel;
+      return DropdownItem(
+        code: model.facilityId,
+        name: widget.localizations.translate('FAC_${model.facilityId}'),
       );
-      debugPrint(
-          'FacilityCard: Applied hierarchy filter, facilities count: ${facilities.length}');
-    }
+    }).toList());
 
     final enums = facilities;
 

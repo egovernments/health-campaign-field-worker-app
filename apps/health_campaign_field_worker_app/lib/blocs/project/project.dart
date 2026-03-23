@@ -374,12 +374,35 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   FutureOr<void> _loadProjectFacilities(
       List<ProjectModel> projects, int batchSize) async {
-    final boundaryType = projects.first.address?.boundaryType;
+    final assignedBoundaryType = projects.first.address?.boundaryType;
+    List<String>? boundaryTypes;
+
+    if (assignedBoundaryType != null) {
+      final configs = await isar.appConfigurations.where().findAll();
+      final boundaryRelationships = configs.firstOrNull?.boundaryRelationship;
+
+      if (boundaryRelationships != null) {
+        final match = boundaryRelationships
+            .where((e) => e.boundaryType == assignedBoundaryType)
+            .firstOrNull;
+
+        if (match != null) {
+          boundaryTypes = [
+            if (match.parentBoundaryType.isNotEmpty) match.parentBoundaryType,
+            match.boundaryType,
+            if (match.childBoundaryTypes.isNotEmpty)
+              match.childBoundaryTypes.first,
+          ];
+        }
+      }
+
+      boundaryTypes ??= [assignedBoundaryType];
+    }
 
     final projectFacilities = await projectFacilityRemoteRepository.search(
       ProjectFacilitySearchModel(
         projectId: projects.map((e) => e.id).toList(),
-        // boundaryTypes: boundaryType != null ? [boundaryType] : null,
+        boundaryTypes: boundaryTypes,
       ),
     );
 

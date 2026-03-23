@@ -42,7 +42,7 @@ class StockLocalRepository
                   if (query.senderId != null)
                     sql.stock.senderId.equals(query.senderId!),
                   if (query.productVariantId != null)
-                    sql.stock.productVariantId.equals(
+                    sql.stock.productVariantId.isIn(
                       query.productVariantId!,
                     ),
                   if (query.clientReferenceId != null)

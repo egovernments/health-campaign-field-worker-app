@@ -72,7 +72,7 @@ class QueryBuilder {
         case 'contains':
           return '$column LIKE ?';
         case 'notContains':
-          return '$column NOT LIKE ?';
+          return '($column IS NULL OR $column NOT LIKE ?)';
         case 'isNotNull':
           return '$column IS NOT NULL';
         case 'isNull':
@@ -251,7 +251,7 @@ class QueryBuilder {
           break;
         case 'notContains':
           whereClauses
-              .add((col as Expression<String>).like('%${filter.value}%').not());
+              .add(col.isNull() | (col as Expression<String>).like('%${filter.value}%').not());
           break;
         case 'isNotNull':
           whereClauses.add(col.isNotNull());
