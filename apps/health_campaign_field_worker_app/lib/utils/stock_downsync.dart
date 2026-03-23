@@ -66,21 +66,18 @@ class StockDownsyncService {
           _getCurrentRunningCycle(context.selectedProject);
       final lastChangedSince = currentRunningCycle?.startDate;
 
-      final projectFacilities = await projectFacilityLocalRepository.search(
+      final allProjectFacilities = await projectFacilityLocalRepository.search(
         ProjectFacilitySearchModel(projectId: [context.selectedProject.id]),
       );
 
-      final allFacilities = await facilityLocalRepository.search(
-        FacilitySearchModel(),
-      );
-
-      Map<String, String> facilityIdUsageMap = {};
-
-      for (var element in allFacilities) {
-        facilityIdUsageMap[element.id] = element.usage ?? "";
-      }
-
-      final boundaryType = context.selectedProject.address?.boundaryType;
+      // Filter to only current level facilities
+      final projectFacilities = allProjectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
 
       // Get product variant IDs from project resources
       final projectResources = await projectResourceLocalRepository.search(
@@ -96,18 +93,10 @@ class StockDownsyncService {
         List<String> receiverIds =
             projectFacilities.map((e) => e.facilityId).toList();
 
-        // receiverIds = receiverIds
-        //     .where((e) => facilityIdUsageMap[e] == Constants.healthFacility)
-        //     .toList();
-
         await _processStock(receiverIds, lastChangedSince, productVariantIds);
       } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
         List<String> receiverIds =
             projectFacilities.map((e) => e.facilityId).toList();
-
-        // receiverIds = receiverIds
-        //     .where((e) => facilityIdUsageMap[e] == Constants.lgaFacility)
-        //     .toList();
 
         await _processStock(receiverIds, lastChangedSince, productVariantIds);
       } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
@@ -147,8 +136,8 @@ class StockDownsyncService {
   /// ======================================================
   /// STOCK PROCESSING
   /// ======================================================
-  Future<void> _processStock(
-      List<String> receiverIds, int? lastChangedSince, List<String> productVariantIds) async {
+  Future<void> _processStock(List<String> receiverIds, int? lastChangedSince,
+      List<String> productVariantIds) async {
     if (receiverIds.isEmpty) return;
 
     final stockSearchModel = StockSearchModel(

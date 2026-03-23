@@ -87,7 +87,7 @@ mixin _$PropertySchema {
   @JsonKey(fromJson: _visibilityConditionOrNull)
   VisibilityCondition? get submitCondition =>
       throw _privateConstructorUsedError; // Secondary action button label (e.g., "Decline" button alongside "Accept")
-  String? get secondaryActionLabel => throw _privateConstructorUsedError;
+  String? get secondaryActionLabel =>
       throw _privateConstructorUsedError; // Comparison config for scanner fields - enables duplicate detection against historical data
   @JsonKey(fromJson: _comparisonConfigOrNull)
   ComparisonConfig? get comparisonConfig => throw _privateConstructorUsedError;
@@ -154,8 +154,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
       bool? preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull)
       VisibilityCondition? submitCondition,
-      String? secondaryActionLabel});
-      VisibilityCondition? submitCondition,
+      String? secondaryActionLabel,
       @JsonKey(fromJson: _comparisonConfigOrNull)
       ComparisonConfig? comparisonConfig});
 
@@ -550,8 +549,7 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       bool? preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull)
       VisibilityCondition? submitCondition,
-      String? secondaryActionLabel});
-      VisibilityCondition? submitCondition,
+      String? secondaryActionLabel,
       @JsonKey(fromJson: _comparisonConfigOrNull)
       ComparisonConfig? comparisonConfig});
 
@@ -859,8 +857,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
       @JsonKey(fromJson: _multiEntityConfigOrNull) this.multiEntityConfig,
       this.preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull) this.submitCondition,
-      this.secondaryActionLabel})
-      @JsonKey(fromJson: _visibilityConditionOrNull) this.submitCondition,
+      this.secondaryActionLabel,
       @JsonKey(fromJson: _comparisonConfigOrNull) this.comparisonConfig})
       : _properties = properties,
         _enums = enums,
@@ -1120,8 +1117,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.submitCondition, submitCondition) ||
                 other.submitCondition == submitCondition) &&
             (identical(other.secondaryActionLabel, secondaryActionLabel) ||
-                other.secondaryActionLabel == secondaryActionLabel));
-                other.submitCondition == submitCondition) &&
+                other.secondaryActionLabel == secondaryActionLabel) &&
             (identical(other.comparisonConfig, comparisonConfig) ||
                 other.comparisonConfig == comparisonConfig));
   }
@@ -1172,8 +1168,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
         multiEntityConfig,
         preventScreenCapture,
         submitCondition,
-        secondaryActionLabel
-        submitCondition,
+        secondaryActionLabel,
         comparisonConfig
       ]);
 
@@ -1244,8 +1239,7 @@ abstract class _PropertySchema implements PropertySchema {
       final bool? preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull)
       final VisibilityCondition? submitCondition,
-      final String? secondaryActionLabel}) = _$PropertySchemaImpl;
-      final VisibilityCondition? submitCondition,
+      final String? secondaryActionLabel,
       @JsonKey(fromJson: _comparisonConfigOrNull)
       final ComparisonConfig? comparisonConfig}) = _$PropertySchemaImpl;
 

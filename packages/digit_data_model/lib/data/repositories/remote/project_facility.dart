@@ -107,10 +107,29 @@ class ProjectFacilityRemoteRepository
       List<ProjectFacilityModel> currentBatch;
 
       try {
-        currentBatch = entityList
-            .map(
-                (e) => MapperContainer.globals.fromMap<ProjectFacilityModel>(e))
-            .toList();
+        currentBatch = entityList.map((e) {
+          final model =
+              MapperContainer.globals.fromMap<ProjectFacilityModel>(e);
+          // Tag ProjectFacilities entries as 'current' level
+          return ProjectFacilityModel(
+            id: model.id,
+            facilityId: model.facilityId,
+            projectId: model.projectId,
+            nonRecoverableError: model.nonRecoverableError,
+            tenantId: model.tenantId,
+            rowVersion: model.rowVersion,
+            auditDetails: model.auditDetails,
+            clientAuditDetails: model.clientAuditDetails,
+            isDeleted: model.isDeleted,
+            additionalFields: ProjectFacilityAdditionalFields(
+              version: 1,
+              fields: [
+                ...?model.additionalFields?.fields,
+                AdditionalField('facilityLevel', 'current'),
+              ],
+            ),
+          );
+        }).toList();
       } catch (e) {
         rethrow;
       }
@@ -139,14 +158,23 @@ class ProjectFacilityRemoteRepository
           if (facilityIds is List) {
             for (final facilityId in facilityIds) {
               if (facilityId is String) {
-                final alreadyExists = allResults.any(
-                        (e) => e.facilityId == facilityId) ||
-                    currentBatch.any((e) => e.facilityId == facilityId);
+                final alreadyExists =
+                    allResults.any((e) => e.facilityId == facilityId) ||
+                        currentBatch.any((e) => e.facilityId == facilityId);
                 if (!alreadyExists) {
+                  final now = DateTime.now().millisecondsSinceEpoch;
                   currentBatch.add(ProjectFacilityModel(
                     id: facilityId,
                     facilityId: facilityId,
                     projectId: projectId,
+                    auditDetails: AuditDetails(
+                      createdBy: '',
+                      createdTime: now,
+                    ),
+                    clientAuditDetails: ClientAuditDetails(
+                      createdBy: '',
+                      createdTime: now,
+                    ),
                     additionalFields: ProjectFacilityAdditionalFields(
                       version: 1,
                       fields: [

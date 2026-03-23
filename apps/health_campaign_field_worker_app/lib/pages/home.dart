@@ -569,6 +569,13 @@ class _HomePageState extends LocalizedState<HomePage> {
             if (pfModels != null && pfModels.isNotEmpty) {
               projectFacilities = pfModels
                   .whereType<ProjectFacilityModel>()
+                  .where((pf) {
+                    final facilityLevel = pf.additionalFields?.fields
+                        .where((f) => f.key == 'facilityLevel')
+                        .firstOrNull
+                        ?.value;
+                    return facilityLevel == null || facilityLevel == 'current';
+                  })
                   .map((pf) => <String, dynamic>{
                         'facilityId': pf.facilityId,
                       })
@@ -581,7 +588,24 @@ class _HomePageState extends LocalizedState<HomePage> {
           return <Map<String, dynamic>>[];
         }
 
-        return projectFacilities
+        // Filter to only show current level facilities
+        final filtered = projectFacilities.where((pf) {
+          final additionalFields =
+              pf['additionalFields'] as Map<String, dynamic>?;
+          if (additionalFields == null) return true;
+          final fields = additionalFields['fields'] as List?;
+          if (fields == null) return true;
+          for (final field in fields) {
+            if (field is Map &&
+                field['key'] == 'facilityLevel' &&
+                field['value'] != null) {
+              return field['value'] == 'current';
+            }
+          }
+          return true;
+        }).toList();
+
+        return filtered
             .map((pf) => {
                   'code': pf['facilityId']?.toString() ?? '',
                   'name': 'FAC_${pf['facilityId']?.toString() ?? ''}',

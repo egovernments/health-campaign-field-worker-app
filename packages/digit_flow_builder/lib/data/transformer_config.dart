@@ -506,7 +506,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
           "projectBeneficiaryClientReferenceId":
-          "__context:ProjectBeneficiaryClientReferenceId",
+              "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
           "status": "__context:status",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -567,7 +567,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
           "projectBeneficiaryClientReferenceId":
-          "__context:ProjectBeneficiaryClientReferenceId",
+              "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
           "status": "unableToDeliver.reason",
           "nonRecoverableError": "errors.nonRecoverable",

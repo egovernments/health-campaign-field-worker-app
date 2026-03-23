@@ -1,13 +1,11 @@
 import 'dart:math';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:transit_post/data/repositories/local/user_action.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -22,7 +20,8 @@ class StockBalanceCard extends LocalizedStatefulWidget {
   State<StockBalanceCard> createState() => _StockBalanceCardState();
 }
 
-class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
+class _StockBalanceCardState extends LocalizedState<StockBalanceCard>
+    with WidgetsBindingObserver {
   List<FacilityModel> _facilities = [];
   FacilityModel? _selectedFacility;
   List<ProductVariantModel> _productVariants = [];
@@ -30,6 +29,26 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
   double _minThreshold = 100;
   double _maxThreshold = 500;
   bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _loadThresholds();
+      _loadData();
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -68,8 +87,17 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         ProjectFacilitySearchModel(projectId: [context.projectId]),
       );
 
+      // Filter to only show current level facilities
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
       // Get facility details for names
-      final facilityIds = projectFacilities.map((pf) => pf.facilityId).toList();
+      final facilityIds = currentFacilities.map((pf) => pf.facilityId).toList();
       final facilityRepo =
           context.read<LocalRepository<FacilityModel, FacilitySearchModel>>();
       final facilities = await facilityRepo.search(

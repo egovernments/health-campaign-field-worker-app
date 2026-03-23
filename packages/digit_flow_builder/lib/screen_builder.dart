@@ -200,8 +200,7 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
       final defaultValues = config['defaultValues'] as Map<String, dynamic>?;
 
       // Build secondary action callback from screen-level onSecondaryAction
-      final secondaryActions =
-          config['onSecondaryAction'] as List<dynamic>?;
+      final secondaryActions = config['onSecondaryAction'] as List<dynamic>?;
       VoidCallback? onSecondaryAction;
       if (secondaryActions != null) {
         onSecondaryAction = () {
@@ -348,13 +347,13 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
                 currentSchemaKey: widget.schemaKey,
                 isEdit: isEdit,
                 onSecondaryAction: widget.onSecondaryAction,
-              // Pass custom components from registry with enhanced state access
-              customComponents: _buildCustomComponents(
-                context,
-                flowState,
-              ),
-              // defaultValues priority (lowest to highest):
-              // 1. widget.defaultValues - config-defined defaults
+                // Pass custom components from registry with enhanced state access
+                customComponents: _buildCustomComponents(
+                  context,
+                  flowState,
+                ),
+                // defaultValues priority (lowest to highest):
+                // 1. widget.defaultValues - config-defined defaults
                 // 2. mergedNavParams - navigation data merged from widget and registry
                 // 3. registryFormData - data from REVERSE_TRANSFORM action (highest priority for prefill)
                 // 4. System values like administrativeArea, availableIDs

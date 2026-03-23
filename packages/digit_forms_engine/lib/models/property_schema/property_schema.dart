@@ -209,7 +209,8 @@ class MultiEntityConfig with _$MultiEntityConfig {
 class ComparisonConfig with _$ComparisonConfig {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory ComparisonConfig({
-    required String model, // table to search (e.g., "stock", "projectBeneficiary")
+    required String
+        model, // table to search (e.g., "stock", "projectBeneficiary")
     required String extractKey, // field to match scanned value against
     @Default('additionalFields')
     String extractFrom, // "additionalFields" or "column"
@@ -226,10 +227,13 @@ class ComparisonFilter with _$ComparisonFilter {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory ComparisonFilter({
     required String key, // DB column name (e.g., "senderId")
-    required String value, // default template (e.g., "{{navigation.facilityFromWhich}}")
+    required String
+        value, // default template (e.g., "{{navigation.facilityFromWhich}}")
     @Default('equals') String operation,
-    String? switchOn, // template for conditional switch (e.g., "{{navigation.stockEntryType}}")
-    Map<String, String>? cases, // conditional overrides (e.g., {"ISSUED": "{{navigation.facilityToWhich}}"})
+    String?
+        switchOn, // template for conditional switch (e.g., "{{navigation.stockEntryType}}")
+    Map<String, String>?
+        cases, // conditional overrides (e.g., {"ISSUED": "{{navigation.facilityToWhich}}"})
   }) = _ComparisonFilter;
 
   factory ComparisonFilter.fromJson(Map<String, dynamic> json) =>

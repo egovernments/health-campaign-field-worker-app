@@ -258,35 +258,59 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
             {};
     final transactionType =
         navigationParams['transactionType']?.toString() ?? '';
+    final stockEntryType =
+        navigationParams['stockEntryType']?.toString() ?? '';
+    final isReturnFlow = stockEntryType == 'RETURNED';
 
     debugPrint(
-        'FacilityCard: Transaction type for filtering: $transactionType');
+        'FacilityCard: Transaction type: $transactionType, stockEntryType: $stockEntryType');
 
-    // Filter facilities by facilityLevel based on transaction type
+    // Filter facilities by facilityLevel based on transaction type and field
+    // facilityToWhich = destination, facilityFromWhich = source
+    final isToField = widget.formKey == 'facilityToWhich';
+    final isFromField = widget.formKey == 'facilityFromWhich';
+
+    // For return flow, prefill facilityFromWhich with logged-in user UUID
+    if (isReturnFlow && isFromField && !_initialized) {
+      final userUuid = context.loggedInUserUuid;
+      selectedFacilityId = userUuid;
+      _initialized = true;
+      _formControlUpdated = false;
+    }
+
     final filteredFacilities = projectFacilities.where((e) {
-          final model = e as ProjectFacilityModel;
-          final facilityLevel = model.additionalFields?.fields
-              .where((f) => f.key == 'facilityLevel')
-              .firstOrNull
-              ?.value;
+      final model = e as ProjectFacilityModel;
+      final facilityLevel = model.additionalFields?.fields
+          .where((f) => f.key == 'facilityLevel')
+          .firstOrNull
+          ?.value;
 
-          // If no facilityLevel (e.g. from ProjectFacilities list), always include
-          if (facilityLevel == null) return true;
+      // If no facilityLevel (e.g. from ProjectFacilities list), always include
+      if (facilityLevel == null) return true;
 
-          if (transactionType == 'DISPATCHED' || transactionType == 'ISSUED') {
-            return facilityLevel == 'child';
-          }
+      if (isReturnFlow) {
+        if (isToField) return facilityLevel == 'parent';
+        if (isFromField) return facilityLevel == 'current';
+      } else if (transactionType == 'DISPATCHED' || transactionType == 'ISSUED') {
+        if (isToField) return facilityLevel == 'child';
+        if (isFromField) return facilityLevel == 'current';
+      } else if (transactionType == 'RECEIVED' || transactionType == 'RECEIPT') {
+        if (isToField) return facilityLevel == 'current';
+        if (isFromField) return facilityLevel == 'parent';
+      }
 
-          // For other transaction types, show all
-          return true;
-        }).toList() ??
-        [];
+      return true;
+    }).toList();
 
     // Build facility list with Delivery Team option if applicable
     var facilities = <DropdownItem>[];
 
-    // Add Delivery Team option for distributors who are not warehouse managers
-    if (showDeliveryTeamOption) {
+    // Add Delivery Team option only in facilityToWhich for distributors
+    // doing DISPATCHED/ISSUED transactions
+    final showDeliveryTeam = showDeliveryTeamOption &&
+        isToField &&
+        (transactionType == 'DISPATCHED' || transactionType == 'ISSUED');
+    if (showDeliveryTeam) {
       facilities.add(const DropdownItem(
         code: 'Delivery Team',
         name: 'Delivery Team',

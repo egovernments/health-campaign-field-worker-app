@@ -30,6 +30,7 @@ import '../../models/entities/roles_type.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
+import '../../notification_service.dart';
 import '../../utils/utils.dart';
 
 part 'project.freezed.dart';
@@ -251,18 +252,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     if (projects.isNotEmpty) {
       try {
-        await _loadProjectFacilities(projects, batchSize);
-      } catch (_) {
-        emit(
-          state.copyWith(
-            projects: [],
-            loading: false,
-            syncError: ProjectSyncErrorType.projectFacilities,
-          ),
-        );
-        return;
-      }
-      try {
         await _loadFacilities(projects, batchSize);
       } catch (_) {
         emit(
@@ -372,9 +361,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
   }
 
-  FutureOr<void> _loadProjectFacilities(
-      List<ProjectModel> projects, int batchSize) async {
-    final assignedBoundaryType = projects.first.address?.boundaryType;
+  FutureOr<void> _loadProjectFacilities(ProjectModel project) async {
+    final assignedBoundaryType = project.address?.boundaryType;
     List<String>? boundaryTypes;
 
     if (assignedBoundaryType != null) {
@@ -401,12 +389,48 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final projectFacilities = await projectFacilityRemoteRepository.search(
       ProjectFacilitySearchModel(
-        projectId: projects.map((e) => e.id).toList(),
+        projectId: [project.id],
         boundaryTypes: boundaryTypes,
       ),
     );
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
+
+    // Register notification token with current level facility IDs
+    final currentFacilityIds = projectFacilities
+        .where((pf) {
+          final facilityLevel = pf.additionalFields?.fields
+              .where((f) => f.key == 'facilityLevel')
+              .firstOrNull
+              ?.value;
+          return facilityLevel == 'current';
+        })
+        .map((pf) => pf.facilityId)
+        .toList();
+
+    if (currentFacilityIds.isNotEmpty) {
+      final fcmToken = await NotificationService.getStoredFcmToken();
+      if (fcmToken != null && fcmToken.isNotEmpty) {
+        await _registerNotificationToken(fcmToken, currentFacilityIds);
+      }
+    }
+  }
+
+  /// Registers the Firebase notification token with the assigned facility IDs.
+  /// TODO: Replace with actual API call when endpoint is available.
+  Future<void> _registerNotificationToken(
+    String token,
+    List<String> facilityIds,
+  ) async {
+    debugPrint('Registering notification token with facilities:');
+    debugPrint('Token: $token');
+    debugPrint('Facility IDs: $facilityIds');
+    // TODO: Call API to register token with facility IDs
+    // Example:
+    // await dio.post('/notification/token/register', data: {
+    //   'token': token,
+    //   'facilityIds': facilityIds,
+    // });
   }
 
   FutureOr<void> _loadFacilities(
@@ -828,6 +852,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         projects: [],
         loading: false,
         syncError: ProjectSyncErrorType.boundary,
+      ));
+      return;
+    }
+
+    // Load project facilities after project selection
+    try {
+      await _loadProjectFacilities(event.model);
+    } catch (_) {
+      emit(state.copyWith(
+        selectedProject: event.model,
+        loading: false,
+        syncError: ProjectSyncErrorType.projectFacilities,
       ));
       return;
     }

@@ -76,10 +76,9 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      name: attendance_management
-      sha256: "4cff17a4188f05010fffc0f853549ec09d035581f3409b058e0952a6999f427c"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/attendance_management"
+      relative: true
+    source: path
     version: "1.0.6"
   audioplayers:
     dependency: transitive
@@ -533,26 +532,23 @@ packages:
   digit_crud_bloc:
     dependency: "direct main"
     description:
-      name: digit_crud_bloc
-      sha256: "13109a2052f63385c5c9e64b87ac403cc3c9a5b1e9d7ce7c1341202bf55351c5"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_crud_bloc"
+      relative: true
+    source: path
     version: "0.0.1"
   digit_data_converter:
     dependency: "direct main"
     description:
-      name: digit_data_converter
-      sha256: "6763a67b6dffa4b6820a7f010488741d32cf39d3d414b45883bbe62a4aad729d"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_converter"
+      relative: true
+    source: path
     version: "0.0.1"
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: d59c5082ff5ad8ddb7ee87c0e150efa1a1de031034713d73d0bae9a0393ba95a
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
     version: "1.3.0"
   digit_dss:
     dependency: "direct main"
@@ -581,18 +577,16 @@ packages:
   digit_forms_engine:
     dependency: "direct main"
     description:
-      name: digit_forms_engine
-      sha256: c5faf078d30b8284da196387c7a1b5ae1d5c31a9c3ed6e6c93d9c1cfd4fd1cce
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_forms_engine"
+      relative: true
+    source: path
     version: "0.0.1"
   digit_formula_parser:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: digit_formula_parser
-      sha256: "5d1d09c302ae05c88bb3b283b51dc5dd95eaf8917b3ea2a5df7ea8603a54b330"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_formula_parser"
+      relative: true
+    source: path
     version: "1.2.0"
   digit_location_tracker:
     dependency: "direct main"
@@ -605,10 +599,9 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: f16f7842fc434036695bc0b48e57537918a548ebfd980bde3699e31af4ea33f4
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
     version: "1.0.7+1"
   digit_showcase:
     dependency: "direct main"
@@ -818,6 +811,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.6.35"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      name: firebase_messaging
+      sha256: a1662cc95d9750a324ad9df349b873360af6f11414902021f130c68ec02267c4
+      url: "https://pub.dev"
+    source: hosted
+    version: "14.9.4"
+  firebase_messaging_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_messaging_platform_interface
+      sha256: "87c4a922cb6f811cfb7a889bdbb3622702443c52a0271636cbc90d813ceac147"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.5.37"
+  firebase_messaging_web:
+    dependency: transitive
+    description:
+      name: firebase_messaging_web
+      sha256: "0d34dca01a7b103ed7f20138bffbb28eb0e61a677bf9e78a028a932e2c7322d5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.8.7"
   fixnum:
     dependency: transitive
     description:
@@ -2051,6 +2068,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.5"
+  sqlite3_flutter_libs:
+    dependency: transitive
+    description:
+      name: sqlite3_flutter_libs
+      sha256: eeb9e3a45207649076b808f8a5a74d68770d0b7f26ccef6d5f43106eee5375ad
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.42"
   sqlparser:
     dependency: transitive
     description:
@@ -2094,10 +2119,9 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      name: survey_form
-      sha256: cf21e96580062cca65cd1ade3b45fcdf91d97a7e9f98741af5495381535b3126
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/survey_form"
+      relative: true
+    source: path
     version: "1.0.4"
   sync_http:
     dependency: transitive
@@ -2110,10 +2134,11 @@ packages:
   sync_service:
     dependency: "direct main"
     description:
-      path: "../../packages/sync_service"
-      relative: true
-    source: path
-    version: "1.0.3"
+      name: sync_service
+      sha256: "3d2ea69d48ca024077ffb7b3f086dbab9459ffcfabb204463f7bc347b874fdfe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   synchronized:
     dependency: transitive
     description:
@@ -2181,10 +2206,9 @@ packages:
   transit_post:
     dependency: "direct main"
     description:
-      name: transit_post
-      sha256: eadb301228c45da17814b82170c0120422b3da5c05bbce1f64582f7d186ea3b2
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/transit_post"
+      relative: true
+    source: path
     version: "1.0.1"
   type_plus:
     dependency: transitive
@@ -2443,5 +2467,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.4.3 <3.9.0"
+  dart: ">=3.4.3 <4.0.0"
   flutter: ">=3.22.0"
