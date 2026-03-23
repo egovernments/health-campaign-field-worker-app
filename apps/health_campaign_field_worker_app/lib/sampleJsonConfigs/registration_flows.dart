@@ -873,7 +873,7 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
-                    "label": "{{fn:getInEligibleStatus(item.task)}}",
+                    "label": "NOT_ELIGIBLE",
                     "format": "tag",
                     "visible":
                         "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false",
@@ -1350,8 +1350,33 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "label": "UNABLETODELIVERY_FLOW_comment_LABEL",
+              "label": "APPONE_UNABLETODELIVER_LATLNG_LABEL",
               "order": 2,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "latLng",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true,
+            },
+            {
+              "type": "string",
+              "label": "UNABLETODELIVERY_FLOW_comment_LABEL",
+              "order": 3,
               "value": "",
               "format": "textArea",
               "hidden": false,
@@ -2539,7 +2564,7 @@ final dynamic sampleFlows = {
             {
               "type": "string",
               "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_scanner",
-              "order": 4,
+              "order": 5,
               "value": "",
               "format": "scanner",
               "hidden": false,
@@ -2560,6 +2585,31 @@ final dynamic sampleFlows = {
               "includeInForm": true,
               "isMultiSelect": false,
               "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "label": "APPONE_DELIVERYDETAILS_LATLNG_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "latLng",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true,
             }
           ],
           "actionLabel":
@@ -3309,8 +3359,7 @@ final dynamic sampleFlows = {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
                         "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  },
-                  {"key": "status", "value": "INELIGIBLE"}
+                  }
                 ],
                 "onError": [
                   {
@@ -3672,6 +3721,7 @@ final dynamic sampleFlows = {
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
+              "includeInForm": true,
               "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
               "systemDate": false,
               "validations": [
@@ -4932,6 +4982,10 @@ final dynamic sampleFlows = {
               "readOnly": false,
               "required": true,
               "fieldName": "gender",
+              "enums": [
+                {"code": "MALE", "name": "MALE"},
+                {"code": "FEMALE", "name": "Female"}
+              ],
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
