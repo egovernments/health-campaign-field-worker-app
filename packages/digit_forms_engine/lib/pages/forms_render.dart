@@ -598,7 +598,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                     ),
                     children: [
                       if (_hasDisplayOnlyProperties(schema))
+                        ...[
                         _buildDisplayOnlyCard(context, schema),
+                          const SizedBox(height: spacer4,)
+                      ],
                       DigitCard(
                         margin: const EdgeInsets.symmetric(
                           horizontal: spacer2,

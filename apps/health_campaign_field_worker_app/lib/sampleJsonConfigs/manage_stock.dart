@@ -1694,6 +1694,7 @@ final dynamic sampleInventoryFlows = {
           "hidden": "{{fn:hasResults('StockModel')}} == false",
           "fieldName": "incomingList",
           "dataSource": "StockModel",
+          "properties": {"spacing": "spacer4"},
           "child": {
             "format": "card",
             "children": [
@@ -1763,7 +1764,7 @@ final dynamic sampleInventoryFlows = {
                 "visible": "{{item.items[0].transactionType == 'DISPATCHED'}}",
                 "properties": {
                   "type": "primary",
-                  "size": "large",
+                  "size": "medium",
                   "mainAxisSize": "max",
                   "mainAxisAlignment": "center"
                 },
