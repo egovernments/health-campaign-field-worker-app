@@ -5,6 +5,7 @@ import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +34,23 @@ late Dio _dio;
 late Isar _isar;
 int i = 0;
 
+
+class MyProxyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..findProxy = (uri) {
+        // Bypass proxy for localhost and 
+        return 'PROXY 192.168.200.80:8888;';
+      }
+      ..badCertificateCallback = 
+        (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() async {
+  HttpOverrides.global = MyProxyHttpOverrides();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   DartPluginRegistrant.ensureInitialized();
@@ -68,6 +85,14 @@ void main() async {
   }
   WidgetsBinding.instance.addObserver(AppLifecycleObserver());
   _dio = DioClient().dio;
+
+  (_dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+    final client = HttpClient();
+    client.findProxy = (uri) => 'PROXY 192.168.200.80:8888;';
+    client.badCertificateCallback =
+        (X509Certificate cert, String host, int port) => true;
+    return client;
+  };
 
   DigitUi.instance.initThemeComponents();
   await Constants().initialize(info.version);
