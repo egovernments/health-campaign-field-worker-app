@@ -28,6 +28,8 @@ import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
+import '../blocs/stock_downsync/stock_downsync.dart';
+import '../data/local_store/secure_store/secure_store.dart';
 import '../blocs/push_notification/push_notification.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -295,6 +297,31 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                           serviceLocalRepository: ctx.read<
                               LocalRepository<ServiceModel,
                                   ServiceSearchModel>>(),
+                        ),
+                      ),
+                      BlocProvider(
+                        create: (ctx) => StockDownSyncBloc(
+                          localSecureStore: LocalSecureStore.instance,
+                          bandwidthCheckRepository: BandwidthCheckRepository(
+                            DioClient().dio,
+                            bandwidthPath:
+                                envConfig.variables.checkBandwidthApiPath,
+                          ),
+                          projectFacilityLocalRepository: ctx.read<
+                              LocalRepository<ProjectFacilityModel,
+                                  ProjectFacilitySearchModel>>(),
+                          facilityLocalRepository: ctx.read<
+                              LocalRepository<FacilityModel,
+                                  FacilitySearchModel>>(),
+                          stockRemoteRepository: ctx.read<
+                              RemoteRepository<StockModel,
+                                  StockSearchModel>>(),
+                          stockLocalRepository: ctx.read<
+                              LocalRepository<StockModel,
+                                  StockSearchModel>>(),
+                          projectResourceLocalRepository: ctx.read<
+                              LocalRepository<ProjectResourceModel,
+                                  ProjectResourceSearchModel>>(),
                         ),
                       ),
                       BlocProvider(
