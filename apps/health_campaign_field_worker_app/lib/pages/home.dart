@@ -670,6 +670,16 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
 
     // Get transaction status type for tag styling
+    // Check if a model has results (for hidden/visible conditions)
+    FunctionRegistry.register('hasResults', (args, stateData) {
+      if (args.isEmpty) return false;
+      final modelKey = args.first?.toString() ?? '';
+      if (modelKey.isEmpty || stateData?.modelMap == null) return false;
+
+      final results = stateData!.modelMap[modelKey];
+      return results != null && results.isNotEmpty;
+    });
+
     FunctionRegistry.register('getTransactionStatusType', (args, stateData) {
       if (args.isEmpty) return 'default';
       final transactionType = args.first?.toString().toUpperCase() ?? '';

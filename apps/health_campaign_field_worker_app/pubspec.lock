@@ -569,10 +569,9 @@ packages:
   digit_flow_builder:
     dependency: "direct main"
     description:
-      name: digit_flow_builder
-      sha256: "9839767ad6b8a1bbfd6596a06ad5501de23e6fb1de7b4e9b5c3368c7c70b457a"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_flow_builder"
+      relative: true
+    source: path
     version: "0.0.1"
   digit_forms_engine:
     dependency: "direct main"
@@ -2467,5 +2466,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.4.3 <4.0.0"
+  dart: ">=3.4.1 <4.0.0"
   flutter: ">=3.22.0"

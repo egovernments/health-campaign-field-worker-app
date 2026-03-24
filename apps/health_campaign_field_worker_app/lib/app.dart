@@ -25,6 +25,7 @@ import 'data/remote_client.dart';
 import 'data/repositories/remote/bandwidth_check.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
+import 'data/repositories/remote/notification_token.dart';
 import 'executors/stock_balance_executor.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
@@ -284,6 +285,8 @@ class MainApplicationState extends State<MainApplication>
                             stockRemoteRepository: ctx.read<
                                 RemoteRepository<StockModel,
                                     StockSearchModel>>(),
+                            notificationTokenRepository:
+                                NotificationTokenRepository(widget.client),
                             context: context,
                           ),
                         ),

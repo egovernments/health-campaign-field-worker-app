@@ -40,13 +40,22 @@ class CrudExecutor extends ActionExecutor {
       debugPrint('CREATE_EVENT: Condition met, proceeding with create');
     }
 
-    final entities = contextData['entities'];
-    if (entities == null || (entities is List && entities.isEmpty)) {
+    final rawEntities = contextData['entities'];
+    if (rawEntities == null || (rawEntities is List && rawEntities.isEmpty)) {
       debugPrint('CREATE_EVENT: No entities to create');
       return contextData;
     }
 
-    debugPrint('CREATE_EVENT: Creating ${entities is List ? entities.length : 1} entities');
+    final entities = rawEntities is List
+        ? rawEntities.whereType<EntityModel>().toList()
+        : [rawEntities as EntityModel];
+
+    if (entities.isEmpty) {
+      debugPrint('CREATE_EVENT: No valid EntityModel entities to create');
+      return contextData;
+    }
+
+    debugPrint('CREATE_EVENT: Creating ${entities.length} entities');
     context.read<CrudBloc>().add(CrudEventCreate(entities: entities));
     return contextData;
   }

@@ -196,6 +196,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard>
       stockList: allStocks,
       facilityId: facilityId,
       productIds: productIds,
+      loggedInUserUuid: context.loggedInUserUuid,
     );
   }
 

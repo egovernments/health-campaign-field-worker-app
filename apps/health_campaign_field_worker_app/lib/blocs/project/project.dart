@@ -24,13 +24,14 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
+import '../../data/repositories/remote/notification_token.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
+import '../../notification_service.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
-import '../../notification_service.dart';
 import '../../utils/utils.dart';
 
 part 'project.freezed.dart';
@@ -109,6 +110,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
       productVariantLocalRepository;
   final DashboardRemoteRepository dashboardRemoteRepository;
+  final NotificationTokenRepository notificationTokenRepository;
   BuildContext context;
 
   ProjectBloc({
@@ -141,6 +143,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.attendanceLogLocalRepository,
     required this.attendanceLogRemoteRepository,
     required this.dashboardRemoteRepository,
+    required this.notificationTokenRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -417,20 +420,28 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   /// Registers the Firebase notification token with the assigned facility IDs.
-  /// TODO: Replace with actual API call when endpoint is available.
   Future<void> _registerNotificationToken(
     String token,
     List<String> facilityIds,
   ) async {
-    debugPrint('Registering notification token with facilities:');
-    debugPrint('Token: $token');
-    debugPrint('Facility IDs: $facilityIds');
-    // TODO: Call API to register token with facility IDs
-    // Example:
-    // await dio.post('/notification/token/register', data: {
-    //   'token': token,
-    //   'facilityIds': facilityIds,
-    // });
+    final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+    final apiEndPoint = Constants.getEndPoint(
+      serviceRegistry: serviceRegistry,
+      service: 'NOTIFICATION',
+      action: ApiOperation.create.toValue(),
+      entityName: 'NotificationToken',
+    );
+
+    if (apiEndPoint.isEmpty) {
+      debugPrint('NotificationToken: No endpoint found in service registry');
+      return;
+    }
+
+    await notificationTokenRepository.registerToken(
+      apiEndPoint: apiEndPoint,
+      token: token,
+      facilityIds: facilityIds,
+    );
   }
 
   FutureOr<void> _loadFacilities(

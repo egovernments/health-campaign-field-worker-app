@@ -309,10 +309,26 @@ class TransformerExecutor extends ActionExecutor {
 
     // Pass existingModels to contextData even for forceCreate,
     // so UPDATE_EVENT with source: "existingModels" can update the originals
+    // Filter to only include models matching the created entities' productVariantId
     if (existingModels != null &&
         existingModels.isNotEmpty &&
         contextData['existingModels'] == null) {
-      contextData['existingModels'] = existingModels;
+      // Get productVariantIds from newly created entities
+      final createdPvIds = entities
+          .map((e) => e.toMap()['productVariantId']?.toString())
+          .whereType<String>()
+          .toSet();
+
+      if (createdPvIds.isNotEmpty) {
+        final filtered = existingModels
+            .where((e) =>
+                createdPvIds.contains(e.toMap()['productVariantId']?.toString()))
+            .toList();
+        contextData['existingModels'] =
+            filtered.isNotEmpty ? filtered : existingModels;
+      } else {
+        contextData['existingModels'] = existingModels;
+      }
     }
 
     return contextData;

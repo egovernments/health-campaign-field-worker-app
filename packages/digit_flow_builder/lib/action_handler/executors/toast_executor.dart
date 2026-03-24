@@ -15,7 +15,24 @@ class ToastExecutor extends ActionExecutor {
     Map<String, dynamic> contextData,
   ) async {
     final message = action.properties['message'] ?? 'Unknown error';
-    Toast.showToast(context, message: message, type: ToastType.error);
+    final typeStr = action.properties['type']?.toString() ?? 'error';
+
+    final ToastType toastType;
+    switch (typeStr) {
+      case 'success':
+        toastType = ToastType.success;
+        break;
+      case 'warning':
+        toastType = ToastType.warning;
+        break;
+      case 'info':
+        toastType = ToastType.info;
+        break;
+      default:
+        toastType = ToastType.error;
+    }
+
+    Toast.showToast(context, message: message, type: toastType);
     return contextData;
   }
 }
