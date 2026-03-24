@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:digit_data_model/data/repositories/package_repository/local/stock.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -20,8 +21,7 @@ class StockBalanceCard extends LocalizedStatefulWidget {
   State<StockBalanceCard> createState() => _StockBalanceCardState();
 }
 
-class _StockBalanceCardState extends LocalizedState<StockBalanceCard>
-    with WidgetsBindingObserver {
+class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
   List<FacilityModel> _facilities = [];
   FacilityModel? _selectedFacility;
   List<ProductVariantModel> _productVariants = [];
@@ -29,26 +29,6 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard>
   double _minThreshold = 100;
   double _maxThreshold = 500;
   bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _loadThresholds();
-      _loadData();
-    }
-  }
 
   @override
   void didChangeDependencies() {
@@ -144,7 +124,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard>
       });
 
       if (autoSelectedFacility != null) {
-        await _loadStockBalances(autoSelectedFacility.id);
+        _setupStockListener(autoSelectedFacility.id);
       }
     } catch (e) {
       if (mounted) {
@@ -155,48 +135,45 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard>
     }
   }
 
-  Future<void> _loadStockBalances(String facilityId) async {
-    // Calculate balances from all stock transactions in DB
-    final balances = await _calculateFromStockTransactions(facilityId);
-
-    if (mounted) {
-      setState(() {
-        _stockBalances = balances;
-      });
-    }
-  }
-
-  /// Fallback: calculate balances from stock transactions when no UserAction
-  /// records exist (e.g., first login or migration from older version).
-  Future<Map<String, double>> _calculateFromStockTransactions(
-    String facilityId,
-  ) async {
+  void _setupStockListener(String facilityId) {
     final stockRepo =
-        context.read<LocalRepository<StockModel, StockSearchModel>>();
+        context.read<LocalRepository<StockModel, StockSearchModel>>()
+            as StockLocalRepository;
 
-    final receivedStocks = await stockRepo.search(
-      StockSearchModel(receiverId: [facilityId]),
-    );
-    final sentStocks = await stockRepo.search(
-      StockSearchModel(senderId: facilityId),
-    );
+    stockRepo.listenToChanges(
+      query: StockSearchModel(receiverId: [facilityId]),
+      listener: (receivedStocks) async {
+        if (!mounted) return;
 
-    // Deduplicate by clientReferenceId
-    final allStocksMap = <String, StockModel>{};
-    for (final stock in receivedStocks) {
-      allStocksMap[stock.clientReferenceId] = stock;
-    }
-    for (final stock in sentStocks) {
-      allStocksMap[stock.clientReferenceId] = stock;
-    }
-    final allStocks = allStocksMap.values.toList();
+        // Also fetch sent stocks to calculate complete balance
+        final sentStocks = await stockRepo.search(
+          StockSearchModel(senderId: facilityId),
+        );
 
-    final productIds = _productVariants.map((pv) => pv.id).toList();
-    return StockCalculationUtils.calculateStockInHandForProducts(
-      stockList: allStocks,
-      facilityId: facilityId,
-      productIds: productIds,
-      loggedInUserUuid: context.loggedInUserUuid,
+        // Deduplicate by clientReferenceId
+        final allStocksMap = <String, StockModel>{};
+        for (final stock in receivedStocks) {
+          allStocksMap[stock.clientReferenceId] = stock;
+        }
+        for (final stock in sentStocks) {
+          allStocksMap[stock.clientReferenceId] = stock;
+        }
+        final allStocks = allStocksMap.values.toList();
+
+        final productIds = _productVariants.map((pv) => pv.id).toList();
+        final balances = StockCalculationUtils.calculateStockInHandForProducts(
+          stockList: allStocks,
+          facilityId: facilityId,
+          productIds: productIds,
+          loggedInUserUuid: context.loggedInUserUuid,
+        );
+
+        if (mounted) {
+          setState(() {
+            _stockBalances = balances;
+          });
+        }
+      },
     );
   }
 
@@ -242,7 +219,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard>
                 setState(() {
                   _selectedFacility = selected;
                 });
-                _loadStockBalances(selected.id);
+                _setupStockListener(selected.id);
               },
             ),
           ),

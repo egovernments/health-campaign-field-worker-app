@@ -7,6 +7,69 @@ class StockLocalRepository
     extends LocalRepository<StockModel, StockSearchModel> {
   StockLocalRepository(super.sql, super.opLogManager);
 
+  void listenToChanges({
+    required StockSearchModel query,
+    required void Function(List<StockModel> data) listener,
+  }) async {
+    return retryLocalCallOperation(() async {
+      final select = sql.select(sql.stock)
+        ..where(
+          (tbl) => buildAnd([
+            if (query.receiverId != null)
+              tbl.receiverId.isIn(query.receiverId!),
+            if (query.senderId != null) tbl.senderId.equals(query.senderId!),
+            if (query.productVariantId != null)
+              tbl.productVariantId.isIn(query.productVariantId!),
+            if (query.transactionType != null)
+              tbl.transactionType.isIn(query.transactionType!),
+          ]),
+        );
+
+      select.watch().listen((event) {
+        final data = event.map((e) {
+          final createdBy = e.auditCreatedBy;
+          final createdTime = e.auditCreatedTime;
+
+          return StockModel(
+            id: e.id,
+            tenantId: e.tenantId,
+            facilityId: e.facilityId,
+            productVariantId: e.productVariantId,
+            receiverId: e.receiverId,
+            senderId: e.senderId,
+            receiverType: e.receiverType,
+            senderType: e.senderType,
+            referenceId: e.referenceId,
+            referenceIdType: e.referenceIdType,
+            transactionType: e.transactionType,
+            transactionReason: e.transactionReason,
+            transactingPartyId: e.transactingPartyId,
+            transactingPartyType: e.transactingPartyType,
+            quantity: e.quantity,
+            waybillNumber: e.waybillNumber,
+            clientReferenceId: e.clientReferenceId,
+            isDeleted: e.isDeleted,
+            rowVersion: e.rowVersion,
+            auditDetails: createdTime == null || createdBy == null
+                ? null
+                : AuditDetails(
+                    createdTime: createdTime, createdBy: createdBy),
+            clientAuditDetails: createdTime == null || createdBy == null
+                ? null
+                : ClientAuditDetails(
+                    createdTime: e.clientCreatedTime!,
+                    createdBy: e.clientCreatedBy!,
+                    lastModifiedBy: e.clientModifiedBy,
+                    lastModifiedTime: e.clientModifiedTime,
+                  ),
+          );
+        }).toList();
+
+        listener(data);
+      });
+    });
+  }
+
   @override
   FutureOr<void> create(
     StockModel entity, {
