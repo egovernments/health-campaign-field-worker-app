@@ -1614,15 +1614,15 @@ final dynamic sampleInventoryFlows = {
                 "operation": "notEquals"
               },
               {
-                "key": "additionalFields",
-                "value": "inTransit",
-                "operation": "notContains"
-              },
-              {
                 "key": "productVariantId",
                 "value": "{{fn:getProjectProductVariantIds()}}",
                 "operation": "in"
-              }
+              },
+              {
+                "key": "additionalFields",
+                "value": "\"key\":\"status\"",
+                "operation": "notContains"
+              },
             ]
           }
         }

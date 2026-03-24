@@ -227,9 +227,13 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         // Title
         Padding(
           padding: const EdgeInsets.only(bottom: spacer1),
-          child: Text(
-            localizations.translate(i18.home.stockBalanceLabel),
-            style: theme.textTheme.headlineSmall,
+          child: Center(
+            child: Text(
+              localizations.translate(i18.home.stockBalanceLabel),
+              style: theme.digitTextTheme(context).bodyL.copyWith(
+                color: theme.colorTheme.text.primary
+              ),
+            ),
           ),
         ),
 
