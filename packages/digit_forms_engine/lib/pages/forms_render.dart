@@ -704,11 +704,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           evaluateSingleCondition(condition.expression, contextValues);
 
       if (isConditionTrue) {
-        return template?.replaceAll("{value}", localizations.translate(condition.value));
+        return template?.replaceAll(
+            "{value}", localizations.translate(condition.value));
       }
 
       if (condition.expression == "DEFAULT") {
-        return template?.replaceAll("{value}", localizations.translate(condition.value));
+        return template?.replaceAll(
+            "{value}", localizations.translate(condition.value));
       }
     }
 
@@ -1296,16 +1298,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   }
 
   bool _hasDisplayOnlyProperties(PropertySchema schema) {
-    return schema.properties?.values.any((p) => p.displayOnly == true) ??
-        false;
+    return schema.properties?.values.any((p) => p.displayOnly == true) ?? false;
   }
 
   Widget _buildDisplayOnlyCard(BuildContext context, PropertySchema schema) {
     final displayOnlyEntries = schema.properties!.entries
         .where((entry) => entry.value.displayOnly == true)
         .toList()
-      ..sort(
-          (a, b) => (a.value.order ?? 0).compareTo(b.value.order ?? 0));
+      ..sort((a, b) => (a.value.order ?? 0).compareTo(b.value.order ?? 0));
 
     // Build resolve context from navigation params and form defaults
     final resolveContext = <String, dynamic>{
@@ -1324,8 +1324,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       if (rawValue != null && rawValue.toString().trim().isNotEmpty) {
         final valueStr = rawValue.toString();
         if (valueStr.contains('{{') && valueStr.contains('}}')) {
-          final templateMatch =
-              RegExp(r'\{\{([^}]+)\}\}').firstMatch(valueStr);
+          final templateMatch = RegExp(r'\{\{([^}]+)\}\}').firstMatch(valueStr);
           if (templateMatch != null) {
             final path = templateMatch.group(1)!.trim();
             final parts = path.split('.');
@@ -1379,12 +1378,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           heading: schema.label != null
               ? localizations.translate(schema.label!)
               : null,
-          headingStyle: Theme.of(context)
-              .digitTextTheme(context)
-              .headingXl
-              .copyWith(
-                color: Theme.of(context).colorTheme.primary.primary2,
-              ),
+          headingStyle:
+              Theme.of(context).digitTextTheme(context).headingXl.copyWith(
+                    color: Theme.of(context).colorTheme.primary.primary2,
+                  ),
           items: items,
         ),
       ],
