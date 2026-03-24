@@ -755,8 +755,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               model: DownloadBeneficiary(
                 title: localizations.translate(
                   initialServerCount > 0
-                      ? i18.beneficiaryDetails.dataFound
-                      : i18.beneficiaryDetails.noDataFound,
+                      ? i18.common.stockDataFound
+                      : i18.common.stockNoDataFound,
                 ),
                 projectId: context.projectId,
                 boundary:
@@ -765,19 +765,19 @@ class _HomePageState extends LocalizedState<HomePage> {
                 totalCount: initialServerCount,
                 content: localizations.translate(
                   initialServerCount > 0
-                      ? i18.beneficiaryDetails.dataFoundContent
-                      : i18.beneficiaryDetails.noDataFoundContent,
+                      ? i18.common.stockDataFoundContent
+                      : i18.common.stockNoDataFoundContent,
                 ),
                 primaryButtonLabel: localizations.translate(
                   initialServerCount > 0
                       ? i18.common.coreCommonDownload
-                      : i18.common.coreCommonGoback,
+                      : i18.acknowledgementSuccess.goToHome,
                 ),
-                secondaryButtonLabel: localizations.translate(
-                  initialServerCount > 0
-                      ? i18.beneficiaryDetails.proceedWithoutDownloading
-                      : i18.common.coreCommonGoback,
-                ),
+                secondaryButtonLabel: initialServerCount > 0
+                    ? localizations.translate(
+                        i18.common.coreCommonGoback,
+                      )
+                    : null,
                 boundaryName:
                     context.selectedProject.address?.boundary ?? '',
               ),
