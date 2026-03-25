@@ -271,7 +271,9 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
     final isFromField = widget.formKey == 'facilityFromWhich';
 
     // For return flow, prefill facilityFromWhich with logged-in user UUID
-    if (isReturnFlow && isFromField && !_initialized) {
+    // only for distributors (least level) who don't have a facility assigned
+    final isLeastLevel = showDeliveryTeamOption;
+    if (isReturnFlow && isFromField && isLeastLevel && !_initialized) {
       final userUuid = context.loggedInUserUuid;
       selectedFacilityId = userUuid;
       _initialized = true;
@@ -320,9 +322,14 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
     // Add actual facilities
     facilities.addAll(filteredFacilities.map((e) {
       final model = e as ProjectFacilityModel;
+      final facilityId = model.facilityId;
+      // Don't prepend FAC_ for UUIDs (distributor's own ID)
+      final isUuid = facilityId.contains('-') && !facilityId.startsWith('F-');
       return DropdownItem(
-        code: model.facilityId,
-        name: widget.localizations.translate('FAC_${model.facilityId}'),
+        code: facilityId,
+        name: isUuid
+            ? facilityId
+            : widget.localizations.translate('FAC_$facilityId'),
       );
     }).toList());
 
@@ -363,8 +370,11 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
                         code: selectedFacilityId!,
                         name: selectedFacilityId == 'Delivery Team'
                             ? 'Delivery Team'
-                            : widget.localizations
-                                .translate('FAC_$selectedFacilityId'),
+                            : (selectedFacilityId!.contains('-') &&
+                                    !selectedFacilityId!.startsWith('F-'))
+                                ? selectedFacilityId!
+                                : widget.localizations
+                                    .translate('FAC_$selectedFacilityId'),
                       )
                     : const DropdownItem(name: '', code: ''),
                 onSelect: (value) {
