@@ -324,6 +324,7 @@ class TransformerExecutor extends ActionExecutor {
             .where((e) =>
                 createdPvIds.contains(e.toMap()['productVariantId']?.toString()))
             .toList();
+        debugPrint('TRANSFORMER: existingModels total=${existingModels.length}, createdPvIds=$createdPvIds, filtered=${filtered.length}');
         contextData['existingModels'] =
             filtered.isNotEmpty ? filtered : existingModels;
       } else {

@@ -172,6 +172,43 @@ class UpdateExecutor extends ActionExecutor {
       return contextData;
     }
 
+    // Filter entities by field match if specified
+    // e.g., "matchField": {"entityField": "productVariantId", "contextKey": "navigation.productVariantId"}
+    final matchField = action.properties['matchField'] as Map<String, dynamic>?;
+    if (matchField != null) {
+      final entityField = matchField['entityField'] as String?;
+      final contextKey = matchField['contextKey'] as String?;
+
+      if (entityField != null && contextKey != null) {
+        // Resolve value from contextData using dot-notation path
+        dynamic matchValue = contextData;
+        for (final part in contextKey.split('.')) {
+          if (matchValue is Map) {
+            matchValue = matchValue[part];
+          } else {
+            matchValue = null;
+            break;
+          }
+        }
+
+        if (matchValue != null) {
+          final matchStr = matchValue.toString();
+          entityList = entityList.where((e) {
+            final entityMap = e.toMap();
+            return entityMap[entityField]?.toString() == matchStr;
+          }).toList();
+
+          debugPrint(
+              'UPDATE_EVENT: matchField filter on $entityField=$matchStr, remaining: ${entityList.length}');
+        }
+      }
+    }
+
+    if (entityList.isEmpty) {
+      debugPrint('UPDATE_EVENT: No entities after matchField filtering');
+      return contextData;
+    }
+
     // Parse modify array: [{"key": "EntityType.fieldName", "value": "..."}]
     // Also supports deeper paths for additionalFields:
     //   "EntityType.additionalFields.fields.fieldKey" adds/updates a field in additionalFields

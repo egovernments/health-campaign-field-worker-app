@@ -1264,6 +1264,10 @@ final dynamic sampleInventoryFlows = {
                     {
                       "key": "selectedStock",
                       "value": "{{navigation.mrnNumber}}"
+                    },
+                    {
+                      "key": "clientReferenceId",
+                      "value": "{{navigation.clientReferenceId}}"
                     }
                   ]
                 }
@@ -1461,7 +1465,11 @@ final dynamic sampleInventoryFlows = {
                       "navigationMode": "popUntilAndPush",
                       "popUntilPageName": "manageStock",
                       "data": [
-                        {"key": "selectedStock", "value": "{{item.groupKey}}"}
+                        {"key": "selectedStock", "value": "{{item.groupKey}}"},
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{item.items[0].clientReferenceId}}"
+                        }
                       ]
                     }
                   }
@@ -1500,7 +1508,14 @@ final dynamic sampleInventoryFlows = {
               {
                 "key": "additionalFields",
                 "value": "{{navigation.selectedStock}}",
-                "operation": "contains"
+                "operation": "contains",
+                "applyIf": "{{fn:isNotEmpty(navigation.selectedStock)}}==true"
+              },
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.clientReferenceId}}",
+                "operation": "equals",
+                "applyIf": "{{fn:isEmpty(navigation.selectedStock)}}==true"
               }
             ]
           }
@@ -1620,8 +1635,8 @@ final dynamic sampleInventoryFlows = {
               },
               {
                 "key": "additionalFields",
-                "value": "\"key\":\"status\"",
-                "operation": "notContains"
+                "value": "IN_TRANSIT",
+                "operation": "contains"
               },
             ]
           }
@@ -1770,14 +1785,6 @@ final dynamic sampleInventoryFlows = {
                 },
                 "onAction": [
                   {
-                    "actionType": "REVERSE_TRANSFORM",
-                    "properties": {
-                      "configName": "stock",
-                      "entityTypes": ["StockModel"],
-                      "sourceData": "item.items"
-                    }
-                  },
-                  {
                     "actionType": "NAVIGATION",
                     "properties": {
                       "type": "FORM",
@@ -1787,7 +1794,11 @@ final dynamic sampleInventoryFlows = {
                         {"key": "transactionType", "value": "RECEIVED"},
                         {"key": "primaryRole", "value": "RECEIVER"},
                         {"key": "secondaryRole", "value": "SENDER"},
-                        {"key": "mrnNumber", "value": "{{item.groupKey}}"},
+                        {
+                          "key": "mrnNumber",
+                          "value":
+                              "{{item.items[0].additionalFields.fields.mrnNumber}}"
+                        },
                         {"key": "isEdit", "value": "true"},
                         {"key": "prefillFromScan", "value": "true"},
                         {
@@ -1810,6 +1821,10 @@ final dynamic sampleInventoryFlows = {
                           "key": "sku",
                           "value":
                               "{{item.items[0].additionalFields.fields.sku}}"
+                        },
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{item.items[0].clientReferenceId}}"
                         }
                       ]
                     }
@@ -1858,7 +1873,8 @@ final dynamic sampleInventoryFlows = {
                 "value": "{{navigation.productVariantId}}"
               },
               {"key": "userFacilityId", "value": "{{fn:getUserFacilityId()}}"},
-              {"key": "sku", "value": "{{navigation.sku}}"}
+              {"key": "sku", "value": "{{navigation.sku}}"},
+              {"key": "quantity", "value": "{{navigation.quantity}}"}
             ],
             "onError": [
               {
@@ -1888,7 +1904,7 @@ final dynamic sampleInventoryFlows = {
             "modify": [
               {
                 "key": "StockModel.additionalFields.fields.status",
-                "value": "accepted"
+                "value": "ACCEPTED"
               }
             ]
           }
@@ -1929,7 +1945,7 @@ final dynamic sampleInventoryFlows = {
             "configName": "stockReject",
             "forceCreate": true,
             "data": [
-              {"key": "stockEntryType", "value": "REJECTED"},
+              {"key": "stockEntryType", "value": "RETURNED"},
               {"key": "transactionType", "value": "DISPATCHED"},
               {"key": "primaryRole", "value": "SENDER"},
               {"key": "secondaryRole", "value": "RECEIVER"},
@@ -1947,7 +1963,8 @@ final dynamic sampleInventoryFlows = {
                 "value": "{{navigation.productVariantId}}"
               },
               {"key": "userFacilityId", "value": "{{fn:getUserFacilityId()}}"},
-              {"key": "sku", "value": "{{navigation.sku}}"}
+              {"key": "sku", "value": "{{navigation.sku}}"},
+              {"key": "quantity", "value": "{{navigation.quantity}}"}
             ],
             "onError": [
               {
@@ -1977,7 +1994,7 @@ final dynamic sampleInventoryFlows = {
             "modify": [
               {
                 "key": "StockModel.additionalFields.fields.status",
-                "value": "rejected"
+                "value": "REJECTED"
               }
             ]
           }
@@ -2008,9 +2025,9 @@ final dynamic sampleInventoryFlows = {
             "awaitResults": true,
             "data": [
               {
-                "key": "additionalFields",
-                "value": "{{navigation.mrnNumber}}",
-                "operation": "contains"
+                "key": "clientReferenceId",
+                "value": "{{navigation.clientReferenceId}}",
+                "operation": "equals"
               }
             ]
           }

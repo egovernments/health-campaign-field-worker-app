@@ -661,7 +661,8 @@ final jsonConfig = {
             "mrnNumber": "__context:mrnNumber",
             "stockEntryType": "__context:stockEntryType",
             "primaryRole": "__context:primaryRole",
-            "secondaryRole": "__context:secondaryRole"
+            "secondaryRole": "__context:secondaryRole",
+            "status": "__switch:__context:stockEntryType:{ISSUED:__value:IN_TRANSIT}"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -681,13 +682,51 @@ final jsonConfig = {
           "productVariantId": "__context:productVariantId",
           "referenceId": "__context:projectId",
           "referenceIdType": "__value:PROJECT",
-          "quantity": "stockReceiptDetails.quantity",
+          "quantity": "__context:quantity",
           "waybillNumber": "stockReceiptDetails.wayBillNumber",
           "transactionType": "__context:transactionType",
           "transactionReason": "__value:RECEIVED",
           "senderId": "__context:senderFacilityId",
           "senderType": "__value:WAREHOUSE",
           "receiverId": "__context:userFacilityId",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "sku": "__context:sku",
+            "batchNumber": "stockReceiptDetails.batchNumber",
+            "expiryDate": "stockReceiptDetails.expiryDate",
+            "comments": "stockReceiptDetails.comment",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "primaryRole": "__context:primaryRole",
+            "secondaryRole": "__context:secondaryRole"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "__value:DATETIME.NOW"
+        }
+      },
+    }
+  },
+  "stockReject": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "__context:userFacilityId",
+          "productVariantId": "__context:productVariantId",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "__context:quantity",
+          "waybillNumber": "stockReceiptDetails.wayBillNumber",
+          "transactionType": "__value:DISPATCHED",
+          "transactionReason": "__value:null",
+          "senderId": "__context:senderFacilityId",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "__context:receiverFacilityId",
           "receiverType": "__value:WAREHOUSE",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
