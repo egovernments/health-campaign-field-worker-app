@@ -137,9 +137,23 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
       ...?widget.navigationParams,
     };
 
+    // Get entities from registry state (from initActions SEARCH_EVENT)
+    final registryState = FlowCrudStateRegistry().get(_compositeKey);
+    List<dynamic> entities = [];
+    final base = registryState?.base;
+    if (base is CrudStateLoaded) {
+      for (final entityList in base.results.values) {
+        entities.addAll(entityList);
+      }
+    }
+    if (entities.isEmpty) {
+      entities = registryState?.stateWrapper ?? [];
+    }
+
     Map<String, dynamic> contextData = {
       'formData': formData,
       'navigation': mergedNavParams,
+      if (entities.isNotEmpty) 'entities': entities,
     };
 
     if (onSubmit != null) {
@@ -221,10 +235,14 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
             entities = registryState?.stateWrapper ?? [];
           }
 
+          // Get form data from registry
+          final formData = registryState?.formData ?? {};
+
           ActionHandler.executeActions(
             secondaryActions,
             context,
             {
+              'formData': formData,
               'navigation': navParams,
               'entities': entities,
             },

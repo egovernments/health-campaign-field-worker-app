@@ -52,8 +52,7 @@ class StockLocalRepository
             rowVersion: e.rowVersion,
             auditDetails: createdTime == null || createdBy == null
                 ? null
-                : AuditDetails(
-                    createdTime: createdTime, createdBy: createdBy),
+                : AuditDetails(createdTime: createdTime, createdBy: createdBy),
             clientAuditDetails: createdTime == null || createdBy == null
                 ? null
                 : ClientAuditDetails(

@@ -152,21 +152,19 @@ class StockDownSyncBloc
           ? null
           : existingDownSyncData.first.lastSyncedTime;
 
-      int offset = existingDownSyncData.isEmpty
-          ? 0
-          : existingDownSyncData.first.offset ?? 0;
-
+      // Always start from offset 0 for total count check since
+      // lastChangedSince already scopes the query to new/modified records
       final totalCount =
           await (stockRemoteRepository as StockRemoteRepository).fetchTotalCount(
         stockSearchModel,
-        offSet: offset,
+        offSet: 0,
         lastChangedSince: lastSyncedTime,
       );
 
       emit(StockDownSyncState.dataFound(
         totalCount,
         event.batchSize,
-        offset,
+        0,
         lastSyncedTime,
       ));
     } catch (e) {
@@ -202,12 +200,13 @@ class StockDownSyncBloc
           locality: localityKey,
         ));
 
-        int offset = existingDownSyncData.isEmpty
-            ? 0
-            : existingDownSyncData.first.offset ?? 0;
         int? lastSyncedTime = existingDownSyncData.isEmpty
             ? null
             : existingDownSyncData.first.lastSyncedTime;
+
+        // Always start from offset 0 for each sync cycle since
+        // lastChangedSince already scopes to new/modified records
+        int offset = 0;
 
         // Create initial downsync record if not exists
         if (existingDownSyncData.isEmpty) {

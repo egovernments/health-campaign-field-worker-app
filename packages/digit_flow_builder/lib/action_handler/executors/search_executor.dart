@@ -242,6 +242,8 @@ class SearchExecutor extends ActionExecutor {
             : resolvedFilters);
 
     // Convert accumulated filters to SearchFilter objects
+    // Default root: use search name (e.g., "stock") which matches the primary table
+    final defaultRoot = searchName;
     final filters = <SearchFilter>[];
     for (final filterMap in accumulatedFilters) {
       if (filterMap is! Map) continue;
@@ -258,7 +260,7 @@ class SearchExecutor extends ActionExecutor {
       }
 
       filters.add(SearchFilter(
-        root: filterMap['root']?.toString() ?? '',
+        root: filterMap['root']?.toString() ?? defaultRoot,
         field: filterMap['key']?.toString() ?? '',
         operator: filterMap['operation']?.toString() ?? 'equals',
         value: filterMap['value'],
