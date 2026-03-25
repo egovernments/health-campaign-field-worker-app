@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -8,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
+import '../../models/downsync/downsync.dart';
 import '../../models/entities/roles_type.dart';
 import '../../models/entities/transaction_type.dart';
 import '../../utils/background_service.dart';
@@ -35,6 +37,9 @@ class StockDownSyncBloc
 
   final BandwidthCheckRepository bandwidthCheckRepository;
 
+  final LocalRepository<DownsyncModel, DownsyncSearchModel>
+      downSyncLocalRepository;
+
   StockDownSyncBloc({
     required this.localSecureStore,
     required this.projectFacilityLocalRepository,
@@ -43,6 +48,7 @@ class StockDownSyncBloc
     required this.stockLocalRepository,
     required this.projectResourceLocalRepository,
     required this.bandwidthCheckRepository,
+    required this.downSyncLocalRepository,
   }) : super(const StockDownSyncState._()) {
     on(_handleGetBatchSize);
     on(_handleCheckTotalCount);
@@ -121,6 +127,8 @@ class StockDownSyncBloc
     }
   }
 
+  String _getLocalityKey(String projectId) => 'stock_$projectId';
+
   FutureOr<void> _handleCheckTotalCount(
     StockDownSyncCheckTotalCountEvent event,
     StockDownSyncEmitter emit,
@@ -130,22 +138,36 @@ class StockDownSyncBloc
       final stockSearchModel = await _buildStockSearchModel(event.projectId);
 
       if (stockSearchModel == null) {
-        emit(const StockDownSyncState.dataFound(0, 0));
+        emit(const StockDownSyncState.dataFound(0, 0, 0, null));
         return;
       }
 
-      // Use remote repository search to fetch all records and get count
-      // TODO: Optimize later with limit=0 direct API call for count only
-      final results = await stockRemoteRepository.search(
-        stockSearchModel,
-        lastChangedSince: event.lastChangedSince,
-      );
+      // Check existing downsync data for stock
+      final existingDownSyncData =
+          await downSyncLocalRepository.search(DownsyncSearchModel(
+        locality: _getLocalityKey(event.projectId),
+      ));
 
-      final totalCount = results.length;
+      int? lastSyncedTime = existingDownSyncData.isEmpty
+          ? null
+          : existingDownSyncData.first.lastSyncedTime;
+
+      int offset = existingDownSyncData.isEmpty
+          ? 0
+          : existingDownSyncData.first.offset ?? 0;
+
+      final totalCount =
+          await (stockRemoteRepository as StockRemoteRepository).fetchTotalCount(
+        stockSearchModel,
+        offSet: offset,
+        lastChangedSince: lastSyncedTime,
+      );
 
       emit(StockDownSyncState.dataFound(
         totalCount,
         event.batchSize,
+        offset,
+        lastSyncedTime,
       ));
     } catch (e) {
       emit(const StockDownSyncState.resetState());
@@ -172,22 +194,66 @@ class StockDownSyncBloc
           return;
         }
 
-        int totalCount = event.initialServerCount;
+        final localityKey = _getLocalityKey(event.projectId);
 
-        emit(StockDownSyncState.inProgress(0, totalCount));
+        // Check existing downsync data for stock
+        final existingDownSyncData =
+            await downSyncLocalRepository.search(DownsyncSearchModel(
+          locality: localityKey,
+        ));
 
-        // Use remote repository to fetch all stock entries
-        final stockEntries = await stockRemoteRepository.search(
-          stockSearchModel,
-          lastChangedSince: event.lastChangedSince,
-        );
+        int offset = existingDownSyncData.isEmpty
+            ? 0
+            : existingDownSyncData.first.offset ?? 0;
+        int? lastSyncedTime = existingDownSyncData.isEmpty
+            ? null
+            : existingDownSyncData.first.lastSyncedTime;
 
-        if (stockEntries.isNotEmpty) {
-          await stockLocalRepository.bulkCreate(stockEntries);
+        // Create initial downsync record if not exists
+        if (existingDownSyncData.isEmpty) {
+          await downSyncLocalRepository.create(DownsyncModel(
+            offset: offset,
+            limit: event.batchSize,
+            lastSyncedTime: lastSyncedTime,
+            totalCount: 0,
+            locality: localityKey,
+          ));
         }
 
-        emit(StockDownSyncState.inProgress(stockEntries.length, totalCount));
-        emit(StockDownSyncState.success(stockEntries.length, totalCount));
+        int totalCount = event.initialServerCount;
+        int syncedCount = 0;
+
+        emit(StockDownSyncState.inProgress(syncedCount, totalCount));
+
+        // Fetch stock entries in batches to allow progress updates
+        while (syncedCount < totalCount) {
+          final stockEntries = await stockRemoteRepository.search(
+            stockSearchModel,
+            offSet: offset,
+            limit: event.batchSize,
+            lastChangedSince: lastSyncedTime,
+          );
+
+          if (stockEntries.isEmpty) break;
+
+          await stockLocalRepository.bulkCreate(stockEntries);
+
+          offset += stockEntries.length;
+          syncedCount += stockEntries.length;
+
+          // Update downsync record after each batch
+          await downSyncLocalRepository.update(DownsyncModel(
+            offset: offset,
+            limit: event.batchSize,
+            lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
+            totalCount: totalCount,
+            locality: localityKey,
+          ));
+
+          emit(StockDownSyncState.inProgress(syncedCount, totalCount));
+        }
+
+        emit(StockDownSyncState.success(syncedCount, totalCount));
       } catch (e) {
         emit(const StockDownSyncState.failed());
       }
@@ -205,14 +271,12 @@ class StockDownSyncEvent with _$StockDownSyncEvent {
   const factory StockDownSyncEvent.checkTotalCount({
     required String projectId,
     required int batchSize,
-    int? lastChangedSince,
   }) = StockDownSyncCheckTotalCountEvent;
 
   const factory StockDownSyncEvent.downloadStock({
     required String projectId,
     required int batchSize,
     required int initialServerCount,
-    int? lastChangedSince,
   }) = StockDownSyncDownloadEvent;
 
   const factory StockDownSyncEvent.resetState() = StockDownSyncResetStateEvent;
@@ -233,6 +297,8 @@ class StockDownSyncState with _$StockDownSyncState {
   const factory StockDownSyncState.dataFound(
     int initialServerCount,
     int batchSize,
+    int offset,
+    int? lastSyncedTime,
   ) = _StockDownSyncDataFoundState;
 
   const factory StockDownSyncState.inProgress(

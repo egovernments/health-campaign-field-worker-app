@@ -21,11 +21,9 @@ mixin _$StockDownSyncEvent {
     required TResult Function(
             List<AppConfiguration> appConfiguration, String projectId)
         getBatchSize,
+    required TResult Function(String projectId, int batchSize) checkTotalCount,
     required TResult Function(
-            String projectId, int batchSize, int? lastChangedSince)
-        checkTotalCount,
-    required TResult Function(String projectId, int batchSize,
-            int initialServerCount, int? lastChangedSince)
+            String projectId, int batchSize, int initialServerCount)
         downloadStock,
     required TResult Function() resetState,
   }) =>
@@ -35,10 +33,8 @@ mixin _$StockDownSyncEvent {
     TResult? Function(
             List<AppConfiguration> appConfiguration, String projectId)?
         getBatchSize,
-    TResult? Function(String projectId, int batchSize, int? lastChangedSince)?
-        checkTotalCount,
-    TResult? Function(String projectId, int batchSize, int initialServerCount,
-            int? lastChangedSince)?
+    TResult? Function(String projectId, int batchSize)? checkTotalCount,
+    TResult? Function(String projectId, int batchSize, int initialServerCount)?
         downloadStock,
     TResult? Function()? resetState,
   }) =>
@@ -47,10 +43,8 @@ mixin _$StockDownSyncEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<AppConfiguration> appConfiguration, String projectId)?
         getBatchSize,
-    TResult Function(String projectId, int batchSize, int? lastChangedSince)?
-        checkTotalCount,
-    TResult Function(String projectId, int batchSize, int initialServerCount,
-            int? lastChangedSince)?
+    TResult Function(String projectId, int batchSize)? checkTotalCount,
+    TResult Function(String projectId, int batchSize, int initialServerCount)?
         downloadStock,
     TResult Function()? resetState,
     required TResult orElse(),
@@ -197,11 +191,9 @@ class _$StockDownSyncGetBatchSizeEventImpl
     required TResult Function(
             List<AppConfiguration> appConfiguration, String projectId)
         getBatchSize,
+    required TResult Function(String projectId, int batchSize) checkTotalCount,
     required TResult Function(
-            String projectId, int batchSize, int? lastChangedSince)
-        checkTotalCount,
-    required TResult Function(String projectId, int batchSize,
-            int initialServerCount, int? lastChangedSince)
+            String projectId, int batchSize, int initialServerCount)
         downloadStock,
     required TResult Function() resetState,
   }) {
@@ -214,10 +206,8 @@ class _$StockDownSyncGetBatchSizeEventImpl
     TResult? Function(
             List<AppConfiguration> appConfiguration, String projectId)?
         getBatchSize,
-    TResult? Function(String projectId, int batchSize, int? lastChangedSince)?
-        checkTotalCount,
-    TResult? Function(String projectId, int batchSize, int initialServerCount,
-            int? lastChangedSince)?
+    TResult? Function(String projectId, int batchSize)? checkTotalCount,
+    TResult? Function(String projectId, int batchSize, int initialServerCount)?
         downloadStock,
     TResult? Function()? resetState,
   }) {
@@ -229,10 +219,8 @@ class _$StockDownSyncGetBatchSizeEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<AppConfiguration> appConfiguration, String projectId)?
         getBatchSize,
-    TResult Function(String projectId, int batchSize, int? lastChangedSince)?
-        checkTotalCount,
-    TResult Function(String projectId, int batchSize, int initialServerCount,
-            int? lastChangedSince)?
+    TResult Function(String projectId, int batchSize)? checkTotalCount,
+    TResult Function(String projectId, int batchSize, int initialServerCount)?
         downloadStock,
     TResult Function()? resetState,
     required TResult orElse(),
@@ -303,7 +291,7 @@ abstract class _$$StockDownSyncCheckTotalCountEventImplCopyWith<$Res> {
           $Res Function(_$StockDownSyncCheckTotalCountEventImpl) then) =
       __$$StockDownSyncCheckTotalCountEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String projectId, int batchSize, int? lastChangedSince});
+  $Res call({String projectId, int batchSize});
 }
 
 /// @nodoc
@@ -321,7 +309,6 @@ class __$$StockDownSyncCheckTotalCountEventImplCopyWithImpl<$Res>
   $Res call({
     Object? projectId = null,
     Object? batchSize = null,
-    Object? lastChangedSince = freezed,
   }) {
     return _then(_$StockDownSyncCheckTotalCountEventImpl(
       projectId: null == projectId
@@ -332,10 +319,6 @@ class __$$StockDownSyncCheckTotalCountEventImplCopyWithImpl<$Res>
           ? _value.batchSize
           : batchSize // ignore: cast_nullable_to_non_nullable
               as int,
-      lastChangedSince: freezed == lastChangedSince
-          ? _value.lastChangedSince
-          : lastChangedSince // ignore: cast_nullable_to_non_nullable
-              as int?,
     ));
   }
 }
@@ -345,20 +328,16 @@ class __$$StockDownSyncCheckTotalCountEventImplCopyWithImpl<$Res>
 class _$StockDownSyncCheckTotalCountEventImpl
     implements StockDownSyncCheckTotalCountEvent {
   const _$StockDownSyncCheckTotalCountEventImpl(
-      {required this.projectId,
-      required this.batchSize,
-      this.lastChangedSince});
+      {required this.projectId, required this.batchSize});
 
   @override
   final String projectId;
   @override
   final int batchSize;
-  @override
-  final int? lastChangedSince;
 
   @override
   String toString() {
-    return 'StockDownSyncEvent.checkTotalCount(projectId: $projectId, batchSize: $batchSize, lastChangedSince: $lastChangedSince)';
+    return 'StockDownSyncEvent.checkTotalCount(projectId: $projectId, batchSize: $batchSize)';
   }
 
   @override
@@ -369,14 +348,11 @@ class _$StockDownSyncCheckTotalCountEventImpl
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.batchSize, batchSize) ||
-                other.batchSize == batchSize) &&
-            (identical(other.lastChangedSince, lastChangedSince) ||
-                other.lastChangedSince == lastChangedSince));
+                other.batchSize == batchSize));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, projectId, batchSize, lastChangedSince);
+  int get hashCode => Object.hash(runtimeType, projectId, batchSize);
 
   @JsonKey(ignore: true)
   @override
@@ -392,15 +368,13 @@ class _$StockDownSyncCheckTotalCountEventImpl
     required TResult Function(
             List<AppConfiguration> appConfiguration, String projectId)
         getBatchSize,
+    required TResult Function(String projectId, int batchSize) checkTotalCount,
     required TResult Function(
-            String projectId, int batchSize, int? lastChangedSince)
-        checkTotalCount,
-    required TResult Function(String projectId, int batchSize,
-            int initialServerCount, int? lastChangedSince)
+            String projectId, int batchSize, int initialServerCount)
         downloadStock,
     required TResult Function() resetState,
   }) {
-    return checkTotalCount(projectId, batchSize, lastChangedSince);
+    return checkTotalCount(projectId, batchSize);
   }
 
   @override
@@ -409,14 +383,12 @@ class _$StockDownSyncCheckTotalCountEventImpl
     TResult? Function(
             List<AppConfiguration> appConfiguration, String projectId)?
         getBatchSize,
-    TResult? Function(String projectId, int batchSize, int? lastChangedSince)?
-        checkTotalCount,
-    TResult? Function(String projectId, int batchSize, int initialServerCount,
-            int? lastChangedSince)?
+    TResult? Function(String projectId, int batchSize)? checkTotalCount,
+    TResult? Function(String projectId, int batchSize, int initialServerCount)?
         downloadStock,
     TResult? Function()? resetState,
   }) {
-    return checkTotalCount?.call(projectId, batchSize, lastChangedSince);
+    return checkTotalCount?.call(projectId, batchSize);
   }
 
   @override
@@ -424,16 +396,14 @@ class _$StockDownSyncCheckTotalCountEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<AppConfiguration> appConfiguration, String projectId)?
         getBatchSize,
-    TResult Function(String projectId, int batchSize, int? lastChangedSince)?
-        checkTotalCount,
-    TResult Function(String projectId, int batchSize, int initialServerCount,
-            int? lastChangedSince)?
+    TResult Function(String projectId, int batchSize)? checkTotalCount,
+    TResult Function(String projectId, int batchSize, int initialServerCount)?
         downloadStock,
     TResult Function()? resetState,
     required TResult orElse(),
   }) {
     if (checkTotalCount != null) {
-      return checkTotalCount(projectId, batchSize, lastChangedSince);
+      return checkTotalCount(projectId, batchSize);
     }
     return orElse();
   }
@@ -481,12 +451,10 @@ class _$StockDownSyncCheckTotalCountEventImpl
 abstract class StockDownSyncCheckTotalCountEvent implements StockDownSyncEvent {
   const factory StockDownSyncCheckTotalCountEvent(
       {required final String projectId,
-      required final int batchSize,
-      final int? lastChangedSince}) = _$StockDownSyncCheckTotalCountEventImpl;
+      required final int batchSize}) = _$StockDownSyncCheckTotalCountEventImpl;
 
   String get projectId;
   int get batchSize;
-  int? get lastChangedSince;
   @JsonKey(ignore: true)
   _$$StockDownSyncCheckTotalCountEventImplCopyWith<
           _$StockDownSyncCheckTotalCountEventImpl>
@@ -500,11 +468,7 @@ abstract class _$$StockDownSyncDownloadEventImplCopyWith<$Res> {
           $Res Function(_$StockDownSyncDownloadEventImpl) then) =
       __$$StockDownSyncDownloadEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call(
-      {String projectId,
-      int batchSize,
-      int initialServerCount,
-      int? lastChangedSince});
+  $Res call({String projectId, int batchSize, int initialServerCount});
 }
 
 /// @nodoc
@@ -523,7 +487,6 @@ class __$$StockDownSyncDownloadEventImplCopyWithImpl<$Res>
     Object? projectId = null,
     Object? batchSize = null,
     Object? initialServerCount = null,
-    Object? lastChangedSince = freezed,
   }) {
     return _then(_$StockDownSyncDownloadEventImpl(
       projectId: null == projectId
@@ -538,10 +501,6 @@ class __$$StockDownSyncDownloadEventImplCopyWithImpl<$Res>
           ? _value.initialServerCount
           : initialServerCount // ignore: cast_nullable_to_non_nullable
               as int,
-      lastChangedSince: freezed == lastChangedSince
-          ? _value.lastChangedSince
-          : lastChangedSince // ignore: cast_nullable_to_non_nullable
-              as int?,
     ));
   }
 }
@@ -552,8 +511,7 @@ class _$StockDownSyncDownloadEventImpl implements StockDownSyncDownloadEvent {
   const _$StockDownSyncDownloadEventImpl(
       {required this.projectId,
       required this.batchSize,
-      required this.initialServerCount,
-      this.lastChangedSince});
+      required this.initialServerCount});
 
   @override
   final String projectId;
@@ -561,12 +519,10 @@ class _$StockDownSyncDownloadEventImpl implements StockDownSyncDownloadEvent {
   final int batchSize;
   @override
   final int initialServerCount;
-  @override
-  final int? lastChangedSince;
 
   @override
   String toString() {
-    return 'StockDownSyncEvent.downloadStock(projectId: $projectId, batchSize: $batchSize, initialServerCount: $initialServerCount, lastChangedSince: $lastChangedSince)';
+    return 'StockDownSyncEvent.downloadStock(projectId: $projectId, batchSize: $batchSize, initialServerCount: $initialServerCount)';
   }
 
   @override
@@ -579,14 +535,12 @@ class _$StockDownSyncDownloadEventImpl implements StockDownSyncDownloadEvent {
             (identical(other.batchSize, batchSize) ||
                 other.batchSize == batchSize) &&
             (identical(other.initialServerCount, initialServerCount) ||
-                other.initialServerCount == initialServerCount) &&
-            (identical(other.lastChangedSince, lastChangedSince) ||
-                other.lastChangedSince == lastChangedSince));
+                other.initialServerCount == initialServerCount));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, projectId, batchSize, initialServerCount, lastChangedSince);
+  int get hashCode =>
+      Object.hash(runtimeType, projectId, batchSize, initialServerCount);
 
   @JsonKey(ignore: true)
   @override
@@ -601,16 +555,13 @@ class _$StockDownSyncDownloadEventImpl implements StockDownSyncDownloadEvent {
     required TResult Function(
             List<AppConfiguration> appConfiguration, String projectId)
         getBatchSize,
+    required TResult Function(String projectId, int batchSize) checkTotalCount,
     required TResult Function(
-            String projectId, int batchSize, int? lastChangedSince)
-        checkTotalCount,
-    required TResult Function(String projectId, int batchSize,
-            int initialServerCount, int? lastChangedSince)
+            String projectId, int batchSize, int initialServerCount)
         downloadStock,
     required TResult Function() resetState,
   }) {
-    return downloadStock(
-        projectId, batchSize, initialServerCount, lastChangedSince);
+    return downloadStock(projectId, batchSize, initialServerCount);
   }
 
   @override
@@ -619,15 +570,12 @@ class _$StockDownSyncDownloadEventImpl implements StockDownSyncDownloadEvent {
     TResult? Function(
             List<AppConfiguration> appConfiguration, String projectId)?
         getBatchSize,
-    TResult? Function(String projectId, int batchSize, int? lastChangedSince)?
-        checkTotalCount,
-    TResult? Function(String projectId, int batchSize, int initialServerCount,
-            int? lastChangedSince)?
+    TResult? Function(String projectId, int batchSize)? checkTotalCount,
+    TResult? Function(String projectId, int batchSize, int initialServerCount)?
         downloadStock,
     TResult? Function()? resetState,
   }) {
-    return downloadStock?.call(
-        projectId, batchSize, initialServerCount, lastChangedSince);
+    return downloadStock?.call(projectId, batchSize, initialServerCount);
   }
 
   @override
@@ -635,17 +583,14 @@ class _$StockDownSyncDownloadEventImpl implements StockDownSyncDownloadEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<AppConfiguration> appConfiguration, String projectId)?
         getBatchSize,
-    TResult Function(String projectId, int batchSize, int? lastChangedSince)?
-        checkTotalCount,
-    TResult Function(String projectId, int batchSize, int initialServerCount,
-            int? lastChangedSince)?
+    TResult Function(String projectId, int batchSize)? checkTotalCount,
+    TResult Function(String projectId, int batchSize, int initialServerCount)?
         downloadStock,
     TResult Function()? resetState,
     required TResult orElse(),
   }) {
     if (downloadStock != null) {
-      return downloadStock(
-          projectId, batchSize, initialServerCount, lastChangedSince);
+      return downloadStock(projectId, batchSize, initialServerCount);
     }
     return orElse();
   }
@@ -692,15 +637,14 @@ class _$StockDownSyncDownloadEventImpl implements StockDownSyncDownloadEvent {
 
 abstract class StockDownSyncDownloadEvent implements StockDownSyncEvent {
   const factory StockDownSyncDownloadEvent(
-      {required final String projectId,
-      required final int batchSize,
-      required final int initialServerCount,
-      final int? lastChangedSince}) = _$StockDownSyncDownloadEventImpl;
+          {required final String projectId,
+          required final int batchSize,
+          required final int initialServerCount}) =
+      _$StockDownSyncDownloadEventImpl;
 
   String get projectId;
   int get batchSize;
   int get initialServerCount;
-  int? get lastChangedSince;
   @JsonKey(ignore: true)
   _$$StockDownSyncDownloadEventImplCopyWith<_$StockDownSyncDownloadEventImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -752,11 +696,9 @@ class _$StockDownSyncResetStateEventImpl
     required TResult Function(
             List<AppConfiguration> appConfiguration, String projectId)
         getBatchSize,
+    required TResult Function(String projectId, int batchSize) checkTotalCount,
     required TResult Function(
-            String projectId, int batchSize, int? lastChangedSince)
-        checkTotalCount,
-    required TResult Function(String projectId, int batchSize,
-            int initialServerCount, int? lastChangedSince)
+            String projectId, int batchSize, int initialServerCount)
         downloadStock,
     required TResult Function() resetState,
   }) {
@@ -769,10 +711,8 @@ class _$StockDownSyncResetStateEventImpl
     TResult? Function(
             List<AppConfiguration> appConfiguration, String projectId)?
         getBatchSize,
-    TResult? Function(String projectId, int batchSize, int? lastChangedSince)?
-        checkTotalCount,
-    TResult? Function(String projectId, int batchSize, int initialServerCount,
-            int? lastChangedSince)?
+    TResult? Function(String projectId, int batchSize)? checkTotalCount,
+    TResult? Function(String projectId, int batchSize, int initialServerCount)?
         downloadStock,
     TResult? Function()? resetState,
   }) {
@@ -784,10 +724,8 @@ class _$StockDownSyncResetStateEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<AppConfiguration> appConfiguration, String projectId)?
         getBatchSize,
-    TResult Function(String projectId, int batchSize, int? lastChangedSince)?
-        checkTotalCount,
-    TResult Function(String projectId, int batchSize, int initialServerCount,
-            int? lastChangedSince)?
+    TResult Function(String projectId, int batchSize)? checkTotalCount,
+    TResult Function(String projectId, int batchSize, int initialServerCount)?
         downloadStock,
     TResult Function()? resetState,
     required TResult orElse(),
@@ -849,7 +787,9 @@ mixin _$StockDownSyncState {
   TResult when<TResult extends Object?>({
     required TResult Function(bool isPop) loading,
     required TResult Function(int batchSize, String projectId) getBatchSize,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)
+        dataFound,
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(int syncedCount, int totalCount) success,
     required TResult Function() failed,
@@ -862,7 +802,9 @@ mixin _$StockDownSyncState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isPop)? loading,
     TResult? Function(int batchSize, String projectId)? getBatchSize,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(int syncedCount, int totalCount)? success,
     TResult? Function()? failed,
@@ -875,7 +817,9 @@ mixin _$StockDownSyncState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isPop)? loading,
     TResult Function(int batchSize, String projectId)? getBatchSize,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(int syncedCount, int totalCount)? success,
     TResult Function()? failed,
@@ -1022,7 +966,9 @@ class _$StockDownSyncLoadingStateImpl extends _StockDownSyncLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function(bool isPop) loading,
     required TResult Function(int batchSize, String projectId) getBatchSize,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)
+        dataFound,
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(int syncedCount, int totalCount) success,
     required TResult Function() failed,
@@ -1038,7 +984,9 @@ class _$StockDownSyncLoadingStateImpl extends _StockDownSyncLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isPop)? loading,
     TResult? Function(int batchSize, String projectId)? getBatchSize,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(int syncedCount, int totalCount)? success,
     TResult? Function()? failed,
@@ -1054,7 +1002,9 @@ class _$StockDownSyncLoadingStateImpl extends _StockDownSyncLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isPop)? loading,
     TResult Function(int batchSize, String projectId)? getBatchSize,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(int syncedCount, int totalCount)? success,
     TResult Function()? failed,
@@ -1223,7 +1173,9 @@ class _$StockDownSyncGetBatchSizeStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function(bool isPop) loading,
     required TResult Function(int batchSize, String projectId) getBatchSize,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)
+        dataFound,
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(int syncedCount, int totalCount) success,
     required TResult Function() failed,
@@ -1239,7 +1191,9 @@ class _$StockDownSyncGetBatchSizeStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isPop)? loading,
     TResult? Function(int batchSize, String projectId)? getBatchSize,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(int syncedCount, int totalCount)? success,
     TResult? Function()? failed,
@@ -1255,7 +1209,9 @@ class _$StockDownSyncGetBatchSizeStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isPop)? loading,
     TResult Function(int batchSize, String projectId)? getBatchSize,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(int syncedCount, int totalCount)? success,
     TResult Function()? failed,
@@ -1351,7 +1307,8 @@ abstract class _$$StockDownSyncDataFoundStateImplCopyWith<$Res> {
           $Res Function(_$StockDownSyncDataFoundStateImpl) then) =
       __$$StockDownSyncDataFoundStateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int initialServerCount, int batchSize});
+  $Res call(
+      {int initialServerCount, int batchSize, int offset, int? lastSyncedTime});
 }
 
 /// @nodoc
@@ -1369,6 +1326,8 @@ class __$$StockDownSyncDataFoundStateImplCopyWithImpl<$Res>
   $Res call({
     Object? initialServerCount = null,
     Object? batchSize = null,
+    Object? offset = null,
+    Object? lastSyncedTime = freezed,
   }) {
     return _then(_$StockDownSyncDataFoundStateImpl(
       null == initialServerCount
@@ -1379,6 +1338,14 @@ class __$$StockDownSyncDataFoundStateImplCopyWithImpl<$Res>
           ? _value.batchSize
           : batchSize // ignore: cast_nullable_to_non_nullable
               as int,
+      null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      freezed == lastSyncedTime
+          ? _value.lastSyncedTime
+          : lastSyncedTime // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -1387,17 +1354,21 @@ class __$$StockDownSyncDataFoundStateImplCopyWithImpl<$Res>
 
 class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
   const _$StockDownSyncDataFoundStateImpl(
-      this.initialServerCount, this.batchSize)
+      this.initialServerCount, this.batchSize, this.offset, this.lastSyncedTime)
       : super._();
 
   @override
   final int initialServerCount;
   @override
   final int batchSize;
+  @override
+  final int offset;
+  @override
+  final int? lastSyncedTime;
 
   @override
   String toString() {
-    return 'StockDownSyncState.dataFound(initialServerCount: $initialServerCount, batchSize: $batchSize)';
+    return 'StockDownSyncState.dataFound(initialServerCount: $initialServerCount, batchSize: $batchSize, offset: $offset, lastSyncedTime: $lastSyncedTime)';
   }
 
   @override
@@ -1408,11 +1379,15 @@ class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
             (identical(other.initialServerCount, initialServerCount) ||
                 other.initialServerCount == initialServerCount) &&
             (identical(other.batchSize, batchSize) ||
-                other.batchSize == batchSize));
+                other.batchSize == batchSize) &&
+            (identical(other.offset, offset) || other.offset == offset) &&
+            (identical(other.lastSyncedTime, lastSyncedTime) ||
+                other.lastSyncedTime == lastSyncedTime));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, initialServerCount, batchSize);
+  int get hashCode => Object.hash(
+      runtimeType, initialServerCount, batchSize, offset, lastSyncedTime);
 
   @JsonKey(ignore: true)
   @override
@@ -1426,7 +1401,9 @@ class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
   TResult when<TResult extends Object?>({
     required TResult Function(bool isPop) loading,
     required TResult Function(int batchSize, String projectId) getBatchSize,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)
+        dataFound,
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(int syncedCount, int totalCount) success,
     required TResult Function() failed,
@@ -1434,7 +1411,7 @@ class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
     required TResult Function() totalCountCheckFailed,
     required TResult Function() resetState,
   }) {
-    return dataFound(initialServerCount, batchSize);
+    return dataFound(initialServerCount, batchSize, offset, lastSyncedTime);
   }
 
   @override
@@ -1442,7 +1419,9 @@ class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isPop)? loading,
     TResult? Function(int batchSize, String projectId)? getBatchSize,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(int syncedCount, int totalCount)? success,
     TResult? Function()? failed,
@@ -1450,7 +1429,8 @@ class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? resetState,
   }) {
-    return dataFound?.call(initialServerCount, batchSize);
+    return dataFound?.call(
+        initialServerCount, batchSize, offset, lastSyncedTime);
   }
 
   @override
@@ -1458,7 +1438,9 @@ class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isPop)? loading,
     TResult Function(int batchSize, String projectId)? getBatchSize,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(int syncedCount, int totalCount)? success,
     TResult Function()? failed,
@@ -1468,7 +1450,7 @@ class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
     required TResult orElse(),
   }) {
     if (dataFound != null) {
-      return dataFound(initialServerCount, batchSize);
+      return dataFound(initialServerCount, batchSize, offset, lastSyncedTime);
     }
     return orElse();
   }
@@ -1535,12 +1517,16 @@ class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
 
 abstract class _StockDownSyncDataFoundState extends StockDownSyncState {
   const factory _StockDownSyncDataFoundState(
-          final int initialServerCount, final int batchSize) =
-      _$StockDownSyncDataFoundStateImpl;
+      final int initialServerCount,
+      final int batchSize,
+      final int offset,
+      final int? lastSyncedTime) = _$StockDownSyncDataFoundStateImpl;
   const _StockDownSyncDataFoundState._() : super._();
 
   int get initialServerCount;
   int get batchSize;
+  int get offset;
+  int? get lastSyncedTime;
   @JsonKey(ignore: true)
   _$$StockDownSyncDataFoundStateImplCopyWith<_$StockDownSyncDataFoundStateImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -1628,7 +1614,9 @@ class _$StockDownSyncInProgressStateImpl extends _StockDownSyncInProgressState {
   TResult when<TResult extends Object?>({
     required TResult Function(bool isPop) loading,
     required TResult Function(int batchSize, String projectId) getBatchSize,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)
+        dataFound,
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(int syncedCount, int totalCount) success,
     required TResult Function() failed,
@@ -1644,7 +1632,9 @@ class _$StockDownSyncInProgressStateImpl extends _StockDownSyncInProgressState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isPop)? loading,
     TResult? Function(int batchSize, String projectId)? getBatchSize,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(int syncedCount, int totalCount)? success,
     TResult? Function()? failed,
@@ -1660,7 +1650,9 @@ class _$StockDownSyncInProgressStateImpl extends _StockDownSyncInProgressState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isPop)? loading,
     TResult Function(int batchSize, String projectId)? getBatchSize,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(int syncedCount, int totalCount)? success,
     TResult Function()? failed,
@@ -1830,7 +1822,9 @@ class _$StockDownSyncSuccessStateImpl extends _StockDownSyncSuccessState {
   TResult when<TResult extends Object?>({
     required TResult Function(bool isPop) loading,
     required TResult Function(int batchSize, String projectId) getBatchSize,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)
+        dataFound,
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(int syncedCount, int totalCount) success,
     required TResult Function() failed,
@@ -1846,7 +1840,9 @@ class _$StockDownSyncSuccessStateImpl extends _StockDownSyncSuccessState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isPop)? loading,
     TResult? Function(int batchSize, String projectId)? getBatchSize,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(int syncedCount, int totalCount)? success,
     TResult? Function()? failed,
@@ -1862,7 +1858,9 @@ class _$StockDownSyncSuccessStateImpl extends _StockDownSyncSuccessState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isPop)? loading,
     TResult Function(int batchSize, String projectId)? getBatchSize,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(int syncedCount, int totalCount)? success,
     TResult Function()? failed,
@@ -1994,7 +1992,9 @@ class _$StockDownSyncFailureStateImpl extends _StockDownSyncFailureState {
   TResult when<TResult extends Object?>({
     required TResult Function(bool isPop) loading,
     required TResult Function(int batchSize, String projectId) getBatchSize,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)
+        dataFound,
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(int syncedCount, int totalCount) success,
     required TResult Function() failed,
@@ -2010,7 +2010,9 @@ class _$StockDownSyncFailureStateImpl extends _StockDownSyncFailureState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isPop)? loading,
     TResult? Function(int batchSize, String projectId)? getBatchSize,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(int syncedCount, int totalCount)? success,
     TResult? Function()? failed,
@@ -2026,7 +2028,9 @@ class _$StockDownSyncFailureStateImpl extends _StockDownSyncFailureState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isPop)? loading,
     TResult Function(int batchSize, String projectId)? getBatchSize,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(int syncedCount, int totalCount)? success,
     TResult Function()? failed,
@@ -2151,7 +2155,9 @@ class _$StockDownSyncInsufficientStorageStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function(bool isPop) loading,
     required TResult Function(int batchSize, String projectId) getBatchSize,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)
+        dataFound,
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(int syncedCount, int totalCount) success,
     required TResult Function() failed,
@@ -2167,7 +2173,9 @@ class _$StockDownSyncInsufficientStorageStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isPop)? loading,
     TResult? Function(int batchSize, String projectId)? getBatchSize,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(int syncedCount, int totalCount)? success,
     TResult? Function()? failed,
@@ -2183,7 +2191,9 @@ class _$StockDownSyncInsufficientStorageStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isPop)? loading,
     TResult Function(int batchSize, String projectId)? getBatchSize,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(int syncedCount, int totalCount)? success,
     TResult Function()? failed,
@@ -2310,7 +2320,9 @@ class _$StockDownSyncCountCheckFailedStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function(bool isPop) loading,
     required TResult Function(int batchSize, String projectId) getBatchSize,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)
+        dataFound,
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(int syncedCount, int totalCount) success,
     required TResult Function() failed,
@@ -2326,7 +2338,9 @@ class _$StockDownSyncCountCheckFailedStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isPop)? loading,
     TResult? Function(int batchSize, String projectId)? getBatchSize,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(int syncedCount, int totalCount)? success,
     TResult? Function()? failed,
@@ -2342,7 +2356,9 @@ class _$StockDownSyncCountCheckFailedStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isPop)? loading,
     TResult Function(int batchSize, String projectId)? getBatchSize,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(int syncedCount, int totalCount)? success,
     TResult Function()? failed,
@@ -2467,7 +2483,9 @@ class _$StockDownSyncResetStateImpl extends _StockDownSyncResetState {
   TResult when<TResult extends Object?>({
     required TResult Function(bool isPop) loading,
     required TResult Function(int batchSize, String projectId) getBatchSize,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)
+        dataFound,
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(int syncedCount, int totalCount) success,
     required TResult Function() failed,
@@ -2483,7 +2501,9 @@ class _$StockDownSyncResetStateImpl extends _StockDownSyncResetState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isPop)? loading,
     TResult? Function(int batchSize, String projectId)? getBatchSize,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(int syncedCount, int totalCount)? success,
     TResult? Function()? failed,
@@ -2499,7 +2519,9 @@ class _$StockDownSyncResetStateImpl extends _StockDownSyncResetState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isPop)? loading,
     TResult Function(int batchSize, String projectId)? getBatchSize,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, int offset,
+            int? lastSyncedTime)?
+        dataFound,
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(int syncedCount, int totalCount)? success,
     TResult Function()? failed,

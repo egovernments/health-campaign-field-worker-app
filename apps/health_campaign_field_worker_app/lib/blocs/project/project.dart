@@ -428,7 +428,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final apiEndPoint = Constants.getEndPoint(
       serviceRegistry: serviceRegistry,
       service: 'NOTIFICATION',
-      action: ApiOperation.create.toValue(),
+      action: ApiOperation.register.toValue(),
       entityName: 'NotificationToken',
     );
 

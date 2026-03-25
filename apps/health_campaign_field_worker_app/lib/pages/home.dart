@@ -759,7 +759,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   ),
                 );
           },
-          dataFound: (initialServerCount, batchSize) {
+          dataFound: (initialServerCount, batchSize, offset, lastSyncedTime) {
             showStockDownloadDialog(
               context,
               model: DownloadBeneficiary(

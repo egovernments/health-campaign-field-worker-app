@@ -122,6 +122,7 @@ enum ApiOperation {
   login,
   create,
   search,
+  register,
   update,
   delete,
   bulkCreate,

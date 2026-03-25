@@ -322,6 +322,9 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                           projectResourceLocalRepository: ctx.read<
                               LocalRepository<ProjectResourceModel,
                                   ProjectResourceSearchModel>>(),
+                          downSyncLocalRepository: ctx.read<
+                              LocalRepository<DownsyncModel,
+                                  DownsyncSearchModel>>(),
                         ),
                       ),
                       BlocProvider(
