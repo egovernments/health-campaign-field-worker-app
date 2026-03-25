@@ -34,7 +34,7 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
 
     return BlocBuilder<BoundaryBloc, BoundaryState>(
       builder: (context, state) {
-        final boundaries = state.selectedLastLevelBoundaries;
+        final boundaries = state.allSelectedLastLevelBoundaries;
 
         return Scaffold(
           body: ScrollableContent(
@@ -88,12 +88,14 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  localizations.translate(
-                                    boundary.code ?? 'No Value',
-                                  ),
-                                  style: theme.digitTextTheme(context).headingM.copyWith(
-                                    color: theme.colorTheme.text.primary
+                                Expanded(
+                                  child: Text(
+                                    localizations.translate(
+                                      boundary.code ?? 'No Value',
+                                    ),
+                                    style: theme.digitTextTheme(context).headingM.copyWith(
+                                      color: theme.colorTheme.text.primary
+                                    ),
                                   ),
                                 ),
                                 Container(

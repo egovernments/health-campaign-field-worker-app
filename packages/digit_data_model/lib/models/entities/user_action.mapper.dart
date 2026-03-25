@@ -33,16 +33,16 @@ class UserActionSearchModelMapper
   static int? _$timestamp(UserActionSearchModel v) => v.timestamp;
   static const Field<UserActionSearchModel, int> _f$timestamp =
       Field('timestamp', _$timestamp);
+  static String? _$action(UserActionSearchModel v) => v.action;
+  static const Field<UserActionSearchModel, String> _f$action =
+      Field('action', _$action);
+  static String? _$projectId(UserActionSearchModel v) => v.projectId;
+  static const Field<UserActionSearchModel, String> _f$projectId =
+      Field('projectId', _$projectId);
   static List<String>? _$clientReferenceId(UserActionSearchModel v) =>
       v.clientReferenceId;
   static const Field<UserActionSearchModel, List<String>> _f$clientReferenceId =
       Field('clientReferenceId', _$clientReferenceId);
-  static String? _$projectId(UserActionSearchModel v) => v.projectId;
-  static const Field<UserActionSearchModel, String> _f$projectId =
-      Field('projectId', _$projectId);
-  static String? _$action(UserActionSearchModel v) => v.action;
-  static const Field<UserActionSearchModel, String> _f$action =
-      Field('action', _$action);
   static String? _$boundaryCode(UserActionSearchModel v) => v.boundaryCode;
   static const Field<UserActionSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -62,9 +62,9 @@ class UserActionSearchModelMapper
     #longitude: _f$longitude,
     #isSync: _f$isSync,
     #timestamp: _f$timestamp,
-    #clientReferenceId: _f$clientReferenceId,
-    #projectId: _f$projectId,
     #action: _f$action,
+    #projectId: _f$projectId,
+    #clientReferenceId: _f$clientReferenceId,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -86,9 +86,9 @@ class UserActionSearchModelMapper
         longitude: data.dec(_f$longitude),
         isSync: data.dec(_f$isSync),
         timestamp: data.dec(_f$timestamp),
-        clientReferenceId: data.dec(_f$clientReferenceId),
-        projectId: data.dec(_f$projectId),
         action: data.dec(_f$action),
+        projectId: data.dec(_f$projectId),
+        clientReferenceId: data.dec(_f$clientReferenceId),
         boundaryCode: data.dec(_f$boundaryCode),
         auditDetails: data.dec(_f$auditDetails));
   }
@@ -160,9 +160,9 @@ abstract class UserActionSearchModelCopyWith<
       double? longitude,
       bool? isSync,
       int? timestamp,
-      List<String>? clientReferenceId,
-      String? projectId,
       String? action,
+      String? projectId,
+      List<String>? clientReferenceId,
       String? boundaryCode,
       AuditDetails? auditDetails});
   UserActionSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -194,9 +194,9 @@ class _UserActionSearchModelCopyWithImpl<$R, $Out>
           Object? longitude = $none,
           Object? isSync = $none,
           Object? timestamp = $none,
-          Object? clientReferenceId = $none,
-          Object? projectId = $none,
           Object? action = $none,
+          Object? projectId = $none,
+          Object? clientReferenceId = $none,
           Object? boundaryCode = $none,
           Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
@@ -204,9 +204,9 @@ class _UserActionSearchModelCopyWithImpl<$R, $Out>
         if (longitude != $none) #longitude: longitude,
         if (isSync != $none) #isSync: isSync,
         if (timestamp != $none) #timestamp: timestamp,
-        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
-        if (projectId != $none) #projectId: projectId,
         if (action != $none) #action: action,
+        if (projectId != $none) #projectId: projectId,
+        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (boundaryCode != $none) #boundaryCode: boundaryCode,
         if (auditDetails != $none) #auditDetails: auditDetails
       }));
@@ -217,10 +217,10 @@ class _UserActionSearchModelCopyWithImpl<$R, $Out>
           longitude: data.get(#longitude, or: $value.longitude),
           isSync: data.get(#isSync, or: $value.isSync),
           timestamp: data.get(#timestamp, or: $value.timestamp),
+          action: data.get(#action, or: $value.action),
+          projectId: data.get(#projectId, or: $value.projectId),
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
-          projectId: data.get(#projectId, or: $value.projectId),
-          action: data.get(#action, or: $value.action),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
           auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 

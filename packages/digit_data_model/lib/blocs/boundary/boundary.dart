@@ -141,7 +141,19 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySubmitEvent event,
     BoundaryEmitter emit,
   ) async {
-    emit(state.copyWith(hasSubmitted: true));
+    // Merge current session's selections into accumulated list (deduplicate by code)
+    final existingCodes = state.selectedLastLevelBoundaries
+        .map((b) => b.code)
+        .toSet();
+    final merged = [
+      ...state.selectedLastLevelBoundaries,
+      ...state.allSelectedLastLevelBoundaries
+          .where((b) => !existingCodes.contains(b.code)),
+    ];
+    emit(state.copyWith(
+      hasSubmitted: true,
+      allSelectedLastLevelBoundaries: merged,
+    ));
   }
 }
 
@@ -178,6 +190,7 @@ class BoundaryState with _$BoundaryState {
     @Default([]) List<BoundaryModel> projectBoundaryList,
     @Default({}) Map<String, BoundaryModel?> selectedBoundaryMap,
     @Default([]) List<BoundaryModel> selectedLastLevelBoundaries,
+    @Default([]) List<BoundaryModel> allSelectedLastLevelBoundaries,
     @Default(false) bool hasSubmitted,
   }) = _BoundaryState;
 

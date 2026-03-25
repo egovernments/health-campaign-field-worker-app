@@ -1088,6 +1088,8 @@ mixin _$BoundaryState {
       throw _privateConstructorUsedError;
   List<BoundaryModel> get selectedLastLevelBoundaries =>
       throw _privateConstructorUsedError;
+  List<BoundaryModel> get allSelectedLastLevelBoundaries =>
+      throw _privateConstructorUsedError;
   bool get hasSubmitted => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -1107,6 +1109,7 @@ abstract class $BoundaryStateCopyWith<$Res> {
       List<BoundaryModel> projectBoundaryList,
       Map<String, BoundaryModel?> selectedBoundaryMap,
       List<BoundaryModel> selectedLastLevelBoundaries,
+      List<BoundaryModel> allSelectedLastLevelBoundaries,
       bool hasSubmitted});
 }
 
@@ -1128,6 +1131,7 @@ class _$BoundaryStateCopyWithImpl<$Res, $Val extends BoundaryState>
     Object? projectBoundaryList = null,
     Object? selectedBoundaryMap = null,
     Object? selectedLastLevelBoundaries = null,
+    Object? allSelectedLastLevelBoundaries = null,
     Object? hasSubmitted = null,
   }) {
     return _then(_value.copyWith(
@@ -1151,6 +1155,10 @@ class _$BoundaryStateCopyWithImpl<$Res, $Val extends BoundaryState>
           ? _value.selectedLastLevelBoundaries
           : selectedLastLevelBoundaries // ignore: cast_nullable_to_non_nullable
               as List<BoundaryModel>,
+      allSelectedLastLevelBoundaries: null == allSelectedLastLevelBoundaries
+          ? _value.allSelectedLastLevelBoundaries
+          : allSelectedLastLevelBoundaries // ignore: cast_nullable_to_non_nullable
+              as List<BoundaryModel>,
       hasSubmitted: null == hasSubmitted
           ? _value.hasSubmitted
           : hasSubmitted // ignore: cast_nullable_to_non_nullable
@@ -1173,6 +1181,7 @@ abstract class _$$BoundaryStateImplCopyWith<$Res>
       List<BoundaryModel> projectBoundaryList,
       Map<String, BoundaryModel?> selectedBoundaryMap,
       List<BoundaryModel> selectedLastLevelBoundaries,
+      List<BoundaryModel> allSelectedLastLevelBoundaries,
       bool hasSubmitted});
 }
 
@@ -1192,6 +1201,7 @@ class __$$BoundaryStateImplCopyWithImpl<$Res>
     Object? projectBoundaryList = null,
     Object? selectedBoundaryMap = null,
     Object? selectedLastLevelBoundaries = null,
+    Object? allSelectedLastLevelBoundaries = null,
     Object? hasSubmitted = null,
   }) {
     return _then(_$BoundaryStateImpl(
@@ -1215,6 +1225,10 @@ class __$$BoundaryStateImplCopyWithImpl<$Res>
           ? _value._selectedLastLevelBoundaries
           : selectedLastLevelBoundaries // ignore: cast_nullable_to_non_nullable
               as List<BoundaryModel>,
+      allSelectedLastLevelBoundaries: null == allSelectedLastLevelBoundaries
+          ? _value._allSelectedLastLevelBoundaries
+          : allSelectedLastLevelBoundaries // ignore: cast_nullable_to_non_nullable
+              as List<BoundaryModel>,
       hasSubmitted: null == hasSubmitted
           ? _value.hasSubmitted
           : hasSubmitted // ignore: cast_nullable_to_non_nullable
@@ -1232,11 +1246,13 @@ class _$BoundaryStateImpl extends _BoundaryState {
       final List<BoundaryModel> projectBoundaryList = const [],
       final Map<String, BoundaryModel?> selectedBoundaryMap = const {},
       final List<BoundaryModel> selectedLastLevelBoundaries = const [],
+      final List<BoundaryModel> allSelectedLastLevelBoundaries = const [],
       this.hasSubmitted = false})
       : _boundaryList = boundaryList,
         _projectBoundaryList = projectBoundaryList,
         _selectedBoundaryMap = selectedBoundaryMap,
         _selectedLastLevelBoundaries = selectedLastLevelBoundaries,
+        _allSelectedLastLevelBoundaries = allSelectedLastLevelBoundaries,
         super._();
 
   @override
@@ -1281,6 +1297,16 @@ class _$BoundaryStateImpl extends _BoundaryState {
     return EqualUnmodifiableListView(_selectedLastLevelBoundaries);
   }
 
+  final List<BoundaryModel> _allSelectedLastLevelBoundaries;
+  @override
+  @JsonKey()
+  List<BoundaryModel> get allSelectedLastLevelBoundaries {
+    if (_allSelectedLastLevelBoundaries is EqualUnmodifiableListView)
+      return _allSelectedLastLevelBoundaries;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_allSelectedLastLevelBoundaries);
+  }
+
   @override
   @JsonKey()
   final bool hasSubmitted;
@@ -1300,6 +1326,9 @@ class _$BoundaryStateImpl extends _BoundaryState {
             const DeepCollectionEquality().equals(
                 other._selectedLastLevelBoundaries,
                 _selectedLastLevelBoundaries) &&
+            const DeepCollectionEquality().equals(
+                other._allSelectedLastLevelBoundaries,
+                _allSelectedLastLevelBoundaries) &&
             (identical(other.hasSubmitted, hasSubmitted) ||
                 other.hasSubmitted == hasSubmitted));
   }
@@ -1312,6 +1341,7 @@ class _$BoundaryStateImpl extends _BoundaryState {
       const DeepCollectionEquality().hash(_projectBoundaryList),
       const DeepCollectionEquality().hash(_selectedBoundaryMap),
       const DeepCollectionEquality().hash(_selectedLastLevelBoundaries),
+      const DeepCollectionEquality().hash(_allSelectedLastLevelBoundaries),
       hasSubmitted);
 
   @JsonKey(ignore: true)
@@ -1328,6 +1358,7 @@ abstract class _BoundaryState extends BoundaryState {
       final List<BoundaryModel> projectBoundaryList,
       final Map<String, BoundaryModel?> selectedBoundaryMap,
       final List<BoundaryModel> selectedLastLevelBoundaries,
+      final List<BoundaryModel> allSelectedLastLevelBoundaries,
       final bool hasSubmitted}) = _$BoundaryStateImpl;
   const _BoundaryState._() : super._();
 
@@ -1341,6 +1372,8 @@ abstract class _BoundaryState extends BoundaryState {
   Map<String, BoundaryModel?> get selectedBoundaryMap;
   @override
   List<BoundaryModel> get selectedLastLevelBoundaries;
+  @override
+  List<BoundaryModel> get allSelectedLastLevelBoundaries;
   @override
   bool get hasSubmitted;
   @override

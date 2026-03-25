@@ -1089,12 +1089,7 @@ class _BoundarySelectionPageState
                                                     )
                                                   : DigitDropdown<
                                                       BoundaryModel>(
-                                                onTap: () {
-                                                  setState(() {
-                                                    resetChildDropdowns(
-                                                        label, state);
-                                                  });
-                                                },
+                                                onTap: () {},
                                                 isDisabled: labelIndex != 0 &&
                                                     formControls[labelList[
                                                                 labelIndex - 1]]
@@ -1114,6 +1109,14 @@ class _BoundarySelectionPageState
                                                           (boundary) =>
                                                               boundary.code ==
                                                               value.code);
+
+                                                  // Only reset children if value actually changed
+                                                  final previousValue =
+                                                      state.selectedBoundaryMap[label];
+                                                  if (previousValue?.code ==
+                                                      selectedBoundary.code) {
+                                                    return;
+                                                  }
 
                                                   context
                                                       .read<BoundaryBloc>()
