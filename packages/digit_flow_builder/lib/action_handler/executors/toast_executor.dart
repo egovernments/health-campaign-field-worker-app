@@ -1,6 +1,8 @@
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
+import '../../blocs/app_localization.dart';
+import '../../widgets/localization_context.dart';
 import '../action_config.dart';
 import 'action_executor.dart';
 
@@ -14,7 +16,10 @@ class ToastExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    final message = action.properties['message'] ?? 'Unknown error';
+    final localization = LocalizationContext.maybeOf(context) ??
+        Localizations.of<FlowBuilderLocalization>(
+            context, FlowBuilderLocalization);
+    final message = localization?.translate(action.properties['message']) ?? 'Unknown error';
     final typeStr = action.properties['type']?.toString() ?? 'error';
 
     final ToastType toastType;
