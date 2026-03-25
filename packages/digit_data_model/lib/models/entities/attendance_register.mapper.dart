@@ -330,10 +330,9 @@ class AttendanceRegisterModelMapper
   static int? _$completedDays(AttendanceRegisterModel v) => v.completedDays;
   static const Field<AttendanceRegisterModel, int> _f$completedDays =
       Field('completedDays', _$completedDays, opt: true, def: 0);
-  static List<Map<DateTime, bool>>? _$attendanceLog(
-          AttendanceRegisterModel v) =>
+  static List<AttendanceLogModel>? _$attendanceLog(AttendanceRegisterModel v) =>
       v.attendanceLog;
-  static const Field<AttendanceRegisterModel, List<Map<DateTime, bool>>>
+  static const Field<AttendanceRegisterModel, List<AttendanceLogModel>>
       _f$attendanceLog =
       Field('attendanceLog', _$attendanceLog, opt: true, def: const []);
   static Map<String, dynamic>? _$additionalDetails(AttendanceRegisterModel v) =>
@@ -478,9 +477,11 @@ abstract class AttendanceRegisterModelCopyWith<
       AttendeeModelCopyWith<$R, AttendeeModel, AttendeeModel>>? get attendees;
   ListCopyWith<$R, StaffModel, StaffModelCopyWith<$R, StaffModel, StaffModel>>?
       get staff;
-  ListCopyWith<$R, Map<DateTime, bool>,
-          ObjectCopyWith<$R, Map<DateTime, bool>, Map<DateTime, bool>>>?
-      get attendanceLog;
+  ListCopyWith<
+      $R,
+      AttendanceLogModel,
+      AttendanceLogModelCopyWith<$R, AttendanceLogModel,
+          AttendanceLogModel>>? get attendanceLog;
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
       get additionalDetails;
   @override
@@ -506,7 +507,7 @@ abstract class AttendanceRegisterModelCopyWith<
       List<AttendeeModel>? attendees,
       List<StaffModel>? staff,
       int? completedDays,
-      List<Map<DateTime, bool>>? attendanceLog,
+      List<AttendanceLogModel>? attendanceLog,
       Map<String, dynamic>? additionalDetails,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
@@ -545,12 +546,13 @@ class _AttendanceRegisterModelCopyWithImpl<$R, $Out>
               (v) => call(staff: v))
           : null;
   @override
-  ListCopyWith<$R, Map<DateTime, bool>,
-          ObjectCopyWith<$R, Map<DateTime, bool>, Map<DateTime, bool>>>?
-      get attendanceLog => $value.attendanceLog != null
-          ? ListCopyWith(
-              $value.attendanceLog!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
+  ListCopyWith<
+      $R,
+      AttendanceLogModel,
+      AttendanceLogModelCopyWith<$R, AttendanceLogModel,
+          AttendanceLogModel>>? get attendanceLog =>
+      $value.attendanceLog != null
+          ? ListCopyWith($value.attendanceLog!, (v, t) => v.copyWith.$chain(t),
               (v) => call(attendanceLog: v))
           : null;
   @override

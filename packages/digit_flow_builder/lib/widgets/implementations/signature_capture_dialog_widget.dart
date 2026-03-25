@@ -46,22 +46,30 @@ class SignatureCaptureWidget extends ResolvedFlowWidget {
             await resolved.executeActions(actionsList, context);
             state.updateWidgetData("signatureData", null);
           },
+          individualName: json['individualName'] ?? "",
           individualId: individualId,
           registerId: registerId,
           signatureData: signatureData,
-          compareSignatureLabel: json['compareSignatureLabel'] ?? '',
-          presentSignatureLabel: json['presentSignatureLabel'] ?? '',
-          absentSignatureLabel: json['absentSignatureLabel'] ?? '',
+          compareSignatureLabel:
+              resolved.resolveText(json['compareSignatureLabel']) ?? '',
+          presentSignatureLabel:
+              resolved.resolveText(json['presentSignatureLabel']) ?? '',
+          absentSignatureLabel:
+              resolved.resolveText(json['absentSignatureLabel']) ?? '',
         );
       }
       return SignatureCapture(
-        individualName: json['individualName'] ?? '',
-        captureSignatureLabel: json['captureSignatureLabel'] ?? '',
-        clearSignatureLabel: json['clearSignatureLabel'] ?? '',
-        saveSignatureLabel: json['saveSignatureLabel'] ?? '',
-        signatureRequiredLabel: json['signatureRequiredLabel'] ?? '',
+        individualName: resolved.resolveText(json['individualName']) ?? '',
+        captureSignatureLabel:
+            resolved.resolveText(json['captureSignatureLabel']) ?? '',
+        clearSignatureLabel:
+            resolved.resolveText(json['clearSignatureLabel']) ?? '',
+        saveSignatureLabel:
+            resolved.resolveText(json['saveSignatureLabel']) ?? '',
+        signatureRequiredLabel:
+            resolved.resolveText(json['signatureRequiredLabel']) ?? '',
         existingSignatureLabel: json['existingSignatureLabel'],
-        fieldName: json['fieldName'] ?? 'signature',
+        fieldName: resolved.resolveText(json['fieldName']) ?? 'signature',
         onSave: (data) async {
           state.updateWidgetData("signatureData", data);
         },
@@ -74,6 +82,7 @@ class SignatureCaptureWidget extends ResolvedFlowWidget {
 class CompareSignature extends StatefulWidget {
   final ResolvedWidgetContext resolved;
   final Function onActions;
+  final String individualName;
   final String individualId;
   final String registerId;
   final String signatureData;
@@ -84,6 +93,7 @@ class CompareSignature extends StatefulWidget {
       {super.key,
       required this.resolved,
       required this.onActions,
+      required this.individualName,
       required this.individualId,
       required this.registerId,
       required this.signatureData,
@@ -206,23 +216,37 @@ class _CompareSignatureState extends State<CompareSignature> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Text("Name: ${widget.individualName}"),
+          SizedBox(height: spacer2),
           if (existingSignatureData != null)
             Expanded(
-              child: DigitCard(children: [
+              child: DigitCard(padding: EdgeInsets.all(0), children: [
                 Image.memory(
                   base64Decode(existingSignatureData!),
-                  height: 100,
+                  height: 90,
                   fit: BoxFit.contain,
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Reference Signature"),
+                  ],
                 ),
               ]),
             ),
           const SizedBox(height: spacer3),
           Expanded(
-            child: DigitCard(children: [
+            child: DigitCard(padding: EdgeInsets.all(0), children: [
               Image.memory(
                 base64Decode(widget.signatureData),
-                height: existingSignatureData == null ? 200 :  100,
+                height: existingSignatureData == null ? 150 : 90,
                 fit: BoxFit.contain,
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Actual Signature"),
+                ],
               ),
             ]),
           ),

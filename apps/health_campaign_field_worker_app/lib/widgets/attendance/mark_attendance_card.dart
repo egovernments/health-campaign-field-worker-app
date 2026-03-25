@@ -69,6 +69,15 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
             e['individual']?.first.name.givenName?.toLowerCase() ?? '';
         return name.contains(searchBar.toLowerCase());
       }).toList();
+
+      // filteredAttendees = filteredAttendees.map((e) {
+      //   if (checkboxValue == false) return true;
+      //   String? individualId = e['entity']?.individualId;
+      //   final logStatus = _getAttendanceLogsStatus(individualId, attendanceLog);
+      //   e["entity"].status = logStatus;
+      //   return e;
+      // }).toList();
+
       List<dynamic> filterAttendanceLogs = attendanceLog.where((log) {
         var entryTime = selectedAttendanceDate['entryTime'];
         var exitTime = selectedAttendanceDate['exitTime'];
@@ -84,10 +93,13 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
           return Padding(
               padding: const EdgeInsets.all(8),
               child: InfoCard(
-                  title: attendanceMarkInfo['title'] ?? '',
+                  title:
+                      resolved.resolveText(attendanceMarkInfo['title']) ?? '',
                   type: InfoType.info,
                   capitalizedLetter: false,
-                  description: attendanceMarkInfo['description'] ?? ''));
+                  description:
+                      resolved.resolveText(attendanceMarkInfo['description']) ??
+                          ''));
         }
         if (groupByTeam) {
           return Column(
@@ -133,7 +145,8 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
                                 onAction,
                                 screenKey,
                                 stateData,
-                                listIndex),
+                                listIndex,
+                                resolved),
                         ],
                       ),
                     ])
@@ -143,17 +156,8 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
         return Column(
           children: [
             for (var item in filteredAttendees)
-              _attendeeCard(
-                context,
-                item,
-                compositeKey,
-                filterAttendanceLogs,
-                json,
-                onAction,
-                screenKey,
-                stateData,
-                listIndex,
-              ),
+              _attendeeCard(context, item, compositeKey, filterAttendanceLogs,
+                  json, onAction, screenKey, stateData, listIndex, resolved),
           ],
         );
       });
@@ -161,7 +165,7 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
   }
 
   Widget _attendeeCard(context, item, compositeKey, filterAttendanceLogs, json,
-      onAction, screenKey, stateData, listIndex) {
+      onAction, screenKey, stateData, listIndex, resolved) {
     bool scanQrCode = json['scanQrCode'] as bool? ?? false;
     bool signatureCapture = json['signatureCapture'] as bool? ?? false;
 
@@ -203,13 +207,17 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
       filterAttendanceLogs,
     );
 
+    final attendanceLogSyncStatus = _getAttendanceLogsSyncStatus(
+      item['entity']?.individualId,
+      filterAttendanceLogs,
+    );
+
     String padding = 'spacer2';
     return DigitCard(
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.all(5),
       spacing: 8,
-      cardType: WidgetParsers.parseCardType(
-          json['properties']?['type']?.toString() ?? 'primary'),
+      cardType: WidgetParsers.parseCardType('secondary'),
       children: [
         Text(
           item['individual']?.first.name.givenName ?? '',
@@ -219,12 +227,12 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
         ),
         Text(
           _getAttendanceStatusText(item['entity']?.individualId, compositeKey,
-              attendanceLogStatus, statusMapping),
+              attendanceLogStatus, statusMapping, resolved),
           style: Theme.of(context).digitTextTheme(context).bodyS,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
         ),
-        if (attendanceLogStatus == -1.0 &&
+        if ((attendanceLogStatus == -1.0 || attendanceLogSyncStatus) &&
             _allowManualAttendance(compositeKey, scanQrCode) &&
             signatureCapture == false)
           Row(
@@ -306,72 +314,70 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
               ),
             ],
           ),
-        if (attendanceLogStatus == -1.0 &&
+        if ((attendanceLogStatus == -1.0 || attendanceLogSyncStatus) &&
             _allowManualAttendance(compositeKey, scanQrCode) &&
             signatureCapture == true)
-          Expanded(
-            child: DigitButton(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              label: signatureButtonLabel,
-              onPressed: () async {
-                // Trigger configured actions if any
-                if (json['onAction'] != null && json['onAction'] is List) {
-                  final actionsList =
-                      List<Map<String, dynamic>>.from(json['onAction']);
+          DigitButton(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            label: signatureButtonLabel,
+            onPressed: () async {
+              // Trigger configured actions if any
+              if (json['onAction'] != null && json['onAction'] is List) {
+                final actionsList =
+                    List<Map<String, dynamic>>.from(json['onAction']);
 
-                  for (var raw in actionsList) {
-                    final action = ActionConfig.fromJson(raw);
-                    onAction(action);
-                  }
+                for (var raw in actionsList) {
+                  final action = ActionConfig.fromJson(raw);
+                  onAction(action);
                 }
+              }
 
-                // Show popup if popupConfig is provided
-                if (popupConfig != null) {
-                  // Execute onOpenAction before showing popup
-                  final onOpenActions =
-                      popupConfig['onOpenAction'] as List<dynamic>?;
-                  if (onOpenActions != null) {
-                    for (var raw in onOpenActions) {
-                      if (raw is Map<String, dynamic>) {
-                        final action = ActionConfig.fromJson(raw);
-                        onAction(action);
-                      }
+              // Show popup if popupConfig is provided
+              if (popupConfig != null) {
+                // Execute onOpenAction before showing popup
+                final onOpenActions =
+                    popupConfig['onOpenAction'] as List<dynamic>?;
+                if (onOpenActions != null) {
+                  for (var raw in onOpenActions) {
+                    if (raw is Map<String, dynamic>) {
+                      final action = ActionConfig.fromJson(raw);
+                      onAction(action);
                     }
                   }
-
-                  await _showActionPopup(context, popupConfig, onAction,
-                      screenKey, stateData, item, listIndex, compositeKey);
                 }
-              },
-              type: _getAttendanceStatus(
-                          item['entity']?.individualId, compositeKey) !=
-                      -1.0
-                  ? DigitButtonType.primary
-                  : DigitButtonType.secondary,
-              size: DigitButtonSize.small,
-              digitButtonThemeData: DigitButtonThemeData(
-                primaryDigitButtonColor:
-                    DigitButtonThemeData.defaultTheme(context)
-                        .primaryDigitButtonColor,
-                DigitButtonColor: (_getAttendanceStatus(
-                                item['entity']?.individualId, compositeKey) ==
-                            1.0
-                        ? colorMap[presentButtonColor]
-                        : colorMap[absentButtonColor]) ??
-                    DigitButtonThemeData.defaultTheme(context).DigitButtonColor,
-                disabledColor:
-                    DigitButtonThemeData.defaultTheme(context).disabledColor,
-                radius: BorderRadius.circular(spacer3),
-                largeRadius: BorderRadius.circular(spacer3),
-                smallMediumRadius: BorderRadius.circular(spacer3),
-                padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
-              ),
-              prefixIcon: _getAttendanceStatus(
-                          item['entity']?.individualId, compositeKey) !=
-                      -1.0
-                  ? DigitIconMapping.getIcon("Check")
-                  : DigitIconMapping.getIcon("Edit"),
+
+                await _showActionPopup(context, popupConfig, onAction,
+                    screenKey, stateData, item, listIndex, compositeKey);
+              }
+            },
+            type: _getAttendanceStatus(
+                        item['entity']?.individualId, compositeKey) !=
+                    -1.0
+                ? DigitButtonType.primary
+                : DigitButtonType.secondary,
+            size: DigitButtonSize.small,
+            digitButtonThemeData: DigitButtonThemeData(
+              primaryDigitButtonColor:
+                  DigitButtonThemeData.defaultTheme(context)
+                      .primaryDigitButtonColor,
+              DigitButtonColor: (_getAttendanceStatus(
+                              item['entity']?.individualId, compositeKey) ==
+                          1.0
+                      ? colorMap[presentButtonColor]
+                      : colorMap[absentButtonColor]) ??
+                  DigitButtonThemeData.defaultTheme(context).DigitButtonColor,
+              disabledColor:
+                  DigitButtonThemeData.defaultTheme(context).disabledColor,
+              radius: BorderRadius.circular(spacer3),
+              largeRadius: BorderRadius.circular(spacer3),
+              smallMediumRadius: BorderRadius.circular(spacer3),
+              padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
             ),
+            prefixIcon: _getAttendanceStatus(
+                        item['entity']?.individualId, compositeKey) !=
+                    -1.0
+                ? DigitIconMapping.getIcon("Check")
+                : DigitIconMapping.getIcon("Edit"),
           ),
       ],
     );
@@ -512,6 +518,23 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     }
   }
 
+  bool _getAttendanceLogsSyncStatus(
+      String? individualId, List<dynamic>? attendanceLogs) {
+    if (attendanceLogs == null || individualId == null) return true;
+
+    // Fall back to stored attendanceLog from DB
+    final filteredAttendanceLogs = attendanceLogs
+        .where((attendanceLog) => attendanceLog["individualId"] == individualId)
+        .toList();
+
+    if (filteredAttendanceLogs.isEmpty) return true;
+
+    final hasUnsyncedLog = filteredAttendanceLogs.any((element) {
+      return element["uploadToServer"] == false;
+    });
+    return hasUnsyncedLog;
+  }
+
   bool _allowManualAttendance(String? compositeKey, bool scanQrCode) {
     if (compositeKey == null) return false;
     final currentState = FlowCrudStateRegistry().get(compositeKey);
@@ -537,13 +560,17 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     return !isSameDay; // allow manual marking for past dates, hide for current day
   }
 
-  String _getAttendanceStatusText(String? individualId, String? compositeKey,
-      double attendanceLogStatus, Map<String, dynamic> statusMapping) {
+  String _getAttendanceStatusText(
+      String? individualId,
+      String? compositeKey,
+      double attendanceLogStatus,
+      Map<String, dynamic> statusMapping,
+      resolved) {
     final status = _getAttendanceStatus(individualId, compositeKey);
     if (attendanceLogStatus != -1.0) {
       return statusMapping[attendanceLogStatus.toString()] ?? '';
     }
-    return statusMapping[status.toString()] ??
+    return resolved.resolveText(statusMapping[status.toString()]) ??
         ''; // default to empty string if not marked
   }
 
@@ -551,7 +578,7 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     final attendanceCollection =
         _getAttendanceCollection(individualId, compositeKey);
 
-    final status = attendanceCollection['status'];
+    final status = (attendanceCollection['status']);
     return status ?? -1.0; // default to -1.0 (absent) if not marked
   }
 

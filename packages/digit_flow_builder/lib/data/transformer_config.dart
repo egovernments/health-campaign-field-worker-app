@@ -1017,23 +1017,70 @@ final jsonConfig = {
       }
     }
   },
-  "markAttendanceAbsent": {
+  "attendanceLogSave": {
     "fallbackModel": "AttendanceLogModel",
+    "multiEntityField": "attendanceLogs",
     "models": {
       "AttendanceLogModel": {
         "mappings": {
           "clientReferenceId": "__generate:uuid",
-          "tenantId": "__context:tenantId",
-          "registerId": "__context:registerId",
-          "individualId": "__context:individualId",
-          "time": "__context:entryTime",
-          "status": "__value:INACTIVE",
-          "type": "__value:ENTRY",
-          "uploadToServer": "__value:false",
+          "tenantId": "attendanceLogs.tenantId",
+          "registerId": "attendanceLogs.registerId",
+          "individualId": "attendanceLogs.individualId",
+          "time": "attendanceLogs.entryTime",
+          "status": "attendanceLogs.status",
+          "type": "attendanceLogs.type",
+          "uploadToServer": "attendanceLogs.uploadToServer",
           "rowVersion": "__value:1",
-          "additionalDetails": "__context:additionalFields",
+          "additionalDetails": "attendanceLogs.additionalFields",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
+        }
+      }
+    }
+  },
+  "attendanceLogSubmit": {
+    "fallbackModel": "AttendanceLogModel",
+    "multiEntityField": "attendanceLogs",
+    "models": {
+      "AttendanceLogModel": {
+        "mappings": {
+          "clientReferenceId": "attendanceLogs.uuid",
+          "tenantId": "attendanceLogs.tenantId",
+          "registerId": "attendanceLogs.registerId",
+          "individualId": "attendanceLogs.individualId",
+          "time": "attendanceLogs.entryTime",
+          "status": "attendanceLogs.status",
+          "type": "attendanceLogs.type",
+          "uploadToServer": "__value:true",
+          "rowVersion": "attendanceLogs.rowVersion",
+          "additionalDetails": "attendanceLogs.additionalFields",
+          "clientAuditDetails": "attendanceLogs.clientAudit",
+          "auditDetails": "attendanceLogs.audit"
+        }
+      }
+    }
+  },
+  "attendanceAttendeeStatusReset": {
+    "fallbackModel": "AttendeeModel",
+    "multiEntityField": "attendees",
+    "models": {
+      "AttendeeModel": {
+        "mappings": {
+          "id": "attendees.id",
+          "tenantId": "attendees.tenantId",
+          "registerId": "attendees.registerId",
+          "individualId": "attendees.individualId",
+          "enrollmentDate": "attendees.enrollmentDate",
+          "denrollmentDate": "attendees.denrollmentDate",
+          "name": "attendees.name",
+          "rowVersion": "attendees.rowVersion",
+          "status": "attendees.status",
+          "tag": "attendees.tag",
+          "nonRecoverableError": "attendees.nonRecoverableError",
+          "additionalFields": "attendees.additionalFields",
+          "auditDetails": "attendees.auditDetails",
+          "clientAuditDetails": "attendees.clientAuditDetails"
         }
       }
     }

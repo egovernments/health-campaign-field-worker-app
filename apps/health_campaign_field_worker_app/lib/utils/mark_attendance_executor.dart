@@ -13,6 +13,8 @@ import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:flutter/material.dart';
 
+import 'date_util_attendance.dart';
+
 /// Stores individual attendance mark in widgetData.attendanceCollection,
 /// replicating _onIndividualAttendanceMark toggle logic.
 // class MarkAttendanceExecutor extends ActionExecutor {
@@ -124,12 +126,34 @@ class SubmitAttendanceExecutor extends ActionExecutor {
     }
 
     final comment = widgetData['COMMENT'] as String?;
+    final isMorning = widgetData['sessionToggle'] as bool? ?? true;
+    final isNotSingleSession =
+        resolveValue(action.properties['isNotSingleSession'], contextData)
+                as bool? ??
+            false;
 
     final selectedDate = widgetData['selectedAttendanceDate'] as Map?;
     final attendanceManualData = widgetData['attendanceManualData'] as Map?;
 
     final entryTime = (selectedDate?['entryTime'] as num?)?.toInt() ?? 0;
     final exitTime = (selectedDate?['exitTime'] as num?)?.toInt() ?? 0;
+
+    int sessionEntryTime = entryTime;
+    int sessionExitTime = exitTime;
+
+    if (isNotSingleSession) {
+      final dateSession = DateTime.fromMillisecondsSinceEpoch(entryTime);
+      sessionEntryTime = AttendanceDateTimeManagement.getMillisecondEpoch(
+        dateSession,
+        isMorning ? 0 : 1,
+        "entryTime",
+      );
+      sessionExitTime = AttendanceDateTimeManagement.getMillisecondEpoch(
+        dateSession,
+        isMorning ? 0 : 1,
+        "exitTime",
+      );
+    }
 
     final isManualScan = attendanceManualData?['isManualScan'] as String?;
     final reason = attendanceManualData?['reason'] as String?;
@@ -207,7 +231,7 @@ class SubmitAttendanceExecutor extends ActionExecutor {
               l.individualId == individualId &&
               l.registerId == registerId &&
               l.type == EnumValues.entry.toValue() &&
-              l.time == entryTime &&
+              l.time == sessionEntryTime &&
               l.clientReferenceId != null)
           .toList();
 
@@ -216,7 +240,7 @@ class SubmitAttendanceExecutor extends ActionExecutor {
               l.individualId == individualId &&
               l.registerId == registerId &&
               l.type == EnumValues.exit.toValue() &&
-              l.time == exitTime &&
+              l.time == sessionExitTime &&
               l.clientReferenceId != null)
           .toList();
 
@@ -230,7 +254,7 @@ class SubmitAttendanceExecutor extends ActionExecutor {
         tenantId: tenantId,
         type: EnumValues.entry.toValue(),
         status: logStatus,
-        time: entryTime,
+        time: sessionEntryTime,
         uploadToServer: true,
         rowVersion: 1,
         additionalDetails: additionalDetails,
@@ -248,7 +272,7 @@ class SubmitAttendanceExecutor extends ActionExecutor {
         tenantId: tenantId,
         type: EnumValues.exit.toValue(),
         status: logStatus,
-        time: exitTime,
+        time: sessionExitTime,
         uploadToServer: true,
         rowVersion: 1,
         additionalDetails: additionalDetails,

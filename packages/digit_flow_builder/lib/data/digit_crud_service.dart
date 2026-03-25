@@ -81,7 +81,6 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
     }
     // Remove nested entity lists that are handled via NestedModelMapping
     // to avoid dart_mappable decode errors
-    normalizedMapAttendance.remove('attendees');
     normalizedMapAttendance.remove('staff');
     normalizedMapAttendance.remove('individualList');
 

@@ -37,6 +37,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
     String padding = props['padding'] ?? 'spacer2';
 
     return DigitButton(
+      isDisabled: resolved.isDisabled,
       mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
       mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
       label: localization?.translate(json['label']) ?? json['label'] ?? '',
@@ -76,6 +77,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         largeRadius: BorderRadius.circular(spacer3),
         smallMediumRadius: BorderRadius.circular(spacer3),
         padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
+        disabledColor: DigitButtonThemeData.defaultTheme(context).disabledColor,
       ),
       iconColor: colorMap[props["color"]],
       textColor: colorMap[props["color"]],

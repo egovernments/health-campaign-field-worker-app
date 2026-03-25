@@ -53,6 +53,7 @@ import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
 import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
+import '../utils/date_util_attendance.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
@@ -471,6 +472,72 @@ class _HomePageState extends LocalizedState<HomePage> {
       return facilityFromWhich == 'Delivery Team' ? 'STAFF' : 'WAREHOUSE';
     });
 
+    // Attendance
+
+    FunctionRegistry.register('updateAttendeeStatus', (args, stateData) {
+      if (args.isEmpty || args.first == null) return null;
+
+      List<dynamic> attendees = args.first;
+      List<dynamic> attendanceLogs =
+          args.length > 1 && args[1] != null ? args[1] : [];
+      final selectedDate = args.length > 2 && args[2] != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              int.tryParse(args[2].toString()) ??
+                  DateTime.now().millisecondsSinceEpoch)
+          : DateTime.now();
+
+      for (var attendee in attendees) {
+        String? individualId;
+        try {
+          individualId = attendee.individualId?.toString();
+        } catch (_) {
+          individualId = null;
+        }
+        if (individualId == null) continue;
+
+        // Find logs for this attendee
+        final filteredLogs = attendanceLogs
+            .where((log) => log.individualId?.toString() == individualId)
+            .toList();
+
+        // Determine attendance status based on logs
+        final hasMorningLog =
+            _hasLogWithType(filteredLogs, selectedDate, 'ENTRY');
+        final hasEveningLog =
+            _hasLogWithType(filteredLogs, selectedDate, 'EXIT');
+
+        double status;
+        if (hasMorningLog && hasEveningLog) {
+          final morningLogActive =
+              _hasLogActiveStatus(filteredLogs, selectedDate, 'ENTRY');
+          final eveningActive =
+              _hasLogActiveStatus(filteredLogs, selectedDate, 'EXIT');
+
+          if (morningLogActive && eveningActive) {
+            status = 1.0; // present
+          } else if (!morningLogActive && !eveningActive) {
+            status = 0.0; // absent
+          } else {
+            status = 0.5; // half day
+          }
+        } else {
+          status = -1.0; // not marked
+        }
+
+        // Update attendee with computed status
+        try {
+          attendee.attendanceStatus = status;
+        } catch (_) {
+          // If attendee is a Map, update the field directly
+          if (attendee is Map) {
+            attendee['status'] = status;
+          }
+        }
+      }
+
+      return attendees;
+    });
+
     FunctionRegistry.register('entryTime', (args, stateData) {
       DateTime today = DateTime.now();
       if (args.isNotEmpty && args.first != null) {
@@ -777,6 +844,159 @@ class _HomePageState extends LocalizedState<HomePage> {
       return register.startDate != null &&
           register.endDate != null &&
           register.endDate! > DateTime.now().millisecondsSinceEpoch;
+    });
+
+    FunctionRegistry.register('createAttendanceLog', (args, stateData) {
+      if (args.isEmpty || args.first == null) return null;
+
+      final widgetData = args.first as Map;
+      List<dynamic> attendanceLogs =
+          args.length > 1 ? args[1] as List<dynamic>? ?? [] : [];
+      final attendanceRegisterModel = args.length > 2 ? args[2] : null;
+
+      final registerId = attendanceRegisterModel?.id ?? '';
+      final isNotSingleSession =
+          attendanceRegisterModel?.additionalDetails?["sessions"] == 2;
+
+      final attendanceCollection = widgetData['attendanceCollection'] as Map?;
+      if (attendanceCollection == null || attendanceCollection.isEmpty) {
+        return null;
+      }
+
+      final comment = widgetData['COMMENT'] as String?;
+      final isMorning = widgetData['sessionToggle'] as bool? ?? true;
+
+      final selectedDate = widgetData['selectedAttendanceDate'] as Map?;
+      final attendanceManualData = widgetData['attendanceManualData'] as Map?;
+
+      final entryTime = (selectedDate?['entryTime'] as num?)?.toInt() ?? 0;
+      final exitTime = (selectedDate?['exitTime'] as num?)?.toInt() ?? 0;
+
+      int sessionEntryTime = entryTime;
+      int sessionExitTime = exitTime;
+
+      if (isNotSingleSession) {
+        final dateSession = DateTime.fromMillisecondsSinceEpoch(entryTime);
+        sessionEntryTime = AttendanceDateTimeManagement.getMillisecondEpoch(
+          dateSession,
+          isMorning ? 0 : 1,
+          "entryTime",
+        );
+        sessionExitTime = AttendanceDateTimeManagement.getMillisecondEpoch(
+          dateSession,
+          isMorning ? 0 : 1,
+          "exitTime",
+        );
+      }
+
+      final isManualScan = attendanceManualData?['isManualScan'] as String?;
+      final reason = attendanceManualData?['reason'] as String?;
+      final reasonComment = attendanceManualData?['reasonComment'] as String?;
+
+      final tenantId = FlowBuilderSingleton().selectedProject?.tenantId ?? '';
+      final boundaryCode = AttendanceSingleton().boundary?.code ?? '';
+      final userUuid = FlowBuilderSingleton().loggedInUser?.uuid ?? '';
+      final now = DateTime.now().millisecondsSinceEpoch;
+
+      final List<EntityModel> entities = [];
+
+      for (final entry in attendanceCollection.entries) {
+        final individualId = entry.key.toString();
+        final data = entry.value as Map?;
+        if (data == null) continue;
+
+        final markStatus = (data['status'] as num?)?.toDouble() ?? -1;
+        if (markStatus == -1) continue; // skip unmarked
+
+        final isPresent = markStatus >= 1.0;
+        final signatureData = data['signatureData'] as String?;
+        final logStatus = isPresent
+            ? EnumValues.active.toValue()
+            : EnumValues.inactive.toValue();
+
+        // Build additionalDetails matching _onSaveAsDraft
+        final additionalDetails = <String, dynamic>{
+          if (boundaryCode.isNotEmpty)
+            EnumValues.boundaryCode.toValue(): boundaryCode,
+          if (signatureData != null) 'signatureData': signatureData,
+          if (comment != null && comment.isNotEmpty) 'comment': comment,
+          if (isManualScan != null) 'isMarkedManually': isManualScan,
+          if (reason != null && reason.isNotEmpty)
+            'manualMarkingReason': reason,
+          if (reasonComment != null && reasonComment.isNotEmpty)
+            'manualMarkingComment': reasonComment,
+        };
+
+        final clientAudit = ClientAuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+        final audit = AuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+
+        // Reuse clientReferenceId from existing log if present (dedup)
+        // Mirrors submitAttendanceDetails: match on individualId + registerId + type + time
+        final existingEntryLog = attendanceLogs
+            .where((l) =>
+                l.individualId == individualId &&
+                l.registerId == registerId &&
+                l.type == EnumValues.entry.toValue() &&
+                l.time == sessionEntryTime &&
+                l.clientReferenceId != null)
+            .toList();
+
+        final existingExitLog = attendanceLogs
+            .where((l) =>
+                l.individualId == individualId &&
+                l.registerId == registerId &&
+                l.type == EnumValues.exit.toValue() &&
+                l.time == sessionExitTime &&
+                l.clientReferenceId != null)
+            .toList();
+
+        // ENTRY log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingEntryLog.isNotEmpty
+              ? existingEntryLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.entry.toValue(),
+          status: logStatus,
+          time: sessionEntryTime,
+          uploadToServer: false,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+
+        // EXIT log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingExitLog.isNotEmpty
+              ? existingExitLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.exit.toValue(),
+          status: logStatus,
+          time: sessionExitTime,
+          uploadToServer: false,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+      }
+      return entities;
     });
 
     /// Registers a function to check if attendance is single session mode.
@@ -1934,17 +2154,23 @@ class _HomePageState extends LocalizedState<HomePage> {
                   ),
                 ],
                 nestedModelMappings: const [
-                  // NestedModelMapping(
-                  //   rootModel: 'attendanceRegister',
-                  //   fields: {
-                  //     'attendees': NestedFieldMapping(
-                  //       table: 'attendee',
-                  //       localKey: 'id',
-                  //       foreignKey: 'registerId',
-                  //       type: NestedMappingType.many,
-                  //     ),
-                  //   },
-                  // ),
+                  NestedModelMapping(
+                    rootModel: 'attendanceRegister',
+                    fields: {
+                      'attendees': NestedFieldMapping(
+                        table: 'attendee',
+                        localKey: 'id',
+                        foreignKey: 'registerId',
+                        type: NestedMappingType.many,
+                      ),
+                      'attendanceLog': NestedFieldMapping(
+                        table: 'attendance',
+                        localKey: 'id',
+                        foreignKey: 'registerId',
+                        type: NestedMappingType.many,
+                      ),
+                    },
+                  ),
                   NestedModelMapping(
                     rootModel: 'individual',
                     fields: {

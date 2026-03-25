@@ -30,6 +30,11 @@ final dynamic manageAttendanceFlow = {
             "key": "tenantId",
             "value": "{{singleton.selectedProject.tenantId}}",
             "operation": "equals"
+          },
+          {
+            "key": "referenceId",
+            "value": "{{singleton.selectedProject.id}}",
+            "operation": "equals"
           }
         ],
         "name": "attendee",
@@ -43,6 +48,11 @@ final dynamic manageAttendanceFlow = {
           {
             "key": "tenantId",
             "value": "{{singleton.selectedProject.tenantId}}",
+            "operation": "equals"
+          },
+          {
+            "key": "referenceId",
+            "value": "{{singleton.selectedProject.id}}",
             "operation": "equals"
           },
           {"key": "uploadToServer", "value": true, "operation": "equals"}
@@ -64,14 +74,29 @@ final dynamic manageAttendanceFlow = {
         "name": "attendanceLog",
         "entity": "AttendanceLogModel",
         "match": {"field": "registerId", "equalsFrom": "id"}
-      }
+      },
     ],
     "rootEntity": "AttendanceRegisterModel",
     "wrapperName": "AttendanceWrapper",
     "searchConfig": {
       "select": ["attendanceRegister", "attendee", "attendance"],
-      "primary": "attendanceRegister"
+      "primary": "attendanceRegister",
+      "pagination": {"limit": 10, "maxItems": 30},
+      "orderBy": {"field": "startDate", "order": "DESC"}
     }
+  },
+  "scrollListener": {
+    "triggerMode": "end",
+    "debounceMs": 300,
+    "showLoadingIndicator": true,
+    "onScroll": [
+      {
+        "actionType": "REFRESH_SEARCH",
+        "properties": {
+          "pagination": {"limit": 10, "maxItems": 30}
+        }
+      }
+    ]
   },
   "header": [
     {

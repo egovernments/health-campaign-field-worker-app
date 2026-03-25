@@ -88,7 +88,7 @@ class DateWidget extends ResolvedFlowWidget {
         children: [
           if (label != null) ...[
             Text(
-              label,
+              resolved.resolveText(label),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
@@ -96,6 +96,8 @@ class DateWidget extends ResolvedFlowWidget {
             const SizedBox(height: 8),
           ],
           DigitDateFormInput(
+            controller: TextEditingController(
+                text: DateFormat("dd MMM yyyy").format(currentDate)),
             firstDate: startDate,
             lastDate: endDate,
             helpText: helpText,

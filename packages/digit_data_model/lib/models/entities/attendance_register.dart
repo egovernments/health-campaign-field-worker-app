@@ -4,6 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
+import 'attendance_log.dart';
 import 'attendee.dart';
 import 'staff.dart';
 
@@ -79,7 +80,7 @@ class AttendanceRegisterModel extends EntityModel
   final List<StaffModel>? staff;
   final Map<String, dynamic>? additionalDetails;
   final int? completedDays;
-  final List<Map<DateTime, bool>>? attendanceLog;
+  final List<AttendanceLogModel>? attendanceLog;
 
   AttendanceRegisterModel({
     required this.id,
@@ -105,8 +106,7 @@ class AttendanceRegisterModel extends EntityModel
     super.isDeleted = false,
   }) : super();
 
-  AttendanceRegisterCompanion get companion =>
-      AttendanceRegisterCompanion(
+  AttendanceRegisterCompanion get companion => AttendanceRegisterCompanion(
         id: Value(id),
         tenantId: Value(tenantId!),
         registerNumber: Value(registerNumber!),
