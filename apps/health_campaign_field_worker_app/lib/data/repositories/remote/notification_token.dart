@@ -16,12 +16,14 @@ class NotificationTokenRepository {
     try {
       await _client.post(
         apiEndPoint,
-        data: [{
-          'deviceToken': token,
-          "deviceType": "ANDROID",
-          "tenantId": "ba",
-          'facilityId': facilityIds.first,
-        }],
+        data: {
+          "deviceTokens":[{
+            'deviceToken': token,
+            "deviceType": "ANDROID",
+            "tenantId": "ba",
+            'facilityIds': facilityIds,
+          }]
+        },
       );
     } catch (e) {
       debugPrint('NotificationTokenRepository: Failed to register token: $e');

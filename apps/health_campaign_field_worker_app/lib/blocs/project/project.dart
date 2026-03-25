@@ -437,11 +437,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
-    await notificationTokenRepository.registerToken(
-      apiEndPoint: apiEndPoint,
-      token: token,
-      facilityIds: facilityIds,
-    );
+    try{
+      await notificationTokenRepository.registerToken(
+        apiEndPoint: apiEndPoint,
+        token: token,
+        facilityIds: facilityIds,
+      );
+    } catch(e){
+      debugPrint('Failed to register notification token');
+    }
   }
 
   FutureOr<void> _loadFacilities(
