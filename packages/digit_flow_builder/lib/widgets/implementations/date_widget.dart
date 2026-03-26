@@ -77,8 +77,7 @@ class DateWidget extends ResolvedFlowWidget {
       // Initialize widgetData with today's date on first render
       if (state.widgetData[fieldKey] == null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          final dateState = _getDateState(currentDate);
-          state.updateWidgetData(fieldKey, dateState);
+          state.updateWidgetData(fieldKey, currentDate.millisecondsSinceEpoch);
         });
       }
 
@@ -117,8 +116,8 @@ class DateWidget extends ResolvedFlowWidget {
 
               if (parsedDate == null) return;
 
-              final dateState = _getDateState(parsedDate);
-              state.updateWidgetData(fieldKey, dateState);
+              state.updateWidgetData(
+                  fieldKey, parsedDate.millisecondsSinceEpoch);
 
               // Dispatch selectDate action for internal handling
               onAction(ActionConfig(
@@ -126,7 +125,7 @@ class DateWidget extends ResolvedFlowWidget {
                 actionType: 'widgetData',
                 properties: {
                   'key': fieldKey,
-                  'value': dateState,
+                  'value': parsedDate.millisecondsSinceEpoch,
                 },
               ));
 
@@ -143,31 +142,5 @@ class DateWidget extends ResolvedFlowWidget {
         ],
       );
     });
-  }
-
-  Map<String, Object> _getDateState(DateTime date) {
-    final startOfDay = DateTime(
-      date.year,
-      date.month,
-      date.day,
-      9,
-      0,
-      0,
-    );
-    final endOfDay = DateTime(
-      date.year,
-      date.month,
-      date.day,
-      18,
-      0,
-      0,
-      0,
-    );
-    final dateState = {
-      'date': date.toIso8601String(),
-      'entryTime': startOfDay.millisecondsSinceEpoch,
-      'exitTime': endOfDay.millisecondsSinceEpoch,
-    };
-    return dateState;
   }
 }

@@ -17,7 +17,6 @@ class LabeledToggleWidget extends ResolvedFlowWidget {
     ResolvedWidgetContext resolved,
   ) {
     final fieldKey = json['fieldKey'] as String? ?? 'labeledToggleValue';
-    final value = json['value'] as bool? ?? true;
     final activeLabel = json['activeLabel'] as String;
     final inactiveLabel = json['inactiveLabel'] as String;
 
@@ -25,13 +24,21 @@ class LabeledToggleWidget extends ResolvedFlowWidget {
       // Initialize widgetData with today's date on first render
       if (state.widgetData[fieldKey] == null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          state.updateWidgetData(fieldKey, value);
+          state.updateWidgetData(fieldKey, state.widgetData[fieldKey]);
         });
       }
       return DigitLabeledToggle(
-        value: value,
-        onChanged: (val) {
+        value: state.widgetData[fieldKey] ?? true,
+        onChanged: (val) async {
           state.updateWidgetData(fieldKey, val);
+          // Process onAction array from config (if present)
+          if (json['onAction'] != null && json['onAction'] is List) {
+            final actionsList =
+                List<Map<String, dynamic>>.from(json['onAction']);
+            if (actionsList.isNotEmpty) {
+              await resolved.executeActions(actionsList, context);
+            }
+          }
         },
         activeLabel: activeLabel,
         inactiveLabel: inactiveLabel,
@@ -63,8 +70,9 @@ class DigitLabeledToggle extends StatelessWidget {
       width: screenWidth,
       height: 40,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(24),
+        color: theme.colorScheme.onPrimary,
+        border: Border.all(color: theme.colorScheme.onSurface, width: 1),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
@@ -100,7 +108,7 @@ class DigitLabeledToggle extends StatelessWidget {
             color: isSelected
                 ? const DigitColors().light.primary1
                 : Colors.transparent,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(12),
           ),
           alignment: Alignment.center,
           child: Text(

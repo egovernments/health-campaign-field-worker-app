@@ -216,8 +216,8 @@ class _CompareSignatureState extends State<CompareSignature> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text("Name: ${widget.individualName}"),
-          SizedBox(height: spacer2),
+          // Text("Name: ${widget.individualName}"),
+          const SizedBox(height: spacer2),
           if (existingSignatureData != null)
             Expanded(
               child: DigitCard(padding: EdgeInsets.all(0), children: [
@@ -225,6 +225,7 @@ class _CompareSignatureState extends State<CompareSignature> {
                   base64Decode(existingSignatureData!),
                   height: 90,
                   fit: BoxFit.contain,
+                  gaplessPlayback: true,
                 ),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -235,21 +236,23 @@ class _CompareSignatureState extends State<CompareSignature> {
               ]),
             ),
           const SizedBox(height: spacer3),
-          Expanded(
-            child: DigitCard(padding: EdgeInsets.all(0), children: [
-              Image.memory(
-                base64Decode(widget.signatureData),
-                height: existingSignatureData == null ? 150 : 90,
-                fit: BoxFit.contain,
-              ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Actual Signature"),
-                ],
-              ),
-            ]),
-          ),
+          if (widget.signatureData != null)
+            Expanded(
+              child: DigitCard(padding: const EdgeInsets.all(0), children: [
+                Image.memory(
+                  base64Decode(widget.signatureData),
+                  height: existingSignatureData == null ? 200 : 90,
+                  fit: BoxFit.contain,
+                  gaplessPlayback: true,
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Actual Signature"),
+                  ],
+                ),
+              ]),
+            ),
           const SizedBox(height: spacer4),
 
           // Action Buttons

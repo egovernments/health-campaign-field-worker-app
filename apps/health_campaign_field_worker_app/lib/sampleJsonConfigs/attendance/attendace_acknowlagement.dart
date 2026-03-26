@@ -1,7 +1,6 @@
 var attendanceAcknowledgementFlow = {
   "screenType": "TEMPLATE",
   "name": "attendanceAcknowledgement",
-  "heading": "ATTENDANCE_SUBMITTED",
   "header": [
     {
       "label": "Back",
@@ -36,7 +35,7 @@ var attendanceAcknowledgementFlow = {
             "properties": {
               "name": "manageAttendance",
               "type": "TEMPLATE",
-              "navigationMode": "popUntilAndPush",
+              "navigationMode": "popUntil",
               "popUntilPageName": "manageAttendance",
             }
           }

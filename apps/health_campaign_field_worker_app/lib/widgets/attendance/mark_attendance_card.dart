@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data/local_store/sql_store/tables/individual.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/models/entities/enum_values.dart';
 import 'package:digit_flow_builder/action_handler/action_config.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/layout_renderer.dart';
@@ -24,6 +26,10 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/date_util_attendance.dart';
+
+enum AttendanceSort { absent, present }
+
 class MarkAttendanceCard extends ResolvedFlowWidget {
   @override
   String get format => 'markAttendanceCard';
@@ -42,6 +48,8 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     final screenKey = resolved.screenKey;
 
     // Read attendees and attendanceLog from state
+    final attendanceRegisterModel = resolved.state
+        .parentData?['AttendanceRegisterModel'] as AttendanceRegisterModel?;
     final attendees = stateData?.modelMap['attendees'] as List<dynamic>? ?? [];
     final attendanceLog =
         stateData?.modelMap['attendanceLog'] as List<dynamic>? ?? [];
@@ -53,9 +61,22 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     bool groupByTeam = json['groupByTeam'] as bool? ?? false;
 
     return WidgetStateContext.reactive(context, (ctx, state) {
+      // Initialize widgetData with today's date on first render
+      if (state.widgetData["selectedAttendanceDate"] == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _setRegisterData(compositeKey, attendanceRegisterModel);
+        });
+      }
+
       // Read Widget Data
       String? searchBar = state.widgetData['searchBar'] as String?;
-      bool checkboxValue = state.widgetData['checkboxValue'] ?? true;
+      bool checkboxValue = state.widgetData['checkboxValue'] ?? false;
+
+      AttendanceSort? attendanceSort = state.widgetData["SORT_BY"] == null
+          ? null
+          : state.widgetData["SORT_BY"] == "PRESENT"
+              ? AttendanceSort.present
+              : AttendanceSort.absent;
 
       //Widget Data for selected date and attendance manual marking data which are set by other widgets in the screen
       final selectedAttendanceDate =
@@ -70,19 +91,33 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
         return name.contains(searchBar.toLowerCase());
       }).toList();
 
-      // filteredAttendees = filteredAttendees.map((e) {
-      //   if (checkboxValue == false) return true;
-      //   String? individualId = e['entity']?.individualId;
-      //   final logStatus = _getAttendanceLogsStatus(individualId, attendanceLog);
-      //   e["entity"].status = logStatus;
-      //   return e;
-      // }).toList();
-
       List<dynamic> filterAttendanceLogs = attendanceLog.where((log) {
         var entryTime = selectedAttendanceDate['entryTime'];
         var exitTime = selectedAttendanceDate['exitTime'];
         return entryTime == log["time"] || exitTime == log["time"];
       }).toList();
+
+      filteredAttendees = filteredAttendees.map((e) {
+        String? individualId = e['entity']?.individualId;
+        final logStatus =
+            _getAttendanceLogsStatus(individualId, filterAttendanceLogs);
+        e["entity"] = e["entity"]?.copyWith(status: logStatus);
+        return e;
+      }).toList();
+
+      if (attendanceSort != null) {
+        filteredAttendees.sort((a, b) {
+          double statusA = a['entity']?.status ?? -1.0;
+          double statusB = b['entity']?.status ?? -1.0;
+          if (attendanceSort == AttendanceSort.present) {
+            // For present first, sort in descending order of status (present > half day > absent)
+            return statusB.compareTo(statusA);
+          } else {
+            // For absent first, sort in ascending order of status (absent > half day > present)
+            return statusA.compareTo(statusB);
+          }
+        });
+      }
 
       // Grouping attendees by team if required
       final teams = _getTeams(filteredAttendees);
@@ -212,7 +247,11 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
       filterAttendanceLogs,
     );
 
+    final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
+
     String padding = 'spacer2';
+
+    // Widget UI
     return DigitCard(
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.all(5),
@@ -321,11 +360,9 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             label: signatureButtonLabel,
             onPressed: () async {
+              _removeSignetureData(compositeKey);
               // Trigger configured actions if any
               if (json['onAction'] != null && json['onAction'] is List) {
-                final actionsList =
-                    List<Map<String, dynamic>>.from(json['onAction']);
-
                 for (var raw in actionsList) {
                   final action = ActionConfig.fromJson(raw);
                   onAction(action);
@@ -391,6 +428,84 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
     'green': Colors.green,
     'red': Colors.red,
   };
+
+  _removeSignetureData(String? compositeKey) {
+    if (compositeKey == null) return;
+    final currentState = FlowCrudStateRegistry().get(compositeKey);
+    final widgetData =
+        Map<String, dynamic>.from(currentState?.widgetData ?? {});
+    widgetData["signatureData"] = null;
+    if (currentState != null) {
+      final updatedState = currentState.copyWith(
+        widgetData: widgetData,
+      );
+      FlowCrudStateRegistry().update(compositeKey, updatedState);
+    } else {
+      final newState = FlowCrudState(
+        widgetData: widgetData,
+      );
+      FlowCrudStateRegistry().update(compositeKey, newState);
+    }
+  }
+
+  void _setRegisterData(
+      String? compositeKey, AttendanceRegisterModel? registerModel) {
+    if (compositeKey == null || registerModel == null) return;
+    final currentState = FlowCrudStateRegistry().get(compositeKey);
+    final widgetData =
+        Map<String, dynamic>.from(currentState?.widgetData ?? {});
+
+    final currentSelectedDate = widgetData['selectedDate'];
+    final isMorning = widgetData['sessionToggle'] ?? true;
+
+    if (currentSelectedDate == null) return;
+
+    DateTime? dateSession = DateTime.now().isAfter(
+            DateTime.fromMillisecondsSinceEpoch(registerModel.endDate!))
+        ? DateTime.fromMillisecondsSinceEpoch(registerModel.endDate!)
+        : DateTime.fromMillisecondsSinceEpoch(currentSelectedDate);
+
+    if (dateSession == null) return;
+
+    var entryTime =
+        registerModel.additionalDetails?[EnumValues.sessions.toValue()] == 2
+            ? AttendanceDateTimeManagement.getMillisecondEpoch(
+                dateSession,
+                isMorning ? 0 : 1,
+                "entryTime",
+              )
+            : (DateTime(dateSession.year, dateSession.month, dateSession.day, 9)
+                .millisecondsSinceEpoch);
+
+    var exitTime = registerModel
+                .additionalDetails?[EnumValues.sessions.toValue()] ==
+            2
+        ? AttendanceDateTimeManagement.getMillisecondEpoch(
+            dateSession,
+            isMorning ? 0 : 1,
+            "exitTime",
+          )
+        : (DateTime(dateSession.year, dateSession.month, dateSession.day, 18)
+            .millisecondsSinceEpoch);
+
+    widgetData['selectedAttendanceDate'] = {
+      'date': dateSession.millisecondsSinceEpoch,
+      'entryTime': entryTime,
+      'exitTime': exitTime,
+    };
+
+    if (currentState != null) {
+      final updatedState = currentState.copyWith(
+        widgetData: widgetData,
+      );
+      FlowCrudStateRegistry().update(compositeKey, updatedState);
+    } else {
+      final newState = FlowCrudState(
+        widgetData: widgetData,
+      );
+      FlowCrudStateRegistry().update(compositeKey, newState);
+    }
+  }
 
   /// Show the action popup based on configuration
   Future<dynamic> _showActionPopup(

@@ -93,49 +93,6 @@ final dynamic markAttendanceFlow = {
         "type": "SEARCH_EVENT"
       }
     },
-    // {
-    //   "actionType": "OPEN_POPUP",
-    //   "properties": {
-    //     "popupConfig": {
-    //       "title": "ACTION_REQUIRED",
-    //       "showCloseButton": true,
-    //       "barrierDismissible": true,
-    //       "body": [
-    //         {
-    //           "type": "template",
-    //           "format": "card",
-    //           "children": [
-    //             {
-    //               "type": "template",
-    //               "format": "textTemplate",
-    //               "value": "MISSED_ATTENDANCE_INFO",
-    //             },
-    //             {
-    //               "type": "template",
-    //               "format": "textTemplate",
-    //               "value": "{{fn:getMissedDays(contextData.0.attendanceLog)}}",
-    //             },
-    //           ]
-    //         },
-    //         {
-    //           "format": "button",
-    //           "type": "template",
-    //           "fieldName": "dateChangeProceed",
-    //           "label": "DATE_CHANGE_PROCEED",
-    //           "properties": {
-    //             "type": "primary",
-    //             "size": "large",
-    //             "mainAxisSize": "max",
-    //             "mainAxisAlignment": "center"
-    //           },
-    //           "onAction": [
-    //             {"actionType": "CLOSE_POPUP", "properties": {}},
-    //           ]
-    //         },
-    //       ],
-    //     }
-    //   }
-    // },
   ],
   "wrapperConfig": {
     "filters": [],
@@ -184,7 +141,7 @@ final dynamic markAttendanceFlow = {
   "footer": [
     {
       "visible":
-          "{{fn:isSameDay(widgetData.selectedAttendanceDate, contextData.0.attendanceLog)}}",
+          "{{fn:isSameDay(widgetData.selectedDate, contextData.0.AttendanceRegisterModel, widgetData.sessionToggle)}}",
       "format": "attendanceQRScannerButton",
       "type": "template",
       "fieldName": "createReferral",
@@ -216,7 +173,7 @@ final dynamic markAttendanceFlow = {
           "actionType": "CUSTOM_DATA",
           "properties": {
             "entities":
-                "{{fn:createAttendanceLog(widgetData, contextData.0.attendanceLog, contextData.0.AttendanceRegisterModel)}}"
+                "{{fn:createAttendanceLog(widgetData, contextData.0.attendanceLog, contextData.0.AttendanceRegisterModel, 0)}}"
           }
         },
         {
@@ -241,7 +198,7 @@ final dynamic markAttendanceFlow = {
           "{{fn:allAttendanceSelected(contextData.0.attendees, widgetData.attendanceCollection)}}",
       "onAction": [],
       "properties": {
-        "type": "primary",
+        "type": "secondary",
         "size": "large",
         "mainAxisSize": "max",
         "mainAxisAlignment": "center",
@@ -253,6 +210,7 @@ final dynamic markAttendanceFlow = {
             {
               "type": "template",
               "format": "textTemplate",
+              "maxLines": 5,
               "value": "CONFIRMATION_DESCRIPTION"
             },
             {
@@ -276,11 +234,29 @@ final dynamic markAttendanceFlow = {
               },
               "onAction": [
                 {"actionType": "CLOSE_POPUP", "properties": {}},
+                // {
+                //   "actionType": "SUBMIT_ATTENDANCE",
+                //   "properties": {
+                //     "isNotSingleSession":
+                //         "{{fn:isNotSingleSession(contextData.0.AttendanceRegisterModel)}}",
+                //   }
+                // },
+                // {
+                //   "actionType": "CREATE_EVENT",
+                //   "properties": {"entity": "AttendanceLogModel"}
+                // },
+                // {
+                //   "actionType": "NAVIGATION",
+                //   "properties": {
+                //     "type": "TEMPLATE",
+                //     "name": "attendanceAcknowledgement"
+                //   }
+                // }
                 {
-                  "actionType": "SUBMIT_ATTENDANCE",
+                  "actionType": "CUSTOM_DATA",
                   "properties": {
-                    "isNotSingleSession":
-                        "{{fn:isNotSingleSession(contextData.0.AttendanceRegisterModel)}}",
+                    "entities":
+                        "{{fn:createAttendanceLog(widgetData, contextData.0.attendanceLog, contextData.0.AttendanceRegisterModel, 1)}}"
                   }
                 },
                 {
@@ -320,7 +296,7 @@ final dynamic markAttendanceFlow = {
     {
       "type": "template",
       "format": "date",
-      "fieldKey": "selectedAttendanceDate",
+      "fieldKey": "selectedDate",
       "label": "MARK_ATTENDANCE_DATE",
       "innerLabel": "Select date",
       "startDate": "{{contextData.0.AttendanceRegisterModel.startDate}}",
@@ -329,52 +305,40 @@ final dynamic markAttendanceFlow = {
         {
           "actionType": "CLEAR_STATE",
           "properties": {
-            "widgetKeys": ["attendanceCollection", "attendanceManualData"],
+            "widgetKeys": [
+              "attendanceCollection",
+              "attendanceManualData",
+              "signatureCapture"
+            ],
           }
         },
-        // {
-        //   "actionType": "FETCH_TRANSFORMER_CONFIG",
-        //   "properties": {
-        //     "configName": "attendanceAttendeeStatusReset",
-        //     "data": [
-        //       {
-        //         "key": "attendees",
-        //         "value":
-        //             "{{fn:updateAttendeeStatus(contextData.0.attendees, contextData.0.attendanceLog, widgetData.selectedAttendanceDate)}}",
-        //       }
-        //     ],
-        //     "onError": [
-        //       {
-        //         "actionType": "SHOW_TOAST",
-        //         "properties": {"message": "Failed to prepare attendees."}
-        //       }
-        //     ]
-        //   }
-        // },
-        // {
-        //   "actionType": "UPDATE_EVENT",
-        //   "properties": {
-        //     "entity": "AttendeeModel",
-        //     "onError": [
-        //       {
-        //         "actionType": "SHOW_TOAST",
-        //         "properties": {"message": "Failed to update."}
-        //       }
-        //     ]
-        //   }
-        // },
+        {
+          "actionType": "CUSTOM_DATA",
+          "properties": {
+            "widgetData":
+                "{{fn:setAttendanceDate(widgetData.selectedDate, contextData.0.AttendanceRegisterModel, widgetData.sessionToggle)}}"
+          }
+        },
       ]
     },
-    // {
-    //   "type": "template",
-    //   "format": "labeledToggle",
-    //   "fieldKey": "sessionToggle",
-    //   "visible":
-    //       "{{fn:isNotSingleSession(contextData.0.AttendanceRegisterModel)}}",
-    //   "activeLabel": "Morning Session",
-    //   "inactiveLabel": "Afternoon Session",
-    //   "onAction": []
-    // },
+    {
+      "type": "template",
+      "format": "labeledToggle",
+      "fieldKey": "sessionToggle",
+      "visible":
+          "{{fn:isNotSingleSession(contextData.0.AttendanceRegisterModel)}}",
+      "activeLabel": "Morning Session",
+      "inactiveLabel": "Afternoon Session",
+      "onAction": [
+        {
+          "actionType": "CUSTOM_DATA",
+          "properties": {
+            "widgetData":
+                "{{fn:setAttendanceDate(widgetData.selectedDate, contextData.0.AttendanceRegisterModel, widgetData.sessionToggle)}}"
+          }
+        },
+      ]
+    },
     {
       "type": "template",
       "format": "row",
@@ -451,7 +415,7 @@ final dynamic markAttendanceFlow = {
                           {
                             "type": "template",
                             "format": "checkbox",
-                            "value": true,
+                            "value": false,
                           },
                           {
                             "type": "template",
@@ -531,7 +495,7 @@ final dynamic markAttendanceFlow = {
       "format": "markAttendanceCard",
       "fieldName": "makeAttendanceCard",
       "groupByTeam": true,
-      "signatureCapture": false,
+      "signatureCapture": true,
       "scanQrCode": true,
       "proofOfWork": false,
       "components": {
@@ -539,7 +503,7 @@ final dynamic markAttendanceFlow = {
           "type": "template",
           "format": "button",
           "label": "PRESENT",
-          "prefixIcon": "Close",
+          "prefixIcon": "Check",
           "properties": {
             "type": "secondary",
             "size": "small",
@@ -579,6 +543,7 @@ final dynamic markAttendanceFlow = {
           "description": "MARK_ATTENDANCE_INFO_DESC",
         }
       },
+      "onAction": [],
       "popupConfig": {
         "title": "MARK_ATTENDANCE_COMPARE_SIGNATURE_LABEL",
         "titleIcon": "CheckCircle",
@@ -589,7 +554,7 @@ final dynamic markAttendanceFlow = {
             "type": "template",
             "format": "signatureCapture",
             "fieldName": "signature",
-            "individualName": "test-sah-dis",
+            "individualName": "",
             "existingSignatureData":
                 "{{fn:getAttendeeSignature(contextData.0.attendee.entity.individualId, contextData.0.attendanceLog)}}",
             "compareSignatureLabel": "MARK_ATTENDANCE_COMPARE_SIGNATURE_LABEL",

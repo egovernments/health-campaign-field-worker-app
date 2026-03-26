@@ -34,7 +34,7 @@ class TextWidget extends ResolvedFlowWidget {
         displayValue.isEmpty ? '--' : displayValue,
         style: textStyle,
         overflow: TextOverflow.ellipsis,
-        maxLines: 2,
+        maxLines: json["maxLines"] ?? 2,
       ),
       properties,
     );

@@ -28,13 +28,12 @@ class CustomDataExecutor extends ActionExecutor {
 
     // Get Data from action properties
     Map<String, dynamic>? widgetDataMap =
-        resolveValue(action.properties['widgetData'], contextData);
-    final List<EntityModel> entities =
-        resolveValue(action.properties['entities'], contextData);
-    final Map<String, dynamic>? additionalContextData =
-        resolveValue(action.properties['additionalContextData'], contextData);
-    final Map<String, dynamic>? updatedContextData =
-        resolveValue(action.properties['updatedContextData'], contextData);
+        action.properties['widgetData'] == null
+            ? null
+            : resolveValue(action.properties['widgetData'], contextData);
+    final List<EntityModel> entities = action.properties['entities'] == null
+        ? []
+        : resolveValue(action.properties['entities'], contextData);
 
     //Add WidgetData Data
     if (widgetDataMap != null) {
@@ -45,20 +44,8 @@ class CustomDataExecutor extends ActionExecutor {
       compositeKey,
       (currentState ?? const FlowCrudState()).copyWith(widgetData: widgetData),
     );
-    //Add Context Data
-    if (additionalContextData != null) {
-      contextData.addAll(additionalContextData);
-    }
-    //Update Context Data
-    if (updatedContextData != null) {
-      for (var entry in updatedContextData.entries) {
-        if (contextData.containsKey(entry.key)) {
-          contextData[entry.key] = entry.value;
-        }
-      }
-    }
 
     if (entities.isNotEmpty) return {...contextData, 'entities': entities};
-    return contextData;
+    return {...contextData};
   }
 }

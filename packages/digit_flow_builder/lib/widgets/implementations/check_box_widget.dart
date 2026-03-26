@@ -22,7 +22,7 @@ class CheckBoxWidget extends ResolvedFlowWidget {
       // Initialize widgetData with today's date on first render
       if (state.widgetData["checkboxValue"] == null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          state.updateWidgetData("checkboxValue", true);
+          state.updateWidgetData("checkboxValue", value);
         });
       }
       return Checkbox(
