@@ -385,14 +385,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
 
-    // Register notification token with current level facility IDs
+    // Register notification token with filtered facility IDs
     final currentFacilityIds = projectFacilities
         .where((pf) {
       final facilityLevel = pf.additionalFields?.fields
           .where((f) => f.key == 'facilityLevel')
           .firstOrNull
           ?.value;
-      return facilityLevel == 'current';
+
+      // Exclude 'parent' and 'child'
+      return facilityLevel != 'parent' && facilityLevel != 'child';
     })
         .map((pf) => pf.facilityId)
         .toList();
