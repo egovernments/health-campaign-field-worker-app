@@ -1478,4 +1478,43 @@ void initializeFunctionRegistry() {
     // If checklist exists → Visited, otherwise → Not Visited
     return checklistExists ? 'VISITED' : 'HF_REFERRAL_NOT_VISITED';
   });
+
+  /// Checks if the individual was registered before the current running cycle.
+  ///
+  /// - **Function Name**: `'isRegisteredBeforeCurrentCycle'`
+  /// - **Arguments**:
+  ///   - First argument: dateOfRegistration (timestamp in milliseconds)
+  ///   - Second argument: currentRunningCycle (cycle id/index)
+  /// - **Returns**: `true` if registered before the current cycle, `false` if registered in the current cycle.
+  ///
+  /// This is used to conditionally show buttons only for individuals registered
+  /// in a previous cycle (not the current one).
+  FunctionRegistry.register('isRegisteredBeforeCurrentCycle',
+      (args, stateData) {
+    if (args.isEmpty) return false;
+
+    // Parse dateOfRegistration timestamp
+    final rawDate = args.first;
+    int? registrationTime;
+    if (rawDate is int) {
+      registrationTime = rawDate;
+    } else if (rawDate is String) {
+      registrationTime = int.tryParse(rawDate);
+    }
+    if (registrationTime == null) return false;
+
+    // Get current running cycle from project config
+    final projectType = FlowBuilderSingleton().projectType;
+    if (projectType == null || projectType.cycles == null) return false;
+
+    // Find the current active cycle
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final currentCycle = projectType.cycles!.firstWhereOrNull(
+      (e) => (e.startDate ?? 0) < now && (e.endDate ?? 0) > now,
+    );
+    if (currentCycle == null) return false;
+
+    // If registered before the current cycle's start date, return true
+    return registrationTime < (currentCycle.startDate ?? 0);
+  });
 }

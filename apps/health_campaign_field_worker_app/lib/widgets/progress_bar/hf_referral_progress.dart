@@ -24,62 +24,60 @@ class HFReferralProgressBar extends StatefulWidget {
 
 class _HFReferralProgressBarState extends State<HFReferralProgressBar> {
   int totalCount = 0;
-  int visitedCount = 0;
-
-  static const _symptomToChecklistKey = {
-    'FEVER': 'feverQ1',
-    'SICK': 'sickQ1',
-    'DRUG_SE_CC': 'sideEffectQ1',
-    'DRUG_SE_PC': 'sideEffectPQ1',
-  };
+  int completedCount = 0;
+  bool _isListenerSetup = false;
 
   @override
   void didChangeDependencies() {
-    final repository =
+    super.didChangeDependencies();
+    if (!_isListenerSetup) {
+      _isListenerSetup = true;
+      _setupListener();
+    }
+  }
+
+  void _setupListener() {
+    final hfRepository =
     context.read<LocalRepository<HFReferralModel, HFReferralSearchModel>>()
     as HFReferralLocalRepository;
 
-    repository.listenToChanges(
+    final currentUserUuid = context.loggedInUserUuid;
+    final projectId = context.projectId;
+
+    hfRepository.listenToChanges(
       query: HFReferralSearchModel(
-        projectId: [context.projectId.toString()],
+        projectId: projectId,
       ),
       listener: (data) {
         if (mounted) {
-          int visited = 0;
+          int completed = 0;
           for (final referral in data) {
-            final symptom = referral.symptom?.toUpperCase() ?? '';
-            final checklistKey = _symptomToChecklistKey[symptom];
-            if (checklistKey != null) {
-              final fields = referral.additionalFields?.fields ?? [];
-              final hasChecklist = fields.any(
-                    (field) =>
-                field.key == checklistKey &&
-                    field.value != null &&
-                    field.value.toString().trim().isNotEmpty,
-              );
-              if (hasChecklist) {
-                visited++;
-              }
+            final clientModifiedBy =
+                referral.clientAuditDetails?.lastModifiedBy;
+            final auditModifiedBy =
+                referral.auditDetails?.lastModifiedBy;
+            if (clientModifiedBy == currentUserUuid ||
+                auditModifiedBy == currentUserUuid) {
+              completed++;
             }
           }
           setState(() {
             totalCount = data.length;
-            visitedCount = visited;
+            completedCount = completed;
           });
         }
       },
     );
-    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return DigitCard(margin: const EdgeInsets.all(spacer2), children: [
       ProgressIndicatorContainer(
-        label: '${totalCount - visitedCount} ${widget.label}',
-        prefixLabel: '$visitedCount ${widget.prefixLabel}',
+        label: '${totalCount - completedCount} ${widget.label}',
+        prefixLabel: '$completedCount ${widget.prefixLabel}',
         suffixLabel: totalCount.toStringAsFixed(0),
-        value: totalCount == 0 ? 0 : visitedCount / totalCount,
+        value: totalCount == 0 ? 0 : completedCount / totalCount,
       ),
     ]);
   }

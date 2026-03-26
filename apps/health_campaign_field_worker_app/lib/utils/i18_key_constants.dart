@@ -172,6 +172,8 @@ class Common {
 
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 
+  String get coreCommonDownloadCompleted => 'CORE_COMMON_DOWNLOAD_COMPLETED';
+
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
   String get maxBoundarySelectionReached =>
@@ -1234,6 +1236,8 @@ class BeneficiaryDetails {
 
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
+
+  String get referralDownloadCompleted => 'REFERRAL_DOWNLOAD_COMPLETED';
 
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
 }

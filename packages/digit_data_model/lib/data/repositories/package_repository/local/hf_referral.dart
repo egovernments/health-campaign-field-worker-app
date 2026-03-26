@@ -21,7 +21,9 @@ class HFReferralLocalRepository
               (tbl) => buildAnd([
             if (query.clientReferenceId != null)
               tbl.clientReferenceId.isIn(query.clientReferenceId!),
-            if (query.projectId != null) tbl.projectId.isIn(query.projectId!),
+            if (query.projectId != null) tbl.projectId.equals(query.projectId!),
+            if (query.projectFacilityId != null)
+              tbl.projectFacilityId.equals(query.projectFacilityId!),
             if (query.beneficiaryId != null)
               tbl.beneficiaryId.isIn(query.beneficiaryId!),
             if (query.localityCode != null)
@@ -115,7 +117,7 @@ class HFReferralLocalRepository
               query.beneficiaryId!,
             ),
           if (query.projectId != null)
-            sql.hFReferral.projectId.isIn(
+            sql.hFReferral.projectId.equals(
               query.projectId!,
             ),
           if (query.localityCode != null)
