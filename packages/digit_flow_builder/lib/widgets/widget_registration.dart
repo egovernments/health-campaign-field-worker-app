@@ -9,7 +9,6 @@ import 'package:digit_flow_builder/widgets/implementations/expanded_widget.dart'
 import 'package:digit_flow_builder/widgets/implementations/icon_button_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/label_toggle_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/progress_bar_widget.dart';
-import 'package:digit_flow_builder/widgets/implementations/proximitySearch_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/signature_capture_dialog_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/sized_box_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/proximity_search_widget.dart';
