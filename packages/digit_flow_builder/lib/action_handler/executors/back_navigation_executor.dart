@@ -25,12 +25,12 @@ class BackNavigationExecutor extends ActionExecutor {
       return contextData;
     }
 
-    // Special handling for HOME - navigate to the main HomePage
+    // Special handling for HOME - exit the entire flow by popping all
+    // FlowBuilderHomeRoute pages, landing on whatever is below (e.g. CurrentBoundary)
     if (targetPageName == 'HOME') {
       try {
         router.popUntil((route) {
-          // Check if the route is HomeRoute (the main app HomePage)
-          return route.settings.name == 'HomeRoute';
+          return route.settings.name?.contains('FlowBuilderHomeRoute') != true;
         });
       } catch (e) {
         // If error occurs, do single pop

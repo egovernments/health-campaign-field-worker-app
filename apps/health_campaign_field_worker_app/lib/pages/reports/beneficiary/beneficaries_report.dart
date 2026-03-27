@@ -36,7 +36,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   List<DownsyncModel> downSyncList = [];
   int pendingSyncCount = 0;
   BoundaryModel? selectedBoundary;
-  StreamController<double> downloadProgress = StreamController<double>();
+  StreamController<DownloadProgressData> downloadProgress =
+      StreamController<DownloadProgressData>();
   late StreamSubscription? syncSubscription;
 
   @override
@@ -80,6 +81,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
               __,
             ) =>
                 ScrollableContent(
+                  enableFixedDigitButton: true,
               footer: DigitCard(
                   margin: const EdgeInsets.only(top: spacer2),
                   children: [
@@ -121,17 +123,15 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       getBatchSize: (
                         batchSize,
                         projectId,
-                        boundaryCode,
+                        boundaries,
                         pendingSync,
-                        boundaryName,
                       ) =>
                           context.read<BeneficiaryDownSyncBloc>().add(
-                                DownSyncCheckTotalCountEvent(
+                                DownSyncAllBoundariesEvent(
                                   projectId: context.projectId,
-                                  boundaryCode: boundaryCode,
-                                  pendingSyncCount: pendingSyncCount,
-                                  boundaryName: boundaryName,
+                                  boundaries: boundaries,
                                   batchSize: batchSize,
+                                  pendingSyncCount: pendingSyncCount,
                                 ),
                               ),
                       report: (downSyncCriteriaList) {
@@ -147,7 +147,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           ),
                           projectId: context.projectId,
                           appConfiguartion: appConfiguration,
-                          boundary: selectedBoundary!.code.toString(),
+                          boundaries: [selectedBoundary!],
                           batchSize: 5,
                           totalCount: 0,
                           content: localizations.translate(
@@ -156,13 +156,13 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           primaryButtonLabel: localizations.translate(
                             i18.acknowledgementSuccess.goToHome,
                           ),
-                          boundaryName: selectedBoundary!.name.toString(),
                         ),
                         dialogType: DigitProgressDialogType.pendingSync,
                         isPop: true,
                       ),
-                      dataFound: (initialServerCount, batchSize) =>
-                          showDownloadDialog(
+                      dataFound:
+                          (initialServerCount, batchSize, boundaryCounts) =>
+                              showDownloadDialog(
                         context,
                         model: DownloadBeneficiary(
                           title: localizations.translate(
@@ -172,9 +172,10 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           ),
                           projectId: context.projectId,
                           appConfiguartion: appConfiguration,
-                          boundary: selectedBoundary!.code.toString(),
+                          boundaries: [selectedBoundary!],
                           batchSize: 5,
                           totalCount: initialServerCount,
+                          boundaryCounts: boundaryCounts,
                           content: localizations.translate(
                             initialServerCount > 0
                                 ? i18.beneficiaryDetails.dataFoundContent
@@ -191,17 +192,23 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                     .proceedWithoutDownloading
                                 : i18.acknowledgementSuccess.goToHome,
                           ),
-                          boundaryName: selectedBoundary!.name.toString(),
                         ),
                         dialogType: DigitProgressDialogType.dataFound,
                         isPop: true,
                       ),
                       inProgress: (syncCount, totalCount) {
-                        downloadProgress.add(
-                          min(
+                        final progressData = DownloadProgressData(
+                          progress: min(
                             (syncCount) / (totalCount),
                             1,
                           ),
+                          boundaryName: localizations.translate(
+                            selectedBoundary?.code ?? '',
+                          ),
+                          syncedCount: syncCount,
+                          totalCount: totalCount,
+                          currentIndex: 0,
+                          totalBoundaries: 1,
                         );
                         if (syncCount < 1) {
                           showDownloadDialog(
@@ -211,19 +218,18 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                 i18.beneficiaryDetails.dataDownloadInProgress,
                               ),
                               projectId: context.projectId,
-                              boundary: selectedBoundary!.code.toString(),
+                              boundaries: [selectedBoundary!],
                               appConfiguartion: appConfiguration,
                               syncCount: syncCount,
                               totalCount: totalCount,
-                              prefixLabel: syncCount.toString(),
-                              suffixLabel: totalCount.toString(),
-                              boundaryName: selectedBoundary!.name.toString(),
                             ),
                             dialogType: DigitProgressDialogType.inProgress,
                             isPop: true,
                             downloadProgressController: downloadProgress,
+                            initialProgressData: progressData,
                           );
                         }
+                        downloadProgress.add(progressData);
                       },
                       success: (result) {
                         int? epochTime = result.lastSyncedTime;
@@ -277,7 +283,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           projectId: context.projectId,
                           pendingSyncCount: pendingSyncCount,
                           appConfiguartion: appConfiguration,
-                          boundary: selectedBoundary!.code.toString(),
+                          boundaries: [selectedBoundary!],
                           content: localizations.translate(
                             i18.beneficiaryDetails.dataFoundContent,
                           ),
@@ -287,7 +293,6 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           secondaryButtonLabel: localizations.translate(
                             i18.beneficiaryDetails.proceedWithoutDownloading,
                           ),
-                          boundaryName: selectedBoundary!.name.toString(),
                         ),
                         dialogType: DigitProgressDialogType.failed,
                         isPop: true,
@@ -301,14 +306,13 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           projectId: context.projectId,
                           pendingSyncCount: pendingSyncCount,
                           appConfiguartion: appConfiguration,
-                          boundary: selectedBoundary!.code.toString(),
+                          boundaries: [selectedBoundary!],
                           primaryButtonLabel: localizations.translate(
                             i18.syncDialog.retryButtonLabel,
                           ),
                           secondaryButtonLabel: localizations.translate(
                             i18.beneficiaryDetails.proceedWithoutDownloading,
                           ),
-                          boundaryName: selectedBoundary!.name.toString(),
                         ),
                         dialogType: DigitProgressDialogType.checkFailed,
                         isPop: true,
@@ -323,11 +327,10 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                               .beneficiaryDetails.insufficientStorageContent),
                           projectId: context.projectId,
                           appConfiguartion: appConfiguration,
-                          boundary: selectedBoundary!.code.toString(),
+                          boundaries: [selectedBoundary!],
                           primaryButtonLabel: localizations.translate(
                             i18.common.coreCommonOk,
                           ),
-                          boundaryName: selectedBoundary!.name.toString(),
                         ),
                         dialogType: DigitProgressDialogType.insufficientStorage,
                         isPop: true,
@@ -343,7 +346,9 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           localizations.translate(
                             i18.beneficiaryDetails.datadownloadreport,
                           ),
-                          style: textTheme.headingXl,
+                          style: textTheme.headingXl.copyWith(
+                            color: theme.colorTheme.primary.primary2
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -351,9 +356,11 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                     ...downSyncList.map(
                       (e) => DigitCard(
                           margin: const EdgeInsets.all(spacer2),
-                          padding: const EdgeInsets.all(spacer1),
+                          padding: const EdgeInsets.all(spacer4),
                           children: [
-                            LabelValueSummary(items: [
+                            LabelValueSummary(
+                              padding: EdgeInsets.zero,
+                                items: [
                               LabelValueItem(
                                   labelFlex: 5,
                                   label: localizations.translate(
@@ -379,6 +386,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                   label: localizations.translate(
                                     i18.beneficiaryDetails.downloadtime,
                                   ),
+                                  maxLines: 3,
                                   value: e.lastSyncedTime != null
                                       ? '${DigitDateUtils.getTimeFromTimestamp(e.lastSyncedTime!)} on ${DigitDateUtils.getDateFromTimestamp(e.lastSyncedTime!)}'
                                       : '--'),
@@ -411,9 +419,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                           appConfiguration,
                                         ],
                                         projectId: context.projectId,
-                                        boundaryCode: e.locality!,
+                                        boundaries: [selectedBoundary!],
                                         pendingSyncCount: pendingSyncCount,
-                                        boundaryName: e.boundaryName.toString(),
                                       ),
                                     );
                               },

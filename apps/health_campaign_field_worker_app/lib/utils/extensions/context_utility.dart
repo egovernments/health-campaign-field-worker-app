@@ -119,6 +119,15 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedBoundary;
   }
 
+  void setBoundary(BoundaryModel selectedBoundary) {
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
+    AttendanceSingleton().setBoundary(boundary: selectedBoundary);
+    TransitPostSingleton().setBoundary(boundary: selectedBoundary);
+    LocationTrackerSingleton()
+        .setBoundaryName(boundaryName: selectedBoundary.code!);
+    FlowBuilderSingleton().setBoundary(boundary: selectedBoundary);
+  }
+
   BoundaryModel? get boundaryOrNull {
     try {
       return boundary;
