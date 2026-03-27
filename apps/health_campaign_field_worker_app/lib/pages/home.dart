@@ -766,7 +766,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       : i18.common.stockNoDataFound,
                 ),
                 projectId: context.projectId,
-                boundary: context.selectedProject.address?.boundaryType ?? '',
+                boundaries: [],
                 batchSize: batchSize,
                 totalCount: initialServerCount,
                 content: localizations.translate(
@@ -784,7 +784,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                         i18.common.coreCommonGoback,
                       )
                     : null,
-                boundaryName: context.selectedProject.address?.boundary ?? '',
               ),
               dialogType: DigitProgressDialogType.dataFound,
               isPop: true,
@@ -802,12 +801,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                     i18.beneficiaryDetails.dataDownloadInProgress,
                   ),
                   projectId: context.projectId,
-                  boundary: context.selectedProject.address?.boundaryType ?? '',
+                  boundaries: [],
                   syncCount: syncCount,
                   totalCount: totalCount,
                   prefixLabel: syncCount.toString(),
                   suffixLabel: totalCount.toString(),
-                  boundaryName: context.selectedProject.address?.boundary ?? '',
                 ),
                 dialogType: DigitProgressDialogType.inProgress,
                 isPop: true,
@@ -848,16 +846,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                         ),
                         appConfiguartion: appConfiguration,
                         projectId: context.projectId,
-                        boundary:
-                            context.selectedProject.address?.boundaryType ?? '',
+                        boundaries: [],
                         primaryButtonLabel: localizations.translate(
                           i18.syncDialog.retryButtonLabel,
                         ),
                         secondaryButtonLabel: localizations.translate(
                           i18.common.coreCommonGoback,
                         ),
-                        boundaryName:
-                            context.selectedProject.address?.boundary ?? '',
                       ),
                       dialogType: DigitProgressDialogType.failed,
                       isPop: true,
@@ -877,16 +872,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                         ),
                         appConfiguartion: appConfiguration,
                         projectId: context.projectId,
-                        boundary:
-                            context.selectedProject.address?.boundaryType ?? '',
+                        boundaries: [],
                         primaryButtonLabel: localizations.translate(
                           i18.syncDialog.retryButtonLabel,
                         ),
                         secondaryButtonLabel: localizations.translate(
                           i18.common.coreCommonGoback,
                         ),
-                        boundaryName:
-                            context.selectedProject.address?.boundary ?? '',
                       ),
                       dialogType: DigitProgressDialogType.checkFailed,
                       isPop: true,
@@ -905,11 +897,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                   i18.beneficiaryDetails.insufficientStorageContent,
                 ),
                 projectId: context.projectId,
-                boundary: context.selectedProject.address?.boundaryType ?? '',
+                boundaries: [],
                 primaryButtonLabel: localizations.translate(
                   i18.common.coreCommonOk,
                 ),
-                boundaryName: context.selectedProject.address?.boundary ?? '',
               ),
               dialogType: DigitProgressDialogType.insufficientStorage,
               isPop: true,
@@ -962,6 +953,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                           ),
                         ),
                       ),
+              /////   hfreferral progress matrics
+              if (state.actionsWrapper.actions
+                  .map((e) => e.displayName)
+                  .contains(i18.home.beneficiaryReferralLabel))
+                HFReferralProgressBar(
+                  label: localizations.translate(
+                    i18.home.progressIndicatorTitle,
+                  ),
+                  prefixLabel: localizations.translate(
+                    i18.common.progressIndicatorPrefixLabelHFReferral,
+                  ),
+                ),
               ],
             ),
             footer: Padding(
@@ -1088,188 +1091,6 @@ class _HomePageState extends LocalizedState<HomePage> {
               ),
             ],
           ),
-    return Scaffold(
-      backgroundColor: DigitTheme.instance.colorScheme.surface,
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: ScrollableContent(
-          slivers: [
-            SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return homeItems.elementAt(index);
-                },
-                childCount: homeItems.length,
-              ),
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 145,
-                childAspectRatio: 104 / 128,
-              ),
-            ),
-          ],
-          header: Column(
-            children: [
-              BackNavigationHelpHeaderWidget(
-                showBackNavigation: false,
-                showHelp: false,
-                showcaseButton: ShowcaseButton(
-                  showcaseFor: showcaseKeys.toSet().toList(),
-                ),
-              ),
-              // Show stock balance card for users with stock management access
-              if (state.actionsWrapper.actions
-                  .map((e) => e.displayName)
-                  .contains(i18.home.manageStockLabel))
-                const StockBalanceCard(),
-              skipProgressBar
-                  ? const SizedBox.shrink()
-                  : homeShowcaseData.distributorProgressBar.buildWith(
-                      child: BeneficiaryProgressBar(
-                        label: localizations.translate(
-                          i18.home.progressIndicatorTitle,
-                        ),
-                        prefixLabel: localizations.translate(
-                          i18.home.progressIndicatorPrefixLabel,
-                        ),
-                      ),
-                    ),
-              /////   hfreferral progress matrics
-              if (state.actionsWrapper.actions
-                  .map((e) => e.displayName)
-                  .contains(i18.home.beneficiaryReferralLabel))
-                HFReferralProgressBar(
-                  label: localizations.translate(
-                    i18.home.progressIndicatorTitle,
-                  ),
-                  prefixLabel: localizations.translate(
-                    i18.common.progressIndicatorPrefixLabelHFReferral,
-                  ),
-                ),
-            ],
-          ),
-          footer: Padding(
-            padding: const EdgeInsets.only(bottom: spacer2),
-            child: PoweredByDigit(
-              version: Constants().version,
-            ),
-          ),
-          children: [
-            const SizedBox(height: spacer2 * 2),
-            // INFO : Need to add sync bloc of package Here
-            BlocConsumer<SyncBloc, SyncState>(
-              listener: (context, state) {
-                state.maybeWhen(
-                  orElse: () => null,
-                  pendingSync: (count) {
-                    final debouncer = Debouncer(seconds: 5);
-                    debouncer.run(() async {
-                      if (count != 0) {
-                        await localSecureStore.setManualSyncTrigger(false);
-                        if (context.mounted) {
-                          await performBackgroundService(
-                            isBackground: false,
-                            stopService: false,
-                            context: context,
-                          );
-                        }
-                      } else {
-                        await localSecureStore.setManualSyncTrigger(true);
-                      }
-                    });
-                  },
-                  syncInProgress: () async {
-                    await localSecureStore.setManualSyncTrigger(false);
-                    if (context.mounted) {
-                      DigitSyncDialog.show(
-                        context,
-                        type: DialogType.inProgress,
-                        label: localizations.translate(
-                          i18.syncDialog.syncInProgressTitle,
-                        ),
-                        barrierDismissible: false,
-                      );
-                    }
-                  },
-                  completedSync: () async {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      DigitSyncDialog.show(context,
-                          type: DialogType.complete,
-                          label: localizations.translate(
-                            i18.syncDialog.dataSyncedTitle,
-                          ),
-                          primaryAction: DigitDialogActions(
-                            label: localizations.translate(
-                              i18.syncDialog.closeButtonLabel,
-                            ),
-                            action: (ctx) {
-                              Navigator.pop(ctx);
-                            },
-                          ),
-                          barrierDismissible: true);
-                    }
-                  },
-                  failedSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      _showSyncFailedDialog(
-                        context,
-                        message: localizations.translate(
-                          i18.syncDialog.syncFailedTitle,
-                        ),
-                      );
-                    }
-                  },
-                  failedDownSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      _showSyncFailedDialog(
-                        context,
-                        message: localizations.translate(
-                          i18.syncDialog.downSyncFailedTitle,
-                        ),
-                      );
-                    }
-                  },
-                  failedUpSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      _showSyncFailedDialog(
-                        context,
-                        message: localizations.translate(
-                          i18.syncDialog.upSyncFailedTitle,
-                        ),
-                      );
-                    }
-                  },
-                );
-              },
-              builder: (context, state) {
-                return state.maybeWhen(
-                  orElse: () => const Offstage(),
-                  pendingSync: (count) {
-                    return count == 0
-                        ? const Offstage()
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: spacer2,
-                            ),
-                            child: InfoCard(
-                              type: InfoType.info,
-                              description: localizations
-                                  .translate(i18.home.dataSyncInfoContent)
-                                  .replaceAll('{}', count.toString()),
-                              title: localizations.translate(
-                                i18.home.dataSyncInfoLabel,
-                              ),
-                            ),
-                          );
-                  },
-                );
-              },
-            ),
-          ],
         ),
       ),
     );
