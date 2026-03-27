@@ -349,18 +349,19 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../digit_data_model"
-      relative: true
-    source: path
-    version: "1.2.0-dev.2-console"
+      name: digit_data_model
+      sha256: d59c5082ff5ad8ddb7ee87c0e150efa1a1de031034713d73d0bae9a0393ba95a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.0"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "45864b746a61557c45c117c06c879344addb1f3a9a91639e0f6c1b9e4c3f905e"
+      sha256: fa61ba8e61ec32aa4f2d8eb195ffda1ac40ae3201aa90eadff0eeca5fbfa9cc5
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.4"
+    version: "0.3.0"
   dio:
     dependency: "direct main"
     description:
@@ -1226,6 +1227,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  sqlcipher_flutter_libs:
+    dependency: transitive
+    description:
+      name: sqlcipher_flutter_libs
+      sha256: dd1fcc74d5baf3c36ad53e2652b2d06c9f8747494a3ccde0076e88b159dfe622
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.8"
   sqlite3:
     dependency: transitive
     description:

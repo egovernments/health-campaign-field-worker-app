@@ -12,6 +12,7 @@ import 'package:digit_flow_builder/widgets/implementations/progress_bar_widget.d
 import 'package:digit_flow_builder/widgets/implementations/proximitySearch_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/signature_capture_dialog_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/sized_box_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/proximity_search_widget.dart';
 
 import 'flow_widget_interface.dart';
 import 'implementations/button_widget.dart';

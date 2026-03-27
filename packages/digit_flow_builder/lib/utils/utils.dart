@@ -390,13 +390,11 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         if (fnMatch != null) {
           final fnName = fnMatch.group(1)!;
           final argsExpr = fnMatch.group(2) ?? '';
-          print('🟢 FUNCTION CALL: $fnName with argsExpr: "$argsExpr"');
 
           final resolvedArgs = argsExpr.trim().isEmpty
               ? <dynamic>[]
               : argsExpr.split(',').map((rawArg) {
                   final trimmed = rawArg.trim();
-                  print('🟢 Resolving arg: "$trimmed"');
 
                   // Check if it's a quoted literal (string)
                   if (trimmed.startsWith("'") || trimmed.startsWith('"')) {
@@ -420,11 +418,9 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
                       widgetData: widgetData,
                       screenKey: screenKey,
                       stateData: stateData);
-                  print('🟢 Arg "$trimmed" resolved to: ${resolved.runtimeType} = $resolved');
                   return resolved;
                 }).toList();
 
-          print('🟢 All resolved args: $resolvedArgs (types: ${resolvedArgs.map((e) => e.runtimeType).toList()})');
           return FunctionRegistry.call(
             fnName,
             resolvedArgs,
@@ -644,7 +640,7 @@ dynamic _resolvePath(dynamic root, String path) {
   if (current is num) {
     return current;
   }
-  if(current is Map){
+  if (current is Map) {
     return current;
   }
   return current?.toString();
@@ -673,9 +669,9 @@ Map<String, dynamic> flattenFormData(Map<String, dynamic> data,
 /// Static parts (outside of {{}}) are translated using localization.
 /// Dynamic parts (inside {{}}) are preserved as-is.
 String resolveStaticString(
-    dynamic input,
-    dynamic localization,
-    ) {
+  dynamic input,
+  dynamic localization,
+) {
   if (input is! String) return input?.toString() ?? '';
 
   final regex = RegExp(r'{{.*?}}');

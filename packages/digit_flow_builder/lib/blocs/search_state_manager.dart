@@ -45,7 +45,8 @@ class SearchStateManager {
   /// Register instanceId for a screen key
   void registerInstance(String screenKey, String instanceId) {
     _instanceIds[screenKey] = instanceId;
-    debugPrint('SearchStateManager: Registered instanceId $instanceId for $screenKey');
+    debugPrint(
+        'SearchStateManager: Registered instanceId $instanceId for $screenKey');
   }
 
   /// Get the current instanceId for a screen key
@@ -60,7 +61,8 @@ class SearchStateManager {
   /// Returns true if disposed, false if skipped
   bool disposeIfOwner(String screenKey, String instanceId) {
     if (_instanceIds[screenKey] != instanceId) {
-      debugPrint('SearchStateManager: Skipped dispose for $screenKey - instanceId $instanceId is not current owner (current: ${_instanceIds[screenKey]})');
+      debugPrint(
+          'SearchStateManager: Skipped dispose for $screenKey - instanceId $instanceId is not current owner (current: ${_instanceIds[screenKey]})');
       return false;
     }
     // Dispose using the specific instanceId
@@ -72,14 +74,14 @@ class SearchStateManager {
   /// Internal dispose for a specific instance
   void _disposeForInstance(String screenKey, String instanceId) {
     final prefix = '$screenKey::$instanceId::';
-    final keysToRemove = _notifiers.keys.where((k) => k.startsWith(prefix)).toList();
+    final keysToRemove =
+        _notifiers.keys.where((k) => k.startsWith(prefix)).toList();
     for (final key in keysToRemove) {
       _notifiers[key]?.dispose();
       _notifiers.remove(key);
       _searchCallbacks.remove(key);
       _state.remove(key);
     }
-    debugPrint('SearchStateManager: Disposed ${keysToRemove.length} entries for $prefix');
   }
 
   // ============ Composite Key Methods (Direct Access) ============
@@ -87,14 +89,14 @@ class SearchStateManager {
   /// Dispose state directly using a composite key (pageName::instanceId)
   void disposeByCompositeKey(String compositeKey) {
     final prefix = '$compositeKey::';
-    final keysToRemove = _notifiers.keys.where((k) => k.startsWith(prefix)).toList();
+    final keysToRemove =
+        _notifiers.keys.where((k) => k.startsWith(prefix)).toList();
     for (final key in keysToRemove) {
       _notifiers[key]?.dispose();
       _notifiers.remove(key);
       _searchCallbacks.remove(key);
       _state.remove(key);
     }
-    debugPrint('SearchStateManager: Disposed ${keysToRemove.length} entries for compositeKey $compositeKey');
   }
 
   /// Update window after data is loaded using composite key directly
@@ -106,10 +108,8 @@ class SearchStateManager {
     required int totalInWindow,
   }) {
     final fullKey = '$compositeKey::$searchName';
-    final windowData = _state[fullKey]?['paginationWindow'] as Map<String, dynamic>?;
-
-    debugPrint('SearchStateManager.onDataLoadedByCompositeKey: compositeKey=$compositeKey, direction=$direction, '
-        'loadedCount=$loadedCount, totalInWindow=$totalInWindow, windowData=${windowData != null}');
+    final windowData =
+        _state[fullKey]?['paginationWindow'] as Map<String, dynamic>?;
 
     if (windowData == null) return;
 
@@ -138,7 +138,8 @@ class SearchStateManager {
       }
     } else if (direction == 'up') {
       final oldStartOffset = windowData['startOffset'] as int? ?? 0;
-      final newStartOffset = (oldStartOffset - loadedCount).clamp(0, oldStartOffset);
+      final newStartOffset =
+          (oldStartOffset - loadedCount).clamp(0, oldStartOffset);
       windowData['startOffset'] = newStartOffset;
       windowData['hasMoreUp'] = newStartOffset > 0;
       windowData['totalInWindow'] = totalInWindow;
@@ -153,7 +154,8 @@ class SearchStateManager {
     }
 
     _state[fullKey]!['paginationWindow'] = windowData;
-    debugPrint('SearchStateManager: Updated window after $direction load for $fullKey');
+    debugPrint(
+        'SearchStateManager: Updated window after $direction load for $fullKey');
   }
 
   // ============ End Composite Key Methods ============
@@ -192,13 +194,13 @@ class SearchStateManager {
 
     // Call search callback if registered
     if (_searchCallbacks.containsKey(compositeKey)) {
-      debugPrint('SearchStateManager: Triggering search for $compositeKey');
       _searchCallbacks[compositeKey]!();
     }
   }
 
-  /// Update/add filters - merges by 'key' field.
-  /// Filters with same 'key' will be replaced, new ones added.
+  /// Update filters for a specific searchName.
+  /// Replaces all existing filters for this searchName with the new ones.
+  /// Cross-searchName accumulation still works via [getAllFilters].
   /// Set [triggerSearch] to false to update without triggering search.
   void updateFilters(
     String screenKey,
@@ -210,31 +212,17 @@ class SearchStateManager {
     _state.putIfAbsent(
         compositeKey, () => {'filters': <dynamic>[], 'orderBy': null});
 
-    final existing =
-        List<dynamic>.from(_state[compositeKey]!['filters'] as List? ?? []);
+    ///
+    /// Problem: When multiple search sources (e.g., QR scanner and text search)
+    /// share the same searchName, merging filters by key caused stale filters
+    /// from a previous search to persist and AND with the new filters —
+    /// resulting in incorrect empty results even when matching data exists.
+    ///
+    /// Solution: Replace all existing filters for this searchName with the new
+    /// ones instead of merging. Cross-searchName accumulation is unaffected
+    /// as it is handled separately by [getAllFilters].
 
-    // Merge: for each new filter, replace if same 'key' exists, else add
-    for (final newFilter in newFilters) {
-      if (newFilter is! Map) continue;
-
-      final filterKey = newFilter['key'];
-      if (filterKey == null) continue;
-
-      final existingIndex =
-          existing.indexWhere((f) => f is Map && f['key'] == filterKey);
-
-      if (existingIndex >= 0) {
-        existing[existingIndex] = newFilter;
-        debugPrint(
-            'SearchStateManager: Updated filter key=$filterKey for $compositeKey');
-      } else {
-        existing.add(newFilter);
-        debugPrint(
-            'SearchStateManager: Added filter key=$filterKey for $compositeKey');
-      }
-    }
-
-    _state[compositeKey]!['filters'] = existing;
+    _state[compositeKey]!['filters'] = List<dynamic>.from(newFilters);
 
     if (triggerSearch) {
       _notifyChange(compositeKey);
@@ -258,9 +246,6 @@ class SearchStateManager {
     existing.removeWhere((f) => f is Map && filterKeys.contains(f['key']));
 
     _state[compositeKey]!['filters'] = existing;
-
-    debugPrint(
-        'SearchStateManager: Removed ${beforeCount - existing.length} filters for keys=$filterKeys from $compositeKey');
 
     if (triggerSearch && beforeCount != existing.length) {
       _notifyChange(compositeKey);
@@ -305,7 +290,8 @@ class SearchStateManager {
       final defaultKey = _compositeKey(screenKey, 'default');
       if (_searchCallbacks.containsKey(defaultKey)) {
         _notifyChange(defaultKey);
-      } else if (lastModifiedKey != null && _searchCallbacks.containsKey(lastModifiedKey)) {
+      } else if (lastModifiedKey != null &&
+          _searchCallbacks.containsKey(lastModifiedKey)) {
         _notifyChange(lastModifiedKey);
       }
     }
@@ -314,8 +300,7 @@ class SearchStateManager {
   /// Get accumulated filters for a specific searchName
   List<dynamic> getFilters(String screenKey, String searchName) {
     final compositeKey = _compositeKey(screenKey, searchName);
-    return List<dynamic>.from(
-        _state[compositeKey]?['filters'] as List? ?? []);
+    return List<dynamic>.from(_state[compositeKey]?['filters'] as List? ?? []);
   }
 
   /// Get ALL accumulated filters across all searchNames for a screen
@@ -336,7 +321,8 @@ class SearchStateManager {
       }
     }
     final allFilters = filtersByKey.values.toList();
-    debugPrint('SearchStateManager: getAllFilters for $screenKey found ${allFilters.length} filters (deduplicated by key)');
+    debugPrint(
+        'SearchStateManager: getAllFilters for $screenKey found ${allFilters.length} filters (deduplicated by key)');
     return allFilters;
   }
 
@@ -366,7 +352,8 @@ class SearchStateManager {
     final oldOrderBy = _state[compositeKey]!['orderBy'];
     _state[compositeKey]!['orderBy'] = orderBy;
 
-    debugPrint('SearchStateManager: Updated orderBy for $compositeKey: $orderBy');
+    debugPrint(
+        'SearchStateManager: Updated orderBy for $compositeKey: $orderBy');
 
     // Only trigger if orderBy actually changed
     if (triggerSearch && _orderByChanged(oldOrderBy, orderBy)) {
@@ -401,7 +388,12 @@ class SearchStateManager {
   }) {
     final compositeKey = _compositeKey(screenKey, searchName);
     _state.putIfAbsent(
-        compositeKey, () => {'filters': <dynamic>[], 'orderBy': null, 'paginationWindow': <String, dynamic>{}});
+        compositeKey,
+        () => {
+              'filters': <dynamic>[],
+              'orderBy': null,
+              'paginationWindow': <String, dynamic>{}
+            });
 
     // Default maxItems to 3 pages worth if not specified
     final effectiveMaxItems = maxItems ?? (limit * 3);
@@ -416,7 +408,8 @@ class SearchStateManager {
       'totalInWindow': initialItemCount,
     };
 
-    debugPrint('SearchStateManager: Initialized pagination window for $compositeKey: limit=$limit, maxItems=$effectiveMaxItems');
+    debugPrint(
+        'SearchStateManager: Initialized pagination window for $compositeKey: limit=$limit, maxItems=$effectiveMaxItems');
   }
 
   /// Get current pagination window state
@@ -456,7 +449,8 @@ class SearchStateManager {
   /// Returns the offset to fetch, or null if can't load more
   int? prepareLoadDown(String screenKey, String searchName) {
     final compositeKey = _compositeKey(screenKey, searchName);
-    final windowData = _state[compositeKey]?['paginationWindow'] as Map<String, dynamic>?;
+    final windowData =
+        _state[compositeKey]?['paginationWindow'] as Map<String, dynamic>?;
     if (windowData == null) return null;
 
     final endOffset = windowData['endOffset'] as int? ?? 0;
@@ -467,7 +461,8 @@ class SearchStateManager {
       return null;
     }
 
-    debugPrint('SearchStateManager: Preparing load down from offset $endOffset');
+    debugPrint(
+        'SearchStateManager: Preparing load down from offset $endOffset');
     return endOffset;
   }
 
@@ -475,7 +470,8 @@ class SearchStateManager {
   /// Returns the offset to fetch, or null if can't load more
   int? prepareLoadUp(String screenKey, String searchName) {
     final compositeKey = _compositeKey(screenKey, searchName);
-    final windowData = _state[compositeKey]?['paginationWindow'] as Map<String, dynamic>?;
+    final windowData =
+        _state[compositeKey]?['paginationWindow'] as Map<String, dynamic>?;
     if (windowData == null) return null;
 
     final startOffset = windowData['startOffset'] as int? ?? 0;
@@ -502,9 +498,11 @@ class SearchStateManager {
     required int totalInWindow,
   }) {
     final compositeKey = _compositeKey(screenKey, searchName);
-    final windowData = _state[compositeKey]?['paginationWindow'] as Map<String, dynamic>?;
+    final windowData =
+        _state[compositeKey]?['paginationWindow'] as Map<String, dynamic>?;
 
-    debugPrint('SearchStateManager.onDataLoaded: screenKey=$screenKey, direction=$direction, '
+    debugPrint(
+        'SearchStateManager.onDataLoaded: screenKey=$screenKey, direction=$direction, '
         'loadedCount=$loadedCount, totalInWindow=$totalInWindow, windowData=${windowData != null}');
 
     if (windowData == null) return;
@@ -514,15 +512,13 @@ class SearchStateManager {
     final maxItems = windowData['maxItems'] as int? ??
         ((windowData['windowSize'] as int? ?? 3) * limit);
 
-    debugPrint('SearchStateManager.onDataLoaded: limit=$limit, maxItems=$maxItems, '
-        'willTrim=${totalInWindow > maxItems} (totalInWindow=$totalInWindow > maxItems=$maxItems)');
-
     if (direction == 'initial') {
       // First load
       windowData['startOffset'] = 0;
       windowData['endOffset'] = loadedCount;
       windowData['hasMoreUp'] = false;
-      windowData['hasMoreDown'] = loadedCount >= limit; // Assume more if we got full page
+      windowData['hasMoreDown'] =
+          loadedCount >= limit; // Assume more if we got full page
       windowData['totalInWindow'] = loadedCount;
     } else if (direction == 'down') {
       // Loaded next page
@@ -542,7 +538,8 @@ class SearchStateManager {
     } else if (direction == 'up') {
       // Loaded previous page
       final oldStartOffset = windowData['startOffset'] as int? ?? 0;
-      final newStartOffset = (oldStartOffset - loadedCount).clamp(0, oldStartOffset);
+      final newStartOffset =
+          (oldStartOffset - loadedCount).clamp(0, oldStartOffset);
       windowData['startOffset'] = newStartOffset;
       windowData['hasMoreUp'] = newStartOffset > 0;
       windowData['totalInWindow'] = totalInWindow;
@@ -568,7 +565,6 @@ class SearchStateManager {
     final compositeKey = _compositeKey(screenKey, searchName);
     if (_state.containsKey(compositeKey)) {
       _state[compositeKey]!.remove('paginationWindow');
-      debugPrint('SearchStateManager: Reset pagination window for $compositeKey');
     }
   }
 
@@ -582,14 +578,21 @@ class SearchStateManager {
   }) {
     final compositeKey = _compositeKey(screenKey, searchName);
     _state.putIfAbsent(
-        compositeKey, () => {'filters': <dynamic>[], 'orderBy': null, 'pagination': <String, dynamic>{}});
+        compositeKey,
+        () => {
+              'filters': <dynamic>[],
+              'orderBy': null,
+              'pagination': <String, dynamic>{}
+            });
 
-    final pagination = _state[compositeKey]!['pagination'] as Map<String, dynamic>? ?? {};
+    final pagination =
+        _state[compositeKey]!['pagination'] as Map<String, dynamic>? ?? {};
     if (offset != null) pagination['offset'] = offset;
     if (limit != null) pagination['limit'] = limit;
     _state[compositeKey]!['pagination'] = pagination;
 
-    debugPrint('SearchStateManager: Updated pagination for $compositeKey: offset=$offset, limit=$limit');
+    debugPrint(
+        'SearchStateManager: Updated pagination for $compositeKey: offset=$offset, limit=$limit');
   }
 
   /// Get current pagination state - DEPRECATED: use getPaginationWindow instead
@@ -600,12 +603,19 @@ class SearchStateManager {
   }
 
   /// Increment offset by limit (for load more) - DEPRECATED
-  int incrementOffset(String screenKey, String searchName, {int defaultLimit = 10}) {
+  int incrementOffset(String screenKey, String searchName,
+      {int defaultLimit = 10}) {
     final compositeKey = _compositeKey(screenKey, searchName);
     _state.putIfAbsent(
-        compositeKey, () => {'filters': <dynamic>[], 'orderBy': null, 'pagination': <String, dynamic>{}});
+        compositeKey,
+        () => {
+              'filters': <dynamic>[],
+              'orderBy': null,
+              'pagination': <String, dynamic>{}
+            });
 
-    final pagination = _state[compositeKey]!['pagination'] as Map<String, dynamic>? ?? {};
+    final pagination =
+        _state[compositeKey]!['pagination'] as Map<String, dynamic>? ?? {};
     final currentOffset = pagination['offset'] as int? ?? 0;
     final limit = pagination['limit'] as int? ?? defaultLimit;
     final newOffset = currentOffset + limit;
@@ -613,7 +623,8 @@ class SearchStateManager {
     pagination['offset'] = newOffset;
     _state[compositeKey]!['pagination'] = pagination;
 
-    debugPrint('SearchStateManager: Incremented offset for $compositeKey: $currentOffset -> $newOffset');
+    debugPrint(
+        'SearchStateManager: Incremented offset for $compositeKey: $currentOffset -> $newOffset');
     return newOffset;
   }
 
@@ -679,7 +690,8 @@ class SearchStateManager {
       }
     }
     _instanceIds.remove(screenKey);
-    debugPrint('SearchStateManager: Disposed for $screenKey${searchName != null ? '::$searchName' : ' (all)'}');
+    debugPrint(
+        'SearchStateManager: Disposed for $screenKey${searchName != null ? '::$searchName' : ' (all)'}');
   }
 
   /// Dispose all state (use with caution, typically on app restart)
