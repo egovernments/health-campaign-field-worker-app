@@ -456,6 +456,18 @@ class MdmsRepository {
       return reasonTypes;
     }).toList();
 
+    appConfiguration.boundaryRelationship =
+        result.hcmWrapperModel?.boundaryRelationship?.map((e) {
+      final boundaryRelConfig = BoundaryRelationshipConfig()
+        ..boundaryType = e.boundaryType
+        ..order = e.order
+        ..parentBoundaryType = e.parent?.boundaryType ?? ''
+        ..childBoundaryTypes =
+            e.children?.map((c) => c.boundaryType).toList() ?? [];
+
+      return boundaryRelConfig;
+    }).toList();
+
     isar.writeTxnSync(() {
       isar.appConfigurations.putSync(appConfiguration);
       isar.rowVersionLists.putAllSync(rowVersionList);

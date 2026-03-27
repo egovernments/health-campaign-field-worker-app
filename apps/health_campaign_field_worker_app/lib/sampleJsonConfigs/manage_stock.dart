@@ -1,7 +1,7 @@
 final dynamic sampleInventoryFlows = {
   "name": "INVENTORY",
   "initialPage": "manageStock",
-  "project": "CMP-2025-08-04-004846",
+  "project": "CMP-2026-03-17-000196",
   "version": 1,
   "disabled": false,
   "isSelected": true,
@@ -9,12 +9,11 @@ final dynamic sampleInventoryFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "manageStock",
-      "heading": "INVENTORY_MANAGE_STOCK_HEADING",
-      "description": "INVENTORY_MANAGE_STOCK_DESCRIPTION",
+      "heading": "APP_CONFIG_INVENTORY_manageStock_HEADING",
       "header": [
         {
           "format": "backLink",
-          "label": "CORE_COMMON_BACK",
+          "label": "APP_CONFIG_INVENTORY_manageStock_BACK_BUTTON_LABEL",
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
@@ -23,7 +22,8 @@ final dynamic sampleInventoryFlows = {
       "footer": [
         {
           "format": "button",
-          "label": "INVENTORY_VIEW_TRANSACTIONS_LABEL",
+          "label":
+              "APP_CONFIG_INVENTORY_manageStock_VIEW_TRANSACTIONS_FOOTER_BUTTON_LABEL",
           "properties": {
             "type": "primary",
             "size": "large",
@@ -87,34 +87,46 @@ final dynamic sampleInventoryFlows = {
       "body": [
         {
           "format": "menu_card",
-          "heading": "INVENTORY_RECORD_STOCK_RECEIPT_HEADING",
-          "description": "INVENTORY_RECORD_STOCK_RECEIPT_DESCRIPTION",
+          "heading":
+              "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
+          "description":
+              "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RECEIVED_AT_THE_WAREHOUSE_DESCRIPTION",
           "icon": "FileUpload",
           "onAction": [
             {
               "actionType": "NAVIGATION",
               "properties": {
-                "type": "FORM",
-                "name": "RECORDSTOCK",
-                "data": [
-                  {"key": "stockEntryType", "value": "RECEIPT"},
-                  {"key": "transactionType", "value": "RECEIVED"},
-                  {"key": "primaryRole", "value": "RECEIVER"},
-                  {"key": "secondaryRole", "value": "SENDER"},
-                  {
-                    "key": "mrnNumber",
-                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
-                  }
-                ]
+                "type": "TEMPLATE",
+                "name": "incomingTransactions",
+                "data": []
               }
             }
+            // {
+            //   "actionType": "NAVIGATION",
+            //   "properties": {
+            //     "type": "FORM",
+            //     "name": "RECORDSTOCK",
+            //     "data": [
+            //       {"key": "stockEntryType", "value": "RECEIPT"},
+            //       {"key": "transactionType", "value": "RECEIVED"},
+            //       {"key": "primaryRole", "value": "RECEIVER"},
+            //       {"key": "secondaryRole", "value": "SENDER"},
+            //       {
+            //         "key": "mrnNumber",
+            //         "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+            //       }
+            //     ]
+            //   }
+            // }
           ]
         },
         {
           "format": "menu_card",
-          "heading": "INVENTORY_RECORD_STOCK_ISSUED_HEADING",
-          "description": "INVENTORY_RECORD_STOCK_ISSUED_DESCRIPTION",
-          "icon": "FileDownload",
+          "heading":
+              "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
+          "description":
+              "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION",
+          "icon": 'FileDownload',
           "onAction": [
             {
               "actionType": "SEARCH_EVENT",
@@ -160,9 +172,11 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
-          "heading": "INVENTORY_STOCK_RETURNED_HEADING",
-          "description": "INVENTORY_STOCK_RETURNED_DESCRIPTION",
-          "icon": "Restore",
+          "heading":
+              "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RETURNED_HEADING",
+          "description":
+              "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RETURNED_TO_THE_WAREHOUSE_DESCRIPTION",
+          "icon": 'Restore',
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -185,10 +199,12 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
-          "heading": "INVENTORY_STOCK_DAMAGED_HEADING",
+          "heading":
+              "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_DAMAGED_HEADING",
           "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}} == false",
-          "description": "INVENTORY_STOCK_DAMAGED_DESCRIPTION",
-          "icon": "Store",
+          "description":
+              "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_DAMAGED_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
+          "icon": 'Store',
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -211,9 +227,11 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
-          "heading": "INVENTORY_STOCK_LOSS_HEADING",
-          "description": "INVENTORY_STOCK_LOSS_DESCRIPTION",
-          "icon": "Store",
+          "heading":
+              "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
+          "description":
+              "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_LOST_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
+          "icon": 'Store',
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -257,22 +275,22 @@ final dynamic sampleInventoryFlows = {
             }
           ]
         },
-        {
-          "format": "menu_card",
-          "heading": "INVENTORY_INCOMING_TRANSACTIONS_HEADING",
-          "description": "INVENTORY_INCOMING_TRANSACTIONS_DESCRIPTION",
-          "icon": "Inbox",
-          "onAction": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "type": "TEMPLATE",
-                "name": "incomingTransactions",
-                "data": []
-              }
-            }
-          ]
-        }
+        // {
+        //   "format": "menu_card",
+        //   "heading": "INVENTORY_INCOMING_TRANSACTIONS_HEADING",
+        //   "description": "INVENTORY_INCOMING_TRANSACTIONS_DESCRIPTION",
+        //   "icon": 'Inbox',
+        //   "onAction": [
+        //     {
+        //       "actionType": "NAVIGATION",
+        //       "properties": {
+        //         "type": "TEMPLATE",
+        //         "name": "incomingTransactions",
+        //         "data": []
+        //       }
+        //     }
+        //   ]
+        // }
       ]
     },
     {
@@ -339,7 +357,7 @@ final dynamic sampleInventoryFlows = {
               }
             ]
           }
-        }
+        },
       ],
       "wrapperConfig": {
         "wrapperName": "ScanStockWrapper",
@@ -406,7 +424,7 @@ final dynamic sampleInventoryFlows = {
     {
       "screenType": "FORM",
       "name": "RECORDSTOCK",
-      "project": "CMP-2025-08-04-004846",
+      "project": "CMP-2026-03-17-000196",
       "version": 1,
       "disabled": false,
       "isSelected": true,
@@ -561,7 +579,7 @@ final dynamic sampleInventoryFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "includeInForm": true,
-              "enums": []
+              "enums": [],
             },
             {
               "type": "string",
@@ -593,7 +611,7 @@ final dynamic sampleInventoryFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "dropDownOptions": []
-            }
+            },
           ],
           "navigateTo": {"name": "stockDetails", "type": "form"}
         },
@@ -718,7 +736,7 @@ final dynamic sampleInventoryFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "enums": []
+              "enums": [],
             },
             {
               "type": "string",
@@ -735,6 +753,13 @@ final dynamic sampleInventoryFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
+              // "validations": [
+              //   {
+              //     "type": "required",
+              //     "value": true,
+              //     "message": "Transport type is required"
+              //   }
+              // ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": [
@@ -757,10 +782,17 @@ final dynamic sampleInventoryFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
+              // "validations": [
+              //   {
+              //     "type": "required",
+              //     "value": true,
+              //     "message": "Vehicle number is required"
+              //   }
+              // ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": null
-            }
+            },
           ],
           "value": null,
           "required": null,
@@ -875,7 +907,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_INVENTORY_QUANTITY_SENT_LABEL_01",
+              "label": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
               "order": 4,
               "value": "",
               "format": "text",
@@ -887,14 +919,6 @@ final dynamic sampleInventoryFlows = {
               "fieldName": "quantitySent",
               "deleteFlag": false,
               "innerLabel": "",
-              "visibilityCondition": {
-                "expression": [
-                  {
-                    "condition": "navigation.stockEntryType == 'ISSUED'",
-                    "type": "custom"
-                  }
-                ]
-              },
               "systemDate": false,
               "validations": [
                 {
@@ -910,7 +934,15 @@ final dynamic sampleInventoryFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "enums": null
+              "enums": null,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "navigation.stockEntryType == 'ISSUED'",
+                    "type": "custom"
+                  }
+                ]
+              }
             },
             {
               "type": "string",
@@ -1111,6 +1143,8 @@ final dynamic sampleInventoryFlows = {
               "validations": [
                 {"type": "isGS1", "value": true, "message": ""}
               ],
+              "hidden": false,
+              "tooltip": "",
               "comparisonConfig": {
                 "model": "stock",
                 "extractKey": "scanResource",
@@ -1141,8 +1175,6 @@ final dynamic sampleInventoryFlows = {
                 ],
                 "errorMessage": "RESOURCES_ALREADY_SCANNED"
               },
-              "hidden": false,
-              "tooltip": "",
               "helpText": "Scan Resource",
               "infoText": "",
               "readOnly": false,
@@ -1152,8 +1184,8 @@ final dynamic sampleInventoryFlows = {
               "systemDate": false,
               "errorMessage": "",
               "isMultiSelect": false,
-              "enums": []
-            }
+              "enums": [],
+            },
           ],
           "value": null,
           "required": null,
@@ -1172,7 +1204,7 @@ final dynamic sampleInventoryFlows = {
           "includeInSummary": null,
           "autoEnable": null,
           "navigateTo": {"name": "stock-acknowledgement", "type": "template"}
-        }
+        },
       ],
       "onAction": [
         {
@@ -1471,8 +1503,7 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "INVENTORY_RECORD_TYPE_REQUIRED_MESSAGE"
+                  "message": "INVENTORY_RECORD_TYPE_REQUIRED_MESSAGE"
                 }
               ],
               "errorMessage": "",
@@ -1646,10 +1677,7 @@ final dynamic sampleInventoryFlows = {
                 "key": "stockEntryType",
                 "value": "{{formData.lessExcessDetails.recordType}}"
               },
-              {
-                "key": "mrnNumber",
-                "value": "{{navigation.mrnNumber}}"
-              }
+              {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"}
             ],
             "onError": [
               {
@@ -1711,7 +1739,7 @@ final dynamic sampleInventoryFlows = {
               "dataModuleColor": "black",
               "backgroundColor": "white",
               "padding": 16,
-              "visible": "{{fn:hasRole('DISTRIBUTOR')}}"
+              "visible": "{{fn:hasRole('DISTRIBUTOR')}}",
             }
           ],
           "properties": {"type": "success"},
@@ -1727,6 +1755,10 @@ final dynamic sampleInventoryFlows = {
                     {
                       "key": "selectedStock",
                       "value": "{{navigation.mrnNumber}}"
+                    },
+                    {
+                      "key": "clientReferenceId",
+                      "value": "{{navigation.clientReferenceId}}"
                     }
                   ]
                 }
@@ -1742,7 +1774,7 @@ final dynamic sampleInventoryFlows = {
                   "type": "TEMPLATE",
                   "name": "manageStock",
                   "navigationMode": "popUntilAndReplace",
-                  "popUntilPageName": "manageStock"
+                  "popUntilPageName": "manageStock",
                 }
               }
             ]
@@ -1762,7 +1794,7 @@ final dynamic sampleInventoryFlows = {
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
-        }
+        },
       ],
       "footer": [],
       "initActions": [
@@ -1795,7 +1827,7 @@ final dynamic sampleInventoryFlows = {
               "field": "clientAuditDetails.createdBy",
               "equalsFrom": "{{singleton.loggedInUserUuid}}"
             }
-          }
+          },
         ],
         "searchConfig": {
           "primary": "stock",
@@ -1924,12 +1956,16 @@ final dynamic sampleInventoryFlows = {
                       "navigationMode": "popUntilAndPush",
                       "popUntilPageName": "manageStock",
                       "data": [
-                        {"key": "selectedStock", "value": "{{item.groupKey}}"}
+                        {"key": "selectedStock", "value": "{{item.groupKey}}"},
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{item.items[0].clientReferenceId}}"
+                        }
                       ]
                     }
                   }
                 ]
-              }
+              },
             ]
           }
         }
@@ -1963,7 +1999,14 @@ final dynamic sampleInventoryFlows = {
               {
                 "key": "additionalFields",
                 "value": "{{navigation.selectedStock}}",
-                "operation": "contains"
+                "operation": "contains",
+                "applyIf": "{{fn:isNotEmpty(navigation.selectedStock)}}==true"
+              },
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.clientReferenceId}}",
+                "operation": "equals",
+                "applyIf": "{{fn:isEmpty(navigation.selectedStock)}}==true"
               }
             ]
           }
@@ -1975,11 +2018,14 @@ final dynamic sampleInventoryFlows = {
         "rootEntity": "StockModel",
         "filters": [],
         "relations": [
-          {"name": "stock", "entity": "StockModel"}
+          {
+            "name": "stock",
+            "entity": "StockModel",
+          }
         ],
         "searchConfig": {
           "primary": "stock",
-          "select": ["stock"]
+          "select": ["stock"],
         }
       },
       "body": [
@@ -2060,21 +2106,8 @@ final dynamic sampleInventoryFlows = {
           "actionType": "SEARCH_EVENT",
           "properties": {
             "type": "SEARCH_EVENT",
-            "name": "projectFacility",
-            "data": [
-              {
-                "key": "projectId",
-                "value": "{{singleton.selectedProject.id}}",
-                "operation": "equals"
-              }
-            ]
-          }
-        },
-        {
-          "actionType": "SEARCH_EVENT",
-          "properties": {
-            "type": "SEARCH_EVENT",
             "name": "stock",
+            "awaitResults": true,
             "data": [
               {
                 "key": "receiverId",
@@ -2082,10 +2115,20 @@ final dynamic sampleInventoryFlows = {
                 "operation": "equals"
               },
               {
-                "key": "transactionType",
-                "value": "DISPATCHED",
-                "operation": "equals"
-              }
+                "key": "auditCreatedBy",
+                "value": "{{singleton.loggedInUserUuid}}",
+                "operation": "notEquals"
+              },
+              {
+                "key": "productVariantId",
+                "value": "{{fn:getProjectProductVariantIds()}}",
+                "operation": "in"
+              },
+              {
+                "key": "additionalFields",
+                "value": "IN_TRANSIT",
+                "operation": "contains"
+              },
             ]
           }
         }
@@ -2097,67 +2140,67 @@ final dynamic sampleInventoryFlows = {
         "groupBy": "additionalFields.fields.mrnNumber",
         "filters": [],
         "relations": [
-          {"name": "stock", "entity": "StockModel"},
-          {
-            "name": "projectFacility",
-            "entity": "ProjectFacilityModel",
-            "match": {"field": "projectId", "equalsFrom": "projectId"}
-          }
+          {"name": "stock", "entity": "StockModel"}
         ],
         "searchConfig": {
           "primary": "stock",
-          "select": ["stock", "projectFacility"],
+          "select": ["stock"],
           "orderBy": {"field": "clientCreatedTime", "order": "DESC"}
         }
       },
       "body": [
-        {
-          "format": "dropdown",
-          "fieldName": "transactionTypeFilter",
-          "label": "INVENTORY_TRANSACTION_TYPE_FILTER_LABEL",
-          "value": "PENDING_RECEIPT",
-          "enums": [
-            {
-              "code": "PENDING_RECEIPT",
-              "name": "INVENTORY_PENDING_RECEIPT_LABEL"
-            },
-            {"code": "RECEIVED", "name": "INVENTORY_RECEIVED_LABEL"},
-            {"code": "DISPATCHED", "name": "INVENTORY_DISPATCHED_LABEL"}
-          ],
-          "onChange": [
-            {
-              "actionType": "SEARCH_EVENT",
-              "properties": {
-                "type": "SEARCH_EVENT",
-                "name": "stock",
-                "awaitResults": true,
-                "data": [
-                  {
-                    "key": "receiverId",
-                    "value": "{{fn:getUserFacilityId()}}",
-                    "operation": "equals"
-                  },
-                  {
-                    "key": "transactionType",
-                    "value": "{{incomingTransactions.transactionTypeFilter}}",
-                    "operation": "equals"
-                  }
-                ]
-              }
-            }
-          ]
-        },
+        // {
+        //   "format": "dropdownTemplate",
+        //   "fieldName": "selectedFacility",
+        //   "label": "INVENTORY_SELECT_FACILITY_LABEL",
+        //   "valueKey": "code",
+        //   "displayKey": "name",
+        //   "source": "{{fn:getProjectFacilities()}}",
+        //   "onChange": [
+        //     {
+        //       "actionType": "SEARCH_EVENT",
+        //       "properties": {
+        //         "type": "SEARCH_EVENT",
+        //         "name": "stock",
+        //         "awaitResults": true,
+        //         "data": [
+        //           {
+        //             "key": "receiverId",
+        //             "value": "{{selectedFacility}}",
+        //             "operation": "equals"
+        //           },
+        //           {
+        //             "key": "auditCreatedBy",
+        //             "value": "{{singleton.loggedInUserUuid}}",
+        //             "operation": "notEquals"
+        //           },
+        //           {
+        //             "key": "additionalFields",
+        //             "value": "\"key\":\"status\"",
+        //             "operation": "notContains"
+        //           },
+        //           {
+        //             "key": "productVariantId",
+        //             "value": "{{fn:getProjectProductVariantIds()}}",
+        //             "operation": "in"
+        //           }
+        //         ]
+        //       }
+        //     }
+        //   ]
+        // },
         {
           "format": "infoCard",
-          "hidden": "{{ context.stock.isNotEmpty }}",
+          "hidden": "{{fn:hasResults('StockModel')}} == true",
           "label": "INVENTORY_NO_INCOMING_TRANSACTIONS_LABEL",
           "description": "INVENTORY_NO_INCOMING_TRANSACTIONS_DESCRIPTION"
         },
         {
           "format": "listView",
-          "hidden": "{{ context.stock.isEmpty }}",
+          "hidden": "{{fn:hasResults('StockModel')}} == false",
           "fieldName": "incomingList",
           "dataSource": "StockModel",
+          "properties": {"spacing": "spacer4"},
           "child": {
             "format": "card",
             "children": [
@@ -2171,7 +2214,7 @@ final dynamic sampleInventoryFlows = {
                   {
                     "format": "tag",
                     "type": "",
-                    "label": "INVENTORY_MRN_TAG_LABEL {{item.groupKey}}"
+                    "label": "MRN {{item.groupKey}}"
                   },
                   {
                     "format": "textTemplate",
@@ -2196,7 +2239,7 @@ final dynamic sampleInventoryFlows = {
                     "children": [
                       {
                         "format": "textTemplate",
-                        "value": "INVENTORY_SENDER_LABEL"
+                        "value": "APP_CONFIG_INVENTORY_SENDER_LABEL"
                       },
                       {
                         "format": "textTemplate",
@@ -2206,10 +2249,8 @@ final dynamic sampleInventoryFlows = {
                     ]
                   },
                   {
-                    "format": "tag",
-                    "type":
-                        "{{fn:getTransactionStatusType(item.items[0].transactionType)}}",
-                    "label": "{{item.items[0].transactionType}}"
+                    "format": "textTemplate",
+                    "value": "{{item.items[0].transactionType}}"
                   }
                 ]
               },
@@ -2225,60 +2266,57 @@ final dynamic sampleInventoryFlows = {
               },
               {
                 "format": "button",
-                "label": "INVENTORY_ACKNOWLEDGE_RECEIPT_LABEL",
+                "label": "INVENTORY_SELECT_LABEL",
                 "visible": "{{item.items[0].transactionType == 'DISPATCHED'}}",
                 "properties": {
                   "type": "primary",
-                  "size": "large",
+                  "size": "medium",
                   "mainAxisSize": "max",
                   "mainAxisAlignment": "center"
                 },
                 "onAction": [
                   {
-                    "actionType": "REVERSE_TRANSFORM",
-                    "properties": {
-                      "configName": "stock",
-                      "entityTypes": ["StockModel"],
-                      "sourceData": "item.items"
-                    }
-                  },
-                  {
                     "actionType": "NAVIGATION",
                     "properties": {
                       "type": "FORM",
-                      "name": "RECORDSTOCK",
+                      "name": "stockReceiptDetails",
                       "data": [
                         {"key": "stockEntryType", "value": "RECEIPT"},
                         {"key": "transactionType", "value": "RECEIVED"},
                         {"key": "primaryRole", "value": "RECEIVER"},
                         {"key": "secondaryRole", "value": "SENDER"},
-                        {"key": "scannedMrn", "value": "{{item.groupKey}}"},
+                        {
+                          "key": "mrnNumber",
+                          "value":
+                              "{{item.items[0].additionalFields.fields.mrnNumber}}"
+                        },
                         {"key": "isEdit", "value": "true"},
                         {"key": "prefillFromScan", "value": "true"},
-                        {"key": "mrnNumber", "value": "{{item.groupKey}}"}
-                      ]
-                    }
-                  }
-                ]
-              },
-              {
-                "format": "button",
-                "label": "INVENTORY_VIEW_DETAILS_LABEL",
-                "visible": "{{item.items[0].transactionType != 'DISPATCHED'}}",
-                "properties": {
-                  "type": "secondary",
-                  "size": "large",
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                },
-                "onAction": [
-                  {
-                    "actionType": "NAVIGATION",
-                    "properties": {
-                      "type": "TEMPLATE",
-                      "name": "viewTransactionDetails",
-                      "data": [
-                        {"key": "selectedStock", "value": "{{item.groupKey}}"}
+                        {
+                          "key": "senderFacilityId",
+                          "value": "{{item.items[0].senderId}}"
+                        },
+                        {
+                          "key": "quantity",
+                          "value": "{{item.items[0].quantity}}"
+                        },
+                        {
+                          "key": "wayBillNumber",
+                          "value": "{{item.items[0].waybillNumber}}"
+                        },
+                        {
+                          "key": "productVariantId",
+                          "value": "{{item.items[0].productVariantId}}"
+                        },
+                        {
+                          "key": "sku",
+                          "value":
+                              "{{item.items[0].additionalFields.fields.sku}}"
+                        },
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{item.items[0].clientReferenceId}}"
+                        }
                       ]
                     }
                   }
@@ -2286,6 +2324,362 @@ final dynamic sampleInventoryFlows = {
               }
             ]
           }
+        }
+      ]
+    },
+    {
+      "screenType": "FORM",
+      "name": "stockReceiptDetails",
+      "heading": "INVENTORY_STOCK_RECEIPT_DETAILS_HEADING",
+      "description": "",
+      "version": 1,
+      "header": [
+        {
+          "format": "backLink",
+          "label": "CORE_COMMON_BACK",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        },
+        {"format": "helpLink", "label": "CORE_COMMON_HELP"}
+      ],
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "configName": "stockReceipt",
+            "forceCreate": true,
+            "data": [
+              {"key": "stockEntryType", "value": "RECEIPT"},
+              {"key": "transactionType", "value": "RECEIVED"},
+              {"key": "primaryRole", "value": "RECEIVER"},
+              {"key": "secondaryRole", "value": "SENDER"},
+              {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"},
+              {
+                "key": "senderFacilityId",
+                "value": "{{navigation.senderFacilityId}}"
+              },
+              {
+                "key": "productVariantId",
+                "value": "{{navigation.productVariantId}}"
+              },
+              {"key": "userFacilityId", "value": "{{fn:getUserFacilityId()}}"},
+              {"key": "sku", "value": "{{navigation.sku}}"},
+              {"key": "quantity", "value": "{{navigation.quantity}}"}
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch config."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "STOCK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to accept stock."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "UPDATE_EVENT",
+          "properties": {
+            "source": "existingModels",
+            "entity": "StockModel",
+            "modify": [
+              {
+                "key": "StockModel.additionalFields.fields.status",
+                "value": "ACCEPTED"
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "UPDATE_STOCK_BALANCE",
+          "properties": {
+            "entity": "STOCK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to update stock balance."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "SHOW_TOAST",
+          "properties": {
+            "message": "INVENTORY_STOCK_ACCEPTED_SUCCESS",
+            "type": "success"
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "TEMPLATE",
+            "name": "manageStock",
+            "navigationMode": "popUntilAndReplace",
+            "popUntilPageName": "manageStock"
+          }
+        }
+      ],
+      "onSecondaryAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "configName": "stockReject",
+            "forceCreate": true,
+            "data": [
+              {"key": "stockEntryType", "value": "RETURNED"},
+              {"key": "transactionType", "value": "DISPATCHED"},
+              {"key": "primaryRole", "value": "SENDER"},
+              {"key": "secondaryRole", "value": "RECEIVER"},
+              {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"},
+              {
+                "key": "senderFacilityId",
+                "value": "{{fn:getUserFacilityId()}}"
+              },
+              {
+                "key": "receiverFacilityId",
+                "value": "{{navigation.senderFacilityId}}"
+              },
+              {
+                "key": "productVariantId",
+                "value": "{{navigation.productVariantId}}"
+              },
+              {"key": "userFacilityId", "value": "{{fn:getUserFacilityId()}}"},
+              {"key": "sku", "value": "{{navigation.sku}}"},
+              {"key": "quantity", "value": "{{navigation.quantity}}"}
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch config."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "UPDATE_EVENT",
+          "properties": {
+            "source": "existingModels",
+            "entity": "StockModel",
+            "modify": [
+              {
+                "key": "StockModel.additionalFields.fields.status",
+                "value": "REJECTED"
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "SHOW_TOAST",
+          "properties": {
+            "message": "INVENTORY_STOCK_REJECTED_SUCCESS",
+            "type": "success"
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "TEMPLATE",
+            "name": "manageStock",
+            "navigationMode": "popUntilAndReplace",
+            "popUntilPageName": "manageStock"
+          }
+        }
+      ],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "stock",
+            "awaitResults": true,
+            "data": [
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.clientReferenceId}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        },
+      ],
+      "wrapperConfig": {
+        "wrapperName": "StockReceiptDetailsWrapper",
+        "groupByType": false,
+        "rootEntity": "StockModel",
+        "filters": [],
+        "relations": [
+          {"name": "stock", "entity": "StockModel"}
+        ],
+        "searchConfig": {
+          "primary": "stock",
+          "select": ["stock"]
+        }
+      },
+      "pages": [
+        {
+          "page": "stockReceiptDetails",
+          "label": "INVENTORY_STOCK_RECEIPT_DETAILS_HEADING",
+          "order": 1,
+          "type": "object",
+          "description": "",
+          "actionLabel": "INVENTORY_ACCEPT_STOCK_LABEL",
+          "secondaryActionLabel": "INVENTORY_DECLINE_STOCK_LABEL",
+          "properties": [
+            {
+              "type": "string",
+              "label": "INVENTORY_RESOURCE_LABEL",
+              "order": 1,
+              "value": "{{sku}}",
+              "format": "text",
+              "fieldName": "resource",
+              "displayOnly": true
+            },
+            {
+              "type": "string",
+              "label": "INVENTORY_MATERIAL_ISSUE_NUMBER_LABEL",
+              "order": 2,
+              "value": "{{mrnNumber}}",
+              "format": "text",
+              "fieldName": "materialIssueNumber",
+              "displayOnly": true
+            },
+            {
+              "type": "string",
+              "label": "INVENTORY_RECEIVED_FROM_LABEL",
+              "order": 3,
+              "value": "{{senderFacilityId}}",
+              "format": "text",
+              "fieldName": "receivedFrom",
+              "displayOnly": true
+            },
+            {
+              "type": "string",
+              "label": "INVENTORY_WAYBILL_NUMBER_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter waybill number",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "wayBillNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "visibilityCondition": {},
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "INVENTORY_BATCH_NUMBER_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter batch number",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "batchNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "visibilityCondition": {},
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "INVENTORY_EXPIRY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select the expiry date",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "expiryDate",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "visibilityCondition": {},
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "INVENTORY_QUANTITY_SENT_BY_WAREHOUSE_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the quantity of blisters sent by warehouse",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "quantity",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "visibilityCondition": {},
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Quantity is required"
+                },
+                {
+                  "type": "regex",
+                  "value": r"^[0-9]+$",
+                  "message": "Please enter a valid number"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "INVENTORY_COMMENTS_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "textArea",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Add any comments",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "comment",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "visibilityCondition": {},
+              "validations": [
+                {"type": "required", "value": false, "message": ""}
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            }
+          ]
         }
       ]
     }

@@ -673,6 +673,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       FormGroup form, List<MapEntry<String, PropertySchema>> entries) {
     final visibleEntries = entries.where((entry) {
       final subSchema = entry.value;
+      if (subSchema.displayOnly == true) return false;
       return !_shouldHideField(form, subSchema, entry.key);
     }).toList();
 

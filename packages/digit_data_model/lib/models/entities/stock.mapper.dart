@@ -29,8 +29,9 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
   static String? _$facilityId(StockSearchModel v) => v.facilityId;
   static const Field<StockSearchModel, String> _f$facilityId =
       Field('facilityId', _$facilityId, opt: true);
-  static String? _$productVariantId(StockSearchModel v) => v.productVariantId;
-  static const Field<StockSearchModel, String> _f$productVariantId =
+  static List<String>? _$productVariantId(StockSearchModel v) =>
+      v.productVariantId;
+  static const Field<StockSearchModel, List<String>> _f$productVariantId =
       Field('productVariantId', _$productVariantId, opt: true);
   static String? _$referenceId(StockSearchModel v) => v.referenceId;
   static const Field<StockSearchModel, String> _f$referenceId =
@@ -196,6 +197,8 @@ extension StockSearchModelValueCopy<$R, $Out>
 
 abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
     implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get productVariantId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get receiverId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
@@ -208,7 +211,7 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
       {String? id,
       String? tenantId,
       String? facilityId,
-      String? productVariantId,
+      List<String>? productVariantId,
       String? referenceId,
       String? referenceIdType,
       String? transactingPartyId,
@@ -234,6 +237,14 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<StockSearchModel> $mapper =
       StockSearchModelMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get productVariantId => $value.productVariantId != null
+          ? ListCopyWith(
+              $value.productVariantId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(productVariantId: v))
+          : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get receiverId => $value.receiverId != null

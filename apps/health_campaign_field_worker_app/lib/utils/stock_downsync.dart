@@ -24,6 +24,9 @@ class StockDownsyncService {
 
   final LocalRepository<StockModel, StockSearchModel> stockLocalRepository;
 
+  final LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>
+      projectResourceLocalRepository;
+
   bool _isRunning = false;
 
   StockDownsyncService({
@@ -32,6 +35,7 @@ class StockDownsyncService {
     required this.facilityLocalRepository,
     required this.stockRemoteRepository,
     required this.stockLocalRepository,
+    required this.projectResourceLocalRepository,
   });
 
   /// ======================================================
@@ -62,44 +66,43 @@ class StockDownsyncService {
           _getCurrentRunningCycle(context.selectedProject);
       final lastChangedSince = currentRunningCycle?.startDate;
 
-      final projectFacilities = await projectFacilityLocalRepository.search(
+      final allProjectFacilities = await projectFacilityLocalRepository.search(
         ProjectFacilitySearchModel(projectId: [context.selectedProject.id]),
       );
 
-      final allFacilities = await facilityLocalRepository.search(
-        FacilitySearchModel(),
+      // Filter to only current level facilities
+      final projectFacilities = allProjectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
+      // Get product variant IDs from project resources
+      final projectResources = await projectResourceLocalRepository.search(
+        ProjectResourceSearchModel(projectId: [context.selectedProject.id]),
       );
-
-      Map<String, String> facilityIdUsageMap = {};
-
-      for (var element in allFacilities) {
-        facilityIdUsageMap[element.id] = element.usage ?? "";
-      }
-
-      final boundaryType = context.selectedProject.address?.boundaryType;
+      final productVariantIds = projectResources
+          .map((pr) => pr.resource.productVariantId)
+          .whereType<String>()
+          .toSet()
+          .toList();
 
       if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
         List<String> receiverIds =
             projectFacilities.map((e) => e.facilityId).toList();
 
-        // receiverIds = receiverIds
-        //     .where((e) => facilityIdUsageMap[e] == Constants.healthFacility)
-        //     .toList();
-
-        await _processStock(receiverIds, lastChangedSince);
+        await _processStock(receiverIds, lastChangedSince, productVariantIds);
       } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
         List<String> receiverIds =
             projectFacilities.map((e) => e.facilityId).toList();
 
-        // receiverIds = receiverIds
-        //     .where((e) => facilityIdUsageMap[e] == Constants.lgaFacility)
-        //     .toList();
-
-        await _processStock(receiverIds, lastChangedSince);
+        await _processStock(receiverIds, lastChangedSince, productVariantIds);
       } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
         final receiverIds = [userObject.uuid];
 
-        await _processStock(receiverIds, lastChangedSince);
+        await _processStock(receiverIds, lastChangedSince, productVariantIds);
       }
     } catch (e) {
       rethrow;
@@ -133,24 +136,34 @@ class StockDownsyncService {
   /// ======================================================
   /// STOCK PROCESSING
   /// ======================================================
-  Future<void> _processStock(
-      List<String> receiverIds, int? lastChangedSince) async {
+  Future<void> _processStock(List<String> receiverIds, int? lastChangedSince,
+      List<String> productVariantIds) async {
     if (receiverIds.isEmpty) return;
 
     final stockSearchModel = StockSearchModel(
       receiverId: receiverIds,
       transactionType: [TransactionType.dispatched.toValue()],
+      productVariantId: productVariantIds.isNotEmpty ? productVariantIds : null,
     );
 
-    final stockEntries = await stockRemoteRepository.search(
-      stockSearchModel,
-      limit: 10,
-      offSet: 0,
-      lastChangedSince: lastChangedSince,
-    );
+    const limit = 10;
+    int offSet = 0;
 
-    if (stockEntries.isNotEmpty) {
-      await stockLocalRepository.bulkCreate(stockEntries);
+    while (true) {
+      final stockEntries = await stockRemoteRepository.search(
+        stockSearchModel,
+        limit: limit,
+        offSet: offSet,
+        lastChangedSince: lastChangedSince,
+      );
+
+      if (stockEntries.isNotEmpty) {
+        await stockLocalRepository.bulkCreate(stockEntries);
+      }
+
+      if (stockEntries.length < limit) break;
+
+      offSet += limit;
     }
   }
 }

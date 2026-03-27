@@ -286,7 +286,7 @@ class MainApplicationState extends State<MainApplication>
                                 RemoteRepository<StockModel,
                                     StockSearchModel>>(),
                             notificationTokenRepository:
-                            NotificationTokenRepository(widget.client),
+                                NotificationTokenRepository(widget.client),
                             context: context,
                           ),
                         ),

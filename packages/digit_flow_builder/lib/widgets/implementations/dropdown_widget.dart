@@ -228,6 +228,11 @@ class DropdownWidget extends ResolvedFlowWidget {
       }
     }
 
+    // Hide dropdown when only one item (search triggered via initActions)
+    if (items.length <= 1) {
+      return const SizedBox.shrink();
+    }
+
     return LabeledField(
       label: label,
       isRequired: isRequired,
@@ -303,9 +308,8 @@ class DropdownWidget extends ResolvedFlowWidget {
     );
   }
 
-  List<DropdownItem> _buildDropdownItems(
-      dynamic sourceData, String displayKey, String valueKey,
-      BuildContext context) {
+  List<DropdownItem> _buildDropdownItems(dynamic sourceData, String displayKey,
+      String valueKey, BuildContext context) {
     final items = <DropdownItem>[];
 
     if (sourceData == null) return items;

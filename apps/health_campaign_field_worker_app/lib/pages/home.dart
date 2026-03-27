@@ -35,6 +35,7 @@ import 'package:transit_post/utils/utils.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/localization.dart';
+import '../blocs/stock_downsync/stock_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
@@ -53,7 +54,7 @@ import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
-import '../utils/stock_downsync.dart';
+import '../utils/stock_downsync_utils.dart';
 import '../utils/utils.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
@@ -87,6 +88,8 @@ class _HomePageState extends LocalizedState<HomePage> {
   final storage = const FlutterSecureStorage();
   late StreamSubscription<List<ConnectivityResult>> subscription;
   bool isTriggerLocalisation = true;
+  final StreamController<double> stockDownloadProgress =
+      StreamController<double>.broadcast();
 
   @override
   initState() {
@@ -503,15 +506,30 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
 
       // For warehouse managers and other roles, get facility from wrapper data
-      if (stateData == null) return '';
-
       try {
         // Get facility list from stateData - CrudStateData has modelMap property
         List<Map<String, dynamic>>? projectFacilities;
 
         // stateData is CrudStateData which has modelMap: Map<String, List<Map<String, dynamic>>>
-        if (stateData.modelMap != null) {
-          projectFacilities = stateData.modelMap['ProjectFacilityModel'];
+        if (stateData?.modelMap != null) {
+          projectFacilities = stateData!.modelMap['ProjectFacilityModel'];
+        }
+
+        // Fallback: read from manageStock page's state
+        if (projectFacilities == null || projectFacilities.isEmpty) {
+          final manageStockState = FlowCrudStateRegistry().get('manageStock');
+          final base = manageStockState?.base;
+          if (base is CrudStateLoaded) {
+            final pfModels = base.results['projectFacility'];
+            if (pfModels != null && pfModels.isNotEmpty) {
+              projectFacilities = pfModels
+                  .whereType<ProjectFacilityModel>()
+                  .map((pf) => <String, dynamic>{
+                        'facilityId': pf.facilityId,
+                      })
+                  .toList();
+            }
+          }
         }
 
         if (projectFacilities == null || projectFacilities.isEmpty) {
@@ -519,7 +537,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         }
 
         // Return first facility ID (user's assigned facility)
-        // Note: Could be enhanced to filter by boundary type if needed
         for (var facility in projectFacilities) {
           final facilityId = facility['facilityId']?.toString() ?? '';
           if (facilityId.isNotEmpty) {
@@ -530,6 +547,111 @@ class _HomePageState extends LocalizedState<HomePage> {
         return '';
       } catch (e) {
         debugPrint('getUserFacilityId error: $e');
+        return '';
+      }
+    });
+
+    // Get list of project facilities for dropdown selection
+    // Reads from manageStock page state in FlowCrudStateRegistry
+    FunctionRegistry.register('getProjectFacilities', (args, stateData) {
+      try {
+        // Try current page's stateData first
+        List<Map<String, dynamic>>? projectFacilities;
+        if (stateData?.modelMap != null) {
+          projectFacilities = stateData!.modelMap['ProjectFacilityModel'];
+        }
+
+        // Fallback: read from manageStock page's state
+        if (projectFacilities == null || projectFacilities.isEmpty) {
+          final manageStockState = FlowCrudStateRegistry().get('manageStock');
+          final base = manageStockState?.base;
+          if (base is CrudStateLoaded) {
+            final pfModels = base.results['projectFacility'];
+            if (pfModels != null && pfModels.isNotEmpty) {
+              projectFacilities = pfModels
+                  .whereType<ProjectFacilityModel>()
+                  .where((pf) {
+                    final facilityLevel = pf.additionalFields?.fields
+                        .where((f) => f.key == 'facilityLevel')
+                        .firstOrNull
+                        ?.value;
+                    return facilityLevel == null || facilityLevel == 'current';
+                  })
+                  .map((pf) => <String, dynamic>{
+                        'facilityId': pf.facilityId,
+                      })
+                  .toList();
+            }
+          }
+        }
+
+        if (projectFacilities == null || projectFacilities.isEmpty) {
+          return <Map<String, dynamic>>[];
+        }
+
+        // Filter to only show current level facilities
+        final filtered = projectFacilities.where((pf) {
+          final additionalFields =
+              pf['additionalFields'] as Map<String, dynamic>?;
+          if (additionalFields == null) return true;
+          final fields = additionalFields['fields'] as List?;
+          if (fields == null) return true;
+          for (final field in fields) {
+            if (field is Map &&
+                field['key'] == 'facilityLevel' &&
+                field['value'] != null) {
+              return field['value'] == 'current';
+            }
+          }
+          return true;
+        }).toList();
+
+        return filtered
+            .map((pf) => {
+                  'code': pf['facilityId']?.toString() ?? '',
+                  'name': 'FAC_${pf['facilityId']?.toString() ?? ''}',
+                })
+            .where((item) => item['code']!.isNotEmpty)
+            .toList();
+      } catch (e) {
+        debugPrint('getProjectFacilities error: $e');
+        return <Map<String, dynamic>>[];
+      }
+    });
+
+    // Get product variant IDs from project resources
+    FunctionRegistry.register('getProjectProductVariantIds', (args, stateData) {
+      try {
+        List<Map<String, dynamic>>? productVariants;
+        if (stateData?.modelMap != null) {
+          productVariants = stateData!.modelMap['ProductVariantModel'];
+        }
+
+        // Fallback: read from manageStock page's state
+        if (productVariants == null || productVariants.isEmpty) {
+          final manageStockState = FlowCrudStateRegistry().get('manageStock');
+          final base = manageStockState?.base;
+          if (base is CrudStateLoaded) {
+            final pvModels = base.results['productVariant'];
+            if (pvModels != null && pvModels.isNotEmpty) {
+              productVariants = pvModels
+                  .whereType<ProductVariantModel>()
+                  .map((pv) => <String, dynamic>{'id': pv.id})
+                  .toList();
+            }
+          }
+        }
+
+        if (productVariants == null || productVariants.isEmpty) {
+          return '';
+        }
+
+        return productVariants
+            .map((pv) => pv['id']?.toString() ?? '')
+            .where((id) => id.isNotEmpty)
+            .join(',');
+      } catch (e) {
+        debugPrint('getProjectProductVariantIds error: $e');
         return '';
       }
     });
@@ -545,6 +667,16 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
 
     // Get transaction status type for tag styling
+    // Check if a model has results (for hidden/visible conditions)
+    FunctionRegistry.register('hasResults', (args, stateData) {
+      if (args.isEmpty) return false;
+      final modelKey = args.first?.toString() ?? '';
+      if (modelKey.isEmpty || stateData?.modelMap == null) return false;
+
+      final results = stateData!.modelMap[modelKey];
+      return results != null && results.isNotEmpty;
+    });
+
     FunctionRegistry.register('getTransactionStatusType', (args, stateData) {
       if (args.isEmpty) return 'default';
       final transactionType = args.first?.toString().toUpperCase() ?? '';
@@ -569,6 +701,7 @@ class _HomePageState extends LocalizedState<HomePage> {
   @override
   dispose() {
     subscription.cancel();
+    stockDownloadProgress.close();
     super.dispose();
   }
 
@@ -597,6 +730,364 @@ class _HomePageState extends LocalizedState<HomePage> {
       ...(mappedItems?.showcaseKeys ?? []),
     ];
 
+    return BlocListener<StockDownSyncBloc, StockDownSyncState>(
+      listener: (context, stockDownSyncState) {
+        stockDownSyncState.maybeWhen(
+          orElse: () {},
+          loading: (isPop) {
+            if (isPop) {
+              Navigator.of(context, rootNavigator: true)
+                  .popUntil((route) => route is! PopupRoute);
+            }
+            DigitSyncDialog.show(
+              context,
+              type: DialogType.inProgress,
+              label: localizations.translate(
+                i18.home.stockSyncDataLabel,
+              ),
+              barrierDismissible: false,
+            );
+          },
+          getBatchSize: (batchSize, projectId) {
+            context.read<StockDownSyncBloc>().add(
+                  StockDownSyncCheckTotalCountEvent(
+                    projectId: projectId,
+                    batchSize: batchSize,
+                  ),
+                );
+          },
+          dataFound: (initialServerCount, batchSize, offset, lastSyncedTime) {
+            showStockDownloadDialog(
+              context,
+              model: DownloadBeneficiary(
+                title: localizations.translate(
+                  initialServerCount > 0
+                      ? i18.common.stockDataFound
+                      : i18.common.stockNoDataFound,
+                ),
+                projectId: context.projectId,
+                boundary: context.selectedProject.address?.boundaryType ?? '',
+                batchSize: batchSize,
+                totalCount: initialServerCount,
+                content: localizations.translate(
+                  initialServerCount > 0
+                      ? i18.common.stockDataFoundContent
+                      : i18.common.stockNoDataFoundContent,
+                ),
+                primaryButtonLabel: localizations.translate(
+                  initialServerCount > 0
+                      ? i18.common.coreCommonDownload
+                      : i18.acknowledgementSuccess.goToHome,
+                ),
+                secondaryButtonLabel: initialServerCount > 0
+                    ? localizations.translate(
+                        i18.common.coreCommonGoback,
+                      )
+                    : null,
+                boundaryName: context.selectedProject.address?.boundary ?? '',
+              ),
+              dialogType: DigitProgressDialogType.dataFound,
+              isPop: true,
+            );
+          },
+          inProgress: (syncCount, totalCount) {
+            stockDownloadProgress.add(
+              totalCount > 0 ? syncCount / totalCount : 0,
+            );
+            if (syncCount < 1) {
+              showStockDownloadDialog(
+                context,
+                model: DownloadBeneficiary(
+                  title: localizations.translate(
+                    i18.beneficiaryDetails.dataDownloadInProgress,
+                  ),
+                  projectId: context.projectId,
+                  boundary: context.selectedProject.address?.boundaryType ?? '',
+                  syncCount: syncCount,
+                  totalCount: totalCount,
+                  prefixLabel: syncCount.toString(),
+                  suffixLabel: totalCount.toString(),
+                  boundaryName: context.selectedProject.address?.boundary ?? '',
+                ),
+                dialogType: DigitProgressDialogType.inProgress,
+                isPop: true,
+                downloadProgressController: stockDownloadProgress,
+              );
+            }
+          },
+          success: (syncedCount, totalCount) {
+            Navigator.of(context, rootNavigator: true)
+                .popUntil((route) => route is! PopupRoute);
+            DigitSyncDialog.show(
+              context,
+              type: DialogType.complete,
+              label: localizations.translate(
+                i18.home.stockSyncDataLabel,
+              ),
+              primaryAction: DigitDialogActions(
+                label: localizations.translate(
+                  i18.acknowledgementSuccess.goToHome,
+                ),
+                action: (ctx) {
+                  Navigator.pop(ctx);
+                  context.router.replaceAll([HomeRoute()]);
+                },
+              ),
+              barrierDismissible: true,
+            );
+          },
+          failed: () {
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (appConfiguration, _, __) {
+                    showStockDownloadDialog(
+                      context,
+                      model: DownloadBeneficiary(
+                        title: localizations.translate(
+                          i18.common.coreCommonDownloadFailed,
+                        ),
+                        appConfiguartion: appConfiguration,
+                        projectId: context.projectId,
+                        boundary:
+                            context.selectedProject.address?.boundaryType ?? '',
+                        primaryButtonLabel: localizations.translate(
+                          i18.syncDialog.retryButtonLabel,
+                        ),
+                        secondaryButtonLabel: localizations.translate(
+                          i18.common.coreCommonGoback,
+                        ),
+                        boundaryName:
+                            context.selectedProject.address?.boundary ?? '',
+                      ),
+                      dialogType: DigitProgressDialogType.failed,
+                      isPop: true,
+                    );
+                  },
+                );
+          },
+          totalCountCheckFailed: () {
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (appConfiguration, _, __) {
+                    showStockDownloadDialog(
+                      context,
+                      model: DownloadBeneficiary(
+                        title: localizations.translate(
+                          i18.common.coreCommonDownloadFailed,
+                        ),
+                        appConfiguartion: appConfiguration,
+                        projectId: context.projectId,
+                        boundary:
+                            context.selectedProject.address?.boundaryType ?? '',
+                        primaryButtonLabel: localizations.translate(
+                          i18.syncDialog.retryButtonLabel,
+                        ),
+                        secondaryButtonLabel: localizations.translate(
+                          i18.common.coreCommonGoback,
+                        ),
+                        boundaryName:
+                            context.selectedProject.address?.boundary ?? '',
+                      ),
+                      dialogType: DigitProgressDialogType.checkFailed,
+                      isPop: true,
+                    );
+                  },
+                );
+          },
+          insufficientStorage: () {
+            showStockDownloadDialog(
+              context,
+              model: DownloadBeneficiary(
+                title: localizations.translate(
+                  i18.beneficiaryDetails.insufficientStorage,
+                ),
+                content: localizations.translate(
+                  i18.beneficiaryDetails.insufficientStorageContent,
+                ),
+                projectId: context.projectId,
+                boundary: context.selectedProject.address?.boundaryType ?? '',
+                primaryButtonLabel: localizations.translate(
+                  i18.common.coreCommonOk,
+                ),
+                boundaryName: context.selectedProject.address?.boundary ?? '',
+              ),
+              dialogType: DigitProgressDialogType.insufficientStorage,
+              isPop: true,
+            );
+          },
+        );
+      },
+      child: Scaffold(
+        backgroundColor: DigitTheme.instance.colorScheme.surface,
+        body: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: ScrollableContent(
+            slivers: [
+              SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return homeItems.elementAt(index);
+                  },
+                  childCount: homeItems.length,
+                ),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 145,
+                  childAspectRatio: 104 / 128,
+                ),
+              ),
+            ],
+            header: Column(
+              children: [
+                BackNavigationHelpHeaderWidget(
+                  showBackNavigation: false,
+                  showHelp: false,
+                  showcaseButton: ShowcaseButton(
+                    showcaseFor: showcaseKeys.toSet().toList(),
+                  ),
+                ),
+                // Show stock balance card for users with stock management access
+                if (state.actionsWrapper.actions
+                    .map((e) => e.displayName)
+                    .contains(i18.home.manageStockLabel))
+                  const StockBalanceCard(),
+                skipProgressBar
+                    ? const SizedBox.shrink()
+                    : homeShowcaseData.distributorProgressBar.buildWith(
+                        child: BeneficiaryProgressBar(
+                          label: localizations.translate(
+                            i18.home.progressIndicatorTitle,
+                          ),
+                          prefixLabel: localizations.translate(
+                            i18.home.progressIndicatorPrefixLabel,
+                          ),
+                        ),
+                      ),
+              ],
+            ),
+            footer: Padding(
+              padding: const EdgeInsets.only(bottom: spacer2),
+              child: PoweredByDigit(
+                version: Constants().version,
+              ),
+            ),
+            children: [
+              const SizedBox(height: spacer2 * 2),
+              // INFO : Need to add sync bloc of package Here
+              BlocConsumer<SyncBloc, SyncState>(
+                listener: (context, state) {
+                  state.maybeWhen(
+                    orElse: () => null,
+                    pendingSync: (count) {
+                      final debouncer = Debouncer(seconds: 5);
+                      debouncer.run(() async {
+                        if (count != 0) {
+                          await localSecureStore.setManualSyncTrigger(false);
+                          if (context.mounted) {
+                            await performBackgroundService(
+                              isBackground: false,
+                              stopService: false,
+                              context: context,
+                            );
+                          }
+                        } else {
+                          await localSecureStore.setManualSyncTrigger(true);
+                        }
+                      });
+                    },
+                    syncInProgress: () async {
+                      await localSecureStore.setManualSyncTrigger(false);
+                      if (context.mounted) {
+                        DigitSyncDialog.show(
+                          context,
+                          type: DialogType.inProgress,
+                          label: localizations.translate(
+                            i18.syncDialog.syncInProgressTitle,
+                          ),
+                          barrierDismissible: false,
+                        );
+                      }
+                    },
+                    completedSync: () async {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        DigitSyncDialog.show(context,
+                            type: DialogType.complete,
+                            label: localizations.translate(
+                              i18.syncDialog.dataSyncedTitle,
+                            ),
+                            primaryAction: DigitDialogActions(
+                              label: localizations.translate(
+                                i18.syncDialog.closeButtonLabel,
+                              ),
+                              action: (ctx) {
+                                Navigator.pop(ctx);
+                              },
+                            ),
+                            barrierDismissible: true);
+                      }
+                    },
+                    failedSync: () async {
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        _showSyncFailedDialog(
+                          context,
+                          message: localizations.translate(
+                            i18.syncDialog.syncFailedTitle,
+                          ),
+                        );
+                      }
+                    },
+                    failedDownSync: () async {
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        _showSyncFailedDialog(
+                          context,
+                          message: localizations.translate(
+                            i18.syncDialog.downSyncFailedTitle,
+                          ),
+                        );
+                      }
+                    },
+                    failedUpSync: () async {
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        _showSyncFailedDialog(
+                          context,
+                          message: localizations.translate(
+                            i18.syncDialog.upSyncFailedTitle,
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+                builder: (context, state) {
+                  return state.maybeWhen(
+                    orElse: () => const Offstage(),
+                    pendingSync: (count) {
+                      return count == 0
+                          ? const Offstage()
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: spacer2,
+                              ),
+                              child: InfoCard(
+                                type: InfoType.info,
+                                description: localizations
+                                    .translate(i18.home.dataSyncInfoContent)
+                                    .replaceAll('{}', count.toString()),
+                                title: localizations.translate(
+                                  i18.home.dataSyncInfoLabel,
+                                ),
+                              ),
+                            );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
     return Scaffold(
       backgroundColor: DigitTheme.instance.colorScheme.surface,
       body: SizedBox(
@@ -1284,21 +1775,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           child: HomeItemCard(
         icon: Icons.sync_alt,
         label: i18.home.stockSyncDataLabel,
-        onPressed: () async {
-          final stockService = StockDownsyncService(
-            localSecureStore: LocalSecureStore.instance,
-            projectFacilityLocalRepository: context.read<
-                LocalRepository<ProjectFacilityModel,
-                    ProjectFacilitySearchModel>>(),
-            facilityLocalRepository: context
-                .read<LocalRepository<FacilityModel, FacilitySearchModel>>(),
-            stockRemoteRepository:
-                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
-            stockLocalRepository:
-                context.read<LocalRepository<StockModel, StockSearchModel>>(),
-          );
-
-          await stockService.execute(context);
+        onPressed: () {
+          triggerStockDownSync(context);
         },
       )),
       i18.home.beneficiaryReferralLabel:
@@ -1513,6 +1991,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       // i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey, // TODO: Uncomment when beneficiary downsync is implemented
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -1533,6 +2012,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       // i18.home.beneficiaryIdLabel, // TODO: Uncomment when beneficiary downsync is implemented
       i18.home.faceRegistrationLabel,
       i18.home.dataShare,
+      i18.home.stockSyncDataLabel,
       i18.home.db,
     ];
 

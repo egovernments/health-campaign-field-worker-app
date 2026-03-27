@@ -174,6 +174,9 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       transitPostType: (json['TRANSIT_POST_TYPE'] as List<dynamic>?)
           ?.map((e) => TransitPostType.fromJson(e as Map<String, dynamic>))
           .toList(),
+      boundaryRelationship: (json['BOUNDARY_RELATIONSHIP'] as List<dynamic>?)
+          ?.map((e) => BoundaryRelationship.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$HCMWrapperModelImplToJson(
@@ -204,6 +207,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'REFUSAL_REASONS': instance.refusalReasons,
       'FIREBASE_CONFIG': instance.firebaseConfig,
       'TRANSIT_POST_TYPE': instance.transitPostType,
+      'BOUNDARY_RELATIONSHIP': instance.boundaryRelationship,
     };
 
 _$AppConfigSecondaryWrapperModelImpl
@@ -605,4 +609,42 @@ Map<String, dynamic> _$$FirebaseConfigImplToJson(
     <String, dynamic>{
       'enableCrashlytics': instance.enableCrashlytics,
       'enableAnalytics': instance.enableAnalytics,
+    };
+
+_$BoundaryRelationshipImpl _$$BoundaryRelationshipImplFromJson(
+        Map<String, dynamic> json) =>
+    _$BoundaryRelationshipImpl(
+      boundaryType: json['boundaryType'] as String,
+      order: (json['order'] as num).toInt(),
+      parent: json['parent'] == null
+          ? null
+          : BoundaryRelationshipRef.fromJson(
+              json['parent'] as Map<String, dynamic>),
+      children: (json['children'] as List<dynamic>?)
+          ?.map((e) =>
+              BoundaryRelationshipRef.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$BoundaryRelationshipImplToJson(
+        _$BoundaryRelationshipImpl instance) =>
+    <String, dynamic>{
+      'boundaryType': instance.boundaryType,
+      'order': instance.order,
+      'parent': instance.parent,
+      'children': instance.children,
+    };
+
+_$BoundaryRelationshipRefImpl _$$BoundaryRelationshipRefImplFromJson(
+        Map<String, dynamic> json) =>
+    _$BoundaryRelationshipRefImpl(
+      boundaryType: json['boundaryType'] as String,
+      order: (json['order'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$BoundaryRelationshipRefImplToJson(
+        _$BoundaryRelationshipRefImpl instance) =>
+    <String, dynamic>{
+      'boundaryType': instance.boundaryType,
+      'order': instance.order,
     };

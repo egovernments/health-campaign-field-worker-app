@@ -119,24 +119,20 @@ class StockCalculationUtils {
             transactionReason == 'DAMAGED_IN_STORAGE' ||
             stockEntryType == 'DAMAGED') {
           stockDamaged += quantity;
+        } else if (stockEntryType == 'REJECTED' || stockEntryType == 'RETURNED') {
+          // Rejected/returned stock - not counted as issued since it was never accepted
         } else {
           // Regular dispatch (issued)
           stockIssued += quantity;
         }
       }
       // Stock Received from dispatch: This facility is the receiver AND transactionType == DISPATCHED
-      // This handles stock received when another facility dispatches TO this facility
+      // These are incoming dispatches from other facilities - they should NOT count
+      // as received until the user accepts them (which creates a RECEIVED record).
+      // Only damage/loss dispatches are tracked here for reporting purposes.
       else if (isReceiver && transactionType == 'DISPATCHED') {
-        if (transactionReason == 'LOST_IN_TRANSIT' ||
-            transactionReason == 'LOST_IN_STORAGE' ||
-            transactionReason == 'DAMAGED_IN_TRANSIT' ||
-            transactionReason == 'DAMAGED_IN_STORAGE' ||
-            stockEntryType == 'LOSS' ||
-            stockEntryType == 'DAMAGED') {
-          // Damage/loss entries - don't count as received
-        } else {
-          stockReceived += quantity;
-        }
+        // Incoming dispatches are not counted as stock received.
+        // They require acceptance first (creates a separate RECEIVED transaction).
       }
     }
 

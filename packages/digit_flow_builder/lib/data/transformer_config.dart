@@ -506,7 +506,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
           "projectBeneficiaryClientReferenceId":
-          "__context:ProjectBeneficiaryClientReferenceId",
+              "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
           "status": "__context:status",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -567,7 +567,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
           "projectBeneficiaryClientReferenceId":
-          "__context:ProjectBeneficiaryClientReferenceId",
+              "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
           "status": "unableToDeliver.reason",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -639,14 +639,10 @@ final jsonConfig = {
           "transactionReason":
               "__switch:__context:stockEntryType:{RECEIPT:__value:RECEIVED,RETURNED:__value:RETURNED,ISSUED:__value:null,DAMAGED:stockDetails.transactionReason,LOSS:stockDetails.transactionReason}",
           "transactingPartyId": "stockDetails.transactingPartyId",
-          "senderId":
-              "__switch:__context:stockEntryType:{RECEIPT:stockDetails.facilityFromWhich,RETURNED:stockDetails.facilityFromWhich,ISSUED:warehouseDetails.facilityToWhich,DAMAGED:warehouseDetails.facilityToWhich,LOSS:warehouseDetails.facilityToWhich}",
-          "senderType":
-              "__switch:__context:stockEntryType:{RECEIPT:__context:secondaryType,RETURNED:__context:secondaryType,ISSUED:__value:WAREHOUSE,DAMAGED:__value:WAREHOUSE,LOSS:__value:WAREHOUSE}",
-          "receiverId":
-              "__switch:__context:stockEntryType:{RECEIPT:warehouseDetails.facilityToWhich,RETURNED:warehouseDetails.facilityToWhich,ISSUED:stockDetails.facilityFromWhich,DAMAGED:stockDetails.facilityFromWhich,LOSS:stockDetails.facilityFromWhich}",
-          "receiverType":
-              "__switch:__context:stockEntryType:{RECEIPT:__value:WAREHOUSE,RETURNED:__value:WAREHOUSE,ISSUED:__context:secondaryType,DAMAGED:__context:secondaryType,LOSS:__context:secondaryType}",
+          "senderId": "stockDetails.facilityFromWhich",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "warehouseDetails.facilityToWhich",
+          "receiverType": "__value:WAREHOUSE",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
@@ -661,11 +657,89 @@ final jsonConfig = {
             "mrnNumber": "__context:mrnNumber",
             "stockEntryType": "__context:stockEntryType",
             "primaryRole": "__context:primaryRole",
-            "secondaryRole": "__context:secondaryRole"
+            "secondaryRole": "__context:secondaryRole",
+            "status": "__switch:__context:stockEntryType:{ISSUED:__value:IN_TRANSIT}"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "dateOfEntry": "warehouseDetails.dateOfEntry"
+        }
+      },
+    }
+  },
+  "stockReceipt": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "id": "stockReceiptDetails.id",
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "__context:userFacilityId",
+          "productVariantId": "__context:productVariantId",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "__context:quantity",
+          "waybillNumber": "stockReceiptDetails.wayBillNumber",
+          "transactionType": "__context:transactionType",
+          "transactionReason": "__value:RECEIVED",
+          "senderId": "__context:senderFacilityId",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "__context:userFacilityId",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "sku": "__context:sku",
+            "batchNumber": "stockReceiptDetails.batchNumber",
+            "expiryDate": "stockReceiptDetails.expiryDate",
+            "comments": "stockReceiptDetails.comment",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "primaryRole": "__context:primaryRole",
+            "secondaryRole": "__context:secondaryRole"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "__value:DATETIME.NOW"
+        }
+      },
+    }
+  },
+  "stockReject": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "__context:userFacilityId",
+          "productVariantId": "__context:productVariantId",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "__context:quantity",
+          "waybillNumber": "stockReceiptDetails.wayBillNumber",
+          "transactionType": "__value:DISPATCHED",
+          "transactionReason": "__value:null",
+          "senderId": "__context:senderFacilityId",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "__context:receiverFacilityId",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "sku": "__context:sku",
+            "batchNumber": "stockReceiptDetails.batchNumber",
+            "expiryDate": "stockReceiptDetails.expiryDate",
+            "comments": "stockReceiptDetails.comment",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "primaryRole": "__context:primaryRole",
+            "secondaryRole": "__context:secondaryRole"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "__value:DATETIME.NOW"
         }
       },
     }

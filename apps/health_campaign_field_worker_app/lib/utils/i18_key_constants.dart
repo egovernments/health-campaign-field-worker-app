@@ -229,6 +229,14 @@ class Common {
   String get qrAttendance => 'QR_ATTENDANCE';
 
   String get progressIndicatorPrefixLabelHFReferral => 'PROGRESS_INDICATOR_PREFIX_LABEL_HFREFERRAL';
+
+  String get stockDataFound => 'STOCK_DATA_FOUND';
+
+  String get stockNoDataFound => 'STOCK_NO_DATA_FOUND';
+
+  String get stockDataFoundContent => 'STOCK_DATA_FOUND_CONTENT';
+
+  String get stockNoDataFoundContent => 'STOCK_NO_DATA_FOUND_CONTENT';
 }
 
 class HomeShowcase {
