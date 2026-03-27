@@ -228,20 +228,20 @@ class _HomePageState extends LocalizedState<HomePage> {
     DateTime date,
     String type,
   ) {
-    final elementTime =
+    final selectedDate =
         DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch);
 
     final logTime = type == 'ENTRY'
         ? DateTime(
-            elementTime.year,
-            elementTime.month,
-            elementTime.day,
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
             9,
           ).millisecondsSinceEpoch
         : DateTime(
-            elementTime.year,
-            elementTime.month,
-            elementTime.day,
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
             18,
           ).millisecondsSinceEpoch;
 
@@ -641,91 +641,19 @@ class _HomePageState extends LocalizedState<HomePage> {
     /// This function handles both:
     /// 1. Model's attendanceLog field (List<Map<DateTime, bool>>?) - legacy format
     /// 2. Wrapper's attendanceLog relation (List<AttendanceLogModel>) - raw attendance records
-    FunctionRegistry.register('calculateCompletedDaysOld', (args, stateData) {
-      if (args.isEmpty || args.first == null) return '0/0';
-
-      final attendanceRegister = args.first;
-
-      // Check for attendance logs passed as second argument (from wrapper relations)
-      dynamic attendanceLog;
-      if (args.length > 1 && args[1] != null) {
-        attendanceLog = args[1];
-      } else {
-        // Fallback: try to get from model's attendanceLog field
-        try {
-          attendanceLog = attendanceRegister.attendanceLog;
-        } catch (_) {
-          attendanceLog = null;
-        }
-      }
-
-      // Get startDate and endDate from register
-      int? startDate;
-      int? endDate;
-      try {
-        startDate = attendanceRegister is Map
-            ? attendanceRegister['startDate'] as int?
-            : attendanceRegister.startDate as int?;
-        endDate = attendanceRegister is Map
-            ? attendanceRegister['endDate'] as int?
-            : attendanceRegister.endDate as int?;
-      } catch (_) {
-        startDate = null;
-        endDate = null;
-      }
-
-      // Process attendanceLog if it exists and is a List
-      if (attendanceLog != null) {
-        // Check if this is raw AttendanceLogModel data (has 'time' and 'type' fields)
-        // final isRawLogData = attendanceLog.isNotEmpty;
-
-        if (startDate != null && endDate != null) {
-          // Calculate completed days using hasLogWithType logic
-          final startDateTime = DateTime.fromMillisecondsSinceEpoch(startDate);
-          final endDateTime = DateTime.fromMillisecondsSinceEpoch(endDate);
-          final daysDifference = endDateTime.difference(startDateTime).inDays;
-          final totalDays = daysDifference + 1;
-
-          var completedDays = 0;
-
-          // Check each day for completed attendance (both ENTRY and EXIT)
-          for (int i = 0; i <= daysDifference; i++) {
-            final currentDate = startDateTime.add(Duration(days: i));
-            final hasMorningLog =
-                _hasLogWithType(attendanceLog, currentDate, 'ENTRY');
-            final hasEveningLog =
-                _hasLogWithType(attendanceLog, currentDate, 'EXIT');
-            if (hasMorningLog && hasEveningLog) {
-              completedDays++;
-            }
-          }
-
-          return '$completedDays/$totalDays';
-        } else {
-          // Legacy format: List<Map<DateTime, bool>>
-          var completedDays = 0;
-          final totalDays = attendanceLog.length;
-
-          for (final element in attendanceLog) {
-            if (element is Map && element.containsValue(true)) {
-              completedDays++;
-            }
-          }
-
-          return '$completedDays/$totalDays';
-        }
-      }
-
-      return '0/0';
-    });
 
     FunctionRegistry.register('calculateCompletedDays', (args, stateData) {
       if (args.isEmpty || args.first == null) return '0/0';
 
       final attendanceRegister = args.first;
 
-      List list = generateAttendanceLogDateList(attendanceRegister.startDate!,
-          attendanceRegister.endDate!, attendanceRegister.attendanceLog);
+      if (attendanceRegister == null) return '0/0';
+
+      List list = generateAttendanceLogDateList(
+        attendanceRegister.startDate!,
+        attendanceRegister.endDate!,
+        attendanceRegister.attendanceLog,
+      );
 
       var completedDays = 0;
       var totalDays = 0;
