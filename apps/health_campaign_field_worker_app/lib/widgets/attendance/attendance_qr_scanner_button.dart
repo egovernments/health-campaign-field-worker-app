@@ -1,15 +1,16 @@
-import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/attendee.dart';
 import 'package:digit_data_model/models/entities/scanned_individual_data.dart';
 import 'package:digit_flow_builder/action_handler/action_config.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/utils/widget_parsers.dart';
 import 'package:digit_flow_builder/widget_registry.dart';
+import 'package:digit_flow_builder/widgets/localization_context.dart';
 import 'package:digit_flow_builder/widgets/resolved_flow_widget.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../pages/attendance_qr_scanner.dart';
 
@@ -40,8 +41,16 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
         label: resolved.resolvedLabel ?? '',
         isDisabled: resolved.isDisabled,
         onPressed: () async {
+          final scannerBloc = context.read<DigitScannerBloc>();
+
+          scannerBloc.add(
+            const DigitScannerEvent.handleScanner(
+              barCode: [],
+              qrCode: [],
+            ),
+          );
           _openAttendanceScanner(context, compositeKey, registerId, attendees,
-              () async {
+              (scannedData) async {
             if (json['onAction'] != null) {
               final actionsList =
                   List<Map<String, dynamic>>.from(json['onAction']);
@@ -79,8 +88,13 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
     );
   }
 
-  _openAttendanceScanner(
-      context, compositeKey, registerId, attendees, Function onSelected) async {
+  Future<void> _openAttendanceScanner(
+    BuildContext context,
+    String? compositeKey,
+    dynamic registerId,
+    List<dynamic> attendees,
+    Future<void> Function(ScannedIndividualDataModel) onSelected,
+  ) async {
     // Navigate to scanner and await return
     List<AttendeeModel> attendeeModels = attendees.map<AttendeeModel>((e) {
       AttendeeModel attendee = e['entity'];
@@ -105,11 +119,14 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
             _markAttendance(data, compositeKey);
             onSelected(scannedData);
           } else {
-            // Toast.showToast(context,
-            //     message: localizations.translate(
-            //       result.errorMessage!,
-            //     ),
-            //     type: ToastType.error);
+            final localization = LocalizationContext.maybeOf(context);
+            Toast.showToast(context,
+                message: localization?.translate(
+                      result.errorMessage!,
+                    ) ??
+                    result.errorMessage ??
+                    "Invalid QR code",
+                type: ToastType.error);
             context.read<DigitScannerBloc>().add(
                   const DigitScannerEvent.handleScanner(
                     barCode: [],
