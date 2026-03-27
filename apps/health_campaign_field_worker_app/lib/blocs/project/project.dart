@@ -30,9 +30,11 @@ import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../notification_service.dart';
 import '../../utils/background_service.dart';
+import '../../models/entities/transaction_type.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/utils.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 
 part 'project.freezed.dart';
 
@@ -883,6 +885,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
+    // Trigger silent stock downsync after project facilities are loaded
+    _silentStockDownSync(event.model.id);
+
     final getSelectedProject = await localSecureStore.selectedProject;
 
     emit(state.copyWith(
@@ -890,6 +895,82 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: false,
       syncError: null,
     ));
+  }
+
+  /// Silently downloads dispatched stock from server without UI dialogs.
+  /// Runs in the background after project selection.
+  Future<void> _silentStockDownSync(String projectId) async {
+    try {
+      final userObject = await localSecureStore.userRequestModel;
+      if (userObject == null) return;
+
+      final userRoles = userObject.roles.map((e) => e.code);
+
+      final projectFacilities = await projectFacilityLocalRepository.search(
+        ProjectFacilitySearchModel(projectId: [projectId]),
+      );
+
+      final projectResources = await projectResourceLocalRepository.search(
+        ProjectResourceSearchModel(projectId: [projectId]),
+      );
+      final productVariantIds = projectResources
+          .map((pr) => pr.resource.productVariantId)
+          .whereType<String>()
+          .toSet()
+          .toList();
+
+      List<String> receiverIds = [];
+      if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
+        receiverIds = projectFacilities.map((e) => e.facilityId).toList();
+      } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
+        receiverIds = projectFacilities.map((e) => e.facilityId).toList();
+      } else if (userRoles
+          .contains(RolesType.communityDistributor.toValue())) {
+        receiverIds = [userObject.uuid];
+      }
+
+      if (receiverIds.isEmpty) return;
+
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+        productVariantId:
+            productVariantIds.isNotEmpty ? productVariantIds : null,
+      );
+
+      final totalCount = await (stockRemoteRepository
+              as StockRemoteRepository)
+          .fetchTotalCount(stockSearchModel, offSet: 0);
+
+      if (totalCount <= 0) return;
+
+      debugPrint(
+          'SILENT_STOCK_DOWNSYNC: Found $totalCount records, downloading...');
+
+      const batchSize = 50;
+      int offset = 0;
+      int syncedCount = 0;
+
+      while (syncedCount < totalCount) {
+        final stockEntries = await stockRemoteRepository.search(
+          stockSearchModel,
+          offSet: offset,
+          limit: batchSize,
+        );
+
+        if (stockEntries.isEmpty) break;
+
+        await stockLocalRepository.bulkCreate(stockEntries);
+
+        offset += stockEntries.length;
+        syncedCount += stockEntries.length;
+      }
+
+      debugPrint(
+          'SILENT_STOCK_DOWNSYNC: Completed. Synced $syncedCount/$totalCount');
+    } catch (e) {
+      debugPrint('SILENT_STOCK_DOWNSYNC: Error - $e');
+    }
   }
 
   Future<void> storeSchema(dynamic schemaJson) async {

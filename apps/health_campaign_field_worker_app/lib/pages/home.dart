@@ -11,7 +11,6 @@ import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
-import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/data/digit_crud_service.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
@@ -36,6 +35,7 @@ import 'package:transit_post/utils/utils.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/localization.dart';
+import '../blocs/stock_downsync/stock_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
@@ -54,7 +54,6 @@ import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
-import '../blocs/stock_downsync/stock_downsync.dart';
 import '../utils/stock_downsync_utils.dart';
 import '../utils/utils.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
@@ -517,8 +516,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
         // Fallback: read from manageStock page's state
         if (projectFacilities == null || projectFacilities.isEmpty) {
-          final manageStockState =
-              FlowCrudStateRegistry().get('manageStock');
+          final manageStockState = FlowCrudStateRegistry().get('manageStock');
           final base = manageStockState?.base;
           if (base is CrudStateLoaded) {
             final pfModels = base.results['projectFacility'];
@@ -564,8 +562,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
         // Fallback: read from manageStock page's state
         if (projectFacilities == null || projectFacilities.isEmpty) {
-          final manageStockState =
-              FlowCrudStateRegistry().get('manageStock');
+          final manageStockState = FlowCrudStateRegistry().get('manageStock');
           final base = manageStockState?.base;
           if (base is CrudStateLoaded) {
             final pfModels = base.results['projectFacility'];
@@ -631,8 +628,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
         // Fallback: read from manageStock page's state
         if (productVariants == null || productVariants.isEmpty) {
-          final manageStockState =
-              FlowCrudStateRegistry().get('manageStock');
+          final manageStockState = FlowCrudStateRegistry().get('manageStock');
           final base = manageStockState?.base;
           if (base is CrudStateLoaded) {
             final pvModels = base.results['productVariant'];
@@ -769,8 +765,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       : i18.common.stockNoDataFound,
                 ),
                 projectId: context.projectId,
-                boundary:
-                    context.selectedProject.address?.boundaryType ?? '',
+                boundary: context.selectedProject.address?.boundaryType ?? '',
                 batchSize: batchSize,
                 totalCount: initialServerCount,
                 content: localizations.translate(
@@ -788,8 +783,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                         i18.common.coreCommonGoback,
                       )
                     : null,
-                boundaryName:
-                    context.selectedProject.address?.boundary ?? '',
+                boundaryName: context.selectedProject.address?.boundary ?? '',
               ),
               dialogType: DigitProgressDialogType.dataFound,
               isPop: true,
@@ -807,14 +801,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                     i18.beneficiaryDetails.dataDownloadInProgress,
                   ),
                   projectId: context.projectId,
-                  boundary:
-                      context.selectedProject.address?.boundaryType ?? '',
+                  boundary: context.selectedProject.address?.boundaryType ?? '',
                   syncCount: syncCount,
                   totalCount: totalCount,
                   prefixLabel: syncCount.toString(),
                   suffixLabel: totalCount.toString(),
-                  boundaryName:
-                      context.selectedProject.address?.boundary ?? '',
+                  boundaryName: context.selectedProject.address?.boundary ?? '',
                 ),
                 dialogType: DigitProgressDialogType.inProgress,
                 isPop: true,
@@ -855,9 +847,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                         ),
                         appConfiguartion: appConfiguration,
                         projectId: context.projectId,
-                        boundary: context.selectedProject.address
-                                ?.boundaryType ??
-                            '',
+                        boundary:
+                            context.selectedProject.address?.boundaryType ?? '',
                         primaryButtonLabel: localizations.translate(
                           i18.syncDialog.retryButtonLabel,
                         ),
@@ -885,9 +876,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                         ),
                         appConfiguartion: appConfiguration,
                         projectId: context.projectId,
-                        boundary: context.selectedProject.address
-                                ?.boundaryType ??
-                            '',
+                        boundary:
+                            context.selectedProject.address?.boundaryType ?? '',
                         primaryButtonLabel: localizations.translate(
                           i18.syncDialog.retryButtonLabel,
                         ),
@@ -914,13 +904,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                   i18.beneficiaryDetails.insufficientStorageContent,
                 ),
                 projectId: context.projectId,
-                boundary:
-                    context.selectedProject.address?.boundaryType ?? '',
+                boundary: context.selectedProject.address?.boundaryType ?? '',
                 primaryButtonLabel: localizations.translate(
                   i18.common.coreCommonOk,
                 ),
-                boundaryName:
-                    context.selectedProject.address?.boundary ?? '',
+                boundaryName: context.selectedProject.address?.boundary ?? '',
               ),
               dialogType: DigitProgressDialogType.insufficientStorage,
               isPop: true,
@@ -930,177 +918,177 @@ class _HomePageState extends LocalizedState<HomePage> {
       },
       child: Scaffold(
         backgroundColor: DigitTheme.instance.colorScheme.surface,
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: ScrollableContent(
-          slivers: [
-            SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return homeItems.elementAt(index);
-                },
-                childCount: homeItems.length,
-              ),
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 145,
-                childAspectRatio: 104 / 128,
-              ),
-            ),
-          ],
-          header: Column(
-            children: [
-              BackNavigationHelpHeaderWidget(
-                showBackNavigation: false,
-                showHelp: false,
-                showcaseButton: ShowcaseButton(
-                  showcaseFor: showcaseKeys.toSet().toList(),
+        body: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: ScrollableContent(
+            slivers: [
+              SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return homeItems.elementAt(index);
+                  },
+                  childCount: homeItems.length,
+                ),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 145,
+                  childAspectRatio: 104 / 128,
                 ),
               ),
-              // Show stock balance card for users with stock management access
-              if (state.actionsWrapper.actions
-                  .map((e) => e.displayName)
-                  .contains(i18.home.manageStockLabel))
-                const StockBalanceCard(),
-              skipProgressBar
-                  ? const SizedBox.shrink()
-                  : homeShowcaseData.distributorProgressBar.buildWith(
-                      child: BeneficiaryProgressBar(
-                        label: localizations.translate(
-                          i18.home.progressIndicatorTitle,
-                        ),
-                        prefixLabel: localizations.translate(
-                          i18.home.progressIndicatorPrefixLabel,
+            ],
+            header: Column(
+              children: [
+                BackNavigationHelpHeaderWidget(
+                  showBackNavigation: false,
+                  showHelp: false,
+                  showcaseButton: ShowcaseButton(
+                    showcaseFor: showcaseKeys.toSet().toList(),
+                  ),
+                ),
+                // Show stock balance card for users with stock management access
+                if (state.actionsWrapper.actions
+                    .map((e) => e.displayName)
+                    .contains(i18.home.manageStockLabel))
+                  const StockBalanceCard(),
+                skipProgressBar
+                    ? const SizedBox.shrink()
+                    : homeShowcaseData.distributorProgressBar.buildWith(
+                        child: BeneficiaryProgressBar(
+                          label: localizations.translate(
+                            i18.home.progressIndicatorTitle,
+                          ),
+                          prefixLabel: localizations.translate(
+                            i18.home.progressIndicatorPrefixLabel,
+                          ),
                         ),
                       ),
-                    ),
+              ],
+            ),
+            footer: Padding(
+              padding: const EdgeInsets.only(bottom: spacer2),
+              child: PoweredByDigit(
+                version: Constants().version,
+              ),
+            ),
+            children: [
+              const SizedBox(height: spacer2 * 2),
+              // INFO : Need to add sync bloc of package Here
+              BlocConsumer<SyncBloc, SyncState>(
+                listener: (context, state) {
+                  state.maybeWhen(
+                    orElse: () => null,
+                    pendingSync: (count) {
+                      final debouncer = Debouncer(seconds: 5);
+                      debouncer.run(() async {
+                        if (count != 0) {
+                          await localSecureStore.setManualSyncTrigger(false);
+                          if (context.mounted) {
+                            await performBackgroundService(
+                              isBackground: false,
+                              stopService: false,
+                              context: context,
+                            );
+                          }
+                        } else {
+                          await localSecureStore.setManualSyncTrigger(true);
+                        }
+                      });
+                    },
+                    syncInProgress: () async {
+                      await localSecureStore.setManualSyncTrigger(false);
+                      if (context.mounted) {
+                        DigitSyncDialog.show(
+                          context,
+                          type: DialogType.inProgress,
+                          label: localizations.translate(
+                            i18.syncDialog.syncInProgressTitle,
+                          ),
+                          barrierDismissible: false,
+                        );
+                      }
+                    },
+                    completedSync: () async {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        DigitSyncDialog.show(context,
+                            type: DialogType.complete,
+                            label: localizations.translate(
+                              i18.syncDialog.dataSyncedTitle,
+                            ),
+                            primaryAction: DigitDialogActions(
+                              label: localizations.translate(
+                                i18.syncDialog.closeButtonLabel,
+                              ),
+                              action: (ctx) {
+                                Navigator.pop(ctx);
+                              },
+                            ),
+                            barrierDismissible: true);
+                      }
+                    },
+                    failedSync: () async {
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        _showSyncFailedDialog(
+                          context,
+                          message: localizations.translate(
+                            i18.syncDialog.syncFailedTitle,
+                          ),
+                        );
+                      }
+                    },
+                    failedDownSync: () async {
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        _showSyncFailedDialog(
+                          context,
+                          message: localizations.translate(
+                            i18.syncDialog.downSyncFailedTitle,
+                          ),
+                        );
+                      }
+                    },
+                    failedUpSync: () async {
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        _showSyncFailedDialog(
+                          context,
+                          message: localizations.translate(
+                            i18.syncDialog.upSyncFailedTitle,
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+                builder: (context, state) {
+                  return state.maybeWhen(
+                    orElse: () => const Offstage(),
+                    pendingSync: (count) {
+                      return count == 0
+                          ? const Offstage()
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: spacer2,
+                              ),
+                              child: InfoCard(
+                                type: InfoType.info,
+                                description: localizations
+                                    .translate(i18.home.dataSyncInfoContent)
+                                    .replaceAll('{}', count.toString()),
+                                title: localizations.translate(
+                                  i18.home.dataSyncInfoLabel,
+                                ),
+                              ),
+                            );
+                    },
+                  );
+                },
+              ),
             ],
           ),
-          footer: Padding(
-            padding: const EdgeInsets.only(bottom: spacer2),
-            child: PoweredByDigit(
-              version: Constants().version,
-            ),
-          ),
-          children: [
-            const SizedBox(height: spacer2 * 2),
-            // INFO : Need to add sync bloc of package Here
-            BlocConsumer<SyncBloc, SyncState>(
-              listener: (context, state) {
-                state.maybeWhen(
-                  orElse: () => null,
-                  pendingSync: (count) {
-                    final debouncer = Debouncer(seconds: 5);
-                    debouncer.run(() async {
-                      if (count != 0) {
-                        await localSecureStore.setManualSyncTrigger(false);
-                        if (context.mounted) {
-                          await performBackgroundService(
-                            isBackground: false,
-                            stopService: false,
-                            context: context,
-                          );
-                        }
-                      } else {
-                        await localSecureStore.setManualSyncTrigger(true);
-                      }
-                    });
-                  },
-                  syncInProgress: () async {
-                    await localSecureStore.setManualSyncTrigger(false);
-                    if (context.mounted) {
-                      DigitSyncDialog.show(
-                        context,
-                        type: DialogType.inProgress,
-                        label: localizations.translate(
-                          i18.syncDialog.syncInProgressTitle,
-                        ),
-                        barrierDismissible: false,
-                      );
-                    }
-                  },
-                  completedSync: () async {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      DigitSyncDialog.show(context,
-                          type: DialogType.complete,
-                          label: localizations.translate(
-                            i18.syncDialog.dataSyncedTitle,
-                          ),
-                          primaryAction: DigitDialogActions(
-                            label: localizations.translate(
-                              i18.syncDialog.closeButtonLabel,
-                            ),
-                            action: (ctx) {
-                              Navigator.pop(ctx);
-                            },
-                          ),
-                          barrierDismissible: true);
-                    }
-                  },
-                  failedSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      _showSyncFailedDialog(
-                        context,
-                        message: localizations.translate(
-                          i18.syncDialog.syncFailedTitle,
-                        ),
-                      );
-                    }
-                  },
-                  failedDownSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      _showSyncFailedDialog(
-                        context,
-                        message: localizations.translate(
-                          i18.syncDialog.downSyncFailedTitle,
-                        ),
-                      );
-                    }
-                  },
-                  failedUpSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      _showSyncFailedDialog(
-                        context,
-                        message: localizations.translate(
-                          i18.syncDialog.upSyncFailedTitle,
-                        ),
-                      );
-                    }
-                  },
-                );
-              },
-              builder: (context, state) {
-                return state.maybeWhen(
-                  orElse: () => const Offstage(),
-                  pendingSync: (count) {
-                    return count == 0
-                        ? const Offstage()
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: spacer2,
-                            ),
-                            child: InfoCard(
-                              type: InfoType.info,
-                              description: localizations
-                                  .translate(i18.home.dataSyncInfoContent)
-                                  .replaceAll('{}', count.toString()),
-                              title: localizations.translate(
-                                i18.home.dataSyncInfoLabel,
-                              ),
-                            ),
-                          );
-                  },
-                );
-              },
-            ),
-          ],
         ),
       ),
-    ),
     );
   }
 
@@ -1795,6 +1783,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       // i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey, // TODO: Uncomment when beneficiary downsync is implemented
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -1815,6 +1804,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       // i18.home.beneficiaryIdLabel, // TODO: Uncomment when beneficiary downsync is implemented
       i18.home.faceRegistrationLabel,
       i18.home.dataShare,
+      i18.home.stockSyncDataLabel,
       i18.home.db,
     ];
 
@@ -1835,7 +1825,6 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
-    filteredLabels.add(i18.home.stockSyncDataLabel);
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
