@@ -1,4 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_data_model/models/entities/scanned_individual_data.dart';
 import 'package:digit_ui_components/digit_components.dart';

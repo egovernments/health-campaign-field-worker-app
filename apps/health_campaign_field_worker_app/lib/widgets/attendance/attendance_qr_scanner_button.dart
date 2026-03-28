@@ -1,4 +1,5 @@
 import 'package:digit_data_model/models/entities/attendee.dart';
+import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_data_model/models/entities/scanned_individual_data.dart';
 import 'package:digit_flow_builder/action_handler/action_config.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
@@ -98,7 +99,10 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
     // Navigate to scanner and await return
     List<AttendeeModel> attendeeModels = attendees.map<AttendeeModel>((e) {
       AttendeeModel attendee = e['entity'];
-      return attendee;
+      String? individualNumber = e['individual'].first?.individualId;
+      return attendee.copyWith(
+        individualNumber: individualNumber,
+      );
     }).toList();
     var manual = await Navigator.of(context).push(MaterialPageRoute(
       builder: (scanContext) => AttendanceDigitScannerPage(
