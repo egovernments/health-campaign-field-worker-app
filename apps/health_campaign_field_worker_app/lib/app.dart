@@ -101,8 +101,10 @@ class MainApplicationState extends State<MainApplication>
             providers: [
               // INFO : Need to add bloc of package Here
               BlocProvider(
-                create: (_) => PushNotificationBloc()
-                  ..add(const PushNotificationEvent.initialize()),
+                create: (_) => PushNotificationBloc(
+                  notificationTokenRepository:
+                      NotificationTokenRepository(widget.client),
+                )..add(const PushNotificationEvent.initialize()),
                 lazy: false,
               ),
 
@@ -154,7 +156,17 @@ class MainApplicationState extends State<MainApplication>
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {
-                return BlocBuilder<AuthBloc, AuthState>(
+                return BlocListener<AuthBloc, AuthState>(
+                  listener: (context, authState) {
+                    if (authState is AuthAuthenticatedState) {
+                      context.read<PushNotificationBloc>().add(
+                            PushNotificationEvent.login(
+                              userId: authState.userModel.uuid,
+                            ),
+                          );
+                    }
+                  },
+                  child: BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
                     if (appConfigState is! AppInitialized) {
                       return const MaterialApp(
@@ -285,8 +297,6 @@ class MainApplicationState extends State<MainApplication>
                             stockRemoteRepository: ctx.read<
                                 RemoteRepository<StockModel,
                                     StockSearchModel>>(),
-                            notificationTokenRepository:
-                                NotificationTokenRepository(widget.client),
                             context: context,
                           ),
                         ),
@@ -411,6 +421,7 @@ class MainApplicationState extends State<MainApplication>
                       }),
                     );
                   },
+                ),
                 );
               },
             ),
