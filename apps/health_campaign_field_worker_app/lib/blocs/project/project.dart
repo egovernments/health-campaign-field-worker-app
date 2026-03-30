@@ -30,6 +30,7 @@ import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../models/entities/transaction_type.dart';
 import '../../utils/background_service.dart';
+import '../../utils/download_image.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/utils.dart';
@@ -535,6 +536,25 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  Future<List<AttendanceLogModel>> _updateLogsData(
+      List<AttendanceLogModel> logs) async {
+    // String signatureFileStoreId = "6e13c470-e54c-4a6c-acbc-fcd22d24fca3";
+    List<AttendanceLogModel> updatedLogs = [];
+    for (var log in logs) {
+      var additionalDetails = log.additionalDetails;
+      if (additionalDetails != null &&
+          additionalDetails['isFirstSignature'] == "true" &&
+          additionalDetails['signatureFileStoreId'] != null) {
+        String signatureFileStoreId = additionalDetails['signatureFileStoreId'];
+        String signatureBase64 =
+            await DownloadImage.downloadSignature(signatureFileStoreId);
+        additionalDetails['signatureData'] = signatureBase64;
+      }
+      updatedLogs.add(log.copyWith(additionalDetails: additionalDetails));
+    }
+    return updatedLogs;
+  }
+
   Future<void> _handleProjectSelection(
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
@@ -607,7 +627,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                       registerId: register.id,
                     ),
                   );
-                  await attendanceLogLocalRepository.bulkCreate(logs);
+                  List<AttendanceLogModel> updatedLogs =
+                      await _updateLogsData(logs);
+                  await attendanceLogLocalRepository.bulkCreate(updatedLogs);
                 }
               } catch (_) {
                 emit(state.copyWith(
