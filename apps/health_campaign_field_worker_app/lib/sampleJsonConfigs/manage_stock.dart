@@ -1886,7 +1886,7 @@ final dynamic sampleInventoryFlows = {
                   {
                     "format": "tag",
                     "type": "",
-                    "label": "INVENTORY_MRN_TAG_LABEL {{item.groupKey}}"
+                    "label": "INVENTORY_MRN_TAG_LABEL{{item.groupKey}}"
                   },
                   {
                     "format": "textTemplate",

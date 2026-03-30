@@ -21,6 +21,7 @@ class ButtonWidget extends ResolvedFlowWidget {
     return WidgetParsers.wrapWithBottomGap(
       DigitButton(
         crossAxisAlignment: CrossAxisAlignment.center,
+        capitalizeLetters: false,
         label: resolved.resolvedLabel ?? '',
         isDisabled: resolved.isDisabled,
         onPressed: () async {

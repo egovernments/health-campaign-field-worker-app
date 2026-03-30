@@ -355,6 +355,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                               iconLabelGap: spacer1
                             ),
                           ),
+                          const SizedBox(height: spacer2),
                           DigitTextBlock(
                             padding: EdgeInsets.zero,
                             heading: (widget.config['heading'] != null &&
