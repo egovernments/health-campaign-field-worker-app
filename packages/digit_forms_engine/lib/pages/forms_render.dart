@@ -34,7 +34,7 @@ class FormsRenderPage extends LocalizedStatefulWidget {
   final bool isSummary;
   final bool isEdit;
   final Map<String, dynamic>? navigationParams;
-  final VoidCallback? onSecondaryAction;
+  final void Function({Map<String, dynamic>? popupData})? onSecondaryAction;
 
   const FormsRenderPage({
     super.key,
@@ -588,7 +588,18 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             child: DigitButton(
                               label: localizations
                                   .translate(schema.secondaryActionLabel!),
-                              onPressed: widget.onSecondaryAction!,
+                              onPressed: () {
+                                if (schema.showSecondaryAlertPopUp != null) {
+                                  _showSecondaryAlertPopUp(
+                                    context,
+                                    schema,
+                                    localizations,
+                                    widget.onSecondaryAction!,
+                                  );
+                                } else {
+                                  widget.onSecondaryAction!();
+                                }
+                              },
                               type: DigitButtonType.tertiary,
                               size: DigitButtonSize.large,
                               mainAxisSize: MainAxisSize.max,
@@ -942,7 +953,18 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       child: DigitButton(
                         label: localizations
                             .translate(schema.secondaryActionLabel!),
-                        onPressed: widget.onSecondaryAction!,
+                        onPressed: () {
+                          if (schema.showSecondaryAlertPopUp != null) {
+                            _showSecondaryAlertPopUp(
+                              context,
+                              schema,
+                              localizations,
+                              widget.onSecondaryAction!,
+                            );
+                          } else {
+                            widget.onSecondaryAction!();
+                          }
+                        },
                         type: DigitButtonType.tertiary,
                         size: DigitButtonSize.large,
                         mainAxisSize: MainAxisSize.max,
@@ -1298,6 +1320,142 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         padding: const EdgeInsets.symmetric(vertical: spacer1),
       );
     }).toList();
+  }
+
+  void _showSecondaryAlertPopUp(
+    BuildContext context,
+    PropertySchema schema,
+    dynamic localizations,
+    void Function({Map<String, dynamic>? popupData}) onConfirm,
+  ) {
+    final popUpConfig = schema.showSecondaryAlertPopUp!;
+    final commentController = TextEditingController();
+    final bodyFields = popUpConfig.body ?? [];
+    final hasMandatoryFields =
+        bodyFields.any((field) => field.mandatory);
+
+    bool showValidationError = false;
+
+    showCustomPopup(
+      context: context,
+      builder: (BuildContext ctx) {
+        return StatefulBuilder(
+          builder: (popupCtx, setPopupState) {
+            return Popup(
+              title: localizations
+                  .translate(popUpConfig.title),
+              description: popUpConfig.description != null
+                  ? localizations
+                      .translate(popUpConfig.description!)
+                  : null,
+              additionalWidgets: [
+                ...bodyFields.map((field) {
+                  final hasError = showValidationError &&
+                      field.mandatory &&
+                      commentController.text
+                          .trim()
+                          .isEmpty;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                        top: spacer2),
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${localizations.translate(field.label)}${field.mandatory ? ' *' : ''}',
+                          style: Theme.of(popupCtx)
+                              .textTheme
+                              .bodyMedium,
+                        ),
+                        const SizedBox(height: spacer1),
+                        TextFormField(
+                          controller: commentController,
+                          maxLines:
+                              field.format == 'textArea'
+                                  ? 3
+                                  : 1,
+                          onChanged: (_) =>
+                              setPopupState(() {
+                            showValidationError = false;
+                          }),
+                          decoration: InputDecoration(
+                            hintText: localizations
+                                .translate(field.label),
+                            border:
+                                const OutlineInputBorder(),
+                            errorBorder:
+                                const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.red),
+                            ),
+                            focusedErrorBorder:
+                                const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.red),
+                            ),
+                            errorText: hasError
+                                ? '${localizations.translate(field.label)} is required'
+                                : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+              actions: [
+                DigitButton(
+                  label: localizations.translate(
+                      popUpConfig.primaryActionLabel),
+                  onPressed: () {
+                    final hasEmptyMandatory =
+                        bodyFields.any((field) =>
+                            field.mandatory &&
+                            commentController.text
+                                .trim()
+                                .isEmpty);
+                    if (hasEmptyMandatory) {
+                      setPopupState(() {
+                        showValidationError = true;
+                      });
+                      return;
+                    }
+                    final popupData =
+                        <String, dynamic>{};
+                    for (final field
+                        in bodyFields) {
+                      popupData[field.fieldName] =
+                          commentController.text
+                              .trim();
+                    }
+                    Navigator.of(ctx,
+                            rootNavigator: true)
+                        .pop();
+                    onConfirm(
+                        popupData: popupData);
+                  },
+                  type: DigitButtonType.primary,
+                  size: DigitButtonSize.large,
+                ),
+                DigitButton(
+                  label: localizations.translate(
+                      popUpConfig.secondaryActionLabel),
+                  onPressed: () {
+                    Navigator.of(ctx,
+                            rootNavigator: true)
+                        .pop();
+                  },
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.large,
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   bool _hasDisplayOnlyProperties(PropertySchema schema) {
