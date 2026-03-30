@@ -214,8 +214,14 @@ class SearchExecutor extends ActionExecutor {
       });
     }
 
+    // Check if this search should skip filter accumulation
+    final skipAccumulatedFilters =
+        data['skipAccumulatedFilters'] as bool? ?? false;
+
     // Update SearchStateManager with resolved filters (will merge with existing)
-    if (compositeKey != null && resolvedFilters.isNotEmpty) {
+    if (!skipAccumulatedFilters &&
+        compositeKey != null &&
+        resolvedFilters.isNotEmpty) {
       SearchStateManager().updateFilters(
         compositeKey,
         searchName,
@@ -227,12 +233,17 @@ class SearchExecutor extends ActionExecutor {
       SearchStateManager().resetPagination(compositeKey, searchName);
     }
 
-    // Get ALL accumulated filters from SearchStateManager (across all searchNames)
-    final accumulatedFilters = compositeKey != null
-        ? SearchStateManager().getAllFilters(compositeKey)
-        : resolvedFilters;
+    // Get filters: use only resolved filters when skipping accumulation,
+    // otherwise get ALL accumulated filters across all searchNames
+    final accumulatedFilters = skipAccumulatedFilters
+        ? resolvedFilters
+        : (compositeKey != null
+            ? SearchStateManager().getAllFilters(compositeKey)
+            : resolvedFilters);
 
     // Convert accumulated filters to SearchFilter objects
+    // Default root: use search name (e.g., "stock") which matches the primary table
+    final defaultRoot = searchName;
     final filters = <SearchFilter>[];
     for (final filterMap in accumulatedFilters) {
       if (filterMap is! Map) continue;
@@ -249,7 +260,7 @@ class SearchExecutor extends ActionExecutor {
       }
 
       filters.add(SearchFilter(
-        root: filterMap['root']?.toString() ?? '',
+        root: filterMap['root']?.toString() ?? defaultRoot,
         field: filterMap['key']?.toString() ?? '',
         operator: filterMap['operation']?.toString() ?? 'equals',
         value: filterMap['value'],

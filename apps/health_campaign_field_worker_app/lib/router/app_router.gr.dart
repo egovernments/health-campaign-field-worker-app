@@ -53,6 +53,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CurrentBoundaryRoute.name: (routeData) {
+      final args = routeData.argsAs<CurrentBoundaryRouteArgs>(
+          orElse: () => const CurrentBoundaryRouteArgs());
+      return AutoRoutePage<BoundaryModel>(
+        routeData: routeData,
+        child: CurrentBoundaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          onBoundarySelected: args.onBoundarySelected,
+        ),
+      );
+    },
     DataReceiverRoute.name: (routeData) {
       final args = routeData.argsAs<DataReceiverRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -317,6 +329,49 @@ class BoundarySelectionRouteArgs {
   @override
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CurrentBoundaryPage]
+class CurrentBoundaryRoute extends PageRouteInfo<CurrentBoundaryRouteArgs> {
+  CurrentBoundaryRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    dynamic Function(BuildContext)? onBoundarySelected,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CurrentBoundaryRoute.name,
+          args: CurrentBoundaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            onBoundarySelected: onBoundarySelected,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CurrentBoundaryRoute';
+
+  static const PageInfo<CurrentBoundaryRouteArgs> page =
+      PageInfo<CurrentBoundaryRouteArgs>(name);
+}
+
+class CurrentBoundaryRouteArgs {
+  const CurrentBoundaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.onBoundarySelected,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final dynamic Function(BuildContext)? onBoundarySelected;
+
+  @override
+  String toString() {
+    return 'CurrentBoundaryRouteArgs{key: $key, appLocalizations: $appLocalizations, onBoundarySelected: $onBoundarySelected}';
   }
 }
 
