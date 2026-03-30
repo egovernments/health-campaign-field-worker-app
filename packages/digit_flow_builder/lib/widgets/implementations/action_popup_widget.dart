@@ -33,6 +33,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
     final compositeKey = resolved.compositeKey;
 
     return DigitButton(
+        capitalizeLetters: false,
         mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
         label: localization?.translate(json['label']) ?? json['label'] ?? '',
