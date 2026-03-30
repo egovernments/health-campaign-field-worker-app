@@ -15,7 +15,10 @@ final dynamic sampleInventoryFlows = {
           "format": "backLink",
           "label": "APP_CONFIG_INVENTORY_manageStock_BACK_BUTTON_LABEL",
           "onAction": [
-            {"actionType": "BACK_NAVIGATION", "properties": {}}
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"name": "HOME", "type": "HOME"}
+            }
           ]
         }
       ],
@@ -1861,7 +1864,7 @@ final dynamic sampleInventoryFlows = {
       "body": [
         {
           "format": "infoCard",
-          "hidden": "{{fn:length(stock)}} > 0}}",
+          "hidden":"{{fn:hasResults('StockModel')}} == true",
           "label": "INVENTORY_NO_TRANSACTIONS_LABEL",
           "description": "INVENTORY_NO_TRANSACTIONS_DESCRIPTION"
         },
@@ -1966,7 +1969,7 @@ final dynamic sampleInventoryFlows = {
                 "label": "INVENTORY_SELECT_TRANSACTION_LABEL",
                 "properties": {
                   "type": "primary",
-                  "size": "large",
+                  "size": "medium",
                   "mainAxisSize": "max",
                   "mainAxisAlignment": "center"
                 },
