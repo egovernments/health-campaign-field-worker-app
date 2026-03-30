@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -26,7 +27,7 @@ class NotificationService {
   /// The map contains the FCM data payload.
   void Function(Map<String, dynamic>)? onNotificationTap;
 
-  static const String _fcmTokenKey = 'fcm_device_token';
+  static const String _fcmTokenMapKey = 'fcm_device_token_map';
   static const String _channelId = 'fcm_default_channel';
   static const String _channelName = 'Push Notifications';
   static const String _channelDescription =
@@ -96,19 +97,9 @@ class NotificationService {
       return null;
     }
 
-    // Get and store the FCM token
+    // Get the FCM token
     final token = await messaging.getToken();
     debugPrint('FCM: Token received = ${token != null ? 'YES' : 'NULL'}');
-    if (token != null) {
-      await _storeFcmToken(token);
-    } else {
-      debugPrint('FCM: WARNING - getToken() returned null');
-    }
-
-    // Listen for token refresh
-    messaging.onTokenRefresh.listen((newToken) async {
-      await _storeFcmToken(newToken);
-    });
 
     // Handle foreground messages
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
@@ -167,21 +158,27 @@ class NotificationService {
     onNotificationTap?.call(message.data);
   }
 
-  /// Store FCM token in SharedPreferences.
-  Future<void> _storeFcmToken(String token) async {
-    debugPrint('═══════════════════════════════════════════');
-    debugPrint('FCM TOKEN (copied to clipboard):');
-    debugPrint(token);
-    debugPrint('═══════════════════════════════════════════');
-    await Clipboard.setData(ClipboardData(text: token));
+  /// Store FCM token in SharedPreferences map against userId.
+  static Future<void> storeTokenForUser(String userId, String token) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_fcmTokenKey, token);
+    final map = await _getTokenMap();
+    map[userId] = token;
+    await prefs.setString(_fcmTokenMapKey, jsonEncode(map));
+    debugPrint('FCM: Stored token for user $userId');
   }
 
-  /// Retrieve stored FCM token.
-  static Future<String?> getStoredFcmToken() async {
+  /// Retrieve stored FCM token for a specific user.
+  static Future<String?> getTokenForUser(String userId) async {
+    final map = await _getTokenMap();
+    return map[userId];
+  }
+
+  /// Get the full token map from SharedPreferences.
+  static Future<Map<String, String>> _getTokenMap() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_fcmTokenKey);
+    final raw = prefs.getString(_fcmTokenMapKey);
+    if (raw == null) return {};
+    return Map<String, String>.from(jsonDecode(raw) as Map);
   }
 
   /// Encode a data map as a simple key=value payload string.

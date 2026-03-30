@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';
@@ -148,11 +146,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(const AuthLoadingState());
       await localSecureStore.deleteAll();
       await localSecureStore.setBoundaryRefetch(true);
-
-      // Clear FCM token on logout
-      await FirebaseMessaging.instance.deleteToken();
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('fcm_device_token');
     } catch (error) {
       rethrow;
     }
