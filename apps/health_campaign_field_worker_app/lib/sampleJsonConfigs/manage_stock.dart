@@ -969,7 +969,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_INVENTORY_QUANTITY_LOSTLABEL",
+              "label": "APPONE_INVENTORY_QUANTITY_LOST_LABEL",
               "order": 4,
               "value": "",
               "format": "text",
@@ -1008,7 +1008,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_INVENTORY_QUANTITY__DAMAGEDLABEL",
+              "label": "APPONE_INVENTORY_QUANTITY_DAMAGED_LABEL",
               "order": 4,
               "value": "",
               "format": "text",
