@@ -2382,7 +2382,11 @@ final dynamic sampleInventoryFlows = {
               {"key": "transactionType", "value": "RECEIVED"},
               {"key": "primaryRole", "value": "RECEIVER"},
               {"key": "secondaryRole", "value": "SENDER"},
-              {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"},
+              {
+                "key": "mrnNumber",
+                "value":
+                    "{{fn:generateUniqueMaterialNoteNumber()}}"
+              },
               {
                 "key": "senderFacilityId",
                 "value": "{{navigation.senderFacilityId}}"
