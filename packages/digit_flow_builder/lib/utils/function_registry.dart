@@ -423,12 +423,12 @@ void initializeFunctionRegistry() {
 
   FunctionRegistry.register("getInEligibleStatus", (args, stateData) {
     // No arguments passed
-    if (args.isEmpty) return '';
+    if (args.isEmpty) return TaskStatus.ineligible;
 
     final tasks = args.first;
 
     // Must be a non-empty list of tasks
-    if (tasks is! List || tasks.isEmpty) return '';
+    if (tasks is! List || tasks.isEmpty) return TaskStatus.ineligible;
 
     // Get the last task and convert to Map if needed
     final item = tasks.last;
