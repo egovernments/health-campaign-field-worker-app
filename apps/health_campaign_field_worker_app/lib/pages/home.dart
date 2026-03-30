@@ -1037,6 +1037,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         if (markStatus == -1) continue; // skip unmarked
 
         final isPresent = markStatus >= 1.0;
+        final isFirstSignature = data['isFirstSignature'] as bool? ?? false;
         final signatureData = data['signatureData'] as String?;
         final qrCreatedTime = data['qrCreatedTime'] as int?;
         final logStatus = isPresent
@@ -1048,6 +1049,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           if (boundaryCode.isNotEmpty)
             EnumValues.boundaryCode.toValue(): boundaryCode,
           if (qrCreatedTime != null) 'qrCreatedTime': qrCreatedTime,
+          if (isFirstSignature)
+            'isFirstSignature': isFirstSignature ? "true" : "false",
           if (signatureData != null) 'signatureData': signatureData,
           if (comment != null && comment.isNotEmpty) 'comment': comment,
           if (isManualScan != null) 'isMarkedManually': isManualScan,

@@ -68,7 +68,6 @@ class SignatureCaptureWidget extends ResolvedFlowWidget {
             resolved.resolveText(json['saveSignatureLabel']) ?? '',
         signatureRequiredLabel:
             resolved.resolveText(json['signatureRequiredLabel']) ?? '',
-        existingSignatureLabel: json['existingSignatureLabel'],
         fieldName: resolved.resolveText(json['fieldName']) ?? 'signature',
         onSave: (data) async {
           state.updateWidgetData("signatureData", data);
@@ -157,6 +156,7 @@ class _CompareSignatureState extends State<CompareSignature> {
     final individualId = data['individualId']?.toString();
     final registerId = data['registerId']?.toString();
     final status = (data['status'] as num?)?.toDouble() ?? 1.0;
+    final isFirstSignature = data['isFirstSignature'] as bool? ?? false;
     final signatureData = data['signatureData'] as String?;
 
     if (individualId == null || individualId.isEmpty) return;
@@ -189,6 +189,7 @@ class _CompareSignatureState extends State<CompareSignature> {
       'registerId': registerId,
       'individualId': individualId,
       'signatureData': signatureData,
+      'isFirstSignature': isFirstSignature,
     };
     widgetData['attendanceCollection'] = collection;
 
@@ -220,39 +221,112 @@ class _CompareSignatureState extends State<CompareSignature> {
           const SizedBox(height: spacer2),
           if (existingSignatureData != null)
             Expanded(
-              child: DigitCard(padding: EdgeInsets.all(0), children: [
-                Image.memory(
-                  base64Decode(existingSignatureData!),
-                  height: 90,
-                  fit: BoxFit.contain,
-                  gaplessPlayback: true,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: Base.defaultBorderWidth,
+                    color: theme.colorTheme.generic.divider,
+                  ),
+                  borderRadius: BorderRadius.circular(radius4),
+                  color: theme.colorTheme.paper.secondary,
                 ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Reference Signature"),
-                  ],
-                ),
-              ]),
+                child: Column(children: [
+                  Center(
+                    child: Image.memory(
+                      base64Decode(existingSignatureData!),
+                      color: null,
+                      colorBlendMode: null,
+                      height: existingSignatureData == null ? 200 : 90,
+                      fit: BoxFit.contain,
+                      gaplessPlayback: true,
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent.withAlpha(50),
+                      border: Border.all(
+                        width: Base.defaultBorderWidth,
+                        color: Colors.blueAccent,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(radius4),
+                        bottomRight: Radius.circular(radius4),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Reference Signature"),
+                      ],
+                    ),
+                  ),
+                ]),
+              ),
             ),
+          // Expanded(
+          //   child: DigitCard(padding: const EdgeInsets.all(0), children: [
+          //     Image.memory(
+          //       base64Decode(existingSignatureData!),
+          //       height: 90,
+          //       fit: BoxFit.contain,
+          //       gaplessPlayback: true,
+          //     ),
+          //     const Row(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         Text("Reference Signature"),
+          //       ],
+          //     ),
+          //   ]),
+          // ),
           const SizedBox(height: spacer3),
-          if (widget.signatureData != null)
-            Expanded(
-              child: DigitCard(padding: const EdgeInsets.all(0), children: [
-                Image.memory(
-                  base64Decode(widget.signatureData),
-                  height: existingSignatureData == null ? 200 : 90,
-                  fit: BoxFit.contain,
-                  gaplessPlayback: true,
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: Base.defaultBorderWidth,
+                  color: theme.colorTheme.generic.divider,
                 ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Actual Signature"),
-                  ],
+                borderRadius: BorderRadius.circular(radius4),
+                color: theme.colorTheme.paper.secondary,
+              ),
+              child: Column(children: [
+                Center(
+                  child: Image.memory(
+                    base64Decode(widget.signatureData),
+                    color: null,
+                    colorBlendMode: null,
+                    height: existingSignatureData == null ? 200 : 90,
+                    fit: BoxFit.contain,
+                    gaplessPlayback: true,
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent.withAlpha(50),
+                    border: Border.all(
+                      width: Base.defaultBorderWidth,
+                      color: Colors.blueAccent,
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(radius4),
+                      bottomRight: Radius.circular(radius4),
+                    ),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Actual Signature"),
+                    ],
+                  ),
                 ),
               ]),
             ),
+          ),
           const SizedBox(height: spacer4),
 
           // Action Buttons
@@ -283,6 +357,8 @@ class _CompareSignatureState extends State<CompareSignature> {
                       'registerId': registerId,
                       'status': 1.0,
                       'signatureData': signatureData,
+                      'isFirstSignature': existingSignatureData ==
+                          null, // Mark as first signature if no existing signature
                     };
                     _markAttendance(
                       attendanceData,
@@ -320,6 +396,8 @@ class _CompareSignatureState extends State<CompareSignature> {
                             widget.resolved.resolveText(widget.registerId),
                         'status': 0.0,
                         'signatureData': widget.signatureData,
+                        'isFirstSignature': existingSignatureData ==
+                            null, // Mark as first signature if no existing signature
                       };
                       _markAttendance(
                         attendanceData,
@@ -344,7 +422,6 @@ class SignatureCapture extends StatefulWidget {
   final String clearSignatureLabel;
   final String saveSignatureLabel;
   final String signatureRequiredLabel;
-  final Uint8List? existingSignatureLabel;
   final String fieldName;
   final ResolvedWidgetContext resolved;
   final Function onSave;
@@ -357,7 +434,6 @@ class SignatureCapture extends StatefulWidget {
     required this.saveSignatureLabel,
     required this.signatureRequiredLabel,
     required this.resolved,
-    this.existingSignatureLabel,
     this.fieldName = 'signature',
     required this.onSave,
   });
@@ -386,24 +462,22 @@ class _SignatureCaptureState extends State<SignatureCapture> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (widget.existingSignatureLabel != null)
-          Image.memory(
-            widget.existingSignatureLabel!,
-            fit: BoxFit.contain,
-          ),
-        const SizedBox(height: spacer3),
         // Signature Pad
         Flexible(
-          child: AspectRatio(
-            aspectRatio: widget.existingSignatureLabel != null ? 2 : 1,
-            child: SignaturePad(
-              controller: _signatureController,
-              repaintBoundaryKey: _repaintBoundaryKey,
-              strokeWidth: 3.0,
-              strokeColor: Colors.black,
-              backgroundColor: Colors.white,
-              existingSignature: widget.existingSignatureLabel,
-            ),
+          child: DigitCard(
+            cardType: CardType.secondary,
+            children: [
+              AspectRatio(
+                aspectRatio: 2,
+                child: SignaturePad(
+                  controller: _signatureController,
+                  repaintBoundaryKey: _repaintBoundaryKey,
+                  strokeWidth: 3.0,
+                  strokeColor: Colors.black,
+                  backgroundColor: Colors.transparent,
+                ),
+              )
+            ],
           ),
         ),
         const SizedBox(height: spacer4),
@@ -440,8 +514,8 @@ class _SignatureCaptureState extends State<SignatureCapture> {
   }
 
   Future<void> _saveSignature() async {
-    // If no new strokes and no existing signature, show error
-    if (_signatureController.isEmpty && widget.existingSignatureLabel == null) {
+    // If no new strokes, show error
+    if (_signatureController.isEmpty) {
       Toast.showToast(
         context,
         message: widget.signatureRequiredLabel,
@@ -457,15 +531,8 @@ class _SignatureCaptureState extends State<SignatureCapture> {
     try {
       Uint8List? signatureBytes;
 
-      // If no new strokes but has existing signature, use existing
-      if (_signatureController.isEmpty &&
-          widget.existingSignatureLabel != null) {
-        signatureBytes = widget.existingSignatureLabel;
-      } else {
-        // Capture new signature
-        signatureBytes =
-            await SignaturePad.captureSignature(_repaintBoundaryKey);
-      }
+      // Capture new signature
+      signatureBytes = await SignaturePad.captureSignature(_repaintBoundaryKey);
 
       if (signatureBytes != null) {
         // Convert signature bytes to base64 for JSON transport
@@ -538,16 +605,14 @@ class SignaturePad extends StatelessWidget {
   final double strokeWidth;
   final Color backgroundColor;
   final GlobalKey? repaintBoundaryKey;
-  final Uint8List? existingSignature;
 
   const SignaturePad({
     super.key,
     required this.controller,
     this.strokeColor = Colors.black,
     this.strokeWidth = 3.0,
-    this.backgroundColor = Colors.white,
+    this.backgroundColor = Colors.transparent,
     this.repaintBoundaryKey,
-    this.existingSignature,
   });
 
   @override
@@ -557,7 +622,7 @@ class SignaturePad extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: backgroundColor,
-          border: Border.all(color: Colors.grey.shade300),
+          border: Border.all(color: Colors.transparent),
           borderRadius: BorderRadius.circular(8),
         ),
         child: ClipRRect(
@@ -586,12 +651,6 @@ class SignaturePad extends StatelessWidget {
                   builder: (_, __) => Stack(
                     fit: StackFit.expand,
                     children: [
-                      // Show existing signature as background when no new strokes
-                      if (existingSignature != null && controller.isEmpty)
-                        Image.memory(
-                          existingSignature!,
-                          fit: BoxFit.contain,
-                        ),
                       // Draw new strokes on top
                       CustomPaint(
                         painter: _SignaturePainter(
