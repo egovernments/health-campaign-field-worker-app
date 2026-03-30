@@ -301,22 +301,6 @@ final dynamic sampleInventoryFlows = {
             }
           ]
         },
-        // {
-        //   "format": "menu_card",
-        //   "heading": "INVENTORY_INCOMING_TRANSACTIONS_HEADING",
-        //   "description": "INVENTORY_INCOMING_TRANSACTIONS_DESCRIPTION",
-        //   "icon": 'Inbox',
-        //   "onAction": [
-        //     {
-        //       "actionType": "NAVIGATION",
-        //       "properties": {
-        //         "type": "TEMPLATE",
-        //         "name": "incomingTransactions",
-        //         "data": []
-        //       }
-        //     }
-        //   ]
-        // }
       ]
     },
     {
@@ -1721,6 +1705,18 @@ final dynamic sampleInventoryFlows = {
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Failed to create stock."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "UPDATE_STOCK_BALANCE",
+          "properties": {
+            "entity": "STOCK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to update stock balance."}
               }
             ]
           }

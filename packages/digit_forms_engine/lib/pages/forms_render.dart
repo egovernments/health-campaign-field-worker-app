@@ -1359,48 +1359,25 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                   return Padding(
                     padding: const EdgeInsets.only(
                         top: spacer2),
-                    child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${localizations.translate(field.label)}${field.mandatory ? ' *' : ''}',
-                          style: Theme.of(popupCtx)
-                              .textTheme
-                              .bodyMedium,
-                        ),
-                        const SizedBox(height: spacer1),
-                        TextFormField(
-                          controller: commentController,
-                          maxLines:
-                              field.format == 'textArea'
-                                  ? 3
-                                  : 1,
-                          onChanged: (_) =>
-                              setPopupState(() {
-                            showValidationError = false;
-                          }),
-                          decoration: InputDecoration(
-                            hintText: localizations
-                                .translate(field.label),
-                            border:
-                                const OutlineInputBorder(),
-                            errorBorder:
-                                const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.red),
-                            ),
-                            focusedErrorBorder:
-                                const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.red),
-                            ),
-                            errorText: hasError
-                                ? '${localizations.translate(field.label)} is required'
-                                : null,
-                          ),
-                        ),
-                      ],
+                    child: LabeledField(
+                      label: localizations
+                          .translate(field.label),
+                      isRequired: field.mandatory,
+                      child: DigitTextAreaFormInput(
+                        initialValue:
+                            commentController.text,
+                        onChange: (value) {
+                          commentController.text =
+                              value;
+                          setPopupState(() {
+                            showValidationError =
+                                false;
+                          });
+                        },
+                        errorMessage: hasError
+                            ? '${localizations.translate(field.label)} is required'
+                            : null,
+                      ),
                     ),
                   );
                 }),
