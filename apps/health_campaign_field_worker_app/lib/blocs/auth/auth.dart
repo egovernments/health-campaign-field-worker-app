@@ -12,7 +12,9 @@ import '../../data/repositories/remote/mdms.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../models/role_actions/role_actions_model.dart';
+import '../../utils/constants.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/utils.dart';
 
 // part 'auth.freezed.dart' need to be added to auto generate the files for freezed model
 part 'auth.freezed.dart';
@@ -144,11 +146,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
     try {
       emit(const AuthLoadingState());
+      final isConnected = await getIsConnected();
+      if (isConnected) {
+        final accessToken = await localSecureStore.accessToken;
+        final user = await localSecureStore.userRequestModel;
+        final tenantId = user?.tenantId;
+        await authRepository.logOutUser(
+          logoutPath: Constants.logoutUserPath,
+          queryParameters: {
+            'tenantId': tenantId.toString(),
+          },
+          body: {'access_token': accessToken},
+        );
+        await localSecureStore.deleteAll();
+        await localSecureStore.setBoundaryRefetch(true);
+
+        emit(const AuthUnauthenticatedState());
+      }
+    } catch (error) {
       await localSecureStore.deleteAll();
       await localSecureStore.setBoundaryRefetch(true);
-    } catch (error) {
-      rethrow;
+      emit(const AuthUnauthenticatedState());
     }
+
     emit(const AuthUnauthenticatedState());
   }
 }
