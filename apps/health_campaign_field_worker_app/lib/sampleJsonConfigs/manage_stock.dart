@@ -179,18 +179,41 @@ final dynamic sampleInventoryFlows = {
           "icon": 'Restore',
           "onAction": [
             {
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "type": "SEARCH_EVENT",
+                "name": "stockSearch",
+                "primary": "stock",
+                "select": ["stock"],
+                "awaitResults": true,
+                "skipAccumulatedFilters": true,
+                "data": [
+                  {
+                    "key": "tenantId",
+                    "value": "{{singleton.tenantId}}",
+                    "operation": "equals",
+                    "root": "stock"
+                  }
+                ]
+              }
+            },
+            {
               "actionType": "NAVIGATION",
               "properties": {
                 "type": "FORM",
                 "name": "RECORDSTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "RETURNED"},
-                  {"key": "transactionType", "value": "RECEIVED"},
-                  {"key": "primaryRole", "value": "RECEIVER"},
-                  {"key": "secondaryRole", "value": "SENDER"},
+                  {"key": "transactionType", "value": "DISPATCHED"},
+                  {"key": "primaryRole", "value": "SENDER"},
+                  {"key": "secondaryRole", "value": "RECEIVER"},
                   {
                     "key": "mrnNumber",
                     "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  },
+                  {
+                    "key": "stockBalances",
+                    "value": "{{fn:getAllStockBalances()}}"
                   }
                 ]
               }
@@ -946,7 +969,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_INVENTORY_QUANTITY__LOSTLABEL",
+              "label": "APPONE_INVENTORY_QUANTITY_LOSTLABEL",
               "order": 4,
               "value": "",
               "format": "text",
