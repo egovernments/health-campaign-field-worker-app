@@ -62,6 +62,8 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       autoFillCondition:
           _autoFillConditionListOrNull(json['autoFillCondition']),
       showAlertPopUp: _showAlertOrNull(json['showAlertPopUp']),
+      showSecondaryAlertPopUp:
+          _showSecondaryAlertOrNull(json['showSecondaryAlertPopUp']),
       multiEntityConfig: _multiEntityConfigOrNull(json['multiEntityConfig']),
       preventScreenCapture: json['preventScreenCapture'] as bool?,
       submitCondition: _visibilityConditionOrNull(json['submitCondition']),
@@ -123,6 +125,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('autoFillCondition',
       instance.autoFillCondition?.map((e) => e.toJson()).toList());
   writeNotNull('showAlertPopUp', instance.showAlertPopUp?.toJson());
+  writeNotNull(
+      'showSecondaryAlertPopUp', instance.showSecondaryAlertPopUp?.toJson());
   writeNotNull('multiEntityConfig', instance.multiEntityConfig?.toJson());
   writeNotNull('preventScreenCapture', instance.preventScreenCapture);
   writeNotNull('submitCondition', instance.submitCondition?.toJson());
@@ -294,6 +298,53 @@ Map<String, dynamic> _$$ShowAlertPopUpImplToJson(
       'primaryActionLabel': instance.primaryActionLabel,
       'secondaryActionLabel': instance.secondaryActionLabel,
       'conditions': instance.conditions,
+    };
+
+_$ShowSecondaryAlertPopUpImpl _$$ShowSecondaryAlertPopUpImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ShowSecondaryAlertPopUpImpl(
+      title: json['title'] as String,
+      description: json['description'] as String?,
+      primaryActionLabel: json['primaryActionLabel'] as String,
+      secondaryActionLabel: json['secondaryActionLabel'] as String,
+      conditions: (json['conditions'] as List<dynamic>?)
+          ?.map((e) => AlertCondition.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      body: (json['body'] as List<dynamic>?)
+          ?.map((e) =>
+              SecondaryAlertBodyField.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$ShowSecondaryAlertPopUpImplToJson(
+        _$ShowSecondaryAlertPopUpImpl instance) =>
+    <String, dynamic>{
+      'title': instance.title,
+      'description': instance.description,
+      'primaryActionLabel': instance.primaryActionLabel,
+      'secondaryActionLabel': instance.secondaryActionLabel,
+      'conditions': instance.conditions,
+      'body': instance.body,
+    };
+
+_$SecondaryAlertBodyFieldImpl _$$SecondaryAlertBodyFieldImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SecondaryAlertBodyFieldImpl(
+      type: json['type'] as String,
+      label: json['label'] as String,
+      format: json['format'] as String?,
+      fieldName: json['fieldName'] as String,
+      mandatory: json['mandatory'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$$SecondaryAlertBodyFieldImplToJson(
+        _$SecondaryAlertBodyFieldImpl instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'label': instance.label,
+      'format': instance.format,
+      'fieldName': instance.fieldName,
+      'mandatory': instance.mandatory,
     };
 
 _$AlertConditionImpl _$$AlertConditionImplFromJson(Map<String, dynamic> json) =>

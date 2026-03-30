@@ -2566,6 +2566,27 @@ final dynamic sampleInventoryFlows = {
           "description": "",
           "actionLabel": "INVENTORY_ACCEPT_STOCK_LABEL",
           "secondaryActionLabel": "INVENTORY_DECLINE_STOCK_LABEL",
+          "showAlertPopUp": {
+            "title": "INVENTORY_ACCEPT_CONFIRMATION_TITLE",
+            "description": "INVENTORY_ACCEPT_CONFIRMATION_DESCRIPTION",
+            "primaryActionLabel": "INVENTORY_ACCEPT_CONFIRM_ACTION",
+            "secondaryActionLabel": "INVENTORY_ACCEPT_CANCEL_ACTION"
+          },
+          "showSecondaryAlertPopUp": {
+            "title": "INVENTORY_REJECT_CONFIRMATION_TITLE",
+            "description": "INVENTORY_REJECT_CONFIRMATION_DESCRIPTION",
+            "primaryActionLabel": "INVENTORY_REJECT_CONFIRM_ACTION",
+            "secondaryActionLabel": "INVENTORY_REJECT_CANCEL_ACTION",
+            "body": [
+              {
+                "type": "string",
+                "label": "INVENTORY_REJECT_COMMENT_LABEL",
+                "format": "textArea",
+                "fieldName": "rejectComment",
+                "mandatory": true
+              }
+            ]
+          },
           "properties": [
             {
               "type": "string",
