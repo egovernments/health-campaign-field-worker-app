@@ -1861,7 +1861,7 @@ final dynamic sampleInventoryFlows = {
       "body": [
         {
           "format": "infoCard",
-          "hidden": "{{fn:length(stock)}} < 0}}",
+          "hidden": "{{fn:length(stock)}} > 0}}",
           "label": "INVENTORY_NO_TRANSACTIONS_LABEL",
           "description": "INVENTORY_NO_TRANSACTIONS_DESCRIPTION"
         },
@@ -1990,7 +1990,8 @@ final dynamic sampleInventoryFlows = {
                 ]
               },
             ]
-          }
+          },
+          "properties": {"spacing": "spacer4"},
         }
       ]
     },
@@ -2005,8 +2006,8 @@ final dynamic sampleInventoryFlows = {
           "label": "CORE_COMMON_BACK",
           "onAction": [
             {
-              "actionType": "BACK_NAVIGATION",
-              "properties": {"type": "TEMPLATE", "name": "viewTransaction"}
+              "actionType": "NAVIGATION",
+              "properties": {"type": "TEMPLATE", "name": "manageStock"}
             }
           ]
         }
@@ -2071,6 +2072,10 @@ final dynamic sampleInventoryFlows = {
                     "value": "{{item.transactionType}}"
                   },
                   {
+                    "key": "INVENTORY_TRANSACTION_REASON_LABEL",
+                    "value": "{{item.transactionReason}}"
+                  },
+                  {
                     "key":
                         "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
                     "value":
@@ -2105,7 +2110,8 @@ final dynamic sampleInventoryFlows = {
                 ]
               }
             ]
-          }
+          },
+          "properties": {"spacing": "spacer4"},
         }
       ]
     },

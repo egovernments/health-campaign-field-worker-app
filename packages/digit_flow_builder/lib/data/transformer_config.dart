@@ -658,7 +658,7 @@ final jsonConfig = {
             "stockEntryType": "__context:stockEntryType",
             "primaryRole": "__context:primaryRole",
             "secondaryRole": "__context:secondaryRole",
-            "status": "__switch:__context:stockEntryType:{ISSUED:__value:IN_TRANSIT}"
+            "status": "__switch:__context:stockEntryType:{ISSUED:__value:IN_TRANSIT,RETURNED:__value:RETURNED}"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
