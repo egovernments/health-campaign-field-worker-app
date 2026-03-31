@@ -139,6 +139,7 @@ class __$$StockDownSyncGetBatchSizeEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncGetBatchSizeEventImpl
+    with DiagnosticableTreeMixin
     implements StockDownSyncGetBatchSizeEvent {
   const _$StockDownSyncGetBatchSizeEventImpl(
       {required final List<AppConfiguration> appConfiguration,
@@ -158,8 +159,17 @@ class _$StockDownSyncGetBatchSizeEventImpl
   final String projectId;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncEvent.getBatchSize(appConfiguration: $appConfiguration, projectId: $projectId)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncEvent.getBatchSize'))
+      ..add(DiagnosticsProperty('appConfiguration', appConfiguration))
+      ..add(DiagnosticsProperty('projectId', projectId));
   }
 
   @override
@@ -326,6 +336,7 @@ class __$$StockDownSyncCheckTotalCountEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncCheckTotalCountEventImpl
+    with DiagnosticableTreeMixin
     implements StockDownSyncCheckTotalCountEvent {
   const _$StockDownSyncCheckTotalCountEventImpl(
       {required this.projectId, required this.batchSize});
@@ -336,8 +347,17 @@ class _$StockDownSyncCheckTotalCountEventImpl
   final int batchSize;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncEvent.checkTotalCount(projectId: $projectId, batchSize: $batchSize)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncEvent.checkTotalCount'))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('batchSize', batchSize));
   }
 
   @override
@@ -507,7 +527,9 @@ class __$$StockDownSyncDownloadEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$StockDownSyncDownloadEventImpl implements StockDownSyncDownloadEvent {
+class _$StockDownSyncDownloadEventImpl
+    with DiagnosticableTreeMixin
+    implements StockDownSyncDownloadEvent {
   const _$StockDownSyncDownloadEventImpl(
       {required this.projectId,
       required this.batchSize,
@@ -521,8 +543,18 @@ class _$StockDownSyncDownloadEventImpl implements StockDownSyncDownloadEvent {
   final int initialServerCount;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncEvent.downloadStock(projectId: $projectId, batchSize: $batchSize, initialServerCount: $initialServerCount)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncEvent.downloadStock'))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('initialServerCount', initialServerCount));
   }
 
   @override
@@ -672,12 +704,20 @@ class __$$StockDownSyncResetStateEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncResetStateEventImpl
+    with DiagnosticableTreeMixin
     implements StockDownSyncResetStateEvent {
   const _$StockDownSyncResetStateEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncEvent.resetState()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'StockDownSyncEvent.resetState'));
   }
 
   @override
@@ -932,15 +972,24 @@ class __$$StockDownSyncLoadingStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$StockDownSyncLoadingStateImpl extends _StockDownSyncLoadingState {
+class _$StockDownSyncLoadingStateImpl extends _StockDownSyncLoadingState
+    with DiagnosticableTreeMixin {
   const _$StockDownSyncLoadingStateImpl(this.isPop) : super._();
 
   @override
   final bool isPop;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncState.loading(isPop: $isPop)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncState.loading'))
+      ..add(DiagnosticsProperty('isPop', isPop));
   }
 
   @override
@@ -1132,7 +1181,7 @@ class __$$StockDownSyncGetBatchSizeStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncGetBatchSizeStateImpl
-    extends _StockDownSyncGetBatchSizeState {
+    extends _StockDownSyncGetBatchSizeState with DiagnosticableTreeMixin {
   const _$StockDownSyncGetBatchSizeStateImpl(this.batchSize, this.projectId)
       : super._();
 
@@ -1142,8 +1191,17 @@ class _$StockDownSyncGetBatchSizeStateImpl
   final String projectId;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncState.getBatchSize(batchSize: $batchSize, projectId: $projectId)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncState.getBatchSize'))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('projectId', projectId));
   }
 
   @override
@@ -1352,7 +1410,8 @@ class __$$StockDownSyncDataFoundStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
+class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState
+    with DiagnosticableTreeMixin {
   const _$StockDownSyncDataFoundStateImpl(
       this.initialServerCount, this.batchSize, this.offset, this.lastSyncedTime)
       : super._();
@@ -1367,8 +1426,19 @@ class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
   final int? lastSyncedTime;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncState.dataFound(initialServerCount: $initialServerCount, batchSize: $batchSize, offset: $offset, lastSyncedTime: $lastSyncedTime)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncState.dataFound'))
+      ..add(DiagnosticsProperty('initialServerCount', initialServerCount))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('offset', offset))
+      ..add(DiagnosticsProperty('lastSyncedTime', lastSyncedTime));
   }
 
   @override
@@ -1573,7 +1643,8 @@ class __$$StockDownSyncInProgressStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$StockDownSyncInProgressStateImpl extends _StockDownSyncInProgressState {
+class _$StockDownSyncInProgressStateImpl extends _StockDownSyncInProgressState
+    with DiagnosticableTreeMixin {
   const _$StockDownSyncInProgressStateImpl(this.syncedCount, this.totalCount)
       : super._();
 
@@ -1583,8 +1654,17 @@ class _$StockDownSyncInProgressStateImpl extends _StockDownSyncInProgressState {
   final int totalCount;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncState.inProgress(syncedCount: $syncedCount, totalCount: $totalCount)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncState.inProgress'))
+      ..add(DiagnosticsProperty('syncedCount', syncedCount))
+      ..add(DiagnosticsProperty('totalCount', totalCount));
   }
 
   @override
@@ -1782,7 +1862,8 @@ class __$$StockDownSyncSuccessStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$StockDownSyncSuccessStateImpl extends _StockDownSyncSuccessState {
+class _$StockDownSyncSuccessStateImpl extends _StockDownSyncSuccessState
+    with DiagnosticableTreeMixin {
   const _$StockDownSyncSuccessStateImpl(this.syncedCount, this.totalCount)
       : super._();
 
@@ -1792,8 +1873,17 @@ class _$StockDownSyncSuccessStateImpl extends _StockDownSyncSuccessState {
   final int totalCount;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncState.success(syncedCount: $syncedCount, totalCount: $totalCount)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncState.success'))
+      ..add(DiagnosticsProperty('syncedCount', syncedCount))
+      ..add(DiagnosticsProperty('totalCount', totalCount));
   }
 
   @override
@@ -1969,12 +2059,19 @@ class __$$StockDownSyncFailureStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$StockDownSyncFailureStateImpl extends _StockDownSyncFailureState {
+class _$StockDownSyncFailureStateImpl extends _StockDownSyncFailureState
+    with DiagnosticableTreeMixin {
   const _$StockDownSyncFailureStateImpl() : super._();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncState.failed()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'StockDownSyncState.failed'));
   }
 
   @override
@@ -2132,12 +2229,20 @@ class __$$StockDownSyncInsufficientStorageStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncInsufficientStorageStateImpl
-    extends _StockDownSyncInsufficientStorageState {
+    extends _StockDownSyncInsufficientStorageState
+    with DiagnosticableTreeMixin {
   const _$StockDownSyncInsufficientStorageStateImpl() : super._();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncState.insufficientStorage()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty('type', 'StockDownSyncState.insufficientStorage'));
   }
 
   @override
@@ -2297,12 +2402,19 @@ class __$$StockDownSyncCountCheckFailedStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncCountCheckFailedStateImpl
-    extends _StockDownSyncCountCheckFailedState {
+    extends _StockDownSyncCountCheckFailedState with DiagnosticableTreeMixin {
   const _$StockDownSyncCountCheckFailedStateImpl() : super._();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncState.totalCountCheckFailed()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty(
+        'type', 'StockDownSyncState.totalCountCheckFailed'));
   }
 
   @override
@@ -2460,12 +2572,20 @@ class __$$StockDownSyncResetStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$StockDownSyncResetStateImpl extends _StockDownSyncResetState {
+class _$StockDownSyncResetStateImpl extends _StockDownSyncResetState
+    with DiagnosticableTreeMixin {
   const _$StockDownSyncResetStateImpl() : super._();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'StockDownSyncState.resetState()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'StockDownSyncState.resetState'));
   }
 
   @override

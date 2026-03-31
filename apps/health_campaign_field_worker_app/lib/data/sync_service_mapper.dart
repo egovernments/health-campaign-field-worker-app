@@ -82,6 +82,11 @@ class SyncServiceMapper extends SyncEntityMapperListener {
             .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
             .toList();
         await local.bulkCreate(entity);
+      case "HFReferrals":
+        final entity = entityList
+            .map((e) => HFReferralModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
       case "Services":
         final entity = entityList
             .map((e) => ServiceModelMapper.fromJson(jsonEncode(e)))
