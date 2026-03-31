@@ -62,7 +62,6 @@ class SignatureCapture extends StatefulWidget {
   final String clearSignatureLabel;
   final String saveSignatureLabel;
   final String signatureRequiredLabel;
-  final Uint8List? existingSignatureLabel;
   final String fieldName;
   final ResolvedWidgetContext resolved;
   final Function onSave;
@@ -74,7 +73,6 @@ class SignatureCapture extends StatefulWidget {
     required this.saveSignatureLabel,
     required this.signatureRequiredLabel,
     required this.resolved,
-    this.existingSignatureLabel,
     this.fieldName = 'signature',
     required this.onSave,
   });
@@ -103,24 +101,22 @@ class _SignatureCaptureState extends State<SignatureCapture> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (widget.existingSignatureLabel != null)
-          Image.memory(
-            widget.existingSignatureLabel!,
-            fit: BoxFit.contain,
-          ),
-        const SizedBox(height: spacer3),
         // Signature Pad
         Flexible(
-          child: AspectRatio(
-            aspectRatio: widget.existingSignatureLabel != null ? 2 : 1,
-            child: SignaturePad(
-              controller: _signatureController,
-              repaintBoundaryKey: _repaintBoundaryKey,
-              strokeWidth: 3.0,
-              strokeColor: Colors.black,
-              backgroundColor: Colors.white,
-              existingSignature: widget.existingSignatureLabel,
-            ),
+          child: DigitCard(
+            cardType: CardType.secondary,
+            children: [
+              AspectRatio(
+                aspectRatio: 2,
+                child: SignaturePad(
+                  controller: _signatureController,
+                  repaintBoundaryKey: _repaintBoundaryKey,
+                  strokeWidth: 3.0,
+                  strokeColor: Colors.black,
+                  backgroundColor: Colors.transparent,
+                ),
+              )
+            ],
           ),
         ),
         const SizedBox(height: spacer4),
@@ -157,8 +153,8 @@ class _SignatureCaptureState extends State<SignatureCapture> {
   }
 
   Future<void> _saveSignature() async {
-    // If no new strokes and no existing signature, show error
-    if (_signatureController.isEmpty && widget.existingSignatureLabel == null) {
+    // If no new strokes, show error
+    if (_signatureController.isEmpty) {
       Toast.showToast(
         context,
         message: widget.signatureRequiredLabel,
@@ -174,15 +170,8 @@ class _SignatureCaptureState extends State<SignatureCapture> {
     try {
       Uint8List? signatureBytes;
 
-      // If no new strokes but has existing signature, use existing
-      if (_signatureController.isEmpty &&
-          widget.existingSignatureLabel != null) {
-        signatureBytes = widget.existingSignatureLabel;
-      } else {
-        // Capture new signature
-        signatureBytes =
-            await SignaturePad.captureSignature(_repaintBoundaryKey);
-      }
+      // Capture new signature
+      signatureBytes = await SignaturePad.captureSignature(_repaintBoundaryKey);
 
       if (signatureBytes != null) {
         // Convert signature bytes to base64 for JSON transport
@@ -258,16 +247,14 @@ class SignaturePad extends StatelessWidget {
   final double strokeWidth;
   final Color backgroundColor;
   final GlobalKey? repaintBoundaryKey;
-  final Uint8List? existingSignature;
 
   const SignaturePad({
     super.key,
     required this.controller,
     this.strokeColor = Colors.black,
     this.strokeWidth = 3.0,
-    this.backgroundColor = Colors.white,
+    this.backgroundColor = Colors.transparent,
     this.repaintBoundaryKey,
-    this.existingSignature,
   });
 
   @override
@@ -277,7 +264,7 @@ class SignaturePad extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: backgroundColor,
-          border: Border.all(color: Colors.grey.shade300),
+          border: Border.all(color: Colors.transparent),
           borderRadius: BorderRadius.circular(8),
         ),
         child: ClipRRect(
@@ -306,12 +293,6 @@ class SignaturePad extends StatelessWidget {
                   builder: (_, __) => Stack(
                     fit: StackFit.expand,
                     children: [
-                      // Show existing signature as background when no new strokes
-                      if (existingSignature != null && controller.isEmpty)
-                        Image.memory(
-                          existingSignature!,
-                          fit: BoxFit.contain,
-                        ),
                       // Draw new strokes on top
                       CustomPaint(
                         painter: _SignaturePainter(

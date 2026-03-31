@@ -1,3 +1,5 @@
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 
 import '../action_handler/action_config.dart';
@@ -240,10 +242,27 @@ class ResolvedWidgetContext {
             {}
         : <String, dynamic>{};
 
+    // Get entities from registry state (from initActions SEARCH_EVENT)
+    final registryState = key != null ? FlowCrudStateRegistry().get(key) : null;
+    List<EntityModel> entities = [];
+    final base = registryState?.base;
+    if (base is CrudStateLoaded) {
+      for (final entityList in base.results.values) {
+        entities.addAll(entityList);
+      }
+    }
+    if (entities.isEmpty) {
+      final wrapper = registryState?.stateWrapper;
+      if (wrapper is List) {
+        entities = wrapper.whereType<EntityModel>().toList();
+      }
+    }
+
     final initialContextData = <String, dynamic>{
       'wrappers': const [],
       ...currentEvalContext,
       'navigation': navigationParams,
+      if (entities.isNotEmpty) 'entities': entities,
     };
 
     await ActionHandler.executeActions(

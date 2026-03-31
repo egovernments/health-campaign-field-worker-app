@@ -238,10 +238,15 @@ class Constants {
     final appConfigs = await isar.appConfigurations.where().findAll();
     final config = appConfigs.firstOrNull;
 
-    final enableCrashlytics = config?.firebaseConfig?.enableCrashlytics ??
-        false; // TODO: Remove hardcoding and uncomment above
+    // Always initialize Firebase Core (required for FCM, analytics, etc.)
+    await firebase_services.initialize(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    final enableCrashlytics =
+        config?.firebaseConfig?.enableCrashlytics ?? false;
     if (enableCrashlytics) {
-      firebase_services.initialize(
+      await firebase_services.initialize(
         options: DefaultFirebaseOptions.currentPlatform,
         onErrorMessage: (value) {
           AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
@@ -423,11 +428,28 @@ enum DigitProgressDialogType {
   pendingSync,
 }
 
+class DownloadProgressData {
+  final double progress;
+  final String boundaryName;
+  final int syncedCount;
+  final int totalCount;
+  final int currentIndex;
+  final int totalBoundaries;
+
+  const DownloadProgressData({
+    required this.progress,
+    required this.boundaryName,
+    required this.syncedCount,
+    required this.totalCount,
+    required this.currentIndex,
+    required this.totalBoundaries,
+  });
+}
+
 class DownloadBeneficiary {
   String title;
   String projectId;
-  String boundary;
-  String boundaryName;
+  List<BoundaryModel> boundaries;
   int? pendingSyncCount;
   int? syncCount;
   int? totalCount;
@@ -438,12 +460,12 @@ class DownloadBeneficiary {
   String? prefixLabel;
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
+  Map<String, int> boundaryCounts;
 
   DownloadBeneficiary({
     required this.title,
     required this.projectId,
-    required this.boundary,
-    required this.boundaryName,
+    required this.boundaries,
     this.appConfiguartion,
     this.pendingSyncCount,
     this.batchSize,
@@ -454,5 +476,6 @@ class DownloadBeneficiary {
     this.secondaryButtonLabel,
     this.prefixLabel,
     this.suffixLabel,
+    this.boundaryCounts = const {},
   });
 }

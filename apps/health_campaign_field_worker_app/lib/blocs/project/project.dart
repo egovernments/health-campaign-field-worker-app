@@ -17,7 +17,7 @@ import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
-
+import '../../data/repositories/remote/notification_token.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
@@ -25,14 +25,18 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
+import '../../data/repositories/remote/notification_token.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
-import '../../models/entities/transaction_type.dart';
+import '../../notification_service.dart';
 import '../../utils/background_service.dart';
+import '../../utils/download_image.dart';
+import '../../models/entities/transaction_type.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/utils.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 
 part 'project.freezed.dart';
 
@@ -110,6 +114,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
       productVariantLocalRepository;
   final DashboardRemoteRepository dashboardRemoteRepository;
+  final NotificationTokenRepository notificationTokenRepository;
   BuildContext context;
 
   ProjectBloc({
@@ -142,6 +147,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.attendanceLogLocalRepository,
     required this.attendanceLogRemoteRepository,
     required this.dashboardRemoteRepository,
+    required this.notificationTokenRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -253,18 +259,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     if (projects.isNotEmpty) {
       try {
-        await _loadProjectFacilities(projects, batchSize);
-      } catch (_) {
-        emit(
-          state.copyWith(
-            projects: [],
-            loading: false,
-            syncError: ProjectSyncErrorType.projectFacilities,
-          ),
-        );
-        return;
-      }
-      try {
         await _loadFacilities(projects, batchSize);
       } catch (_) {
         emit(
@@ -365,7 +359,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
 
     /* An empty BoundarySearchModel is sent to retrieve all boundaries from the repository.
-    This ensures that the entire dataset is fetched, as no specific filters or constraints are applied.
+    This ensures that the entire dataset is fetched, as no specific filters or constraints are applied.Facility
     The retrieved boundaries are then processed to find the least level boundaries and set them in the singleton.*/
     final boundaries = await boundaryLocalRepository.search(
       BoundarySearchModel(),
@@ -374,15 +368,88 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
   }
 
-  FutureOr<void> _loadProjectFacilities(
-      List<ProjectModel> projects, int batchSize) async {
+  FutureOr<void> _loadProjectFacilities(ProjectModel project) async {
+    final assignedBoundaryType = project.address?.boundaryType;
+    List<String>? boundaryTypes;
+
+    if (assignedBoundaryType != null) {
+      final configs = await isar.appConfigurations.where().findAll();
+      final boundaryRelationships = configs.firstOrNull?.boundaryRelationship;
+
+      if (boundaryRelationships != null) {
+        final match = boundaryRelationships
+            .where((e) => e.boundaryType == assignedBoundaryType)
+            .firstOrNull;
+
+        if (match != null) {
+          boundaryTypes = [
+            if (match.parentBoundaryType.isNotEmpty) match.parentBoundaryType,
+            match.boundaryType,
+            if (match.childBoundaryTypes.isNotEmpty)
+              match.childBoundaryTypes.first,
+          ];
+        }
+      }
+
+      boundaryTypes ??= [assignedBoundaryType];
+    }
+
     final projectFacilities = await projectFacilityRemoteRepository.search(
       ProjectFacilitySearchModel(
-        projectId: projects.map((e) => e.id).toList(),
+        projectId: [project.id],
+        boundaryTypes: boundaryTypes,
       ),
     );
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
+
+    // Register notification token with current level facility IDs
+    final currentFacilityIds = projectFacilities
+        .where((pf) {
+          final facilityLevel = pf.additionalFields?.fields
+              .where((f) => f.key == 'facilityLevel')
+              .firstOrNull
+              ?.value;
+          return facilityLevel == 'current';
+        })
+        .map((pf) => pf.facilityId)
+        .toList();
+
+    if (currentFacilityIds.isNotEmpty) {
+      final fcmToken = await NotificationService.getStoredFcmToken();
+      if (fcmToken != null && fcmToken.isNotEmpty) {
+        await _registerNotificationToken(fcmToken, currentFacilityIds);
+      }
+    }
+  }
+
+  /// Registers the Firebase notification token with the assigned facility IDs.
+  Future<void> _registerNotificationToken(
+    String token,
+    List<String> facilityIds,
+  ) async {
+    final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+    final apiEndPoint = Constants.getEndPoint(
+      serviceRegistry: serviceRegistry,
+      service: 'NOTIFICATION',
+      action: ApiOperation.register.toValue(),
+      entityName: 'NotificationToken',
+    );
+
+    if (apiEndPoint.isEmpty) {
+      debugPrint('NotificationToken: No endpoint found in service registry');
+      return;
+    }
+
+    try {
+      await notificationTokenRepository.registerToken(
+        apiEndPoint: apiEndPoint,
+        token: token,
+        facilityIds: facilityIds,
+      );
+    } catch (e) {
+      debugPrint('Failed to register notification token');
+    }
   }
 
   FutureOr<void> _loadFacilities(
@@ -535,6 +602,24 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  Future<List<AttendanceLogModel>> _updateLogsData(
+      List<AttendanceLogModel> logs) async {
+    List<AttendanceLogModel> updatedLogs = [];
+    for (var log in logs) {
+      var additionalDetails = log.additionalDetails;
+      if (additionalDetails != null &&
+          additionalDetails['isFirstSignature'] == "true" &&
+          additionalDetails['signatureFileStoreId'] != null) {
+        String signatureFileStoreId = additionalDetails['signatureFileStoreId'];
+        String signatureBase64 =
+            await DownloadImage.downloadSignature(signatureFileStoreId);
+        additionalDetails['signatureData'] = signatureBase64;
+      }
+      updatedLogs.add(log.copyWith(additionalDetails: additionalDetails));
+    }
+    return updatedLogs;
+  }
+
   Future<void> _handleProjectSelection(
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
@@ -607,7 +692,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                       registerId: register.id,
                     ),
                   );
-                  await attendanceLogLocalRepository.bulkCreate(logs);
+                  List<AttendanceLogModel> updatedLogs =
+                      await _updateLogsData(logs);
+                  await attendanceLogLocalRepository.bulkCreate(updatedLogs);
                 }
               } catch (_) {
                 emit(state.copyWith(
@@ -892,40 +979,101 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
-    final getSelectedProjectType = await localSecureStore.selectedProjectType;
-    final getSelectedProject = await localSecureStore.selectedProject;
-
-    final currentRunningCycle =
-        getSelectedProject?.additionalDetails?.projectType?.cycles
-            ?.where(
-              (e) =>
-                  (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-                  (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-              // Return null when no matching cycle is found
-            )
-            .firstOrNull;
-
+    // Load project facilities after project selection
     try {
-      final projectFacilities = await projectFacilityLocalRepository
-          .search(ProjectFacilitySearchModel());
-      final facilities =
-          await facilityLocalRepository.search(FacilitySearchModel());
-      await downloadStockDataBasedOnRole(projectFacilities, facilities,
-          event.model.address?.boundaryType, currentRunningCycle);
-
+      await _loadProjectFacilities(event.model);
+    } catch (_) {
       emit(state.copyWith(
         selectedProject: event.model,
         loading: false,
-        syncError: null,
-        projectType: getSelectedProjectType,
-        selectedCycle: currentRunningCycle,
-      ));
-    } catch (_) {
-      emit(state.copyWith(
-        loading: false,
-        projects: [],
         syncError: ProjectSyncErrorType.projectFacilities,
       ));
+      return;
+    }
+
+    // Trigger silent stock downsync after project facilities are loaded
+    _silentStockDownSync(event.model.id);
+
+    final getSelectedProject = await localSecureStore.selectedProject;
+
+    emit(state.copyWith(
+      selectedProject: getSelectedProject,
+      loading: false,
+      syncError: null,
+    ));
+  }
+
+  /// Silently downloads dispatched stock from server without UI dialogs.
+  /// Runs in the background after project selection.
+  Future<void> _silentStockDownSync(String projectId) async {
+    try {
+      final userObject = await localSecureStore.userRequestModel;
+      if (userObject == null) return;
+
+      final userRoles = userObject.roles.map((e) => e.code);
+
+      final projectFacilities = await projectFacilityLocalRepository.search(
+        ProjectFacilitySearchModel(projectId: [projectId]),
+      );
+
+      final projectResources = await projectResourceLocalRepository.search(
+        ProjectResourceSearchModel(projectId: [projectId]),
+      );
+      final productVariantIds = projectResources
+          .map((pr) => pr.resource.productVariantId)
+          .whereType<String>()
+          .toSet()
+          .toList();
+
+      List<String> receiverIds = [];
+      if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
+        receiverIds = projectFacilities.map((e) => e.facilityId).toList();
+      } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
+        receiverIds = projectFacilities.map((e) => e.facilityId).toList();
+      } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+        receiverIds = [userObject.uuid];
+      }
+
+      if (receiverIds.isEmpty) return;
+
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+        productVariantId:
+            productVariantIds.isNotEmpty ? productVariantIds : null,
+      );
+
+      final totalCount = await (stockRemoteRepository as StockRemoteRepository)
+          .fetchTotalCount(stockSearchModel, offSet: 0);
+
+      if (totalCount <= 0) return;
+
+      debugPrint(
+          'SILENT_STOCK_DOWNSYNC: Found $totalCount records, downloading...');
+
+      const batchSize = 50;
+      int offset = 0;
+      int syncedCount = 0;
+
+      while (syncedCount < totalCount) {
+        final stockEntries = await stockRemoteRepository.search(
+          stockSearchModel,
+          offSet: offset,
+          limit: batchSize,
+        );
+
+        if (stockEntries.isEmpty) break;
+
+        await stockLocalRepository.bulkCreate(stockEntries);
+
+        offset += stockEntries.length;
+        syncedCount += stockEntries.length;
+      }
+
+      debugPrint(
+          'SILENT_STOCK_DOWNSYNC: Completed. Synced $syncedCount/$totalCount');
+    } catch (e) {
+      debugPrint('SILENT_STOCK_DOWNSYNC: Error - $e');
     }
   }
 

@@ -44,8 +44,15 @@ class _EvaluationKeyDropDownState
       builder: (context, state) {
         return state.maybeWhen(
           orElse: () => _buildDropdown(context, []),
-          fetched: (projectFacilities) =>
-              _buildDropdown(context, projectFacilities),
+          fetched: (projectFacilities) => _buildDropdown(
+              context,
+              projectFacilities.where((pf) {
+                final facilityLevel = pf.additionalFields?.fields
+                    .where((f) => f.key == 'facilityLevel')
+                    .firstOrNull
+                    ?.value;
+                return facilityLevel == null || facilityLevel == 'current';
+              }).toList()),
         );
       },
     );

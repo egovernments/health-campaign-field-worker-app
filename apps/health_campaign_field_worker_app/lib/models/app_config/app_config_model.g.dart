@@ -174,6 +174,9 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       transitPostType: (json['TRANSIT_POST_TYPE'] as List<dynamic>?)
           ?.map((e) => TransitPostType.fromJson(e as Map<String, dynamic>))
           .toList(),
+      boundaryRelationship: (json['BOUNDARY_RELATIONSHIP'] as List<dynamic>?)
+          ?.map((e) => BoundaryRelationship.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$HCMWrapperModelImplToJson(
@@ -204,6 +207,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'REFUSAL_REASONS': instance.refusalReasons,
       'FIREBASE_CONFIG': instance.firebaseConfig,
       'TRANSIT_POST_TYPE': instance.transitPostType,
+      'BOUNDARY_RELATIONSHIP': instance.boundaryRelationship,
     };
 
 _$AppConfigSecondaryWrapperModelImpl
@@ -299,6 +303,8 @@ _$AppConfigImpl _$$AppConfigImplFromJson(Map<String, dynamic> json) =>
       syncTrigger: json['SYNC_TRIGGER'] as String,
       tenantId: json['TENANT_ID'] as String?,
       maxRadius: (json['PROXIMITY_SEARCH_RANGE'] as num?)?.toDouble(),
+      boundaryLastLevelMaxSelection:
+          (json['BOUNDARY_LAST_LEVEL_MAX_SELECTION'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
@@ -309,6 +315,8 @@ Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
       'SYNC_TRIGGER': instance.syncTrigger,
       'TENANT_ID': instance.tenantId,
       'PROXIMITY_SEARCH_RANGE': instance.maxRadius,
+      'BOUNDARY_LAST_LEVEL_MAX_SELECTION':
+          instance.boundaryLastLevelMaxSelection,
     };
 
 _$IdTypeOptionsImpl _$$IdTypeOptionsImplFromJson(Map<String, dynamic> json) =>
@@ -601,4 +609,42 @@ Map<String, dynamic> _$$FirebaseConfigImplToJson(
     <String, dynamic>{
       'enableCrashlytics': instance.enableCrashlytics,
       'enableAnalytics': instance.enableAnalytics,
+    };
+
+_$BoundaryRelationshipImpl _$$BoundaryRelationshipImplFromJson(
+        Map<String, dynamic> json) =>
+    _$BoundaryRelationshipImpl(
+      boundaryType: json['boundaryType'] as String,
+      order: (json['order'] as num).toInt(),
+      parent: json['parent'] == null
+          ? null
+          : BoundaryRelationshipRef.fromJson(
+              json['parent'] as Map<String, dynamic>),
+      children: (json['children'] as List<dynamic>?)
+          ?.map((e) =>
+              BoundaryRelationshipRef.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$BoundaryRelationshipImplToJson(
+        _$BoundaryRelationshipImpl instance) =>
+    <String, dynamic>{
+      'boundaryType': instance.boundaryType,
+      'order': instance.order,
+      'parent': instance.parent,
+      'children': instance.children,
+    };
+
+_$BoundaryRelationshipRefImpl _$$BoundaryRelationshipRefImplFromJson(
+        Map<String, dynamic> json) =>
+    _$BoundaryRelationshipRefImpl(
+      boundaryType: json['boundaryType'] as String,
+      order: (json['order'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$BoundaryRelationshipRefImplToJson(
+        _$BoundaryRelationshipRefImpl instance) =>
+    <String, dynamic>{
+      'boundaryType': instance.boundaryType,
+      'order': instance.order,
     };

@@ -18,6 +18,7 @@ import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/boundary_selection.dart';
+import '../pages/current_boundary.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
@@ -131,6 +132,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: BoundarySelectionRoute.page,
           path: 'select-boundary',
+        ),
+        AutoRoute(
+          page: CurrentBoundaryRoute.page,
+          path: 'current-boundary',
         ),
 
         // Attendance Route

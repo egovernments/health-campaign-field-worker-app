@@ -68,6 +68,8 @@ class StockCalculationUtils {
     double stockReturned = 0;
     double stockLost = 0;
     double stockDamaged = 0;
+    double stockExcess = 0;
+    double stockLess = 0;
 
     for (final stock in filteredStock) {
       final transactionType = stock.transactionType?.toUpperCase() ?? '';
@@ -81,11 +83,18 @@ class StockCalculationUtils {
       final isReceiver = stock.receiverId == facilityId;
       final isSender = stock.senderId == facilityId;
 
-      // Stock Received: This facility is the receiver AND transactionType == RECEIVED
+      // Stock Received/Excess/Less: This facility is the receiver AND transactionType == RECEIVED
+      // Both LESS and EXCESS use RECEIVED transactionType, differentiated by stockEntryType
       if (isReceiver && transactionType == 'RECEIVED') {
         if (transactionReason == 'RETURNED' ||
             stockEntryType == 'RETURNED') {
           stockReturned += quantity;
+        } else if (stockEntryType == 'EXCESS') {
+          // Stock Excess: recorded via less/excess flow
+          stockExcess += quantity;
+        } else if (stockEntryType == 'LESS') {
+          // Stock Less: recorded via less/excess flow
+          stockLess += quantity;
         } else if (transactionReason.isEmpty ||
             transactionReason == 'RECEIVED') {
           stockReceived += quantity;
@@ -110,30 +119,26 @@ class StockCalculationUtils {
             transactionReason == 'DAMAGED_IN_STORAGE' ||
             stockEntryType == 'DAMAGED') {
           stockDamaged += quantity;
+        } else if (stockEntryType == 'REJECTED' || stockEntryType == 'RETURNED') {
+          // Rejected/returned stock - not counted as issued since it was never accepted
         } else {
           // Regular dispatch (issued)
           stockIssued += quantity;
         }
       }
       // Stock Received from dispatch: This facility is the receiver AND transactionType == DISPATCHED
-      // This handles stock received when another facility dispatches TO this facility
+      // These are incoming dispatches from other facilities - they should NOT count
+      // as received until the user accepts them (which creates a RECEIVED record).
+      // Only damage/loss dispatches are tracked here for reporting purposes.
       else if (isReceiver && transactionType == 'DISPATCHED') {
-        if (transactionReason == 'LOST_IN_TRANSIT' ||
-            transactionReason == 'LOST_IN_STORAGE' ||
-            transactionReason == 'DAMAGED_IN_TRANSIT' ||
-            transactionReason == 'DAMAGED_IN_STORAGE' ||
-            stockEntryType == 'LOSS' ||
-            stockEntryType == 'DAMAGED') {
-          // Damage/loss entries - don't count as received
-        } else {
-          stockReceived += quantity;
-        }
+        // Incoming dispatches are not counted as stock received.
+        // They require acceptance first (creates a separate RECEIVED transaction).
       }
     }
 
-    // Stock in hand = (received + returned) - (issued + damaged + lost)
-    final stockInHand = (stockReceived + stockReturned) -
-        (stockIssued + stockDamaged + stockLost);
+    // Stock in hand = (received + returned + excess) - (issued + damaged + lost + less)
+    final stockInHand = (stockReceived + stockReturned + stockExcess) -
+        (stockIssued + stockDamaged + stockLost + stockLess);
 
     return {
       'stockReceived': stockReceived,
@@ -141,6 +146,8 @@ class StockCalculationUtils {
       'stockReturned': stockReturned,
       'stockLost': stockLost,
       'stockDamaged': stockDamaged,
+      'stockExcess': stockExcess,
+      'stockLess': stockLess,
       'stockInHand': stockInHand,
     };
   }
@@ -182,6 +189,8 @@ class StockCalculationUtils {
         'stockReturned': 0,
         'stockLost': 0,
         'stockDamaged': 0,
+        'stockExcess': 0,
+        'stockLess': 0,
         'stockInHand': 0,
       };
 

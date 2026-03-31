@@ -47,6 +47,10 @@ class StockReconciliationMetrics {
 
   String get stockDamaged => 'STOCK_RECONCILIATION_STOCK_DAMAGED';
 
+  String get stockExcess => 'STOCK_RECONCILIATION_STOCK_EXCESS';
+
+  String get stockLess => 'STOCK_RECONCILIATION_STOCK_LESS';
+
   String get stockOnHand => 'STOCK_RECONCILIATION_STOCK_ON_HAND';
 }
 
@@ -173,7 +177,19 @@ class Common {
 
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 
+  String get coreCommonDownloadCompleted => 'CORE_COMMON_DOWNLOAD_COMPLETED';
+
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
+
+  String get maxBoundarySelectionReached =>
+      'CORE_COMMON_MAX_BOUNDARY_SELECTION_REACHED';
+
+  String get selectCurrentBoundary => 'CORE_COMMON_SELECT_CURRENT_BOUNDARY';
+
+  String get wantToChooseAnotherBoundary =>
+      'CORE_COMMON_WANT_TO_CHOOSE_ANOTHER_BOUNDARY';
+
+  String get chooseAnotherBoundary => 'CORE_COMMON_CHOOSE_ANOTHER_BOUNDARY';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
 
@@ -216,6 +232,16 @@ class Common {
   String get qrInventory => 'QR_INVENTORY';
 
   String get qrAttendance => 'QR_ATTENDANCE';
+
+  String get progressIndicatorPrefixLabelHFReferral => 'PROGRESS_INDICATOR_PREFIX_LABEL_HFREFERRAL';
+
+  String get stockDataFound => 'STOCK_DATA_FOUND';
+
+  String get stockNoDataFound => 'STOCK_NO_DATA_FOUND';
+
+  String get stockDataFoundContent => 'STOCK_DATA_FOUND_CONTENT';
+
+  String get stockNoDataFoundContent => 'STOCK_NO_DATA_FOUND_CONTENT';
 }
 
 class Attendance {
@@ -399,6 +425,10 @@ class HomeShowcase {
 
   String get distributorSyncData {
     return 'DISTRIBUTOR_HOME_SHOWCASE_SYNC_DATA';
+  }
+
+  String get stockSyncData {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_STOCK_SYNC_DATA';
   }
 
   String get warehouseManagerManageStock {
@@ -785,6 +815,8 @@ class Home {
 
   String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
 
+  String get stockSyncDataLabel => 'HOME_STOCK_SYNC_DATA_LABEL';
+
   String get callbackLabel => 'HOME_CALL_BACK_LABEL';
 
   String get fileComplaint => 'HOME_FILE_COMPLAINT';
@@ -822,6 +854,10 @@ class Home {
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
+
+  String get stockBalanceLabel => 'HOME_STOCK_BALANCE_LABEL';
+
+  String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
 }
 
 class DataShare {
@@ -1369,6 +1405,8 @@ class BeneficiaryDetails {
 
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
+
+  String get referralDownloadCompleted => 'REFERRAL_DOWNLOAD_COMPLETED';
 
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
 }

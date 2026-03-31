@@ -40,13 +40,22 @@ class CrudExecutor extends ActionExecutor {
       debugPrint('CREATE_EVENT: Condition met, proceeding with create');
     }
 
-    final entities = contextData['entities'];
-    if (entities == null || (entities is List && entities.isEmpty)) {
+    final rawEntities = contextData['entities'];
+    if (rawEntities == null || (rawEntities is List && rawEntities.isEmpty)) {
       debugPrint('CREATE_EVENT: No entities to create');
       return contextData;
     }
 
-    debugPrint('CREATE_EVENT: Creating ${entities is List ? entities.length : 1} entities');
+    final entities = rawEntities is List
+        ? rawEntities.whereType<EntityModel>().toList()
+        : [rawEntities as EntityModel];
+
+    if (entities.isEmpty) {
+      debugPrint('CREATE_EVENT: No valid EntityModel entities to create');
+      return contextData;
+    }
+
+    debugPrint('CREATE_EVENT: Creating ${entities.length} entities');
     context.read<CrudBloc>().add(CrudEventCreate(entities: entities));
     return contextData;
   }
@@ -120,9 +129,13 @@ class UpdateExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    final entities = contextData['entities'];
+    // Support 'source' property to pick which entities to update
+    // Default: 'entities' (the transformed entities)
+    // 'existingModels': use the original entities (e.g., to mark original stock as accepted)
+    final source = action.properties['source'] as String? ?? 'entities';
+    final entities = contextData[source];
     if (entities == null || entities is! List || entities.isEmpty) {
-      debugPrint('UPDATE_EVENT: No entities found in contextData');
+      debugPrint('UPDATE_EVENT: No entities found in contextData[$source]');
       return contextData;
     }
 
@@ -159,7 +172,46 @@ class UpdateExecutor extends ActionExecutor {
       return contextData;
     }
 
+    // Filter entities by field match if specified
+    // e.g., "matchField": {"entityField": "productVariantId", "contextKey": "navigation.productVariantId"}
+    final matchField = action.properties['matchField'] as Map<String, dynamic>?;
+    if (matchField != null) {
+      final entityField = matchField['entityField'] as String?;
+      final contextKey = matchField['contextKey'] as String?;
+
+      if (entityField != null && contextKey != null) {
+        // Resolve value from contextData using dot-notation path
+        dynamic matchValue = contextData;
+        for (final part in contextKey.split('.')) {
+          if (matchValue is Map) {
+            matchValue = matchValue[part];
+          } else {
+            matchValue = null;
+            break;
+          }
+        }
+
+        if (matchValue != null) {
+          final matchStr = matchValue.toString();
+          entityList = entityList.where((e) {
+            final entityMap = e.toMap();
+            return entityMap[entityField]?.toString() == matchStr;
+          }).toList();
+
+          debugPrint(
+              'UPDATE_EVENT: matchField filter on $entityField=$matchStr, remaining: ${entityList.length}');
+        }
+      }
+    }
+
+    if (entityList.isEmpty) {
+      debugPrint('UPDATE_EVENT: No entities after matchField filtering');
+      return contextData;
+    }
+
     // Parse modify array: [{"key": "EntityType.fieldName", "value": "..."}]
+    // Also supports deeper paths for additionalFields:
+    //   "EntityType.additionalFields.fields.fieldKey" adds/updates a field in additionalFields
     final modifyList = action.properties['modify'] as List<dynamic>?;
     final modifyMap = <String, dynamic>{};
     if (modifyList != null) {
@@ -191,24 +243,67 @@ class UpdateExecutor extends ActionExecutor {
       // Check if there are field updates for this entity type
       if (modifyMap.isNotEmpty) {
         final entityUpdates = <String, dynamic>{};
+        final additionalFieldUpdates = <String, dynamic>{};
 
         for (final entry in modifyMap.entries) {
-          // Parse "EntityType.fieldName" format
           final parts = entry.key.split('.');
           if (parts.length == 2 && parts[0] == entityType) {
+            // Simple: "EntityType.fieldName"
             entityUpdates[parts[1]] = entry.value;
+          } else if (parts.length == 4 &&
+              parts[0] == entityType &&
+              parts[1] == 'additionalFields' &&
+              parts[2] == 'fields') {
+            // Deep: "EntityType.additionalFields.fields.fieldKey"
+            additionalFieldUpdates[parts[3]] = entry.value;
           }
         }
 
-        if (entityUpdates.isNotEmpty) {
+        if (entityUpdates.isNotEmpty || additionalFieldUpdates.isNotEmpty) {
           debugPrint(
-              'UPDATE_EVENT: Applying updates to $entityType: $entityUpdates');
+              'UPDATE_EVENT: Applying updates to $entityType: $entityUpdates, additionalFields: $additionalFieldUpdates');
 
           // Convert entity to map, apply updates, recreate entity
           final entityMap = entity.toMap();
           entityUpdates.forEach((key, value) {
             entityMap[key] = value;
           });
+
+          // Merge additional field updates into existing additionalFields
+          if (additionalFieldUpdates.isNotEmpty) {
+            final existingAF = entityMap['additionalFields'];
+            if (existingAF is Map<String, dynamic>) {
+              final existingFields =
+                  (existingAF['fields'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
+              final updatedFields = <Map<String, dynamic>>[];
+
+              // Keep existing fields, replacing any with matching keys
+              final updatedKeys = additionalFieldUpdates.keys.toSet();
+              for (final field in existingFields) {
+                if (!updatedKeys.contains(field['key'])) {
+                  updatedFields.add(field);
+                }
+              }
+              // Add new/updated fields
+              for (final entry in additionalFieldUpdates.entries) {
+                updatedFields.add({'key': entry.key, 'value': entry.value});
+              }
+
+              entityMap['additionalFields'] = {
+                ...existingAF,
+                'fields': updatedFields,
+              };
+            } else {
+              // No existing additionalFields, create new
+              entityMap['additionalFields'] = {
+                'schema': entityType.replaceAll('Model', ''),
+                'version': 1,
+                'fields': additionalFieldUpdates.entries
+                    .map((e) => {'key': e.key, 'value': e.value})
+                    .toList(),
+              };
+            }
+          }
 
           // Update clientAuditDetails in map
           if (updatedClientAudit != null) {
@@ -238,13 +333,15 @@ class UpdateExecutor extends ActionExecutor {
       }
 
       // Find the original entity of the same type for comparison
-      final originalEntity = existingModelsList.firstWhere(
-        (e) => getEntityTypeName(e) == entityType,
-        orElse: () => updatedEntity, // If no original found, treat as changed
-      );
+      final originalEntity = existingModelsList.isEmpty
+          ? null
+          : existingModelsList.cast<EntityModel?>().firstWhere(
+              (e) => getEntityTypeName(e!) == entityType,
+              orElse: () => null,
+            );
 
-      // Only add to update list if entity has actually changed
-      if (_hasEntityChanged(originalEntity, updatedEntity)) {
+      // If no original found, treat as changed (always update)
+      if (originalEntity == null || _hasEntityChanged(originalEntity, updatedEntity)) {
         processedEntities.add(updatedEntity);
         debugPrint('UPDATE_EVENT: $entityType has changes - will be updated');
       } else {

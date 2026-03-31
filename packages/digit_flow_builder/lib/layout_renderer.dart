@@ -6,8 +6,10 @@ import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localization_context.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/digit_tag_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -293,33 +295,12 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
               children: [
                 Scaffold(
                   body: ScrollableContent(
-                    header: headers.isNotEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.only(
-                                top: spacer4, left: spacer4),
-                            child: Row(
-                              children: headers
-                                  .map((e) => LayoutMapper.map(
-                                        preprocessConfigWithState(e, stateData),
-                                        stateData,
-                                        context,
-                                        screenKey: screenKey,
-                                        (action) {
-                                          ActionHandler.execute(
-                                              action, context, {
-                                            'wrappers': const [],
-                                            '_compositeKey': compositeKey,
-                                          });
-                                        },
-                                      ))
-                                  .toList(),
-                            ),
-                          )
-                        : null,
-                    enableFixedDigitButton: actions.isNotEmpty ? true : false,
-                    footer: actions.isNotEmpty
-                        ? DigitCard(
-                            children: actions
+                  header: headers.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              top: spacer4, left: spacer4),
+                          child: Row(
+                            children: headers
                                 .map((e) => LayoutMapper.map(
                                       preprocessConfigWithState(e, stateData),
                                       stateData,
@@ -333,48 +314,78 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                       },
                                     ))
                                 .toList(),
-                          )
-                        : null,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(spacer4),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            DigitTextBlock(
-                              padding: EdgeInsets.zero,
-                              heading: (widget.config['heading'] != null &&
-                                      localizations
-                                          .translate(widget.config['heading'])
-                                          .trim()
-                                          .isNotEmpty)
-                                  ? localizations
-                                      .translate(widget.config['heading'])
-                                  : null,
-                              headingStyle: Theme.of(context)
-                                  .digitTextTheme(context)
-                                  .headingXl
-                                  .copyWith(
-                                      color: Theme.of(context)
-                                          .colorTheme
-                                          .primary
-                                          .primary2),
-                              description: (widget.config['description'] !=
-                                          null &&
-                                      localizations
-                                          .translate(
-                                              widget.config['description'])
-                                          .trim()
-                                          .isNotEmpty)
-                                  ? localizations
-                                      .translate(widget.config['description'])
-                                  : null,
+                          ),
+                        )
+                      : null,
+                  enableFixedDigitButton: actions.isNotEmpty ? true : false,
+                  footer: actions.isNotEmpty
+                      ? DigitCard(
+                          children: actions
+                              .map((e) => LayoutMapper.map(
+                                    preprocessConfigWithState(e, stateData),
+                                    stateData,
+                                    context,
+                                    screenKey: screenKey,
+                                    (action) {
+                                      ActionHandler.execute(action, context, {
+                                        'wrappers': const [],
+                                        '_compositeKey': compositeKey,
+                                      });
+                                    },
+                                  ))
+                              .toList(),
+                        )
+                      : null,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(spacer4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Tag(
+                            label: localizations.translate(FlowBuilderSingleton().boundary?.code ?? ""),
+                            isIcon: true,
+                            customTextStyle: Theme.of(context).digitTextTheme(context).bodyS.copyWith(
+                              color: Theme.of(context).colorTheme.alert.info
                             ),
-                            const SizedBox(height: 16),
-                            ...body
-                                .map((e) {
-                                  final processed =
-                                      preprocessConfigWithState(e, stateData);
+                            type: TagType.monochrome,
+                            customIcon: Icon(Icons.location_on_outlined, color: Theme.of(context).colorTheme.alert.info, size: 16,),
+                            themeData: TagThemeData(
+                              monochromeBackgroundColor: Theme.of(context).colorTheme.alert.infoBg,
+                              iconLabelGap: spacer1
+                            ),
+                          ),
+                          DigitTextBlock(
+                            padding: EdgeInsets.zero,
+                            heading: (widget.config['heading'] != null &&
+                                    localizations
+                                        .translate(widget.config['heading']).trim()
+                                        .isNotEmpty)
+                                ? localizations
+                                    .translate(widget.config['heading'])
+                                : null,
+                            headingStyle: Theme.of(context)
+                                .digitTextTheme(context)
+                                .headingXl
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorTheme
+                                        .primary
+                                        .primary2),
+                            description: (widget.config['description'] !=
+                                        null &&
+                                    localizations
+                                        .translate(widget.config['description']).trim()
+                                        .isNotEmpty)
+                                ? localizations
+                                    .translate(widget.config['description'])
+                                : null,
+                          ),
+                          const SizedBox(height: 16),
+                          ...body
+                              .map((e) {
+                                final processed =
+                                    preprocessConfigWithState(e, stateData);
 
                                   return CrudItemContext(
                                     stateData: stateData,

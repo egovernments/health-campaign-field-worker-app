@@ -170,6 +170,48 @@ final dynamic inventoryReportFlows = {
         {
           "type": "template",
           "format": "menu_card",
+          "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_EXCESS_HEADING",
+          "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_EXCESS_DESCRIPTION",
+          "icon": "Assessment",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "excess"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "template",
+          "format": "menu_card",
+          "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_HEADING",
+          "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_DESCRIPTION",
+          "icon": "Assessment",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "less"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "template",
+          "format": "menu_card",
           "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_HEADING",
           "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_DESCRIPTION",
           "icon": "Assessment",
@@ -559,6 +601,14 @@ final dynamic inventoryReportFlows = {
               {
                 "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_6_LABEL",
                 "cellValue": "{{item.additionalFields.fields.stockDamaged}}"
+              },
+              {
+                "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_EXCESS_LABEL",
+                "cellValue": "{{item.additionalFields.fields.stockExcess}}"
+              },
+              {
+                "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_LESS_LABEL",
+                "cellValue": "{{item.additionalFields.fields.stockLess}}"
               },
               {
                 "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_7_LABEL",
