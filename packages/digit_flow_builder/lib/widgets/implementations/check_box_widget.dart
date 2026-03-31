@@ -18,18 +18,20 @@ class CheckBoxWidget extends ResolvedFlowWidget {
     var rawValue = json['value'];
     var value = resolved.resolveText(rawValue.toString()) == 'true';
 
+    final fieldKey = json['fieldKey'] as String? ?? 'checkbox';
+
     return WidgetStateContext.reactive(context, (ctx, state) {
       // Initialize widgetData with today's date on first render
-      if (state.widgetData["checkboxValue"] == null) {
+      if (state.widgetData[fieldKey] == null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          state.updateWidgetData("checkboxValue", value);
+          state.updateWidgetData(fieldKey, value);
         });
       }
       return Checkbox(
         checkColor: Colors.white,
-        value: state.widgetData["checkboxValue"] ?? value,
+        value: state.widgetData[fieldKey] ?? value,
         onChanged: (bool? value) {
-          state.updateWidgetData("checkboxValue", value);
+          state.updateWidgetData(fieldKey, value);
         },
       );
     });
