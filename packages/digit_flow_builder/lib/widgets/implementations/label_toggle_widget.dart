@@ -17,6 +17,7 @@ class LabeledToggleWidget extends ResolvedFlowWidget {
     ResolvedWidgetContext resolved,
   ) {
     final fieldKey = json['fieldKey'] as String? ?? 'labeledToggleValue';
+    final value = json['value'] as bool? ?? true;
     final activeLabel = json['activeLabel'] as String;
     final inactiveLabel = json['inactiveLabel'] as String;
 
@@ -24,7 +25,15 @@ class LabeledToggleWidget extends ResolvedFlowWidget {
       // Initialize widgetData with today's date on first render
       if (state.widgetData[fieldKey] == null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          state.updateWidgetData(fieldKey, state.widgetData[fieldKey]);
+          state.updateWidgetData(fieldKey, value);
+          // Process onAction array from config (if present)
+          if (json['onAction'] != null && json['onAction'] is List) {
+            final actionsList =
+                List<Map<String, dynamic>>.from(json['onAction']);
+            if (actionsList.isNotEmpty) {
+              resolved.executeActions(actionsList, context);
+            }
+          }
         });
       }
       return DigitLabeledToggle(

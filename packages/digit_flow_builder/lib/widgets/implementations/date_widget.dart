@@ -78,6 +78,15 @@ class DateWidget extends ResolvedFlowWidget {
       if (state.widgetData[fieldKey] == null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           state.updateWidgetData(fieldKey, currentDate.millisecondsSinceEpoch);
+
+          // Process onAction array from config (if present)
+          if (json['onAction'] != null && json['onAction'] is List) {
+            final actionsList =
+                List<Map<String, dynamic>>.from(json['onAction']);
+            if (actionsList.isNotEmpty) {
+              resolved.executeActions(actionsList, context);
+            }
+          }
         });
       }
 

@@ -1,4 +1,5 @@
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:flutter/material.dart';
 
@@ -196,6 +197,39 @@ class WidgetParsers {
         return spacer12;
       default:
         return 0;
+    }
+  }
+
+  static TextStyle? parseTextStyle(BuildContext context, String? styleKey) {
+    if (styleKey == null) return null;
+
+    final digitTextTheme = Theme.of(context).digitTextTheme(context);
+
+    switch (styleKey) {
+      // Heading styles
+      case 'headingXl':
+        return digitTextTheme.headingXl;
+      case 'headingL':
+        return digitTextTheme.headingL;
+      case 'headingM':
+        return digitTextTheme.headingM;
+      case 'headingS':
+        return digitTextTheme.headingS;
+      // Body styles
+      case 'bodyL':
+        return digitTextTheme.bodyL;
+      case 'bodyS':
+        return digitTextTheme.bodyS;
+      // Caption styles
+      case 'captionL':
+        return digitTextTheme.captionL;
+      case 'captionS':
+        return digitTextTheme.captionS;
+      // Label style
+      case 'label':
+        return digitTextTheme.label;
+      default:
+        return null;
     }
   }
 }
