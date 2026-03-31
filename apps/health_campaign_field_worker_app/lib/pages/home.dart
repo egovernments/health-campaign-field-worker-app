@@ -28,6 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
@@ -250,6 +251,42 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     return logs
         .any((element) => element.time == logTime && element.type == type);
+  }
+
+  Map<String, dynamic>? _attendanceTime(
+      selectedDate, isMorning, attendanceRegisterModel) {
+    final isNotSingleSession =
+        attendanceRegisterModel?.additionalDetails?["sessions"] == 2;
+
+    DateTime? dateSession = selectedDate != null
+        ? DateTime.fromMillisecondsSinceEpoch(selectedDate)
+        : null;
+
+    if (dateSession == null) return null;
+
+    var entryTime = isNotSingleSession
+        ? AttendanceDateTimeManagement.getMillisecondEpoch(
+            dateSession,
+            isMorning ? 0 : 1,
+            "entryTime",
+          )
+        : (DateTime(dateSession.year, dateSession.month, dateSession.day, 9)
+            .millisecondsSinceEpoch);
+
+    var exitTime = isNotSingleSession
+        ? AttendanceDateTimeManagement.getMillisecondEpoch(
+            dateSession,
+            isMorning ? 0 : 1,
+            "exitTime",
+          )
+        : (DateTime(dateSession.year, dateSession.month, dateSession.day, 18)
+            .millisecondsSinceEpoch);
+
+    return {
+      "date": dateSession.toIso8601String(),
+      "entryTime": entryTime,
+      "exitTime": exitTime,
+    };
   }
 
   /// Register custom components for forms engine
@@ -545,9 +582,14 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       List attendanceLogs = attendanceRegister.attendanceLog ?? [];
 
-      int? entryTime =
-          widgetData['selectedAttendanceDate']?['entryTime'] as int?;
-      int? exitTime = widgetData['selectedAttendanceDate']?['exitTime'] as int?;
+      final selectedDate = widgetData['selectedDate'] as int?;
+      final isMorning = widgetData['sessionToggle'] as bool? ?? true;
+
+      Map<String, dynamic>? attendanceTime =
+          _attendanceTime(selectedDate, isMorning, attendanceRegister);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
 
       if (entryTime == null || exitTime == null) return [];
 
@@ -595,17 +637,28 @@ class _HomePageState extends LocalizedState<HomePage> {
     FunctionRegistry.register('showMarkAttendanceButtons', (args, stateData) {
       final widgetData = args.isNotEmpty ? args[0] : null;
       final attendee = args.length > 1 ? args[1] : null;
-      List attendanceLogs = args.length > 2 && args[2] != null ? args[2] : [];
+      final attendanceRegister =
+          args.length > 2 && args[2] != null ? args[2] : [];
 
-      if (widgetData == null || attendee == null || attendanceLogs.isEmpty) {
+      if (widgetData == null ||
+          attendee == null ||
+          attendanceRegister != null) {
         return true; // show buttons if no attendee or logs
       }
 
+      List attendanceLogs = attendanceRegister.attendanceLogs;
+
       final individualId = attendee?["individualId"];
-      final entryTime =
-          widgetData['selectedAttendanceDate']?['entryTime'] as int?;
-      final exitTime =
-          widgetData['selectedAttendanceDate']?['exitTime'] as int?;
+
+      final selectedDate = widgetData['selectedDate'] as int?;
+      final isMorning = widgetData['sessionToggle'] as bool? ?? true;
+      // final isManual = widgetData['isManual'] as bool? ?? false;
+
+      Map<String, dynamic>? attendanceTime =
+          _attendanceTime(selectedDate, isMorning, attendanceRegister);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
 
       List filterAttendanceLogs = attendanceLogs.where((log) {
         return ((entryTime != null && log["time"] == entryTime) ||
@@ -1036,50 +1089,11 @@ class _HomePageState extends LocalizedState<HomePage> {
       final selectedDate = widgetData['selectedDate'] as int?;
       final attendanceManualData = widgetData['attendanceManualData'] as Map?;
 
-      DateTime? dateSession = selectedDate != null
-          ? DateTime.fromMillisecondsSinceEpoch(selectedDate)
-          : null;
+      Map<String, dynamic>? attendanceTime =
+          _attendanceTime(selectedDate, isMorning, attendanceRegisterModel);
 
-      if (dateSession == null) return null;
-
-      var entryTime = isNotSingleSession
-          ? AttendanceDateTimeManagement.getMillisecondEpoch(
-              dateSession,
-              isMorning ? 0 : 1,
-              "entryTime",
-            )
-          : (DateTime(dateSession.year, dateSession.month, dateSession.day, 9)
-              .millisecondsSinceEpoch);
-
-      var exitTime = isNotSingleSession
-          ? AttendanceDateTimeManagement.getMillisecondEpoch(
-              dateSession,
-              isMorning ? 0 : 1,
-              "exitTime",
-            )
-          : (DateTime(dateSession.year, dateSession.month, dateSession.day, 18)
-              .millisecondsSinceEpoch);
-
-      // final entryTime = (selectedDate?['entryTime'] as num?)?.toInt() ?? 0;
-      // final exitTime = (selectedDate?['exitTime'] as num?)?.toInt() ?? 0;
-
-      // int sessionEntryTime = entryTime;
-      // int sessionExitTime = exitTime;
-
-      // if (isNotSingleSession) {
-      //   final dateSession = time == null ? null : DateTime.parse(time);
-      //   if (dateSession == null) return null;
-      //   sessionEntryTime = AttendanceDateTimeManagement.getMillisecondEpoch(
-      //     dateSession,
-      //     isMorning ? 0 : 1,
-      //     "entryTime",
-      //   );
-      //   sessionExitTime = AttendanceDateTimeManagement.getMillisecondEpoch(
-      //     dateSession,
-      //     isMorning ? 0 : 1,
-      //     "exitTime",
-      //   );
-      // }
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
 
       final isManualScan = attendanceManualData?['isManualScan'] as String?;
       final reason = attendanceManualData?['reason'] as String?;
@@ -1106,8 +1120,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         if (markStatus == -1.0) continue; // skip unmarked
 
         final isPresent = markStatus >= 1.0;
-        final signatureData = data['signatureData'] as String?;
-        final qrCreatedTime = data['qrCreatedTime'] as int?;
+        // final signatureData = data['signatureData'] as String?;
+        // final qrCreatedTime = data['qrCreatedTime'] as int?;
         final logStatus = isPresent
             ? EnumValues.active.toValue()
             : EnumValues.inactive.toValue();
@@ -1116,8 +1130,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         final additionalDetails = <String, dynamic>{
           if (boundaryCode.isNotEmpty)
             EnumValues.boundaryCode.toValue(): boundaryCode,
-          if (qrCreatedTime != null) 'qrCreatedTime': qrCreatedTime,
-          if (signatureData != null) 'signatureData': signatureData,
+          // if (qrCreatedTime != null) 'qrCreatedTime': qrCreatedTime,
+          // if (signatureData != null) 'signatureData': signatureData,
           if (comment != null && comment.isNotEmpty) 'comment': comment,
           if (isManualScan != null) 'isMarkedManually': isManualScan,
           if (reason != null && reason.isNotEmpty)
