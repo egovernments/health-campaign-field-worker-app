@@ -5,18 +5,24 @@ import 'package:digit_data_model/data_model.dart';
 /// This provides common stock calculation methods that can be reused across
 /// different widgets like StockReconciliationCard and ProductSelectionCard.
 class StockCalculationUtils {
-  /// Extracts the stockEntryType from a StockModel's additionalFields.
-  /// Returns uppercase value (e.g., 'RECEIPT', 'ISSUED', 'RETURNED', 'DAMAGED', 'LOSS')
-  /// or empty string if not found.
-  static String _getStockEntryType(StockModel stock) {
+  /// Extracts a value from a StockModel's additionalFields by key.
+  /// Returns uppercase string value or empty string if not found.
+  static String _getAdditionalFieldValue(StockModel stock, String key) {
     final fields = stock.additionalFields?.fields;
     if (fields == null) return '';
     for (final field in fields) {
-      if (field.key == 'stockEntryType') {
+      if (field.key == key) {
         return field.value?.toString().toUpperCase() ?? '';
       }
     }
     return '';
+  }
+
+  /// Extracts the stockEntryType from a StockModel's additionalFields.
+  /// Returns uppercase value (e.g., 'RECEIPT', 'ISSUED', 'RETURNED', 'DAMAGED', 'LOSS')
+  /// or empty string if not found.
+  static String _getStockEntryType(StockModel stock) {
+    return _getAdditionalFieldValue(stock, 'stockEntryType');
   }
 
   /// Calculates stock metrics for a given facility and product from a list of stocks.
@@ -53,9 +59,10 @@ class StockCalculationUtils {
       final matchesSender = stock.senderId == facilityId;
       if (!matchesReceiver && !matchesSender) return false;
 
-      // Optionally filter by logged-in user
+      // Optionally filter by logged-in user (created by OR modified by)
       if (loggedInUserUuid != null &&
-          stock.auditDetails?.createdBy != loggedInUserUuid) {
+          stock.auditDetails?.createdBy != loggedInUserUuid &&
+          stock.clientAuditDetails?.lastModifiedBy != loggedInUserUuid) {
         return false;
       }
 
@@ -130,12 +137,13 @@ class StockCalculationUtils {
         }
       }
       // Stock Received from dispatch: This facility is the receiver AND transactionType == DISPATCHED
-      // These are incoming dispatches from other facilities - they should NOT count
-      // as received until the user accepts them (which creates a RECEIVED record).
-      // Only damage/loss dispatches are tracked here for reporting purposes.
+      // Incoming dispatches are only counted as received if the status is ACCEPTED.
+      // Pending/IN_TRANSIT dispatches are not counted until explicitly accepted.
       else if (isReceiver && transactionType == 'DISPATCHED') {
-        // Incoming dispatches are not counted as stock received.
-        // They require acceptance first (creates a separate RECEIVED transaction).
+        final status = _getAdditionalFieldValue(stock, 'status');
+        if (status == 'ACCEPTED') {
+          stockReceived += quantity;
+        }
       }
     }
 
