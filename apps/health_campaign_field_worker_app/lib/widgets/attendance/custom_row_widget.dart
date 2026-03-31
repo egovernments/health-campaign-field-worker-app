@@ -19,6 +19,7 @@ class CustomRowWidget extends ResolvedFlowWidget {
   ) {
     final stateData = resolved.stateData;
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
+    final spacing = WidgetParsers.parseSize(props['spacing']) ?? 0.0;
     final hide = resolved.resolveField(json['hide']) as bool? ?? false;
 
     if (hide) {
@@ -45,11 +46,19 @@ class CustomRowWidget extends ResolvedFlowWidget {
             item: resolved.state.itemData,
             screenKey: resolved.screenKey,
             compositeKey: resolved.compositeKey,
-            child: LayoutMapper.map(
-                processedChild, stateData, context, onAction,
-                item: resolved.state.itemData,
-                listIndex: resolved.state.listIndex,
-                compositeKey: resolved.compositeKey),
+            child: Expanded(
+              child: Row(
+                children: [
+                  LayoutMapper.map(processedChild, stateData, context, onAction,
+                      item: resolved.state.itemData,
+                      listIndex: resolved.state.listIndex,
+                      compositeKey: resolved.compositeKey),
+                  if (json['children'].indexOf(childJson) !=
+                      (json['children'] as List).length - 1)
+                    SizedBox(width: spacing),
+                ],
+              ),
+            ),
           );
         }).toList(),
       ),
