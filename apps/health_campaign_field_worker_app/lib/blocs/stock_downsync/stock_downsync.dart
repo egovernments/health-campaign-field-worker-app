@@ -168,7 +168,7 @@ class StockDownSyncBloc
           await (stockRemoteRepository as StockRemoteRepository).fetchTotalCount(
         stockSearchModel,
         offSet: 0,
-        lastChangedSince: lastSyncedTime,
+        lastSyncedTime: lastSyncedTime,
       );
 
       emit(StockDownSyncState.dataFound(
@@ -214,14 +214,10 @@ class StockDownSyncBloc
             ? null
             : existingDownSyncData.first.lastSyncedTime;
 
-        // Always start from offset 0 for each sync cycle since
-        // lastChangedSince already scopes to new/modified records
-        int offset = 0;
-
         // Create initial downsync record if not exists
         if (existingDownSyncData.isEmpty) {
           await downSyncLocalRepository.create(DownsyncModel(
-            offset: offset,
+            offset: 0,
             limit: event.batchSize,
             lastSyncedTime: lastSyncedTime,
             totalCount: 0,
@@ -238,21 +234,20 @@ class StockDownSyncBloc
         while (syncedCount < totalCount) {
           final stockEntries = await stockRemoteRepository.search(
             stockSearchModel,
-            offSet: offset,
+            offSet: 0,
             limit: event.batchSize,
-            lastChangedSince: lastSyncedTime,
+            lastSyncedTime: lastSyncedTime,
           );
 
           if (stockEntries.isEmpty) break;
 
           await stockLocalRepository.bulkCreate(stockEntries);
 
-          offset += stockEntries.length;
           syncedCount += stockEntries.length;
 
-          // Update downsync record after each batch
+          // Update downsync record, keep offset 0, update lastSyncedTime
           await downSyncLocalRepository.update(DownsyncModel(
-            offset: offset,
+            offset: 0,
             limit: event.batchSize,
             lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
             totalCount: totalCount,

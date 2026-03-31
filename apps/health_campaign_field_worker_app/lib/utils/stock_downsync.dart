@@ -154,7 +154,7 @@ class StockDownsyncService {
         stockSearchModel,
         limit: limit,
         offSet: offSet,
-        lastChangedSince: lastChangedSince,
+        lastSyncedTime: lastChangedSince,
       );
 
       if (stockEntries.isNotEmpty) {

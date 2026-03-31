@@ -146,7 +146,7 @@ class HFReferralDownSyncBloc
           ),
           offSet: 0,
           limit: batchSize,
-          lastChangedSince: lastSyncedTime,
+          lastSyncedTime: lastSyncedTime,
         );
 
         if (hfReferrals.isEmpty) break;
