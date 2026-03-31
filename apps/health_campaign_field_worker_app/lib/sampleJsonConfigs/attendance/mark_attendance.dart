@@ -216,6 +216,7 @@ final dynamic markAttendanceFlow = {
             {
               "type": "template",
               "format": "textInput",
+              "label": "COMMENT_KEY",
               "fieldName": "COMMENT",
               "inputType": "multiline",
             },
@@ -234,24 +235,6 @@ final dynamic markAttendanceFlow = {
               },
               "onAction": [
                 {"actionType": "CLOSE_POPUP", "properties": {}},
-                // {
-                //   "actionType": "SUBMIT_ATTENDANCE",
-                //   "properties": {
-                //     "isNotSingleSession":
-                //         "{{fn:isNotSingleSession(contextData.0.AttendanceRegisterModel)}}",
-                //   }
-                // },
-                // {
-                //   "actionType": "CREATE_EVENT",
-                //   "properties": {"entity": "AttendanceLogModel"}
-                // },
-                // {
-                //   "actionType": "NAVIGATION",
-                //   "properties": {
-                //     "type": "TEMPLATE",
-                //     "name": "attendanceAcknowledgement"
-                //   }
-                // }
                 {
                   "actionType": "CUSTOM_DATA",
                   "properties": {

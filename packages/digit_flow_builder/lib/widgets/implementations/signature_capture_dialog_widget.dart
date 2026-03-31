@@ -135,6 +135,7 @@ class _CompareSignatureState extends State<CompareSignature> {
     if (log.isNotEmpty) {
       var filterLogs = log.firstWhereOrNull((log) {
         return log['additionalDetails'] != null &&
+            log['additionalDetails']['isFirstSignature'] == "true" &&
             log['additionalDetails'].containsKey('signatureData');
       });
 
