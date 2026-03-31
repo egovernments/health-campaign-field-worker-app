@@ -1827,9 +1827,9 @@ final dynamic sampleInventoryFlows = {
             "name": "stock",
             "data": [
               {
-                "key": "clientCreatedBy",
+                "key": "clientCreatedBy,clientModifiedBy",
                 "value": "{{singleton.loggedInUserUuid}}",
-                "operation": "equals"
+                "operation": "equalsAny"
               }
             ]
           }
@@ -1844,11 +1844,7 @@ final dynamic sampleInventoryFlows = {
         "relations": [
           {
             "name": "stock",
-            "entity": "StockModel",
-            "match": {
-              "field": "clientAuditDetails.createdBy",
-              "equalsFrom": "{{singleton.loggedInUserUuid}}"
-            }
+            "entity": "StockModel"
           },
         ],
         "searchConfig": {
@@ -1860,7 +1856,7 @@ final dynamic sampleInventoryFlows = {
       "body": [
         {
           "format": "infoCard",
-          "hidden":"{{fn:hasResults('StockModel')}} == true",
+          "hidden": "{{fn:hasResults('StockModel')}} == true",
           "label": "INVENTORY_NO_TRANSACTIONS_LABEL",
           "description": "INVENTORY_NO_TRANSACTIONS_DESCRIPTION"
         },
@@ -2384,8 +2380,7 @@ final dynamic sampleInventoryFlows = {
               {"key": "secondaryRole", "value": "SENDER"},
               {
                 "key": "mrnNumber",
-                "value":
-                    "{{fn:generateUniqueMaterialNoteNumber()}}"
+                "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
               },
               {
                 "key": "senderFacilityId",
@@ -2403,18 +2398,6 @@ final dynamic sampleInventoryFlows = {
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Failed to fetch config."}
-              }
-            ]
-          }
-        },
-        {
-          "actionType": "CREATE_EVENT",
-          "properties": {
-            "entity": "STOCK",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to accept stock."}
               }
             ]
           }

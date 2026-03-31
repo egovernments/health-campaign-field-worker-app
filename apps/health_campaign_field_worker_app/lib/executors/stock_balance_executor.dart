@@ -26,7 +26,11 @@ class StockBalanceExecutor extends ActionExecutor {
     Map<String, dynamic> contextData,
   ) async {
     try {
-      final entities = contextData['entities'];
+      var entities = contextData['entities'];
+      if (entities == null || entities is! List || entities.isEmpty) {
+        // Fallback to existingModels (e.g., when accept flow only updates existing models)
+        entities = contextData['existingModels'];
+      }
       if (entities == null || entities is! List || entities.isEmpty) {
         debugPrint('UPDATE_STOCK_BALANCE: No entities found');
         return contextData;

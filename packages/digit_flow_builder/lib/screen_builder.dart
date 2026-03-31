@@ -133,8 +133,11 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
     final onSubmit = widget.config['onAction'] as List<dynamic>?;
 
     // Merge widget.navigationParams with registry params (registry takes precedence)
+    final registryNavParams =
+        FlowCrudStateRegistry().getNavigationParams(_compositeKey);
     final mergedNavParams = {
       ...?widget.navigationParams,
+      ...?registryNavParams,
     };
 
     // Get entities from registry state (from initActions SEARCH_EVENT)
