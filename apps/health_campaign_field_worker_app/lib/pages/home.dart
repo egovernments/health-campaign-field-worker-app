@@ -2668,10 +2668,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.manageAttendanceLabel,
           onPressed: () async {
             // if (isTriggerLocalisation) {
-            const module = "hcm-attendance";
-            triggerLocalization(module: module);
-            isTriggerLocalisation = false;
-            // };
+            //   const module = "hcm-attendance";
+            //   triggerLocalization(module: module);
+            //   isTriggerLocalisation = false;
+            // }
             // context.router.push(const ManageAttendanceRoute());
 
             // Set up CRUD service
@@ -2747,12 +2747,17 @@ class _HomePageState extends LocalizedState<HomePage> {
                     PersistenceConfiguration.offlineFirst);
             WidgetRegistry.initialize();
             try {
-              if (schemaJsonRaw != null) {
-                final allSchemas =
-                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                Map<String, dynamic> data = allSchemas['ATTENDANCE'];
-
-                // final attendanceData = data?['data'];
+              NavigationRegistry.setupNavigation(context);
+              context.router
+                  .push(CurrentBoundaryRoute(onBoundarySelected: (ctx) async {
+                if (isTriggerLocalisation) {
+                  final moduleName =
+                      'hcm-complaints-${context.selectedProject.referenceID}';
+                  const module = "hcm-attendance";
+                  triggerLocalization(module: module);
+                  isTriggerLocalisation = false;
+                }
+                // triggerLocalization(module: moduleName);
                 Map<String, dynamic> attendanceData =
                     attendanceFlows; // Adding custom attendance flows as the flows are not coming from the server for attendance module
                 List<Map<String, dynamic>> flowsData =
@@ -2762,19 +2767,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                         [];
                 FlowRegistry.setConfig(flowsData);
                 NavigationRegistry.setupNavigation(context);
-
                 context.router.push(
                   FlowBuilderHomeRoute(pageName: attendanceData["initialPage"]),
                 );
-              } else {
-                FlowRegistry.setConfig(
-                    sampleFlows["flows"] as List<Map<String, dynamic>>);
-                NavigationRegistry.setupNavigation(context);
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: attendanceFlows["initialPage"]),
-                );
-              }
+              }));
             } catch (e) {
               debugPrint('error $e');
             }

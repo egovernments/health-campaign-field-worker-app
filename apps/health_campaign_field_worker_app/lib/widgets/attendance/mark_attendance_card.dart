@@ -683,7 +683,8 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
       resolved) {
     final status = _getAttendanceStatus(individualId, compositeKey);
     if (attendanceLogStatus != -1.0) {
-      return statusMapping[attendanceLogStatus.toString()] ?? '';
+      return resolved
+          .resolveText(statusMapping[attendanceLogStatus.toString()]);
     }
     return resolved.resolveText(statusMapping[status.toString()]) ??
         ''; // default to empty string if not marked
