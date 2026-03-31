@@ -569,80 +569,51 @@ final dynamic markAttendanceFlow = {
             "value": "{{fn:attendanceStatus(widgetData, item)}}",
           },
           {
-            "type": "template",
-            "format": "customRow",
-            "hide":
-                "{{fn:showMarkAttendanceButtons(widgetData, item, contextData.0.AttendanceRegisterModel)}}",
-            "properties": {
-              "mainAxisAlignment": "start",
-              "crossAxisAlignment": "stretch",
+            "condition": {
+              "lhs": "{{widgetData.signatureCollection.signatureData}}",
+              "rhs": "NOT_EMPTY",
             },
-            "children": [
+            "type": "template",
+            "format": "selectButton",
+            "label": "SIGNATURE",
+            "prefixIcon": "EDIT",
+            "properties": {
+              "type": "secondary",
+              "selectedType": "primary",
+              "size": "small",
+              "mainAxisAlignment": "center"
+            },
+            "onAction": [
               {
-                "type": "template",
-                "format": "expanded",
-                "child": {
-                  "fieldKey": "{{item.individualId}}",
-                  "fieldValue": "present",
-                  "groupKey": "attendanceCollection",
-                  "type": "template",
-                  "format": "selectButton",
-                  "label": "PRESENT",
-                  "prefixIcon": "Check",
-                  "properties": {
-                    "color": "green",
-                    "type": "secondary",
-                    "selectedType": "primary",
-                    "size": "small",
-                    "mainAxisAlignment": "center"
-                  },
-                  "onAction": [
-                    {
-                      "actionType": "CUSTOM_DATA",
-                      "properties": {
-                        "widgetData":
-                            "{{fn:markAttendance(widgetData, item.entity, contextData.0.AttendanceRegisterModel, 1)}}"
+                "actionType": "OPEN_POPUP",
+                "properties": {
+                  "popupConfig": {
+                    "title": "SIGNATURE",
+                    "showCloseButton": true,
+                    "barrierDismissible": true,
+                    "body": [
+                      {
+                        "type": "template",
+                        "format": "signatureCapture",
+                        "fieldName": "signatureCapture",
+                        "properties": {
+                          "height": 200.0,
+                          "backgroundColor": "#F0F0F0",
+                          "penColor": "#000000",
+                          "clearButtonLabel": "CLEAR",
+                          "saveButtonLabel": "SAVE"
+                        },
+                        "onAction": [
+                          {"actionType": "CLOSE_POPUP", "properties": {}}
+                        ]
                       }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "template",
-                "format": "sizedBox",
-                "width": 12.0,
-              },
-              {
-                "type": "template",
-                "format": "expanded",
-                "child": {
-                  "fieldKey": "{{item.individualId}}",
-                  "fieldValue": "absent",
-                  "groupKey": "attendanceCollection",
-                  "type": "template",
-                  "format": "selectButton",
-                  "label": "ABSENT",
-                  "prefixIcon": "Close",
-                  "properties": {
-                    "color": "red",
-                    "type": "secondary",
-                    "selectedType": "primary",
-                    "size": "small",
-                    "mainAxisAlignment": "center"
-                  },
-                  "onAction": [
-                    {
-                      "actionType": "CUSTOM_DATA",
-                      "properties": {
-                        "widgetData":
-                            "{{fn:markAttendance(widgetData, item.entity, contextData.0.AttendanceRegisterModel, 0)}}"
-                      }
-                    }
-                  ]
+                    ],
+                    "footerActions": []
+                  }
                 }
               }
             ]
-          }
+          },
         ],
       },
     }

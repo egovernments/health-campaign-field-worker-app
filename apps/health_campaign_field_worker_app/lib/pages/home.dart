@@ -642,17 +642,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       if (widgetData == null ||
           attendee == null ||
-          attendanceRegister != null) {
+          attendanceRegister == null) {
         return true; // show buttons if no attendee or logs
       }
 
-      List attendanceLogs = attendanceRegister.attendanceLogs;
-
       final individualId = attendee?["individualId"];
+      List attendanceLogs = attendanceRegister.attendanceLog ?? [];
 
       final selectedDate = widgetData['selectedDate'] as int?;
       final isMorning = widgetData['sessionToggle'] as bool? ?? true;
-      // final isManual = widgetData['isManual'] as bool? ?? false;
+      final attendanceManualData = widgetData['attendanceManualData'] as Map?;
 
       Map<String, dynamic>? attendanceTime =
           _attendanceTime(selectedDate, isMorning, attendanceRegister);
@@ -661,16 +660,26 @@ class _HomePageState extends LocalizedState<HomePage> {
       var exitTime = attendanceTime?['exitTime'];
 
       List filterAttendanceLogs = attendanceLogs.where((log) {
-        return ((entryTime != null && log["time"] == entryTime) ||
-                (exitTime != null && log["time"] == exitTime)) &&
-            log["individualId"] == individualId?.toString();
+        return ((entryTime != null && log.time == entryTime) ||
+                (exitTime != null && log.time == exitTime)) &&
+            log.individualId == individualId?.toString();
       }).toList();
 
       var status = attendee['status'] ?? -1.0;
       var uploaded =
-          filterAttendanceLogs.any((log) => log["uploadToServer"] == false);
+          filterAttendanceLogs.any((log) => log.uploadToServer == true);
 
-      return status != -1.0 && uploaded == true;
+      final now = DateTime.now();
+      final selectedDateTIme =
+          DateTime.fromMillisecondsSinceEpoch(selectedDate!);
+      bool isSameDay = selectedDateTIme.year == now.year &&
+          selectedDateTIme.month == now.month &&
+          selectedDateTIme.day == now.day;
+
+      bool show = (status == -1.0 || uploaded == false) &&
+          (!isSameDay || attendanceManualData != null);
+
+      return !show;
     });
 
     FunctionRegistry.register('updateAttendeeStatus', (args, stateData) {

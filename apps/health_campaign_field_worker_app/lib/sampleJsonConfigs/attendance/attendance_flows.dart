@@ -1,7 +1,7 @@
 import 'attendace_acknowlagement.dart';
 import 'attendance_qr_scanner.dart';
 import 'manage_attendance.dart';
-import 'mark_attendance.dart';
+import 'mark_attendance_signature.dart';
 
 final dynamic attendanceFlows = {
   "name": "ATTENDANCE",
