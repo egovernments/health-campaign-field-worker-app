@@ -537,6 +537,20 @@ final dynamic markAttendanceFlow = {
           "field": "name",
           "widgetKey": "searchBar",
           "operation": "contains"
+        },
+        {
+          "type": "filter",
+          "field": "status",
+          "widgetKey": "checkboxValue",
+          "operation": "in",
+          "values": [1.0, 0.0]
+        },
+        {
+          "type": "sort",
+          "field": "status",
+          "widgetKey": "SORT_BY",
+          "presentValue": "PRESENT",
+          "absentValue": "ABSENT"
         }
       ],
       "init": {
