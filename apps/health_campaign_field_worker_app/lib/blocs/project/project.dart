@@ -604,7 +604,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   Future<List<AttendanceLogModel>> _updateLogsData(
       List<AttendanceLogModel> logs) async {
-    // String signatureFileStoreId = "6e13c470-e54c-4a6c-acbc-fcd22d24fca3";
     List<AttendanceLogModel> updatedLogs = [];
     for (var log in logs) {
       var additionalDetails = log.additionalDetails;

@@ -251,6 +251,9 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
 
     String padding = 'spacer2';
 
+    final individual =
+        item['individual'].isNotEmpty ? item['individual'].first : null;
+
     // Widget UI
     return DigitCard(
       width: MediaQuery.of(context).size.width,
@@ -259,7 +262,7 @@ class MarkAttendanceCard extends ResolvedFlowWidget {
       cardType: WidgetParsers.parseCardType('secondary'),
       children: [
         Text(
-          item['individual']?.first.name.givenName ?? '',
+          individual?.name?.givenName ?? '',
           style: Theme.of(context).digitTextTheme(context).headingS,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
