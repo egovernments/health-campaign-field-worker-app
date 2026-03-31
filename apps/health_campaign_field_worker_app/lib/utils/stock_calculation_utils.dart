@@ -119,8 +119,11 @@ class StockCalculationUtils {
             transactionReason == 'DAMAGED_IN_STORAGE' ||
             stockEntryType == 'DAMAGED') {
           stockDamaged += quantity;
-        } else if (stockEntryType == 'REJECTED' || stockEntryType == 'RETURNED') {
-          // Rejected/returned stock - not counted as issued since it was never accepted
+        } else if (stockEntryType == 'REJECTED') {
+          // Rejected stock - not counted as issued since it was never accepted
+        } else if (stockEntryType == 'RETURNED') {
+          // Returned stock dispatched out should decrease stock in hand
+          stockIssued += quantity;
         } else {
           // Regular dispatch (issued)
           stockIssued += quantity;

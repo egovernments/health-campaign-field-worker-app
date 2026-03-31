@@ -22,6 +22,8 @@ import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 
@@ -269,6 +271,10 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                           downSyncLocalRepository: ctx.read<
                               LocalRepository<DownsyncModel,
                                   DownsyncSearchModel>>(),
+                          userActionRemoteRepository:
+                              ctx.read<UserActionRemoteRepository>(),
+                          userActionLocalRepository:
+                              ctx.read<UserActionLocalRepository>(),
                         ),
                       ),
                       BlocProvider(

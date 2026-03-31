@@ -2,9 +2,13 @@ import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:disk_space_update/disk_space_update.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
@@ -40,6 +44,10 @@ class StockDownSyncBloc
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
       downSyncLocalRepository;
 
+  final UserActionRemoteRepository userActionRemoteRepository;
+
+  final UserActionLocalRepository userActionLocalRepository;
+
   StockDownSyncBloc({
     required this.localSecureStore,
     required this.projectFacilityLocalRepository,
@@ -49,6 +57,8 @@ class StockDownSyncBloc
     required this.projectResourceLocalRepository,
     required this.bandwidthCheckRepository,
     required this.downSyncLocalRepository,
+    required this.userActionRemoteRepository,
+    required this.userActionLocalRepository,
   }) : super(const StockDownSyncState._()) {
     on(_handleGetBatchSize);
     on(_handleCheckTotalCount);
@@ -252,10 +262,77 @@ class StockDownSyncBloc
           emit(StockDownSyncState.inProgress(syncedCount, totalCount));
         }
 
+        // After stock download, downsync stock balance user actions
+        await _downSyncStockBalances(event.projectId);
+
         emit(StockDownSyncState.success(syncedCount, totalCount));
       } catch (e) {
         emit(const StockDownSyncState.failed());
       }
+    }
+  }
+
+  /// Fetches stock balance UserAction records from the server
+  /// using balance keys (stock_balance_{facilityId}_{productVariantId})
+  /// and creates or updates them locally.
+  Future<void> _downSyncStockBalances(String projectId) async {
+    try {
+      final projectFacilities = await projectFacilityLocalRepository.search(
+        ProjectFacilitySearchModel(projectId: [projectId]),
+      );
+      final projectResources = await projectResourceLocalRepository.search(
+        ProjectResourceSearchModel(projectId: [projectId]),
+      );
+
+      final facilityIds =
+          projectFacilities.map((e) => e.facilityId).toSet().toList();
+      final productVariantIds = projectResources
+          .map((pr) => pr.resource.productVariantId)
+          .whereType<String>()
+          .toSet()
+          .toList();
+
+      if (facilityIds.isEmpty || productVariantIds.isEmpty) return;
+
+      // Build balance keys for all facility × product variant combinations
+      final balanceKeys = <String>[];
+      for (final facilityId in facilityIds) {
+        for (final productVariantId in productVariantIds) {
+          balanceKeys.add('stock_balance_${facilityId}_$productVariantId');
+        }
+      }
+
+      // Fetch from server
+      final remoteBalances = await userActionRemoteRepository.search(
+        UserActionSearchModel(
+          clientReferenceId: balanceKeys,
+        ),
+      );
+
+      if (remoteBalances.isEmpty) return;
+
+      // For each fetched balance, create or update locally
+      for (final remoteBalance in remoteBalances) {
+        final existing = await userActionLocalRepository.search(
+          UserActionSearchModel(
+            clientReferenceId: [remoteBalance.clientReferenceId],
+          ),
+        );
+
+        if (existing.isNotEmpty) {
+          await userActionLocalRepository.update(
+            remoteBalance,
+            createOpLog: false,
+          );
+        } else {
+          await userActionLocalRepository.create(
+            remoteBalance,
+            createOpLog: false,
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Stock balance downsync error: $e');
     }
   }
 }
