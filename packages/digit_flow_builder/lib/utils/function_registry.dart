@@ -425,6 +425,24 @@ void initializeFunctionRegistry() {
     // No arguments passed
     if (args.isEmpty) return TaskStatus.ineligible;
 
+    // --- ProjectType comes from FlowBuilderSingleton ---
+    final projectType = FlowBuilderSingleton().projectType;
+    if (projectType == null) return TaskStatus.ineligible;
+
+    // --- Current active cycle ---
+    Map<String, dynamic>? currentCycle;
+    for (final e in projectType.cycles ?? []) {
+      if ((e.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+          (e.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch) {
+        currentCycle = {
+          "startDate": e.startDate,
+          "endDate": e.endDate,
+        };
+        break;
+      }
+    }
+    if (currentCycle == null) return TaskStatus.ineligible;
+
     final tasks = args.first;
 
     // Must be a non-empty list of tasks
