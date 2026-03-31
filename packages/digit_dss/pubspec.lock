@@ -454,10 +454,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: fa61ba8e61ec32aa4f2d8eb195ffda1ac40ae3201aa90eadff0eeca5fbfa9cc5
+      sha256: b82d5636feae0e04111d1e4282945e55865b2586e121583d315f08b4233773de
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.3.0+1"
   dio:
     dependency: "direct main"
     description:
@@ -1435,6 +1435,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
+  sqlite3_flutter_libs:
+    dependency: transitive
+    description:
+      name: sqlite3_flutter_libs
+      sha256: eeb9e3a45207649076b808f8a5a74d68770d0b7f26ccef6d5f43106eee5375ad
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.42"
   sqlparser:
     dependency: transitive
     description:

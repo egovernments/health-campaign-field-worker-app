@@ -1,10 +1,7 @@
 name: digit_flow_builder
-description: "A JSON-driven dynamic UI rendering framework that builds complete screens and workflows from configuration. Flow configs are registered in `FlowRegistry` by the host application, and the framework renders forms or templates, handles user actions (search, create, update, delete, navigate), and manages state — all without writing screen-level code."
+description: "A new Flutter package project."
 version: 0.0.1
-homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_flow_builder
-repository: https://github.com/egovernments/health-campaign-field-worker-app
-issue_tracker: https://github.com/egovernments/health-campaign-field-worker-app/issues
-documentation: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_flow_builder#readme
+homepage:
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -13,19 +10,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_crud_bloc: ^0.0.1
-  digit_data_converter: ^0.0.1
-  digit_forms_engine: ^0.0.1
-  digit_ui_components: ^0.3.0
+  digit_crud_bloc: ^0.0.2-dev
+  digit_data_converter: ^0.0.2-dev
+  digit_forms_engine: ^0.0.2-dev
+  digit_ui_components: ^0.3.0+1
   flutter_bloc: ^8.1.5
   auto_route: ^8.1.3
-  digit_data_model: ^1.3.0
-  digit_formula_parser: ^1.2.0
+  digit_data_model: ^1.2.0-dev.1-console
+  digit_formula_parser: ^1.0.0
   collection: ^1.18.0
   intl: ^0.19.0
   qr_flutter: ^4.1.0
-  screen_protector: ^1.4.1
-  digit_scanner: ^1.0.7+1
+  screen_protector: 1.4.1
 
 dev_dependencies:
   flutter_test:
@@ -37,6 +33,7 @@ dev_dependencies:
   bloc_test: ^9.1.0
   mocktail: ^1.0.2
   build_runner: ^2.4.11
+  digit_scanner: ^1.0.6
   dart_mappable_builder:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/

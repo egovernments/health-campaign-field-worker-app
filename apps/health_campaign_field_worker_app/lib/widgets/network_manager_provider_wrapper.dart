@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:attendance_management/attendance_management.dart';
+import 'package:digit_data_model/data/repositories/local/attendance_logs.dart';
+import 'package:digit_data_model/data/repositories/local/attendance_register.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/hf_referral.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/household.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/household_member.dart';
@@ -14,6 +15,8 @@ import 'package:digit_data_model/data/repositories/package_repository/local/stoc
 import 'package:digit_data_model/data/repositories/package_repository/local/task.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/unique_id_pool.dart';
 import 'package:digit_data_model/data/repositories/package_repository/oplog/oplog.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/attendance_logs.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/attendance_register.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/hf_referral.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/household.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/household_member.dart';
@@ -26,6 +29,8 @@ import 'package:digit_data_model/data/repositories/package_repository/remote/sto
 import 'package:digit_data_model/data/repositories/package_repository/remote/task.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/unique_id_pool.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_location_tracker/data/oplog/oplog.dart';

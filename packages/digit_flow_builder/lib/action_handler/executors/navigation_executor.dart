@@ -132,7 +132,7 @@ class NavigationExecutor extends ActionExecutor {
                 'NAVIGATION: No existing wrapper found, building new wrapper');
             // Fall back to building new wrapper
             final wrapper = WrapperBuilder(
-              entities as List<EntityModel>,
+              (entities is List ? entities.whereType<EntityModel>().toList() : <EntityModel>[]),
               config!['wrapperConfig'],
               screenKey: targetCompositeKey,
             ).build();

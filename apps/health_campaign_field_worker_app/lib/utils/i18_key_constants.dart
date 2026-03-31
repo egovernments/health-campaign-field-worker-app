@@ -1,6 +1,7 @@
 library i18;
 
 const common = Common();
+const attendance = Attendance();
 const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
@@ -46,6 +47,10 @@ class StockReconciliationMetrics {
 
   String get stockDamaged => 'STOCK_RECONCILIATION_STOCK_DAMAGED';
 
+  String get stockExcess => 'STOCK_RECONCILIATION_STOCK_EXCESS';
+
+  String get stockLess => 'STOCK_RECONCILIATION_STOCK_LESS';
+
   String get stockOnHand => 'STOCK_RECONCILIATION_STOCK_ON_HAND';
 }
 
@@ -65,6 +70,10 @@ class Common {
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get permissionContinue => 'PERMISSION_CONTINUE';
 
+  String get coreCommonOr => 'CORE_COMMON_OR';
+  String get commentKey => 'COMMENT_KEY';
+  String get locationLabel => 'LOCATION_LABEL';
+
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
   String get coreCommonName => 'CORE_COMMON_NAME';
@@ -83,7 +92,8 @@ class Common {
 
   String get coreCommonDelete => 'CORE_COMMON_DELETE';
 
-  String get coreCommonQuantityDistributed => 'CORE_COMMON_QUANTITY_DISTRIBUTED';
+  String get coreCommonQuantityDistributed =>
+      'CORE_COMMON_QUANTITY_DISTRIBUTED';
 
   String get coreCommonDeleteResource => 'CORE_COMMON_DELETE_RESOURCE';
 
@@ -167,7 +177,19 @@ class Common {
 
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 
+  String get coreCommonDownloadCompleted => 'CORE_COMMON_DOWNLOAD_COMPLETED';
+
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
+
+  String get maxBoundarySelectionReached =>
+      'CORE_COMMON_MAX_BOUNDARY_SELECTION_REACHED';
+
+  String get selectCurrentBoundary => 'CORE_COMMON_SELECT_CURRENT_BOUNDARY';
+
+  String get wantToChooseAnotherBoundary =>
+      'CORE_COMMON_WANT_TO_CHOOSE_ANOTHER_BOUNDARY';
+
+  String get chooseAnotherBoundary => 'CORE_COMMON_CHOOSE_ANOTHER_BOUNDARY';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
 
@@ -184,8 +206,7 @@ class Common {
 
   String get permissionsAlert => 'PERMISSIONS_ALERT';
 
-  String get enablePermissionCheckbox =>
-      'ENABLE_PERMISSION_CHECKBOX';
+  String get enablePermissionCheckbox => 'ENABLE_PERMISSION_CHECKBOX';
 
   String get allowPermissions => 'CORE_COMMON_ALLOW_PERMISSIONS';
 
@@ -211,6 +232,172 @@ class Common {
   String get qrInventory => 'QR_INVENTORY';
 
   String get qrAttendance => 'QR_ATTENDANCE';
+
+  String get progressIndicatorPrefixLabelHFReferral => 'PROGRESS_INDICATOR_PREFIX_LABEL_HFREFERRAL';
+
+  String get stockDataFound => 'STOCK_DATA_FOUND';
+
+  String get stockNoDataFound => 'STOCK_NO_DATA_FOUND';
+
+  String get stockDataFoundContent => 'STOCK_DATA_FOUND_CONTENT';
+
+  String get stockNoDataFoundContent => 'STOCK_NO_DATA_FOUND_CONTENT';
+}
+
+class Attendance {
+  const Attendance();
+
+  String get viewAttendanceLabel => 'HOME_VIEW_ATTENDANCE_LABEL';
+
+  String get campaignNameLabel => 'CAMPAIGN_NAME_LABEL';
+
+  String get eventTypeLabel => 'EVENT_TYPE_LABEL';
+
+  String get staffCountLabel => 'STAFF_COUNT_LABEL';
+
+  String get startDateLabel => 'START_DATE_LABEL';
+
+  String get endDateLabel => 'END_DATE_LABEL';
+
+  String get statusLabel => 'STATUS_LABEL';
+
+  String get attendanceCompletionLabel => 'ATTENDANCE_COMPLETION_LABEL';
+
+  String get noAttendeesEnrolledMessage =>
+      'NO_ATTENDEES_ENROLLED_TO_THE_REGISTER';
+
+  String get registerNotStarted => 'REGISTER_NOT_STARTED_MSG';
+
+  String get saveAndMarkLaterLabel => 'SAVE_AND_MARK_LATER_LABEL';
+
+  String get pleaseMarkAttForIndividuals =>
+      'PLZ_MARK_ATTENDANCE_FOR_INDIVIDUALS';
+
+  String get draftSavedMessage => 'DRAFT_SAVED_MESSAGE';
+
+  String get attendanceSubmittedSuccessMsg =>
+      'ATTENDANCE_SUBMITTED_SUCCESS_MSG';
+
+  String get selectSession => 'SESSION_SELECTION_HEADER';
+
+  String get sessionRadioLabel => 'SESSION_SELECT_RADIO_LABEL';
+
+  String get dateOfSession => 'SESSION_DATE_OF_SESSION';
+
+  String get sessionDescForRadio => 'SESSION_RADIO_INFO';
+
+  String get missedAttendanceInfo => 'MISSED_ATTENDANCE_INFO';
+
+  String get missedAttendanceDesc => 'MISSED_ATTENDANCE_DESC';
+
+  String get viewAttendance => 'VIEW_ATTENDANCE';
+
+  String get openRegister => 'ATTENDANCE_OPEN_REGISTER';
+
+  String get markAttendance => 'BUTTON_MARK_ATTENDANCE';
+
+  String get name => 'TABLE_HEADER_NAME';
+
+  String get tableHeaderAttendance => 'TABLE_HEADER_ATTENDANCE';
+
+  String get userId => 'TABLE_HEADER_USERID';
+
+  String get individualId => 'INDIVIDUAL_ID_NUMBER';
+
+  String get markAttendanceLabel => "LABEL_MARK_ATTENDANCE";
+
+  String get markedAsPresent => "MARKED_AS_PRESENT";
+
+  String get attendanceUnMarked => "UN_MARKED";
+
+  String get markedAsAbsent => "MARKED_AS_ABSENT";
+
+  String get closeButton => "CLOSE_BUTTON";
+
+  String get retryButton => "RETRY_BUTTON";
+
+  String get proceed => "PROCEED_BUTTON";
+
+  String get confirmationLabel => "CONFIRMATION_LABEL";
+
+  String get confirmationDesc => "CONFIRMATION_DESCRIPTION";
+
+  String get confirmationDescNote => "CONFIRMATION_DESCRIPTION_NOTE";
+
+  String get goBackButton => "GO_BACK_BUTTON";
+
+  String get goHome => "GO_TO_HOME_SCREEN";
+
+  String get morningSession => "MORNING_SESSION";
+
+  String get eveningSession => "EVENING_SESSION";
+
+  String get goToAttendanceRegisters => "GO_TO_ATTENDANCE_REGISTERS";
+
+  String get reasonForManualAttendance =>
+      "REASON_FOR_MARKING_ATTENDANCE_MANUALLY";
+
+  String get selectReason => "SELECT_REASON";
+
+  String get reasonForManualAttendanceDesc =>
+      "REASON_FOR_MARKING_ATTENDANCE_MANUALLY_DESC";
+
+  String get plzSelectSession => "PLZ_SELECT_THE_SESSION";
+
+  String get checkAttendanceMark => "CHECK_ATTENDANCE_MARK";
+
+  String get backToAttendanceManager => "BACK_TO_ATTENDANCE_MANAGER";
+
+  String get attendanceRegistarLabel => "ATTENDANCE_REGISTAR_LABEL";
+
+  String get somethingWentWrong => "SOMETHING_WENT_WRONG";
+
+  String get pleaseTryAgain => "PLEASE_TRY_AGAIN";
+
+  String get retry => "CORE_COMMON_NULL";
+
+  String get missedAttendanceHeader => "MISSED_ATTENDANCE_HEADER";
+
+  String get missedAttendanceDescription => "MISSED_ATTENDANCE_DESCRIPTION";
+
+  String get halfDay => 'HALF_DAY';
+
+  String get present => 'PRESENT';
+
+  String get absent => 'ABSENT';
+
+  String get markAsAbsent => 'MARK_AS_ABSENT';
+
+  String get ctaDateChangeProceed => 'DATE_CHANGE_PROCEED';
+
+  String get scanAnotherQR => 'SCAN_ANOTHER_QR';
+
+  String get actionRequired => "ACTION_REQUIRED";
+
+  String get qrCreatedTime => 'QR_CREATED_TIME';
+
+  String get scannerNotAvailableTitle => 'SCANNER_NOT_AVAILABLE_TITLE';
+
+  String get scannerNotAvailableDescription =>
+      'SCANNER_NOT_AVAILABLE_DESCRIPTION';
+
+  String get manualScanLabel => 'ATTENDANCE_MANUAL_SCAN';
+
+  String get enterUniqueCode => 'ENTER_UNIQUE_CODE';
+
+  String get userQRTimeExpiredError => 'USER_QR_TIME_EXPIRED_ERROR';
+
+  String get qrAlreadyScanned => 'USER_QR_ALREADY_SCANNED';
+
+  String get uniqueCodeLabel => 'UNIQUE_CODE_LABEL';
+
+  String get attendeeNotFound => 'ATTENDEE_NOT_FOUND';
+
+  String get failedToScanQR => 'QR_SCANNER_FAILED';
+
+  String get markAttendanceManually => 'MARK_ATTENDANCE_MANUALLY';
+
+  String get validationRequiredError => 'COMMENT_VALIDATION_REQUIRED_ERROR';
 }
 
 class HomeShowcase {
@@ -238,6 +425,10 @@ class HomeShowcase {
 
   String get distributorSyncData {
     return 'DISTRIBUTOR_HOME_SHOWCASE_SYNC_DATA';
+  }
+
+  String get stockSyncData {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_STOCK_SYNC_DATA';
   }
 
   String get warehouseManagerManageStock {
@@ -624,6 +815,8 @@ class Home {
 
   String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
 
+  String get stockSyncDataLabel => 'HOME_STOCK_SYNC_DATA_LABEL';
+
   String get callbackLabel => 'HOME_CALL_BACK_LABEL';
 
   String get fileComplaint => 'HOME_FILE_COMPLAINT';
@@ -661,6 +854,10 @@ class Home {
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
+
+  String get stockBalanceLabel => 'HOME_STOCK_BALANCE_LABEL';
+
+  String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
 }
 
 class DataShare {
@@ -1208,6 +1405,8 @@ class BeneficiaryDetails {
 
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
+
+  String get referralDownloadCompleted => 'REFERRAL_DOWNLOAD_COMPLETED';
 
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
 }

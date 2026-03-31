@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
@@ -10,6 +12,11 @@ class TaskStatus {
   static const String administrationSuccess = 'ADMINISTRATION_SUCCESS';
   static const String delivered = 'DELIVERED';
   static const String ineligible = 'INELIGIBLE';
+  static const String notDelivered = 'NOT_DELIVERED';
+  static const String beneficiaryDied = 'BENEFICIARY_DIED';
+  static const String beneficiaryMigrated = 'BENEFICIARY_MIGRATED';
+  static const String beneficiaryAbsent = 'BENEFICIARY_ABSENT';
+  static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
 }
 
 /// The signature for a function that can be registered in the [FunctionRegistry].
@@ -163,6 +170,20 @@ bool _recordedSideEffectInternal(
   }
 
   return false;
+}
+
+// Helper function matching hasLogWithType logic
+bool _hasLogWithType(attendanceLog, DateTime date, String type) {
+  final logTime = type == 'ENTRY'
+      ? DateTime(date.year, date.month, date.day, 9).millisecondsSinceEpoch
+      : DateTime(date.year, date.month, date.day, 18).millisecondsSinceEpoch;
+
+  return attendanceLog.any((element) {
+    if (element is! AttendanceLogModel) return false;
+    final elementTime = element.time;
+    final elementType = element.type?.toString();
+    return elementTime == logTime && elementType == type;
+  });
 }
 
 /// Initializes the [FunctionRegistry] with application-specific functions.
@@ -332,25 +353,55 @@ void initializeFunctionRegistry() {
     bool recordedSideEffect = false;
 
     if (tasks.isNotEmpty) {
-      final item = tasks.last;
+      // Get currentRunningCycle from third argument if provided
+      final currentRunningCycle = args.length > 2
+          ? int.tryParse(args[2]?.toString() ?? '')
+          : null;
 
-      Map<String, dynamic> lastTask;
+      for (final item in tasks) {
+        Map<String, dynamic> task;
 
-      if (item is Map<String, dynamic>) {
-        lastTask = item;
-      } else {
-        try {
-          lastTask = (item as dynamic).toMap() as Map<String, dynamic>;
-        } catch (_) {
+        if (item is Map<String, dynamic>) {
+          task = item;
+        } else {
           try {
-            lastTask = (item as dynamic).toJson() as Map<String, dynamic>;
+            task = (item as dynamic).toMap() as Map<String, dynamic>;
           } catch (_) {
-            lastTask = <String, dynamic>{};
+            try {
+              task = (item as dynamic).toJson() as Map<String, dynamic>;
+            } catch (_) {
+              continue;
+            }
           }
         }
-      }
 
-      if (lastTask['status'] == "INELIGIBLE") return false;
+        // BENEFICIARY_DIED returns false immediately regardless of cycle
+        if (task['status'] == TaskStatus.beneficiaryDied) return false;
+
+        // For other ineligible statuses, only check tasks matching the current cycle
+        if (currentRunningCycle != null) {
+          final additionalFields = task['additionalFields'];
+          final fields = additionalFields is Map
+              ? additionalFields['fields'] as List?
+              : null;
+          int? taskCycleIndex;
+          if (fields != null) {
+            for (final field in fields) {
+              if (field is Map && field['key'] == 'cycleIndex') {
+                taskCycleIndex =
+                    int.tryParse(field['value']?.toString() ?? '');
+                break;
+              }
+            }
+          }
+          if (taskCycleIndex != currentRunningCycle) continue;
+        }
+
+        if (task['status'] == TaskStatus.ineligible ||
+            task['status'] == TaskStatus.beneficiaryMigrated ||
+            task['status'] == TaskStatus.beneficiaryAbsent ||
+            task['status'] == TaskStatus.beneficiaryRefused) return false;
+      }
     }
 
     if (tasks.isNotEmpty && sideEffects.isNotEmpty) {
@@ -386,6 +437,55 @@ void initializeFunctionRegistry() {
     }
   });
 
+  FunctionRegistry.register("getInEligibleStatus", (args, stateData) {
+    // No arguments passed
+    if (args.isEmpty) return '';
+
+    final tasks = args.first;
+
+    // Must be a non-empty list of tasks
+    if (tasks is! List || tasks.isEmpty) return '';
+
+    // Get the last task and convert to Map if needed
+    final item = tasks.last;
+    Map<String, dynamic>? lastTask;
+    if (item is Map<String, dynamic>) {
+      lastTask = item;
+    } else if (item is Map) {
+      lastTask = Map<String, dynamic>.from(item);
+    } else {
+      try {
+        lastTask = (item as dynamic).toMap() as Map<String, dynamic>;
+      } catch (_) {
+        try {
+          lastTask = (item as dynamic).toJson() as Map<String, dynamic>;
+        } catch (_) {
+          return '';
+        }
+      }
+    }
+
+    if (lastTask == null) return TaskStatus.ineligible.toString();
+
+    // Get and normalize the status
+    final status = lastTask['status']?.toString().trim().toUpperCase() ?? '';
+
+    if (status.isEmpty) return TaskStatus.ineligible.toString();
+
+    // Return the status string for ineligible/non-delivered statuses
+    if (status == TaskStatus.ineligible ||
+        status == TaskStatus.beneficiaryDied ||
+        status == TaskStatus.beneficiaryMigrated ||
+        status == TaskStatus.beneficiaryAbsent ||
+        status == TaskStatus.beneficiaryRefused ||
+        status == TaskStatus.notDelivered) {
+      return status;
+    }
+
+    // Default to ineligible
+    return TaskStatus.ineligible;
+  });
+
   FunctionRegistry.register("isDelivered", (args, stateData) {
     // No arguments passed
     if (args.isEmpty) return false;
@@ -399,7 +499,7 @@ void initializeFunctionRegistry() {
     final status = value.trim().toUpperCase();
 
     // Match valid delivered statuses
-    if (status == "ADMINISTRATION_SUCCESS" || status == "DELIVERED") {
+    if (status == TaskStatus.administrationSuccess || status == TaskStatus.delivered) {
       return true;
     }
 
@@ -1078,12 +1178,16 @@ void initializeFunctionRegistry() {
 
             // Disable if any task status is success
             if (status == TaskStatus.administrationSuccess ||
-                status == TaskStatus.delivered) {
+                status == TaskStatus.delivered ) {
               return true;
             }
 
             // Disable if any task is not eligible
-            if (status == TaskStatus.ineligible) {
+            if (status == TaskStatus.ineligible ||
+                status == TaskStatus.beneficiaryDied ||
+                status == TaskStatus.beneficiaryMigrated ||
+                status == TaskStatus.beneficiaryAbsent ||
+                status == TaskStatus.beneficiaryRefused) {
               return true;
             }
           }
@@ -1389,5 +1493,44 @@ void initializeFunctionRegistry() {
 
     // If checklist exists → Visited, otherwise → Not Visited
     return checklistExists ? 'VISITED' : 'HF_REFERRAL_NOT_VISITED';
+  });
+
+  /// Checks if the individual was registered before the current running cycle.
+  ///
+  /// - **Function Name**: `'isRegisteredBeforeCurrentCycle'`
+  /// - **Arguments**:
+  ///   - First argument: dateOfRegistration (timestamp in milliseconds)
+  ///   - Second argument: currentRunningCycle (cycle id/index)
+  /// - **Returns**: `true` if registered before the current cycle, `false` if registered in the current cycle.
+  ///
+  /// This is used to conditionally show buttons only for individuals registered
+  /// in a previous cycle (not the current one).
+  FunctionRegistry.register('isRegisteredBeforeCurrentCycle',
+      (args, stateData) {
+    if (args.isEmpty) return false;
+
+    // Parse dateOfRegistration timestamp
+    final rawDate = args.first;
+    int? registrationTime;
+    if (rawDate is int) {
+      registrationTime = rawDate;
+    } else if (rawDate is String) {
+      registrationTime = int.tryParse(rawDate);
+    }
+    if (registrationTime == null) return false;
+
+    // Get current running cycle from project config
+    final projectType = FlowBuilderSingleton().projectType;
+    if (projectType == null || projectType.cycles == null) return false;
+
+    // Find the current active cycle
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final currentCycle = projectType.cycles!.firstWhereOrNull(
+      (e) => (e.startDate ?? 0) < now && (e.endDate ?? 0) > now,
+    );
+    if (currentCycle == null) return false;
+
+    // If registered before the current cycle's start date, return true
+    return registrationTime < (currentCycle.startDate ?? 0);
   });
 }

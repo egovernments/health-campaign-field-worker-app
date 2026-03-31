@@ -30,12 +30,12 @@ class HFReferralSearchModelMapper
   static String? _$name(HFReferralSearchModel v) => v.name;
   static const Field<HFReferralSearchModel, String> _f$name =
       Field('name', _$name, opt: true);
-  static List<String>? _$projectId(HFReferralSearchModel v) => v.projectId;
-  static const Field<HFReferralSearchModel, List<String>> _f$projectId =
+  static String? _$projectId(HFReferralSearchModel v) => v.projectId;
+  static const Field<HFReferralSearchModel, String> _f$projectId =
       Field('projectId', _$projectId, opt: true);
-  static List<String>? _$projectFacilityId(HFReferralSearchModel v) =>
+  static String? _$projectFacilityId(HFReferralSearchModel v) =>
       v.projectFacilityId;
-  static const Field<HFReferralSearchModel, List<String>> _f$projectFacilityId =
+  static const Field<HFReferralSearchModel, String> _f$projectFacilityId =
       Field('projectFacilityId', _$projectFacilityId, opt: true);
   static List<String>? _$symptomSurveyId(HFReferralSearchModel v) =>
       v.symptomSurveyId;
@@ -181,9 +181,6 @@ abstract class HFReferralSearchModelCopyWith<
     $In extends HFReferralSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get projectId;
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
-      get projectFacilityId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get symptomSurveyId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
@@ -202,8 +199,8 @@ abstract class HFReferralSearchModelCopyWith<
       {List<String>? id,
       String? tenantId,
       String? name,
-      List<String>? projectId,
-      List<String>? projectFacilityId,
+      String? projectId,
+      String? projectFacilityId,
       List<String>? symptomSurveyId,
       List<String>? beneficiaryId,
       List<String>? referralCode,
@@ -229,22 +226,6 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
       $value.id != null
           ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
               (v) => call(id: v))
-          : null;
-  @override
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get projectId =>
-      $value.projectId != null
-          ? ListCopyWith(
-              $value.projectId!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(projectId: v))
-          : null;
-  @override
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
-      get projectFacilityId => $value.projectFacilityId != null
-          ? ListCopyWith(
-              $value.projectFacilityId!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(projectFacilityId: v))
           : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?

@@ -29,7 +29,7 @@ class CardWidget extends ResolvedFlowWidget {
 
     return DigitCard(
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.all(5),
+      margin: EdgeInsets.zero,
       spacing: spacing,
       cardType: WidgetParsers.parseCardType(
           json['properties']?['type']?.toString() ?? 'primary'),

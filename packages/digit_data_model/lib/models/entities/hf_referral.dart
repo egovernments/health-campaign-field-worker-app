@@ -11,8 +11,8 @@ class HFReferralSearchModel extends EntitySearchModel
   final List<String>? id;
   final String? tenantId;
   final String? name;
-  final List<String>? projectId;
-  final List<String>? projectFacilityId;
+  final String? projectId;
+  final String? projectFacilityId;
   final List<String>? symptomSurveyId;
   final List<String>? beneficiaryId;
   final List<String>? referralCode;

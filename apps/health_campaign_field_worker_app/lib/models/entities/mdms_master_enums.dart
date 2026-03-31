@@ -63,4 +63,6 @@ enum MasterEnums {
   dashboardConfig,
   @MappableValue("TRANSIT_POST_TYPE")
   transitPostType,
+  @MappableValue("BOUNDARY_RELATIONSHIP")
+  boundaryRelationShip
 }

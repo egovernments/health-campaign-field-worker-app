@@ -7,10 +7,10 @@ class AttendanceRoute extends $AttendanceRoute {
   RouteType get defaultRouteType => const RouteType.material();
 
   List<AutoRoute> routes = [
-    AutoRoute(page: ManageAttendanceRoute.page),
-    AutoRoute(
-      page: MarkAttendanceRoute.page,
-    ),
+    // AutoRoute(page: ManageAttendanceRoute.page),
+    // AutoRoute(
+    //   page: MarkAttendanceRoute.page,
+    // ),
     AutoRoute(page: AttendanceAcknowledgementRoute.page),
   ];
 }

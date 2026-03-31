@@ -1,10 +1,12 @@
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../utils/interpolation.dart';
+import '../../utils/widget_parsers.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
@@ -32,48 +34,60 @@ class ActionPopupWidget extends ResolvedFlowWidget {
     final screenKey = resolved.screenKey;
     final compositeKey = resolved.compositeKey;
 
+    String padding = props['padding'] ?? 'spacer2';
+
     return DigitButton(
-        mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
-        mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
-        label: localization?.translate(json['label']) ?? json['label'] ?? '',
-        onPressed: () async {
-          // Trigger configured actions if any
-          if (json['onAction'] != null && json['onAction'] is List) {
-            final actionsList =
-                List<Map<String, dynamic>>.from(json['onAction']);
+      isDisabled: resolved.isDisabled,
+      mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
+      mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
+      label: localization?.translate(json['label']) ?? json['label'] ?? '',
+      onPressed: () async {
+        // Trigger configured actions if any
+        if (json['onAction'] != null && json['onAction'] is List) {
+          final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
 
-            for (var raw in actionsList) {
-              final action = ActionConfig.fromJson(raw);
-              onAction(action);
-            }
+          for (var raw in actionsList) {
+            final action = ActionConfig.fromJson(raw);
+            onAction(action);
           }
+        }
 
-          // Show popup if popupConfig is provided
-          if (popupConfig != null) {
-            // Execute onOpenAction before showing popup
-            final onOpenActions =
-                popupConfig['onOpenAction'] as List<dynamic>?;
-            if (onOpenActions != null) {
-              for (var raw in onOpenActions) {
-                if (raw is Map<String, dynamic>) {
-                  final action = ActionConfig.fromJson(raw);
-                  onAction(action);
-                }
+        // Show popup if popupConfig is provided
+        if (popupConfig != null) {
+          // Execute onOpenAction before showing popup
+          final onOpenActions = popupConfig['onOpenAction'] as List<dynamic>?;
+          if (onOpenActions != null) {
+            for (var raw in onOpenActions) {
+              if (raw is Map<String, dynamic>) {
+                final action = ActionConfig.fromJson(raw);
+                onAction(action);
               }
             }
-
-            await _showActionPopup(context, popupConfig, onAction, screenKey,
-                stateData, item, listIndex, compositeKey);
           }
-        },
-        type: _parseButtonType(props['type']),
-        size: _parseButtonSize(props['size']),
-        suffixIcon: props['suffixIcon'] != null
-            ? DigitIconMapping.getIcon(props['suffixIcon'])
-            : null,
-        prefixIcon: props['prefixIcon'] != null
-            ? DigitIconMapping.getIcon(props['prefixIcon'])
-            : null);
+
+          await _showActionPopup(context, popupConfig, onAction, screenKey,
+              stateData, item, listIndex, compositeKey);
+        }
+      },
+      type: _parseButtonType(props['type']),
+      size: _parseButtonSize(props['size']),
+      digitButtonThemeData: DigitButtonThemeData(
+        DigitButtonColor: colorMap[props["color"]],
+        radius: BorderRadius.circular(spacer3),
+        largeRadius: BorderRadius.circular(spacer3),
+        smallMediumRadius: BorderRadius.circular(spacer3),
+        padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
+        disabledColor: DigitButtonThemeData.defaultTheme(context).disabledColor,
+      ),
+      iconColor: colorMap[props["color"]],
+      textColor: colorMap[props["color"]],
+      suffixIcon: props['suffixIcon'] != null
+          ? DigitIconMapping.getIcon(props['suffixIcon'])
+          : null,
+      prefixIcon: props['prefixIcon'] != null
+          ? DigitIconMapping.getIcon(props['prefixIcon'])
+          : null,
+    );
   }
 
   /// Show the action popup based on configuration
@@ -103,7 +117,10 @@ class ActionPopupWidget extends ResolvedFlowWidget {
       builder: (ctx) {
         return Popup(
           title: localization?.translate(title) ?? title,
-          description: description!=null && localization!.translate(description).trim().isNotEmpty ? description : null,
+          description: description != null &&
+                  localization!.translate(description).trim().isNotEmpty
+              ? description
+              : null,
           titleIcon: titleIconName != null
               ? Icon(
                   DigitIconMapping.getIcon(titleIconName),
@@ -132,7 +149,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
                     child: Builder(
                       builder: (innerCtx) => FlowWidgetFactory.build(
                         widgetJson,
-                        innerCtx,
+                        context,
                         onAction,
                       ),
                     ),
@@ -211,4 +228,6 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         return MainAxisAlignment.start;
     }
   }
+
+  Map<String, Color> colorMap = {'green': Colors.green};
 }

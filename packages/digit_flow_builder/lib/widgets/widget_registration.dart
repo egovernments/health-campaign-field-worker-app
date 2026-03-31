@@ -1,6 +1,16 @@
+import 'dart:developer';
+
 import 'package:digit_flow_builder/widgets/implementations/action_popup_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/back_link.dart';
+import 'package:digit_flow_builder/widgets/implementations/check_box_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/date_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/expandable_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/expanded_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/icon_button_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/label_toggle_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/progress_bar_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/signature_capture_dialog_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/sized_box_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/proximity_search_widget.dart';
 
 import 'flow_widget_interface.dart';
@@ -10,6 +20,7 @@ import 'implementations/column_widget.dart';
 import 'implementations/dropdown_widget.dart';
 import 'implementations/filter_widget.dart';
 import 'implementations/icon_widget.dart';
+import 'implementations/image_widget.dart';
 import 'implementations/info_card_widget.dart';
 import 'implementations/label_pair_list_widget.dart';
 import 'implementations/list_view_widget.dart';
@@ -63,7 +74,15 @@ class WidgetRegistration {
     FlowWidgetFactory.register(ActionPopupWidget());
     FlowWidgetFactory.register(ProximitySearchWidget());
     FlowWidgetFactory.register(ExpandableWidget());
-
+    FlowWidgetFactory.register(ExpandedWidget());
+    FlowWidgetFactory.register(SizedBoxWidget());
+    FlowWidgetFactory.register(IconsButtonWidget());
+    FlowWidgetFactory.register(DateWidget());
+    FlowWidgetFactory.register(ProgressBarWidget());
+    FlowWidgetFactory.register(SignatureCaptureWidget());
+    FlowWidgetFactory.register(LabeledToggleWidget());
+    FlowWidgetFactory.register(CheckBoxWidget());
+    FlowWidgetFactory.register(ImageWidget());
     _initialized = true;
   }
 

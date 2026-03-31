@@ -11,103 +11,186 @@ class HFReferralLocalRepository
     extends LocalRepository<HFReferralModel, HFReferralSearchModel> {
   HFReferralLocalRepository(super.sql, super.opLogManager);
 
+  void listenToChanges({
+    required HFReferralSearchModel query,
+    required void Function(List<HFReferralModel> data) listener,
+  }) async {
+    return retryLocalCallOperation(() async {
+      final select = sql.select(sql.hFReferral)
+        ..where(
+              (tbl) => buildAnd([
+            if (query.clientReferenceId != null)
+              tbl.clientReferenceId.isIn(query.clientReferenceId!),
+            if (query.projectId != null) tbl.projectId.equals(query.projectId!),
+            if (query.projectFacilityId != null)
+              tbl.projectFacilityId.equals(query.projectFacilityId!),
+            if (query.beneficiaryId != null)
+              tbl.beneficiaryId.isIn(query.beneficiaryId!),
+            if (query.localityCode != null)
+              tbl.localityCode.isIn(query.localityCode!),
+          ]),
+        );
+      select.watch().listen((event) {
+        final data = event
+            .map((referral) {
+          final additionalData = referral.additionalFields != null
+              ? jsonDecode(referral.additionalFields!)
+              : null;
+          List<Map<String, dynamic>> fields = additionalData != null &&
+              additionalData['fields'] != null
+              ? List<Map<String, dynamic>>.from(additionalData['fields'])
+              : <Map<String, dynamic>>[];
+          final HFReferralAdditionalFields additionalFields =
+          HFReferralAdditionalFields(
+            version: additionalData?['version'] ?? 1,
+            fields: fields
+                .where((field) =>
+            field['key'] != null && field['value'] != null)
+                .map((field) => AdditionalField(
+              field['key'] as String,
+              field['value'],
+            ))
+                .toList(),
+          );
+          return HFReferralModel(
+            id: referral.id,
+            clientReferenceId: referral.clientReferenceId,
+            rowVersion: referral.rowVersion,
+            tenantId: referral.tenantId,
+            name: referral.name,
+            projectId: referral.projectId,
+            projectFacilityId: referral.projectFacilityId,
+            symptom: referral.symptom,
+            symptomSurveyId: referral.symptomSurveyId,
+            beneficiaryId: referral.beneficiaryId,
+            referralCode: referral.referralCode,
+            nationalLevelId: referral.nationalLevelId,
+            localityCode: referral.localityCode,
+            isDeleted: referral.isDeleted,
+            additionalFields: additionalFields,
+            auditDetails: referral.auditCreatedBy != null
+                ? AuditDetails(
+              createdBy: referral.auditCreatedBy!,
+              createdTime: referral.auditCreatedTime!,
+              lastModifiedBy: referral.auditModifiedBy,
+              lastModifiedTime: referral.auditModifiedTime,
+            )
+                : null,
+            clientAuditDetails: referral.clientCreatedTime == null ||
+                referral.clientCreatedBy == null
+                ? null
+                : ClientAuditDetails(
+              createdTime: referral.clientCreatedTime!,
+              createdBy: referral.clientCreatedBy!,
+              lastModifiedBy: referral.clientModifiedBy,
+              lastModifiedTime: referral.clientModifiedTime,
+            ),
+          );
+        })
+            .where((element) => element.isDeleted != true)
+            .toList();
+        listener(data);
+      });
+    });
+  }
+
   @override
   FutureOr<List<HFReferralModel>> search(
-    HFReferralSearchModel query, [
-    String? userId,
-  ]) async {
+      HFReferralSearchModel query, [
+        String? userId,
+      ]) async {
     return retryLocalCallOperation(() async {
       final selectQuery = sql.select(sql.hFReferral).join([]);
 
       final results = await (selectQuery
-            ..where(buildAnd([
-              if (query.clientReferenceId != null)
-                sql.hFReferral.clientReferenceId.isIn(
-                  query.clientReferenceId!,
-                ),
-              if (query.name != null)
-                sql.hFReferral.name.contains(
-                  query.name!,
-                ),
-              if (query.beneficiaryId != null)
-                sql.hFReferral.beneficiaryId.isIn(
-                  query.beneficiaryId!,
-                ),
-              if (query.projectId != null)
-                sql.hFReferral.projectId.isIn(
-                  query.projectId!,
-                ),
-              if (query.localityCode != null)
-                sql.hFReferral.localityCode.isIn(
-                  query.localityCode!,
-                ),
-              if (userId != null)
-                sql.hFReferral.auditCreatedBy.equals(
-                  userId,
-                ),
-            ])))
+        ..where(buildAnd([
+          if (query.clientReferenceId != null)
+            sql.hFReferral.clientReferenceId.isIn(
+              query.clientReferenceId!,
+            ),
+          if (query.name != null)
+            sql.hFReferral.name.contains(
+              query.name!,
+            ),
+          if (query.beneficiaryId != null)
+            sql.hFReferral.beneficiaryId.isIn(
+              query.beneficiaryId!,
+            ),
+          if (query.projectId != null)
+            sql.hFReferral.projectId.equals(
+              query.projectId!,
+            ),
+          if (query.localityCode != null)
+            sql.hFReferral.localityCode.isIn(
+              query.localityCode!,
+            ),
+          if (userId != null)
+            sql.hFReferral.auditCreatedBy.equals(
+              userId,
+            ),
+        ])))
           .get();
 
       return results
           .map((e) {
-            final referral = e.readTableOrNull(sql.hFReferral);
-            if (referral == null) return null;
+        final referral = e.readTableOrNull(sql.hFReferral);
+        if (referral == null) return null;
 
-            // Parse additional fields generically from JSON
-            final additionalData = referral.additionalFields != null
-                ? jsonDecode(referral.additionalFields!)
-                : null;
-            List<Map<String, dynamic>> data =
-                additionalData != null && additionalData['fields'] != null
-                    ? List<Map<String, dynamic>>.from(additionalData['fields'])
-                    : <Map<String, dynamic>>[];
+        // Parse additional fields generically from JSON
+        final additionalData = referral.additionalFields != null
+            ? jsonDecode(referral.additionalFields!)
+            : null;
+        List<Map<String, dynamic>> data =
+        additionalData != null && additionalData['fields'] != null
+            ? List<Map<String, dynamic>>.from(additionalData['fields'])
+            : <Map<String, dynamic>>[];
 
-            final HFReferralAdditionalFields additionalFields =
-                HFReferralAdditionalFields(
-              version: additionalData?['version'] ?? 1,
-              fields: data
-                  .where((field) =>
-                      field['key'] != null && field['value'] != null)
-                  .map((field) => AdditionalField(
-                        field['key'] as String,
-                        field['value'],
-                      ))
-                  .toList(),
-            );
+        final HFReferralAdditionalFields additionalFields =
+        HFReferralAdditionalFields(
+          version: additionalData?['version'] ?? 1,
+          fields: data
+              .where(
+                  (field) => field['key'] != null && field['value'] != null)
+              .map((field) => AdditionalField(
+            field['key'] as String,
+            field['value'],
+          ))
+              .toList(),
+        );
 
-            return HFReferralModel(
-              id: referral.id,
-              clientReferenceId: referral.clientReferenceId,
-              rowVersion: referral.rowVersion,
-              tenantId: referral.tenantId,
-              name: referral.name,
-              projectId: referral.projectId,
-              projectFacilityId: referral.projectFacilityId,
-              symptom: referral.symptom,
-              symptomSurveyId: referral.symptomSurveyId,
-              beneficiaryId: referral.beneficiaryId,
-              referralCode: referral.referralCode,
-              nationalLevelId: referral.nationalLevelId,
-              localityCode: referral.localityCode,
-              isDeleted: referral.isDeleted,
-              additionalFields: additionalFields,
-              auditDetails: AuditDetails(
-                createdBy: referral.auditCreatedBy!,
-                createdTime: referral.auditCreatedTime!,
-                lastModifiedBy: referral.auditModifiedBy,
-                lastModifiedTime: referral.auditModifiedTime,
-              ),
-              clientAuditDetails: referral.clientCreatedTime == null ||
-                      referral.clientCreatedBy == null
-                  ? null
-                  : ClientAuditDetails(
-                      createdTime: referral.clientCreatedTime!,
-                      createdBy: referral.clientCreatedBy!,
-                      lastModifiedBy: referral.clientModifiedBy,
-                      lastModifiedTime: referral.clientModifiedTime,
-                    ),
-            );
-          })
+        return HFReferralModel(
+          id: referral.id,
+          clientReferenceId: referral.clientReferenceId,
+          rowVersion: referral.rowVersion,
+          tenantId: referral.tenantId,
+          name: referral.name,
+          projectId: referral.projectId,
+          projectFacilityId: referral.projectFacilityId,
+          symptom: referral.symptom,
+          symptomSurveyId: referral.symptomSurveyId,
+          beneficiaryId: referral.beneficiaryId,
+          referralCode: referral.referralCode,
+          nationalLevelId: referral.nationalLevelId,
+          localityCode: referral.localityCode,
+          isDeleted: referral.isDeleted,
+          additionalFields: additionalFields,
+          auditDetails: AuditDetails(
+            createdBy: referral.auditCreatedBy!,
+            createdTime: referral.auditCreatedTime!,
+            lastModifiedBy: referral.auditModifiedBy,
+            lastModifiedTime: referral.auditModifiedTime,
+          ),
+          clientAuditDetails: referral.clientCreatedTime == null ||
+              referral.clientCreatedBy == null
+              ? null
+              : ClientAuditDetails(
+            createdTime: referral.clientCreatedTime!,
+            createdBy: referral.clientCreatedBy!,
+            lastModifiedBy: referral.clientModifiedBy,
+            lastModifiedTime: referral.clientModifiedTime,
+          ),
+        );
+      })
           .whereNotNull()
           .where((element) => element.isDeleted != true)
           .toList();
@@ -116,10 +199,10 @@ class HFReferralLocalRepository
 
   @override
   FutureOr<void> create(
-    HFReferralModel entity, {
-    bool createOpLog = true,
-    DataOperation dataOperation = DataOperation.create,
-  }) async {
+      HFReferralModel entity, {
+        bool createOpLog = true,
+        DataOperation dataOperation = DataOperation.create,
+      }) async {
     return retryLocalCallOperation(() async {
       final referralCompanion = entity.companion;
       await sql.batch((batch) async {
@@ -131,18 +214,18 @@ class HFReferralLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-    List<HFReferralModel> entities,
-  ) async {
+      List<HFReferralModel> entities,
+      ) async {
     return retryLocalCallOperation(() async {
       final referralCompanions = entities
           .map((e) => e.companion.copyWith(
-                name: Value(e.additionalFields?.fields
-                    .where((h) => h.key == 'nameOfReferral')
-                    .firstOrNull
-                    ?.value),
-                // Include localityCode during downsync
-                localityCode: Value(e.localityCode),
-              ))
+        name: Value(e.additionalFields?.fields
+            .where((h) => h.key == 'nameOfReferral')
+            .firstOrNull
+            ?.value),
+        // Include localityCode during downsync
+        localityCode: Value(e.localityCode),
+      ))
           .toList();
 
       await sql.batch((batch) async {
@@ -157,10 +240,10 @@ class HFReferralLocalRepository
 
   @override
   FutureOr<void> update(
-    HFReferralModel entity, {
-    bool createOpLog = true,
-    DataOperation dataOperation = DataOperation.update,
-  }) async {
+      HFReferralModel entity, {
+        bool createOpLog = true,
+        DataOperation dataOperation = DataOperation.update,
+      }) async {
     return retryLocalCallOperation(() async {
       debugPrint(
           'HFReferralLocalRepository.update: Starting update for clientReferenceId=${entity.clientReferenceId}');
@@ -226,19 +309,19 @@ class HFReferralLocalRepository
           name: entity.name ?? existingRecord.name,
           projectId: entity.projectId ?? existingRecord.projectId,
           projectFacilityId:
-              entity.projectFacilityId ?? existingRecord.projectFacilityId,
+          entity.projectFacilityId ?? existingRecord.projectFacilityId,
           symptom: entity.symptom ?? existingRecord.symptom,
           symptomSurveyId:
-              entity.symptomSurveyId ?? existingRecord.symptomSurveyId,
+          entity.symptomSurveyId ?? existingRecord.symptomSurveyId,
           beneficiaryId: entity.beneficiaryId ?? existingRecord.beneficiaryId,
           referralCode: entity.referralCode ?? existingRecord.referralCode,
           nationalLevelId:
-              entity.nationalLevelId ?? existingRecord.nationalLevelId,
+          entity.nationalLevelId ?? existingRecord.nationalLevelId,
           localityCode: entity.localityCode ?? existingRecord.localityCode,
           rowVersion: entity.rowVersion ?? existingRecord.rowVersion,
           isDeleted: entity.isDeleted ?? existingRecord.isDeleted,
           nonRecoverableError:
-              entity.nonRecoverableError ?? existingRecord.nonRecoverableError,
+          entity.nonRecoverableError ?? existingRecord.nonRecoverableError,
           additionalFields: mergedAdditionalFields,
           auditDetails: AuditDetails(
             createdBy: existingRecord.auditDetails?.createdBy ??

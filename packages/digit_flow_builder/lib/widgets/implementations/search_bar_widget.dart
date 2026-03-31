@@ -85,7 +85,8 @@ class SearchBarWidget extends ResolvedFlowWidget {
             }
           }
         } else if (json['onAction'] != null) {
-          // Below minimum chars — remove only this search bar's filter (not the entire state)
+          // Below minimum chars: only clear filters when input is fully empty.
+          // This avoids stale filters while preserving state for partial typing.
           final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
 
           final searchBarFilterKeys = <String>[];
@@ -103,7 +104,7 @@ class SearchBarWidget extends ResolvedFlowWidget {
             }
           }
 
-          if (searchBarFilterKeys.isNotEmpty) {
+          if (value.isEmpty && searchBarFilterKeys.isNotEmpty) {
             onAction(ActionConfig.fromJson({
               'actionType': 'CLEAR_STATE',
               'properties': {

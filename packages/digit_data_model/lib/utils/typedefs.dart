@@ -1,5 +1,7 @@
 // Importing necessary packages and files.
 import '../data/data_repository.dart';
+import '../models/entities/attendance_log.dart';
+import '../models/entities/attendance_register.dart';
 import '../models/entities/boundary.dart';
 import '../models/entities/facility.dart';
 import '../models/entities/individual.dart';
@@ -31,3 +33,10 @@ typedef ProductVariantDataRepository
 typedef BoundaryDataRepository
     = DataRepository<BoundaryModel, BoundarySearchModel>;
 
+/// `AttendanceDataRepository` is a type alias for a `DataRepository` that works with `AttendanceRegisterModel` and `AttendanceRegisterSearchModel`.
+typedef AttendanceDataRepository
+    = DataRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>;
+
+/// `AttendanceLogDataRepository` is a type alias for a `DataRepository` that works with `AttendanceLogModel` and `AttendanceLogSearchModel`.
+typedef AttendanceLogDataRepository
+    = DataRepository<AttendanceLogModel, AttendanceLogSearchModel>;

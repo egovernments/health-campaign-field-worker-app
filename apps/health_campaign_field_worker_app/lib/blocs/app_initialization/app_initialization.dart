@@ -110,7 +110,8 @@ class AppInitializationBloc
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
                     MasterEnums.transitPostType.toValue(),
-                    MasterEnums.searchCLFFilters.toValue()
+                    MasterEnums.searchCLFFilters.toValue(),
+                    MasterEnums.boundaryRelationShip.toValue()
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -220,7 +221,7 @@ class AppInitializationBloc
         .findAll();
 
     if (serviceRegistryList.isEmpty) {
-       throw Exception('`serviceRegistryList` cannot be empty');
+      throw Exception('`serviceRegistryList` cannot be empty');
     }
     if (configs.isEmpty) {
       throw Exception('`configs` cannot be empty');
