@@ -9,6 +9,7 @@ import 'package:digit_flow_builder/widgets/implementations/expanded_widget.dart'
 import 'package:digit_flow_builder/widgets/implementations/icon_button_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/label_toggle_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/progress_bar_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/select_button_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/signature_capture_dialog_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/sized_box_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/proximity_search_widget.dart';
@@ -49,6 +50,7 @@ class WidgetRegistration {
     // Register all widget implementations
     FlowWidgetFactory.register(ActionPopupWidget());
     FlowWidgetFactory.register(ButtonWidget());
+    FlowWidgetFactory.register(SelectButtonWidget());
     FlowWidgetFactory.register(TextWidget());
     FlowWidgetFactory.register(TextInputWidget());
     FlowWidgetFactory.register(IconWidget());

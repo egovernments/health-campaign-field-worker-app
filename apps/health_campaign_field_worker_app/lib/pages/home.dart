@@ -62,7 +62,10 @@ import '../utils/least_level_boundary_singleton.dart';
 import '../utils/mark_attendance_executor.dart';
 import '../utils/utils.dart';
 import '../widgets/attendance/attendance_qr_scanner_button.dart';
+import '../widgets/attendance/custom_row_widget.dart';
 import '../widgets/attendance/mark_attendance_card.dart';
+import '../widgets/attendance/group_list_view_widget.dart';
+import '../widgets/attendance/signature_compare_dialog_widget.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
 import '../widgets/header/back_navigation_help_header.dart';
@@ -257,6 +260,9 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     FlowWidgetFactory.register(MarkAttendanceCard());
     FlowWidgetFactory.register(AttendanceQrScannerButton());
+    FlowWidgetFactory.register(GroupListViewWidget());
+    FlowWidgetFactory.register(CustomRowWidget());
+    FlowWidgetFactory.register(SignatureCompareWidget());
 
     // Example 1: Register a dynamic resource card with multi-page state access
     CustomComponentRegistry().registerBuilder(
@@ -528,6 +534,92 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     // Attendance
 
+    FunctionRegistry.register('todayAttendanceLogs', (args, stateData) {
+      if (args.isEmpty || args.first == null) return [];
+
+      final widgetData = args.first;
+      var attendanceRegister =
+          args.length > 1 && args[1] != null ? args[1] : null;
+
+      if (attendanceRegister == null) return [];
+
+      List attendanceLogs = attendanceRegister.attendanceLog ?? [];
+
+      int? entryTime =
+          widgetData['selectedAttendanceDate']?['entryTime'] as int?;
+      int? exitTime = widgetData['selectedAttendanceDate']?['exitTime'] as int?;
+
+      if (entryTime == null || exitTime == null) return [];
+
+      List filteredLogs = attendanceLogs.where((log) {
+        final logTime = log.time;
+        return logTime == entryTime || logTime == exitTime;
+      }).toList();
+
+      return filteredLogs;
+    });
+
+    // Update attendanceStatus to also check in-memory collection (4th arg)
+    FunctionRegistry.register('attendanceStatus', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final attendee = args.length > 1 ? args[1] : null;
+
+      double? currentStatus;
+
+      String attendanceUnmarked = 'ATTENDANCE_UNMARKED';
+      String markAsPresent = 'MARK_AS_PRESENT';
+      String markedAsAbsent = 'MARK_AS_ABSENT';
+
+      final individualId = attendee?["individualId"];
+
+      var attendanceCollectionData =
+          widgetData["attendanceCollection"]?[individualId];
+
+      if (attendanceCollectionData == 'present') {
+        currentStatus = 1.0;
+      } else if (attendanceCollectionData == 'absent') {
+        currentStatus = 0.0;
+      }
+
+      var status = currentStatus ?? attendee?['status'] ?? -1.0;
+
+      if (status == 1.0) {
+        return markAsPresent;
+      } else if (status == 0.0) {
+        return markedAsAbsent;
+      } else if (status == -1.0) {
+        return attendanceUnmarked;
+      }
+    });
+
+    FunctionRegistry.register('showMarkAttendanceButtons', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final attendee = args.length > 1 ? args[1] : null;
+      List attendanceLogs = args.length > 2 && args[2] != null ? args[2] : [];
+
+      if (widgetData == null || attendee == null || attendanceLogs.isEmpty) {
+        return true; // show buttons if no attendee or logs
+      }
+
+      final individualId = attendee?["individualId"];
+      final entryTime =
+          widgetData['selectedAttendanceDate']?['entryTime'] as int?;
+      final exitTime =
+          widgetData['selectedAttendanceDate']?['exitTime'] as int?;
+
+      List filterAttendanceLogs = attendanceLogs.where((log) {
+        return ((entryTime != null && log["time"] == entryTime) ||
+                (exitTime != null && log["time"] == exitTime)) &&
+            log["individualId"] == individualId?.toString();
+      }).toList();
+
+      var status = attendee['status'] ?? -1.0;
+      var uploaded =
+          filterAttendanceLogs.any((log) => log["uploadToServer"] == false);
+
+      return status != -1.0 && uploaded == true;
+    });
+
     FunctionRegistry.register('updateAttendeeStatus', (args, stateData) {
       if (args.isEmpty || args.first == null) return null;
 
@@ -754,34 +846,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       double status =
           _attendanceLogsStatus(individualId, selectedDate, attendanceLogs);
       return status; // 1.0 for present, 0.0 for absent, 0.5 for half day, -1.0 for unmarked
-    });
-
-    // Update attendanceStatus to also check in-memory collection (4th arg)
-    FunctionRegistry.register('attendanceStatus', (args, stateData) {
-      List<dynamic>? attendanceLogs = args.isNotEmpty ? args[0] : null;
-      String? individualId = args.length > 1 ? args[1]?.toString() : null;
-      int? selectedDateRaw =
-          args.length > 2 ? int.tryParse(args[2]?.toString() ?? '') : null;
-      Map? attendanceCollection = args.length > 3 ? args[3] as Map? : null;
-
-      DateTime selectedDate = selectedDateRaw != null
-          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
-          : DateTime.now();
-
-      String attendanceUnmarked = 'ATTENDANCE_UNMARKED';
-      String markAsPresent = 'MARK_AS_PRESENT';
-      String markedAsAbsent = 'MARK_AS_ABSENT';
-      double status =
-          _attendanceStatus(individualId, selectedDate, attendanceCollection);
-      double logsStatus =
-          _attendanceLogsStatus(individualId, selectedDate, attendanceLogs);
-      if (status == 1.0 || logsStatus == 1.0) {
-        return markAsPresent;
-      } else if (status == 0.0 || logsStatus == 0.0) {
-        return markedAsAbsent;
-      } else if (status == -1.0 || logsStatus == -1.0) {
-        return attendanceUnmarked;
-      }
     });
 
     FunctionRegistry.register('isSameDay', (args, stateData) {
@@ -1030,11 +1094,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       for (final entry in attendanceCollection.entries) {
         final individualId = entry.key.toString();
-        final data = entry.value as Map?;
+        final data = entry.value;
         if (data == null) continue;
 
-        final markStatus = (data['status'] as num?)?.toDouble() ?? -1;
-        if (markStatus == -1) continue; // skip unmarked
+        double markStatus = -1.0;
+        if (data == "present") {
+          markStatus = 1.0;
+        } else if (data == "absent") {
+          markStatus = 0.0;
+        }
+        if (markStatus == -1.0) continue; // skip unmarked
 
         final isPresent = markStatus >= 1.0;
         final signatureData = data['signatureData'] as String?;
@@ -1155,9 +1224,9 @@ class _HomePageState extends LocalizedState<HomePage> {
             status; // otherwise, update to new status (could be marking absent or toggling)
       }
       collection?[individualId] = {
-        'status': finalStatus,
         'registerId': registerId,
         'individualId': individualId,
+        'status': finalStatus,
         'signatureData': signatureData,
       };
       return collection;
@@ -2307,16 +2376,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                     foreignKey: 'registerId',
                   ),
                   RelationshipMapping(
-                    from: 'attendee',
-                    to: 'individual',
-                    localKey: 'individualId',
-                    foreignKey: 'id',
-                  ),
-                  RelationshipMapping(
                     from: 'individual',
                     to: 'name',
                     localKey: 'clientReferenceId',
                     foreignKey: 'individualClientReferenceId',
+                  ),
+                  RelationshipMapping(
+                    from: 'attendee',
+                    to: 'individual',
+                    localKey: 'individualId',
+                    foreignKey: 'id',
                   ),
                 ],
                 nestedModelMappings: const [
