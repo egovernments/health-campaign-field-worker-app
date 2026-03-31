@@ -20,23 +20,31 @@ class SelectButtonWidget extends ResolvedFlowWidget {
   ) {
     final fieldKey = resolved.resolveField(json['fieldKey']) as String?;
     final fieldValue = resolved.resolveField(json['fieldValue']) as String?;
+    final condition = json['condition'] as Map<String, dynamic>?;
     final groupKey = resolved.resolveField(json['groupKey']) as String?;
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
 
     String padding = props['padding'] ?? 'spacer2';
+    var selectedData;
+    var isSelected = false;
 
-    if (fieldKey == null) {
-      throw Exception('fieldKey is required for selectButton widget');
-    }
-    if (fieldValue == null) {
-      throw Exception('fieldValue is required for selectButton widget');
+    if ((fieldKey == null || fieldValue == null) && condition == null) {
+      throw Exception(
+          'fieldKey and fieldValue are required for selectButton widget');
     }
 
     return WidgetStateContext.reactive(context, (ctx, state) {
-      final selectedData = (groupKey != null
-              ? (state.widgetData[groupKey]?[fieldKey])
-              : state.widgetData[fieldKey]) ??
-          false;
+      if (condition != null) {
+        condition["lhs"] = resolved.resolveField(condition["lhs"]);
+        condition["rhs"] = resolved.resolveField(condition["rhs"]);
+        isSelected = condition["lhs"] == condition["rhs"];
+      } else {
+        selectedData = (groupKey != null
+                ? (state.widgetData[groupKey]?[fieldKey])
+                : state.widgetData[fieldKey]) ??
+            false;
+      }
+
       return WidgetParsers.wrapWithBottomGap(
         DigitButton(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,16 +56,19 @@ class SelectButtonWidget extends ResolvedFlowWidget {
                   List<Map<String, dynamic>>.from(json['onAction']);
               await resolved.executeActions(actionsList, context);
             }
-            if (groupKey != null) {
-              state.updateWidgetData(groupKey,
-                  {...?state.widgetData[groupKey], fieldKey: fieldValue});
-            } else {
-              state.updateWidgetData(fieldKey, fieldValue);
+            if (condition == null) {
+              if (groupKey != null) {
+                state.updateWidgetData(groupKey,
+                    {...?state.widgetData[groupKey], fieldKey: fieldValue});
+              } else {
+                state.updateWidgetData(fieldKey!, fieldValue);
+              }
             }
           },
-          type: WidgetParsers.parseButtonType(selectedData == fieldValue
-              ? props['selectedType']
-              : props['type']),
+          type: WidgetParsers.parseButtonType(
+              isSelected || (selectedData != null && selectedData == fieldValue)
+                  ? props['selectedType']
+                  : props['type']),
           size: WidgetParsers.parseButtonSize(props['size']),
           digitButtonThemeData: DigitButtonThemeData(
             primaryDigitButtonColor: DigitButtonThemeData.defaultTheme(context)
