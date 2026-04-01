@@ -8,10 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 
 import '../utils/stock_calculation_utils.dart';
-<<<<<<< HEAD
-=======
 import '../utils/utils.dart';
->>>>>>> upstream/nigeria-product-changes
 
 /// Executor that maintains running stock balances in UserAction records.
 ///
@@ -29,15 +26,11 @@ class StockBalanceExecutor extends ActionExecutor {
     Map<String, dynamic> contextData,
   ) async {
     try {
-<<<<<<< HEAD
-      final entities = contextData['entities'];
-=======
       var entities = contextData['entities'];
       if (entities == null || entities is! List || entities.isEmpty) {
         // Fallback to existingModels (e.g., when accept flow only updates existing models)
         entities = contextData['existingModels'];
       }
->>>>>>> upstream/nigeria-product-changes
       if (entities == null || entities is! List || entities.isEmpty) {
         debugPrint('UPDATE_STOCK_BALANCE: No entities found');
         return contextData;
@@ -77,8 +70,7 @@ class StockBalanceExecutor extends ActionExecutor {
     String projectId,
     String boundaryCode,
   ) async {
-    final stockEntities =
-        entities.whereType<StockModel>().toList();
+    final stockEntities = entities.whereType<StockModel>().toList();
     if (stockEntities.isEmpty) return;
 
     final userActionRepo = context.read<UserActionLocalRepository>();
@@ -203,12 +195,9 @@ class StockBalanceExecutor extends ActionExecutor {
 
     final now = DateTime.now().millisecondsSinceEpoch;
     final loggedInUserUuid = FlowBuilderSingleton().loggedInUserUuid ?? '';
-    final existing = existingBalances.isNotEmpty ? existingBalances.first : null;
+    final existing =
+        existingBalances.isNotEmpty ? existingBalances.first : null;
 
-<<<<<<< HEAD
-    // Always update (upsert) — never create a new UserAction
-=======
->>>>>>> upstream/nigeria-product-changes
     final balanceAction = UserActionModel(
       clientReferenceId: balanceKey,
       action: 'STOCK_BALANCE',
@@ -221,11 +210,7 @@ class StockBalanceExecutor extends ActionExecutor {
       timestamp: now,
       id: existing?.id,
       rowVersion: existing?.rowVersion,
-<<<<<<< HEAD
-      tenantId: existing?.tenantId,
-=======
       tenantId: existing?.tenantId ?? context.selectedProject.tenantId,
->>>>>>> upstream/nigeria-product-changes
       nonRecoverableError: false,
       additionalFields: UserActionAdditionalFields(
         version: 1,
@@ -249,15 +234,11 @@ class StockBalanceExecutor extends ActionExecutor {
       ),
     );
 
-<<<<<<< HEAD
-    await userActionRepo.update(balanceAction);
-=======
     if (existing != null) {
       await userActionRepo.update(balanceAction);
     } else {
       await userActionRepo.create(balanceAction);
     }
->>>>>>> upstream/nigeria-product-changes
 
     debugPrint(
       'UPDATE_STOCK_BALANCE: Updated balance for $facilityId/$productVariantId = $balance',

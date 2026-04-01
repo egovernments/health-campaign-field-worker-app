@@ -1,6 +1,8 @@
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendee.dart';
+import 'package:digit_data_model/models/entities/scanned_individual_data.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.dart';
@@ -16,6 +18,7 @@ import 'package:transit_post/router/transit_post_router.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
+import '../pages/attendance_qr_scanner.dart';
 import '../pages/authenticated.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/current_boundary.dart';

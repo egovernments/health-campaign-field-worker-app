@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:health_campaign_field_worker_app/data/repositories/remote/notification_token.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -548,9 +549,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     var initialLimit = 10;
 
     final stockEntries = await stockRemoteRepository.search(stockSearchModel,
-        limit: initialLimit,
-        offSet: offset,
-        lastChangedSince: lastChangedSince);
+        limit: initialLimit, offSet: offset, lastSyncedTime: lastChangedSince);
 
     return stockEntries;
   }

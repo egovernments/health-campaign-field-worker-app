@@ -5,10 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-<<<<<<< HEAD
-=======
 import '../../data/repositories/remote/notification_token.dart';
->>>>>>> upstream/nigeria-product-changes
 import '../../notification_service.dart';
 
 part 'push_notification.freezed.dart';
@@ -18,12 +15,6 @@ typedef PushNotificationEmitter = Emitter<PushNotificationState>;
 class PushNotificationBloc
     extends Bloc<PushNotificationEvent, PushNotificationState> {
   StreamSubscription<String>? _tokenRefreshSubscription;
-<<<<<<< HEAD
-
-  PushNotificationBloc() : super(const PushNotificationState.initial()) {
-    on(_onInitialize);
-    on(_onTokenRefreshed);
-=======
   final NotificationTokenRepository notificationTokenRepository;
 
   String? _currentUserId;
@@ -37,7 +28,6 @@ class PushNotificationBloc
     on(_onLogin);
     on(_onTokenRefreshed);
     on(_onRegisterToken);
->>>>>>> upstream/nigeria-product-changes
     on(_onNotificationReceived);
   }
 
@@ -47,28 +37,15 @@ class PushNotificationBloc
   ) async {
     try {
       final notificationService = NotificationService();
-<<<<<<< HEAD
-
-      // Initialize FCM here (post-runApp) to avoid blocking app startup
       await notificationService.init();
       final fcmToken = await notificationService.initializeFCM();
 
-      // Set up the notification tap callback to emit bloc events
-=======
-      await notificationService.init();
-      final fcmToken = await notificationService.initializeFCM();
-
->>>>>>> upstream/nigeria-product-changes
       notificationService.onNotificationTap = (data) {
         if (!isClosed) {
           add(PushNotificationEvent.notificationReceived(data: data));
         }
       };
 
-<<<<<<< HEAD
-      // Listen for token refresh events
-=======
->>>>>>> upstream/nigeria-product-changes
       _tokenRefreshSubscription =
           FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
         if (!isClosed) {
@@ -84,8 +61,6 @@ class PushNotificationBloc
     }
   }
 
-<<<<<<< HEAD
-=======
   FutureOr<void> _onLogin(
     PushNotificationLoginEvent event,
     PushNotificationEmitter emit,
@@ -105,14 +80,10 @@ class PushNotificationBloc
     }
   }
 
->>>>>>> upstream/nigeria-product-changes
   FutureOr<void> _onTokenRefreshed(
     PushNotificationTokenRefreshedEvent event,
     PushNotificationEmitter emit,
   ) async {
-<<<<<<< HEAD
-    emit(PushNotificationState.initialized(fcmToken: event.token));
-=======
     if (_currentUserId != null) {
       await NotificationService.storeTokenForUser(
         _currentUserId!,
@@ -149,7 +120,6 @@ class PushNotificationBloc
       token: token,
       facilityIds: event.facilityIds,
     );
->>>>>>> upstream/nigeria-product-changes
   }
 
   FutureOr<void> _onNotificationReceived(
@@ -157,14 +127,9 @@ class PushNotificationBloc
     PushNotificationEmitter emit,
   ) async {
     emit(PushNotificationState.notificationTapped(data: event.data));
-<<<<<<< HEAD
-    // Return to initialized state so future taps can also be handled
-    final token = await NotificationService.getStoredFcmToken();
-=======
     final token = _currentUserId != null
         ? await NotificationService.getTokenForUser(_currentUserId!)
         : null;
->>>>>>> upstream/nigeria-product-changes
     emit(PushNotificationState.initialized(fcmToken: token));
   }
 
@@ -180,25 +145,19 @@ class PushNotificationEvent with _$PushNotificationEvent {
   const factory PushNotificationEvent.initialize() =
       PushNotificationInitializeEvent;
 
-<<<<<<< HEAD
-=======
   const factory PushNotificationEvent.login({
     required String userId,
   }) = PushNotificationLoginEvent;
 
->>>>>>> upstream/nigeria-product-changes
   const factory PushNotificationEvent.tokenRefreshed({
     required String token,
   }) = PushNotificationTokenRefreshedEvent;
 
-<<<<<<< HEAD
-=======
   const factory PushNotificationEvent.registerToken({
     required String apiEndPoint,
     required List<String> facilityIds,
   }) = PushNotificationRegisterTokenEvent;
 
->>>>>>> upstream/nigeria-product-changes
   const factory PushNotificationEvent.notificationReceived({
     required Map<String, dynamic> data,
   }) = PushNotificationNotificationReceivedEvent;
@@ -206,8 +165,7 @@ class PushNotificationEvent with _$PushNotificationEvent {
 
 @freezed
 class PushNotificationState with _$PushNotificationState {
-  const factory PushNotificationState.initial() =
-      PushNotificationInitialState;
+  const factory PushNotificationState.initial() = PushNotificationInitialState;
 
   const factory PushNotificationState.initialized({
     String? fcmToken,
