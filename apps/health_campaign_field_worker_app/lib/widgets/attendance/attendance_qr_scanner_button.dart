@@ -42,6 +42,11 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
         label: resolved.resolvedLabel ?? '',
         isDisabled: resolved.isDisabled,
         onPressed: () async {
+          if (json['onAction'] != null) {
+            final actionsList =
+                List<Map<String, dynamic>>.from(json['onAction']);
+            await resolved.executeActions(actionsList, context);
+          }
           final scannerBloc = context.read<DigitScannerBloc>();
 
           scannerBloc.add(
@@ -51,13 +56,7 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
             ),
           );
           _openAttendanceScanner(context, compositeKey, registerId, attendees,
-              (scannedData) async {
-            if (json['onAction'] != null) {
-              final actionsList =
-                  List<Map<String, dynamic>>.from(json['onAction']);
-              await resolved.executeActions(actionsList, context);
-            }
-          });
+              (scannedData) async {});
         },
         type: WidgetParsers.parseButtonType(props['type']),
         size: WidgetParsers.parseButtonSize(props['size']),
@@ -114,8 +113,6 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
           if (result.isValid) {
             Map<String, dynamic> data = {
               "individualId": _getIndividualId(scannedData, attendeeModels),
-              "registerId": registerId,
-              "status": 1.0, // 1.0 for present
               "isMarkedManually": scannedData
                   .manualEntry, // indicate manual marking for present
               "qrCreatedTime": scannedData.qrCreatedTime,
@@ -185,10 +182,8 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
     String? compositeKey,
   ) async {
     final individualId = data['individualId']?.toString();
-    final registerId = data['registerId']?.toString();
-    final status = (data['status'] as num?)?.toDouble() ?? 1.0;
     final isMarkedManually = data['isMarkedManually'] as bool? ?? false;
-    final signatureData = data['signatureData'] as String?;
+    final qrCreatedTime = data['qrCreatedTime'] as int?;
 
     if (individualId == null || individualId.isEmpty) return;
     if (compositeKey == null) return;
@@ -201,29 +196,18 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
       widgetData['attendanceCollection'] as Map? ?? {},
     );
 
-    // Toggle logic matching _onIndividualAttendanceMark
-    final existing = collection[individualId];
-    final currentStatus =
-        existing is Map ? (existing['status'] as num?)?.toDouble() : null;
+    final attendanceQRCollection = Map<String, dynamic>.from(
+      widgetData['attendanceQRCollection'] as Map? ?? {},
+    );
 
-    final double finalStatus;
-    if (currentStatus == null || currentStatus == -1) {
-      finalStatus = status;
-    } else if (currentStatus == 1.0 && status == 1.0) {
-      finalStatus = 1.0; // already present, keep present
-    } else {
-      finalStatus = status;
-    }
-
-    collection[individualId] = {
-      'status': finalStatus,
-      'registerId': registerId,
-      'individualId': individualId,
-      'isMarkedManually': isMarkedManually,
-      'signatureData': signatureData,
+    collection[individualId] = "present";
+    attendanceQRCollection[individualId] = {
+      "isMarkedManually": isMarkedManually,
+      "qrCreatedTime": qrCreatedTime,
     };
-    widgetData['attendanceCollection'] = collection;
 
+    widgetData['attendanceCollection'] = collection;
+    widgetData['attendanceQRCollection'] = attendanceQRCollection;
     if (currentState != null) {
       final updatedState = currentState.copyWith(
         widgetData: widgetData,
