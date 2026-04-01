@@ -34,45 +34,6 @@ final dynamic markAttendanceFlow = {
         "type": "SEARCH_EVENT"
       }
     },
-    // {
-    //   "actionType": "OPEN_POPUP",
-    //   "properties": {
-    //     "popupConfig": {
-    //       "title": "LABEL_MARK_ATTENDANCE",
-    //       "showCloseButton": true,
-    //       "barrierDismissible": true,
-    //       "waitForContextKeys": ["stateWrapper.0.AttendanceRegisterModel"],
-    //       "conditions": [
-    //         {"type": "notNull", "key": "stateWrapper.0.AttendanceRegisterModel"}
-    //       ],
-    //       "waitTimeoutMs": 5000,
-    //       "waitPollIntervalMs": 100,
-    //       "body": [
-    //         {
-    //           "type": "template",
-    //           "format": "textTemplate",
-    //           "value":
-    //               "{{contextData.stateWrapper.AttendanceRegisterModel.id}}",
-    //         }
-    //       ],
-    //       "footerActions": [
-    //         {
-    //           "format": "button",
-    //           "type": "template",
-    //           "label": "CORE_COMMON_GO_BACK",
-    //           "properties": {
-    //             "type": "secondary",
-    //             "size": "small",
-    //             "mainAxisAlignment": "center"
-    //           },
-    //           "onAction": [
-    //             {"actionType": "CLOSE_POPUP", "properties": {}}
-    //           ]
-    //         }
-    //       ]
-    //     }
-    //   }
-    // },
   ],
   "wrapperConfig": {
     "filters": [],
@@ -138,7 +99,18 @@ final dynamic markAttendanceFlow = {
         "mainAxisSize": "max",
         "mainAxisAlignment": "center"
       },
-      "onAction": []
+      "onAction": [
+        {
+          "actionType": "CLEAR_STATE",
+          "properties": {
+            "widgetKeys": [
+              "attendanceCollection",
+              "attendanceManualData",
+              "signatureCollection"
+            ],
+          }
+        },
+      ]
     },
     {
       "disabled":
@@ -276,7 +248,7 @@ final dynamic markAttendanceFlow = {
             "widgetKeys": [
               "attendanceCollection",
               "attendanceManualData",
-              "signatureCapture"
+              "signatureCollection"
             ],
           }
         },
@@ -304,7 +276,7 @@ final dynamic markAttendanceFlow = {
             "widgetKeys": [
               "attendanceCollection",
               "attendanceManualData",
-              "signatureCapture"
+              "signatureCollection"
             ],
           }
         },
@@ -621,7 +593,8 @@ final dynamic markAttendanceFlow = {
             "label": "SIGNATURE",
             "prefixIcon": "EditSquare",
             "properties": {
-              "type": "secondary",
+              "color": "{{fn:buttonColor(widgetData, item)}}",
+              "type": "{{fn:buttonType(widgetData, item)}}",
               "selectedType": "primary",
               "size": "small",
               "mainAxisAlignment": "center"

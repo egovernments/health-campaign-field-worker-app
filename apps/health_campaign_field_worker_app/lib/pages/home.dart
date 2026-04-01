@@ -655,6 +655,62 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
     });
 
+    FunctionRegistry.register('buttonColor', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final attendee = args.length > 1 ? args[1] : null;
+
+      double? currentStatus;
+
+      final individualId = attendee?["individualId"];
+
+      var attendanceCollectionData =
+          widgetData["attendanceCollection"]?[individualId];
+
+      if (attendanceCollectionData == 'present') {
+        currentStatus = 1.0;
+      } else if (attendanceCollectionData == 'absent') {
+        currentStatus = 0.0;
+      }
+
+      var status = currentStatus ?? attendee?['status'] ?? -1.0;
+
+      if (status == 1.0) {
+        return "green";
+      } else if (status == 0.0) {
+        return "red";
+      } else if (status == -1.0) {
+        return null;
+      }
+    });
+
+    FunctionRegistry.register('buttonType', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final attendee = args.length > 1 ? args[1] : null;
+
+      double? currentStatus;
+
+      final individualId = attendee?["individualId"];
+
+      var attendanceCollectionData =
+          widgetData["attendanceCollection"]?[individualId];
+
+      if (attendanceCollectionData == 'present') {
+        currentStatus = 1.0;
+      } else if (attendanceCollectionData == 'absent') {
+        currentStatus = 0.0;
+      }
+
+      var status = currentStatus ?? attendee?['status'] ?? -1.0;
+
+      if (status == 1.0) {
+        return "primary";
+      } else if (status == 0.0) {
+        return "primary";
+      } else if (status == -1.0) {
+        return "secondary";
+      }
+    });
+
     FunctionRegistry.register('hideMarkAttendanceButtons', (args, stateData) {
       final widgetData = args.isNotEmpty ? args[0] : null;
       final attendee = args.length > 1 ? args[1] : null;
@@ -1148,6 +1204,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       final attendanceCollection = widgetData['attendanceCollection'] as Map?;
       final signatureCollection = widgetData['signatureCollection'] as Map?;
+      final attendanceQRCollection =
+          widgetData['attendanceQRCollection'] as Map?;
 
       final comment = widgetData['COMMENT'] as String?;
       final isMorning = widgetData['sessionToggle'] as bool? ?? true;
@@ -1212,7 +1270,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 false;
         final signatureData =
             signatureCollection?[individualId]?['signatureData'] as String?;
-        // final qrCreatedTime = data['qrCreatedTime'] as int?;
+        final qrCreatedTime =
+            attendanceQRCollection?[individualId]?['qrCreatedTime'] as int?;
+
         final logStatus = isPresent
             ? EnumValues.active.toValue()
             : EnumValues.inactive.toValue();
@@ -1221,7 +1281,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         final additionalDetails = <String, dynamic>{
           if (boundaryCode.isNotEmpty)
             EnumValues.boundaryCode.toValue(): boundaryCode,
-          // if (qrCreatedTime != null) 'qrCreatedTime': qrCreatedTime,
+          if (qrCreatedTime != null) 'qrCreatedTime': qrCreatedTime,
           if (isFirstSignature)
             'isFirstSignature': isFirstSignature ? "true" : "false",
           if (signatureData != null) 'signatureData': signatureData,

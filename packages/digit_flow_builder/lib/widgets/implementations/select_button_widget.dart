@@ -102,12 +102,12 @@ class SelectButtonWidget extends ResolvedFlowWidget {
         type: WidgetParsers.parseButtonType(
             isSelected || (selectedData != null && selectedData == fieldValue)
                 ? props['selectedType']
-                : props['type']),
+                : resolved.resolveField(props['type'])),
         size: WidgetParsers.parseButtonSize(props['size']),
         digitButtonThemeData: DigitButtonThemeData(
           primaryDigitButtonColor: DigitButtonThemeData.defaultTheme(context)
               .primaryDigitButtonColor,
-          DigitButtonColor: colorMap[props["color"]] ??
+          DigitButtonColor: colorMap[resolved.resolveField(props["color"])] ??
               DigitButtonThemeData.defaultTheme(context).DigitButtonColor,
           disabledColor:
               DigitButtonThemeData.defaultTheme(context).disabledColor,
