@@ -51,8 +51,8 @@ class SelectButtonWidget extends ResolvedFlowWidget {
 
     if ((fieldKey == null || fieldValue == null) &&
         selectionConditions == null) {
-      throw Exception(
-          'fieldKey and fieldValue are required for selectButton widget');
+      return const SizedBox
+          .shrink(); // If required data for selection is not provided, return empty widget.
     }
 
     return WidgetStateContext.reactive(context, (ctx, state) {
@@ -65,70 +65,66 @@ class SelectButtonWidget extends ResolvedFlowWidget {
             false;
       }
 
-      return WidgetParsers.wrapWithBottomGap(
-        DigitButton(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          label: resolved.resolvedLabel ?? '',
-          isDisabled: resolved.isDisabled,
-          onPressed: () async {
-            // Show popup if popupConfig is provided
-            if (popupConfig != null) {
-              // Execute onOpenAction before showing popup
-              final onOpenActions =
-                  popupConfig['onOpenAction'] as List<dynamic>?;
-              if (onOpenActions != null) {
-                for (var raw in onOpenActions) {
-                  if (raw is Map<String, dynamic>) {
-                    final action = ActionConfig.fromJson(raw);
-                    onAction(action);
-                  }
+      return DigitButton(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        label: resolved.resolvedLabel ?? '',
+        isDisabled: resolved.isDisabled,
+        onPressed: () async {
+          // Show popup if popupConfig is provided
+          if (popupConfig != null) {
+            // Execute onOpenAction before showing popup
+            final onOpenActions = popupConfig['onOpenAction'] as List<dynamic>?;
+            if (onOpenActions != null) {
+              for (var raw in onOpenActions) {
+                if (raw is Map<String, dynamic>) {
+                  final action = ActionConfig.fromJson(raw);
+                  onAction(action);
                 }
               }
-              await _showActionPopup(context, popupConfig, onAction, screenKey,
-                  stateData, item, listIndex, compositeKey);
             }
-            if (json['onAction'] != null) {
-              final actionsList =
-                  List<Map<String, dynamic>>.from(json['onAction']);
-              await resolved.executeActions(actionsList, context);
+            await _showActionPopup(context, popupConfig, onAction, screenKey,
+                stateData, item, listIndex, compositeKey);
+          }
+          if (json['onAction'] != null) {
+            final actionsList =
+                List<Map<String, dynamic>>.from(json['onAction']);
+            await resolved.executeActions(actionsList, context);
+          }
+          if (selectionConditions == null) {
+            if (groupKey != null) {
+              state.updateWidgetData(groupKey,
+                  {...?state.widgetData[groupKey], fieldKey: fieldValue});
+            } else {
+              state.updateWidgetData(fieldKey!, fieldValue);
             }
-            if (selectionConditions == null) {
-              if (groupKey != null) {
-                state.updateWidgetData(groupKey,
-                    {...?state.widgetData[groupKey], fieldKey: fieldValue});
-              } else {
-                state.updateWidgetData(fieldKey!, fieldValue);
-              }
-            }
-          },
-          type: WidgetParsers.parseButtonType(
-              isSelected || (selectedData != null && selectedData == fieldValue)
-                  ? props['selectedType']
-                  : props['type']),
-          size: WidgetParsers.parseButtonSize(props['size']),
-          digitButtonThemeData: DigitButtonThemeData(
-            primaryDigitButtonColor: DigitButtonThemeData.defaultTheme(context)
-                .primaryDigitButtonColor,
-            DigitButtonColor: colorMap[props["color"]] ??
-                DigitButtonThemeData.defaultTheme(context).DigitButtonColor,
-            disabledColor:
-                DigitButtonThemeData.defaultTheme(context).disabledColor,
-            radius: BorderRadius.circular(spacer3),
-            largeRadius: BorderRadius.circular(spacer3),
-            smallMediumRadius: BorderRadius.circular(spacer3),
-            padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
-          ),
-          mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
-          mainAxisAlignment:
-              WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
-          suffixIcon: json['suffixIcon'] != null
-              ? DigitIconMapping.getIcon(json['suffixIcon'])
-              : null,
-          prefixIcon: json['prefixIcon'] != null
-              ? DigitIconMapping.getIcon(json['prefixIcon'])
-              : null,
+          }
+        },
+        type: WidgetParsers.parseButtonType(
+            isSelected || (selectedData != null && selectedData == fieldValue)
+                ? props['selectedType']
+                : props['type']),
+        size: WidgetParsers.parseButtonSize(props['size']),
+        digitButtonThemeData: DigitButtonThemeData(
+          primaryDigitButtonColor: DigitButtonThemeData.defaultTheme(context)
+              .primaryDigitButtonColor,
+          DigitButtonColor: colorMap[props["color"]] ??
+              DigitButtonThemeData.defaultTheme(context).DigitButtonColor,
+          disabledColor:
+              DigitButtonThemeData.defaultTheme(context).disabledColor,
+          radius: BorderRadius.circular(spacer3),
+          largeRadius: BorderRadius.circular(spacer3),
+          smallMediumRadius: BorderRadius.circular(spacer3),
+          padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
         ),
-        props,
+        mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
+        mainAxisAlignment:
+            WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
+        suffixIcon: json['suffixIcon'] != null
+            ? DigitIconMapping.getIcon(json['suffixIcon'])
+            : null,
+        prefixIcon: json['prefixIcon'] != null
+            ? DigitIconMapping.getIcon(json['prefixIcon'])
+            : null,
       );
     });
   }
