@@ -139,6 +139,10 @@ class __$$StockDownSyncGetBatchSizeEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncGetBatchSizeEventImpl
+<<<<<<< HEAD
+=======
+    with DiagnosticableTreeMixin
+>>>>>>> upstream/nigeria-product-changes
     implements StockDownSyncGetBatchSizeEvent {
   const _$StockDownSyncGetBatchSizeEventImpl(
       {required final List<AppConfiguration> appConfiguration,
@@ -158,11 +162,27 @@ class _$StockDownSyncGetBatchSizeEventImpl
   final String projectId;
 
   @override
+<<<<<<< HEAD
   String toString() {
+=======
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncEvent.getBatchSize(appConfiguration: $appConfiguration, projectId: $projectId)';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncEvent.getBatchSize'))
+      ..add(DiagnosticsProperty('appConfiguration', appConfiguration))
+      ..add(DiagnosticsProperty('projectId', projectId));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -326,6 +346,10 @@ class __$$StockDownSyncCheckTotalCountEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncCheckTotalCountEventImpl
+<<<<<<< HEAD
+=======
+    with DiagnosticableTreeMixin
+>>>>>>> upstream/nigeria-product-changes
     implements StockDownSyncCheckTotalCountEvent {
   const _$StockDownSyncCheckTotalCountEventImpl(
       {required this.projectId, required this.batchSize});
@@ -336,11 +360,27 @@ class _$StockDownSyncCheckTotalCountEventImpl
   final int batchSize;
 
   @override
+<<<<<<< HEAD
   String toString() {
+=======
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncEvent.checkTotalCount(projectId: $projectId, batchSize: $batchSize)';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncEvent.checkTotalCount'))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('batchSize', batchSize));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -507,7 +547,13 @@ class __$$StockDownSyncDownloadEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
+<<<<<<< HEAD
 class _$StockDownSyncDownloadEventImpl implements StockDownSyncDownloadEvent {
+=======
+class _$StockDownSyncDownloadEventImpl
+    with DiagnosticableTreeMixin
+    implements StockDownSyncDownloadEvent {
+>>>>>>> upstream/nigeria-product-changes
   const _$StockDownSyncDownloadEventImpl(
       {required this.projectId,
       required this.batchSize,
@@ -521,11 +567,28 @@ class _$StockDownSyncDownloadEventImpl implements StockDownSyncDownloadEvent {
   final int initialServerCount;
 
   @override
+<<<<<<< HEAD
   String toString() {
+=======
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncEvent.downloadStock(projectId: $projectId, batchSize: $batchSize, initialServerCount: $initialServerCount)';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncEvent.downloadStock'))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('initialServerCount', initialServerCount));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -672,15 +735,33 @@ class __$$StockDownSyncResetStateEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncResetStateEventImpl
+<<<<<<< HEAD
+=======
+    with DiagnosticableTreeMixin
+>>>>>>> upstream/nigeria-product-changes
     implements StockDownSyncResetStateEvent {
   const _$StockDownSyncResetStateEventImpl();
 
   @override
+<<<<<<< HEAD
   String toString() {
+=======
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncEvent.resetState()';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'StockDownSyncEvent.resetState'));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -932,18 +1013,38 @@ class __$$StockDownSyncLoadingStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
+<<<<<<< HEAD
 class _$StockDownSyncLoadingStateImpl extends _StockDownSyncLoadingState {
+=======
+class _$StockDownSyncLoadingStateImpl extends _StockDownSyncLoadingState
+    with DiagnosticableTreeMixin {
+>>>>>>> upstream/nigeria-product-changes
   const _$StockDownSyncLoadingStateImpl(this.isPop) : super._();
 
   @override
   final bool isPop;
 
   @override
+<<<<<<< HEAD
   String toString() {
+=======
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncState.loading(isPop: $isPop)';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncState.loading'))
+      ..add(DiagnosticsProperty('isPop', isPop));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -1132,7 +1233,11 @@ class __$$StockDownSyncGetBatchSizeStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncGetBatchSizeStateImpl
+<<<<<<< HEAD
     extends _StockDownSyncGetBatchSizeState {
+=======
+    extends _StockDownSyncGetBatchSizeState with DiagnosticableTreeMixin {
+>>>>>>> upstream/nigeria-product-changes
   const _$StockDownSyncGetBatchSizeStateImpl(this.batchSize, this.projectId)
       : super._();
 
@@ -1142,11 +1247,27 @@ class _$StockDownSyncGetBatchSizeStateImpl
   final String projectId;
 
   @override
+<<<<<<< HEAD
   String toString() {
+=======
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncState.getBatchSize(batchSize: $batchSize, projectId: $projectId)';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncState.getBatchSize'))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('projectId', projectId));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -1352,7 +1473,12 @@ class __$$StockDownSyncDataFoundStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
+<<<<<<< HEAD
 class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
+=======
+class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState
+    with DiagnosticableTreeMixin {
+>>>>>>> upstream/nigeria-product-changes
   const _$StockDownSyncDataFoundStateImpl(
       this.initialServerCount, this.batchSize, this.offset, this.lastSyncedTime)
       : super._();
@@ -1367,11 +1493,29 @@ class _$StockDownSyncDataFoundStateImpl extends _StockDownSyncDataFoundState {
   final int? lastSyncedTime;
 
   @override
+<<<<<<< HEAD
   String toString() {
+=======
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncState.dataFound(initialServerCount: $initialServerCount, batchSize: $batchSize, offset: $offset, lastSyncedTime: $lastSyncedTime)';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncState.dataFound'))
+      ..add(DiagnosticsProperty('initialServerCount', initialServerCount))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('offset', offset))
+      ..add(DiagnosticsProperty('lastSyncedTime', lastSyncedTime));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -1573,7 +1717,12 @@ class __$$StockDownSyncInProgressStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
+<<<<<<< HEAD
 class _$StockDownSyncInProgressStateImpl extends _StockDownSyncInProgressState {
+=======
+class _$StockDownSyncInProgressStateImpl extends _StockDownSyncInProgressState
+    with DiagnosticableTreeMixin {
+>>>>>>> upstream/nigeria-product-changes
   const _$StockDownSyncInProgressStateImpl(this.syncedCount, this.totalCount)
       : super._();
 
@@ -1583,11 +1732,27 @@ class _$StockDownSyncInProgressStateImpl extends _StockDownSyncInProgressState {
   final int totalCount;
 
   @override
+<<<<<<< HEAD
   String toString() {
+=======
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncState.inProgress(syncedCount: $syncedCount, totalCount: $totalCount)';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncState.inProgress'))
+      ..add(DiagnosticsProperty('syncedCount', syncedCount))
+      ..add(DiagnosticsProperty('totalCount', totalCount));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -1782,7 +1947,12 @@ class __$$StockDownSyncSuccessStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
+<<<<<<< HEAD
 class _$StockDownSyncSuccessStateImpl extends _StockDownSyncSuccessState {
+=======
+class _$StockDownSyncSuccessStateImpl extends _StockDownSyncSuccessState
+    with DiagnosticableTreeMixin {
+>>>>>>> upstream/nigeria-product-changes
   const _$StockDownSyncSuccessStateImpl(this.syncedCount, this.totalCount)
       : super._();
 
@@ -1792,11 +1962,27 @@ class _$StockDownSyncSuccessStateImpl extends _StockDownSyncSuccessState {
   final int totalCount;
 
   @override
+<<<<<<< HEAD
   String toString() {
+=======
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncState.success(syncedCount: $syncedCount, totalCount: $totalCount)';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'StockDownSyncState.success'))
+      ..add(DiagnosticsProperty('syncedCount', syncedCount))
+      ..add(DiagnosticsProperty('totalCount', totalCount));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -1969,15 +2155,33 @@ class __$$StockDownSyncFailureStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
+<<<<<<< HEAD
 class _$StockDownSyncFailureStateImpl extends _StockDownSyncFailureState {
   const _$StockDownSyncFailureStateImpl() : super._();
 
   @override
   String toString() {
+=======
+class _$StockDownSyncFailureStateImpl extends _StockDownSyncFailureState
+    with DiagnosticableTreeMixin {
+  const _$StockDownSyncFailureStateImpl() : super._();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncState.failed()';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'StockDownSyncState.failed'));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -2132,15 +2336,34 @@ class __$$StockDownSyncInsufficientStorageStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncInsufficientStorageStateImpl
+<<<<<<< HEAD
     extends _StockDownSyncInsufficientStorageState {
   const _$StockDownSyncInsufficientStorageStateImpl() : super._();
 
   @override
   String toString() {
+=======
+    extends _StockDownSyncInsufficientStorageState
+    with DiagnosticableTreeMixin {
+  const _$StockDownSyncInsufficientStorageStateImpl() : super._();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncState.insufficientStorage()';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty('type', 'StockDownSyncState.insufficientStorage'));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -2297,15 +2520,33 @@ class __$$StockDownSyncCountCheckFailedStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StockDownSyncCountCheckFailedStateImpl
+<<<<<<< HEAD
     extends _StockDownSyncCountCheckFailedState {
   const _$StockDownSyncCountCheckFailedStateImpl() : super._();
 
   @override
   String toString() {
+=======
+    extends _StockDownSyncCountCheckFailedState with DiagnosticableTreeMixin {
+  const _$StockDownSyncCountCheckFailedStateImpl() : super._();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncState.totalCountCheckFailed()';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty(
+        'type', 'StockDownSyncState.totalCountCheckFailed'));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -2460,15 +2701,34 @@ class __$$StockDownSyncResetStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
+<<<<<<< HEAD
 class _$StockDownSyncResetStateImpl extends _StockDownSyncResetState {
   const _$StockDownSyncResetStateImpl() : super._();
 
   @override
   String toString() {
+=======
+class _$StockDownSyncResetStateImpl extends _StockDownSyncResetState
+    with DiagnosticableTreeMixin {
+  const _$StockDownSyncResetStateImpl() : super._();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+>>>>>>> upstream/nigeria-product-changes
     return 'StockDownSyncState.resetState()';
   }
 
   @override
+<<<<<<< HEAD
+=======
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'StockDownSyncState.resetState'));
+  }
+
+  @override
+>>>>>>> upstream/nigeria-product-changes
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&

@@ -63,6 +63,9 @@ class PropertySchema with _$PropertySchema {
     @JsonKey(fromJson: _autoFillConditionListOrNull)
     List<AutoFillCondition>? autoFillCondition,
     @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
+    // Secondary action alert popup (e.g., for reject confirmation with comment)
+    @JsonKey(fromJson: _showSecondaryAlertOrNull)
+    ShowSecondaryAlertPopUp? showSecondaryAlertPopUp,
     // Multi-entity tab configuration
     @JsonKey(fromJson: _multiEntityConfigOrNull)
     MultiEntityConfig? multiEntityConfig,
@@ -181,6 +184,36 @@ class ShowAlertPopUp with _$ShowAlertPopUp {
 
   factory ShowAlertPopUp.fromJson(Map<String, dynamic> json) =>
       _$ShowAlertPopUpFromJson(json);
+}
+
+@freezed
+class ShowSecondaryAlertPopUp with _$ShowSecondaryAlertPopUp {
+  const factory ShowSecondaryAlertPopUp({
+    required String title,
+    String? description,
+    required String primaryActionLabel,
+    required String secondaryActionLabel,
+    List<AlertCondition>? conditions,
+    // Body fields for form inputs inside the popup (e.g., mandatory comment)
+    List<SecondaryAlertBodyField>? body,
+  }) = _ShowSecondaryAlertPopUp;
+
+  factory ShowSecondaryAlertPopUp.fromJson(Map<String, dynamic> json) =>
+      _$ShowSecondaryAlertPopUpFromJson(json);
+}
+
+@freezed
+class SecondaryAlertBodyField with _$SecondaryAlertBodyField {
+  const factory SecondaryAlertBodyField({
+    required String type,
+    required String label,
+    String? format,
+    required String fieldName,
+    @Default(false) bool mandatory,
+  }) = _SecondaryAlertBodyField;
+
+  factory SecondaryAlertBodyField.fromJson(Map<String, dynamic> json) =>
+      _$SecondaryAlertBodyFieldFromJson(json);
 }
 
 @freezed
@@ -318,6 +351,13 @@ List<AutoFillCondition>? _autoFillConditionListOrNull(dynamic value) {
 ShowAlertPopUp? _showAlertOrNull(dynamic value) {
   if (value is Map && value.isNotEmpty) {
     return ShowAlertPopUp.fromJson(Map<String, dynamic>.from(value));
+  }
+  return null;
+}
+
+ShowSecondaryAlertPopUp? _showSecondaryAlertOrNull(dynamic value) {
+  if (value is Map && value.isNotEmpty) {
+    return ShowSecondaryAlertPopUp.fromJson(Map<String, dynamic>.from(value));
   }
   return null;
 }

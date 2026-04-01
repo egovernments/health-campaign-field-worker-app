@@ -24,7 +24,7 @@ class HFReferralRemoteRepository
     HFReferralSearchModel query, {
     int? offSet,
     int? limit,
-    int? lastChangedSince,
+    int? lastSyncedTime,
   }) async {
     Response response;
 
@@ -36,8 +36,7 @@ class HFReferralRemoteRepository
             queryParameters: {
               'offset': offSet ?? 0,
               'limit': limit ?? 100,
-              if (lastChangedSince != null)
-                'lastChangedSince': lastChangedSince,
+              if (lastSyncedTime != null) 'lastChangedSince': lastSyncedTime,
               'tenantId': DigitDataModelSingleton().tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
             },

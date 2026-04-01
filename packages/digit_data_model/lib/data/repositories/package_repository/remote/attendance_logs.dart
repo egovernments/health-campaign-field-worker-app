@@ -22,7 +22,7 @@ class AttendanceLogRemoteRepository
     AttendanceLogSearchModel query, {
     int? offSet,
     int? limit,
-    int? lastChangedSince,
+    int? lastSyncedTime,
   }) async {
     Response response;
 

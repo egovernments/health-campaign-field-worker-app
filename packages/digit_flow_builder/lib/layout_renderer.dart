@@ -103,7 +103,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
     // Skip if not scrollable or already loading
     final isLoading =
         FlowCrudStateRegistry().get(compositeKey)?.isLoading ?? false;
-    debugPrint('ScrollListener: ScrollUpdate - maxExtent=${metrics.maxScrollExtent}, '
+    debugPrint(
+        'ScrollListener: ScrollUpdate - maxExtent=${metrics.maxScrollExtent}, '
         'pixels=${metrics.pixels}, isLoading=$isLoading, triggerMode=$_triggerMode, '
         'compositeKey=$compositeKey');
     if (metrics.maxScrollExtent == 0 || isLoading) return false;
@@ -295,12 +296,33 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
               children: [
                 Scaffold(
                   body: ScrollableContent(
-                  header: headers.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                              top: spacer4, left: spacer4),
-                          child: Row(
-                            children: headers
+                    header: headers.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                                top: spacer4, left: spacer4),
+                            child: Row(
+                              children: headers
+                                  .map((e) => LayoutMapper.map(
+                                        preprocessConfigWithState(e, stateData),
+                                        stateData,
+                                        context,
+                                        screenKey: screenKey,
+                                        (action) {
+                                          ActionHandler.execute(
+                                              action, context, {
+                                            'wrappers': const [],
+                                            '_compositeKey': compositeKey,
+                                          });
+                                        },
+                                      ))
+                                  .toList(),
+                            ),
+                          )
+                        : null,
+                    enableFixedDigitButton: actions.isNotEmpty ? true : false,
+                    footer: actions.isNotEmpty
+                        ? DigitCard(
+                            children: actions
                                 .map((e) => LayoutMapper.map(
                                       preprocessConfigWithState(e, stateData),
                                       stateData,
@@ -314,78 +336,72 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                       },
                                     ))
                                 .toList(),
-                          ),
-                        )
-                      : null,
-                  enableFixedDigitButton: actions.isNotEmpty ? true : false,
-                  footer: actions.isNotEmpty
-                      ? DigitCard(
-                          children: actions
-                              .map((e) => LayoutMapper.map(
-                                    preprocessConfigWithState(e, stateData),
-                                    stateData,
-                                    context,
-                                    screenKey: screenKey,
-                                    (action) {
-                                      ActionHandler.execute(action, context, {
-                                        'wrappers': const [],
-                                        '_compositeKey': compositeKey,
-                                      });
-                                    },
-                                  ))
-                              .toList(),
-                        )
-                      : null,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(spacer4),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Tag(
-                            label: localizations.translate(FlowBuilderSingleton().boundary?.code ?? ""),
-                            isIcon: true,
-                            customTextStyle: Theme.of(context).digitTextTheme(context).bodyS.copyWith(
-                              color: Theme.of(context).colorTheme.alert.info
+                          )
+                        : null,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(spacer4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Tag(
+                              label: localizations.translate(
+                                  FlowBuilderSingleton().boundary?.code ?? ""),
+                              isIcon: true,
+                              customTextStyle: Theme.of(context)
+                                  .digitTextTheme(context)
+                                  .bodyS
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorTheme
+                                          .alert
+                                          .info),
+                              type: TagType.monochrome,
+                              customIcon: Icon(
+                                Icons.location_on_outlined,
+                                color: Theme.of(context).colorTheme.alert.info,
+                                size: 16,
+                              ),
+                              themeData: TagThemeData(
+                                  monochromeBackgroundColor:
+                                      Theme.of(context).colorTheme.alert.infoBg,
+                                  iconLabelGap: spacer1),
                             ),
-                            type: TagType.monochrome,
-                            customIcon: Icon(Icons.location_on_outlined, color: Theme.of(context).colorTheme.alert.info, size: 16,),
-                            themeData: TagThemeData(
-                              monochromeBackgroundColor: Theme.of(context).colorTheme.alert.infoBg,
-                              iconLabelGap: spacer1
+                            const SizedBox(height: spacer2),
+                            DigitTextBlock(
+                              padding: EdgeInsets.zero,
+                              heading: (widget.config['heading'] != null &&
+                                      localizations
+                                          .translate(widget.config['heading'])
+                                          .trim()
+                                          .isNotEmpty)
+                                  ? localizations
+                                      .translate(widget.config['heading'])
+                                  : null,
+                              headingStyle: Theme.of(context)
+                                  .digitTextTheme(context)
+                                  .headingXl
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorTheme
+                                          .primary
+                                          .primary2),
+                              description: (widget.config['description'] !=
+                                          null &&
+                                      localizations
+                                          .translate(
+                                              widget.config['description'])
+                                          .trim()
+                                          .isNotEmpty)
+                                  ? localizations
+                                      .translate(widget.config['description'])
+                                  : null,
                             ),
-                          ),
-                          DigitTextBlock(
-                            padding: EdgeInsets.zero,
-                            heading: (widget.config['heading'] != null &&
-                                    localizations
-                                        .translate(widget.config['heading']).trim()
-                                        .isNotEmpty)
-                                ? localizations
-                                    .translate(widget.config['heading'])
-                                : null,
-                            headingStyle: Theme.of(context)
-                                .digitTextTheme(context)
-                                .headingXl
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .colorTheme
-                                        .primary
-                                        .primary2),
-                            description: (widget.config['description'] !=
-                                        null &&
-                                    localizations
-                                        .translate(widget.config['description']).trim()
-                                        .isNotEmpty)
-                                ? localizations
-                                    .translate(widget.config['description'])
-                                : null,
-                          ),
-                          const SizedBox(height: 16),
-                          ...body
-                              .map((e) {
-                                final processed =
-                                    preprocessConfigWithState(e, stateData);
+                            const SizedBox(height: 16),
+                            ...body
+                                .map((e) {
+                                  final processed =
+                                      preprocessConfigWithState(e, stateData);
 
                                   return CrudItemContext(
                                     stateData: stateData,

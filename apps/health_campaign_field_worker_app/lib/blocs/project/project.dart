@@ -17,7 +17,6 @@ import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
-import '../../data/repositories/remote/notification_token.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
@@ -25,11 +24,10 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
-import '../../data/repositories/remote/notification_token.dart';
+import '../push_notification/push_notification.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
-import '../../notification_service.dart';
 import '../../utils/background_service.dart';
 import '../../utils/download_image.dart';
 import '../../models/entities/transaction_type.dart';
@@ -416,39 +414,22 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         .toList();
 
     if (currentFacilityIds.isNotEmpty) {
-      final fcmToken = await NotificationService.getStoredFcmToken();
-      if (fcmToken != null && fcmToken.isNotEmpty) {
-        await _registerNotificationToken(fcmToken, currentFacilityIds);
-      }
-    }
-  }
-
-  /// Registers the Firebase notification token with the assigned facility IDs.
-  Future<void> _registerNotificationToken(
-    String token,
-    List<String> facilityIds,
-  ) async {
-    final serviceRegistry = await isar.serviceRegistrys.where().findAll();
-    final apiEndPoint = Constants.getEndPoint(
-      serviceRegistry: serviceRegistry,
-      service: 'NOTIFICATION',
-      action: ApiOperation.register.toValue(),
-      entityName: 'NotificationToken',
-    );
-
-    if (apiEndPoint.isEmpty) {
-      debugPrint('NotificationToken: No endpoint found in service registry');
-      return;
-    }
-
-    try {
-      await notificationTokenRepository.registerToken(
-        apiEndPoint: apiEndPoint,
-        token: token,
-        facilityIds: facilityIds,
+      final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+      final apiEndPoint = Constants.getEndPoint(
+        serviceRegistry: serviceRegistry,
+        service: 'NOTIFICATION',
+        action: ApiOperation.register.toValue(),
+        entityName: 'NotificationToken',
       );
-    } catch (e) {
-      debugPrint('Failed to register notification token');
+
+      if (apiEndPoint.isNotEmpty) {
+        context.read<PushNotificationBloc>().add(
+              PushNotificationEvent.registerToken(
+                apiEndPoint: apiEndPoint,
+                facilityIds: currentFacilityIds,
+              ),
+            );
+      }
     }
   }
 

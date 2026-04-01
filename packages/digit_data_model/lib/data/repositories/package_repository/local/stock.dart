@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
@@ -50,6 +51,7 @@ class StockLocalRepository
             clientReferenceId: e.clientReferenceId,
             isDeleted: e.isDeleted,
             rowVersion: e.rowVersion,
+            additionalFields: _parseAdditionalFields(e.additionalFields),
             auditDetails: createdTime == null || createdBy == null
                 ? null
                 : AuditDetails(createdTime: createdTime, createdBy: createdBy),
@@ -154,6 +156,7 @@ class StockLocalRepository
           clientReferenceId: data.clientReferenceId,
           isDeleted: data.isDeleted,
           rowVersion: data.rowVersion,
+          additionalFields: _parseAdditionalFields(data.additionalFields),
           auditDetails: createdTime == null || createdBy == null
               ? null
               : AuditDetails(createdTime: createdTime, createdBy: createdBy),
@@ -208,6 +211,17 @@ class StockLocalRepository
         );
       });
     });
+  }
+
+  StockAdditionalFields? _parseAdditionalFields(String? jsonStr) {
+    if (jsonStr == null || jsonStr.isEmpty) return null;
+    try {
+      final map = jsonDecode(jsonStr);
+      if (map is Map<String, dynamic>) {
+        return StockAdditionalFieldsMapper.fromMap(map);
+      }
+    } catch (_) {}
+    return null;
   }
 
   @override

@@ -38,6 +38,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
 
     return DigitButton(
       isDisabled: resolved.isDisabled,
+      capitalizeLetters: false,
       mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
       mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
       label: localization?.translate(json['label']) ?? json['label'] ?? '',

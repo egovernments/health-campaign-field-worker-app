@@ -230,9 +230,16 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
           child: Center(
             child: Text(
               localizations.translate(i18.home.stockBalanceLabel),
+<<<<<<< HEAD
               style: theme.digitTextTheme(context).bodyL.copyWith(
                 color: theme.colorTheme.text.primary
               ),
+=======
+              style: theme
+                  .digitTextTheme(context)
+                  .bodyL
+                  .copyWith(color: theme.colorTheme.text.primary),
+>>>>>>> upstream/nigeria-product-changes
             ),
           ),
         ),

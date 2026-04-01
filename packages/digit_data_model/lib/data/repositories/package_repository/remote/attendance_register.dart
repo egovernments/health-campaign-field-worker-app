@@ -22,7 +22,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
     AttendanceRegisterSearchModel query, {
     int? offSet,
     int? limit,
-    int? lastChangedSince,
+    int? lastSyncedTime,
   }) async {
     Response response;
 
