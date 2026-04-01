@@ -552,53 +552,55 @@ final dynamic markAttendanceFlow = {
             "format": "textTemplate",
             "value": "{{fn:attendanceStatus(widgetData, item)}}",
           },
-          {
-            "type": "template",
-            "format": "customRow",
-            "hide":
-                "{{fn:hideMarkAttendanceButtons(widgetData, item, contextData.0.AttendanceRegisterModel)}}",
-            "properties": {
-              "mainAxisAlignment": "start",
-              "crossAxisAlignment": "stretch",
-              "spacing": "spacer2"
-            },
-            "children": [
-              {
-                "fieldKey": "{{item.individualId}}",
-                "fieldValue": "present",
-                "groupKey": "attendanceCollection",
-                "type": "template",
-                "format": "selectButton",
-                "label": "PRESENT",
-                "prefixIcon": "Check",
-                "properties": {
-                  "color": "green",
-                  "type": "secondary",
-                  "selectedType": "primary",
-                  "size": "small",
-                  "mainAxisAlignment": "center"
-                },
-                "onAction": []
-              },
-              {
-                "fieldKey": "{{item.individualId}}",
-                "fieldValue": "absent",
-                "groupKey": "attendanceCollection",
-                "type": "template",
-                "format": "selectButton",
-                "label": "ABSENT",
-                "prefixIcon": "Close",
-                "properties": {
-                  "color": "red",
-                  "type": "secondary",
-                  "selectedType": "primary",
-                  "size": "small",
-                  "mainAxisAlignment": "center"
-                },
-                "onAction": []
-              }
-            ]
-          },
+          // Manual Buttons
+          // {
+          //   "type": "template",
+          //   "format": "customRow",
+          //   "hide":
+          //       "{{fn:hideMarkAttendanceButtons(widgetData, item, contextData.0.AttendanceRegisterModel)}}",
+          //   "properties": {
+          //     "mainAxisAlignment": "start",
+          //     "crossAxisAlignment": "stretch",
+          //     "spacing": "spacer2"
+          //   },
+          //   "children": [
+          //     {
+          //       "fieldKey": "{{item.individualId}}",
+          //       "fieldValue": "present",
+          //       "groupKey": "attendanceCollection",
+          //       "type": "template",
+          //       "format": "selectButton",
+          //       "label": "PRESENT",
+          //       "prefixIcon": "Check",
+          //       "properties": {
+          //         "color": "green",
+          //         "type": "secondary",
+          //         "selectedType": "primary",
+          //         "size": "small",
+          //         "mainAxisAlignment": "center"
+          //       },
+          //       "onAction": []
+          //     },
+          //     {
+          //       "fieldKey": "{{item.individualId}}",
+          //       "fieldValue": "absent",
+          //       "groupKey": "attendanceCollection",
+          //       "type": "template",
+          //       "format": "selectButton",
+          //       "label": "ABSENT",
+          //       "prefixIcon": "Close",
+          //       "properties": {
+          //         "color": "red",
+          //         "type": "secondary",
+          //         "selectedType": "primary",
+          //         "size": "small",
+          //         "mainAxisAlignment": "center"
+          //       },
+          //       "onAction": []
+          //     }
+          //   ]
+          // },
+          //Signature Button
           {
             "type": "template",
             "format": "selectButton",
