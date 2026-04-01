@@ -24,29 +24,7 @@ class GroupListViewWidget extends ResolvedFlowWidget {
     ResolvedWidgetContext resolved,
   ) {
     final stateData = resolved.stateData;
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   if (json.containsKey('init')) {
-    //     final initConfig = json['init'] as Map<String, dynamic>;
-    //     final actionConfig = ActionConfig.fromJson(initConfig);
-    //     onAction(actionConfig);
-    //   }
-    // });
-
-    final dataSourceKey = json['dataSource'] ?? json['dataSource'] as String?;
-    final rawState = resolved.state.contextData ?? [];
-    var items = rawState;
-
-    if (dataSourceKey != null && rawState.isNotEmpty) {
-      if (dataSourceKey.startsWith('item.')) {
-        final fieldPath = dataSourceKey.substring(5);
-        items = resolved.state.itemData != null
-            ? _resolveNestedField(resolved.state.itemData!, fieldPath)
-            : [];
-      } else {
-        items = rawState[0]?[dataSourceKey];
-      }
-    }
+    List items = resolved.resolveField(json['items']) ?? [];
 
     //Update the items with attendance status
     List attendanceLogs = resolved.resolveField(json['attendanceLogs']);
@@ -94,15 +72,18 @@ class GroupListViewWidget extends ResolvedFlowWidget {
       return item;
     }).toList();
 
+    var testList = resolved.resolveField(json['testList']);
+
     // Optional client-side filtering for already-resolved list items.
     final clientFilters = json['clientFilter'] as List<dynamic>?;
     if (clientFilters != null && clientFilters.isNotEmpty && items is List) {
-      final clientFilter = clientFilters
+      final searchClientFilter = clientFilters
           .firstWhere((e) => e['type'] == 'search', orElse: () => null);
-      final filterField = clientFilter['field'] as String?;
-      final widgetKey = clientFilter['widgetKey'] as String?;
+      final filterField = searchClientFilter['field'] as String?;
+      final widgetKey = searchClientFilter['widgetKey'] as String?;
       final operation =
-          (clientFilter['operation'] as String? ?? 'contains').toLowerCase();
+          (searchClientFilter['operation'] as String? ?? 'contains')
+              .toLowerCase();
 
       if (filterField != null && widgetKey != null) {
         final searchTerm = (resolved.widgetData[widgetKey] ?? '').toString();
@@ -121,6 +102,52 @@ class GroupListViewWidget extends ResolvedFlowWidget {
 
             return true;
           }).toList();
+        }
+      }
+
+      // Attendance status filter
+      final markedAttendanceFilter = clientFilters
+          .firstWhere((e) => e['type'] == 'filter', orElse: () => null);
+
+      if (markedAttendanceFilter != null) {
+        var statusValues = markedAttendanceFilter['values'];
+        var widgetKey = markedAttendanceFilter['widgetKey'] as String?;
+        if (statusValues is List && widgetKey != null) {
+          statusValues = statusValues.map((e) => e.toString()).toList();
+          items = (items as List).where((item) {
+            if ((resolved.widgetData[widgetKey] ?? false) == false) {
+              return true; // If checkbox is unchecked, show all items regardless of status
+            }
+            final rawStatus = item is Map ? item['status'] : null;
+            final status = rawStatus != null ? rawStatus.toString() : '';
+            return statusValues.contains(status);
+          }).toList();
+        }
+      }
+
+      // Sorting logic based on attendance status
+      final sortFilter = clientFilters.firstWhere((e) => e['type'] == 'sort',
+          orElse: () => null);
+
+      if (sortFilter != null) {
+        var widgetKey = sortFilter['widgetKey'] as String?;
+        var presentValue = sortFilter['presentValue']?.toString();
+        var absentValue = sortFilter['absentValue']?.toString();
+
+        if (widgetKey != null && presentValue != null && absentValue != null) {
+          try {
+            items.sort((a, b) {
+              double statusA = a["status"] ?? -1.0;
+              double statusB = b["status"] ?? -1.0;
+              if (resolved.widgetData[widgetKey] == presentValue) {
+                // For present first, sort in descending order of status (present > half day > absent)
+                return statusB.compareTo(statusA);
+              } else {
+                // For absent first, sort in ascending order of status (absent > half day > present)
+                return statusA.compareTo(statusB);
+              }
+            });
+          } catch (e) {}
         }
       }
     }
