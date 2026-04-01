@@ -63,6 +63,7 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
 import '../utils/mark_attendance_executor.dart';
 import '../utils/stock_downsync_utils.dart';
+import '../utils/stock_downsync_utils.dart';
 import '../utils/utils.dart';
 import '../widgets/attendance/attendance_qr_scanner_button.dart';
 import '../widgets/attendance/custom_row_widget.dart';

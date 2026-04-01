@@ -1477,7 +1477,13 @@ final dynamic sampleFlows = {
               "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
               "properties": {
                 "data": [
-                  {"key": "", "value": 5, "operation": "within"}
+                  {"key": "", "value": 5, "operation": "within"},
+                  {
+                    "key": "localityBoundaryCode",
+                    "root": "address",
+                    "value": "{{singleton.boundary.code}}",
+                    "operation": "equals"
+                  }
                 ],
                 "name": "address",
                 "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
@@ -1508,6 +1514,12 @@ final dynamic sampleFlows = {
                     "key": "givenName",
                     "value": "field.value",
                     "operation": "contains"
+                  },
+                  {
+                    "key": "localityBoundaryCode",
+                    "root": "address",
+                    "value": "{{singleton.boundary.code}}",
+                    "operation": "equals"
                   }
                 ],
                 "name": "name",
@@ -1622,6 +1634,12 @@ final dynamic sampleFlows = {
                                 "key": "status",
                                 "value": "{{selectedStatus}}",
                                 "operation": "in"
+                              },
+                              {
+                                "key": "localityBoundaryCode",
+                                "root": "address",
+                                "value": "{{singleton.boundary.code}}",
+                                "operation": "equals"
                               }
                             ],
                             "name": "task"
@@ -1643,6 +1661,12 @@ final dynamic sampleFlows = {
                                 "key": "projectId",
                                 "value": "{{singleton.selectedProject.id}}",
                                 "operation": "notEqual"
+                              },
+                              {
+                                "key": "localityBoundaryCode",
+                                "root": "address",
+                                "value": "{{singleton.boundary.code}}",
+                                "operation": "equals"
                               }
                             ],
                             "name": "projectBeneficiary"
@@ -1670,6 +1694,12 @@ final dynamic sampleFlows = {
                                 "root": "task",
                                 "value": "NOT_ADMINISTERED",
                                 "operation": "equals"
+                              },
+                              {
+                                "key": "localityBoundaryCode",
+                                "root": "address",
+                                "value": "{{singleton.boundary.code}}",
+                                "operation": "equals"
                               }
                             ],
                             "filterLogic": "or"
@@ -1690,6 +1720,12 @@ final dynamic sampleFlows = {
                                 "key": "projectId",
                                 "root": "hFReferral",
                                 "value": "{{singleton.selectedProject.id}}",
+                                "operation": "equals"
+                              },
+                              {
+                                "key": "localityBoundaryCode",
+                                "root": "address",
+                                "value": "{{singleton.boundary.code}}",
                                 "operation": "equals"
                               }
                             ]
@@ -1894,6 +1930,12 @@ final dynamic sampleFlows = {
                         {
                           "key": "tag",
                           "value": "{{beneficiaryTag}}",
+                          "operation": "equals"
+                        },
+                        {
+                          "key": "localityBoundaryCode",
+                          "root": "address",
+                          "value": "{{singleton.boundary.code}}",
                           "operation": "equals"
                         }
                       ],

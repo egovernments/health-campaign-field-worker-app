@@ -133,8 +133,11 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
     final onSubmit = widget.config['onAction'] as List<dynamic>?;
 
     // Merge widget.navigationParams with registry params (registry takes precedence)
+    final registryNavParams =
+        FlowCrudStateRegistry().getNavigationParams(_compositeKey);
     final mergedNavParams = {
       ...?widget.navigationParams,
+      ...?registryNavParams,
     };
 
     // Get entities from registry state (from initActions SEARCH_EVENT)
@@ -215,9 +218,9 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
 
       // Build secondary action callback from screen-level onSecondaryAction
       final secondaryActions = config['onSecondaryAction'] as List<dynamic>?;
-      VoidCallback? onSecondaryAction;
+      void Function({Map<String, dynamic>? popupData})? onSecondaryAction;
       if (secondaryActions != null) {
-        onSecondaryAction = () {
+        onSecondaryAction = ({Map<String, dynamic>? popupData}) {
           final navParams = {
             ...?widget.navigationParams,
           };
@@ -235,8 +238,11 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
             entities = registryState?.stateWrapper ?? [];
           }
 
-          // Get form data from registry
-          final formData = registryState?.formData ?? {};
+          // Get form data from registry and merge popup data (e.g., reject comment)
+          final formData = {
+            ...registryState?.formData ?? {},
+            ...?popupData,
+          };
 
           ActionHandler.executeActions(
             secondaryActions,
@@ -273,7 +279,7 @@ class _FormScreenWrapper extends LocalizedStatefulWidget {
   final Map<String, dynamic>? defaultValues;
   final Map<String, dynamic>? navigationParams;
   final String compositeKey;
-  final VoidCallback? onSecondaryAction;
+  final void Function({Map<String, dynamic>? popupData})? onSecondaryAction;
 
   const _FormScreenWrapper({
     required this.schemaKey,

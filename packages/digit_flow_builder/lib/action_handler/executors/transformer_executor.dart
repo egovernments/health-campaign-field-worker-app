@@ -274,13 +274,17 @@ class TransformerExecutor extends ActionExecutor {
           // Map entity-specific fields (with _item_N suffix) to base field names
           modifiedFormValues = _mapEntityFieldsToBase(modifiedFormValues, i);
 
-          final itemEntities = formEntityMapper.mapFormToEntities(
-            formValues: modifiedFormValues,
-            modelsConfig: transformerConfig,
-            context: contextMap,
-            fallbackFormDataString: fallBackModel,
-          );
-          entities.addAll(itemEntities);
+          try{
+            final itemEntities = formEntityMapper.mapFormToEntities(
+              formValues: modifiedFormValues,
+              modelsConfig: transformerConfig,
+              context: contextMap,
+              fallbackFormDataString: fallBackModel,
+            );
+            entities.addAll(itemEntities);
+          } catch (e){
+            print(e);
+          }
         }
       } else {
         // No items selected, create entities normally

@@ -64,9 +64,10 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
         navigationParams['transactionType']?.toString() ?? '';
     final isIssue =
         transactionType == 'DISPATCHED' || transactionType == 'ISSUED';
+    final isReturn = transactionType == 'RETURNED';
 
     // For issue, use current user's facility directly
-    if (isIssue) {
+    if (isIssue || isReturn) {
       final stateData = widget.stateData is CrudStateData
           ? widget.stateData as CrudStateData
           : CrudStateData({}, []);

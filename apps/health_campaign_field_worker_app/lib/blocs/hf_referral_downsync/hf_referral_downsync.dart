@@ -67,11 +67,7 @@ class HFReferralDownSyncBloc
           ? null
           : existingDownSyncData.first.lastSyncedTime;
 
-      int offset = existingDownSyncData.isEmpty
-          ? 0
-          : existingDownSyncData.first.offset ?? 0;
-
-      // Fetch total count from server
+      // Fetch total count from server using lastSyncedTime to get only new records
       final totalCount =
           await (hfReferralRemoteRepository as HFReferralRemoteRepository)
               .fetchTotalCount(
@@ -79,18 +75,12 @@ class HFReferralDownSyncBloc
           projectId: event.projectId,
         ),
         offSet: 0,
-        // lastSyncedTime: lastSyncedTime,
+        lastSyncedTime: lastSyncedTime,
       );
 
-      // Compare with previously stored total count to detect new data
-      final previousTotalCount = existingDownSyncData.isEmpty
-          ? 0
-          : existingDownSyncData.first.totalCount ?? 0;
-
-      final newCount = totalCount - previousTotalCount;
-
-      if (newCount > 0) {
-        emit(HFReferralDownSyncState.dataFound(newCount, totalCount));
+      // totalCount is already the new count since lastSyncedTime filters to only new records
+      if (totalCount > 0) {
+        emit(HFReferralDownSyncState.dataFound(totalCount, totalCount));
       } else {
         emit(const HFReferralDownSyncState.dataFound(0, 0));
       }
@@ -126,10 +116,6 @@ class HFReferralDownSyncBloc
           ? null
           : existingDownSyncData.first.lastSyncedTime;
 
-      int offset = existingDownSyncData.isEmpty
-          ? 0
-          : existingDownSyncData.first.offset ?? 0;
-
       final totalCount = event.totalCount;
 
       if (totalCount == 0) {
@@ -140,7 +126,7 @@ class HFReferralDownSyncBloc
       // Create initial downsync record if not exists
       if (existingDownSyncData.isEmpty) {
         await downSyncLocalRepository.create(DownsyncModel(
-          offset: offset,
+          offset: 0,
           limit: batchSize,
           lastSyncedTime: lastSyncedTime,
           totalCount: 0,
@@ -152,7 +138,7 @@ class HFReferralDownSyncBloc
 
       emit(HFReferralDownSyncState.inProgress(syncedCount, totalCount));
 
-      // Download in batches
+      // Download in batches using lastSyncedTime, offset always 0
       while (syncedCount < totalCount) {
         final hfReferrals = await hfReferralRemoteRepository.search(
           HFReferralSearchModel(
@@ -160,7 +146,7 @@ class HFReferralDownSyncBloc
           ),
           offSet: 0,
           limit: batchSize,
-          // lastChangedSince: lastSyncedTime,
+          lastSyncedTime: lastSyncedTime,
         );
 
         if (hfReferrals.isEmpty) break;
@@ -181,15 +167,14 @@ class HFReferralDownSyncBloc
           await hfReferralLocalRepository.bulkCreate(newReferrals);
         }
 
-        offset += hfReferrals.length;
         syncedCount += hfReferrals.length;
 
-        // Update downsync progress (store server total for future comparison)
+        // Update downsync progress with lastSyncedTime, keep offset 0
         await downSyncLocalRepository.update(DownsyncModel(
-          offset: offset,
+          offset: 0,
           limit: batchSize,
           lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
-          totalCount: event.serverTotalCount,
+          totalCount: totalCount,
           locality: localityKey,
         ));
 

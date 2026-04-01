@@ -78,6 +78,9 @@ mixin _$PropertySchema {
       throw _privateConstructorUsedError;
   @JsonKey(fromJson: _showAlertOrNull)
   ShowAlertPopUp? get showAlertPopUp =>
+      throw _privateConstructorUsedError; // Secondary action alert popup (e.g., for reject confirmation with comment)
+  @JsonKey(fromJson: _showSecondaryAlertOrNull)
+  ShowSecondaryAlertPopUp? get showSecondaryAlertPopUp =>
       throw _privateConstructorUsedError; // Multi-entity tab configuration
   @JsonKey(fromJson: _multiEntityConfigOrNull)
   MultiEntityConfig? get multiEntityConfig =>
@@ -149,6 +152,8 @@ abstract class $PropertySchemaCopyWith<$Res> {
       @JsonKey(fromJson: _autoFillConditionListOrNull)
       List<AutoFillCondition>? autoFillCondition,
       @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
+      @JsonKey(fromJson: _showSecondaryAlertOrNull)
+      ShowSecondaryAlertPopUp? showSecondaryAlertPopUp,
       @JsonKey(fromJson: _multiEntityConfigOrNull)
       MultiEntityConfig? multiEntityConfig,
       bool? preventScreenCapture,
@@ -162,6 +167,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
   $VisibilityConditionCopyWith<$Res>? get visibilityCondition;
   $ShowAlertPopUpCopyWith<$Res>? get showAlertPopUp;
+  $ShowSecondaryAlertPopUpCopyWith<$Res>? get showSecondaryAlertPopUp;
   $MultiEntityConfigCopyWith<$Res>? get multiEntityConfig;
   $VisibilityConditionCopyWith<$Res>? get submitCondition;
   $ComparisonConfigCopyWith<$Res>? get comparisonConfig;
@@ -219,6 +225,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? conditionalNavigateTo = freezed,
     Object? autoFillCondition = freezed,
     Object? showAlertPopUp = freezed,
+    Object? showSecondaryAlertPopUp = freezed,
     Object? multiEntityConfig = freezed,
     Object? preventScreenCapture = freezed,
     Object? submitCondition = freezed,
@@ -382,6 +389,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.showAlertPopUp
           : showAlertPopUp // ignore: cast_nullable_to_non_nullable
               as ShowAlertPopUp?,
+      showSecondaryAlertPopUp: freezed == showSecondaryAlertPopUp
+          ? _value.showSecondaryAlertPopUp
+          : showSecondaryAlertPopUp // ignore: cast_nullable_to_non_nullable
+              as ShowSecondaryAlertPopUp?,
       multiEntityConfig: freezed == multiEntityConfig
           ? _value.multiEntityConfig
           : multiEntityConfig // ignore: cast_nullable_to_non_nullable
@@ -451,6 +462,19 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
 
     return $ShowAlertPopUpCopyWith<$Res>(_value.showAlertPopUp!, (value) {
       return _then(_value.copyWith(showAlertPopUp: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ShowSecondaryAlertPopUpCopyWith<$Res>? get showSecondaryAlertPopUp {
+    if (_value.showSecondaryAlertPopUp == null) {
+      return null;
+    }
+
+    return $ShowSecondaryAlertPopUpCopyWith<$Res>(
+        _value.showSecondaryAlertPopUp!, (value) {
+      return _then(_value.copyWith(showSecondaryAlertPopUp: value) as $Val);
     });
   }
 
@@ -544,6 +568,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       @JsonKey(fromJson: _autoFillConditionListOrNull)
       List<AutoFillCondition>? autoFillCondition,
       @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
+      @JsonKey(fromJson: _showSecondaryAlertOrNull)
+      ShowSecondaryAlertPopUp? showSecondaryAlertPopUp,
       @JsonKey(fromJson: _multiEntityConfigOrNull)
       MultiEntityConfig? multiEntityConfig,
       bool? preventScreenCapture,
@@ -561,6 +587,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
   $VisibilityConditionCopyWith<$Res>? get visibilityCondition;
   @override
   $ShowAlertPopUpCopyWith<$Res>? get showAlertPopUp;
+  @override
+  $ShowSecondaryAlertPopUpCopyWith<$Res>? get showSecondaryAlertPopUp;
   @override
   $MultiEntityConfigCopyWith<$Res>? get multiEntityConfig;
   @override
@@ -619,6 +647,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? conditionalNavigateTo = freezed,
     Object? autoFillCondition = freezed,
     Object? showAlertPopUp = freezed,
+    Object? showSecondaryAlertPopUp = freezed,
     Object? multiEntityConfig = freezed,
     Object? preventScreenCapture = freezed,
     Object? submitCondition = freezed,
@@ -782,6 +811,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.showAlertPopUp
           : showAlertPopUp // ignore: cast_nullable_to_non_nullable
               as ShowAlertPopUp?,
+      showSecondaryAlertPopUp: freezed == showSecondaryAlertPopUp
+          ? _value.showSecondaryAlertPopUp
+          : showSecondaryAlertPopUp // ignore: cast_nullable_to_non_nullable
+              as ShowSecondaryAlertPopUp?,
       multiEntityConfig: freezed == multiEntityConfig
           ? _value.multiEntityConfig
           : multiEntityConfig // ignore: cast_nullable_to_non_nullable
@@ -854,6 +887,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       @JsonKey(fromJson: _autoFillConditionListOrNull)
       final List<AutoFillCondition>? autoFillCondition,
       @JsonKey(fromJson: _showAlertOrNull) this.showAlertPopUp,
+      @JsonKey(fromJson: _showSecondaryAlertOrNull)
+      this.showSecondaryAlertPopUp,
       @JsonKey(fromJson: _multiEntityConfigOrNull) this.multiEntityConfig,
       this.preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull) this.submitCondition,
@@ -1014,6 +1049,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   @JsonKey(fromJson: _showAlertOrNull)
   final ShowAlertPopUp? showAlertPopUp;
+// Secondary action alert popup (e.g., for reject confirmation with comment)
+  @override
+  @JsonKey(fromJson: _showSecondaryAlertOrNull)
+  final ShowSecondaryAlertPopUp? showSecondaryAlertPopUp;
 // Multi-entity tab configuration
   @override
   @JsonKey(fromJson: _multiEntityConfigOrNull)
@@ -1035,7 +1074,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, showSecondaryAlertPopUp: $showSecondaryAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig)';
   }
 
   @override
@@ -1110,6 +1149,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
                 .equals(other._autoFillCondition, _autoFillCondition) &&
             (identical(other.showAlertPopUp, showAlertPopUp) ||
                 other.showAlertPopUp == showAlertPopUp) &&
+            (identical(
+                    other.showSecondaryAlertPopUp, showSecondaryAlertPopUp) ||
+                other.showSecondaryAlertPopUp == showSecondaryAlertPopUp) &&
             (identical(other.multiEntityConfig, multiEntityConfig) ||
                 other.multiEntityConfig == multiEntityConfig) &&
             (identical(other.preventScreenCapture, preventScreenCapture) ||
@@ -1165,6 +1207,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
         const DeepCollectionEquality().hash(_conditionalNavigateTo),
         const DeepCollectionEquality().hash(_autoFillCondition),
         showAlertPopUp,
+        showSecondaryAlertPopUp,
         multiEntityConfig,
         preventScreenCapture,
         submitCondition,
@@ -1234,6 +1277,8 @@ abstract class _PropertySchema implements PropertySchema {
       @JsonKey(fromJson: _autoFillConditionListOrNull)
       final List<AutoFillCondition>? autoFillCondition,
       @JsonKey(fromJson: _showAlertOrNull) final ShowAlertPopUp? showAlertPopUp,
+      @JsonKey(fromJson: _showSecondaryAlertOrNull)
+      final ShowSecondaryAlertPopUp? showSecondaryAlertPopUp,
       @JsonKey(fromJson: _multiEntityConfigOrNull)
       final MultiEntityConfig? multiEntityConfig,
       final bool? preventScreenCapture,
@@ -1339,6 +1384,9 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   @JsonKey(fromJson: _showAlertOrNull)
   ShowAlertPopUp? get showAlertPopUp;
+  @override // Secondary action alert popup (e.g., for reject confirmation with comment)
+  @JsonKey(fromJson: _showSecondaryAlertOrNull)
+  ShowSecondaryAlertPopUp? get showSecondaryAlertPopUp;
   @override // Multi-entity tab configuration
   @JsonKey(fromJson: _multiEntityConfigOrNull)
   MultiEntityConfig? get multiEntityConfig;
@@ -2897,6 +2945,514 @@ abstract class _ShowAlertPopUp implements ShowAlertPopUp {
   @JsonKey(ignore: true)
   _$$ShowAlertPopUpImplCopyWith<_$ShowAlertPopUpImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+ShowSecondaryAlertPopUp _$ShowSecondaryAlertPopUpFromJson(
+    Map<String, dynamic> json) {
+  return _ShowSecondaryAlertPopUp.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ShowSecondaryAlertPopUp {
+  String get title => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  String get primaryActionLabel => throw _privateConstructorUsedError;
+  String get secondaryActionLabel => throw _privateConstructorUsedError;
+  List<AlertCondition>? get conditions =>
+      throw _privateConstructorUsedError; // Body fields for form inputs inside the popup (e.g., mandatory comment)
+  List<SecondaryAlertBodyField>? get body => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ShowSecondaryAlertPopUpCopyWith<ShowSecondaryAlertPopUp> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ShowSecondaryAlertPopUpCopyWith<$Res> {
+  factory $ShowSecondaryAlertPopUpCopyWith(ShowSecondaryAlertPopUp value,
+          $Res Function(ShowSecondaryAlertPopUp) then) =
+      _$ShowSecondaryAlertPopUpCopyWithImpl<$Res, ShowSecondaryAlertPopUp>;
+  @useResult
+  $Res call(
+      {String title,
+      String? description,
+      String primaryActionLabel,
+      String secondaryActionLabel,
+      List<AlertCondition>? conditions,
+      List<SecondaryAlertBodyField>? body});
+}
+
+/// @nodoc
+class _$ShowSecondaryAlertPopUpCopyWithImpl<$Res,
+        $Val extends ShowSecondaryAlertPopUp>
+    implements $ShowSecondaryAlertPopUpCopyWith<$Res> {
+  _$ShowSecondaryAlertPopUpCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? title = null,
+    Object? description = freezed,
+    Object? primaryActionLabel = null,
+    Object? secondaryActionLabel = null,
+    Object? conditions = freezed,
+    Object? body = freezed,
+  }) {
+    return _then(_value.copyWith(
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      primaryActionLabel: null == primaryActionLabel
+          ? _value.primaryActionLabel
+          : primaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      secondaryActionLabel: null == secondaryActionLabel
+          ? _value.secondaryActionLabel
+          : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      conditions: freezed == conditions
+          ? _value.conditions
+          : conditions // ignore: cast_nullable_to_non_nullable
+              as List<AlertCondition>?,
+      body: freezed == body
+          ? _value.body
+          : body // ignore: cast_nullable_to_non_nullable
+              as List<SecondaryAlertBodyField>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ShowSecondaryAlertPopUpImplCopyWith<$Res>
+    implements $ShowSecondaryAlertPopUpCopyWith<$Res> {
+  factory _$$ShowSecondaryAlertPopUpImplCopyWith(
+          _$ShowSecondaryAlertPopUpImpl value,
+          $Res Function(_$ShowSecondaryAlertPopUpImpl) then) =
+      __$$ShowSecondaryAlertPopUpImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String title,
+      String? description,
+      String primaryActionLabel,
+      String secondaryActionLabel,
+      List<AlertCondition>? conditions,
+      List<SecondaryAlertBodyField>? body});
+}
+
+/// @nodoc
+class __$$ShowSecondaryAlertPopUpImplCopyWithImpl<$Res>
+    extends _$ShowSecondaryAlertPopUpCopyWithImpl<$Res,
+        _$ShowSecondaryAlertPopUpImpl>
+    implements _$$ShowSecondaryAlertPopUpImplCopyWith<$Res> {
+  __$$ShowSecondaryAlertPopUpImplCopyWithImpl(
+      _$ShowSecondaryAlertPopUpImpl _value,
+      $Res Function(_$ShowSecondaryAlertPopUpImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? title = null,
+    Object? description = freezed,
+    Object? primaryActionLabel = null,
+    Object? secondaryActionLabel = null,
+    Object? conditions = freezed,
+    Object? body = freezed,
+  }) {
+    return _then(_$ShowSecondaryAlertPopUpImpl(
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      primaryActionLabel: null == primaryActionLabel
+          ? _value.primaryActionLabel
+          : primaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      secondaryActionLabel: null == secondaryActionLabel
+          ? _value.secondaryActionLabel
+          : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      conditions: freezed == conditions
+          ? _value._conditions
+          : conditions // ignore: cast_nullable_to_non_nullable
+              as List<AlertCondition>?,
+      body: freezed == body
+          ? _value._body
+          : body // ignore: cast_nullable_to_non_nullable
+              as List<SecondaryAlertBodyField>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ShowSecondaryAlertPopUpImpl implements _ShowSecondaryAlertPopUp {
+  const _$ShowSecondaryAlertPopUpImpl(
+      {required this.title,
+      this.description,
+      required this.primaryActionLabel,
+      required this.secondaryActionLabel,
+      final List<AlertCondition>? conditions,
+      final List<SecondaryAlertBodyField>? body})
+      : _conditions = conditions,
+        _body = body;
+
+  factory _$ShowSecondaryAlertPopUpImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ShowSecondaryAlertPopUpImplFromJson(json);
+
+  @override
+  final String title;
+  @override
+  final String? description;
+  @override
+  final String primaryActionLabel;
+  @override
+  final String secondaryActionLabel;
+  final List<AlertCondition>? _conditions;
+  @override
+  List<AlertCondition>? get conditions {
+    final value = _conditions;
+    if (value == null) return null;
+    if (_conditions is EqualUnmodifiableListView) return _conditions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+// Body fields for form inputs inside the popup (e.g., mandatory comment)
+  final List<SecondaryAlertBodyField>? _body;
+// Body fields for form inputs inside the popup (e.g., mandatory comment)
+  @override
+  List<SecondaryAlertBodyField>? get body {
+    final value = _body;
+    if (value == null) return null;
+    if (_body is EqualUnmodifiableListView) return _body;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'ShowSecondaryAlertPopUp(title: $title, description: $description, primaryActionLabel: $primaryActionLabel, secondaryActionLabel: $secondaryActionLabel, conditions: $conditions, body: $body)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ShowSecondaryAlertPopUpImpl &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.primaryActionLabel, primaryActionLabel) ||
+                other.primaryActionLabel == primaryActionLabel) &&
+            (identical(other.secondaryActionLabel, secondaryActionLabel) ||
+                other.secondaryActionLabel == secondaryActionLabel) &&
+            const DeepCollectionEquality()
+                .equals(other._conditions, _conditions) &&
+            const DeepCollectionEquality().equals(other._body, _body));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      title,
+      description,
+      primaryActionLabel,
+      secondaryActionLabel,
+      const DeepCollectionEquality().hash(_conditions),
+      const DeepCollectionEquality().hash(_body));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ShowSecondaryAlertPopUpImplCopyWith<_$ShowSecondaryAlertPopUpImpl>
+      get copyWith => __$$ShowSecondaryAlertPopUpImplCopyWithImpl<
+          _$ShowSecondaryAlertPopUpImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ShowSecondaryAlertPopUpImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ShowSecondaryAlertPopUp implements ShowSecondaryAlertPopUp {
+  const factory _ShowSecondaryAlertPopUp(
+          {required final String title,
+          final String? description,
+          required final String primaryActionLabel,
+          required final String secondaryActionLabel,
+          final List<AlertCondition>? conditions,
+          final List<SecondaryAlertBodyField>? body}) =
+      _$ShowSecondaryAlertPopUpImpl;
+
+  factory _ShowSecondaryAlertPopUp.fromJson(Map<String, dynamic> json) =
+      _$ShowSecondaryAlertPopUpImpl.fromJson;
+
+  @override
+  String get title;
+  @override
+  String? get description;
+  @override
+  String get primaryActionLabel;
+  @override
+  String get secondaryActionLabel;
+  @override
+  List<AlertCondition>? get conditions;
+  @override // Body fields for form inputs inside the popup (e.g., mandatory comment)
+  List<SecondaryAlertBodyField>? get body;
+  @override
+  @JsonKey(ignore: true)
+  _$$ShowSecondaryAlertPopUpImplCopyWith<_$ShowSecondaryAlertPopUpImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+SecondaryAlertBodyField _$SecondaryAlertBodyFieldFromJson(
+    Map<String, dynamic> json) {
+  return _SecondaryAlertBodyField.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SecondaryAlertBodyField {
+  String get type => throw _privateConstructorUsedError;
+  String get label => throw _privateConstructorUsedError;
+  String? get format => throw _privateConstructorUsedError;
+  String get fieldName => throw _privateConstructorUsedError;
+  bool get mandatory => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SecondaryAlertBodyFieldCopyWith<SecondaryAlertBodyField> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SecondaryAlertBodyFieldCopyWith<$Res> {
+  factory $SecondaryAlertBodyFieldCopyWith(SecondaryAlertBodyField value,
+          $Res Function(SecondaryAlertBodyField) then) =
+      _$SecondaryAlertBodyFieldCopyWithImpl<$Res, SecondaryAlertBodyField>;
+  @useResult
+  $Res call(
+      {String type,
+      String label,
+      String? format,
+      String fieldName,
+      bool mandatory});
+}
+
+/// @nodoc
+class _$SecondaryAlertBodyFieldCopyWithImpl<$Res,
+        $Val extends SecondaryAlertBodyField>
+    implements $SecondaryAlertBodyFieldCopyWith<$Res> {
+  _$SecondaryAlertBodyFieldCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? label = null,
+    Object? format = freezed,
+    Object? fieldName = null,
+    Object? mandatory = null,
+  }) {
+    return _then(_value.copyWith(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      format: freezed == format
+          ? _value.format
+          : format // ignore: cast_nullable_to_non_nullable
+              as String?,
+      fieldName: null == fieldName
+          ? _value.fieldName
+          : fieldName // ignore: cast_nullable_to_non_nullable
+              as String,
+      mandatory: null == mandatory
+          ? _value.mandatory
+          : mandatory // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SecondaryAlertBodyFieldImplCopyWith<$Res>
+    implements $SecondaryAlertBodyFieldCopyWith<$Res> {
+  factory _$$SecondaryAlertBodyFieldImplCopyWith(
+          _$SecondaryAlertBodyFieldImpl value,
+          $Res Function(_$SecondaryAlertBodyFieldImpl) then) =
+      __$$SecondaryAlertBodyFieldImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String type,
+      String label,
+      String? format,
+      String fieldName,
+      bool mandatory});
+}
+
+/// @nodoc
+class __$$SecondaryAlertBodyFieldImplCopyWithImpl<$Res>
+    extends _$SecondaryAlertBodyFieldCopyWithImpl<$Res,
+        _$SecondaryAlertBodyFieldImpl>
+    implements _$$SecondaryAlertBodyFieldImplCopyWith<$Res> {
+  __$$SecondaryAlertBodyFieldImplCopyWithImpl(
+      _$SecondaryAlertBodyFieldImpl _value,
+      $Res Function(_$SecondaryAlertBodyFieldImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? label = null,
+    Object? format = freezed,
+    Object? fieldName = null,
+    Object? mandatory = null,
+  }) {
+    return _then(_$SecondaryAlertBodyFieldImpl(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      format: freezed == format
+          ? _value.format
+          : format // ignore: cast_nullable_to_non_nullable
+              as String?,
+      fieldName: null == fieldName
+          ? _value.fieldName
+          : fieldName // ignore: cast_nullable_to_non_nullable
+              as String,
+      mandatory: null == mandatory
+          ? _value.mandatory
+          : mandatory // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SecondaryAlertBodyFieldImpl implements _SecondaryAlertBodyField {
+  const _$SecondaryAlertBodyFieldImpl(
+      {required this.type,
+      required this.label,
+      this.format,
+      required this.fieldName,
+      this.mandatory = false});
+
+  factory _$SecondaryAlertBodyFieldImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SecondaryAlertBodyFieldImplFromJson(json);
+
+  @override
+  final String type;
+  @override
+  final String label;
+  @override
+  final String? format;
+  @override
+  final String fieldName;
+  @override
+  @JsonKey()
+  final bool mandatory;
+
+  @override
+  String toString() {
+    return 'SecondaryAlertBodyField(type: $type, label: $label, format: $format, fieldName: $fieldName, mandatory: $mandatory)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SecondaryAlertBodyFieldImpl &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.label, label) || other.label == label) &&
+            (identical(other.format, format) || other.format == format) &&
+            (identical(other.fieldName, fieldName) ||
+                other.fieldName == fieldName) &&
+            (identical(other.mandatory, mandatory) ||
+                other.mandatory == mandatory));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, type, label, format, fieldName, mandatory);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SecondaryAlertBodyFieldImplCopyWith<_$SecondaryAlertBodyFieldImpl>
+      get copyWith => __$$SecondaryAlertBodyFieldImplCopyWithImpl<
+          _$SecondaryAlertBodyFieldImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SecondaryAlertBodyFieldImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SecondaryAlertBodyField implements SecondaryAlertBodyField {
+  const factory _SecondaryAlertBodyField(
+      {required final String type,
+      required final String label,
+      final String? format,
+      required final String fieldName,
+      final bool mandatory}) = _$SecondaryAlertBodyFieldImpl;
+
+  factory _SecondaryAlertBodyField.fromJson(Map<String, dynamic> json) =
+      _$SecondaryAlertBodyFieldImpl.fromJson;
+
+  @override
+  String get type;
+  @override
+  String get label;
+  @override
+  String? get format;
+  @override
+  String get fieldName;
+  @override
+  bool get mandatory;
+  @override
+  @JsonKey(ignore: true)
+  _$$SecondaryAlertBodyFieldImplCopyWith<_$SecondaryAlertBodyFieldImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 AlertCondition _$AlertConditionFromJson(Map<String, dynamic> json) {

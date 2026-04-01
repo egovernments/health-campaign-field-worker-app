@@ -22,6 +22,8 @@ import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 
@@ -238,6 +240,9 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                           referralLocalRepository: ctx.read<
                               LocalRepository<ReferralModel,
                                   ReferralSearchModel>>(),
+                          hfReferralLocalRepository: ctx.read<
+                              LocalRepository<HFReferralModel,
+                                  HFReferralSearchModel>>(),
                           serviceLocalRepository: ctx.read<
                               LocalRepository<ServiceModel,
                                   ServiceSearchModel>>(),
@@ -258,17 +263,19 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                               LocalRepository<FacilityModel,
                                   FacilitySearchModel>>(),
                           stockRemoteRepository: ctx.read<
-                              RemoteRepository<StockModel,
-                                  StockSearchModel>>(),
+                              RemoteRepository<StockModel, StockSearchModel>>(),
                           stockLocalRepository: ctx.read<
-                              LocalRepository<StockModel,
-                                  StockSearchModel>>(),
+                              LocalRepository<StockModel, StockSearchModel>>(),
                           projectResourceLocalRepository: ctx.read<
                               LocalRepository<ProjectResourceModel,
                                   ProjectResourceSearchModel>>(),
                           downSyncLocalRepository: ctx.read<
                               LocalRepository<DownsyncModel,
                                   DownsyncSearchModel>>(),
+                          userActionRemoteRepository:
+                              ctx.read<UserActionRemoteRepository>(),
+                          userActionLocalRepository:
+                              ctx.read<UserActionLocalRepository>(),
                         ),
                       ),
                       BlocProvider(
@@ -312,23 +319,20 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                               final notificationData =
                                   NotificationData.fromMap(state.data);
 
-                              NotificationHandlerFactory
-                                  .getHandler(
+                              NotificationHandlerFactory.getHandler(
                                       notificationData.notificationType)
-                                  ?.handle(
-                                      context, notificationData.payload);
+                                  ?.handle(context, notificationData.payload);
                             }
                           },
                         ),
                         BlocListener<HFReferralDownSyncBloc,
                             HFReferralDownSyncState>(
                           listener: (context, hfDownSyncState) {
-                            final localizations =
-                                AppLocalizations.of(context);
-                            final appConfiguration =
-                                (context.read<AppInitializationBloc>().state
-                                        as AppInitialized)
-                                    .appConfiguration;
+                            final localizations = AppLocalizations.of(context);
+                            final appConfiguration = (context
+                                    .read<AppInitializationBloc>()
+                                    .state as AppInitialized)
+                                .appConfiguration;
                             hfDownSyncState.maybeWhen(
                               orElse: () {},
                               loading: () {
@@ -344,8 +348,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                               },
                               dataFound: (newCount, serverTotalCount) {
                                 Navigator.of(context, rootNavigator: true)
-                                    .popUntil(
-                                        (route) => route is! PopupRoute);
+                                    .popUntil((route) => route is! PopupRoute);
                                 showCustomPopup(
                                   barrierDismissible: false,
                                   context: context,
@@ -353,8 +356,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                     title: localizations.translate(
                                       newCount > 0
                                           ? i18.beneficiaryDetails.dataFound
-                                          : i18.beneficiaryDetails
-                                              .noDataFound,
+                                          : i18.beneficiaryDetails.noDataFound,
                                     ),
                                     titleIcon: Icon(
                                       Icons.info_outline_rounded,
@@ -380,8 +382,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                         onPressed: () {
                                           if (newCount > 0) {
                                             context
-                                                .read<
-                                                    HFReferralDownSyncBloc>()
+                                                .read<HFReferralDownSyncBloc>()
                                                 .add(
                                                   HFReferralDownSyncDownloadEvent(
                                                     projectId:
@@ -390,7 +391,8 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                       appConfiguration
                                                     ],
                                                     totalCount: newCount,
-                                                    serverTotalCount: serverTotalCount,
+                                                    serverTotalCount:
+                                                        serverTotalCount,
                                                   ),
                                                 );
                                           } else {
@@ -425,8 +427,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                 );
                               },
                               inProgress: (syncedCount, totalCount) {
-                                final progressData =
-                                    HFReferralProgressData(
+                                final progressData = HFReferralProgressData(
                                   progress: totalCount == 0
                                       ? 0
                                       : (syncedCount / totalCount)
@@ -436,10 +437,8 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                 );
                                 if (syncedCount < 1) {
                                   if (_hfReferralProgress.isClosed) {
-                                    _hfReferralProgress =
-                                        StreamController<
-                                                HFReferralProgressData>
-                                            .broadcast();
+                                    _hfReferralProgress = StreamController<
+                                        HFReferralProgressData>.broadcast();
                                   }
                                   showHFReferralProgressDialog(
                                     context,
@@ -447,8 +446,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                       i18.beneficiaryDetails
                                           .dataDownloadInProgress,
                                     ),
-                                    progressController:
-                                        _hfReferralProgress,
+                                    progressController: _hfReferralProgress,
                                     initialData: progressData,
                                   );
                                 }
@@ -458,8 +456,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                               },
                               success: (syncedCount, totalCount) {
                                 Navigator.of(context, rootNavigator: true)
-                                    .popUntil(
-                                        (route) => route is! PopupRoute);
+                                    .popUntil((route) => route is! PopupRoute);
                                 DigitSyncDialog.show(
                                   context,
                                   type: DialogType.complete,
@@ -472,19 +469,16 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                       i18.common.coreCommonGoback,
                                     ),
                                     action: (ctx) {
-                                      Navigator.of(context,
-                                              rootNavigator: true)
+                                      Navigator.of(context, rootNavigator: true)
                                           .pop();
-                                      context.router
-                                          .replaceAll([HomeRoute()]);
+                                      context.router.replaceAll([HomeRoute()]);
                                     },
                                   ),
                                 );
                               },
                               failed: () {
                                 Navigator.of(context, rootNavigator: true)
-                                    .popUntil(
-                                        (route) => route is! PopupRoute);
+                                    .popUntil((route) => route is! PopupRoute);
                                 DigitSyncDialog.show(
                                   context,
                                   type: DialogType.failed,
@@ -496,8 +490,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                       i18.syncDialog.retryButtonLabel,
                                     ),
                                     action: (ctx) {
-                                      Navigator.of(context,
-                                              rootNavigator: true)
+                                      Navigator.of(context, rootNavigator: true)
                                           .pop();
                                       context
                                           .read<HFReferralDownSyncBloc>()
@@ -517,11 +510,9 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                           .proceedWithoutDownloading,
                                     ),
                                     action: (ctx) {
-                                      Navigator.of(context,
-                                              rootNavigator: true)
+                                      Navigator.of(context, rootNavigator: true)
                                           .pop();
-                                      context.router
-                                          .replaceAll([HomeRoute()]);
+                                      context.router.replaceAll([HomeRoute()]);
                                     },
                                   ),
                                 );
@@ -548,15 +539,15 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                           shouldShowDrawer = true;
                                       }
 
-                                    _drawerVisibilityController
-                                        .add(shouldShowDrawer);
-                                  },
-                                ),
-                              ],
-                            );
-                    }),
+                                      _drawerVisibilityController
+                                          .add(shouldShowDrawer);
+                                    },
+                                  ),
+                                ],
+                              );
+                      }),
+                    ),
                   ),
-                ),
                 ),
               );
             },

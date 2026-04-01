@@ -48,6 +48,7 @@ abstract class $FormsRoute extends _i2.AutoRouterModule {
           navigationParams: args.navigationParams,
           isSummary: args.isSummary,
           onSecondaryAction: args.onSecondaryAction,
+          onSecondaryAction: args.onSecondaryAction,
         ),
       );
     }
@@ -67,7 +68,7 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
     Map<String, dynamic>? defaultValues,
     Map<String, dynamic>? navigationParams,
     bool isSummary = false,
-    void Function()? onSecondaryAction,
+    void Function({Map<String, dynamic>? popupData})? onSecondaryAction,
     List<_i2.PageRouteInfo>? children,
   }) : super(
           FormsRenderRoute.name,
@@ -130,7 +131,7 @@ class FormsRenderRouteArgs {
 
   final bool isSummary;
 
-  final void Function()? onSecondaryAction;
+  final void Function({Map<String, dynamic>? popupData})? onSecondaryAction;
 
   @override
   String toString() {

@@ -354,9 +354,8 @@ void initializeFunctionRegistry() {
 
     if (tasks.isNotEmpty) {
       // Get currentRunningCycle from third argument if provided
-      final currentRunningCycle = args.length > 2
-          ? int.tryParse(args[2]?.toString() ?? '')
-          : null;
+      final currentRunningCycle =
+          args.length > 2 ? int.tryParse(args[2]?.toString() ?? '') : null;
 
       for (final item in tasks) {
         Map<String, dynamic> task;
@@ -388,8 +387,7 @@ void initializeFunctionRegistry() {
           if (fields != null) {
             for (final field in fields) {
               if (field is Map && field['key'] == 'cycleIndex') {
-                taskCycleIndex =
-                    int.tryParse(field['value']?.toString() ?? '');
+                taskCycleIndex = int.tryParse(field['value']?.toString() ?? '');
                 break;
               }
             }
@@ -439,12 +437,30 @@ void initializeFunctionRegistry() {
 
   FunctionRegistry.register("getInEligibleStatus", (args, stateData) {
     // No arguments passed
-    if (args.isEmpty) return '';
+    if (args.isEmpty) return TaskStatus.ineligible;
+
+    // --- ProjectType comes from FlowBuilderSingleton ---
+    final projectType = FlowBuilderSingleton().projectType;
+    if (projectType == null) return TaskStatus.ineligible;
+
+    // --- Current active cycle ---
+    Map<String, dynamic>? currentCycle;
+    for (final e in projectType.cycles ?? []) {
+      if ((e.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+          (e.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch) {
+        currentCycle = {
+          "startDate": e.startDate,
+          "endDate": e.endDate,
+        };
+        break;
+      }
+    }
+    if (currentCycle == null) return TaskStatus.ineligible;
 
     final tasks = args.first;
 
     // Must be a non-empty list of tasks
-    if (tasks is! List || tasks.isEmpty) return '';
+    if (tasks is! List || tasks.isEmpty) return TaskStatus.ineligible;
 
     // Get the last task and convert to Map if needed
     final item = tasks.last;
@@ -499,7 +515,8 @@ void initializeFunctionRegistry() {
     final status = value.trim().toUpperCase();
 
     // Match valid delivered statuses
-    if (status == TaskStatus.administrationSuccess || status == TaskStatus.delivered) {
+    if (status == TaskStatus.administrationSuccess ||
+        status == TaskStatus.delivered) {
       return true;
     }
 
@@ -1178,7 +1195,7 @@ void initializeFunctionRegistry() {
 
             // Disable if any task status is success
             if (status == TaskStatus.administrationSuccess ||
-                status == TaskStatus.delivered ) {
+                status == TaskStatus.delivered) {
               return true;
             }
 
