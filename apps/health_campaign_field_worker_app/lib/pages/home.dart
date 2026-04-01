@@ -66,7 +66,6 @@ import '../utils/stock_downsync_utils.dart';
 import '../utils/utils.dart';
 import '../widgets/attendance/attendance_qr_scanner_button.dart';
 import '../widgets/attendance/custom_row_widget.dart';
-import '../widgets/attendance/mark_attendance_card.dart';
 import '../widgets/attendance/group_list_view_widget.dart';
 import '../widgets/attendance/signature_compare_dialog_widget.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
@@ -301,7 +300,6 @@ class _HomePageState extends LocalizedState<HomePage> {
     ActionHandler.registry
         .register('SUBMIT_ATTENDANCE', SubmitAttendanceExecutor());
 
-    FlowWidgetFactory.register(MarkAttendanceCard());
     FlowWidgetFactory.register(AttendanceQrScannerButton());
     FlowWidgetFactory.register(GroupListViewWidget());
     FlowWidgetFactory.register(CustomRowWidget());

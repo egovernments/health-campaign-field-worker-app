@@ -126,7 +126,7 @@ final dynamic markAttendanceFlow = {
   "footer": [
     {
       "visible":
-          "{{fn:isSameDay(widgetData.selectedDate, contextData.0.AttendanceRegisterModel, widgetData.sessionToggle)}}",
+          "{{fn:showAttendanceQRButton(widgetData.selectedDate, widgetData.sessionToggle, contextData.0.AttendanceRegisterModel)}}",
       "format": "attendanceQRScannerButton",
       "type": "template",
       "fieldName": "createReferral",
@@ -142,7 +142,7 @@ final dynamic markAttendanceFlow = {
     },
     {
       "disabled":
-          "{{fn:allAttendanceSelected(contextData.0.attendees, widgetData.attendanceCollection)}}",
+          "{{fn:allAttendanceSelected(widgetData, contextData.0.AttendanceRegisterModel)}}",
       "format": "button",
       "type": "template",
       "fieldName": "createReferral",
@@ -158,7 +158,7 @@ final dynamic markAttendanceFlow = {
           "actionType": "CUSTOM_DATA",
           "properties": {
             "entities":
-                "{{fn:createAttendanceLog(widgetData, contextData.0.attendanceLog, contextData.0.AttendanceRegisterModel, 0)}}"
+                "{{fn:createAttendanceLog(widgetData, contextData.0.AttendanceRegisterModel, 0)}}"
           }
         },
         {
@@ -180,7 +180,7 @@ final dynamic markAttendanceFlow = {
       "fieldName": "submitAttendance",
       "label": "CORE_COMMON_SUBMIT",
       "disabled":
-          "{{fn:allAttendanceSelected(contextData.0.attendees, widgetData.attendanceCollection)}}",
+          "{{fn:allAttendanceSelected(widgetData, contextData.0.AttendanceRegisterModel)}}",
       "onAction": [],
       "properties": {
         "type": "secondary",
@@ -202,6 +202,7 @@ final dynamic markAttendanceFlow = {
               "type": "template",
               "format": "textInput",
               "fieldName": "COMMENT",
+              "label": "COMMENT_KEY",
               "inputType": "multiline",
             },
           ],
@@ -223,7 +224,7 @@ final dynamic markAttendanceFlow = {
                   "actionType": "CUSTOM_DATA",
                   "properties": {
                     "entities":
-                        "{{fn:createAttendanceLog(widgetData, contextData.0.attendanceLog, contextData.0.AttendanceRegisterModel, 1)}}"
+                        "{{fn:createAttendanceLog(widgetData, contextData.0.AttendanceRegisterModel, 1)}}"
                   }
                 },
                 {
@@ -324,37 +325,6 @@ final dynamic markAttendanceFlow = {
         "crossAxisAlignment": "stretch"
       },
       "children": [
-        // {
-        //   "type": "template",
-        //   "format": "expanded",
-        //   "child": {
-        //     "type": "template",
-        //     "format": "searchBar",
-        //     "label": "CORE_COMMON_SEARCH",
-        //     "fieldName": "searchBar",
-        //     "mandatory": true,
-        //     "validations": [
-        //       {"type": "minSearchChars", "value": 2}
-        //     ],
-        //     "minSearchChars": 2,
-        //     "onAction": [
-        //       {
-        //         "actionType": "SEARCH_EVENT",
-        //         "properties": {
-        //           "data": [
-        //             {
-        //               "key": "givenName",
-        //               "value": "field.value",
-        //               "operation": "contains"
-        //             }
-        //           ],
-        //           "name": "name",
-        //           "type": "SEARCH_EVENT"
-        //         }
-        //       }
-        //     ],
-        //   },
-        // },
         {
           "type": "template",
           "format": "expanded",
@@ -443,6 +413,7 @@ final dynamic markAttendanceFlow = {
                           {
                             "type": "template",
                             "format": "checkbox",
+                            "fieldKey": "checkboxValue",
                             "value": false,
                           },
                           {
@@ -519,8 +490,7 @@ final dynamic markAttendanceFlow = {
       ]
     },
     {
-      "data": "AttendanceWrapper",
-      "dataSource": "attendees",
+      "items": "{{contextData.0.attendees}}",
       "attendanceLogs":
           "{{fn:todayAttendanceLogs(widgetData, contextData.0.AttendanceRegisterModel)}}",
       "type": "template",
@@ -543,7 +513,7 @@ final dynamic markAttendanceFlow = {
           "field": "status",
           "widgetKey": "checkboxValue",
           "operation": "in",
-          "values": [1.0, 0.0]
+          "values": [-1.0]
         },
         {
           "type": "sort",
@@ -586,77 +556,192 @@ final dynamic markAttendanceFlow = {
             "type": "template",
             "format": "customRow",
             "hide":
-                "{{fn:showMarkAttendanceButtons(widgetData, item, contextData.0.AttendanceRegisterModel)}}",
+                "{{fn:hideMarkAttendanceButtons(widgetData, item, contextData.0.AttendanceRegisterModel)}}",
             "properties": {
               "mainAxisAlignment": "start",
               "crossAxisAlignment": "stretch",
+              "spacing": "spacer2"
             },
             "children": [
               {
+                "fieldKey": "{{item.individualId}}",
+                "fieldValue": "present",
+                "groupKey": "attendanceCollection",
                 "type": "template",
-                "format": "expanded",
-                "child": {
-                  "fieldKey": "{{item.individualId}}",
-                  "fieldValue": "present",
-                  "groupKey": "attendanceCollection",
-                  "type": "template",
-                  "format": "selectButton",
-                  "label": "PRESENT",
-                  "prefixIcon": "Check",
-                  "properties": {
-                    "color": "green",
-                    "type": "secondary",
-                    "selectedType": "primary",
-                    "size": "small",
-                    "mainAxisAlignment": "center"
-                  },
-                  "onAction": [
-                    {
-                      "actionType": "CUSTOM_DATA",
-                      "properties": {
-                        "widgetData":
-                            "{{fn:markAttendance(widgetData, item.entity, contextData.0.AttendanceRegisterModel, 1)}}"
-                      }
-                    }
-                  ]
-                }
+                "format": "selectButton",
+                "label": "PRESENT",
+                "prefixIcon": "Check",
+                "properties": {
+                  "color": "green",
+                  "type": "secondary",
+                  "selectedType": "primary",
+                  "size": "small",
+                  "mainAxisAlignment": "center"
+                },
+                "onAction": []
               },
               {
+                "fieldKey": "{{item.individualId}}",
+                "fieldValue": "absent",
+                "groupKey": "attendanceCollection",
                 "type": "template",
-                "format": "sizedBox",
-                "width": 12.0,
-              },
-              {
-                "type": "template",
-                "format": "expanded",
-                "child": {
-                  "fieldKey": "{{item.individualId}}",
-                  "fieldValue": "absent",
-                  "groupKey": "attendanceCollection",
-                  "type": "template",
-                  "format": "selectButton",
-                  "label": "ABSENT",
-                  "prefixIcon": "Close",
-                  "properties": {
-                    "color": "red",
-                    "type": "secondary",
-                    "selectedType": "primary",
-                    "size": "small",
-                    "mainAxisAlignment": "center"
-                  },
-                  "onAction": [
-                    {
-                      "actionType": "CUSTOM_DATA",
-                      "properties": {
-                        "widgetData":
-                            "{{fn:markAttendance(widgetData, item.entity, contextData.0.AttendanceRegisterModel, 0)}}"
-                      }
-                    }
-                  ]
-                }
+                "format": "selectButton",
+                "label": "ABSENT",
+                "prefixIcon": "Close",
+                "properties": {
+                  "color": "red",
+                  "type": "secondary",
+                  "selectedType": "primary",
+                  "size": "small",
+                  "mainAxisAlignment": "center"
+                },
+                "onAction": []
               }
             ]
-          }
+          },
+          {
+            "type": "template",
+            "format": "selectButton",
+            "selectionConditions": [
+              {
+                "condition": "NOT_EMPTY",
+                "target":
+                    "{{fn:getCurrentSignature(widgetData, item.entity.individualId)}}",
+              },
+              {
+                "condition": "CONTAINS",
+                "target": "{{widgetData.attendanceCollection}}",
+                "value": "{{item.individualId}}"
+              },
+            ],
+            "hide":
+                "{{fn:hideMarkAttendanceButtons(widgetData, item, contextData.0.AttendanceRegisterModel)}}",
+            "label": "SIGNATURE",
+            "prefixIcon": "EditSquare",
+            "properties": {
+              "type": "secondary",
+              "selectedType": "primary",
+              "size": "small",
+              "mainAxisAlignment": "center"
+            },
+            "onAction": [],
+            "popupConfig": {
+              "title": "MARK_ATTENDANCE_CAPTURE_SIGNATURE_LABEL",
+              "titleIcon": "CheckCircle",
+              "showCloseButton": true,
+              "barrierDismissible": true,
+              "body": [
+                {
+                  "type": "template",
+                  "format": "signatureCapture",
+                  "fieldName": "signature",
+                  "fieldKey": "{{item.entity.individualId}}",
+                  "groupKey": "signatureCollection",
+                  "signatureData":
+                      "{{fn:getExistingSignature(item.entity.individualId, contextData.0.attendanceLog)}}",
+                  "clearSignatureLabel":
+                      "MARK_ATTENDANCE_CLEAR_SIGNATURE_LABEL",
+                  "saveSignatureLabel": "MARK_ATTENDANCE_CONFIRM_LABEL",
+                  "signatureRequiredLabel":
+                      "MARK_ATTENDANCE_SIGNATURE_REQUIRED_LABEL",
+                  "popupConfig": {
+                    "title": "MARK_ATTENDANCE_COMPARE_SIGNATURE_LABEL",
+                    "titleIcon": "CheckCircle",
+                    "showCloseButton": true,
+                    "barrierDismissible": true,
+                    "body": [
+                      {
+                        "type": "template",
+                        "format": "signatureCompare",
+                        "registerId": "{{item.entity.registerId}}",
+                        "individualId": "{{item.entity.individualId}}",
+                        "individualName":
+                            "{{item.entity.first.individual.name.givenName}}",
+                        "existingSignatureData":
+                            "{{fn:getExistingSignature(item.entity.individualId, contextData.0.attendanceLog)}}",
+                        "currentSignatureData":
+                            "{{fn:getCurrentSignature(widgetData, item.entity.individualId)}}",
+                        "compareSignatureLabel":
+                            "MARK_ATTENDANCE_COMPARE_SIGNATURE_LABEL",
+                        "presentSignatureLabel":
+                            "MARK_ATTENDANCE_PRESENT_SIGNATURE_LABEL",
+                        "absentSignatureLabel":
+                            "MARK_ATTENDANCE_ABSENT_SIGNATURE_LABEL",
+                        "referenceSignatureLabel":
+                            "MARK_ATTENDANCE_REFERENCE_SIGNATURE_LABEL",
+                        "actualSignatureLabel":
+                            "MARK_ATTENDANCE_ACTUAL_SIGNATURE_LABEL",
+                        "onAction": [
+                          {"actionType": "CLOSE_POPUP", "properties": {}},
+                        ]
+                      },
+                      {
+                        "type": "template",
+                        "format": "customRow",
+                        "properties": {
+                          "mainAxisAlignment": "start",
+                          "crossAxisAlignment": "stretch",
+                          "spacing": "spacer3"
+                        },
+                        "children": [
+                          {
+                            "type": "template",
+                            "format": "expanded",
+                            "child": {
+                              "fieldKey": "{{item.individualId}}",
+                              "fieldValue": "absent",
+                              "groupKey": "attendanceCollection",
+                              "type": "template",
+                              "format": "selectButton",
+                              "label": "ABSENT",
+                              "prefixIcon": "Close",
+                              "properties": {
+                                "color": "red",
+                                "type": "primary",
+                                "selectedType": "secondary",
+                                "size": "small",
+                                "mainAxisAlignment": "center"
+                              },
+                              "onAction": [
+                                {"actionType": "CLOSE_POPUP", "properties": {}},
+                              ]
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "format": "expanded",
+                            "child": {
+                              "fieldKey": "{{item.individualId}}",
+                              "fieldValue": "present",
+                              "groupKey": "attendanceCollection",
+                              "type": "template",
+                              "format": "selectButton",
+                              "label": "PRESENT",
+                              "prefixIcon": "Check",
+                              "properties": {
+                                "color": "green",
+                                "type": "primary",
+                                "selectedType": "secondary",
+                                "size": "small",
+                                "mainAxisAlignment": "center"
+                              },
+                              "onAction": [
+                                {"actionType": "CLOSE_POPUP", "properties": {}},
+                              ]
+                            }
+                          },
+                        ]
+                      }
+                    ]
+                  },
+                  "onAction": [
+                    {"actionType": "CLOSE_POPUP", "properties": {}},
+                  ]
+                }
+              ],
+              "onAction": []
+            },
+          },
         ],
       },
     }
