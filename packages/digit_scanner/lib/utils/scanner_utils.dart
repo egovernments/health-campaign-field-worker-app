@@ -149,7 +149,8 @@ class DigitScannerUtils {
                           .translate(i18.scanner.resourceAlreadyScanned));
                   return;
                 }
-              } catch (_) {
+              } catch (e) {
+                debugPrint('Duplicate check failed (GS1 camera scan): $e');
                 await handleError(localizations
                     .translate(i18.scanner.duplicateCheckFailed));
                 return;
@@ -213,7 +214,8 @@ class DigitScannerUtils {
                         .translate(i18.scanner.resourceAlreadyScanned));
                 return;
               }
-            } catch (_) {
+            } catch (e) {
+              debugPrint('Duplicate check failed (QR camera scan): $e');
               await handleError(localizations
                   .translate(i18.scanner.duplicateCheckFailed));
               return;

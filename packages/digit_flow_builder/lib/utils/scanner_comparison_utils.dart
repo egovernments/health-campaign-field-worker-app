@@ -2,19 +2,6 @@ import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:flutter/foundation.dart';
 
-/// Thrown when a duplicate check cannot complete due to infrastructure issues
-/// (e.g., CrudService not initialized, DB query failure, entity parse error).
-///
-/// Callers should treat this as "check inconclusive" and block the scan
-/// rather than allowing it to proceed unchecked.
-class DuplicateCheckException implements Exception {
-  final String message;
-  const DuplicateCheckException(this.message);
-
-  @override
-  String toString() => 'DuplicateCheckException: $message';
-}
-
 /// Utility class for scanner duplicate detection via DB queries.
 ///
 /// Used by [ScannerComparisonProvider] in screen_builder to perform
@@ -88,6 +75,37 @@ class ScannerComparisonUtils {
     Map<String, dynamic> formValues,
     Map<String, dynamic> navigationParams,
   ) async {
+    try {
+      return await _executeDuplicateCheckInternal(
+        schema,
+        compositeKey,
+        fieldName,
+        scannedValue,
+        formValues,
+        navigationParams,
+      );
+    } catch (e, stackTrace) {
+      // Log the full error for debugging, but do NOT block scanning.
+      // The in-session duplicate check (bloc state comparison) still runs
+      // as a safety net even when the DB check fails.
+      debugPrint(
+          'ScannerComparisonUtils: DB duplicate check failed, allowing scan.\n'
+          'Error: $e\n'
+          'StackTrace: $stackTrace');
+      return false;
+    }
+  }
+
+  /// Internal implementation of duplicate check. Exceptions propagate to
+  /// [executeDuplicateCheck] which handles them gracefully.
+  static Future<bool> _executeDuplicateCheckInternal(
+    SchemaObject schema,
+    String compositeKey,
+    String fieldName,
+    String scannedValue,
+    Map<String, dynamic> formValues,
+    Map<String, dynamic> navigationParams,
+  ) async {
     // 1. Find comparisonConfig for fieldName in schema
     final config = findComparisonConfig(schema, fieldName);
     if (config == null) return false;
@@ -104,11 +122,54 @@ class ScannerComparisonUtils {
       ...navigationParams,
     };
 
-    // 2. Resolve filter values with switchOn/cases support
-    final resolvedFilters = <SearchFilter>[];
+    // Resolve currentEntityId for multi-entity forms (e.g., stock with
+    // multiple product variants). The screen_builder's navigationParams
+    // doesn't include currentEntity (that's added at multi_entity_tab_view
+    // level below the ScannerComparisonProvider), so we extract the product
+    // variant ID from the schema's source field value using the entity index
+    // embedded in the field name suffix (_item_N).
+    if (!mergedNavParams.containsKey('currentEntityId')) {
+      final entityIndex = _extractEntityIndex(fieldName);
+      if (entityIndex != null) {
+        final multiConfig = _findMultiEntityConfig(schema, fieldName);
+        if (multiConfig != null) {
+          final entities = allSchemaValues[multiConfig.sourceFieldKey];
+          if (entities is List && entityIndex < entities.length) {
+            final entity = entities[entityIndex];
+            if (entity is Map && entity.containsKey('id')) {
+              mergedNavParams['currentEntityId'] = entity['id'];
+              debugPrint('ScannerComparisonUtils: Resolved currentEntityId='
+                  '${entity['id']} from multiEntityConfig index=$entityIndex');
+            }
+          }
+        }
+      }
+    }
+
+    debugPrint('ScannerComparisonUtils: Config found for $fieldName, '
+        'model=${config.model}, extractFrom=${config.extractFrom}');
+
+    // 2. Separate filters into SQL-level and entity-level.
+    // Filters with key prefix "additionalFields." are checked at entity level
+    // against the entity's additionalFields after the SQL query.
+    // All other filters become SQL WHERE clauses on direct columns.
+    final sqlFilters = <ComparisonFilter>[];
+    final entityAdditionalFieldFilters = <ComparisonFilter>[];
     for (final filter in config.filters) {
+      if (filter.key.startsWith('additionalFields.')) {
+        entityAdditionalFieldFilters.add(filter);
+      } else {
+        sqlFilters.add(filter);
+      }
+    }
+
+    // 3. Resolve SQL filter values with switchOn/cases support
+    final resolvedFilters = <SearchFilter>[];
+    for (final filter in sqlFilters) {
       final resolvedValue =
           resolveFilterValue(filter, formValues, mergedNavParams);
+      debugPrint('ScannerComparisonUtils: SQL filter ${filter.key} '
+          'resolved to: $resolvedValue');
       if (resolvedValue == null || resolvedValue.isEmpty) continue;
       resolvedFilters.add(SearchFilter(
         field: filter.key,
@@ -118,7 +179,20 @@ class ScannerComparisonUtils {
       ));
     }
 
-    // 3. For "column" match, add scanned value as direct filter
+    // Resolve entity-level additionalFields filter expected values upfront
+    final resolvedEntityFilters = <String, String>{};
+    for (final filter in entityAdditionalFieldFilters) {
+      final afKey = filter.key.substring('additionalFields.'.length);
+      final resolvedValue =
+          resolveFilterValue(filter, formValues, mergedNavParams);
+      debugPrint('ScannerComparisonUtils: Entity filter $afKey '
+          'resolved to: $resolvedValue');
+      if (resolvedValue != null && resolvedValue.isNotEmpty) {
+        resolvedEntityFilters[afKey] = resolvedValue;
+      }
+    }
+
+    // 4. For "column" match, add scanned value as direct filter
     if (config.extractFrom == 'column') {
       resolvedFilters.add(SearchFilter(
         field: config.extractKey,
@@ -128,13 +202,22 @@ class ScannerComparisonUtils {
       ));
     }
 
-    if (resolvedFilters.isEmpty) return false;
-
-    // 4. Execute search
-    final service = CrudBlocSingleton().crudService;
-    if (!service.isInitialized) {
-      throw const DuplicateCheckException('CrudService not initialized');
+    if (resolvedFilters.isEmpty) {
+      debugPrint(
+          'ScannerComparisonUtils: No resolved SQL filters, skipping check');
+      return false;
     }
+
+    // 5. Execute search
+    final service = CrudBlocSingleton().crudService;
+    // Lazily initialize if not yet ready (matches CrudBloc._onSearch pattern)
+    if (!service.isInitialized) {
+      debugPrint('ScannerComparisonUtils: Initializing CrudService');
+      service.init();
+    }
+
+    debugPrint('ScannerComparisonUtils: Executing search with '
+        '${resolvedFilters.length} SQL filters on model ${config.model}');
 
     final (results, _) = await service.searchEntities(
       query: GlobalSearchParameters(
@@ -145,31 +228,60 @@ class ScannerComparisonUtils {
     );
 
     final entities = results[config.model] ?? [];
+    debugPrint(
+        'ScannerComparisonUtils: Found ${entities.length} matching entities');
 
-    // 5. For "column" match: any result = duplicate
+    // 6. For "column" match: any result = duplicate
     if (config.extractFrom == 'column') {
       return entities.isNotEmpty;
     }
 
-    // 6. For "additionalFields" match: compare scanned value
+    // 7. For "additionalFields" match: check entity-level filters then barcode
     // Normalize the scanned value so key ordering doesn't matter
     final normalizedScanned = _normalizeBarcode(scannedValue);
     for (final entity in entities) {
       try {
         final additionalFields = (entity as dynamic).additionalFields;
         if (additionalFields == null) continue;
+
+        // Check entity-level additionalFields filters first.
+        // ALL filters must match for this entity to be considered a candidate.
+        // e.g., stockEntryType must match the current transaction type.
+        bool entityFiltersMatch = true;
+        if (resolvedEntityFilters.isNotEmpty) {
+          for (final entry in resolvedEntityFilters.entries) {
+            bool found = false;
+            for (final field in additionalFields.fields) {
+              if (field.key == entry.key &&
+                  field.value?.toString() == entry.value) {
+                found = true;
+                break;
+              }
+            }
+            if (!found) {
+              entityFiltersMatch = false;
+              break;
+            }
+          }
+        }
+        if (!entityFiltersMatch) continue;
+
+        // Entity-level filters passed — now check for barcode match
         for (final field in additionalFields.fields) {
           if (field.key == config.extractKey && field.value != null) {
             final existingValues =
                 extractComparisonValues(field.value.toString());
             if (existingValues.contains(scannedValue) ||
                 existingValues.contains(normalizedScanned)) {
+              debugPrint(
+                  'ScannerComparisonUtils: DUPLICATE found in entity');
               return true;
             }
           }
         }
       } catch (e) {
-        throw DuplicateCheckException('Entity parse failed: $e');
+        debugPrint('ScannerComparisonUtils: Entity parse failed: $e');
+        continue;
       }
     }
     return false;
@@ -306,5 +418,30 @@ class ScannerComparisonUtils {
     final pairs = barcode.split('|').map((p) => p.trim()).toList();
     pairs.sort();
     return pairs.join('|');
+  }
+
+  /// Extracts the entity index from a multi-entity field name suffix.
+  ///
+  /// e.g., `scanResource_item_0` → `0`, `scanResource` → `null`
+  static int? _extractEntityIndex(String fieldName) {
+    final match = RegExp(r'_item_(\d+)$').firstMatch(fieldName);
+    return match != null ? int.tryParse(match.group(1)!) : null;
+  }
+
+  /// Finds the [MultiEntityConfig] for the page containing a given field.
+  ///
+  /// Strips the `_item_N` suffix and searches for the base field name
+  /// across all pages. Returns the page's multiEntityConfig if found.
+  static MultiEntityConfig? _findMultiEntityConfig(
+      SchemaObject schema, String fieldName) {
+    final baseFieldName = fieldName.replaceAll(RegExp(r'_item_\d+$'), '');
+    for (final page in schema.pages.values) {
+      final properties = page.properties;
+      if (properties == null || page.multiEntityConfig == null) continue;
+      if (properties.containsKey(baseFieldName)) {
+        return page.multiEntityConfig;
+      }
+    }
+    return null;
   }
 }

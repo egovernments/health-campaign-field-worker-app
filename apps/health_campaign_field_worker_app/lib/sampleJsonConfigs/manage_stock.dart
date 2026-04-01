@@ -1163,24 +1163,22 @@ final dynamic sampleInventoryFlows = {
                   {
                     "key": "senderId",
                     "value": "{{navigation.facilityFromWhich}}",
-                    "operation": "equals",
-                    "switchOn": "{{navigation.stockEntryType}}",
-                    "cases": {
-                      "ISSUED": "{{navigation.facilityToWhich}}",
-                      "DAMAGED": "{{navigation.facilityToWhich}}",
-                      "LOSS": "{{navigation.facilityToWhich}}"
-                    }
+                    "operation": "equals"
                   },
                   {
                     "key": "receiverId",
                     "value": "{{navigation.facilityToWhich}}",
-                    "operation": "equals",
-                    "switchOn": "{{navigation.stockEntryType}}",
-                    "cases": {
-                      "ISSUED": "{{navigation.facilityFromWhich}}",
-                      "DAMAGED": "{{navigation.facilityFromWhich}}",
-                      "LOSS": "{{navigation.facilityFromWhich}}"
-                    }
+                    "operation": "equals"
+                  },
+                  {
+                    "key": "productVariantId",
+                    "value": "{{navigation.currentEntityId}}",
+                    "operation": "equals"
+                  },
+                  {
+                    "key": "additionalFields.stockEntryType",
+                    "value": "{{navigation.stockEntryType}}",
+                    "operation": "equals"
                   }
                 ],
                 "errorMessage": "RESOURCES_ALREADY_SCANNED"

@@ -632,7 +632,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                     );
                                     return;
                                   }
-                                } catch (_) {
+                                } catch (e) {
+                                  debugPrint('Duplicate check failed (GS1 manual entry): $e');
                                   Toast.showToast(
                                     context,
                                     type: ToastType.error,
@@ -757,7 +758,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                     );
                                     return;
                                   }
-                                } catch (_) {
+                                } catch (e) {
+                                  debugPrint('Duplicate check failed (QR manual entry GS1 mode): $e');
                                   Toast.showToast(
                                     context,
                                     type: ToastType.error,
@@ -1031,7 +1033,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                   );
                                   return;
                                 }
-                              } catch (_) {
+                              } catch (e) {
+                                debugPrint('Duplicate check failed (QR manual entry): $e');
                                 Toast.showToast(
                                   context,
                                   type: ToastType.error,
