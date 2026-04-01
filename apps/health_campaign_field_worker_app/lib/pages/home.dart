@@ -813,6 +813,75 @@ class _HomePageState extends LocalizedState<HomePage> {
       return isSameDay && (filterUploadedAttendanceLogs?.isEmpty ?? true);
     });
 
+    FunctionRegistry.register('todayAttendeesList', (args, stateData) {
+      final widgetData = args.isNotEmpty && args[0] != null ? args[0] : null;
+      List items = args.length > 1 && args[1] != null ? args[1] : [];
+      final attendanceLogs = args.length > 2 && args[2] != null ? args[2] : [];
+      final attendanceRegisterModel =
+          args.length > 3 && args[3] != null ? args[3] : null;
+
+      final selectedDate = widgetData?['selectedDate'] as int?;
+      final isMorning = widgetData?['sessionToggle'] as bool? ?? true;
+
+      Map<String, dynamic>? attendanceTime =
+          _attendanceTime(selectedDate, isMorning, attendanceRegisterModel);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      // Filter logs for the selected entry and exit times that are uploaded
+      final todayAttendanceLogs = attendanceLogs?.where((log) {
+        final logTime = log.time;
+        if (logTime == null) return false;
+        return (logTime == entryTime || logTime == exitTime);
+      }).toList();
+
+      items = items.map((item) {
+        if (item is Map && item['individualId'] != null) {
+          double status = -1.0;
+          final individualId = item['individualId'];
+          List filterAttendanceLogs = todayAttendanceLogs.where((log) {
+            return log.individualId == individualId;
+          }).toList();
+          if (filterAttendanceLogs.isEmpty) {
+            status = -1.0; // no logs
+            item['status'] = status;
+            return item;
+          }
+          final hasMorningLog = filterAttendanceLogs.any((element) {
+            final elementType = element.type?.toString();
+            final elementStatus = element.status;
+            if (elementStatus == null) return false;
+            if (elementType == "ENTRY") {
+              return elementStatus == 'ACTIVE';
+            }
+            return false;
+          });
+          ;
+          final hasEveningLog = filterAttendanceLogs.any((element) {
+            final elementType = element.type?.toString();
+            final elementStatus = element.status;
+            if (elementStatus == null) return false;
+            if (elementType == "EXIT") {
+              return elementStatus == 'ACTIVE';
+            }
+            return false;
+          });
+          if (hasMorningLog && hasEveningLog) {
+            status = 1.0; // present
+          } else if (!hasMorningLog && !hasEveningLog) {
+            status = 0.0; // absent
+          } else {
+            status = 0.5; // half day
+          }
+          item['status'] = status;
+        }
+        return item;
+      }).toList();
+
+      return items;
+    });
+
     FunctionRegistry.register('allAttendanceSelected', (args, stateData) {
       if (args.isEmpty || args.first == null) return false;
 

@@ -462,9 +462,8 @@ final dynamic markAttendanceFlow = {
       ]
     },
     {
-      "items": "{{contextData.0.attendees}}",
-      "attendanceLogs":
-          "{{fn:todayAttendanceLogs(widgetData, contextData.0.AttendanceRegisterModel)}}",
+      "items":
+          "{{fn:todayAttendeesList(widgetData, contextData.0.attendees, contextData.0.attendanceLog, contextData.0.AttendanceRegisterModel)}}",
       "type": "template",
       "format": "groupListView",
       "fieldName": "groupListView",

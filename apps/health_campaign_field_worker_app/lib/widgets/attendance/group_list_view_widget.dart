@@ -26,54 +26,6 @@ class GroupListViewWidget extends ResolvedFlowWidget {
     final stateData = resolved.stateData;
     List items = resolved.resolveField(json['items']) ?? [];
 
-    //Update the items with attendance status
-    List attendanceLogs = resolved.resolveField(json['attendanceLogs']);
-
-    items = items.map((item) {
-      if (item is Map && item['individualId'] != null) {
-        double status = -1.0;
-        final individualId = item['individualId'];
-        List filterAttendanceLogs = attendanceLogs.where((log) {
-          return log.individualId == individualId;
-        }).toList();
-        if (filterAttendanceLogs.isEmpty) {
-          status = -1.0; // no logs
-          item['status'] = status;
-          return item;
-        }
-        final hasMorningLog = filterAttendanceLogs.any((element) {
-          final elementType = element.type?.toString();
-          final elementStatus = element.status;
-          if (elementStatus == null) return false;
-          if (elementType == "ENTRY") {
-            return elementStatus == 'ACTIVE';
-          }
-          return false;
-        });
-        ;
-        final hasEveningLog = filterAttendanceLogs.any((element) {
-          final elementType = element.type?.toString();
-          final elementStatus = element.status;
-          if (elementStatus == null) return false;
-          if (elementType == "EXIT") {
-            return elementStatus == 'ACTIVE';
-          }
-          return false;
-        });
-        if (hasMorningLog && hasEveningLog) {
-          status = 1.0; // present
-        } else if (!hasMorningLog && !hasEveningLog) {
-          status = 0.0; // absent
-        } else {
-          status = 0.5; // half day
-        }
-        item['status'] = status;
-      }
-      return item;
-    }).toList();
-
-    var testList = resolved.resolveField(json['testList']);
-
     // Optional client-side filtering for already-resolved list items.
     final clientFilters = json['clientFilter'] as List<dynamic>?;
     if (clientFilters != null && clientFilters.isNotEmpty && items is List) {
