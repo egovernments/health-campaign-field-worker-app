@@ -219,8 +219,15 @@ class UpdateExecutor extends ActionExecutor {
       for (final modify in modifyList) {
         if (modify is Map<String, dynamic>) {
           final key = modify['key'] as String?;
-          final value = modify['value'];
+          var value = modify['value'];
           if (key != null) {
+            // Resolve template expressions like {{navigation.mrnNumber}}
+            if (value is String && value.contains('{{')) {
+              final resolved = resolveValue(value, contextData);
+              if (resolved != null) {
+                value = resolved;
+              }
+            }
             modifyMap[key] = value;
           }
         }

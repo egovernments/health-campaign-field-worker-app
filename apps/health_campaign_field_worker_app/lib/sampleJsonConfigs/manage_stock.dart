@@ -2016,16 +2016,9 @@ final dynamic sampleInventoryFlows = {
             "name": "stock",
             "data": [
               {
-                "key": "additionalFields",
-                "value": "{{navigation.selectedStock}}",
-                "operation": "contains",
-                "applyIf": "{{fn:isNotEmpty(navigation.selectedStock)}}==true"
-              },
-              {
                 "key": "clientReferenceId",
                 "value": "{{navigation.clientReferenceId}}",
-                "operation": "equals",
-                "applyIf": "{{fn:isEmpty(navigation.selectedStock)}}==true"
+                "operation": "equals"
               }
             ]
           }
@@ -2411,6 +2404,10 @@ final dynamic sampleInventoryFlows = {
               {
                 "key": "StockModel.additionalFields.fields.status",
                 "value": "ACCEPTED"
+              },
+              {
+                "key": "StockModel.additionalFields.fields.mrnNumber",
+                "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
               }
             ]
           }
