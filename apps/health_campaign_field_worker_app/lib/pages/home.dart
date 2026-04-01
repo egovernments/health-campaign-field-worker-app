@@ -657,7 +657,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
     });
 
-    FunctionRegistry.register('showMarkAttendanceButtons', (args, stateData) {
+    FunctionRegistry.register('hideMarkAttendanceButtons', (args, stateData) {
       final widgetData = args.isNotEmpty ? args[0] : null;
       final attendee = args.length > 1 ? args[1] : null;
       final attendanceRegister =
@@ -666,7 +666,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       if (widgetData == null ||
           attendee == null ||
           attendanceRegister == null) {
-        return true; // show buttons if no attendee or logs
+        return false; // hide buttons if no attendee or logs
       }
 
       final individualId = attendee?["individualId"];
@@ -676,33 +676,126 @@ class _HomePageState extends LocalizedState<HomePage> {
       final isMorning = widgetData['sessionToggle'] as bool? ?? true;
       final attendanceManualData = widgetData['attendanceManualData'] as Map?;
 
+      if (selectedDate == null)
+        return false; // hide buttons if no date selected
+
       Map<String, dynamic>? attendanceTime =
           _attendanceTime(selectedDate, isMorning, attendanceRegister);
 
       var entryTime = attendanceTime?['entryTime'];
       var exitTime = attendanceTime?['exitTime'];
 
-      List filterAttendanceLogs = attendanceLogs.where((log) {
+      // Filter logs for this individual and selected session times
+      List filterLocalAttendanceLogs = attendanceLogs.where((log) {
         return ((entryTime != null && log.time == entryTime) ||
                 (exitTime != null && log.time == exitTime)) &&
-            log.individualId == individualId?.toString();
+            log.individualId == individualId?.toString() &&
+            log.uploadToServer != true;
       }).toList();
 
-      var status = attendee['status'] ?? -1.0;
-      var uploaded =
-          filterAttendanceLogs.any((log) => log.uploadToServer == true);
+      // Filter logs for this individual and selected session times
+      List filterUploadedAttendanceLogs = attendanceLogs.where((log) {
+        return ((entryTime != null && log.time == entryTime) ||
+                (exitTime != null && log.time == exitTime)) &&
+            log.individualId == individualId?.toString() &&
+            log.uploadToServer == true;
+      }).toList();
 
       final now = DateTime.now();
-      final selectedDateTIme =
-          DateTime.fromMillisecondsSinceEpoch(selectedDate!);
-      bool isSameDay = selectedDateTIme.year == now.year &&
-          selectedDateTIme.month == now.month &&
-          selectedDateTIme.day == now.day;
+      final selectedDateTime =
+          DateTime.fromMillisecondsSinceEpoch(selectedDate);
+      bool isSameDay = selectedDateTime.year == now.year &&
+          selectedDateTime.month == now.month &&
+          selectedDateTime.day == now.day;
 
-      bool show = (status == -1.0 || uploaded == false) &&
-          (!isSameDay || attendanceManualData != null);
+      bool show = false;
+
+      if (filterUploadedAttendanceLogs.isNotEmpty) {
+        show =
+            false; // hide buttons if already uploaded logs exist for this session
+      } else if (!isSameDay) {
+        show = true; // show buttons for past dates if no uploaded logs exist
+      } else {
+        show = filterLocalAttendanceLogs.isNotEmpty ||
+            (isSameDay &&
+                attendanceManualData !=
+                    null); // show buttons for current day if local logs exist or manual marking is enabled
+      }
 
       return !show;
+    });
+
+    FunctionRegistry.register('showAttendanceQRButton', (args, stateData) {
+      final selectedDate = args.isNotEmpty ? args[0] : null;
+      final isMorning = args.length > 1 ? args[1] : null;
+      final attendanceRegisterModel = args.length > 2 ? args[2] : null;
+
+      if (attendanceRegisterModel == null) {
+        return false; // hide if no attendance data
+      }
+
+      if (selectedDate == null) {
+        return false; // hide buttons if no date selected
+      }
+
+      Map<String, dynamic>? attendanceTime = _attendanceTime(selectedDate,
+          isMorning == "true" ? true : false, attendanceRegisterModel);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      final attendanceLogs = attendanceRegisterModel.attendanceLog;
+
+      // Filter logs for the selected entry and exit times that are uploaded
+      final filterUploadedAttendanceLogs = attendanceLogs?.where((log) {
+        final logTime = log.time;
+        if (logTime == null) return false;
+        return (logTime == entryTime || logTime == exitTime) &&
+            log.uploadToServer == true;
+      }).toList();
+
+      final now = DateTime.now();
+      final selectedDateTime =
+          DateTime.fromMillisecondsSinceEpoch(selectedDate);
+      bool isSameDay = selectedDateTime.year == now.year &&
+          selectedDateTime.month == now.month &&
+          selectedDateTime.day == now.day;
+      return isSameDay && (filterUploadedAttendanceLogs?.isEmpty ?? true);
+    });
+
+    FunctionRegistry.register('allAttendanceSelected', (args, stateData) {
+      if (args.isEmpty || args.first == null) return false;
+
+      final widgetData = args.first;
+      final attendanceRegisterModel = args.length > 1 ? args[1] : null;
+
+      final selectedDate = widgetData?['selectedDate'] as int?;
+      final isMorning = widgetData?['sessionToggle'] as bool? ?? true;
+
+      Map<String, dynamic>? attendanceTime =
+          _attendanceTime(selectedDate, isMorning, attendanceRegisterModel);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      final attendanceCollection = widgetData?['attendanceCollection'] as Map?;
+
+      final attendees = attendanceRegisterModel?.attendees ?? [];
+      final attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
+
+      // Filter logs for the selected entry and exit times that are not yet uploaded
+      final filterAttendanceLogs = attendanceLogs.where((log) {
+        final logTime = log.time;
+        final logUploadToServer = log.uploadToServer;
+        return (logTime == entryTime || logTime == exitTime) &&
+            logUploadToServer != true;
+      }).toList();
+
+      if (filterAttendanceLogs.isNotEmpty) {
+        return attendees.length != (filterAttendanceLogs.length / 2);
+      }
+
+      return attendees.length != attendanceCollection?.length;
     });
 
     FunctionRegistry.register('updateAttendeeStatus', (args, stateData) {
@@ -933,55 +1026,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       return status; // 1.0 for present, 0.0 for absent, 0.5 for half day, -1.0 for unmarked
     });
 
-    FunctionRegistry.register('isSameDay', (args, stateData) {
-      if (args.isEmpty || args.first == null) return false;
-
-      final date = args.first;
-      final attendanceRegisterModel = args.length > 1 ? args[1] : null;
-      final isMorning = args.length > 2 ? args[2] as String? ?? 'true' : 'true';
-
-      if (attendanceRegisterModel == null) return false;
-      if (date is! int) return false;
-      final dateTime = DateTime.fromMillisecondsSinceEpoch(date);
-      // final entryTime = DateTime(dateTime.year, dateTime.month, dateTime.day, 9)
-      //     .millisecondsSinceEpoch;
-
-      var entryTime = attendanceRegisterModel
-                  .additionalDetails?[EnumValues.sessions.toValue()] ==
-              2
-          ? AttendanceDateTimeManagement.getMillisecondEpoch(
-              dateTime,
-              isMorning == "true" ? 0 : 1,
-              "entryTime",
-            )
-          : (DateTime(dateTime.year, dateTime.month, dateTime.day, 9)
-              .millisecondsSinceEpoch);
-      final attendanceLogs = attendanceRegisterModel.attendanceLog;
-      final filterAttendanceLogs = attendanceLogs?.where((log) {
-        final logTime = log.time;
-        if (logTime == null) return false;
-        return logTime == entryTime;
-      }).toList();
-
-      final now = DateTime.now();
-
-      bool isSameDay = dateTime.year == now.year &&
-          dateTime.month == now.month &&
-          dateTime.day == now.day;
-      return isSameDay && (filterAttendanceLogs ?? []).isEmpty;
-    });
-
-    FunctionRegistry.register('allAttendanceSelected', (args, stateData) {
-      if (args.isEmpty || args.first == null) return false;
-
-      final attendee = args.first;
-      final attendanceCollection = args.length > 1 ? args[1] as Map? : null;
-
-      if (attendee is! List || attendanceCollection is! Map) return true;
-
-      return attendee.length != attendanceCollection.length;
-    });
-
     // Helper to extract stockEntryType from additionalFields array
     String getStockEntryTypeFromFields(dynamic fields) {
       if (fields == null) return '';
@@ -1065,55 +1109,47 @@ class _HomePageState extends LocalizedState<HomePage> {
       };
     });
 
-    FunctionRegistry.register('getExistingSignature', (args, stateData) {
-      if (args.isEmpty || args.first == null) return false;
+    FunctionRegistry.register('getCurrentSignature', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final individualId = args.length > 1 ? args[1] as String? : null;
 
-      final registerId = args.first?.toString() ?? '';
-      final individualId = args.length > 1 ? args[1]?.toString() ?? '' : '';
-      final attendanceLogs = args.length > 2 ? args[2] as List<dynamic>? : null;
+      if (widgetData == null || individualId == null) return null;
+
+      final signatureCollection = widgetData['signatureCollection'] as Map?;
+      final signatureData =
+          signatureCollection?[individualId]?['signatureData'] as String?;
+
+      return signatureData;
+    });
+
+    FunctionRegistry.register('getExistingSignature', (args, stateData) {
+      final individualId = args.isNotEmpty ? args[0]?.toString() : null;
+      final attendanceLogs = args.length > 1 ? args[1] as List<dynamic>? : null;
 
       if (attendanceLogs == null || attendanceLogs.isEmpty) return null;
-      List log = attendanceLogs
-          .where(
-            (log) =>
-                log['individualId'] == individualId &&
-                log['registerId'] == registerId,
-          )
-          .toList();
-      if (log.isNotEmpty) {
-        var filterLogs = log.firstWhereOrNull((log) {
-          return log['additionalDetails'] != null &&
-              log['additionalDetails'].containsKey('signatureData');
-        });
-
-        if (filterLogs == null) return null;
-        var additionalDetails = filterLogs['additionalDetails'] ?? null;
-
-        var signatureData = additionalDetails != null
-            ? additionalDetails['signatureData'] as String?
-            : null;
-        return signatureData;
-      }
-      return null;
+      List logs = attendanceLogs.where((log) {
+        final additionalDetails = log.additionalDetails as Map?;
+        final isFirstSignature =
+            additionalDetails?['isFirstSignature'] == "true";
+        return log.individualId == individualId && isFirstSignature;
+      }).toList();
+      return logs.isNotEmpty
+          ? (logs.first.additionalDetails?['signatureData'])
+          : null;
     });
 
     FunctionRegistry.register('createAttendanceLog', (args, stateData) {
       if (args.isEmpty || args.first == null) return null;
 
       final widgetData = args.first as Map;
-      List<dynamic> attendanceLogs =
-          args.length > 1 ? args[1] as List<dynamic>? ?? [] : [];
-      final attendanceRegisterModel = args.length > 2 ? args[2] : null;
-      final uploadToServer = args.length > 3 ? args[3] as int? : 0;
+      final attendanceRegisterModel = args.length > 1 ? args[1] : null;
+      final uploadToServer = args.length > 2 ? args[2] as int? : 0;
 
       final registerId = attendanceRegisterModel?.id ?? '';
-      final isNotSingleSession =
-          attendanceRegisterModel?.additionalDetails?["sessions"] == 2;
+      List attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
 
       final attendanceCollection = widgetData['attendanceCollection'] as Map?;
-      if (attendanceCollection == null || attendanceCollection.isEmpty) {
-        return null;
-      }
+      final signatureCollection = widgetData['signatureCollection'] as Map?;
 
       final comment = widgetData['COMMENT'] as String?;
       final isMorning = widgetData['sessionToggle'] as bool? ?? true;
@@ -1136,9 +1172,30 @@ class _HomePageState extends LocalizedState<HomePage> {
       final userUuid = FlowBuilderSingleton().loggedInUser?.uuid ?? '';
       final now = DateTime.now().millisecondsSinceEpoch;
 
-      final List<EntityModel> entities = [];
+      List todayAttendanceLogs = attendanceLogs.where((log) {
+        final logTime = log.time;
+        return logTime == entryTime || logTime == exitTime;
+      }).toList();
 
-      for (final entry in attendanceCollection.entries) {
+      //
+      List notMarkedAttendanceLogs = todayAttendanceLogs.where((log) {
+        bool isMarked = log.individualId != null &&
+            attendanceCollection?.containsKey(log.individualId.toString()) ==
+                true &&
+            (attendanceCollection?[log.individualId.toString()] == 'present' ||
+                attendanceCollection?[log.individualId.toString()] == 'absent');
+        return !isMarked;
+      }).toList(); // logs that are not marked
+
+      notMarkedAttendanceLogs = notMarkedAttendanceLogs.map((e) {
+        return e.copyWith(
+          uploadToServer: uploadToServer == 1,
+        );
+      }).toList();
+
+      final List<EntityModel> entities = [...notMarkedAttendanceLogs];
+
+      for (final entry in (attendanceCollection ?? {}).entries) {
         final individualId = entry.key.toString();
         final data = entry.value;
         if (data == null) continue;
@@ -1152,8 +1209,11 @@ class _HomePageState extends LocalizedState<HomePage> {
         if (markStatus == -1.0) continue; // skip unmarked
 
         final isPresent = markStatus >= 1.0;
-        // final isFirstSignature = data['isFirstSignature'] as bool? ?? false;
-        // final signatureData = data['signatureData'] as String?;
+        final isFirstSignature =
+            signatureCollection?[individualId]?['isFirstSignature'] as bool? ??
+                false;
+        final signatureData =
+            signatureCollection?[individualId]?['signatureData'] as String?;
         // final qrCreatedTime = data['qrCreatedTime'] as int?;
         final logStatus = isPresent
             ? EnumValues.active.toValue()
@@ -1164,9 +1224,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           if (boundaryCode.isNotEmpty)
             EnumValues.boundaryCode.toValue(): boundaryCode,
           // if (qrCreatedTime != null) 'qrCreatedTime': qrCreatedTime,
-          // if (isFirstSignature)
-          //   'isFirstSignature': isFirstSignature ? "true" : "false",
-          // if (signatureData != null) 'signatureData': signatureData,
+          if (isFirstSignature)
+            'isFirstSignature': isFirstSignature ? "true" : "false",
+          if (signatureData != null) 'signatureData': signatureData,
           if (comment != null && comment.isNotEmpty) 'comment': comment,
           if (isManualScan != null) 'isMarkedManually': isManualScan,
           if (reason != null && reason.isNotEmpty)
@@ -1191,21 +1251,21 @@ class _HomePageState extends LocalizedState<HomePage> {
         // Reuse clientReferenceId from existing log if present (dedup)
         // Mirrors submitAttendanceDetails: match on individualId + registerId + type + time
         final existingEntryLog = attendanceLogs
-            .where((l) =>
-                l.individualId == individualId &&
-                l.registerId == registerId &&
-                l.type == EnumValues.entry.toValue() &&
-                l.time == entryTime &&
-                l.clientReferenceId != null)
+            .where((log) =>
+                log.individualId == individualId &&
+                log.registerId == registerId &&
+                log.type == EnumValues.entry.toValue() &&
+                log.time == entryTime &&
+                log.clientReferenceId != null)
             .toList();
 
         final existingExitLog = attendanceLogs
-            .where((l) =>
-                l.individualId == individualId &&
-                l.registerId == registerId &&
-                l.type == EnumValues.exit.toValue() &&
-                l.time == exitTime &&
-                l.clientReferenceId != null)
+            .where((log) =>
+                log.individualId == individualId &&
+                log.registerId == registerId &&
+                log.type == EnumValues.exit.toValue() &&
+                log.time == exitTime &&
+                log.clientReferenceId != null)
             .toList();
 
         // ENTRY log
