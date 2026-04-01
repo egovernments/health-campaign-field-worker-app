@@ -134,7 +134,10 @@ class GroupListViewWidget extends ResolvedFlowWidget {
         var presentValue = sortFilter['presentValue']?.toString();
         var absentValue = sortFilter['absentValue']?.toString();
 
-        if (widgetKey != null && presentValue != null && absentValue != null) {
+        if (widgetKey != null &&
+            presentValue != null &&
+            absentValue != null &&
+            resolved.widgetData[widgetKey] != null) {
           try {
             items.sort((a, b) {
               double statusA = a["status"] ?? -1.0;
