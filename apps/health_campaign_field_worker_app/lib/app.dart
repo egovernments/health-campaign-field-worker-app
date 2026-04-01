@@ -4,7 +4,6 @@ import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_flow_builder/action_handler/action_handler.dart';
-import 'package:digit_flow_builder/action_handler/action_handler.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -21,15 +20,12 @@ import 'blocs/error/error.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'blocs/push_notification/push_notification.dart';
-import 'blocs/push_notification/push_notification.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/remote_client.dart';
 import 'data/repositories/remote/bandwidth_check.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
-import 'data/repositories/remote/notification_token.dart';
-import 'executors/stock_balance_executor.dart';
 import 'data/repositories/remote/notification_token.dart';
 import 'executors/stock_balance_executor.dart';
 import 'router/app_navigator_observer.dart';
@@ -304,8 +300,6 @@ class MainApplicationState extends State<MainApplication>
                               stockRemoteRepository: ctx.read<
                                   RemoteRepository<StockModel,
                                       StockSearchModel>>(),
-                              notificationTokenRepository:
-                                  NotificationTokenRepository(widget.client),
                               context: context,
                             ),
                           ),
