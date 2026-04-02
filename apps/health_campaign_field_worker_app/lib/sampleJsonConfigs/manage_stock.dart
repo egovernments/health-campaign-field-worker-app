@@ -888,33 +888,33 @@ final dynamic sampleInventoryFlows = {
               "isMultiSelect": false,
               "enums": null
             },
-            {
-              "type": "string",
-              "label": "APPONE_INVENTORY_EXPIRY_DATE_LABEL",
-              "order": 3,
-              "value": "",
-              "format": "date",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "Select the expiry date",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "expiryDate",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "visibilityCondition": {},
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "Expiry date is required"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": null
-            },
+            // {
+            //   "type": "string",
+            //   "label": "APPONE_INVENTORY_EXPIRY_DATE_LABEL",
+            //   "order": 3,
+            //   "value": "",
+            //   "format": "date",
+            //   "hidden": false,
+            //   "tooltip": "",
+            //   "helpText": "Select the expiry date",
+            //   "infoText": "",
+            //   "readOnly": false,
+            //   "fieldName": "expiryDate",
+            //   "deleteFlag": false,
+            //   "innerLabel": "",
+            //   "systemDate": false,
+            //   "visibilityCondition": {},
+            //   "validations": [
+            //     {
+            //       "type": "required",
+            //       "value": true,
+            //       "message": "Expiry date is required"
+            //     }
+            //   ],
+            //   "errorMessage": "",
+            //   "isMultiSelect": false,
+            //   "enums": null
+            // },
             {
               "type": "string",
               "label": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
@@ -2079,11 +2079,11 @@ final dynamic sampleInventoryFlows = {
                     "key": "INVENTORY_BATCH_NUMBER_LABEL",
                     "value": "{{item.additionalFields.fields.batchNumber}}"
                   },
-                  {
-                    "key": "INVENTORY_EXPIRY_LABEL",
-                    "value":
-                        "{{fn:formatDate(item.additionalFields.fields.expiryDate, 'date', dd MMM yyyy)}}"
-                  },
+                  // {
+                  //   "key": "INVENTORY_EXPIRY_LABEL",
+                  //   "value":
+                  //       "{{fn:formatDate(item.additionalFields.fields.expiryDate, 'date', dd MMM yyyy)}}"
+                  // },
                   {
                     "key":
                         "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
@@ -2635,26 +2635,26 @@ final dynamic sampleInventoryFlows = {
               "isMultiSelect": false,
               "enums": null
             },
-            {
-              "type": "string",
-              "label": "INVENTORY_EXPIRY_LABEL",
-              "order": 6,
-              "value": "",
-              "format": "date",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "Select the expiry date",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "expiryDate",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "visibilityCondition": {},
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": null
-            },
+            // {
+            //   "type": "string",
+            //   "label": "INVENTORY_EXPIRY_LABEL",
+            //   "order": 6,
+            //   "value": "",
+            //   "format": "date",
+            //   "hidden": false,
+            //   "tooltip": "",
+            //   "helpText": "Select the expiry date",
+            //   "infoText": "",
+            //   "readOnly": false,
+            //   "fieldName": "expiryDate",
+            //   "deleteFlag": false,
+            //   "innerLabel": "",
+            //   "systemDate": false,
+            //   "visibilityCondition": {},
+            //   "errorMessage": "",
+            //   "isMultiSelect": false,
+            //   "enums": null
+            // },
             {
               "type": "string",
               "label": "INVENTORY_QUANTITY_SENT_BY_WAREHOUSE_LABEL",
