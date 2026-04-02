@@ -1792,18 +1792,6 @@ final dynamic sampleInventoryFlows = {
           "label": "INVENTORY_STOCK_SUCCESS_LABEL",
           "description":
               "INVENTORY_STOCK_SUCCESS_MRN_DESCRIPTION {{navigation.mrnNumber}}",
-          "additionalWidgets": [
-            {
-              "format": "qr_view",
-              "data": "{{navigation.mrnNumber}}",
-              "size": "medium",
-              "errorCorrectionLevel": "M",
-              "dataModuleColor": "black",
-              "backgroundColor": "white",
-              "padding": 16,
-              "visible": "{{fn:hasRole('DISTRIBUTOR')}}",
-            }
-          ],
           "properties": {"type": "success"},
           "primaryAction": {
             "label": "INVENTORY_VIEW_TRANSACTION_LABEL",
@@ -2053,9 +2041,9 @@ final dynamic sampleInventoryFlows = {
             "name": "stock",
             "data": [
               {
-                "key": "clientReferenceId",
-                "value": "{{navigation.clientReferenceId}}",
-                "operation": "equals"
+                "key": "additionalFields",
+                "value": "{{navigation.selectedStock}}",
+                "operation": "contains"
               }
             ]
           }
