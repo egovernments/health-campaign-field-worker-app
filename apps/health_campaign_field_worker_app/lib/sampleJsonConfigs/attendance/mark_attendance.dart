@@ -528,48 +528,58 @@ final dynamic markAttendanceFlow = {
           // {
           //   "type": "template",
           //   "format": "customRow",
-          //   "hide":
-          //       "{{fn:hideMarkAttendanceButtons(widgetData, item, contextData.0.AttendanceRegisterModel)}}",
           //   "properties": {
           //     "mainAxisAlignment": "start",
           //     "crossAxisAlignment": "stretch",
-          //     "spacing": "spacer2"
+          //     "spacing": "spacer3"
           //   },
           //   "children": [
           //     {
-          //       "fieldKey": "{{item.individualId}}",
-          //       "fieldValue": "present",
-          //       "groupKey": "attendanceCollection",
           //       "type": "template",
-          //       "format": "selectButton",
-          //       "label": "PRESENT",
-          //       "prefixIcon": "Check",
-          //       "properties": {
-          //         "color": "green",
-          //         "type": "secondary",
-          //         "selectedType": "primary",
-          //         "size": "small",
-          //         "mainAxisAlignment": "center"
-          //       },
-          //       "onAction": []
+          //       "format": "expanded",
+          //       "child": {
+          //         "fieldKey": "{{item.individualId}}",
+          //         "fieldValue": "absent",
+          //         "groupKey": "attendanceCollection",
+          //         "type": "template",
+          //         "format": "selectButton",
+          //         "label": "ABSENT",
+          //         "prefixIcon": "Close",
+          //         "properties": {
+          //           "color": "red",
+          //           "type": "secondary",
+          //           "selectedType": "primary",
+          //           "size": "small",
+          //           "mainAxisAlignment": "center"
+          //         },
+          //         "onAction": [
+          //           {"actionType": "CLOSE_POPUP", "properties": {}},
+          //         ]
+          //       }
           //     },
           //     {
-          //       "fieldKey": "{{item.individualId}}",
-          //       "fieldValue": "absent",
-          //       "groupKey": "attendanceCollection",
           //       "type": "template",
-          //       "format": "selectButton",
-          //       "label": "ABSENT",
-          //       "prefixIcon": "Close",
-          //       "properties": {
-          //         "color": "red",
-          //         "type": "secondary",
-          //         "selectedType": "primary",
-          //         "size": "small",
-          //         "mainAxisAlignment": "center"
-          //       },
-          //       "onAction": []
-          //     }
+          //       "format": "expanded",
+          //       "child": {
+          //         "fieldKey": "{{item.individualId}}",
+          //         "fieldValue": "present",
+          //         "groupKey": "attendanceCollection",
+          //         "type": "template",
+          //         "format": "selectButton",
+          //         "label": "PRESENT",
+          //         "prefixIcon": "Check",
+          //         "properties": {
+          //           "color": "green",
+          //           "type": "secondary",
+          //           "selectedType": "primary",
+          //           "size": "small",
+          //           "mainAxisAlignment": "center"
+          //         },
+          //         "onAction": [
+          //           {"actionType": "CLOSE_POPUP", "properties": {}},
+          //         ]
+          //       }
+          //     },
           //   ]
           // },
           //Signature Button
