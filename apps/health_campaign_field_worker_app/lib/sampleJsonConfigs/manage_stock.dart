@@ -1858,6 +1858,11 @@ final dynamic sampleInventoryFlows = {
                 "key": "clientCreatedBy,clientModifiedBy",
                 "value": "{{singleton.loggedInUserUuid}}",
                 "operation": "equalsAny"
+              },
+              {
+                "key": "additionalFields",
+                "value": "\"value\":\"REJECTED\"",
+                "operation": "notContains"
               }
             ]
           }
