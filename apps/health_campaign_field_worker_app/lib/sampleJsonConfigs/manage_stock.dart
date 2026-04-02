@@ -132,93 +132,11 @@ final dynamic sampleInventoryFlows = {
           "icon": 'FileDownload',
           "onAction": [
             {
-              "actionType": "SEARCH_EVENT",
-              "properties": {
-                "type": "SEARCH_EVENT",
-                "name": "stockSearch",
-                "primary": "stock",
-                "select": ["stock"],
-                "awaitResults": true,
-                "skipAccumulatedFilters": true,
-                "data": [
-                  {
-                    "key": "tenantId",
-                    "value": "{{singleton.tenantId}}",
-                    "operation": "equals",
-                    "root": "stock"
-                  }
-                ]
-              }
-            },
-            {
               "actionType": "NAVIGATION",
               "properties": {
-                "type": "FORM",
-                "name": "RECORDSTOCK",
-                "data": [
-                  {"key": "stockEntryType", "value": "ISSUED"},
-                  {"key": "transactionType", "value": "DISPATCHED"},
-                  {"key": "primaryRole", "value": "SENDER"},
-                  {"key": "secondaryRole", "value": "RECEIVER"},
-                  {
-                    "key": "mrnNumber",
-                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
-                  },
-                  {
-                    "key": "stockBalances",
-                    "value": "{{fn:getAllStockBalances()}}"
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "format": "menu_card",
-          "heading":
-              "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RETURNED_HEADING",
-          "description":
-              "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RETURNED_TO_THE_WAREHOUSE_DESCRIPTION",
-          "icon": 'Restore',
-          "onAction": [
-            {
-              "actionType": "SEARCH_EVENT",
-              "properties": {
-                "type": "SEARCH_EVENT",
-                "name": "stockSearch",
-                "primary": "stock",
-                "select": ["stock"],
-                "awaitResults": true,
-                "skipAccumulatedFilters": true,
-                "data": [
-                  {
-                    "key": "tenantId",
-                    "value": "{{singleton.tenantId}}",
-                    "operation": "equals",
-                    "root": "stock"
-                  }
-                ]
-              }
-            },
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "type": "FORM",
-                "name": "RECORDSTOCK",
-                "data": [
-                  {"key": "stockEntryType", "value": "RETURNED"},
-                  {"key": "transactionType", "value": "DISPATCHED"},
-                  {"key": "primaryRole", "value": "SENDER"},
-                  {"key": "secondaryRole", "value": "RECEIVER"},
-                  {
-                    "key": "mrnNumber",
-                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
-                  },
-                  {
-                    "key": "stockBalances",
-                    "value": "{{fn:getAllStockBalances()}}"
-                  }
-                ]
+                "type": "TEMPLATE",
+                "name": "returnOrIssueSelection",
+                "data": []
               }
             }
           ]
@@ -301,6 +219,130 @@ final dynamic sampleInventoryFlows = {
             }
           ]
         },
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "returnOrIssueSelection",
+      "heading": "APP_CONFIG_INVENTORY_returnOrIssueSelection_HEADING",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "CORE_COMMON_BACK",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        }
+      ],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "stockSearch",
+            "primary": "stock",
+            "select": ["stock"],
+            "awaitResults": true,
+            "skipAccumulatedFilters": true,
+            "data": [
+              {
+                "key": "tenantId",
+                "value": "{{singleton.tenantId}}",
+                "operation": "equals",
+                "root": "stock"
+              }
+            ]
+          }
+        }
+      ],
+      "footer": [
+        {
+          "format": "button",
+          "label":
+              "APP_CONFIG_INVENTORY_returnOrIssueSelection_NEXT_BUTTON_LABEL",
+          "properties": {
+            "type": "primary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "condition": {"expression": "transactionType == ISSUED"},
+              "actions": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "type": "FORM",
+                    "name": "RECORDSTOCK",
+                    "data": [
+                      {"key": "stockEntryType", "value": "ISSUED"},
+                      {"key": "transactionType", "value": "DISPATCHED"},
+                      {"key": "primaryRole", "value": "SENDER"},
+                      {"key": "secondaryRole", "value": "RECEIVER"},
+                      {
+                        "key": "mrnNumber",
+                        "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                      },
+                      {
+                        "key": "stockBalances",
+                        "value": "{{fn:getAllStockBalances()}}"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "condition": {"expression": "transactionType == RETURNED"},
+              "actions": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "type": "FORM",
+                    "name": "RECORDSTOCK",
+                    "data": [
+                      {"key": "stockEntryType", "value": "RETURNED"},
+                      {"key": "transactionType", "value": "DISPATCHED"},
+                      {"key": "primaryRole", "value": "SENDER"},
+                      {"key": "secondaryRole", "value": "RECEIVER"},
+                      {
+                        "key": "mrnNumber",
+                        "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                      },
+                      {
+                        "key": "stockBalances",
+                        "value": "{{fn:getAllStockBalances()}}"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "body": [
+        {
+          "type": "template",
+          "format": "dropdownTemplate",
+          "label":
+              "APP_CONFIG_INVENTORY_returnOrIssueSelection_TRANSACTION_TYPE_LABEL",
+          "fieldName": "transactionType",
+          "valueKey": "code",
+          "enums": [
+            {
+              "name":
+                  "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_ISSUED",
+              "code": "ISSUED"
+            },
+            {
+              "name":
+                  "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_RETURNED",
+              "code": "RETURNED"
+            }
+          ]
+        }
       ]
     },
     {
@@ -1840,10 +1882,7 @@ final dynamic sampleInventoryFlows = {
         "groupBy": "additionalFields.fields.mrnNumber",
         "filters": [],
         "relations": [
-          {
-            "name": "stock",
-            "entity": "StockModel"
-          },
+          {"name": "stock", "entity": "StockModel"},
         ],
         "searchConfig": {
           "primary": "stock",
