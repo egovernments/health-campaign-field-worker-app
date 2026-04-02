@@ -75,6 +75,15 @@ class StockDownSyncBloc
       ProjectFacilitySearchModel(projectId: [projectId]),
     );
 
+    // Filter to only include facilities where facilityLevel is 'current'
+    final currentFacilities = projectFacilities.where((pf) {
+      final facilityLevel = pf.additionalFields?.fields
+          .where((f) => f.key == 'facilityLevel')
+          .firstOrNull
+          ?.value;
+      return facilityLevel == null || facilityLevel == 'current';
+    }).toList();
+
     final projectResources = await projectResourceLocalRepository.search(
       ProjectResourceSearchModel(projectId: [projectId]),
     );
@@ -87,9 +96,9 @@ class StockDownSyncBloc
     List<String> receiverIds = [];
 
     if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
-      receiverIds = projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = currentFacilities.map((e) => e.facilityId).toList();
     } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
-      receiverIds = projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = currentFacilities.map((e) => e.facilityId).toList();
     } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
       receiverIds = [userObject.uuid];
     }
@@ -97,10 +106,11 @@ class StockDownSyncBloc
     if (receiverIds.isEmpty) return null;
 
     return StockSearchModel(
-      receiverId: receiverIds,
-      transactionType: [TransactionType.dispatched.toValue()],
-      productVariantId:
-          productVariantIds.isNotEmpty ? productVariantIds : null,
+      receiverId: receiverIds.first,
+      senderId: receiverIds.first,
+      // transactionType: [TransactionType.dispatched.toValue()],
+      // productVariantId:
+      //     productVariantIds.isNotEmpty ? productVariantIds : null,
     );
   }
 

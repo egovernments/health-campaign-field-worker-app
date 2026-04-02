@@ -911,10 +911,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       if (receiverIds.isEmpty) return;
 
       final stockSearchModel = StockSearchModel(
-        receiverId: receiverIds,
-        transactionType: [TransactionType.dispatched.toValue()],
-        productVariantId:
-            productVariantIds.isNotEmpty ? productVariantIds : null,
+        receiverId: receiverIds.first,
+        senderId: receiverIds.first,
       );
 
       final totalCount = await (stockRemoteRepository
@@ -923,8 +921,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       if (totalCount <= 0) return;
 
-      debugPrint(
-          'SILENT_STOCK_DOWNSYNC: Found $totalCount records, downloading...');
 
       const batchSize = 50;
       int offset = 0;
