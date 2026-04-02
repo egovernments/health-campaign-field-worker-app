@@ -70,8 +70,7 @@ class StockBalanceExecutor extends ActionExecutor {
     String projectId,
     String boundaryCode,
   ) async {
-    final stockEntities =
-        entities.whereType<StockModel>().toList();
+    final stockEntities = entities.whereType<StockModel>().toList();
     if (stockEntities.isEmpty) return;
 
     final userActionRepo = context.read<UserActionLocalRepository>();
@@ -196,7 +195,8 @@ class StockBalanceExecutor extends ActionExecutor {
 
     final now = DateTime.now().millisecondsSinceEpoch;
     final loggedInUserUuid = FlowBuilderSingleton().loggedInUserUuid ?? '';
-    final existing = existingBalances.isNotEmpty ? existingBalances.first : null;
+    final existing =
+        existingBalances.isNotEmpty ? existingBalances.first : null;
 
     final balanceAction = UserActionModel(
       clientReferenceId: balanceKey,

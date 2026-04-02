@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:collection/collection.dart';
 
-import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:attendance_management/utils/utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/enum_values.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -15,6 +17,7 @@ import 'package:digit_flow_builder/data/digit_crud_service.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
+import 'package:digit_flow_builder/widgets/flow_widget_interface.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -24,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
@@ -36,12 +40,14 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/stock_downsync/stock_downsync.dart';
+import '../blocs/stock_downsync/stock_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
+import '../sampleJsonConfigs/attendance/attendance_flows.dart';
 import '../sampleJsonConfigs/closed_household.dart';
 import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
@@ -49,6 +55,8 @@ import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
 import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
+import '../utils/attendance_utils.dart';
+import '../utils/date_util_attendance.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
@@ -56,6 +64,10 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
 import '../utils/stock_downsync_utils.dart';
 import '../utils/utils.dart';
+import '../widgets/attendance/attendance_qr_scanner_button.dart';
+import '../widgets/attendance/custom_row_widget.dart';
+import '../widgets/attendance/group_list_view_widget.dart';
+import '../widgets/attendance/signature_compare_dialog_widget.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
 import '../widgets/header/back_navigation_help_header.dart';
@@ -113,6 +125,11 @@ class _HomePageState extends LocalizedState<HomePage> {
 
   /// Register custom components for forms engine
   void _registerCustomComponents() {
+    FlowWidgetFactory.register(AttendanceQrScannerButton());
+    FlowWidgetFactory.register(GroupListViewWidget());
+    FlowWidgetFactory.register(CustomRowWidget());
+    FlowWidgetFactory.register(SignatureCompareWidget());
+
     // Example 1: Register a dynamic resource card with multi-page state access
     CustomComponentRegistry().registerBuilder(
       'resourceCard',
@@ -398,6 +415,567 @@ class _HomePageState extends LocalizedState<HomePage> {
       return facilityFromWhich == 'Delivery Team' ? 'STAFF' : 'WAREHOUSE';
     });
 
+    // Attendance
+
+    FunctionRegistry.register('todayAttendanceLogs', (args, stateData) {
+      if (args.isEmpty || args.first == null) return [];
+
+      final widgetData = args.first;
+      var attendanceRegister =
+          args.length > 1 && args[1] != null ? args[1] : null;
+
+      if (attendanceRegister == null) return [];
+
+      List attendanceLogs = attendanceRegister.attendanceLog ?? [];
+
+      final selectedDate = widgetData['selectedDate'] as int?;
+      final isMorning = widgetData['sessionToggle'] as bool? ?? true;
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegister);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      if (entryTime == null || exitTime == null) return [];
+
+      List filteredLogs = attendanceLogs.where((log) {
+        final logTime = log.time;
+        return logTime == entryTime || logTime == exitTime;
+      }).toList();
+
+      return filteredLogs;
+    });
+
+    // Update attendanceStatus to also check in-memory collection (4th arg)
+    FunctionRegistry.register('attendanceStatus', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final attendee = args.length > 1 ? args[1] : null;
+
+      double? currentStatus;
+
+      String attendanceUnmarked = 'ATTENDANCE_UNMARKED';
+      String markAsPresent = 'MARK_AS_PRESENT';
+      String markedAsAbsent = 'MARK_AS_ABSENT';
+
+      final individualId = attendee?["individualId"];
+
+      var attendanceCollectionData =
+          widgetData["attendanceCollection"]?[individualId];
+
+      if (attendanceCollectionData == 'present') {
+        currentStatus = 1.0;
+      } else if (attendanceCollectionData == 'absent') {
+        currentStatus = 0.0;
+      }
+
+      var status = currentStatus ?? attendee?['status'] ?? -1.0;
+
+      if (status == 1.0) {
+        return markAsPresent;
+      } else if (status == 0.0) {
+        return markedAsAbsent;
+      } else if (status == -1.0) {
+        return attendanceUnmarked;
+      }
+    });
+
+    FunctionRegistry.register('buttonColor', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final attendee = args.length > 1 ? args[1] : null;
+
+      double? currentStatus;
+
+      final individualId = attendee?["individualId"];
+
+      var attendanceCollectionData =
+          widgetData["attendanceCollection"]?[individualId];
+
+      if (attendanceCollectionData == 'present') {
+        currentStatus = 1.0;
+      } else if (attendanceCollectionData == 'absent') {
+        currentStatus = 0.0;
+      }
+
+      var status = currentStatus ?? attendee?['status'] ?? -1.0;
+
+      if (status == 1.0) {
+        return "green";
+      } else if (status == 0.0) {
+        return "red";
+      } else if (status == -1.0) {
+        return null;
+      }
+    });
+
+    FunctionRegistry.register('buttonType', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final attendee = args.length > 1 ? args[1] : null;
+
+      double? currentStatus;
+
+      final individualId = attendee?["individualId"];
+
+      var attendanceCollectionData =
+          widgetData["attendanceCollection"]?[individualId];
+
+      if (attendanceCollectionData == 'present') {
+        currentStatus = 1.0;
+      } else if (attendanceCollectionData == 'absent') {
+        currentStatus = 0.0;
+      }
+
+      var status = currentStatus ?? attendee?['status'] ?? -1.0;
+
+      if (status == 1.0) {
+        return "primary";
+      } else if (status == 0.0) {
+        return "primary";
+      } else if (status == -1.0) {
+        return "secondary";
+      }
+    });
+
+    FunctionRegistry.register('hideMarkAttendanceButtons', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final attendee = args.length > 1 ? args[1] : null;
+      final attendanceRegister =
+          args.length > 2 && args[2] != null ? args[2] : [];
+
+      if (widgetData == null ||
+          attendee == null ||
+          attendanceRegister == null) {
+        return false; // hide buttons if no attendee or logs
+      }
+
+      final individualId = attendee?["individualId"];
+      List attendanceLogs = attendanceRegister.attendanceLog ?? [];
+
+      final selectedDate = widgetData['selectedDate'] as int?;
+      final isMorning = widgetData['sessionToggle'] as bool? ?? true;
+      final attendanceManualData = widgetData['attendanceManualData'] as Map?;
+
+      if (selectedDate == null)
+        return false; // hide buttons if no date selected
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegister);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      // Filter logs for this individual and selected session times
+      List filterLocalAttendanceLogs = attendanceLogs.where((log) {
+        return ((entryTime != null && log.time == entryTime) ||
+                (exitTime != null && log.time == exitTime)) &&
+            log.individualId == individualId?.toString() &&
+            log.uploadToServer != true;
+      }).toList();
+
+      // Filter logs for this individual and selected session times
+      List filterUploadedAttendanceLogs = attendanceLogs.where((log) {
+        return ((entryTime != null && log.time == entryTime) ||
+                (exitTime != null && log.time == exitTime)) &&
+            log.individualId == individualId?.toString() &&
+            log.uploadToServer == true;
+      }).toList();
+
+      final now = DateTime.now();
+      final selectedDateTime =
+          DateTime.fromMillisecondsSinceEpoch(selectedDate);
+      bool isSameDay = selectedDateTime.year == now.year &&
+          selectedDateTime.month == now.month &&
+          selectedDateTime.day == now.day;
+
+      bool show = false;
+
+      if (filterUploadedAttendanceLogs.isNotEmpty) {
+        show =
+            false; // hide buttons if already uploaded logs exist for this session
+      } else if (!isSameDay) {
+        show = true; // show buttons for past dates if no uploaded logs exist
+      } else {
+        show = filterLocalAttendanceLogs.isNotEmpty ||
+            (isSameDay &&
+                attendanceManualData !=
+                    null); // show buttons for current day if local logs exist or manual marking is enabled
+      }
+
+      return !show;
+    });
+
+    FunctionRegistry.register('showAttendanceQRButton', (args, stateData) {
+      final selectedDate = args.isNotEmpty ? args[0] : null;
+      final isMorning = args.length > 1 ? args[1] : null;
+      final attendanceRegisterModel = args.length > 2 ? args[2] : null;
+
+      if (attendanceRegisterModel == null) {
+        return false; // hide if no attendance data
+      }
+
+      if (selectedDate == null) {
+        return false; // hide buttons if no date selected
+      }
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate,
+          isMorning == "true" ? true : false,
+          attendanceRegisterModel);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      final attendanceLogs = attendanceRegisterModel.attendanceLog;
+
+      // Filter logs for the selected entry and exit times that are uploaded
+      final filterUploadedAttendanceLogs = attendanceLogs?.where((log) {
+        final logTime = log.time;
+        if (logTime == null) return false;
+        return (logTime == entryTime || logTime == exitTime) &&
+            log.uploadToServer == true;
+      }).toList();
+
+      final now = DateTime.now();
+      final selectedDateTime =
+          DateTime.fromMillisecondsSinceEpoch(selectedDate);
+      bool isSameDay = selectedDateTime.year == now.year &&
+          selectedDateTime.month == now.month &&
+          selectedDateTime.day == now.day;
+      return isSameDay && (filterUploadedAttendanceLogs?.isEmpty ?? true);
+    });
+
+    FunctionRegistry.register('todayAttendeesList', (args, stateData) {
+      final widgetData = args.isNotEmpty && args[0] != null ? args[0] : null;
+      List items = args.length > 1 && args[1] != null ? args[1] : [];
+      final attendanceLogs = args.length > 2 && args[2] != null ? args[2] : [];
+      final attendanceRegisterModel =
+          args.length > 3 && args[3] != null ? args[3] : null;
+
+      final selectedDate = widgetData?['selectedDate'] as int?;
+      final isMorning = widgetData?['sessionToggle'] as bool? ?? true;
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegisterModel);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      // Filter logs for the selected entry and exit times that are uploaded
+      final todayAttendanceLogs = attendanceLogs?.where((log) {
+        final logTime = log.time;
+        if (logTime == null) return false;
+        return (logTime == entryTime || logTime == exitTime);
+      }).toList();
+
+      items = items.map((item) {
+        if (item is Map && item['individualId'] != null) {
+          double status = -1.0;
+          final individualId = item['individualId'];
+          List filterAttendanceLogs = todayAttendanceLogs.where((log) {
+            return log.individualId == individualId;
+          }).toList();
+          if (filterAttendanceLogs.isEmpty) {
+            status = -1.0; // no logs
+            item['status'] = status;
+            return item;
+          }
+          final hasMorningLog = filterAttendanceLogs.any((element) {
+            final elementType = element.type?.toString();
+            final elementStatus = element.status;
+            if (elementStatus == null) return false;
+            if (elementType == "ENTRY") {
+              return elementStatus == 'ACTIVE';
+            }
+            return false;
+          });
+          ;
+          final hasEveningLog = filterAttendanceLogs.any((element) {
+            final elementType = element.type?.toString();
+            final elementStatus = element.status;
+            if (elementStatus == null) return false;
+            if (elementType == "EXIT") {
+              return elementStatus == 'ACTIVE';
+            }
+            return false;
+          });
+          if (hasMorningLog && hasEveningLog) {
+            status = 1.0; // present
+          } else if (!hasMorningLog && !hasEveningLog) {
+            status = 0.0; // absent
+          } else {
+            status = 0.5; // half day
+          }
+          item['status'] = status;
+        }
+        return item;
+      }).toList();
+
+      return items;
+    });
+
+    FunctionRegistry.register('allAttendanceSelected', (args, stateData) {
+      if (args.isEmpty || args.first == null) return false;
+
+      final widgetData = args.first;
+      final attendanceRegisterModel = args.length > 1 ? args[1] : null;
+
+      final selectedDate = widgetData?['selectedDate'] as int?;
+      final isMorning = widgetData?['sessionToggle'] as bool? ?? true;
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegisterModel);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      final attendanceCollection = widgetData?['attendanceCollection'] as Map?;
+
+      final attendees = attendanceRegisterModel?.attendees ?? [];
+      final attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
+
+      // Filter logs for the selected entry and exit times that are not yet uploaded
+      final filterAttendanceLogs = attendanceLogs.where((log) {
+        final logTime = log.time;
+        final logUploadToServer = log.uploadToServer;
+        return (logTime == entryTime || logTime == exitTime) &&
+            logUploadToServer != true;
+      }).toList();
+
+      if (filterAttendanceLogs.isNotEmpty) {
+        return attendees.length != (filterAttendanceLogs.length / 2);
+      }
+
+      return attendees.length != attendanceCollection?.length;
+    });
+
+    FunctionRegistry.register('updateAttendeeStatus', (args, stateData) {
+      if (args.isEmpty || args.first == null) return null;
+
+      List<dynamic> attendees = args.first;
+      List<dynamic> attendanceLogs =
+          args.length > 1 && args[1] != null ? args[1] : [];
+      final selectedDate = args.length > 2 && args[2] != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              int.tryParse(args[2].toString()) ??
+                  DateTime.now().millisecondsSinceEpoch)
+          : DateTime.now();
+
+      for (var attendee in attendees) {
+        String? individualId;
+        try {
+          individualId = attendee.individualId?.toString();
+        } catch (_) {
+          individualId = null;
+        }
+        if (individualId == null) continue;
+
+        // Find logs for this attendee
+        final filteredLogs = attendanceLogs
+            .where((log) => log.individualId?.toString() == individualId)
+            .toList();
+
+        // Determine attendance status based on logs
+        final hasMorningLog =
+            AttendanceUtils.hasLogWithType(filteredLogs, selectedDate, 'ENTRY');
+        final hasEveningLog =
+            AttendanceUtils.hasLogWithType(filteredLogs, selectedDate, 'EXIT');
+
+        double status;
+        if (hasMorningLog && hasEveningLog) {
+          final morningLogActive = AttendanceUtils.hasLogActiveStatus(
+              filteredLogs, selectedDate, 'ENTRY');
+          final eveningActive = AttendanceUtils.hasLogActiveStatus(
+              filteredLogs, selectedDate, 'EXIT');
+
+          if (morningLogActive && eveningActive) {
+            status = 1.0; // present
+          } else if (!morningLogActive && !eveningActive) {
+            status = 0.0; // absent
+          } else {
+            status = 0.5; // half day
+          }
+        } else {
+          status = -1.0; // not marked
+        }
+
+        // Update attendee with computed status
+        try {
+          attendee.attendanceStatus = status;
+        } catch (_) {
+          // If attendee is a Map, update the field directly
+          if (attendee is Map) {
+            attendee['status'] = status;
+          }
+        }
+      }
+
+      return attendees;
+    });
+
+    FunctionRegistry.register('entryTime', (args, stateData) {
+      DateTime today = DateTime.now();
+      if (args.isNotEmpty && args.first != null) {
+        today = DateTime.fromMillisecondsSinceEpoch(
+            int.tryParse(args.first.toString()) ??
+                today.millisecondsSinceEpoch);
+      }
+      final startOfDay = DateTime(
+        today.year,
+        today.month,
+        today.day,
+        9,
+        0,
+        0,
+      );
+      return startOfDay.millisecondsSinceEpoch;
+    });
+
+    FunctionRegistry.register('exitTime', (args, stateData) {
+      DateTime today = DateTime.now();
+      if (args.isNotEmpty && args.first != null) {
+        today = DateTime.fromMillisecondsSinceEpoch(
+            int.tryParse(args.first.toString()) ??
+                today.millisecondsSinceEpoch);
+      }
+
+      final endOfDay = DateTime(
+        today.year,
+        today.month,
+        today.day,
+        18,
+        0,
+        0,
+        0,
+      );
+      return endOfDay.millisecondsSinceEpoch;
+    });
+
+    /// Registers a function to calculate completed attendance days.
+    ///
+    /// - **Function Name**: `'calculateCompletedDays'`
+    /// - **Arguments**: A list where:
+    ///   - First element is the AttendanceRegisterModel or its Map representation.
+    ///   - Second element (optional) is the attendance logs list from wrapper relations (List<AttendanceLogModel> or List<Map>).
+    /// - **Returns**: A formatted string like `"3/5"` representing completed/total days.
+    ///
+    /// This function handles both:
+    /// 1. Model's attendanceLog field (List<Map<DateTime, bool>>?) - legacy format
+    /// 2. Wrapper's attendanceLog relation (List<AttendanceLogModel>) - raw attendance records
+
+    FunctionRegistry.register('calculateCompletedDays', (args, stateData) {
+      if (args.isEmpty || args.first == null) return '0/0';
+
+      final attendanceRegister = args.first;
+
+      if (attendanceRegister == null) return '0/0';
+
+      List list = AttendanceUtils.generateAttendanceLogDateList(
+        attendanceRegister.startDate!,
+        attendanceRegister.endDate!,
+        attendanceRegister.attendanceLog,
+      );
+
+      var completedDays = 0;
+      var totalDays = 0;
+      totalDays = list.length;
+      for (var element in list) {
+        if (element.containsValue(true)) {
+          completedDays++;
+        }
+      }
+      return '$completedDays/$totalDays';
+    });
+
+    FunctionRegistry.register('filterAttendeesByTeam', (args, stateData) {
+      if (args.isEmpty || args.first == null) return null;
+
+      final item = args.first;
+      List<dynamic>? attendees;
+
+      try {
+        attendees = item.attendees;
+      } catch (_) {
+        attendees = null;
+      }
+
+      return attendees;
+    });
+
+    FunctionRegistry.register('todayDate', (args, stateData) {
+      return DateTime.now().millisecondsSinceEpoch.toString();
+    });
+
+    FunctionRegistry.register('isActiveAttendee', (args, stateData) {
+      if (args.isEmpty) return true;
+      final denrollmentDate = args.first;
+      if (denrollmentDate == null) return true;
+      final deDate = denrollmentDate is int
+          ? denrollmentDate
+          : int.tryParse(denrollmentDate.toString());
+      if (deDate == null) return true;
+      return deDate >= DateTime.now().millisecondsSinceEpoch;
+    });
+
+    FunctionRegistry.register('isLogNotMarked', (args, stateData) {
+      String? individualId = args.isNotEmpty ? args[0] : null;
+      int? selectedDateRaw =
+          args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') : null;
+      List<dynamic>? attendanceLogs =
+          args.length > 2 ? args[2] as List<dynamic>? : null;
+      bool? filter = args.length > 3 ? args[3] as bool? : null;
+
+      DateTime selectedDate = selectedDateRaw != null
+          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
+          : DateTime.now();
+
+      double status = AttendanceUtils.attendanceLogsStatus(
+          individualId, selectedDate, attendanceLogs);
+      bool isLogNotMarked = status == -1.0;
+      if (filter != null) {
+        return filter
+            ? isLogNotMarked
+            : true; // If filter is true, return isLogNotMarked; if false, ignore and return true
+      }
+      return isLogNotMarked;
+    });
+
+    FunctionRegistry.register('isAbsentMarked', (args, stateData) {
+      String? individualId = args.isNotEmpty ? args[0] : null;
+      int? selectedDateRaw =
+          args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') : null;
+      Map? attendanceCollection = args.length > 2 ? args[2] as Map? : null;
+
+      DateTime selectedDate = selectedDateRaw != null
+          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
+          : DateTime.now();
+
+      double status = AttendanceUtils.attendanceStatus(
+          individualId, selectedDate, attendanceCollection);
+      if (status == -1.0) {
+        return false;
+      } else if (status == 1.0) {
+        return false;
+      } else if (status == 0.0) {
+        return true;
+      }
+    });
+
+    FunctionRegistry.register('attendanceLogStatus', (args, stateData) {
+      String? individualId = args.isNotEmpty ? args[0] : null;
+      int? selectedDateRaw =
+          args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') : null;
+      List<dynamic>? attendanceLogs =
+          args.length > 2 ? args[2] as List<dynamic>? : null;
+
+      DateTime selectedDate = selectedDateRaw != null
+          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
+          : DateTime.now();
+
+      double status = AttendanceUtils.attendanceLogsStatus(
+          individualId, selectedDate, attendanceLogs);
+      return status; // 1.0 for present, 0.0 for absent, 0.5 for half day, -1.0 for unmarked
+    });
+
     // Helper to extract stockEntryType from additionalFields array
     String getStockEntryTypeFromFields(dynamic fields) {
       if (fields == null) return '';
@@ -410,6 +988,500 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
       return '';
     }
+
+    FunctionRegistry.register('showOpenRegisterButton', (args, stateData) {
+      if (args.isEmpty || args.first == null) return false;
+
+      var register = args.isNotEmpty ? args[0] : null;
+      if (register == null) return false;
+
+      var attendanceRegisters = args.length > 1 ? args[1] : null;
+
+      if (attendanceRegisters == null ||
+          (attendanceRegisters is List && attendanceRegisters.isEmpty)) {
+        return false;
+      }
+
+      return register.startDate != null &&
+          register.endDate != null &&
+          register.startDate! <= DateTime.now().millisecondsSinceEpoch &&
+          register.endDate! > DateTime.now().millisecondsSinceEpoch;
+    });
+
+    FunctionRegistry.register('setAttendanceDate', (args, stateData) {
+      if (args.isEmpty || args.first == null) return null;
+
+      final selectedDate = args.first as int?;
+      final attendanceRegisterModel = args.length > 1 ? args[1] : null;
+      final isMorning = args.length > 2 ? args[2] as String? ?? 'true' : 'true';
+
+      if (selectedDate == null || attendanceRegisterModel == null) return null;
+
+      DateTime? dateSession = DateTime.now().isAfter(
+              DateTime.fromMillisecondsSinceEpoch(
+                  attendanceRegisterModel.endDate!))
+          ? DateTime.fromMillisecondsSinceEpoch(
+              attendanceRegisterModel.endDate!)
+          : DateTime.fromMillisecondsSinceEpoch(selectedDate);
+
+      if (dateSession == null) return null;
+
+      var entryTime = attendanceRegisterModel
+                  .additionalDetails?[EnumValues.sessions.toValue()] ==
+              2
+          ? AttendanceDateTimeManagement.getMillisecondEpoch(
+              dateSession,
+              isMorning == 'true' ? 0 : 1,
+              "entryTime",
+            )
+          : (DateTime(dateSession.year, dateSession.month, dateSession.day, 9)
+              .millisecondsSinceEpoch);
+
+      var exitTime = attendanceRegisterModel
+                  .additionalDetails?[EnumValues.sessions.toValue()] ==
+              2
+          ? AttendanceDateTimeManagement.getMillisecondEpoch(
+              dateSession,
+              isMorning == 'true' ? 0 : 1,
+              "exitTime",
+            )
+          : (DateTime(dateSession.year, dateSession.month, dateSession.day, 18)
+              .millisecondsSinceEpoch);
+
+      if (entryTime == null || exitTime == null) return null;
+
+      return {
+        'selectedAttendanceDate': {
+          'date': dateSession.millisecondsSinceEpoch,
+          'entryTime': entryTime,
+          'exitTime': exitTime,
+        }
+      };
+    });
+
+    FunctionRegistry.register('getCurrentSignature', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final individualId = args.length > 1 ? args[1] as String? : null;
+
+      if (widgetData == null || individualId == null) return null;
+
+      final signatureCollection = widgetData['signatureCollection'] as Map?;
+      final signatureData =
+          signatureCollection?[individualId]?['signatureData'] as String?;
+
+      return signatureData;
+    });
+
+    FunctionRegistry.register('getExistingSignature', (args, stateData) {
+      final individualId = args.isNotEmpty ? args[0]?.toString() : null;
+      final attendanceLogs = args.length > 1 ? args[1] as List<dynamic>? : null;
+
+      if (attendanceLogs == null || attendanceLogs.isEmpty) return null;
+      List logs = attendanceLogs.where((log) {
+        final additionalDetails = log.additionalDetails as Map?;
+        final isFirstSignature =
+            additionalDetails?['isFirstSignature'] == "true";
+        return log.individualId == individualId && isFirstSignature;
+      }).toList();
+      return logs.isNotEmpty
+          ? (logs.first.additionalDetails?['signatureData'])
+          : null;
+    });
+
+    FunctionRegistry.register('createAttendanceLog', (args, stateData) {
+      if (args.isEmpty || args.first == null) return null;
+
+      final widgetData = args.first as Map;
+      final attendanceRegisterModel = args.length > 1 ? args[1] : null;
+      final uploadToServer = args.length > 2 ? args[2] as int? : 0;
+
+      final registerId = attendanceRegisterModel?.id ?? '';
+      List attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
+
+      final attendanceCollection = widgetData['attendanceCollection'] as Map?;
+      final signatureCollection = widgetData['signatureCollection'] as Map?;
+      final attendanceQRCollection =
+          widgetData['attendanceQRCollection'] as Map?;
+
+      final comment = widgetData['COMMENT'] as String?;
+      final isMorning = widgetData['sessionToggle'] as bool? ?? true;
+
+      final selectedDate = widgetData['selectedDate'] as int?;
+      final attendanceManualData = widgetData['attendanceManualData'] as Map?;
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegisterModel);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      final isManualScan = attendanceManualData?['isManualScan'] as String?;
+      final reason = attendanceManualData?['reason'] as String?;
+      final reasonComment = attendanceManualData?['reasonComment'] as String?;
+
+      final tenantId = FlowBuilderSingleton().selectedProject?.tenantId ?? '';
+      final boundaryCode = AttendanceSingleton().boundary?.code ?? '';
+      final userUuid = FlowBuilderSingleton().loggedInUser?.uuid ?? '';
+      final now = DateTime.now().millisecondsSinceEpoch;
+
+      List todayAttendanceLogs = attendanceLogs.where((log) {
+        final logTime = log.time;
+        return logTime == entryTime || logTime == exitTime;
+      }).toList();
+
+      //
+      List notMarkedAttendanceLogs = todayAttendanceLogs.where((log) {
+        bool isMarked = log.individualId != null &&
+            attendanceCollection?.containsKey(log.individualId.toString()) ==
+                true &&
+            (attendanceCollection?[log.individualId.toString()] == 'present' ||
+                attendanceCollection?[log.individualId.toString()] == 'absent');
+        return !isMarked;
+      }).toList(); // logs that are not marked
+
+      notMarkedAttendanceLogs = notMarkedAttendanceLogs.map((e) {
+        return e.copyWith(
+          uploadToServer: uploadToServer == 1,
+        );
+      }).toList();
+
+      final List<EntityModel> entities = [...notMarkedAttendanceLogs];
+
+      for (final entry in (attendanceCollection ?? {}).entries) {
+        final individualId = entry.key.toString();
+        final data = entry.value;
+        if (data == null) continue;
+
+        double markStatus = -1.0;
+        if (data == "present") {
+          markStatus = 1.0;
+        } else if (data == "absent") {
+          markStatus = 0.0;
+        }
+        if (markStatus == -1.0) continue; // skip unmarked
+
+        final isPresent = markStatus >= 1.0;
+        final isFirstSignature =
+            signatureCollection?[individualId]?['isFirstSignature'] as bool? ??
+                false;
+        final signatureData =
+            signatureCollection?[individualId]?['signatureData'] as String?;
+        final qrCreatedTime =
+            attendanceQRCollection?[individualId]?['qrCreatedTime'] as int?;
+
+        final logStatus = isPresent
+            ? EnumValues.active.toValue()
+            : EnumValues.inactive.toValue();
+
+        // Build additionalDetails matching _onSaveAsDraft
+        final additionalDetails = <String, dynamic>{
+          if (boundaryCode.isNotEmpty)
+            EnumValues.boundaryCode.toValue(): boundaryCode,
+          if (qrCreatedTime != null) 'qrCreatedTime': qrCreatedTime,
+          if (isFirstSignature)
+            'isFirstSignature': isFirstSignature ? "true" : "false",
+          if (signatureData != null) 'signatureData': signatureData,
+          if (comment != null && comment.isNotEmpty) 'comment': comment,
+          if (isManualScan != null) 'isMarkedManually': isManualScan,
+          if (reason != null && reason.isNotEmpty)
+            'manualMarkingReason': reason,
+          if (reasonComment != null && reasonComment.isNotEmpty)
+            'manualMarkingComment': reasonComment,
+        };
+
+        final clientAudit = ClientAuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+        final audit = AuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+
+        // Reuse clientReferenceId from existing log if present (dedup)
+        // Mirrors submitAttendanceDetails: match on individualId + registerId + type + time
+        final existingEntryLog = attendanceLogs
+            .where((log) =>
+                log.individualId == individualId &&
+                log.registerId == registerId &&
+                log.type == EnumValues.entry.toValue() &&
+                log.time == entryTime &&
+                log.clientReferenceId != null)
+            .toList();
+
+        final existingExitLog = attendanceLogs
+            .where((log) =>
+                log.individualId == individualId &&
+                log.registerId == registerId &&
+                log.type == EnumValues.exit.toValue() &&
+                log.time == exitTime &&
+                log.clientReferenceId != null)
+            .toList();
+
+        // ENTRY log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingEntryLog.isNotEmpty
+              ? existingEntryLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.entry.toValue(),
+          status: logStatus,
+          time: entryTime,
+          uploadToServer: uploadToServer == 1,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+
+        // EXIT log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingExitLog.isNotEmpty
+              ? existingExitLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.exit.toValue(),
+          status: logStatus,
+          time: exitTime,
+          uploadToServer: uploadToServer == 1,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+      }
+      return entities;
+    });
+
+    FunctionRegistry.register("markAttendance", (args, stateData) {
+      final individualId = args.isNotEmpty ? args.first?.toString() : null;
+      final registerId = args.length > 1 ? args[1]?.toString() : null;
+      final status = args.length > 2 ? (args[2] as double?)?.toDouble() : null;
+      final signatureData = args.length > 3 ? args[3] as String? : null;
+      final collection = args.length > 4 ? args[4] as Map? : null;
+
+      if (individualId == null || individualId.isEmpty) return null;
+      if (registerId == null || registerId.isEmpty) return null;
+      if (status == null) return null;
+
+      // Toggle logic matching _onIndividualAttendanceMark
+      final existing = collection?[individualId];
+      final currentStatus =
+          existing is Map ? (existing['status'] as num?)?.toDouble() : null;
+
+      final double finalStatus;
+      if (currentStatus == null || currentStatus == -1) {
+        finalStatus = status; // not marked, take new status
+      } else if (currentStatus == 1.0 && status == 1.0) {
+        finalStatus = 1.0; // already present, keep present
+      } else {
+        finalStatus =
+            status; // otherwise, update to new status (could be marking absent or toggling)
+      }
+      collection?[individualId] = {
+        'registerId': registerId,
+        'individualId': individualId,
+        'status': finalStatus,
+        'signatureData': signatureData,
+      };
+      return collection;
+    });
+
+    /// Registers a function to check if attendance is single session mode.
+    ///
+    /// - **Function Name**: `'isSingleSession'`
+    /// - **Arguments**: A list where the first element is the sessions value from
+    ///   AttendanceRegisterModel.additionalDetails.sessions
+    /// - **Returns**: `true` if single session (sessions != 2), `false` if double session (sessions == 2).
+    ///
+    /// This function is used in attendance marking to determine if the register
+    /// operates in single session mode (one entry/exit per day) or double session mode
+    /// (morning and evening sessions).
+    FunctionRegistry.register("isNotSingleSession", (args, stateData) {
+      // If no argument provided, default to single session
+      if (args.isEmpty || args.first == null) {
+        return true;
+      }
+
+      final registerModel = args.first;
+
+      var isSingleSession = registerModel.additionalDetails?["sessions"] != 2;
+
+      return !isSingleSession;
+    });
+
+    FunctionRegistry.register("attendeeFilterByTeam", (args, stateData) {
+      // If no argument provided, default to single session
+      if (args.isEmpty || args.first == null) return null;
+
+      final attendees = args.first;
+      final teamName = args.length > 1 ? args[1]?.toString() : null;
+      List filteredAttendees = attendees;
+
+      return filteredAttendees;
+    });
+
+    FunctionRegistry.register("getMissedDays", (args, stateData) {
+      List attendanceLog =
+          (args.isEmpty || args.first == null) ? [] : args.first;
+
+      String missedDays = ""; // Initialize the missedDays string
+
+      // Get current date
+      DateTime nowTime = DateTime.now();
+      DateTime currentDate = DateTime(nowTime.year, nowTime.month, nowTime.day);
+
+      // Check if attendance log exists
+      if (attendanceLog.isNotEmpty) {
+        // Iterate through attendance log entries
+        for (var entry in attendanceLog) {
+          // Check each entry for missed attendance
+          entry.forEach((key, value) {
+            if (value == false && key.isBefore(currentDate)) {
+              // Add missed day to missedDays string
+              missedDays += "${key.day}/${key.month}/${key.year} \n";
+            }
+          });
+        }
+      }
+
+      // Return missed attendance days with description
+      return "MISSED_ATTENDANCE_DESCRIPTION\n$missedDays";
+    });
+
+    /// Builds AttendanceLogModel entities (ENTRY + EXIT per individual) from
+    /// attendanceCollection, mirroring _onSaveAsDraft / submitAttendanceDetails.
+    /// Reuses clientReferenceId from existing logs for dedup on re-submit.
+    ///
+    /// Args:
+    ///  - args[0]: attendanceCollection (Map<individualId, {status, signatureData, ...}>)
+    ///  - args[1]: selectedDate (Map with 'entryTime' and 'exitTime' as epoch millis)
+    ///  - args[2]: registerId (String)
+    ///  - args[3]: existingLogs (List<AttendanceLogModel>) - optional, for dedup
+    ///
+    /// Returns: List<AttendanceLogModel> entities ready for CREATE action.
+    FunctionRegistry.register('attendanceLogEntities', (args, stateData) {
+      if (args.isEmpty || args.first == null) return <EntityModel>[];
+
+      final attendanceCollection = args[0] as Map?;
+      if (attendanceCollection == null || attendanceCollection.isEmpty) {
+        return <EntityModel>[];
+      }
+
+      final selectedDate = args.length > 1 ? args[1] as Map? : null;
+      final entryTime = (selectedDate?['entryTime'] as num?)?.toInt() ?? 0;
+      final exitTime = (selectedDate?['exitTime'] as num?)?.toInt() ?? 0;
+
+      final registerId = args.length > 2 ? args[2]?.toString() ?? '' : '';
+      final List<dynamic> existingLogs =
+          args.length > 3 && args[3] is List ? args[3] as List : [];
+
+      final tenantId = FlowBuilderSingleton().selectedProject?.tenantId ?? '';
+      final boundaryCode = AttendanceSingleton().boundary?.code ?? '';
+      final userUuid = FlowBuilderSingleton().loggedInUser?.uuid ?? '';
+      final now = DateTime.now().millisecondsSinceEpoch;
+
+      final List<EntityModel> entities = [];
+
+      for (final entry in attendanceCollection.entries) {
+        final individualId = entry.key.toString();
+        final data = entry.value as Map?;
+        if (data == null) continue;
+
+        final markStatus = (data['status'] as num?)?.toDouble() ?? -1;
+        if (markStatus == -1) continue; // skip unmarked
+
+        final isPresent = markStatus >= 1.0;
+        final signatureData = data['signatureData'] as String?;
+        final logStatus = isPresent
+            ? EnumValues.active.toValue()
+            : EnumValues.inactive.toValue();
+
+        final additionalDetails = <String, dynamic>{
+          if (boundaryCode.isNotEmpty)
+            EnumValues.boundaryCode.toValue(): boundaryCode,
+          if (signatureData != null) 'signatureData': signatureData,
+        };
+
+        final clientAudit = ClientAuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+        final audit = AuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+
+        // Reuse clientReferenceId from existing log if present (dedup)
+        final existingEntryLog = existingLogs
+            .where((l) =>
+                l.individualId == individualId &&
+                l.registerId == registerId &&
+                l.type == EnumValues.entry.toValue() &&
+                l.time == entryTime &&
+                l.clientReferenceId != null)
+            .toList();
+
+        final existingExitLog = existingLogs
+            .where((l) =>
+                l.individualId == individualId &&
+                l.registerId == registerId &&
+                l.type == EnumValues.exit.toValue() &&
+                l.time == exitTime &&
+                l.clientReferenceId != null)
+            .toList();
+
+        // ENTRY log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingEntryLog.isNotEmpty
+              ? existingEntryLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.entry.toValue(),
+          status: logStatus,
+          time: entryTime,
+          uploadToServer: true,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+
+        // EXIT log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingExitLog.isNotEmpty
+              ? existingExitLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.exit.toValue(),
+          status: logStatus,
+          time: exitTime,
+          uploadToServer: true,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+      }
+
+      return entities;
+    });
 
     // First page (viewTransaction) - shows sender for RECEIPT/RETURNED, receiver for ISSUED/DAMAGED/LOSS
     FunctionRegistry.register('getFirstPagePartyLabel', (args, stateData) {
@@ -953,18 +2025,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                           ),
                         ),
                       ),
-              /////   hfreferral progress matrics
-              if (state.actionsWrapper.actions
-                  .map((e) => e.displayName)
-                  .contains(i18.home.beneficiaryReferralLabel))
-                HFReferralProgressBar(
-                  label: localizations.translate(
-                    i18.home.progressIndicatorTitle,
+                /////   hfreferral progress matrics
+                if (state.actionsWrapper.actions
+                    .map((e) => e.displayName)
+                    .contains(i18.home.beneficiaryReferralLabel))
+                  HFReferralProgressBar(
+                    label: localizations.translate(
+                      i18.home.progressIndicatorTitle,
+                    ),
+                    prefixLabel: localizations.translate(
+                      i18.common.progressIndicatorPrefixLabelHFReferral,
+                    ),
                   ),
-                  prefixLabel: localizations.translate(
-                    i18.common.progressIndicatorPrefixLabelHFReferral,
-                  ),
-                ),
               ],
             ),
             footer: Padding(
@@ -1700,13 +2772,107 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
-          onPressed: () {
-            // if (isTriggerLocalisation) {
-            const module = "hcm-attendance";
-            triggerLocalization(module: module);
-            isTriggerLocalisation = false;
-            // };
-            context.router.push(const ManageAttendanceRoute());
+          onPressed: () async {
+            // Set up CRUD service
+            CrudBlocSingleton().setData(
+              crudService: DigitCrudService(
+                context: context,
+                relationshipMap: const [
+                  RelationshipMapping(
+                    from: 'attendanceRegister',
+                    to: 'attendee',
+                    localKey: 'id',
+                    foreignKey: 'registerId',
+                  ),
+                  RelationshipMapping(
+                    from: 'attendanceRegister',
+                    to: 'attendance',
+                    localKey: 'id',
+                    foreignKey: 'registerId',
+                  ),
+                  RelationshipMapping(
+                    from: 'individual',
+                    to: 'name',
+                    localKey: 'clientReferenceId',
+                    foreignKey: 'individualClientReferenceId',
+                  ),
+                  RelationshipMapping(
+                    from: 'attendee',
+                    to: 'individual',
+                    localKey: 'individualId',
+                    foreignKey: 'id',
+                  ),
+                ],
+                nestedModelMappings: const [
+                  NestedModelMapping(
+                    rootModel: 'attendanceRegister',
+                    fields: {
+                      'attendees': NestedFieldMapping(
+                        table: 'attendee',
+                        localKey: 'id',
+                        foreignKey: 'registerId',
+                        type: NestedMappingType.many,
+                      ),
+                      'attendanceLog': NestedFieldMapping(
+                        table: 'attendance',
+                        localKey: 'id',
+                        foreignKey: 'registerId',
+                        type: NestedMappingType.many,
+                      ),
+                    },
+                  ),
+                  NestedModelMapping(
+                    rootModel: 'individual',
+                    fields: {
+                      'name': NestedFieldMapping(
+                        table: 'name',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'individualClientReferenceId',
+                        type: NestedMappingType.one,
+                      ),
+                    },
+                  ),
+                ],
+                searchEntityRepository: context.read<SearchEntityRepository>(),
+              ),
+              dynamicEntityModelListener: EntityModelMapMapper(),
+            );
+
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            FlowBuilderSingleton().setPersistenceConfiguration(
+                persistenceConfiguration:
+                    PersistenceConfiguration.offlineFirst);
+            WidgetRegistry.initialize();
+            try {
+              NavigationRegistry.setupNavigation(context);
+              context.router
+                  .push(CurrentBoundaryRoute(onBoundarySelected: (ctx) async {
+                if (isTriggerLocalisation) {
+                  final moduleName =
+                      'hcm-complaints-${context.selectedProject.referenceID}';
+                  const module = "hcm-attendance";
+                  triggerLocalization(module: module);
+                  isTriggerLocalisation = false;
+                }
+                // triggerLocalization(module: moduleName);
+                Map<String, dynamic> attendanceData =
+                    attendanceFlows; // Adding custom attendance flows as the flows are not coming from the server for attendance module
+                List<Map<String, dynamic>> flowsData =
+                    (attendanceData['flows'] as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: attendanceData["initialPage"]),
+                );
+              }));
+            } catch (e) {
+              debugPrint('error $e');
+            }
           },
         ),
       ),
@@ -1843,7 +3009,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            element == i18.home.manageAttendanceLabel)
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -1946,7 +3113,6 @@ void setPackagesSingleton(BuildContext context) {
                   })
               .toList(),
         );
-
         AttendanceSingleton().setInitialData(
           project: context.selectedProject,
           loggedInIndividualId: context.loggedInIndividualId ?? '',

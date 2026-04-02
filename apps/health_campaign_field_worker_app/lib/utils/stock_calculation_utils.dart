@@ -93,8 +93,7 @@ class StockCalculationUtils {
       // Stock Received/Excess/Less: This facility is the receiver AND transactionType == RECEIVED
       // Both LESS and EXCESS use RECEIVED transactionType, differentiated by stockEntryType
       if (isReceiver && transactionType == 'RECEIVED') {
-        if (transactionReason == 'RETURNED' ||
-            stockEntryType == 'RETURNED') {
+        if (transactionReason == 'RETURNED' || stockEntryType == 'RETURNED') {
           stockReturned += quantity;
         } else if (stockEntryType == 'EXCESS') {
           // Stock Excess: recorded via less/excess flow

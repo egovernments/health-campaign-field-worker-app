@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
@@ -170,6 +172,20 @@ bool _recordedSideEffectInternal(
   return false;
 }
 
+// Helper function matching hasLogWithType logic
+bool _hasLogWithType(attendanceLog, DateTime date, String type) {
+  final logTime = type == 'ENTRY'
+      ? DateTime(date.year, date.month, date.day, 9).millisecondsSinceEpoch
+      : DateTime(date.year, date.month, date.day, 18).millisecondsSinceEpoch;
+
+  return attendanceLog.any((element) {
+    if (element is! AttendanceLogModel) return false;
+    final elementTime = element.time;
+    final elementType = element.type?.toString();
+    return elementTime == logTime && elementType == type;
+  });
+}
+
 /// Initializes the [FunctionRegistry] with application-specific functions.
 ///
 /// This function should be called at application startup to populate the
@@ -338,9 +354,8 @@ void initializeFunctionRegistry() {
 
     if (tasks.isNotEmpty) {
       // Get currentRunningCycle from third argument if provided
-      final currentRunningCycle = args.length > 2
-          ? int.tryParse(args[2]?.toString() ?? '')
-          : null;
+      final currentRunningCycle =
+          args.length > 2 ? int.tryParse(args[2]?.toString() ?? '') : null;
 
       for (final item in tasks) {
         Map<String, dynamic> task;
@@ -372,8 +387,7 @@ void initializeFunctionRegistry() {
           if (fields != null) {
             for (final field in fields) {
               if (field is Map && field['key'] == 'cycleIndex') {
-                taskCycleIndex =
-                    int.tryParse(field['value']?.toString() ?? '');
+                taskCycleIndex = int.tryParse(field['value']?.toString() ?? '');
                 break;
               }
             }
@@ -501,7 +515,8 @@ void initializeFunctionRegistry() {
     final status = value.trim().toUpperCase();
 
     // Match valid delivered statuses
-    if (status == TaskStatus.administrationSuccess || status == TaskStatus.delivered) {
+    if (status == TaskStatus.administrationSuccess ||
+        status == TaskStatus.delivered) {
       return true;
     }
 
@@ -1180,7 +1195,7 @@ void initializeFunctionRegistry() {
 
             // Disable if any task status is success
             if (status == TaskStatus.administrationSuccess ||
-                status == TaskStatus.delivered ) {
+                status == TaskStatus.delivered) {
               return true;
             }
 

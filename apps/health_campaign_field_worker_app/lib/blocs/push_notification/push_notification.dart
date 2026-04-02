@@ -165,8 +165,7 @@ class PushNotificationEvent with _$PushNotificationEvent {
 
 @freezed
 class PushNotificationState with _$PushNotificationState {
-  const factory PushNotificationState.initial() =
-      PushNotificationInitialState;
+  const factory PushNotificationState.initial() = PushNotificationInitialState;
 
   const factory PushNotificationState.initialized({
     String? fcmToken,

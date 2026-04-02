@@ -3,9 +3,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 
-import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +24,7 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
+import '../../utils/download_image.dart';
 import '../push_notification/push_notification.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
@@ -495,6 +497,24 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  Future<List<AttendanceLogModel>> _updateLogsData(
+      List<AttendanceLogModel> logs) async {
+    List<AttendanceLogModel> updatedLogs = [];
+    for (var log in logs) {
+      var additionalDetails = log.additionalDetails;
+      if (additionalDetails != null &&
+          additionalDetails['isFirstSignature'] == "true" &&
+          additionalDetails['signatureFileStoreId'] != null) {
+        String signatureFileStoreId = additionalDetails['signatureFileStoreId'];
+        String signatureBase64 =
+            await DownloadImage.downloadSignature(signatureFileStoreId);
+        additionalDetails['signatureData'] = signatureBase64;
+      }
+      updatedLogs.add(log.copyWith(additionalDetails: additionalDetails));
+    }
+    return updatedLogs;
+  }
+
   Future<void> _handleProjectSelection(
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
@@ -567,7 +587,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                       registerId: register.id,
                     ),
                   );
-                  await attendanceLogLocalRepository.bulkCreate(logs);
+                  List<AttendanceLogModel> updatedLogs =
+                      await _updateLogsData(logs);
+                  await attendanceLogLocalRepository.bulkCreate(updatedLogs);
                 }
               } catch (_) {
                 emit(state.copyWith(
@@ -903,8 +925,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         receiverIds = projectFacilities.map((e) => e.facilityId).toList();
       } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
         receiverIds = projectFacilities.map((e) => e.facilityId).toList();
-      } else if (userRoles
-          .contains(RolesType.communityDistributor.toValue())) {
+      } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
         receiverIds = [userObject.uuid];
       }
 
@@ -917,8 +938,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             productVariantIds.isNotEmpty ? productVariantIds : null,
       );
 
-      final totalCount = await (stockRemoteRepository
-              as StockRemoteRepository)
+      final totalCount = await (stockRemoteRepository as StockRemoteRepository)
           .fetchTotalCount(stockSearchModel, offSet: 0);
 
       if (totalCount <= 0) return;

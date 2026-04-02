@@ -22,8 +22,7 @@ part 'stock_downsync.freezed.dart';
 
 typedef StockDownSyncEmitter = Emitter<StockDownSyncState>;
 
-class StockDownSyncBloc
-    extends Bloc<StockDownSyncEvent, StockDownSyncState> {
+class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
   final LocalSecureStore localSecureStore;
 
   final LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
@@ -99,8 +98,7 @@ class StockDownSyncBloc
     return StockSearchModel(
       receiverId: receiverIds,
       transactionType: [TransactionType.dispatched.toValue()],
-      productVariantId:
-          productVariantIds.isNotEmpty ? productVariantIds : null,
+      productVariantId: productVariantIds.isNotEmpty ? productVariantIds : null,
     );
   }
 
@@ -164,8 +162,8 @@ class StockDownSyncBloc
 
       // Always start from offset 0 for total count check since
       // lastChangedSince already scopes the query to new/modified records
-      final totalCount =
-          await (stockRemoteRepository as StockRemoteRepository).fetchTotalCount(
+      final totalCount = await (stockRemoteRepository as StockRemoteRepository)
+          .fetchTotalCount(
         stockSearchModel,
         offSet: 0,
         lastSyncedTime: lastSyncedTime,
