@@ -2773,13 +2773,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () async {
-            // if (isTriggerLocalisation) {
-            //   const module = "hcm-attendance";
-            //   triggerLocalization(module: module);
-            //   isTriggerLocalisation = false;
-            // }
-            // context.router.push(const ManageAttendanceRoute());
-
             // Set up CRUD service
             CrudBlocSingleton().setData(
               crudService: DigitCrudService(

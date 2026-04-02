@@ -1,12 +1,9 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:digit_flow_builder/action_handler/action_config.dart';
-import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/utils/flow_widget_state.dart';
 import 'package:digit_flow_builder/widgets/resolved_flow_widget.dart';
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -22,9 +19,6 @@ class SignatureCompareWidget extends ResolvedFlowWidget {
     ResolvedWidgetContext resolved,
   ) {
     return WidgetStateContext.reactive(context, (ctx, state) {
-      final signatureData = state.widgetData["signatureCollection"];
-      final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
-
       final registerId = resolved.resolveText(json['registerId']);
       final individualId = resolved.resolveText(json['individualId']);
       final individualName = resolved.resolveText(json['individualName']);
@@ -100,35 +94,6 @@ class _CompareSignatureState extends State<CompareSignature> {
     individualId = widget.resolved.resolveText(widget.individualId);
     registerId = widget.resolved.resolveText(widget.registerId);
     super.initState();
-  }
-
-  String? _getExistingSignatureData() {
-    var attendanceLogs = widget.resolved.stateData?.modelMap['attendanceLog']
-            as List<dynamic>? ??
-        [];
-    if (attendanceLogs.isEmpty) return null;
-    List log = attendanceLogs
-        .where(
-          (log) =>
-              log['individualId'] == individualId &&
-              log['registerId'] == registerId,
-        )
-        .toList();
-    if (log.isNotEmpty) {
-      var filterLogs = log.firstWhereOrNull((log) {
-        return log['additionalDetails'] != null &&
-            log['additionalDetails'].containsKey('signatureData');
-      });
-
-      if (filterLogs == null) return null;
-      var additionalDetails = filterLogs['additionalDetails'] ?? null;
-
-      var signatureData = additionalDetails != null
-          ? additionalDetails['signatureData'] as String?
-          : null;
-      return signatureData;
-    }
-    return null;
   }
 
   @override

@@ -21,7 +21,6 @@ import 'implementations/column_widget.dart';
 import 'implementations/dropdown_widget.dart';
 import 'implementations/filter_widget.dart';
 import 'implementations/icon_widget.dart';
-import 'implementations/image_widget.dart';
 import 'implementations/info_card_widget.dart';
 import 'implementations/label_pair_list_widget.dart';
 import 'implementations/list_view_widget.dart';
@@ -84,7 +83,6 @@ class WidgetRegistration {
     FlowWidgetFactory.register(SignatureCaptureWidget());
     FlowWidgetFactory.register(LabeledToggleWidget());
     FlowWidgetFactory.register(CheckBoxWidget());
-    FlowWidgetFactory.register(ImageWidget());
     _initialized = true;
   }
 

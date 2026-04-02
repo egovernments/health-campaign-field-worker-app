@@ -114,11 +114,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
               padding: const EdgeInsets.all(spacer2),
               child: Text(
                 subLabel ?? '',
-                style: TextStyle(
-                  color: theme.colorTheme.primary.primary1,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: theme.textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
             ),

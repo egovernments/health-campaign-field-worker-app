@@ -397,7 +397,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                       .translate(widget.config['description'])
                                   : null,
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: spacer4),
                             ...body
                                 .map((e) {
                                   final processed =
