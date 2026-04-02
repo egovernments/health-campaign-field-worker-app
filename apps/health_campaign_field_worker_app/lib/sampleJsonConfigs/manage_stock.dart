@@ -1917,7 +1917,7 @@ final dynamic sampleInventoryFlows = {
                   {
                     "format": "tag",
                     "type": "",
-                    "label": "INVENTORY_MRN_TAG_LABEL{{item.groupKey}}"
+                    "label": "MRN {{item.groupKey}}"
                   },
                   {
                     "format": "textTemplate",
@@ -2270,7 +2270,7 @@ final dynamic sampleInventoryFlows = {
                   {
                     "format": "tag",
                     "type": "",
-                    "label": "MRN {{item.groupKey}}"
+                      "label": "MRN {{item.groupKey}}"
                   },
                   {
                     "format": "textTemplate",
