@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:collection/collection.dart';
 
 import 'package:attendance_management/utils/utils.dart';
@@ -56,6 +55,7 @@ import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
 import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
+import '../utils/attendance_utils.dart';
 import '../utils/date_util_attendance.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
@@ -121,177 +121,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     // Register custom components for forms
     _registerCustomComponents();
-  }
-
-  // Helper function matching hasLogWithType logic
-  bool _hasLogWithType(attendanceLog, DateTime date, String type) {
-    final logTime = type == 'ENTRY'
-        ? DateTime(date.year, date.month, date.day, 9).millisecondsSinceEpoch
-        : DateTime(date.year, date.month, date.day, 18).millisecondsSinceEpoch;
-
-    if (attendanceLog == null) return false;
-
-    return attendanceLog.any((element) {
-      final elementTime = element.time;
-      final elementType = element.type?.toString();
-      return elementTime == logTime && elementType == type;
-    });
-  }
-
-  bool _hasLogActiveStatus(attendanceLog, DateTime date, String type) {
-    final logTime = type == 'ENTRY'
-        ? DateTime(date.year, date.month, date.day, 9).millisecondsSinceEpoch
-        : DateTime(date.year, date.month, date.day, 18).millisecondsSinceEpoch;
-
-    if (attendanceLog == null) return false;
-
-    return attendanceLog.any((element) {
-      final elementTime = element.time;
-      final elementType = element.type?.toString();
-      final elementStatus = element.status;
-      if (elementStatus == null) return false;
-      if (elementTime == logTime && elementType == type) {
-        return elementStatus == 'ACTIVE';
-      }
-      return false;
-    });
-  }
-
-  double _attendanceStatus(
-      String? individualId, DateTime selectedDate, Map? attendanceCollection) {
-    // Check in-memory collection first — gives instant UI feedback after mark click
-    if (attendanceCollection != null && individualId != null) {
-      final entry = attendanceCollection[individualId];
-      if (entry is Map) {
-        return (entry['status'] as num?)?.toDouble() ?? -1.0;
-      }
-    }
-    return -1.0;
-  }
-
-  double _attendanceLogsStatus(String? individualId, DateTime selectedDate,
-      List<dynamic>? attendanceLogs) {
-    if (attendanceLogs == null || individualId == null) return -1.0;
-
-    // Fall back to stored attendanceLog from DB
-    final filteredAttendanceLogs = attendanceLogs
-        .where((attendanceLog) =>
-            attendanceLog.individualId?.toString() == individualId)
-        .toList();
-
-    if (filteredAttendanceLogs.isEmpty) return -1.0;
-
-    // Process attendanceLog if it exists and is a List
-
-    final hasMorningLog =
-        _hasLogWithType(filteredAttendanceLogs, selectedDate, 'ENTRY');
-    final hasEveningLog =
-        _hasLogWithType(filteredAttendanceLogs, selectedDate, 'EXIT');
-    if (hasMorningLog && hasEveningLog) {
-      final morningLogActive =
-          _hasLogActiveStatus(filteredAttendanceLogs, selectedDate, 'ENTRY');
-      final eveningActive =
-          _hasLogActiveStatus(filteredAttendanceLogs, selectedDate, 'EXIT');
-
-      if (morningLogActive && eveningActive) {
-        return 1.0; // present
-      } else if (!morningLogActive && !eveningActive) {
-        return 0.0; // absent
-      } else {
-        return 0.5; // half day
-      }
-    }
-    return -1.0;
-  }
-
-  List<Map<DateTime, bool>> generateAttendanceLogDateList(
-    int startMillis,
-    int endMillis,
-    List<AttendanceLogModel> completedLogs,
-  ) {
-    List<Map<DateTime, bool>> dateList = [];
-
-    // Convert milliseconds to DateTime objects
-    DateTime startDate = DateTime.fromMillisecondsSinceEpoch(startMillis);
-    DateTime endDate = DateTime.fromMillisecondsSinceEpoch(endMillis);
-
-    // Calculate the number of days between start and end dates
-    final daysDifference = endDate.difference(startDate).inDays;
-
-    // Generate date list directly based on the number of days
-    for (int i = 0; i <= daysDifference; i++) {
-      DateTime currentDate = startDate.add(Duration(days: i));
-      bool hasMorningLog = hasLogWithType(completedLogs, currentDate, "ENTRY");
-      bool hasEveningLog = hasLogWithType(completedLogs, currentDate, "EXIT");
-      dateList.add({
-        currentDate: hasMorningLog && hasEveningLog,
-      });
-    }
-
-    return dateList;
-  }
-
-  // Method to check if logs exist for a given date and type
-  bool hasLogWithType(
-    List<AttendanceLogModel> logs,
-    DateTime date,
-    String type,
-  ) {
-    final selectedDate =
-        DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch);
-
-    final logTime = type == 'ENTRY'
-        ? DateTime(
-            selectedDate.year,
-            selectedDate.month,
-            selectedDate.day,
-            9,
-          ).millisecondsSinceEpoch
-        : DateTime(
-            selectedDate.year,
-            selectedDate.month,
-            selectedDate.day,
-            18,
-          ).millisecondsSinceEpoch;
-
-    return logs
-        .any((element) => element.time == logTime && element.type == type);
-  }
-
-  Map<String, dynamic>? _attendanceTime(
-      selectedDate, isMorning, attendanceRegisterModel) {
-    final isNotSingleSession =
-        attendanceRegisterModel?.additionalDetails?["sessions"] == 2;
-
-    DateTime? dateSession = selectedDate != null
-        ? DateTime.fromMillisecondsSinceEpoch(selectedDate)
-        : null;
-
-    if (dateSession == null) return null;
-
-    var entryTime = isNotSingleSession
-        ? AttendanceDateTimeManagement.getMillisecondEpoch(
-            dateSession,
-            isMorning ? 0 : 1,
-            "entryTime",
-          )
-        : (DateTime(dateSession.year, dateSession.month, dateSession.day, 9)
-            .millisecondsSinceEpoch);
-
-    var exitTime = isNotSingleSession
-        ? AttendanceDateTimeManagement.getMillisecondEpoch(
-            dateSession,
-            isMorning ? 0 : 1,
-            "exitTime",
-          )
-        : (DateTime(dateSession.year, dateSession.month, dateSession.day, 18)
-            .millisecondsSinceEpoch);
-
-    return {
-      "date": dateSession.toIso8601String(),
-      "entryTime": entryTime,
-      "exitTime": exitTime,
-    };
   }
 
   /// Register custom components for forms engine
@@ -602,8 +431,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       final selectedDate = widgetData['selectedDate'] as int?;
       final isMorning = widgetData['sessionToggle'] as bool? ?? true;
 
-      Map<String, dynamic>? attendanceTime =
-          _attendanceTime(selectedDate, isMorning, attendanceRegister);
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegister);
 
       var entryTime = attendanceTime?['entryTime'];
       var exitTime = attendanceTime?['exitTime'];
@@ -729,8 +558,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       if (selectedDate == null)
         return false; // hide buttons if no date selected
 
-      Map<String, dynamic>? attendanceTime =
-          _attendanceTime(selectedDate, isMorning, attendanceRegister);
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegister);
 
       var entryTime = attendanceTime?['entryTime'];
       var exitTime = attendanceTime?['exitTime'];
@@ -788,8 +617,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         return false; // hide buttons if no date selected
       }
 
-      Map<String, dynamic>? attendanceTime = _attendanceTime(selectedDate,
-          isMorning == "true" ? true : false, attendanceRegisterModel);
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate,
+          isMorning == "true" ? true : false,
+          attendanceRegisterModel);
 
       var entryTime = attendanceTime?['entryTime'];
       var exitTime = attendanceTime?['exitTime'];
@@ -823,8 +654,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       final selectedDate = widgetData?['selectedDate'] as int?;
       final isMorning = widgetData?['sessionToggle'] as bool? ?? true;
 
-      Map<String, dynamic>? attendanceTime =
-          _attendanceTime(selectedDate, isMorning, attendanceRegisterModel);
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegisterModel);
 
       var entryTime = attendanceTime?['entryTime'];
       var exitTime = attendanceTime?['exitTime'];
@@ -891,8 +722,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       final selectedDate = widgetData?['selectedDate'] as int?;
       final isMorning = widgetData?['sessionToggle'] as bool? ?? true;
 
-      Map<String, dynamic>? attendanceTime =
-          _attendanceTime(selectedDate, isMorning, attendanceRegisterModel);
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegisterModel);
 
       var entryTime = attendanceTime?['entryTime'];
       var exitTime = attendanceTime?['exitTime'];
@@ -945,16 +776,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
         // Determine attendance status based on logs
         final hasMorningLog =
-            _hasLogWithType(filteredLogs, selectedDate, 'ENTRY');
+            AttendanceUtils.hasLogWithType(filteredLogs, selectedDate, 'ENTRY');
         final hasEveningLog =
-            _hasLogWithType(filteredLogs, selectedDate, 'EXIT');
+            AttendanceUtils.hasLogWithType(filteredLogs, selectedDate, 'EXIT');
 
         double status;
         if (hasMorningLog && hasEveningLog) {
-          final morningLogActive =
-              _hasLogActiveStatus(filteredLogs, selectedDate, 'ENTRY');
-          final eveningActive =
-              _hasLogActiveStatus(filteredLogs, selectedDate, 'EXIT');
+          final morningLogActive = AttendanceUtils.hasLogActiveStatus(
+              filteredLogs, selectedDate, 'ENTRY');
+          final eveningActive = AttendanceUtils.hasLogActiveStatus(
+              filteredLogs, selectedDate, 'EXIT');
 
           if (morningLogActive && eveningActive) {
             status = 1.0; // present
@@ -1038,7 +869,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       if (attendanceRegister == null) return '0/0';
 
-      List list = generateAttendanceLogDateList(
+      List list = AttendanceUtils.generateAttendanceLogDateList(
         attendanceRegister.startDate!,
         attendanceRegister.endDate!,
         attendanceRegister.attendanceLog,
@@ -1097,8 +928,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
           : DateTime.now();
 
-      double status =
-          _attendanceLogsStatus(individualId, selectedDate, attendanceLogs);
+      double status = AttendanceUtils.attendanceLogsStatus(
+          individualId, selectedDate, attendanceLogs);
       bool isLogNotMarked = status == -1.0;
       if (filter != null) {
         return filter
@@ -1118,8 +949,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
           : DateTime.now();
 
-      double status =
-          _attendanceStatus(individualId, selectedDate, attendanceCollection);
+      double status = AttendanceUtils.attendanceStatus(
+          individualId, selectedDate, attendanceCollection);
       if (status == -1.0) {
         return false;
       } else if (status == 1.0) {
@@ -1140,8 +971,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
           : DateTime.now();
 
-      double status =
-          _attendanceLogsStatus(individualId, selectedDate, attendanceLogs);
+      double status = AttendanceUtils.attendanceLogsStatus(
+          individualId, selectedDate, attendanceLogs);
       return status; // 1.0 for present, 0.0 for absent, 0.5 for half day, -1.0 for unmarked
     });
 
@@ -1278,8 +1109,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       final selectedDate = widgetData['selectedDate'] as int?;
       final attendanceManualData = widgetData['attendanceManualData'] as Map?;
 
-      Map<String, dynamic>? attendanceTime =
-          _attendanceTime(selectedDate, isMorning, attendanceRegisterModel);
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegisterModel);
 
       var entryTime = attendanceTime?['entryTime'];
       var exitTime = attendanceTime?['exitTime'];
