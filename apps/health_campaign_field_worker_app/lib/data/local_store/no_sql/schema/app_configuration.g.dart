@@ -65,140 +65,152 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'DeliveryCommentOptions',
     ),
-    r'DOWNSYNC-BANDWIDTH_BATCH_SIZE': PropertySchema(
+    r'DEVICE_CHANGE_REASONS': PropertySchema(
       id: 8,
+      name: r'DEVICE_CHANGE_REASONS',
+      type: IsarType.objectList,
+      target: r'DeviceChangeReasons',
+    ),
+    r'DOWNSYNC-BANDWIDTH_BATCH_SIZE': PropertySchema(
+      id: 9,
       name: r'DOWNSYNC-BANDWIDTH_BATCH_SIZE',
       type: IsarType.objectList,
       target: r'BandwidthBatchSize',
     ),
     r'FIREBASE_CONFIG': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'FIREBASE_CONFIG',
       type: IsarType.object,
       target: r'FirebaseConfig',
     ),
     r'GENDER_OPTIONS_POPULATOR': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'GENDER_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'GenderOptions',
     ),
     r'HOUSEHOLD_DELETION_REASON_OPTIONS': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'HOUSEHOLD_DELETION_REASON_OPTIONS',
       type: IsarType.objectList,
       target: r'HouseholdDeletionReasonOptions',
     ),
     r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS',
       type: IsarType.objectList,
       target: r'HouseholdMemberDeletionReasonOptions',
     ),
     r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
       type: IsarType.objectList,
       target: r'RelationShipTypeOptions',
     ),
     r'ID_TYPE_OPTIONS_POPULATOR': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'ID_TYPE_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'IdTypeOptions',
     ),
     r'LANGUAGES': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'LANGUAGES',
       type: IsarType.objectList,
       target: r'Languages',
     ),
     r'NETWORK_DETECTION': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'NETWORK_DETECTION',
       type: IsarType.string,
     ),
     r'PERSISTENCE_MODE': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'PERSISTENCE_MODE',
       type: IsarType.string,
     ),
     r'PROXIMITY_SEARCH_RANGE': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'PROXIMITY_SEARCH_RANGE',
       type: IsarType.double,
     ),
     r'SEARCH_CLF_FILTERS': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'SEARCH_CLF_FILTERS',
       type: IsarType.objectList,
       target: r'SearchCLFFilters',
     ),
     r'SEARCH_HOUSEHOLD_FILTERS': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'SEARCH_HOUSEHOLD_FILTERS',
       type: IsarType.objectList,
       target: r'SearchHouseHoldFilters',
     ),
+    r'SINGLE_USER_LOGIN': PropertySchema(
+      id: 22,
+      name: r'SINGLE_USER_LOGIN',
+      type: IsarType.objectList,
+      target: r'SingleUserLogin',
+    ),
     r'SYNC_METHOD': PropertySchema(
-      id: 21,
+      id: 23,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 22,
+      id: 24,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 23,
+      id: 25,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSIT_POST_TYPE': PropertySchema(
-      id: 24,
+      id: 26,
       name: r'TRANSIT_POST_TYPE',
       type: IsarType.objectList,
       target: r'TransitPostType',
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 25,
+      id: 27,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 26,
+      id: 28,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'manualAttendanceReasons': PropertySchema(
-      id: 27,
+      id: 29,
       name: r'manualAttendanceReasons',
       type: IsarType.objectList,
       target: r'ManualAttendanceReasons',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 28,
+      id: 30,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 29,
+      id: 31,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 30,
+      id: 32,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 31,
+      id: 33,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -235,6 +247,8 @@ const AppConfigurationSchema = CollectionSchema(
     r'SearchHouseHoldFilters': SearchHouseHoldFiltersSchema,
     r'SearchCLFFilters': SearchCLFFiltersSchema,
     r'TransitPostType': TransitPostTypeSchema,
+    r'DeviceChangeReasons': DeviceChangeReasonsSchema,
+    r'SingleUserLogin': SingleUserLoginSchema,
     r'ReferralReasons': ReferralReasonsSchema,
     r'ManualAttendanceReasons': ManualAttendanceReasonsSchema,
     r'HouseStructureTypes': HouseStructureTypesSchema,
@@ -351,6 +365,20 @@ int _appConfigurationEstimateSize(
         for (var i = 0; i < list.length; i++) {
           final value = list[i];
           bytesCount += DeliveryCommentOptionsSchema.estimateSize(
+              value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
+    final list = object.deviceChangeReasons;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[DeviceChangeReasons]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += DeviceChangeReasonsSchema.estimateSize(
               value, offsets, allOffsets);
         }
       }
@@ -498,6 +526,20 @@ int _appConfigurationEstimateSize(
           final value = list[i];
           bytesCount += SearchHouseHoldFiltersSchema.estimateSize(
               value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
+    final list = object.singleUserLogin;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[SingleUserLogin]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              SingleUserLoginSchema.estimateSize(value, offsets, allOffsets);
         }
       }
     }
@@ -683,116 +725,128 @@ void _appConfigurationSerialize(
     DeliveryCommentOptionsSchema.serialize,
     object.deliveryCommentOptions,
   );
-  writer.writeObjectList<BandwidthBatchSize>(
+  writer.writeObjectList<DeviceChangeReasons>(
     offsets[8],
+    allOffsets,
+    DeviceChangeReasonsSchema.serialize,
+    object.deviceChangeReasons,
+  );
+  writer.writeObjectList<BandwidthBatchSize>(
+    offsets[9],
     allOffsets,
     BandwidthBatchSizeSchema.serialize,
     object.downSyncBandwidthBatchSize,
   );
   writer.writeObject<FirebaseConfig>(
-    offsets[9],
+    offsets[10],
     allOffsets,
     FirebaseConfigSchema.serialize,
     object.firebaseConfig,
   );
   writer.writeObjectList<GenderOptions>(
-    offsets[10],
+    offsets[11],
     allOffsets,
     GenderOptionsSchema.serialize,
     object.genderOptions,
   );
   writer.writeObjectList<HouseholdDeletionReasonOptions>(
-    offsets[11],
+    offsets[12],
     allOffsets,
     HouseholdDeletionReasonOptionsSchema.serialize,
     object.householdDeletionReasonOptions,
   );
   writer.writeObjectList<HouseholdMemberDeletionReasonOptions>(
-    offsets[12],
+    offsets[13],
     allOffsets,
     HouseholdMemberDeletionReasonOptionsSchema.serialize,
     object.householdMemberDeletionReasonOptions,
   );
   writer.writeObjectList<RelationShipTypeOptions>(
-    offsets[13],
+    offsets[14],
     allOffsets,
     RelationShipTypeOptionsSchema.serialize,
     object.relationShipTypeOptions,
   );
   writer.writeObjectList<IdTypeOptions>(
-    offsets[14],
+    offsets[15],
     allOffsets,
     IdTypeOptionsSchema.serialize,
     object.idTypeOptions,
   );
   writer.writeObjectList<Languages>(
-    offsets[15],
+    offsets[16],
     allOffsets,
     LanguagesSchema.serialize,
     object.languages,
   );
-  writer.writeString(offsets[16], object.networkDetection);
-  writer.writeString(offsets[17], object.persistenceMode);
-  writer.writeDouble(offsets[18], object.maxRadius);
+  writer.writeString(offsets[17], object.networkDetection);
+  writer.writeString(offsets[18], object.persistenceMode);
+  writer.writeDouble(offsets[19], object.maxRadius);
   writer.writeObjectList<SearchCLFFilters>(
-    offsets[19],
+    offsets[20],
     allOffsets,
     SearchCLFFiltersSchema.serialize,
     object.searchCLFFilters,
   );
   writer.writeObjectList<SearchHouseHoldFilters>(
-    offsets[20],
+    offsets[21],
     allOffsets,
     SearchHouseHoldFiltersSchema.serialize,
     object.searchHouseHoldFilters,
   );
-  writer.writeString(offsets[21], object.syncMethod);
-  writer.writeString(offsets[22], object.syncTrigger);
-  writer.writeString(offsets[23], object.tenantId);
+  writer.writeObjectList<SingleUserLogin>(
+    offsets[22],
+    allOffsets,
+    SingleUserLoginSchema.serialize,
+    object.singleUserLogin,
+  );
+  writer.writeString(offsets[23], object.syncMethod);
+  writer.writeString(offsets[24], object.syncTrigger);
+  writer.writeString(offsets[25], object.tenantId);
   writer.writeObjectList<TransitPostType>(
-    offsets[24],
+    offsets[26],
     allOffsets,
     TransitPostTypeSchema.serialize,
     object.transitPostType,
   );
   writer.writeObjectList<TransportTypes>(
-    offsets[25],
+    offsets[27],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[26],
+    offsets[28],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObjectList<ManualAttendanceReasons>(
-    offsets[27],
+    offsets[29],
     allOffsets,
     ManualAttendanceReasonsSchema.serialize,
     object.manualAttendanceReasons,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[28],
+    offsets[30],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[29],
+    offsets[31],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[30],
+    offsets[32],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[31],
+    offsets[33],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -853,88 +907,100 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     DeliveryCommentOptions(),
   );
-  object.downSyncBandwidthBatchSize = reader.readObjectList<BandwidthBatchSize>(
+  object.deviceChangeReasons = reader.readObjectList<DeviceChangeReasons>(
     offsets[8],
+    DeviceChangeReasonsSchema.deserialize,
+    allOffsets,
+    DeviceChangeReasons(),
+  );
+  object.downSyncBandwidthBatchSize = reader.readObjectList<BandwidthBatchSize>(
+    offsets[9],
     BandwidthBatchSizeSchema.deserialize,
     allOffsets,
     BandwidthBatchSize(),
   );
   object.firebaseConfig = reader.readObjectOrNull<FirebaseConfig>(
-    offsets[9],
+    offsets[10],
     FirebaseConfigSchema.deserialize,
     allOffsets,
   );
   object.genderOptions = reader.readObjectList<GenderOptions>(
-    offsets[10],
+    offsets[11],
     GenderOptionsSchema.deserialize,
     allOffsets,
     GenderOptions(),
   );
   object.householdDeletionReasonOptions =
       reader.readObjectList<HouseholdDeletionReasonOptions>(
-    offsets[11],
+    offsets[12],
     HouseholdDeletionReasonOptionsSchema.deserialize,
     allOffsets,
     HouseholdDeletionReasonOptions(),
   );
   object.householdMemberDeletionReasonOptions =
       reader.readObjectList<HouseholdMemberDeletionReasonOptions>(
-    offsets[12],
+    offsets[13],
     HouseholdMemberDeletionReasonOptionsSchema.deserialize,
     allOffsets,
     HouseholdMemberDeletionReasonOptions(),
   );
   object.relationShipTypeOptions =
       reader.readObjectList<RelationShipTypeOptions>(
-    offsets[13],
+    offsets[14],
     RelationShipTypeOptionsSchema.deserialize,
     allOffsets,
     RelationShipTypeOptions(),
   );
   object.idTypeOptions = reader.readObjectList<IdTypeOptions>(
-    offsets[14],
+    offsets[15],
     IdTypeOptionsSchema.deserialize,
     allOffsets,
     IdTypeOptions(),
   );
   object.languages = reader.readObjectList<Languages>(
-    offsets[15],
+    offsets[16],
     LanguagesSchema.deserialize,
     allOffsets,
     Languages(),
   );
-  object.networkDetection = reader.readStringOrNull(offsets[16]);
-  object.persistenceMode = reader.readStringOrNull(offsets[17]);
-  object.maxRadius = reader.readDoubleOrNull(offsets[18]);
+  object.networkDetection = reader.readStringOrNull(offsets[17]);
+  object.persistenceMode = reader.readStringOrNull(offsets[18]);
+  object.maxRadius = reader.readDoubleOrNull(offsets[19]);
   object.searchCLFFilters = reader.readObjectList<SearchCLFFilters>(
-    offsets[19],
+    offsets[20],
     SearchCLFFiltersSchema.deserialize,
     allOffsets,
     SearchCLFFilters(),
   );
   object.searchHouseHoldFilters = reader.readObjectList<SearchHouseHoldFilters>(
-    offsets[20],
+    offsets[21],
     SearchHouseHoldFiltersSchema.deserialize,
     allOffsets,
     SearchHouseHoldFilters(),
   );
-  object.syncMethod = reader.readStringOrNull(offsets[21]);
-  object.syncTrigger = reader.readStringOrNull(offsets[22]);
-  object.tenantId = reader.readStringOrNull(offsets[23]);
+  object.singleUserLogin = reader.readObjectList<SingleUserLogin>(
+    offsets[22],
+    SingleUserLoginSchema.deserialize,
+    allOffsets,
+    SingleUserLogin(),
+  );
+  object.syncMethod = reader.readStringOrNull(offsets[23]);
+  object.syncTrigger = reader.readStringOrNull(offsets[24]);
+  object.tenantId = reader.readStringOrNull(offsets[25]);
   object.transitPostType = reader.readObjectList<TransitPostType>(
-    offsets[24],
+    offsets[26],
     TransitPostTypeSchema.deserialize,
     allOffsets,
     TransitPostType(),
   );
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[25],
+    offsets[27],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[26],
+    offsets[28],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
@@ -942,30 +1008,30 @@ AppConfiguration _appConfigurationDeserialize(
   object.id = id;
   object.manualAttendanceReasons =
       reader.readObjectList<ManualAttendanceReasons>(
-    offsets[27],
+    offsets[29],
     ManualAttendanceReasonsSchema.deserialize,
     allOffsets,
     ManualAttendanceReasons(),
   );
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[28],
+    offsets[30],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[29],
+    offsets[31],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[30],
+    offsets[32],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[31],
+    offsets[33],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -1035,135 +1101,149 @@ P _appConfigurationDeserializeProp<P>(
         DeliveryCommentOptions(),
       )) as P;
     case 8:
+      return (reader.readObjectList<DeviceChangeReasons>(
+        offset,
+        DeviceChangeReasonsSchema.deserialize,
+        allOffsets,
+        DeviceChangeReasons(),
+      )) as P;
+    case 9:
       return (reader.readObjectList<BandwidthBatchSize>(
         offset,
         BandwidthBatchSizeSchema.deserialize,
         allOffsets,
         BandwidthBatchSize(),
       )) as P;
-    case 9:
+    case 10:
       return (reader.readObjectOrNull<FirebaseConfig>(
         offset,
         FirebaseConfigSchema.deserialize,
         allOffsets,
       )) as P;
-    case 10:
+    case 11:
       return (reader.readObjectList<GenderOptions>(
         offset,
         GenderOptionsSchema.deserialize,
         allOffsets,
         GenderOptions(),
       )) as P;
-    case 11:
+    case 12:
       return (reader.readObjectList<HouseholdDeletionReasonOptions>(
         offset,
         HouseholdDeletionReasonOptionsSchema.deserialize,
         allOffsets,
         HouseholdDeletionReasonOptions(),
       )) as P;
-    case 12:
+    case 13:
       return (reader.readObjectList<HouseholdMemberDeletionReasonOptions>(
         offset,
         HouseholdMemberDeletionReasonOptionsSchema.deserialize,
         allOffsets,
         HouseholdMemberDeletionReasonOptions(),
       )) as P;
-    case 13:
+    case 14:
       return (reader.readObjectList<RelationShipTypeOptions>(
         offset,
         RelationShipTypeOptionsSchema.deserialize,
         allOffsets,
         RelationShipTypeOptions(),
       )) as P;
-    case 14:
+    case 15:
       return (reader.readObjectList<IdTypeOptions>(
         offset,
         IdTypeOptionsSchema.deserialize,
         allOffsets,
         IdTypeOptions(),
       )) as P;
-    case 15:
+    case 16:
       return (reader.readObjectList<Languages>(
         offset,
         LanguagesSchema.deserialize,
         allOffsets,
         Languages(),
       )) as P;
-    case 16:
-      return (reader.readStringOrNull(offset)) as P;
     case 17:
       return (reader.readStringOrNull(offset)) as P;
     case 18:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 19:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 20:
       return (reader.readObjectList<SearchCLFFilters>(
         offset,
         SearchCLFFiltersSchema.deserialize,
         allOffsets,
         SearchCLFFilters(),
       )) as P;
-    case 20:
+    case 21:
       return (reader.readObjectList<SearchHouseHoldFilters>(
         offset,
         SearchHouseHoldFiltersSchema.deserialize,
         allOffsets,
         SearchHouseHoldFilters(),
       )) as P;
-    case 21:
-      return (reader.readStringOrNull(offset)) as P;
     case 22:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readObjectList<SingleUserLogin>(
+        offset,
+        SingleUserLoginSchema.deserialize,
+        allOffsets,
+        SingleUserLogin(),
+      )) as P;
     case 23:
       return (reader.readStringOrNull(offset)) as P;
     case 24:
+      return (reader.readStringOrNull(offset)) as P;
+    case 25:
+      return (reader.readStringOrNull(offset)) as P;
+    case 26:
       return (reader.readObjectList<TransitPostType>(
         offset,
         TransitPostTypeSchema.deserialize,
         allOffsets,
         TransitPostType(),
       )) as P;
-    case 25:
+    case 27:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 26:
+    case 28:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 27:
+    case 29:
       return (reader.readObjectList<ManualAttendanceReasons>(
         offset,
         ManualAttendanceReasonsSchema.deserialize,
         allOffsets,
         ManualAttendanceReasons(),
       )) as P;
-    case 28:
+    case 30:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 29:
+    case 31:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 30:
+    case 32:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 31:
+    case 33:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -1939,6 +2019,113 @@ extension AppConfigurationQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'DELIVERY_COMMENT_OPTIONS_POPULATOR',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      deviceChangeReasonsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'DEVICE_CHANGE_REASONS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      deviceChangeReasonsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'DEVICE_CHANGE_REASONS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      deviceChangeReasonsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DEVICE_CHANGE_REASONS',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      deviceChangeReasonsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DEVICE_CHANGE_REASONS',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      deviceChangeReasonsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DEVICE_CHANGE_REASONS',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      deviceChangeReasonsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DEVICE_CHANGE_REASONS',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      deviceChangeReasonsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DEVICE_CHANGE_REASONS',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      deviceChangeReasonsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DEVICE_CHANGE_REASONS',
         lower,
         includeLower,
         upper,
@@ -3321,6 +3508,113 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      singleUserLoginIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'SINGLE_USER_LOGIN',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      singleUserLoginIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'SINGLE_USER_LOGIN',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      singleUserLoginLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SINGLE_USER_LOGIN',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      singleUserLoginIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SINGLE_USER_LOGIN',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      singleUserLoginIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SINGLE_USER_LOGIN',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      singleUserLoginLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SINGLE_USER_LOGIN',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      singleUserLoginLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SINGLE_USER_LOGIN',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      singleUserLoginLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SINGLE_USER_LOGIN',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       syncMethodIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -4665,6 +4959,13 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      deviceChangeReasonsElement(FilterQuery<DeviceChangeReasons> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'DEVICE_CHANGE_REASONS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       downSyncBandwidthBatchSizeElement(FilterQuery<BandwidthBatchSize> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'DOWNSYNC-BANDWIDTH_BATCH_SIZE');
@@ -4733,6 +5034,13 @@ extension AppConfigurationQueryObject
       searchHouseHoldFiltersElement(FilterQuery<SearchHouseHoldFilters> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'SEARCH_HOUSEHOLD_FILTERS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      singleUserLoginElement(FilterQuery<SingleUserLogin> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'SINGLE_USER_LOGIN');
     });
   }
 
@@ -5094,6 +5402,13 @@ extension AppConfigurationQueryProperty
     });
   }
 
+  QueryBuilder<AppConfiguration, List<DeviceChangeReasons>?, QQueryOperations>
+      deviceChangeReasonsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'DEVICE_CHANGE_REASONS');
+    });
+  }
+
   QueryBuilder<AppConfiguration, List<BandwidthBatchSize>?, QQueryOperations>
       downSyncBandwidthBatchSizeProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -5182,6 +5497,13 @@ extension AppConfigurationQueryProperty
       QQueryOperations> searchHouseHoldFiltersProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'SEARCH_HOUSEHOLD_FILTERS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<SingleUserLogin>?, QQueryOperations>
+      singleUserLoginProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'SINGLE_USER_LOGIN');
     });
   }
 
@@ -10650,6 +10972,500 @@ extension TransitPostTypeQueryFilter
 
 extension TransitPostTypeQueryObject
     on QueryBuilder<TransitPostType, TransitPostType, QFilterCondition> {}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+const DeviceChangeReasonsSchema = Schema(
+  name: r'DeviceChangeReasons',
+  id: -302646620529582328,
+  properties: {
+    r'code': PropertySchema(
+      id: 0,
+      name: r'code',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 1,
+      name: r'name',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _deviceChangeReasonsEstimateSize,
+  serialize: _deviceChangeReasonsSerialize,
+  deserialize: _deviceChangeReasonsDeserialize,
+  deserializeProp: _deviceChangeReasonsDeserializeProp,
+);
+
+int _deviceChangeReasonsEstimateSize(
+  DeviceChangeReasons object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  bytesCount += 3 + object.code.length * 3;
+  bytesCount += 3 + object.name.length * 3;
+  return bytesCount;
+}
+
+void _deviceChangeReasonsSerialize(
+  DeviceChangeReasons object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeString(offsets[0], object.code);
+  writer.writeString(offsets[1], object.name);
+}
+
+DeviceChangeReasons _deviceChangeReasonsDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = DeviceChangeReasons();
+  object.code = reader.readString(offsets[0]);
+  object.name = reader.readString(offsets[1]);
+  return object;
+}
+
+P _deviceChangeReasonsDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readString(offset)) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension DeviceChangeReasonsQueryFilter on QueryBuilder<DeviceChangeReasons,
+    DeviceChangeReasons, QFilterCondition> {
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      codeEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      codeGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      codeLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      codeBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'code',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      codeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      codeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      codeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      codeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'code',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      codeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'code',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      codeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'code',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      nameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      nameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      nameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      nameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'name',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      nameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      nameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'name',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DeviceChangeReasons, DeviceChangeReasons, QAfterFilterCondition>
+      nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+}
+
+extension DeviceChangeReasonsQueryObject on QueryBuilder<DeviceChangeReasons,
+    DeviceChangeReasons, QFilterCondition> {}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+const SingleUserLoginSchema = Schema(
+  name: r'SingleUserLogin',
+  id: 6672778267106634477,
+  properties: {
+    r'enabled': PropertySchema(
+      id: 0,
+      name: r'enabled',
+      type: IsarType.bool,
+    ),
+    r'id': PropertySchema(
+      id: 1,
+      name: r'id',
+      type: IsarType.long,
+    )
+  },
+  estimateSize: _singleUserLoginEstimateSize,
+  serialize: _singleUserLoginSerialize,
+  deserialize: _singleUserLoginDeserialize,
+  deserializeProp: _singleUserLoginDeserializeProp,
+);
+
+int _singleUserLoginEstimateSize(
+  SingleUserLogin object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  return bytesCount;
+}
+
+void _singleUserLoginSerialize(
+  SingleUserLogin object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeBool(offsets[0], object.enabled);
+  writer.writeLong(offsets[1], object.id);
+}
+
+SingleUserLogin _singleUserLoginDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = SingleUserLogin();
+  object.enabled = reader.readBool(offsets[0]);
+  object.id = reader.readLong(offsets[1]);
+  return object;
+}
+
+P _singleUserLoginDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readBool(offset)) as P;
+    case 1:
+      return (reader.readLong(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension SingleUserLoginQueryFilter
+    on QueryBuilder<SingleUserLogin, SingleUserLogin, QFilterCondition> {
+  QueryBuilder<SingleUserLogin, SingleUserLogin, QAfterFilterCondition>
+      enabledEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'enabled',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SingleUserLogin, SingleUserLogin, QAfterFilterCondition>
+      idEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SingleUserLogin, SingleUserLogin, QAfterFilterCondition>
+      idGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SingleUserLogin, SingleUserLogin, QAfterFilterCondition>
+      idLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SingleUserLogin, SingleUserLogin, QAfterFilterCondition>
+      idBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+}
+
+extension SingleUserLoginQueryObject
+    on QueryBuilder<SingleUserLogin, SingleUserLogin, QFilterCondition> {}
 
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types

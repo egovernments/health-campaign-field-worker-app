@@ -955,6 +955,12 @@ mixin _$HCMWrapperModel {
       throw _privateConstructorUsedError;
   @JsonKey(name: 'CHECKLIST_TYPES')
   List<CheckListTypes> get checklistTypes => throw _privateConstructorUsedError;
+  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+  List<DeviceChangeReasons> get deviceChangeReasons =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'SINGLE_USER_LOGIN')
+  List<SingleUserLogin> get singleUserLogin =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
   List<IdTypeOptions> get idTypeOptions => throw _privateConstructorUsedError;
   @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1026,6 +1032,9 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
       List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1074,6 +1083,8 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? householdMemberDeletionReasonOptions = null,
     Object? backgroundServiceConfig = freezed,
     Object? checklistTypes = null,
+    Object? deviceChangeReasons = null,
+    Object? singleUserLogin = null,
     Object? idTypeOptions = null,
     Object? relationShipTypeOptions = null,
     Object? deliveryCommentOptions = null,
@@ -1124,6 +1135,14 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.checklistTypes
           : checklistTypes // ignore: cast_nullable_to_non_nullable
               as List<CheckListTypes>,
+      deviceChangeReasons: null == deviceChangeReasons
+          ? _value.deviceChangeReasons
+          : deviceChangeReasons // ignore: cast_nullable_to_non_nullable
+              as List<DeviceChangeReasons>,
+      singleUserLogin: null == singleUserLogin
+          ? _value.singleUserLogin
+          : singleUserLogin // ignore: cast_nullable_to_non_nullable
+              as List<SingleUserLogin>,
       idTypeOptions: null == idTypeOptions
           ? _value.idTypeOptions
           : idTypeOptions // ignore: cast_nullable_to_non_nullable
@@ -1211,6 +1230,9 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
       List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1257,6 +1279,8 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? householdMemberDeletionReasonOptions = null,
     Object? backgroundServiceConfig = freezed,
     Object? checklistTypes = null,
+    Object? deviceChangeReasons = null,
+    Object? singleUserLogin = null,
     Object? idTypeOptions = null,
     Object? relationShipTypeOptions = null,
     Object? deliveryCommentOptions = null,
@@ -1307,6 +1331,14 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._checklistTypes
           : checklistTypes // ignore: cast_nullable_to_non_nullable
               as List<CheckListTypes>,
+      deviceChangeReasons: null == deviceChangeReasons
+          ? _value._deviceChangeReasons
+          : deviceChangeReasons // ignore: cast_nullable_to_non_nullable
+              as List<DeviceChangeReasons>,
+      singleUserLogin: null == singleUserLogin
+          ? _value._singleUserLogin
+          : singleUserLogin // ignore: cast_nullable_to_non_nullable
+              as List<SingleUserLogin>,
       idTypeOptions: null == idTypeOptions
           ? _value._idTypeOptions
           : idTypeOptions // ignore: cast_nullable_to_non_nullable
@@ -1391,6 +1423,10 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       final List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES')
       required final List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      required final List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN')
+      required final List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1430,6 +1466,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             householdMemberDeletionReasonOptions,
         _backgroundServiceConfig = backgroundServiceConfig,
         _checklistTypes = checklistTypes,
+        _deviceChangeReasons = deviceChangeReasons,
+        _singleUserLogin = singleUserLogin,
         _idTypeOptions = idTypeOptions,
         _relationShipTypeOptions = relationShipTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
@@ -1527,6 +1565,25 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     if (_checklistTypes is EqualUnmodifiableListView) return _checklistTypes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_checklistTypes);
+  }
+
+  final List<DeviceChangeReasons> _deviceChangeReasons;
+  @override
+  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+  List<DeviceChangeReasons> get deviceChangeReasons {
+    if (_deviceChangeReasons is EqualUnmodifiableListView)
+      return _deviceChangeReasons;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_deviceChangeReasons);
+  }
+
+  final List<SingleUserLogin> _singleUserLogin;
+  @override
+  @JsonKey(name: 'SINGLE_USER_LOGIN')
+  List<SingleUserLogin> get singleUserLogin {
+    if (_singleUserLogin is EqualUnmodifiableListView) return _singleUserLogin;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_singleUserLogin);
   }
 
   final List<IdTypeOptions> _idTypeOptions;
@@ -1696,7 +1753,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, beneficiaryIdConfig: $beneficiaryIdConfig, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, relationShipTypeOptions: $relationShipTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, manualAttendanceReasonList: $manualAttendanceReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, transitPostType: $transitPostType)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, beneficiaryIdConfig: $beneficiaryIdConfig, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, deviceChangeReasons: $deviceChangeReasons, singleUserLogin: $singleUserLogin, idTypeOptions: $idTypeOptions, relationShipTypeOptions: $relationShipTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, manualAttendanceReasonList: $manualAttendanceReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, transitPostType: $transitPostType)';
   }
 
   @override
@@ -1723,6 +1780,10 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 other._backgroundServiceConfig, _backgroundServiceConfig) &&
             const DeepCollectionEquality()
                 .equals(other._checklistTypes, _checklistTypes) &&
+            const DeepCollectionEquality()
+                .equals(other._deviceChangeReasons, _deviceChangeReasons) &&
+            const DeepCollectionEquality()
+                .equals(other._singleUserLogin, _singleUserLogin) &&
             const DeepCollectionEquality()
                 .equals(other._idTypeOptions, _idTypeOptions) &&
             const DeepCollectionEquality().equals(
@@ -1769,6 +1830,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             .hash(_householdMemberDeletionReasonOptions),
         const DeepCollectionEquality().hash(_backgroundServiceConfig),
         const DeepCollectionEquality().hash(_checklistTypes),
+        const DeepCollectionEquality().hash(_deviceChangeReasons),
+        const DeepCollectionEquality().hash(_singleUserLogin),
         const DeepCollectionEquality().hash(_idTypeOptions),
         const DeepCollectionEquality().hash(_relationShipTypeOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptions),
@@ -1819,6 +1882,10 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       final List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES')
       required final List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      required final List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN')
+      required final List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1877,6 +1944,12 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'CHECKLIST_TYPES')
   List<CheckListTypes> get checklistTypes;
+  @override
+  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+  List<DeviceChangeReasons> get deviceChangeReasons;
+  @override
+  @JsonKey(name: 'SINGLE_USER_LOGIN')
+  List<SingleUserLogin> get singleUserLogin;
   @override
   @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
   List<IdTypeOptions> get idTypeOptions;
@@ -6150,6 +6223,316 @@ abstract class _TransitPostType implements TransitPostType {
   @override
   @JsonKey(ignore: true)
   _$$TransitPostTypeImplCopyWith<_$TransitPostTypeImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+DeviceChangeReasons _$DeviceChangeReasonsFromJson(Map<String, dynamic> json) {
+  return _DeviceChangeReasons.fromJson(json);
+}
+
+/// @nodoc
+mixin _$DeviceChangeReasons {
+  String get name => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $DeviceChangeReasonsCopyWith<DeviceChangeReasons> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $DeviceChangeReasonsCopyWith<$Res> {
+  factory $DeviceChangeReasonsCopyWith(
+          DeviceChangeReasons value, $Res Function(DeviceChangeReasons) then) =
+      _$DeviceChangeReasonsCopyWithImpl<$Res, DeviceChangeReasons>;
+  @useResult
+  $Res call({String name, String code});
+}
+
+/// @nodoc
+class _$DeviceChangeReasonsCopyWithImpl<$Res, $Val extends DeviceChangeReasons>
+    implements $DeviceChangeReasonsCopyWith<$Res> {
+  _$DeviceChangeReasonsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$DeviceChangeReasonsImplCopyWith<$Res>
+    implements $DeviceChangeReasonsCopyWith<$Res> {
+  factory _$$DeviceChangeReasonsImplCopyWith(_$DeviceChangeReasonsImpl value,
+          $Res Function(_$DeviceChangeReasonsImpl) then) =
+      __$$DeviceChangeReasonsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String code});
+}
+
+/// @nodoc
+class __$$DeviceChangeReasonsImplCopyWithImpl<$Res>
+    extends _$DeviceChangeReasonsCopyWithImpl<$Res, _$DeviceChangeReasonsImpl>
+    implements _$$DeviceChangeReasonsImplCopyWith<$Res> {
+  __$$DeviceChangeReasonsImplCopyWithImpl(_$DeviceChangeReasonsImpl _value,
+      $Res Function(_$DeviceChangeReasonsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+  }) {
+    return _then(_$DeviceChangeReasonsImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$DeviceChangeReasonsImpl implements _DeviceChangeReasons {
+  _$DeviceChangeReasonsImpl({required this.name, required this.code});
+
+  factory _$DeviceChangeReasonsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DeviceChangeReasonsImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String code;
+
+  @override
+  String toString() {
+    return 'DeviceChangeReasons(name: $name, code: $code)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DeviceChangeReasonsImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) || other.code == code));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, code);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DeviceChangeReasonsImplCopyWith<_$DeviceChangeReasonsImpl> get copyWith =>
+      __$$DeviceChangeReasonsImplCopyWithImpl<_$DeviceChangeReasonsImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$DeviceChangeReasonsImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _DeviceChangeReasons implements DeviceChangeReasons {
+  factory _DeviceChangeReasons(
+      {required final String name,
+      required final String code}) = _$DeviceChangeReasonsImpl;
+
+  factory _DeviceChangeReasons.fromJson(Map<String, dynamic> json) =
+      _$DeviceChangeReasonsImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get code;
+  @override
+  @JsonKey(ignore: true)
+  _$$DeviceChangeReasonsImplCopyWith<_$DeviceChangeReasonsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+SingleUserLogin _$SingleUserLoginFromJson(Map<String, dynamic> json) {
+  return _SingleUserLogin.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SingleUserLogin {
+  bool get enabled => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SingleUserLoginCopyWith<SingleUserLogin> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SingleUserLoginCopyWith<$Res> {
+  factory $SingleUserLoginCopyWith(
+          SingleUserLogin value, $Res Function(SingleUserLogin) then) =
+      _$SingleUserLoginCopyWithImpl<$Res, SingleUserLogin>;
+  @useResult
+  $Res call({bool enabled, int id});
+}
+
+/// @nodoc
+class _$SingleUserLoginCopyWithImpl<$Res, $Val extends SingleUserLogin>
+    implements $SingleUserLoginCopyWith<$Res> {
+  _$SingleUserLoginCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enabled = null,
+    Object? id = null,
+  }) {
+    return _then(_value.copyWith(
+      enabled: null == enabled
+          ? _value.enabled
+          : enabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SingleUserLoginImplCopyWith<$Res>
+    implements $SingleUserLoginCopyWith<$Res> {
+  factory _$$SingleUserLoginImplCopyWith(_$SingleUserLoginImpl value,
+          $Res Function(_$SingleUserLoginImpl) then) =
+      __$$SingleUserLoginImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({bool enabled, int id});
+}
+
+/// @nodoc
+class __$$SingleUserLoginImplCopyWithImpl<$Res>
+    extends _$SingleUserLoginCopyWithImpl<$Res, _$SingleUserLoginImpl>
+    implements _$$SingleUserLoginImplCopyWith<$Res> {
+  __$$SingleUserLoginImplCopyWithImpl(
+      _$SingleUserLoginImpl _value, $Res Function(_$SingleUserLoginImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enabled = null,
+    Object? id = null,
+  }) {
+    return _then(_$SingleUserLoginImpl(
+      enabled: null == enabled
+          ? _value.enabled
+          : enabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SingleUserLoginImpl implements _SingleUserLogin {
+  _$SingleUserLoginImpl({required this.enabled, required this.id});
+
+  factory _$SingleUserLoginImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SingleUserLoginImplFromJson(json);
+
+  @override
+  final bool enabled;
+  @override
+  final int id;
+
+  @override
+  String toString() {
+    return 'SingleUserLogin(enabled: $enabled, id: $id)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SingleUserLoginImpl &&
+            (identical(other.enabled, enabled) || other.enabled == enabled) &&
+            (identical(other.id, id) || other.id == id));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, enabled, id);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SingleUserLoginImplCopyWith<_$SingleUserLoginImpl> get copyWith =>
+      __$$SingleUserLoginImplCopyWithImpl<_$SingleUserLoginImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SingleUserLoginImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SingleUserLogin implements SingleUserLogin {
+  factory _SingleUserLogin(
+      {required final bool enabled,
+      required final int id}) = _$SingleUserLoginImpl;
+
+  factory _SingleUserLogin.fromJson(Map<String, dynamic> json) =
+      _$SingleUserLoginImpl.fromJson;
+
+  @override
+  bool get enabled;
+  @override
+  int get id;
+  @override
+  @JsonKey(ignore: true)
+  _$$SingleUserLoginImplCopyWith<_$SingleUserLoginImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

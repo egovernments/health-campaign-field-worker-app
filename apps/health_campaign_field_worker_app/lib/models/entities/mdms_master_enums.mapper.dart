@@ -83,6 +83,10 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.dashboardConfig;
       case "TRANSIT_POST_TYPE":
         return MasterEnums.transitPostType;
+      case "DEVICE_CHANGE_REASONS":
+        return MasterEnums.deviceChangeReasons;
+      case "SINGLE_USER_LOGIN":
+        return MasterEnums.singleUserLogin;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -149,6 +153,10 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "dashboardConfig";
       case MasterEnums.transitPostType:
         return "TRANSIT_POST_TYPE";
+      case MasterEnums.deviceChangeReasons:
+        return "DEVICE_CHANGE_REASONS";
+      case MasterEnums.singleUserLogin:
+        return "SINGLE_USER_LOGIN";
     }
   }
 }

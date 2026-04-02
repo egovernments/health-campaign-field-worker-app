@@ -85,6 +85,10 @@ class HCMWrapperModel with _$HCMWrapperModel {
     List<BackgroundServiceConfig>? backgroundServiceConfig,
     @JsonKey(name: 'CHECKLIST_TYPES')
     required List<CheckListTypes> checklistTypes,
+    @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+    required List<DeviceChangeReasons> deviceChangeReasons,
+    @JsonKey(name: 'SINGLE_USER_LOGIN')
+    required List<SingleUserLogin> singleUserLogin,
     @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
     required List<IdTypeOptions> idTypeOptions,
     @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -402,6 +406,29 @@ class TransitPostType with _$TransitPostType {
 
   factory TransitPostType.fromJson(Map<String, dynamic> json) =>
       _$TransitPostTypeFromJson(json);
+}
+
+@freezed
+class DeviceChangeReasons with _$DeviceChangeReasons {
+  factory DeviceChangeReasons({
+    required String name,
+    required String code,
+  }) = _DeviceChangeReasons;
+
+  factory DeviceChangeReasons.fromJson(Map<String, dynamic> json) =>
+      _$DeviceChangeReasonsFromJson(json);
+}
+
+
+@freezed
+class SingleUserLogin with _$SingleUserLogin {
+  factory SingleUserLogin({
+    required bool enabled,
+    required int id,
+  }) = _SingleUserLogin;
+
+  factory SingleUserLogin.fromJson(Map<String, dynamic> json) =>
+      _$SingleUserLoginFromJson(json);
 }
 
 @freezed

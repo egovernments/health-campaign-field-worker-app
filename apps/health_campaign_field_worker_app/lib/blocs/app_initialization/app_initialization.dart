@@ -110,7 +110,9 @@ class AppInitializationBloc
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
                     MasterEnums.transitPostType.toValue(),
-                    MasterEnums.searchCLFFilters.toValue()
+                    MasterEnums.searchCLFFilters.toValue(),
+                    MasterEnums.deviceChangeReasons.toValue(),
+                    MasterEnums.singleUserLogin.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -130,8 +132,8 @@ class AppInitializationBloc
             ),
           ).toJson(),
         );
-        final pgrServiceDefinitions =
-            await mdmsRepository.searchPGRServiceDefinitions(
+        
+        final pgrServiceDefinitions = await mdmsRepository.searchPGRServiceDefinitions(
           envConfig.variables.mdmsApiPath,
           MdmsRequestModel(
             mdmsCriteria: MdmsCriteriaModel(

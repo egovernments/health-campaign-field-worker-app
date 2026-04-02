@@ -63,4 +63,8 @@ enum MasterEnums {
   dashboardConfig,
   @MappableValue("TRANSIT_POST_TYPE")
   transitPostType,
+  @MappableValue("DEVICE_CHANGE_REASONS")
+  deviceChangeReasons,
+  @MappableValue("SINGLE_USER_LOGIN")
+  singleUserLogin,
 }

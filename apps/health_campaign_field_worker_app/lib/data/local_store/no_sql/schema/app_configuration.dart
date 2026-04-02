@@ -87,6 +87,12 @@ class AppConfiguration {
   @Name('TRANSIT_POST_TYPE')
   late List<TransitPostType>? transitPostType;
 
+  @Name('DEVICE_CHANGE_REASONS')
+  late List<DeviceChangeReasons>? deviceChangeReasons;
+
+  @Name('SINGLE_USER_LOGIN')
+  late List<SingleUserLogin>? singleUserLogin;
+
   late List<ReferralReasons>? referralReasons;
   late List<ManualAttendanceReasons>? manualAttendanceReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
@@ -212,6 +218,18 @@ class TransitPostType {
 }
 
 @embedded
+class DeviceChangeReasons {
+  late String name;
+  late String code;
+}
+
+@embedded
+class SingleUserLogin {
+  late bool enabled;
+  late int id;
+}
+
+@embedded
 class SearchCLFFilters {
   late String name;
   late String code;
@@ -252,8 +270,9 @@ class ReferralReasons {
   late String name;
   late bool active;
 }
+
 @embedded
-class ManualAttendanceReasons{
+class ManualAttendanceReasons {
   late String code;
   late String name;
   late bool active;
