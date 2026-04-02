@@ -25,10 +25,6 @@ class SignatureCompareWidget extends ResolvedFlowWidget {
 
       return CompareSignature(
         resolved: resolved,
-        onActions: (data) async {
-          // await resolved.executeActions(actionsList, context);
-          // state.updateWidgetData("signatureData", null);
-        },
         individualName: individualName,
         individualId: individualId,
         registerId: registerId,
@@ -53,7 +49,6 @@ class SignatureCompareWidget extends ResolvedFlowWidget {
 
 class CompareSignature extends StatefulWidget {
   final ResolvedWidgetContext resolved;
-  final Function onActions;
   final String individualName;
   final String individualId;
   final String registerId;
@@ -68,7 +63,6 @@ class CompareSignature extends StatefulWidget {
   const CompareSignature(
       {super.key,
       required this.resolved,
-      required this.onActions,
       required this.individualName,
       required this.individualId,
       required this.registerId,
