@@ -1,11 +1,9 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/models/entities/project_facility.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
 import 'package:digit_forms_engine/widgets/base_reactive_field_wrapper.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -391,119 +389,79 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
             // Update form control with prefilled value if needed
             _updateFormControlIfNeeded(field);
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                LabeledField(
-                  label: labelFromSchema != null
-                      ? widget.localizations.translate(
-                          labelFromSchema,
-                        )
-                      : widget.localizations.translate("SELECT_FACILITY"),
-                  capitalizedFirstLetter: false,
-                  isRequired: true,
-                  child: DigitDropdown(
-                    errorMessage: field.errorText,
-                    emptyItemText: widget.localizations.translate(
-                      'NOT_FOUND',
-                    ),
-                    items: enums,
-                    selectedOption: selectedFacilityId != null
-                        ? DropdownItem(
-                            code: selectedFacilityId!,
-                            name: selectedFacilityId == 'Delivery Team'
-                                ? 'Delivery Team'
-                                : (selectedFacilityId!.contains('-') &&
-                                        !selectedFacilityId!.startsWith('F-'))
-                                    ? selectedFacilityId!
-                                    : widget.localizations
-                                        .translate('FAC_$selectedFacilityId'),
-                          )
-                        : const DropdownItem(name: '', code: ''),
-                    onSelect: (value) {
-                      setState(() {
-                        selectedFacilityId = value.code;
-                        deliveryTeamSelected = value.code == 'Delivery Team';
-                      });
-
-                      final form = ReactiveForm.of(context) as FormGroup;
-
-                      // Clear team code when switching facilities
-                      if (!deliveryTeamSelected) {
-                        // Check if the dependant form control exists before accessing it
-                        if (form.contains(widget.dependantFormKey)) {
-                          form.control(widget.dependantFormKey).value = '';
-                        }
-                        teamCodeController.clear();
-                        context.read<DigitScannerBloc>().add(
-                            const DigitScannerEvent.handleScanner(
-                                barCode: [], qrCode: []));
-                      }
-
-                      field.control.value = value.code;
-
-                      // Update FormsBloc with appropriate values
-                      if (deliveryTeamSelected) {
-                        context.read<FormsBloc>().add(
-                              FormsEvent.updateField(
-                                schemaKey: widget.pageSchema,
-                                context: context,
-                                key: widget.formKey,
-                                value: value.code,
-                              ),
-                            );
-                      } else {
-                        final selectedModel = projectFacilities!
-                            .map((e) => e as ProjectFacilityModel)
-                            .firstWhere((m) => m.facilityId == value.code);
-
-                        context.read<FormsBloc>().add(
-                              FormsEvent.updateField(
-                                  schemaKey: widget.pageSchema,
-                                  context: context,
-                                  key: widget.formKey,
-                                  value: selectedModel.facilityId),
-                            );
-                      }
-                    },
-                  ),
+            return LabeledField(
+              label: labelFromSchema != null
+                  ? widget.localizations.translate(
+                      labelFromSchema,
+                    )
+                  : widget.localizations.translate("SELECT_FACILITY"),
+              capitalizedFirstLetter: false,
+              isRequired: true,
+              child: DigitDropdown(
+                errorMessage: field.errorText,
+                emptyItemText: widget.localizations.translate(
+                  'NOT_FOUND',
                 ),
-                if (deliveryTeamSelected) ...[
-                  const SizedBox(height: 16),
-                  LabeledField(
-                    label: widget.localizations
-                        .translate('INVENTORY_TEAM_CODE_LABEL'),
-                    isRequired: true,
-                    child: DigitTextFormInput(
-                      controller: teamCodeController,
-                      keyboardType: TextInputType.text,
-                      onChange: (value) {
-                        final form = ReactiveForm.of(context) as FormGroup;
-                        if (form.contains(widget.dependantFormKey)) {
-                          form.control(widget.dependantFormKey).value = value;
-                        }
-                        context.read<FormsBloc>().add(
-                              FormsEvent.updateField(
-                                schemaKey: widget.pageSchema,
-                                context: context,
-                                key: widget.dependantFormKey,
-                                value: value,
-                              ),
-                            );
-                      },
-                      suffixIcon: Icons.qr_code_scanner,
-                      onSuffixTap: (value) {
-                        context.router.push(DigitScannerRoute(
-                          singleValue: true,
-                          quantity: 1,
-                          isGS1code: false,
-                          scannerId: widget.dependantFormKey,
-                        ));
-                      },
-                    ),
-                  ),
-                ],
-              ],
+                items: enums,
+                selectedOption: selectedFacilityId != null
+                    ? DropdownItem(
+                        code: selectedFacilityId!,
+                        name: selectedFacilityId == 'Delivery Team'
+                            ? 'Delivery Team'
+                            : (selectedFacilityId!.contains('-') &&
+                                    !selectedFacilityId!.startsWith('F-'))
+                                ? selectedFacilityId!
+                                : widget.localizations
+                                    .translate('FAC_$selectedFacilityId'),
+                      )
+                    : const DropdownItem(name: '', code: ''),
+                onSelect: (value) {
+                  setState(() {
+                    selectedFacilityId = value.code;
+                    deliveryTeamSelected = value.code == 'Delivery Team';
+                  });
+
+                  final form = ReactiveForm.of(context) as FormGroup;
+
+                  // Clear team code when switching facilities
+                  if (!deliveryTeamSelected) {
+                    // Check if the dependant form control exists before accessing it
+                    if (form.contains(widget.dependantFormKey)) {
+                      form.control(widget.dependantFormKey).value = '';
+                    }
+                    teamCodeController.clear();
+                    context.read<DigitScannerBloc>().add(
+                        const DigitScannerEvent.handleScanner(
+                            barCode: [], qrCode: []));
+                  }
+
+                  field.control.value = value.code;
+
+                  // Update FormsBloc with appropriate values
+                  if (deliveryTeamSelected) {
+                    context.read<FormsBloc>().add(
+                          FormsEvent.updateField(
+                            schemaKey: widget.pageSchema,
+                            context: context,
+                            key: widget.formKey,
+                            value: value.code,
+                          ),
+                        );
+                  } else {
+                    final selectedModel = projectFacilities!
+                        .map((e) => e as ProjectFacilityModel)
+                        .firstWhere((m) => m.facilityId == value.code);
+
+                    context.read<FormsBloc>().add(
+                          FormsEvent.updateField(
+                              schemaKey: widget.pageSchema,
+                              context: context,
+                              key: widget.formKey,
+                              value: selectedModel.facilityId),
+                        );
+                  }
+                },
+              ),
             );
           },
         );
