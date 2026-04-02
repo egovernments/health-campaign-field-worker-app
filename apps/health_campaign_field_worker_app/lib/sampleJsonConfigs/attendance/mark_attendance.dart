@@ -93,6 +93,7 @@ final dynamic markAttendanceFlow = {
       "fieldName": "createReferral",
       "label": "SCAN_QR_CODE",
       "prefixIcon": "QrCodeScanner",
+      "enableDynamicQRScanning": true,
       "properties": {
         "type": "secondary",
         "size": "large",

@@ -30,6 +30,9 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
     final crudCtx = CrudItemContext.of(context);
     final compositeKey = crudCtx?.compositeKey;
 
+    final enableDynamicQRScanning =
+        resolved.resolveField(json['enableDynamicQRScanning']) ?? true;
+
     final attendees = stateData?.modelMap['attendees'] as List<dynamic>? ?? [];
 
     final registerId = json['registerId'];
@@ -56,7 +59,7 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
             ),
           );
           _openAttendanceScanner(context, compositeKey, registerId, attendees,
-              (scannedData) async {});
+              enableDynamicQRScanning, (scannedData) async {});
         },
         type: WidgetParsers.parseButtonType(props['type']),
         size: WidgetParsers.parseButtonSize(props['size']),
@@ -93,6 +96,7 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
     String? compositeKey,
     dynamic registerId,
     List<dynamic> attendees,
+    bool enableDynamicQRScanning,
     Future<void> Function(ScannedIndividualDataModel) onSelected,
   ) async {
     // Navigate to scanner and await return
@@ -109,6 +113,7 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
         isGS1code: false,
         singleValue: false,
         attendees: attendeeModels,
+        enableDynamicQRScanning: enableDynamicQRScanning,
         onScanResult: (scannedData, result) {
           if (result.isValid) {
             Map<String, dynamic> data = {

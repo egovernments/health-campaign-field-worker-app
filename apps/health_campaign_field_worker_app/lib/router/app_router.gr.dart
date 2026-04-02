@@ -36,6 +36,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: AttendanceDigitScannerPage(
           key: args.key,
+          enableDynamicQRScanning: args.enableDynamicQRScanning,
           attendees: args.attendees,
           onScanResult: args.onScanResult,
           quantity: args.quantity,
@@ -286,6 +287,7 @@ class AttendanceDigitScannerRoute
     extends PageRouteInfo<AttendanceDigitScannerRouteArgs> {
   AttendanceDigitScannerRoute({
     Key? key,
+    required bool enableDynamicQRScanning,
     required List<AttendeeModel> attendees,
     required void Function(
       ScannedIndividualDataModel,
@@ -299,6 +301,7 @@ class AttendanceDigitScannerRoute
           AttendanceDigitScannerRoute.name,
           args: AttendanceDigitScannerRouteArgs(
             key: key,
+            enableDynamicQRScanning: enableDynamicQRScanning,
             attendees: attendees,
             onScanResult: onScanResult,
             quantity: quantity,
@@ -317,6 +320,7 @@ class AttendanceDigitScannerRoute
 class AttendanceDigitScannerRouteArgs {
   const AttendanceDigitScannerRouteArgs({
     this.key,
+    required this.enableDynamicQRScanning,
     required this.attendees,
     required this.onScanResult,
     required this.quantity,
@@ -325,6 +329,8 @@ class AttendanceDigitScannerRouteArgs {
   });
 
   final Key? key;
+
+  final bool enableDynamicQRScanning;
 
   final List<AttendeeModel> attendees;
 
@@ -341,7 +347,7 @@ class AttendanceDigitScannerRouteArgs {
 
   @override
   String toString() {
-    return 'AttendanceDigitScannerRouteArgs{key: $key, attendees: $attendees, onScanResult: $onScanResult, quantity: $quantity, singleValue: $singleValue, isGS1code: $isGS1code}';
+    return 'AttendanceDigitScannerRouteArgs{key: $key, enableDynamicQRScanning: $enableDynamicQRScanning, attendees: $attendees, onScanResult: $onScanResult, quantity: $quantity, singleValue: $singleValue, isGS1code: $isGS1code}';
   }
 }
 

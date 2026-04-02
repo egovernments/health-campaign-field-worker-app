@@ -26,6 +26,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class AttendanceDigitScannerPage extends DigitScannerPage {
+  final bool enableDynamicQRScanning;
   final List<AttendeeModel> attendees;
   final void Function(
     ScannedIndividualDataModel scannedUser,
@@ -34,6 +35,7 @@ class AttendanceDigitScannerPage extends DigitScannerPage {
 
   const AttendanceDigitScannerPage(
       {super.key,
+      required this.enableDynamicQRScanning,
       required this.attendees,
       required this.onScanResult,
       required super.quantity,
@@ -46,6 +48,7 @@ class AttendanceDigitScannerPage extends DigitScannerPage {
 
 class AttendanceScannerPageState extends DigitScannerPageState {
   static const _manualCodeFormKey = 'manualCode';
+  late final bool enableDynamicQRScanning;
   late final List<AttendeeModel> attendees;
   static const _reasonKey = 'reason';
   static const _reasonCommentKey = 'reasonComment';
@@ -53,6 +56,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
   @override
   void initState() {
     final specificWidget = widget as AttendanceDigitScannerPage;
+    enableDynamicQRScanning = specificWidget.enableDynamicQRScanning;
     attendees = specificWidget.attendees;
     super.initState();
   }
@@ -154,7 +158,9 @@ class AttendanceScannerPageState extends DigitScannerPageState {
       final scannedData = ScannedIndividualDataModelMapper.fromMap(
           DataMapEncryptor.decrypt(code));
 
-      if (validateIndividualAttendance(scannedData, attendees).isValid) {
+      if (validateIndividualAttendance(
+              enableDynamicQRScanning, scannedData, attendees)
+          .isValid) {
         if (scannedData.manualEntry == null ||
             scannedData.manualEntry == false) {
           showAttendanceSuccessPopup(scannedData);
@@ -193,6 +199,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
   }
 
   AttendanceValidationResult validateIndividualAttendance(
+    bool enableDynamicQRScanning,
     ScannedIndividualDataModel scannedData,
     List<AttendeeModel> attendees, {
     int allowedIntervalInMinutes = 2,
@@ -246,7 +253,8 @@ class AttendanceScannerPageState extends DigitScannerPageState {
       print("Allowed Time: ${allowedTimeInMillis ~/ 60000} min");
     }
 
-    if (timeDifference.inMilliseconds > allowedTimeInMillis) {
+    if (enableDynamicQRScanning &&
+        timeDifference.inMilliseconds > allowedTimeInMillis) {
       callBack.onScanResult(
           scannedData,
           AttendanceValidationResult(
