@@ -117,7 +117,12 @@ class StockCalculationUtils {
       // Stock Issued/Lost/Damaged: This facility is the sender AND transactionType == DISPATCHED
       // Check sender first so damage/loss is counted correctly when senderId == receiverId
       else if (isSender && transactionType == 'DISPATCHED') {
-        if (transactionReason == 'LOST_IN_TRANSIT' ||
+        final status = _getAdditionalFieldValue(stock, 'status');
+        // If the receiver rejected this stock, it comes back to the sender.
+        // Don't count as issued so the quantity stays in sender's balance.
+        if (status == 'REJECTED') {
+          // Skip - rejected stock is not subtracted from sender's balance
+        } else if (transactionReason == 'LOST_IN_TRANSIT' ||
             transactionReason == 'LOST_IN_STORAGE' ||
             stockEntryType == 'LOSS') {
           stockLost += quantity;

@@ -47,8 +47,8 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
       v.transactingPartyType;
   static const Field<StockSearchModel, String> _f$transactingPartyType =
       Field('transactingPartyType', _$transactingPartyType, opt: true);
-  static List<String>? _$receiverId(StockSearchModel v) => v.receiverId;
-  static const Field<StockSearchModel, List<String>> _f$receiverId =
+  static String? _$receiverId(StockSearchModel v) => v.receiverId;
+  static const Field<StockSearchModel, String> _f$receiverId =
       Field('receiverId', _$receiverId, opt: true);
   static String? _$receiverType(StockSearchModel v) => v.receiverType;
   static const Field<StockSearchModel, String> _f$receiverType =
@@ -199,7 +199,6 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
     implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get productVariantId;
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get receiverId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
@@ -216,7 +215,7 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
       String? referenceIdType,
       String? transactingPartyId,
       String? transactingPartyType,
-      List<String>? receiverId,
+      String? receiverId,
       String? receiverType,
       String? senderId,
       String? senderType,
@@ -244,14 +243,6 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
               $value.productVariantId!,
               (v, t) => ObjectCopyWith(v, $identity, t),
               (v) => call(productVariantId: v))
-          : null;
-  @override
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
-      get receiverId => $value.receiverId != null
-          ? ListCopyWith(
-              $value.receiverId!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(receiverId: v))
           : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?

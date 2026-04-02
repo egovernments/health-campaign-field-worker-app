@@ -911,6 +911,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         ProjectFacilitySearchModel(projectId: [projectId]),
       );
 
+      // Filter to only include facilities where facilityLevel is 'current'
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
       final projectResources = await projectResourceLocalRepository.search(
         ProjectResourceSearchModel(projectId: [projectId]),
       );
@@ -922,9 +931,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       List<String> receiverIds = [];
       if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
-        receiverIds = projectFacilities.map((e) => e.facilityId).toList();
+        receiverIds = currentFacilities.map((e) => e.facilityId).toList();
       } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
-        receiverIds = projectFacilities.map((e) => e.facilityId).toList();
+        receiverIds = currentFacilities.map((e) => e.facilityId).toList();
       } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
         receiverIds = [userObject.uuid];
       }
@@ -932,19 +941,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       if (receiverIds.isEmpty) return;
 
       final stockSearchModel = StockSearchModel(
-        receiverId: receiverIds,
-        transactionType: [TransactionType.dispatched.toValue()],
-        productVariantId:
-            productVariantIds.isNotEmpty ? productVariantIds : null,
+        receiverId: receiverIds.first,
+        senderId: receiverIds.first,
       );
 
       final totalCount = await (stockRemoteRepository as StockRemoteRepository)
           .fetchTotalCount(stockSearchModel, offSet: 0);
 
       if (totalCount <= 0) return;
-
-      debugPrint(
-          'SILENT_STOCK_DOWNSYNC: Found $totalCount records, downloading...');
 
       const batchSize = 50;
       int offset = 0;

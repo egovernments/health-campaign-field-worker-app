@@ -141,7 +141,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
             as StockLocalRepository;
 
     stockRepo.listenToChanges(
-      query: StockSearchModel(receiverId: [facilityId]),
+      query: StockSearchModel(receiverId: facilityId),
       listener: (receivedStocks) async {
         if (!mounted) return;
 
@@ -240,7 +240,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
 
         // Per-commodity stock balance bars
         ..._productVariants.map((product) {
-          final balance = _stockBalances[product.id] ?? 0.0;
+          final balance = max(_stockBalances[product.id] ?? 0.0, 0.0);
           final color = _getColorForBalance(balance);
           final progress =
               _maxThreshold > 0 ? min(balance / _maxThreshold, 1.0) : 0.0;

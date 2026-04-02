@@ -412,7 +412,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     FunctionRegistry.register('getSecondaryType', (args, stateData) {
       if (args.isEmpty) return 'WAREHOUSE';
       final facilityFromWhich = args.first?.toString() ?? '';
-      return facilityFromWhich == 'Delivery Team' ? 'STAFF' : 'WAREHOUSE';
+      return facilityFromWhich == 'DELIVERY_TEAM' ? 'STAFF' : 'WAREHOUSE';
     });
 
     // Attendance

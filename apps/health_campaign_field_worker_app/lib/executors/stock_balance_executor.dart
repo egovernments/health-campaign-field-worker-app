@@ -170,7 +170,7 @@ class StockBalanceExecutor extends ActionExecutor {
         context.read<LocalRepository<StockModel, StockSearchModel>>();
 
     final receivedStocks = await stockRepo.search(
-      StockSearchModel(receiverId: [facilityId]),
+      StockSearchModel(receiverId: facilityId),
     );
     final sentStocks = await stockRepo.search(
       StockSearchModel(senderId: facilityId),
