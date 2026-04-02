@@ -213,7 +213,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ...AttendanceRoute().pagesMap,
     ...DigitScannerPackageRoute().pagesMap,
     ...DashboardRoute().pagesMap,
     ...SurveyFormRoute().pagesMap,
