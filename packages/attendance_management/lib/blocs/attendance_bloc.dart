@@ -132,11 +132,12 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 
   // Method to fetch attendance registers
   fetchRegisters({required int offSet, required int limit}) async {
+    var staffId = AttendanceSingleton().loggedInIndividualId;
     final registers = await attendanceDataRepository?.search(
       AttendanceRegisterSearchModel(
         limit: limit,
         offSet: offSet,
-        staffId: AttendanceSingleton().loggedInIndividualId,
+        staffId: staffId,
         referenceId: AttendanceSingleton().project!.id,
       ),
     );
@@ -203,7 +204,6 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     return register.copyWith(
       individualList: individualList,
       attendees: attendeeList,
-      // attendanceLog: list,
       completedDays: completedDaysCount,
     );
   }
