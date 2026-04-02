@@ -139,6 +139,20 @@ class GroupListViewWidget extends ResolvedFlowWidget {
       }
     }
 
+    if (groupByField == null) {
+      // No grouping, render all items in a single list
+      return _ItemsListWidget(
+        null,
+        items,
+        json,
+        context,
+        onAction,
+        resolved,
+        stateData,
+        properties,
+      );
+    }
+
     final groupedItems =
         groupBy(items, (e) => _resolveNestedField(e, groupByField!));
 
@@ -168,7 +182,7 @@ class GroupListViewWidget extends ResolvedFlowWidget {
   }
 
   Widget _ItemsListWidget(
-      String groupName,
+      String? groupName,
       List<dynamic> items,
       Map<String, dynamic> json,
       BuildContext context,
@@ -200,6 +214,9 @@ class GroupListViewWidget extends ResolvedFlowWidget {
       if (itemWidget != null) {
         widgets.add(itemWidget);
       }
+    }
+    if (groupName == null) {
+      return Column(children: widgets);
     }
     return Column(
       children: [
