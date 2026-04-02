@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 
+import 'environment_config.dart';
+
 class DownloadImage {
   static Future<Uint8List?> getImageBytesFromUrl(String imageUrl) async {
     try {
@@ -26,8 +28,10 @@ class DownloadImage {
   }
 
   static Future<String> downloadSignature(String signatureFileStoreId) async {
+    final baseUrl = envConfig.variables.baseUrl;
+    final tenantId = envConfig.variables.tenantId;
     String downloadUrl =
-        "https://bauchi-hcm-uat.digit.org/filestore/v1/files/id?tenantId=ba&fileStoreId=$signatureFileStoreId";
+        "${baseUrl}filestore/v1/files/id?tenantId=$tenantId&fileStoreId=$signatureFileStoreId";
     Uint8List? signatureBytes =
         await DownloadImage.getImageBytesFromUrl(downloadUrl);
     String signatureBase64 = base64Encode(signatureBytes!);
