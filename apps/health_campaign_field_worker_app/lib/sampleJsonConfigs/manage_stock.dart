@@ -2473,7 +2473,7 @@ final dynamic sampleInventoryFlows = {
             "configName": "stockReject",
             "forceCreate": true,
             "data": [
-              {"key": "stockEntryType", "value": "RETURNED"},
+              // {"key": "stockEntryType", "value": "RETURNED"},
               {"key": "transactionType", "value": "DISPATCHED"},
               {"key": "primaryRole", "value": "SENDER"},
               {"key": "secondaryRole", "value": "RECEIVER"},
