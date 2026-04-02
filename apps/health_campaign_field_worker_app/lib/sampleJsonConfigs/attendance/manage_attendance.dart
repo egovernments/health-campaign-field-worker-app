@@ -160,7 +160,7 @@ final dynamic manageAttendanceFlow = {
             ],
             "type": "template",
             "format": "labelPairList",
-            "fieldName": "labelPairComplaint"
+            "fieldName": "labelPairAttendance",
           },
           {
             "type": "template",
