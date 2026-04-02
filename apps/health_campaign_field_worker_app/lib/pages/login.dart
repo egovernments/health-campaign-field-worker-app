@@ -1,3 +1,253 @@
+// import 'package:digit_ui_components/digit_components.dart';
+// import 'package:digit_ui_components/models/privacy_notice/privacy_notice_model.dart';
+// import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+// import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+// import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+// import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+// import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
+// import 'package:digit_ui_components/widgets/privacy_notice/privacy_component.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:reactive_forms/reactive_forms.dart';
+
+// import '../blocs/app_initialization/app_initialization.dart';
+// import '../blocs/auth/auth.dart';
+// import '../data/local_store/no_sql/schema/app_configuration.dart';
+// import '../router/app_router.dart';
+// import '../utils/environment_config.dart';
+// import '../utils/i18_key_constants.dart' as i18;
+// import '../widgets/localized.dart';
+
+// @RoutePage()
+// class LoginPage extends LocalizedStatefulWidget {
+//   const LoginPage({
+//     Key? key,
+//     super.appLocalizations,
+//   }) : super(key: key);
+
+//   @override
+//   State<LoginPage> createState() => _LoginPageState();
+// }
+
+// class _LoginPageState extends LocalizedState<LoginPage> {
+//   var passwordVisible = false;
+//   bool isPrivacyEnabled = false;
+//   static const _userId = 'userId';
+//   static const _password = 'password';
+//   static const _privacyCheck = 'privacyCheck';
+
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+//     final textTheme = theme.digitTextTheme(context);
+
+//     return Scaffold(
+//       appBar: AppBar(
+//         foregroundColor: theme.colorTheme.paper.primary,
+//         backgroundColor: theme.colorTheme.primary.primary2,
+//       ),
+//       body: BlocListener<AuthBloc, AuthState>(
+//         listener: (context, state) {
+//           state.maybeWhen(
+//             orElse: () {},
+//             loading: () {
+//               DigitLoaders.overlayLoader(context: context);
+//             },
+//             error: (message) {
+//               Navigator.of(context, rootNavigator: true).pop();
+//               Toast.showToast(
+//                 context,
+//                 message: message ??
+//                     localizations.translate(i18.login.unableToLoginText),
+//                 type: ToastType.error,
+//               );
+//             },
+//           );
+//         },
+//         child: ScrollableContent(
+//           children: [
+//             ReactiveFormBuilder(
+//               form: buildForm,
+//               builder: (context, form, child) {
+//                 return DigitCard(
+//                     margin: const EdgeInsets.all(spacer2),
+//                     children: [
+//                       Text(
+//                         localizations.translate(
+//                           i18.login.labelText,
+//                         ),
+//                         style: textTheme.headingXl.copyWith(
+//                           color: theme
+//                               .colorTheme.primary.primary2, // Use theme color
+//                         ),
+//                       ),
+//                       ReactiveWrapperField(
+//                         formControlName: _userId,
+//                         validationMessages: {
+//                           "required": (control) {
+//                             return localizations.translate(
+//                               '${i18.login.userIdPlaceholder}_IS_REQUIRED',
+//                             );
+//                           },
+//                         },
+//                         builder: (field) => LabeledField(
+//                           label: localizations.translate(
+//                             i18.login.userIdPlaceholder,
+//                           ),
+//                           capitalizedFirstLetter: false,
+//                           isRequired: true,
+//                           child: DigitTextFormInput(
+//                             keyboardType: TextInputType.text,
+//                             initialValue: form.control(_userId).value,
+//                             errorMessage: field.errorText,
+//                             onChange: (value) {
+//                               form.control(_userId).value = value;
+//                             },
+//                           ),
+//                         ),
+//                       ),
+//                       ReactiveWrapperField(
+//                         formControlName: _password,
+//                         validationMessages: {
+//                           "required": (control) {
+//                             return localizations.translate(
+//                               '${i18.login.passwordPlaceholder}_IS_REQUIRED',
+//                             );
+//                           },
+//                         },
+//                         builder: (field) => LabeledField(
+//                           label: localizations.translate(
+//                             i18.login.passwordPlaceholder,
+//                           ),
+//                           isRequired: true,
+//                           child: DigitPasswordFormInput(
+//                             initialValue: form.control(_password).value,
+//                             errorMessage: field.errorText,
+//                             onChange: (value) {
+//                               form.control(_password).value = value;
+//                             },
+//                             keyboardType: TextInputType.text,
+//                           ),
+//                         ),
+//                       ),
+//                       BlocBuilder<AppInitializationBloc,
+//                               AppInitializationState>(
+//                           builder: (context, initState) {
+//                         final privacyPolicyJson = initState.maybeWhen(
+//                             initialized:
+//                                 (AppConfiguration appConfiguration, _, __) =>
+//                                     appConfiguration.privacyPolicyConfig,
+//                             orElse: () => null);
+//                         if (privacyPolicyJson?.active == false) {
+//                           return const SizedBox.shrink();
+//                         }
+
+//                         form
+//                             .control(_privacyCheck)
+//                             .setValidators([Validators.requiredTrue]);
+//                         form.control(_privacyCheck).updateValueAndValidity();
+//                         return PrivacyComponent(
+//                           privacyPolicy:
+//                               convertToPrivacyPolicyModel(privacyPolicyJson),
+//                           formControlName: _privacyCheck,
+//                           text: localizations
+//                               .translate(i18.privacyPolicy.privacyNoticeText),
+//                           linkText: localizations.translate(
+//                               i18.privacyPolicy.privacyPolicyLinkText),
+//                           validationMessage: localizations.translate(
+//                               i18.privacyPolicy.privacyPolicyValidationText),
+//                         );
+//                       }),
+//                       DigitButton(
+//                         label: localizations.translate(i18.login.actionLabel),
+//                         type: DigitButtonType.primary,
+//                         onPressed: () {
+//                           form.markAllAsTouched();
+//                           if (!form.valid) return;
+
+//                           FocusManager.instance.primaryFocus?.unfocus();
+
+//                           context.read<AuthBloc>().add(
+//                                 AuthLoginEvent(
+//                                   userId:
+//                                       (form.control(_userId).value as String)
+//                                           .trim(),
+//                                   password:
+//                                       (form.control(_password).value as String)
+//                                           .trim(),
+//                                   tenantId: envConfig.variables.tenantId,
+//                                 ),
+//                               );
+//                         },
+//                         size: DigitButtonSize.large,
+//                         mainAxisSize: MainAxisSize.max,
+//                       ),
+//                       DigitButton(
+//                         label: localizations.translate(
+//                           i18.forgotPassword.actionLabel,
+//                         ),
+//                         capitalizeLetters: false,
+//                         mainAxisSize: MainAxisSize.max,
+//                         type: DigitButtonType.tertiary,
+//                         size: DigitButtonSize.medium,
+//                         onPressed: () => showCustomPopup(
+//                           context: context,
+//                           builder: (ctx) => Popup(
+//                             title: localizations.translate(
+//                               i18.forgotPassword.labelText,
+//                             ),
+//                             description: localizations.translate(
+//                               i18.forgotPassword.contentText,
+//                             ),
+//                             onOutsideTap: () {
+//                               Navigator.of(ctx).pop();
+//                             },
+//                             type: PopUpType.simple,
+//                             actions: [
+//                               DigitButton(
+//                                   label: localizations.translate(
+//                                     i18.forgotPassword.primaryActionLabel,
+//                                   ),
+//                                   onPressed: () {
+//                                     Navigator.of(ctx).pop();
+//                                     context.router.popUntilRoot();
+//                                   },
+//                                   type: DigitButtonType.primary,
+//                                   size: DigitButtonSize.large)
+//                             ],
+//                           ),
+//                         ),
+//                       ),
+//                     ]);
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   FormGroup buildForm() => fb.group(<String, Object>{
+//         _userId: FormControl<String>(
+//           value: '',
+//           validators: [Validators.required],
+//         ),
+//         _password: FormControl<String>(
+//           validators: [Validators.required],
+//           value: '',
+//         ),
+//         _privacyCheck: FormControl<bool>(
+//           value: false,
+//         )
+//       });
+// }
+
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/privacy_notice/privacy_notice_model.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -6,14 +256,20 @@ import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/privacy_notice/privacy_component.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/login_guard/login_guard.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/local_store/no_sql/schema/service_registry.dart';
+import '../data/repositories/remote/validate_login.dart';
 import '../router/app_router.dart';
+import '../utils/constants.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
@@ -36,9 +292,39 @@ class _LoginPageState extends LocalizedState<LoginPage> {
   static const _password = 'password';
   static const _privacyCheck = 'privacyCheck';
 
+  String? _pendingUserId;
+  String? _pendingPassword;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  void _checkOtherDeviceLogin(BuildContext context, String username) async {
+    print("Checking for other device login for user: $username");
+
+    final loginGuardBloc = context.read<LoginGuardBloc>();
+
+    final isar = await Constants().isar;
+    final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+
+    print(serviceRegistry);
+
+    final apiEndPoint = Constants.getEndPoint(
+      serviceRegistry: serviceRegistry,
+      service: 'MULTILOGIN',
+      action: ApiOperation.switchUser.toValue(),
+      entityName: 'MultiLogin',
+    );
+
+    debugPrint("API End Point $apiEndPoint");
+
+    loginGuardBloc.add(
+      LoginGuardEvent.checkOtherDeviceLogin(
+        username: username,
+        apiEndPoint: apiEndPoint,
+      ),
+    );
   }
 
   @override
@@ -46,188 +332,272 @@ class _LoginPageState extends LocalizedState<LoginPage> {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        foregroundColor: theme.colorTheme.paper.primary,
-        backgroundColor: theme.colorTheme.primary.primary2,
-      ),
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          state.maybeWhen(
-            orElse: () {},
-            loading: () {
-              DigitLoaders.overlayLoader(context: context);
-            },
-            error: (message) {
-              Navigator.of(context, rootNavigator: true).pop();
-              Toast.showToast(
-                context,
-                message: message ??
-                    localizations.translate(i18.login.unableToLoginText),
-                type: ToastType.error,
-              );
-            },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<LoginGuardBloc>(
+          create: (context) => LoginGuardBloc(
+            ValidateRepository(Dio()),
+          ),
+        ),
+      ],
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            appBar: AppBar(
+              foregroundColor: theme.colorTheme.paper.primary,
+              backgroundColor: theme.colorTheme.primary.primary2,
+            ),
+            body: MultiBlocListener(
+              listeners: [
+                BlocListener<AuthBloc, AuthState>(
+                  listener: (context, state) {
+                    debugPrint('AuthBloc State Changed: $state');
+                    state.maybeWhen(
+                      orElse: () {},
+                      loading: () {
+                        DigitLoaders.overlayLoader(context: context);
+                      },
+                      error: (message) {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        Toast.showToast(
+                          context,
+                          message: message ??
+                              localizations
+                                  .translate(i18.login.unableToLoginText),
+                          type: ToastType.error,
+                        );
+                      },
+                    );
+                  },
+                ),
+                BlocListener<LoginGuardBloc, LoginGuardState>(
+                  listener: (context, state) {
+                    debugPrint('LoginGuardBloc State Changed: $state');
+                    state.maybeWhen(
+                      allow: () {
+                        // context.router.replaceAll([HomeRoute()]);
+                        context.read<AuthBloc>().add(
+                              AuthLoginEvent(
+                                userId: _pendingUserId as String,
+                                password: _pendingPassword as String,
+                                tenantId: envConfig.variables.tenantId,
+                              ),
+                            );
+                      },
+                      otherDevice: () {
+                        _showMultiDeviceLoginPopUp(context,
+                            username: _pendingUserId as String,
+                            password: _pendingPassword as String);
+                      },
+                      orElse: () {},
+                    );
+                  },
+                ),
+              ],
+              child: ScrollableContent(
+                children: [
+                  ReactiveFormBuilder(
+                    form: buildForm,
+                    builder: (context, form, child) {
+                      return DigitCard(
+                        margin: const EdgeInsets.all(spacer2),
+                        children: [
+                          Text(
+                            localizations.translate(
+                              i18.login.labelText,
+                            ),
+                            style: textTheme.headingXl.copyWith(
+                              color: theme.colorTheme.primary.primary2,
+                            ),
+                          ),
+                          ReactiveWrapperField(
+                            formControlName: _userId,
+                            validationMessages: {
+                              "required": (control) {
+                                return localizations.translate(
+                                  '${i18.login.userIdPlaceholder}_IS_REQUIRED',
+                                );
+                              },
+                            },
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.login.userIdPlaceholder,
+                              ),
+                              capitalizedFirstLetter: false,
+                              isRequired: true,
+                              child: DigitTextFormInput(
+                                keyboardType: TextInputType.text,
+                                initialValue: form.control(_userId).value,
+                                errorMessage: field.errorText,
+                                onChange: (value) {
+                                  form.control(_userId).value = value;
+                                },
+                              ),
+                            ),
+                          ),
+                          ReactiveWrapperField(
+                            formControlName: _password,
+                            validationMessages: {
+                              "required": (control) {
+                                return localizations.translate(
+                                  '${i18.login.passwordPlaceholder}_IS_REQUIRED',
+                                );
+                              },
+                            },
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.login.passwordPlaceholder,
+                              ),
+                              isRequired: true,
+                              child: DigitPasswordFormInput(
+                                initialValue: form.control(_password).value,
+                                errorMessage: field.errorText,
+                                onChange: (value) {
+                                  form.control(_password).value = value;
+                                },
+                                keyboardType: TextInputType.text,
+                              ),
+                            ),
+                          ),
+                          BlocBuilder<AppInitializationBloc,
+                              AppInitializationState>(
+                            builder: (context, initState) {
+                              final privacyPolicyJson = initState.maybeWhen(
+                                initialized: (AppConfiguration appConfiguration,
+                                        _, __) =>
+                                    appConfiguration.privacyPolicyConfig,
+                                orElse: () => null,
+                              );
+                              if (privacyPolicyJson?.active == false) {
+                                return const SizedBox.shrink();
+                              }
+
+                              form
+                                  .control(_privacyCheck)
+                                  .setValidators([Validators.requiredTrue]);
+                              form
+                                  .control(_privacyCheck)
+                                  .updateValueAndValidity();
+                              return PrivacyComponent(
+                                privacyPolicy: convertToPrivacyPolicyModel(
+                                    privacyPolicyJson),
+                                formControlName: _privacyCheck,
+                                text: localizations.translate(
+                                    i18.privacyPolicy.privacyNoticeText),
+                                linkText: localizations.translate(
+                                    i18.privacyPolicy.privacyPolicyLinkText),
+                                validationMessage: localizations.translate(i18
+                                    .privacyPolicy.privacyPolicyValidationText),
+                              );
+                            },
+                          ),
+                          BlocBuilder<AppInitializationBloc,
+                              AppInitializationState>(
+                            builder: (context, state) {
+                              print("state: $state");
+                              return DigitButton(
+                                label: localizations
+                                    .translate(i18.login.actionLabel),
+                                type: DigitButtonType.primary,
+                                onPressed: () {
+                                  form.markAllAsTouched();
+                                  if (!form.valid) return;
+
+                                  FocusManager.instance.primaryFocus?.unfocus();
+
+                                  _pendingUserId =
+                                      (form.control(_userId).value as String)
+                                          .trim();
+                                  _pendingPassword =
+                                      (form.control(_password).value as String)
+                                          .trim();
+
+                                  print(" Pending User ID: $_pendingUserId");
+                                  print(" Pending Password: $_pendingPassword");
+
+                                  final bool singleUserLogin = state.maybeWhen(initialized: (appConfiguration, _, __) {
+                                      final list =
+                                          appConfiguration.singleUserLogin ??
+                                              [];
+                                      if (list.isEmpty) return false;
+                                      final config = list.first;
+                                      return config.enabled;
+                                    },
+                                    orElse: () => false,
+                                  );
+
+                                  print(
+                                      "Single User Login Enabled: $singleUserLogin");
+
+                                  if (singleUserLogin) {
+                                    print("inside if condition for single user login");
+                                    _checkOtherDeviceLogin(
+                                        context,
+                                        _pendingUserId as String);
+                                  } else {
+                                    print("inside else condition for single user login");
+                                    context.read<AuthBloc>().add(
+                                          AuthLoginEvent(
+                                            userId: _pendingUserId as String,
+                                            password:
+                                                _pendingPassword as String,
+                                            tenantId:
+                                                envConfig.variables.tenantId,
+                                          ),
+                                        );
+                                  }
+                                },
+                                size: DigitButtonSize.large,
+                                mainAxisSize: MainAxisSize.max,
+                              );
+                            },
+                          ),
+                          DigitButton(
+                            label: localizations.translate(
+                              i18.forgotPassword.actionLabel,
+                            ),
+                            capitalizeLetters: false,
+                            mainAxisSize: MainAxisSize.max,
+                            type: DigitButtonType.tertiary,
+                            size: DigitButtonSize.medium,
+                            onPressed: () => showCustomPopup(
+                              context: context,
+                              builder: (ctx) => Popup(
+                                title: localizations.translate(
+                                  i18.forgotPassword.labelText,
+                                ),
+                                description: localizations.translate(
+                                  i18.forgotPassword.contentText,
+                                ),
+                                onOutsideTap: () {
+                                  Navigator.of(ctx).pop();
+                                },
+                                type: PopUpType.simple,
+                                actions: [
+                                  DigitButton(
+                                    label: localizations.translate(
+                                      i18.forgotPassword.primaryActionLabel,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                      context.router.popUntilRoot();
+                                    },
+                                    type: DigitButtonType.primary,
+                                    size: DigitButtonSize.large,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
           );
         },
-        child: ScrollableContent(
-          children: [
-            ReactiveFormBuilder(
-              form: buildForm,
-              builder: (context, form, child) {
-                return DigitCard(
-                    margin: const EdgeInsets.all(spacer2),
-                    children: [
-                      Text(
-                        localizations.translate(
-                          i18.login.labelText,
-                        ),
-                        style: textTheme.headingXl.copyWith(
-                          color: theme
-                              .colorTheme.primary.primary2, // Use theme color
-                        ),
-                      ),
-                      ReactiveWrapperField(
-                        formControlName: _userId,
-                        validationMessages: {
-                          "required": (control) {
-                            return localizations.translate(
-                              '${i18.login.userIdPlaceholder}_IS_REQUIRED',
-                            );
-                          },
-                        },
-                        builder: (field) => LabeledField(
-                          label: localizations.translate(
-                            i18.login.userIdPlaceholder,
-                          ),
-                          capitalizedFirstLetter: false,
-                          isRequired: true,
-                          child: DigitTextFormInput(
-                            keyboardType: TextInputType.text,
-                            initialValue: form.control(_userId).value,
-                            errorMessage: field.errorText,
-                            onChange: (value) {
-                              form.control(_userId).value = value;
-                            },
-                          ),
-                        ),
-                      ),
-                      ReactiveWrapperField(
-                        formControlName: _password,
-                        validationMessages: {
-                          "required": (control) {
-                            return localizations.translate(
-                              '${i18.login.passwordPlaceholder}_IS_REQUIRED',
-                            );
-                          },
-                        },
-                        builder: (field) => LabeledField(
-                          label: localizations.translate(
-                            i18.login.passwordPlaceholder,
-                          ),
-                          isRequired: true,
-                          child: DigitPasswordFormInput(
-                            initialValue: form.control(_password).value,
-                            errorMessage: field.errorText,
-                            onChange: (value) {
-                              form.control(_password).value = value;
-                            },
-                            keyboardType: TextInputType.text,
-                          ),
-                        ),
-                      ),
-                      BlocBuilder<AppInitializationBloc,
-                              AppInitializationState>(
-                          builder: (context, initState) {
-                        final privacyPolicyJson = initState.maybeWhen(
-                            initialized:
-                                (AppConfiguration appConfiguration, _, __) =>
-                                    appConfiguration.privacyPolicyConfig,
-                            orElse: () => null);
-                        if (privacyPolicyJson?.active == false) {
-                          return const SizedBox.shrink();
-                        }
-
-                        form
-                            .control(_privacyCheck)
-                            .setValidators([Validators.requiredTrue]);
-                        form.control(_privacyCheck).updateValueAndValidity();
-                        return PrivacyComponent(
-                          privacyPolicy:
-                              convertToPrivacyPolicyModel(privacyPolicyJson),
-                          formControlName: _privacyCheck,
-                          text: localizations
-                              .translate(i18.privacyPolicy.privacyNoticeText),
-                          linkText: localizations.translate(
-                              i18.privacyPolicy.privacyPolicyLinkText),
-                          validationMessage: localizations.translate(
-                              i18.privacyPolicy.privacyPolicyValidationText),
-                        );
-                      }),
-                      DigitButton(
-                        label: localizations.translate(i18.login.actionLabel),
-                        type: DigitButtonType.primary,
-                        onPressed: () {
-                          form.markAllAsTouched();
-                          if (!form.valid) return;
-
-                          FocusManager.instance.primaryFocus?.unfocus();
-
-                          context.read<AuthBloc>().add(
-                                AuthLoginEvent(
-                                  userId:
-                                      (form.control(_userId).value as String)
-                                          .trim(),
-                                  password:
-                                      (form.control(_password).value as String)
-                                          .trim(),
-                                  tenantId: envConfig.variables.tenantId,
-                                ),
-                              );
-                        },
-                        size: DigitButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
-                      ),
-                      DigitButton(
-                        label: localizations.translate(
-                          i18.forgotPassword.actionLabel,
-                        ),
-                        capitalizeLetters: false,
-                        mainAxisSize: MainAxisSize.max,
-                        type: DigitButtonType.tertiary,
-                        size: DigitButtonSize.medium,
-                        onPressed: () => showCustomPopup(
-                          context: context,
-                          builder: (ctx) => Popup(
-                            title: localizations.translate(
-                              i18.forgotPassword.labelText,
-                            ),
-                            description: localizations.translate(
-                              i18.forgotPassword.contentText,
-                            ),
-                            onOutsideTap: () {
-                              Navigator.of(ctx).pop();
-                            },
-                            type: PopUpType.simple,
-                            actions: [
-                              DigitButton(
-                                  label: localizations.translate(
-                                    i18.forgotPassword.primaryActionLabel,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(ctx).pop();
-                                    context.router.popUntilRoot();
-                                  },
-                                  type: DigitButtonType.primary,
-                                  size: DigitButtonSize.large)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ]);
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -247,7 +617,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
       });
 }
 
-// convert to privacy notice model
+// // convert to privacy notice model
 PrivacyNoticeModel? convertToPrivacyPolicyModel(PrivacyPolicy? privacyPolicy) {
   return PrivacyNoticeModel(
     header: privacyPolicy?.header ?? '',
@@ -274,5 +644,58 @@ PrivacyNoticeModel? convertToPrivacyPolicyModel(PrivacyPolicy? privacyPolicy) {
                   .toList(),
             ))
         .toList(),
+  );
+}
+
+void _showMultiDeviceLoginPopUp(
+  BuildContext context, {
+  required String username,
+  required String password,
+}) {
+  showCustomPopup(
+    context: context,
+    builder: (ctx) => Popup(
+      title: 'Switch to this Mobile?',
+      titleIcon: Icon(Icons.error_outline, color: const Light().alertError),
+      additionalWidgets: [
+        Center(
+          child: Image.asset("assets/images/switch_device.png"),
+        ),
+        Text(
+          'You are moving to a new phone. Make sure all your data from the old phone is synced before you continue.',
+          textAlign: TextAlign.center,
+          style: Theme.of(ctx).textTheme.bodyMedium,
+        ),
+      ],
+      actions: [
+        DigitButton(
+          label: 'Continue',
+          onPressed: () {
+            Navigator.of(ctx).pop(); // Close popup
+            // Use the parent context to navigate
+            context.router.replaceAll([
+              DeviceChangeReasonRoute(
+                username: username,
+                password: password,
+              ),
+            ]);
+          },
+          type: DigitButtonType.primary,
+          mainAxisSize: MainAxisSize.max,
+          size: DigitButtonSize.large,
+        ),
+        DigitButton(
+          label: 'Back to Login',
+          prefixIcon: Icons.undo,
+          onPressed: () {
+            context.read<LoginGuardBloc>().add(LoginGuardEvent.reset());
+            Navigator.of(ctx).pop(); // Just close popup
+          },
+          type: DigitButtonType.secondary,
+          mainAxisSize: MainAxisSize.max,
+          size: DigitButtonSize.medium,
+        ),
+      ],
+    ),
   );
 }

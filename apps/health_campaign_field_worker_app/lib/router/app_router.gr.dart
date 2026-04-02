@@ -93,6 +93,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DeviceChangeReasonRoute.name: (routeData) {
+      final args = routeData.argsAs<DeviceChangeReasonRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DeviceChangeReasonPage(
+          key: args.key,
+          username: args.username,
+          password: args.password,
+        ),
+      );
+    },
     DevicesListRoute.name: (routeData) {
       final args = routeData.argsAs<DevicesListRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -472,6 +483,50 @@ class DataTransferRouteArgs {
   @override
   String toString() {
     return 'DataTransferRouteArgs{key: $key, nearbyService: $nearbyService, connectedDevices: $connectedDevices}';
+  }
+}
+
+/// generated route for
+/// [DeviceChangeReasonPage]
+class DeviceChangeReasonRoute
+    extends PageRouteInfo<DeviceChangeReasonRouteArgs> {
+  DeviceChangeReasonRoute({
+    Key? key,
+    required String username,
+    required String password,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DeviceChangeReasonRoute.name,
+          args: DeviceChangeReasonRouteArgs(
+            key: key,
+            username: username,
+            password: password,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DeviceChangeReasonRoute';
+
+  static const PageInfo<DeviceChangeReasonRouteArgs> page =
+      PageInfo<DeviceChangeReasonRouteArgs>(name);
+}
+
+class DeviceChangeReasonRouteArgs {
+  const DeviceChangeReasonRouteArgs({
+    this.key,
+    required this.username,
+    required this.password,
+  });
+
+  final Key? key;
+
+  final String username;
+
+  final String password;
+
+  @override
+  String toString() {
+    return 'DeviceChangeReasonRouteArgs{key: $key, username: $username, password: $password}';
   }
 }
 
