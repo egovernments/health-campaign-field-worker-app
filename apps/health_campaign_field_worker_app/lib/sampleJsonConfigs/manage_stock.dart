@@ -1163,24 +1163,22 @@ final dynamic sampleInventoryFlows = {
                   {
                     "key": "senderId",
                     "value": "{{navigation.facilityFromWhich}}",
-                    "operation": "equals",
-                    "switchOn": "{{navigation.stockEntryType}}",
-                    "cases": {
-                      "ISSUED": "{{navigation.facilityToWhich}}",
-                      "DAMAGED": "{{navigation.facilityToWhich}}",
-                      "LOSS": "{{navigation.facilityToWhich}}"
-                    }
+                    "operation": "equals"
                   },
                   {
                     "key": "receiverId",
                     "value": "{{navigation.facilityToWhich}}",
-                    "operation": "equals",
-                    "switchOn": "{{navigation.stockEntryType}}",
-                    "cases": {
-                      "ISSUED": "{{navigation.facilityFromWhich}}",
-                      "DAMAGED": "{{navigation.facilityFromWhich}}",
-                      "LOSS": "{{navigation.facilityFromWhich}}"
-                    }
+                    "operation": "equals"
+                  },
+                  {
+                    "key": "productVariantId",
+                    "value": "{{navigation.currentEntityId}}",
+                    "operation": "equals"
+                  },
+                  {
+                    "key": "additionalFields.stockEntryType",
+                    "value": "{{navigation.stockEntryType}}",
+                    "operation": "equals"
                   }
                 ],
                 "errorMessage": "RESOURCES_ALREADY_SCANNED"
@@ -2013,16 +2011,9 @@ final dynamic sampleInventoryFlows = {
             "name": "stock",
             "data": [
               {
-                "key": "additionalFields",
-                "value": "{{navigation.selectedStock}}",
-                "operation": "contains",
-                "applyIf": "{{fn:isNotEmpty(navigation.selectedStock)}}==true"
-              },
-              {
                 "key": "clientReferenceId",
                 "value": "{{navigation.clientReferenceId}}",
-                "operation": "equals",
-                "applyIf": "{{fn:isEmpty(navigation.selectedStock)}}==true"
+                "operation": "equals"
               }
             ]
           }
@@ -2408,6 +2399,10 @@ final dynamic sampleInventoryFlows = {
               {
                 "key": "StockModel.additionalFields.fields.status",
                 "value": "ACCEPTED"
+              },
+              {
+                "key": "StockModel.additionalFields.fields.mrnNumber",
+                "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
               }
             ]
           }
