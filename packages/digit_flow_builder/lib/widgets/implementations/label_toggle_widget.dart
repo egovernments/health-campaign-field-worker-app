@@ -109,7 +109,7 @@ class DigitLabeledToggle extends StatelessWidget {
             color: isSelected
                 ? const DigitColors().light.primary1
                 : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(spacer3),
           ),
           alignment: Alignment.center,
           child: Text(
