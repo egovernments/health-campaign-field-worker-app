@@ -1,5 +1,4 @@
 import 'package:digit_data_model/models/entities/attendee.dart';
-import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_data_model/models/entities/scanned_individual_data.dart';
 import 'package:digit_flow_builder/action_handler/action_config.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
@@ -14,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../pages/attendance_qr_scanner.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 
 class AttendanceQrScannerButton extends ResolvedFlowWidget {
   @override
@@ -131,7 +131,7 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
                       result.errorMessage!,
                     ) ??
                     result.errorMessage ??
-                    "Invalid QR code",
+                    i18.attendance.invalidQRCode,
                 type: ToastType.error);
             context.read<DigitScannerBloc>().add(
                   const DigitScannerEvent.handleScanner(

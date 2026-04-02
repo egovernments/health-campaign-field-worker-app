@@ -33,6 +33,8 @@ const stockReconciliationMetrics = StockReconciliationMetrics();
 class Attendance {
   const Attendance();
 
+  String get invalidQRCode => 'INVALID_QR_CODE';
+
   String get viewAttendanceLabel => 'HOME_VIEW_ATTENDANCE_LABEL';
 
   String get campaignNameLabel => 'CAMPAIGN_NAME_LABEL';
