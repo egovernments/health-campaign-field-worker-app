@@ -640,7 +640,7 @@ final dynamic sampleInventoryFlows = {
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -663,15 +663,7 @@ final dynamic sampleInventoryFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "dropDownOptions": [],
-              "visibilityCondition": {
-                "expression": [
-                  {
-                    "condition":
-                        "warehouseDetails.facilityToWhich == Delivery Team || warehouseDetails.facilityFromWhich == Delivery Team"
-                  }
-                ]
-              }
+              "dropDownOptions": []
             },
           ],
           "navigateTo": {"name": "stockDetails", "type": "form"}
