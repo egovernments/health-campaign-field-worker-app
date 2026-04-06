@@ -112,11 +112,7 @@ void main() async {
     sql: _sql,
   ));
 
-  // Initialize FCM after runApp so UI renders before permission dialog.
-  final notificationService = NotificationService();
-  await notificationService.init();
-  final fcmToken = await notificationService.initializeFCM();
-  debugPrint('FCM Token at startup: $fcmToken');
+
 }
 
 class AppLifecycleObserver extends WidgetsBindingObserver {
