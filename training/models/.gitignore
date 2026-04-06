@@ -1,0 +1,6 @@
+# ONNX models are too large for git (~13MB)
+# Download via the notebook or from:
+# https://huggingface.co/WePrompt/buffalo_sc/resolve/main/w600k_mbf.onnx
+*.onnx
+*.tflite
+*.pth

@@ -5,7 +5,7 @@ import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 /// Configuration for a module's flow navigation
 class FlowModuleConfig {
@@ -82,7 +82,7 @@ class FlowNavigationUtils {
       //   }
       // }
 
-      // Fallback to sample flows
+      // Use local sample flows (contains UPDATE_STOCK_BALANCE actions)
       FlowRegistry.setConfig(
         config.sampleFlows["flows"] as List<Map<String, dynamic>>,
       );

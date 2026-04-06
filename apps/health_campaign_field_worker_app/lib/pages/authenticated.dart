@@ -563,7 +563,8 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                 ),
                               ],
                             );
-                    }),
+                      }),
+                    ),
                   ),
                 ),
                 ),

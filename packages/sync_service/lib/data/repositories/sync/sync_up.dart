@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sync_service/utils/utils.dart';
 import '../../../models/bandwidth/bandwidth_model.dart';
 import 'remote_type.dart';
@@ -72,6 +73,11 @@ class PerformSyncUp {
 
     // For each type and operation, get the remote and local repositories and apply the server generated ID to each entity
     for (final typeGroupedEntity in entries) {
+      SyncServiceSingleton().reportProgress(SyncProgress(
+        entityType: typeGroupedEntity.key.name,
+        operation: 'syncUp',
+      ));
+
       final groupedOperations = typeGroupedEntity.value.groupListsBy(
         (element) => element.operation,
       );
@@ -165,10 +171,6 @@ class PerformSyncUp {
 
         // Handle successful operations
         if (listOfBatchedOpLogList.isNotEmpty) {
-          final registry = SyncServiceSingleton()
-              .registries
-              ?.getSyncRegistries(typeGroupedEntity.key, remote);
-
           for (final sublist in listOfBatchedOpLogList) {
             final entities = getEntityModel(sublist, local);
             if (operationGroupedEntity.key == DataOperation.create) {
@@ -215,17 +217,25 @@ class PerformSyncUp {
                 }
               }
             }
-            if (registry != null) {
-              await registry.localMarkSyncUp(sublist, local);
-            } else {
-              for (final syncedEntity in sublist) {
-                await local.markSyncedUp(
-                  entry: syncedEntity,
-                  id: syncedEntity.id,
-                  nonRecoverableError: syncedEntity.nonRecoverableError,
-                  clientReferenceId: syncedEntity.clientReferenceId,
-                );
+            // Mark entries as synced immediately after API call succeeds.
+            try {
+              if (registry != null) {
+                await registry.localMarkSyncUp(sublist, local);
+              } else {
+                for (final syncedEntity in sublist) {
+                  await local.markSyncedUp(
+                    entry: syncedEntity,
+                    id: syncedEntity.id,
+                    nonRecoverableError: syncedEntity.nonRecoverableError,
+                    clientReferenceId: syncedEntity.clientReferenceId,
+                  );
+                }
               }
+            } catch (e) {
+              // Log but don't rethrow — the API call already succeeded.
+              // Rethrowing would cause the while loop to restart and
+              // send the same records again.
+              debugPrint('SYNC: markSyncedUp failed: $e');
             }
           }
         }
