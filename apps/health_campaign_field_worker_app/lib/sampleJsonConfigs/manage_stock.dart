@@ -641,11 +641,16 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "enums": [],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "warehouseDetails.facilityToWhich==DELIVERY_TEAM"}
+                ]
+              },
               "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": true,
+              "hidden": false,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -658,7 +663,14 @@ final dynamic sampleInventoryFlows = {
               "systemDate": false,
               "includeInSummary": true,
               "includeInForm": true,
-              "validations": [],
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false,
               "dropDownOptions": []
@@ -761,7 +773,7 @@ final dynamic sampleInventoryFlows = {
               "type": "string",
               "visibilityCondition": {
                 "expression": [
-                  {"condition": "stockDetails.facilityFromWhich==Delivery Team"}
+                  {"condition": "stockDetails.facilityFromWhich==DELIVERY_TEAM"}
                 ]
               },
               "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
@@ -1493,11 +1505,16 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "enums": [],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "warehouseDetails.facilityToWhich==DELIVERY_TEAM"}
+                ]
+              },
               "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": true,
+              "hidden": false,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
