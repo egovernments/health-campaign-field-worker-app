@@ -6,15 +6,15 @@ import 'package:flutter/foundation.dart';
 
 export './crash_button.dart';
 
-Future initialize({
+Future initializeFirebaseCore({
   required FirebaseOptions options,
-  ValueChanged<String>? onErrorMessage,
 }) async {
   await Firebase.initializeApp(options: options);
+}
 
-  // Enable Crashlytics collection (even in debug mode for testing)
-  // await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-
+Future initializeCrashlytics({
+  ValueChanged<String>? onErrorMessage,
+}) async {
   FlutterError.onError = (errorDetails) {
     onErrorMessage?.call(
       'Diagnostic node: '

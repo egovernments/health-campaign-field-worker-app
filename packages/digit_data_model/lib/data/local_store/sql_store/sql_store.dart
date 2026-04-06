@@ -355,6 +355,10 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             // Use SQLCipher encryption with the provided key
             database.execute("PRAGMA key = '$encryptionKey';");
           }
+          // Enable WAL mode for concurrent reads/writes across isolates
+          database.execute('PRAGMA journal_mode = WAL;');
+          // Wait up to 5 seconds when the DB is locked by another isolate
+          database.execute('PRAGMA busy_timeout = 5000;');
         },
       );
     });
