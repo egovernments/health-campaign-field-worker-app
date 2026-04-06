@@ -29,10 +29,10 @@ class UserActionSearchModelMapper
       Field('longitude', _$longitude);
   static bool? _$isSync(UserActionSearchModel v) => v.isSync;
   static const Field<UserActionSearchModel, bool> _f$isSync =
-      Field('isSync', _$isSync);
+      Field('isSync', _$isSync, opt: true);
   static int? _$timestamp(UserActionSearchModel v) => v.timestamp;
   static const Field<UserActionSearchModel, int> _f$timestamp =
-      Field('timestamp', _$timestamp);
+      Field('timestamp', _$timestamp, opt: true);
   static String? _$action(UserActionSearchModel v) => v.action;
   static const Field<UserActionSearchModel, String> _f$action =
       Field('action', _$action);
@@ -261,12 +261,12 @@ class UserActionModelMapper extends SubClassMapperBase<UserActionModel> {
   static String _$clientReferenceId(UserActionModel v) => v.clientReferenceId;
   static const Field<UserActionModel, String> _f$clientReferenceId =
       Field('clientReferenceId', _$clientReferenceId);
-  static bool _$isSync(UserActionModel v) => v.isSync;
+  static bool? _$isSync(UserActionModel v) => v.isSync;
   static const Field<UserActionModel, bool> _f$isSync =
-      Field('isSync', _$isSync);
-  static int _$timestamp(UserActionModel v) => v.timestamp;
+      Field('isSync', _$isSync, opt: true);
+  static int? _$timestamp(UserActionModel v) => v.timestamp;
   static const Field<UserActionModel, int> _f$timestamp =
-      Field('timestamp', _$timestamp);
+      Field('timestamp', _$timestamp, opt: true);
   static String _$projectId(UserActionModel v) => v.projectId;
   static const Field<UserActionModel, String> _f$projectId =
       Field('projectId', _$projectId);
@@ -476,8 +476,8 @@ class _UserActionModelCopyWithImpl<$R, $Out>
           double? longitude,
           double? locationAccuracy,
           String? clientReferenceId,
-          bool? isSync,
-          int? timestamp,
+          Object? isSync = $none,
+          Object? timestamp = $none,
           String? projectId,
           String? boundaryCode,
           String? action,
@@ -496,8 +496,8 @@ class _UserActionModelCopyWithImpl<$R, $Out>
         if (longitude != null) #longitude: longitude,
         if (locationAccuracy != null) #locationAccuracy: locationAccuracy,
         if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
-        if (isSync != null) #isSync: isSync,
-        if (timestamp != null) #timestamp: timestamp,
+        if (isSync != $none) #isSync: isSync,
+        if (timestamp != $none) #timestamp: timestamp,
         if (projectId != null) #projectId: projectId,
         if (boundaryCode != null) #boundaryCode: boundaryCode,
         if (action != null) #action: action,
