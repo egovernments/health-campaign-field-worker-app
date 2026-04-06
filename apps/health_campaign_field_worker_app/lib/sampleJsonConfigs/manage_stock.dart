@@ -324,25 +324,30 @@ final dynamic sampleInventoryFlows = {
       ],
       "body": [
         {
-          "type": "template",
-          "format": "dropdownTemplate",
-          "label":
-              "APP_CONFIG_INVENTORY_returnOrIssueSelection_TRANSACTION_TYPE_LABEL",
-          "fieldName": "transactionType",
-          "valueKey": "code",
-          "enums": [
+          "format": "card",
+          "children": [
             {
-              "name":
-                  "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_ISSUED",
-              "code": "ISSUED"
-            },
-            {
-              "name":
-                  "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_RETURNED",
-              "code": "RETURNED"
+              "type": "template",
+              "format": "dropdownTemplate",
+              "label":
+                  "APP_CONFIG_INVENTORY_returnOrIssueSelection_TRANSACTION_TYPE_LABEL",
+              "fieldName": "transactionType",
+              "valueKey": "code",
+              "enums": [
+                {
+                  "name":
+                      "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_ISSUED",
+                  "code": "ISSUED"
+                },
+                {
+                  "name":
+                      "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_RETURNED",
+                  "code": "RETURNED"
+                }
+              ]
             }
           ]
-        }
+        },
       ]
     },
     {
@@ -2255,7 +2260,7 @@ final dynamic sampleInventoryFlows = {
                   {
                     "format": "tag",
                     "type": "",
-                      "label": "MRN {{item.groupKey}}"
+                    "label": "MRN {{item.groupKey}}"
                   },
                   {
                     "format": "textTemplate",
