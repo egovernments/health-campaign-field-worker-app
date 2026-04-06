@@ -450,6 +450,8 @@ class MdmsRepository {
       return reasonTypes;
     }).toList();
 
+    appConfiguration.stockThresholdConfig = null;
+
     isar.writeTxnSync(() {
       isar.appConfigurations.putSync(appConfiguration);
       isar.rowVersionLists.putAllSync(rowVersionList);

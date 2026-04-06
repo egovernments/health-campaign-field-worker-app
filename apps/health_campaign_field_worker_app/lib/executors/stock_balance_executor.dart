@@ -155,11 +155,11 @@ class StockBalanceExecutor extends ActionExecutor {
     final balanceKey = 'stock_balance_${facilityId}_$productVariantId';
 
     // Search for existing stock balance UserAction
-    final existingBalances = await userActionRepo.search(
-      UserActionSearchModel(
-        clientReferenceId: [balanceKey],
-      ),
-    );
+    // final existingBalances = await userActionRepo.search(
+    //   UserActionSearchModel(
+    //     clientReferenceId: [balanceKey],
+    //   ),
+    // );
 
     // Calculate the current balance from stock transactions
     final stockRepo =
@@ -191,46 +191,11 @@ class StockBalanceExecutor extends ActionExecutor {
 
     final now = DateTime.now().millisecondsSinceEpoch;
     final loggedInUserUuid = FlowBuilderSingleton().loggedInUserUuid ?? '';
-    final existing = existingBalances.isNotEmpty ? existingBalances.first : null;
+    // final existing = existingBalances.isNotEmpty ? existingBalances.first : null;
 
-    // Always update (upsert) — never create a new UserAction
-    final balanceAction = UserActionModel(
-      clientReferenceId: balanceKey,
-      action: 'STOCK_BALANCE',
-      projectId: projectId,
-      boundaryCode: boundaryCode,
-      latitude: 0.0,
-      longitude: 0.0,
-      locationAccuracy: 0.0,
-      isSync: false,
-      timestamp: now,
-      id: existing?.id,
-      rowVersion: existing?.rowVersion,
-      tenantId: existing?.tenantId,
-      nonRecoverableError: false,
-      additionalFields: UserActionAdditionalFields(
-        version: 1,
-        fields: [
-          AdditionalField('balance', balance.toString()),
-          AdditionalField('facilityId', facilityId),
-          AdditionalField('productVariantId', productVariantId),
-        ],
-      ),
-      // auditDetails is required for oplog creation — must not be null
-      auditDetails: existing?.auditDetails ??
-          AuditDetails(
-            createdBy: loggedInUserUuid,
-            createdTime: now,
-          ),
-      clientAuditDetails: ClientAuditDetails(
-        createdBy: existing?.clientAuditDetails?.createdBy ?? loggedInUserUuid,
-        createdTime: existing?.clientAuditDetails?.createdTime ?? now,
-        lastModifiedBy: loggedInUserUuid,
-        lastModifiedTime: now,
-      ),
-    );
+  
 
-    await userActionRepo.update(balanceAction);
+
 
     debugPrint(
       'UPDATE_STOCK_BALANCE: Updated balance for $facilityId/$productVariantId = $balance',

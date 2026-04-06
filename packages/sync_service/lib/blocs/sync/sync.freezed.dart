@@ -470,6 +470,7 @@ mixin _$SyncState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
+    required TResult Function() nothingPending,
     required TResult Function(String message) failedSync,
     required TResult Function(String message) failedDownSync,
     required TResult Function(String message) failedUpSync,
@@ -481,6 +482,7 @@ mixin _$SyncState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
+    TResult? Function()? nothingPending,
     TResult? Function(String message)? failedSync,
     TResult? Function(String message)? failedDownSync,
     TResult? Function(String message)? failedUpSync,
@@ -492,6 +494,7 @@ mixin _$SyncState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
+    TResult Function()? nothingPending,
     TResult Function(String message)? failedSync,
     TResult Function(String message)? failedDownSync,
     TResult Function(String message)? failedUpSync,
@@ -504,6 +507,7 @@ mixin _$SyncState {
     required TResult Function(SyncInProgressState value) syncInProgress,
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
+    required TResult Function(SyncNothingPendingState value) nothingPending,
     required TResult Function(SyncFailedState value) failedSync,
     required TResult Function(DownSyncFailedState value) failedDownSync,
     required TResult Function(UpSyncFailedState value) failedUpSync,
@@ -515,6 +519,7 @@ mixin _$SyncState {
     TResult? Function(SyncInProgressState value)? syncInProgress,
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
+    TResult? Function(SyncNothingPendingState value)? nothingPending,
     TResult? Function(SyncFailedState value)? failedSync,
     TResult? Function(DownSyncFailedState value)? failedDownSync,
     TResult? Function(UpSyncFailedState value)? failedUpSync,
@@ -526,6 +531,7 @@ mixin _$SyncState {
     TResult Function(SyncInProgressState value)? syncInProgress,
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
+    TResult Function(SyncNothingPendingState value)? nothingPending,
     TResult Function(SyncFailedState value)? failedSync,
     TResult Function(DownSyncFailedState value)? failedDownSync,
     TResult Function(UpSyncFailedState value)? failedUpSync,
@@ -593,6 +599,7 @@ class _$SyncLoadingStateImpl implements SyncLoadingState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
+    required TResult Function() nothingPending,
     required TResult Function(String message) failedSync,
     required TResult Function(String message) failedDownSync,
     required TResult Function(String message) failedUpSync,
@@ -607,6 +614,7 @@ class _$SyncLoadingStateImpl implements SyncLoadingState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
+    TResult? Function()? nothingPending,
     TResult? Function(String message)? failedSync,
     TResult? Function(String message)? failedDownSync,
     TResult? Function(String message)? failedUpSync,
@@ -621,6 +629,7 @@ class _$SyncLoadingStateImpl implements SyncLoadingState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
+    TResult Function()? nothingPending,
     TResult Function(String message)? failedSync,
     TResult Function(String message)? failedDownSync,
     TResult Function(String message)? failedUpSync,
@@ -639,6 +648,7 @@ class _$SyncLoadingStateImpl implements SyncLoadingState {
     required TResult Function(SyncInProgressState value) syncInProgress,
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
+    required TResult Function(SyncNothingPendingState value) nothingPending,
     required TResult Function(SyncFailedState value) failedSync,
     required TResult Function(DownSyncFailedState value) failedDownSync,
     required TResult Function(UpSyncFailedState value) failedUpSync,
@@ -653,6 +663,7 @@ class _$SyncLoadingStateImpl implements SyncLoadingState {
     TResult? Function(SyncInProgressState value)? syncInProgress,
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
+    TResult? Function(SyncNothingPendingState value)? nothingPending,
     TResult? Function(SyncFailedState value)? failedSync,
     TResult? Function(DownSyncFailedState value)? failedDownSync,
     TResult? Function(UpSyncFailedState value)? failedUpSync,
@@ -667,6 +678,7 @@ class _$SyncLoadingStateImpl implements SyncLoadingState {
     TResult Function(SyncInProgressState value)? syncInProgress,
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
+    TResult Function(SyncNothingPendingState value)? nothingPending,
     TResult Function(SyncFailedState value)? failedSync,
     TResult Function(DownSyncFailedState value)? failedDownSync,
     TResult Function(UpSyncFailedState value)? failedUpSync,
@@ -726,6 +738,7 @@ class _$SyncInProgressStateImpl implements SyncInProgressState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
+    required TResult Function() nothingPending,
     required TResult Function(String message) failedSync,
     required TResult Function(String message) failedDownSync,
     required TResult Function(String message) failedUpSync,
@@ -740,6 +753,7 @@ class _$SyncInProgressStateImpl implements SyncInProgressState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
+    TResult? Function()? nothingPending,
     TResult? Function(String message)? failedSync,
     TResult? Function(String message)? failedDownSync,
     TResult? Function(String message)? failedUpSync,
@@ -754,6 +768,7 @@ class _$SyncInProgressStateImpl implements SyncInProgressState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
+    TResult Function()? nothingPending,
     TResult Function(String message)? failedSync,
     TResult Function(String message)? failedDownSync,
     TResult Function(String message)? failedUpSync,
@@ -772,6 +787,7 @@ class _$SyncInProgressStateImpl implements SyncInProgressState {
     required TResult Function(SyncInProgressState value) syncInProgress,
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
+    required TResult Function(SyncNothingPendingState value) nothingPending,
     required TResult Function(SyncFailedState value) failedSync,
     required TResult Function(DownSyncFailedState value) failedDownSync,
     required TResult Function(UpSyncFailedState value) failedUpSync,
@@ -786,6 +802,7 @@ class _$SyncInProgressStateImpl implements SyncInProgressState {
     TResult? Function(SyncInProgressState value)? syncInProgress,
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
+    TResult? Function(SyncNothingPendingState value)? nothingPending,
     TResult? Function(SyncFailedState value)? failedSync,
     TResult? Function(DownSyncFailedState value)? failedDownSync,
     TResult? Function(UpSyncFailedState value)? failedUpSync,
@@ -800,6 +817,7 @@ class _$SyncInProgressStateImpl implements SyncInProgressState {
     TResult Function(SyncInProgressState value)? syncInProgress,
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
+    TResult Function(SyncNothingPendingState value)? nothingPending,
     TResult Function(SyncFailedState value)? failedSync,
     TResult Function(DownSyncFailedState value)? failedDownSync,
     TResult Function(UpSyncFailedState value)? failedUpSync,
@@ -886,6 +904,7 @@ class _$SyncPendingStateImpl implements SyncPendingState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
+    required TResult Function() nothingPending,
     required TResult Function(String message) failedSync,
     required TResult Function(String message) failedDownSync,
     required TResult Function(String message) failedUpSync,
@@ -900,6 +919,7 @@ class _$SyncPendingStateImpl implements SyncPendingState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
+    TResult? Function()? nothingPending,
     TResult? Function(String message)? failedSync,
     TResult? Function(String message)? failedDownSync,
     TResult? Function(String message)? failedUpSync,
@@ -914,6 +934,7 @@ class _$SyncPendingStateImpl implements SyncPendingState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
+    TResult Function()? nothingPending,
     TResult Function(String message)? failedSync,
     TResult Function(String message)? failedDownSync,
     TResult Function(String message)? failedUpSync,
@@ -932,6 +953,7 @@ class _$SyncPendingStateImpl implements SyncPendingState {
     required TResult Function(SyncInProgressState value) syncInProgress,
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
+    required TResult Function(SyncNothingPendingState value) nothingPending,
     required TResult Function(SyncFailedState value) failedSync,
     required TResult Function(DownSyncFailedState value) failedDownSync,
     required TResult Function(UpSyncFailedState value) failedUpSync,
@@ -946,6 +968,7 @@ class _$SyncPendingStateImpl implements SyncPendingState {
     TResult? Function(SyncInProgressState value)? syncInProgress,
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
+    TResult? Function(SyncNothingPendingState value)? nothingPending,
     TResult? Function(SyncFailedState value)? failedSync,
     TResult? Function(DownSyncFailedState value)? failedDownSync,
     TResult? Function(UpSyncFailedState value)? failedUpSync,
@@ -960,6 +983,7 @@ class _$SyncPendingStateImpl implements SyncPendingState {
     TResult Function(SyncInProgressState value)? syncInProgress,
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
+    TResult Function(SyncNothingPendingState value)? nothingPending,
     TResult Function(SyncFailedState value)? failedSync,
     TResult Function(DownSyncFailedState value)? failedDownSync,
     TResult Function(UpSyncFailedState value)? failedUpSync,
@@ -1023,6 +1047,7 @@ class _$SyncCompletedStateImpl implements SyncCompletedState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
+    required TResult Function() nothingPending,
     required TResult Function(String message) failedSync,
     required TResult Function(String message) failedDownSync,
     required TResult Function(String message) failedUpSync,
@@ -1037,6 +1062,7 @@ class _$SyncCompletedStateImpl implements SyncCompletedState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
+    TResult? Function()? nothingPending,
     TResult? Function(String message)? failedSync,
     TResult? Function(String message)? failedDownSync,
     TResult? Function(String message)? failedUpSync,
@@ -1051,6 +1077,7 @@ class _$SyncCompletedStateImpl implements SyncCompletedState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
+    TResult Function()? nothingPending,
     TResult Function(String message)? failedSync,
     TResult Function(String message)? failedDownSync,
     TResult Function(String message)? failedUpSync,
@@ -1069,6 +1096,7 @@ class _$SyncCompletedStateImpl implements SyncCompletedState {
     required TResult Function(SyncInProgressState value) syncInProgress,
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
+    required TResult Function(SyncNothingPendingState value) nothingPending,
     required TResult Function(SyncFailedState value) failedSync,
     required TResult Function(DownSyncFailedState value) failedDownSync,
     required TResult Function(UpSyncFailedState value) failedUpSync,
@@ -1083,6 +1111,7 @@ class _$SyncCompletedStateImpl implements SyncCompletedState {
     TResult? Function(SyncInProgressState value)? syncInProgress,
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
+    TResult? Function(SyncNothingPendingState value)? nothingPending,
     TResult? Function(SyncFailedState value)? failedSync,
     TResult? Function(DownSyncFailedState value)? failedDownSync,
     TResult? Function(UpSyncFailedState value)? failedUpSync,
@@ -1097,6 +1126,7 @@ class _$SyncCompletedStateImpl implements SyncCompletedState {
     TResult Function(SyncInProgressState value)? syncInProgress,
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
+    TResult Function(SyncNothingPendingState value)? nothingPending,
     TResult Function(SyncFailedState value)? failedSync,
     TResult Function(DownSyncFailedState value)? failedDownSync,
     TResult Function(UpSyncFailedState value)? failedUpSync,
@@ -1111,6 +1141,147 @@ class _$SyncCompletedStateImpl implements SyncCompletedState {
 
 abstract class SyncCompletedState implements SyncState {
   const factory SyncCompletedState() = _$SyncCompletedStateImpl;
+}
+
+/// @nodoc
+abstract class _$$SyncNothingPendingStateImplCopyWith<$Res> {
+  factory _$$SyncNothingPendingStateImplCopyWith(
+          _$SyncNothingPendingStateImpl value,
+          $Res Function(_$SyncNothingPendingStateImpl) then) =
+      __$$SyncNothingPendingStateImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$SyncNothingPendingStateImplCopyWithImpl<$Res>
+    extends _$SyncStateCopyWithImpl<$Res, _$SyncNothingPendingStateImpl>
+    implements _$$SyncNothingPendingStateImplCopyWith<$Res> {
+  __$$SyncNothingPendingStateImplCopyWithImpl(
+      _$SyncNothingPendingStateImpl _value,
+      $Res Function(_$SyncNothingPendingStateImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$SyncNothingPendingStateImpl implements SyncNothingPendingState {
+  const _$SyncNothingPendingStateImpl();
+
+  @override
+  String toString() {
+    return 'SyncState.nothingPending()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SyncNothingPendingStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loading,
+    required TResult Function() syncInProgress,
+    required TResult Function(int count) pendingSync,
+    required TResult Function() completedSync,
+    required TResult Function() nothingPending,
+    required TResult Function(String message) failedSync,
+    required TResult Function(String message) failedDownSync,
+    required TResult Function(String message) failedUpSync,
+  }) {
+    return nothingPending();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loading,
+    TResult? Function()? syncInProgress,
+    TResult? Function(int count)? pendingSync,
+    TResult? Function()? completedSync,
+    TResult? Function()? nothingPending,
+    TResult? Function(String message)? failedSync,
+    TResult? Function(String message)? failedDownSync,
+    TResult? Function(String message)? failedUpSync,
+  }) {
+    return nothingPending?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loading,
+    TResult Function()? syncInProgress,
+    TResult Function(int count)? pendingSync,
+    TResult Function()? completedSync,
+    TResult Function()? nothingPending,
+    TResult Function(String message)? failedSync,
+    TResult Function(String message)? failedDownSync,
+    TResult Function(String message)? failedUpSync,
+    required TResult orElse(),
+  }) {
+    if (nothingPending != null) {
+      return nothingPending();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SyncLoadingState value) loading,
+    required TResult Function(SyncInProgressState value) syncInProgress,
+    required TResult Function(SyncPendingState value) pendingSync,
+    required TResult Function(SyncCompletedState value) completedSync,
+    required TResult Function(SyncNothingPendingState value) nothingPending,
+    required TResult Function(SyncFailedState value) failedSync,
+    required TResult Function(DownSyncFailedState value) failedDownSync,
+    required TResult Function(UpSyncFailedState value) failedUpSync,
+  }) {
+    return nothingPending(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SyncLoadingState value)? loading,
+    TResult? Function(SyncInProgressState value)? syncInProgress,
+    TResult? Function(SyncPendingState value)? pendingSync,
+    TResult? Function(SyncCompletedState value)? completedSync,
+    TResult? Function(SyncNothingPendingState value)? nothingPending,
+    TResult? Function(SyncFailedState value)? failedSync,
+    TResult? Function(DownSyncFailedState value)? failedDownSync,
+    TResult? Function(UpSyncFailedState value)? failedUpSync,
+  }) {
+    return nothingPending?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SyncLoadingState value)? loading,
+    TResult Function(SyncInProgressState value)? syncInProgress,
+    TResult Function(SyncPendingState value)? pendingSync,
+    TResult Function(SyncCompletedState value)? completedSync,
+    TResult Function(SyncNothingPendingState value)? nothingPending,
+    TResult Function(SyncFailedState value)? failedSync,
+    TResult Function(DownSyncFailedState value)? failedDownSync,
+    TResult Function(UpSyncFailedState value)? failedUpSync,
+    required TResult orElse(),
+  }) {
+    if (nothingPending != null) {
+      return nothingPending(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SyncNothingPendingState implements SyncState {
+  const factory SyncNothingPendingState() = _$SyncNothingPendingStateImpl;
 }
 
 /// @nodoc
@@ -1183,6 +1354,7 @@ class _$SyncFailedStateImpl implements SyncFailedState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
+    required TResult Function() nothingPending,
     required TResult Function(String message) failedSync,
     required TResult Function(String message) failedDownSync,
     required TResult Function(String message) failedUpSync,
@@ -1197,6 +1369,7 @@ class _$SyncFailedStateImpl implements SyncFailedState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
+    TResult? Function()? nothingPending,
     TResult? Function(String message)? failedSync,
     TResult? Function(String message)? failedDownSync,
     TResult? Function(String message)? failedUpSync,
@@ -1211,6 +1384,7 @@ class _$SyncFailedStateImpl implements SyncFailedState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
+    TResult Function()? nothingPending,
     TResult Function(String message)? failedSync,
     TResult Function(String message)? failedDownSync,
     TResult Function(String message)? failedUpSync,
@@ -1229,6 +1403,7 @@ class _$SyncFailedStateImpl implements SyncFailedState {
     required TResult Function(SyncInProgressState value) syncInProgress,
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
+    required TResult Function(SyncNothingPendingState value) nothingPending,
     required TResult Function(SyncFailedState value) failedSync,
     required TResult Function(DownSyncFailedState value) failedDownSync,
     required TResult Function(UpSyncFailedState value) failedUpSync,
@@ -1243,6 +1418,7 @@ class _$SyncFailedStateImpl implements SyncFailedState {
     TResult? Function(SyncInProgressState value)? syncInProgress,
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
+    TResult? Function(SyncNothingPendingState value)? nothingPending,
     TResult? Function(SyncFailedState value)? failedSync,
     TResult? Function(DownSyncFailedState value)? failedDownSync,
     TResult? Function(UpSyncFailedState value)? failedUpSync,
@@ -1257,6 +1433,7 @@ class _$SyncFailedStateImpl implements SyncFailedState {
     TResult Function(SyncInProgressState value)? syncInProgress,
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
+    TResult Function(SyncNothingPendingState value)? nothingPending,
     TResult Function(SyncFailedState value)? failedSync,
     TResult Function(DownSyncFailedState value)? failedDownSync,
     TResult Function(UpSyncFailedState value)? failedUpSync,
@@ -1348,6 +1525,7 @@ class _$DownSyncFailedStateImpl implements DownSyncFailedState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
+    required TResult Function() nothingPending,
     required TResult Function(String message) failedSync,
     required TResult Function(String message) failedDownSync,
     required TResult Function(String message) failedUpSync,
@@ -1362,6 +1540,7 @@ class _$DownSyncFailedStateImpl implements DownSyncFailedState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
+    TResult? Function()? nothingPending,
     TResult? Function(String message)? failedSync,
     TResult? Function(String message)? failedDownSync,
     TResult? Function(String message)? failedUpSync,
@@ -1376,6 +1555,7 @@ class _$DownSyncFailedStateImpl implements DownSyncFailedState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
+    TResult Function()? nothingPending,
     TResult Function(String message)? failedSync,
     TResult Function(String message)? failedDownSync,
     TResult Function(String message)? failedUpSync,
@@ -1394,6 +1574,7 @@ class _$DownSyncFailedStateImpl implements DownSyncFailedState {
     required TResult Function(SyncInProgressState value) syncInProgress,
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
+    required TResult Function(SyncNothingPendingState value) nothingPending,
     required TResult Function(SyncFailedState value) failedSync,
     required TResult Function(DownSyncFailedState value) failedDownSync,
     required TResult Function(UpSyncFailedState value) failedUpSync,
@@ -1408,6 +1589,7 @@ class _$DownSyncFailedStateImpl implements DownSyncFailedState {
     TResult? Function(SyncInProgressState value)? syncInProgress,
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
+    TResult? Function(SyncNothingPendingState value)? nothingPending,
     TResult? Function(SyncFailedState value)? failedSync,
     TResult? Function(DownSyncFailedState value)? failedDownSync,
     TResult? Function(UpSyncFailedState value)? failedUpSync,
@@ -1422,6 +1604,7 @@ class _$DownSyncFailedStateImpl implements DownSyncFailedState {
     TResult Function(SyncInProgressState value)? syncInProgress,
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
+    TResult Function(SyncNothingPendingState value)? nothingPending,
     TResult Function(SyncFailedState value)? failedSync,
     TResult Function(DownSyncFailedState value)? failedDownSync,
     TResult Function(UpSyncFailedState value)? failedUpSync,
@@ -1514,6 +1697,7 @@ class _$UpSyncFailedStateImpl implements UpSyncFailedState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
+    required TResult Function() nothingPending,
     required TResult Function(String message) failedSync,
     required TResult Function(String message) failedDownSync,
     required TResult Function(String message) failedUpSync,
@@ -1528,6 +1712,7 @@ class _$UpSyncFailedStateImpl implements UpSyncFailedState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
+    TResult? Function()? nothingPending,
     TResult? Function(String message)? failedSync,
     TResult? Function(String message)? failedDownSync,
     TResult? Function(String message)? failedUpSync,
@@ -1542,6 +1727,7 @@ class _$UpSyncFailedStateImpl implements UpSyncFailedState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
+    TResult Function()? nothingPending,
     TResult Function(String message)? failedSync,
     TResult Function(String message)? failedDownSync,
     TResult Function(String message)? failedUpSync,
@@ -1560,6 +1746,7 @@ class _$UpSyncFailedStateImpl implements UpSyncFailedState {
     required TResult Function(SyncInProgressState value) syncInProgress,
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
+    required TResult Function(SyncNothingPendingState value) nothingPending,
     required TResult Function(SyncFailedState value) failedSync,
     required TResult Function(DownSyncFailedState value) failedDownSync,
     required TResult Function(UpSyncFailedState value) failedUpSync,
@@ -1574,6 +1761,7 @@ class _$UpSyncFailedStateImpl implements UpSyncFailedState {
     TResult? Function(SyncInProgressState value)? syncInProgress,
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
+    TResult? Function(SyncNothingPendingState value)? nothingPending,
     TResult? Function(SyncFailedState value)? failedSync,
     TResult? Function(DownSyncFailedState value)? failedDownSync,
     TResult? Function(UpSyncFailedState value)? failedUpSync,
@@ -1588,6 +1776,7 @@ class _$UpSyncFailedStateImpl implements UpSyncFailedState {
     TResult Function(SyncInProgressState value)? syncInProgress,
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
+    TResult Function(SyncNothingPendingState value)? nothingPending,
     TResult Function(SyncFailedState value)? failedSync,
     TResult Function(DownSyncFailedState value)? failedDownSync,
     TResult Function(UpSyncFailedState value)? failedUpSync,

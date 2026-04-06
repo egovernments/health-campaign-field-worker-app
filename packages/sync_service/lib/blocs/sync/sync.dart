@@ -83,6 +83,17 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         'userId': event.userId,
         'batchSize': 5,
       });
+
+      // Check if there is any data pending to sync before starting
+      final pendingCount = await syncService.getPendingSyncRecordsCount(
+        event.localRepositories,
+        event.userId,
+      );
+      if (pendingCount == 0) {
+        emit(const SyncNothingPendingState());
+        return;
+      }
+
       emit(const SyncInProgressState());
       final isSyncCompleted = await syncService.performSync(
         localRepositories: event.localRepositories,
@@ -220,6 +231,9 @@ class SyncState with _$SyncState {
 
   // The `SyncCompletedState` represents a completed sync state.
   const factory SyncState.completedSync() = SyncCompletedState;
+
+  // The `SyncNothingPendingState` represents no data to sync.
+  const factory SyncState.nothingPending() = SyncNothingPendingState;
 
   // The `SyncFailedState` represents a failed sync state.
   const factory SyncState.failedSync({@Default('') String message}) =

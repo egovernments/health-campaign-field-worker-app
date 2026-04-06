@@ -29,6 +29,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:sync_service/data/sync_service.dart';
 import 'package:transit_post/router/transit_post_router.gm.dart';
 import 'package:transit_post/utils/utils.dart';
 
@@ -85,10 +86,26 @@ class _HomePageState extends LocalizedState<HomePage> {
   final storage = const FlutterSecureStorage();
   late StreamSubscription<List<ConnectivityResult>> subscription;
   bool isTriggerLocalisation = true;
+  final _syncDebouncer = Debouncer(seconds: 5);
 
   @override
   initState() {
     super.initState();
+
+    // If background service was killed with the app, release orphaned lock
+    // and restart the service.
+    FlutterBackgroundService().isRunning().then((isRunning) {
+      if (!isRunning) {
+        SyncLock.release();
+        if (context.mounted) {
+          performBackgroundService(
+            isBackground: false,
+            stopService: false,
+            context: context,
+          );
+        }
+      }
+    });
 
     subscription = Connectivity()
         .onConnectivityChanged
@@ -639,8 +656,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 state.maybeWhen(
                   orElse: () => null,
                   pendingSync: (count) {
-                    final debouncer = Debouncer(seconds: 5);
-                    debouncer.run(() async {
+                    _syncDebouncer.run(() async {
                       if (count != 0) {
                         if (context.mounted) {
                           await performBackgroundService(
@@ -662,6 +678,24 @@ class _HomePageState extends LocalizedState<HomePage> {
                         ),
                         barrierDismissible: false,
                       );
+                    }
+                  },
+                  nothingPending: () async {
+                    if (context.mounted) {
+                      DigitSyncDialog.show(context,
+                          type: DialogType.complete,
+                          label: localizations.translate(
+                            i18.syncDialog.noDataToSyncTitle,
+                          ),
+                          primaryAction: DigitDialogActions(
+                            label: localizations.translate(
+                              i18.syncDialog.closeButtonLabel,
+                            ),
+                            action: (ctx) {
+                              Navigator.pop(ctx);
+                            },
+                          ),
+                          barrierDismissible: true);
                     }
                   },
                   completedSync: () async {
@@ -1205,6 +1239,26 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
           builder: (context, snapshot) {
+            final syncError = snapshot.data?['syncError'] as String?;
+            if (syncError != null && context.mounted) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  DigitSyncDialog.show(
+                    context,
+                    type: DialogType.failed,
+                    label:
+                        '${localizations.translate(i18.syncDialog.syncFailedTitle)}\n${localizations.translate(syncError)}',
+                    primaryAction: DigitDialogActions(
+                      label: localizations.translate(
+                        i18.syncDialog.closeButtonLabel,
+                      ),
+                      action: (ctx) => Navigator.pop(ctx),
+                    ),
+                    barrierDismissible: true,
+                  );
+                }
+              });
+            }
             return HomeItemCard(
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,

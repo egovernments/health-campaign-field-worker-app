@@ -15,7 +15,7 @@ import '../models/bandwidth/bandwidth_model.dart';
 /// (e.g. from a killed process) auto-expire after [_staleDuration].
 class SyncLock {
   static const _key = 'syncLockTimestamp';
-  static const _staleDuration = Duration(minutes: 10);
+  static const _staleDuration = Duration(minutes: 2);
   static const _storage = FlutterSecureStorage();
 
   /// Tries to acquire the lock.
@@ -104,7 +104,8 @@ class SyncService {
       throw Exception('Sync up is not valid for online only configuration');
     }
 
-    while (true) {
+    const maxIterations = 10;
+    for (var iteration = 0; iteration < maxIterations; iteration++) {
       final futuresSyncDown = await Future.wait(
         localRepositories
             .map((e) => e.getItemsToBeSyncedDown(bandwidthModel.userId)),
@@ -168,6 +169,8 @@ class SyncService {
       await Future.delayed(const Duration(seconds: 3));
       await SyncLock.refresh();
     }
+
+    return true;
   }
 
   /// Writes the given response to the entity database.

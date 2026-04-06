@@ -205,53 +205,46 @@ abstract class OpLogManager<T extends EntityModel> {
     String? clientReferenceId,
     bool? nonRecoverableError,
   }) async {
+    final now = DateTime.now();
+
     if (nonRecoverableError == true && id != null && entry != null) {
       final oplog = await isar.opLogs.filter().idEqualTo(id).findFirst();
       if (oplog == null) return;
-      final OpLogEntry<T> fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
+      oplog.syncedUp = true;
+      oplog.syncedDown = true;
+      oplog.syncedDownOn = now;
+      oplog.syncedUpOn = now;
       isar.writeTxnSync(() {
-        isar.opLogs.putSync(fetchedEntry
-            .copyWith(
-              syncedUp: true,
-              syncedDown: true,
-              syncedDownOn: DateTime.now(),
-              syncedUpOn: DateTime.now(),
-            )
-            .oplog);
+        isar.opLogs.putSync(oplog);
       });
     } else if (entry != null) {
-      await put(
-        entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()),
-      );
-    } else if (id != null) {
-      OpLog? oplog;
-
-      oplog = await isar.opLogs.get(id);
+      if (entry.id == null) return;
+      final oplog = await isar.opLogs.get(entry.id!);
       if (oplog == null) return;
-      final OpLogEntry<T> fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
-
-      await put(
-        fetchedEntry.copyWith(
-          syncedUp: true,
-          syncedUpOn: DateTime.now(),
-        ) as OpLogEntry<T>,
-      );
+      oplog.syncedUp = true;
+      oplog.syncedUpOn = now;
+      isar.writeTxnSync(() {
+        isar.opLogs.putSync(oplog);
+      });
+    } else if (id != null) {
+      final oplog = await isar.opLogs.get(id);
+      if (oplog == null) return;
+      oplog.syncedUp = true;
+      oplog.syncedUpOn = now;
+      isar.writeTxnSync(() {
+        isar.opLogs.putSync(oplog);
+      });
     } else if (clientReferenceId != null) {
       final oplog = await isar.opLogs
           .filter()
           .clientReferenceIdEqualTo(clientReferenceId)
           .findFirst();
-
       if (oplog == null) return;
-
-      final fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
-
-      await put(
-        fetchedEntry.copyWith(
-          syncedUp: true,
-          syncedUpOn: DateTime.now(),
-        ) as OpLogEntry<T>,
-      );
+      oplog.syncedUp = true;
+      oplog.syncedUpOn = now;
+      isar.writeTxnSync(() {
+        isar.opLogs.putSync(oplog);
+      });
     } else {
       throw AppException('Invalid arguments');
     }

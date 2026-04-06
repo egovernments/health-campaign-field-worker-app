@@ -171,13 +171,16 @@ void onStart(ServiceInstance service) async {
                 flutterLocalNotificationsPlugin =
                 FlutterLocalNotificationsPlugin();
             final isSyncAlreadyRunning = await SyncLock.isLocked();
+            debugPrint('BG_SYNC: locked=$isSyncAlreadyRunning, frequencyCount=$frequencyCount');
             if (frequencyCount != null && !isSyncAlreadyRunning) {
               final serviceRegistryList =
                   await _isar.serviceRegistrys.where().findAll();
+              debugPrint('BG_SYNC: serviceRegistryList=${serviceRegistryList.length}');
               if (serviceRegistryList.isNotEmpty) {
                 final bandwidthService = serviceRegistryList.firstWhereOrNull(
                   (element) => element.service == 'BANDWIDTH-CHECK',
                 );
+                debugPrint('BG_SYNC: bandwidthService=${bandwidthService?.service}');
                 if (bandwidthService != null &&
                     bandwidthService.actions.isNotEmpty) {
                   final bandwidthPath = bandwidthService.actions.first.path;
@@ -191,10 +194,11 @@ void onStart(ServiceInstance service) async {
                       ).pingBandwidthCheck(bandWidthCheckModel: null);
                       speedArray.add(speed);
                     } catch (e) {
+                      debugPrint('BG_SYNC: bandwidth check failed: $e');
                       service.invoke('serviceRunning', {
                         "enablesManualSync": true,
+                        "syncError": "SYNC_DIALOG_NO_INTERNET_CONNECTION",
                       });
-                      service.invoke("stopService");
                       break;
                     }
                   }
@@ -280,18 +284,6 @@ void onStart(ServiceInstance service) async {
                           ),
                         ),
                       );
-                      // Verify no new records were created during sync
-                      final remaining = await SyncService()
-                          .getPendingSyncRecordsCount(
-                        localRepos,
-                        bandwidthModel.userId,
-                      );
-                      final isAppInActive =
-                          await LocalSecureStore.instance.isAppInActive;
-
-                      if (remaining == 0 && isAppInActive) {
-                        service.invoke("stopService");
-                      }
                     }
                   }
                 }

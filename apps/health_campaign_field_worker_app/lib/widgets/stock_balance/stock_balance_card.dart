@@ -119,9 +119,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         _isLoading = false;
       });
 
-      if (autoSelectedFacility != null) {
-        await _loadStockBalances(autoSelectedFacility.id);
-      }
+
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -131,56 +129,6 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
     }
   }
 
-  Future<void> _loadStockBalances(String facilityId) async {
-    final userActionRepo = context.read<UserActionLocalRepository>();
-
-    // Search for stock balance UserAction records for this project
-    final balanceActions = await userActionRepo.search(
-      UserActionSearchModel(
-        action: 'STOCK_BALANCE',
-        projectId: context.projectId,
-      ),
-    );
-
-    // Filter for the selected facility and extract balances
-    final balances = <String, double>{};
-    for (final action in balanceActions) {
-      final fields = action.additionalFields?.fields ?? [];
-
-      String? actionFacilityId;
-      String? productVariantId;
-      String? balanceValue;
-
-      for (final field in fields) {
-        if (field.key == 'facilityId') {
-          actionFacilityId = field.value?.toString();
-        } else if (field.key == 'productVariantId') {
-          productVariantId = field.value?.toString();
-        } else if (field.key == 'balance') {
-          balanceValue = field.value?.toString();
-        }
-      }
-
-      if (actionFacilityId != facilityId) continue;
-      if (productVariantId != null && productVariantId.isNotEmpty) {
-        balances[productVariantId] =
-            double.tryParse(balanceValue ?? '0') ?? 0.0;
-      }
-    }
-
-    // Fallback: if no UserAction records found, calculate from stock transactions
-    if (balances.isEmpty) {
-      final fallbackBalances =
-          await _calculateFromStockTransactions(facilityId);
-      balances.addAll(fallbackBalances);
-    }
-
-    if (mounted) {
-      setState(() {
-        _stockBalances = balances;
-      });
-    }
-  }
 
   /// Fallback: calculate balances from stock transactions when no UserAction
   /// records exist (e.g., first login or migration from older version).
@@ -258,7 +206,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
                 setState(() {
                   _selectedFacility = selected;
                 });
-                _loadStockBalances(selected.id);
+
               },
             ),
           ),
