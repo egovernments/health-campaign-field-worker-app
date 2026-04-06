@@ -1,28 +1,29 @@
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../flow_builder.dart';
-import '../../utils/flow_widget_state.dart';
-import '../flow_widget_interface.dart';
+import '../../action_handler/action_config.dart';
+import '../../blocs/flow_crud_bloc.dart';
+import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class SearchBarWidget implements FlowWidget {
+class SearchBarWidget extends ResolvedFlowWidget {
   @override
   String get format => 'searchBar';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final flowState = WidgetStateContext.of(context);
     final localization = LocalizationContext.maybeOf(context);
     final hintText = json['label'] ?? '';
     final localizedHint = localization?.translate(hintText) ?? hintText;
     final fieldName = (json['fieldName'] ?? 'searchBar') as String;
 
     // Use compositeKey for registry operations (includes instanceId for proper isolation)
-    final compositeKey = flowState.compositeKey ?? flowState.screenKey;
+    final compositeKey = resolved.compositeKey ?? resolved.screenKey;
 
     // Get validation rules
     final validations = json['validations'] as List<dynamic>? ?? [];
@@ -85,15 +86,13 @@ class SearchBarWidget implements FlowWidget {
           }
         } else if (json['onAction'] != null) {
           // Below minimum chars — remove only this search bar's filter (not the entire state)
-          final actionsList =
-              List<Map<String, dynamic>>.from(json['onAction']);
+          final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
 
           final searchBarFilterKeys = <String>[];
           String searchName = 'default';
 
           for (var raw in actionsList) {
-            searchName =
-                (raw['properties']?['name'] as String?) ?? searchName;
+            searchName = (raw['properties']?['name'] as String?) ?? searchName;
             final data = raw['properties']?['data'] as List?;
             if (data != null) {
               for (var item in data) {

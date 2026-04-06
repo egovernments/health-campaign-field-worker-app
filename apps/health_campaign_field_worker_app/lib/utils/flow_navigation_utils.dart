@@ -57,11 +57,10 @@ class FlowNavigationUtils {
       // Initialize widget registry
       WidgetRegistry.initialize();
 
-      // TODO: Re-enable MDMS config loading once UPDATE_STOCK_BALANCE is added to server config
-      // // Get schema from shared preferences
-      // final prefs = await SharedPreferences.getInstance();
-      // final schemaJsonRaw = prefs.getString('app_config_schemas');
-      //
+      // Get schema from shared preferences
+      final prefs = await SharedPreferences.getInstance();
+      final schemaJsonRaw = prefs.getString('app_config_schemas');
+
       // if (schemaJsonRaw != null) {
       //   final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
       //   final moduleSchema = allSchemas[config.schemaKey];

@@ -17,6 +17,17 @@ final dynamic sampleComplaintFlows = {
                 "type": "tertiary",
                 "suffixIcon": "Search",
                 "popupConfig": {
+                  "onOpenAction": [
+                    {
+                      "actionType": "CLEAR_STATE",
+                      "properties": {
+                        "name": "pgrService",
+                        "filterKeys": ["serviceRequestId", "mobileNumber"],
+                        "widgetKeys": ["complaintNumber", "mobileNumber"],
+                        "triggerSearch": true
+                      }
+                    }
+                  ],
                   "body": [
                     {
                       "type": "template",
@@ -130,7 +141,27 @@ final dynamic sampleComplaintFlows = {
                 "icon": "FilterAlt",
                 "size": "medium",
                 "type": "tertiary",
+                "suffixIcon": "FilterAlt",
                 "popupConfig": {
+                  "onOpenAction": [
+                    {
+                      "actionType": "CLEAR_STATE",
+                      "properties": {
+                        "name": "pgrService",
+                        "filterKeys": [
+                          "name",
+                          "serviceCode",
+                          "localityBoundaryCode"
+                        ],
+                        "widgetKeys": [
+                          "assignTo",
+                          "complaintType",
+                          "locality"
+                        ],
+                        "triggerSearch": true
+                      }
+                    }
+                  ],
                   "body": [
                     {
                       "data": [
@@ -271,6 +302,7 @@ final dynamic sampleComplaintFlows = {
                 "icon": "SortSvg",
                 "size": "medium",
                 "type": "tertiary",
+                "suffixIcon": "SortSvg",
                 "popupConfig": {
                   "body": [
                     {
@@ -356,8 +388,7 @@ final dynamic sampleComplaintFlows = {
                 },
                 "mainAxisSize": "min",
                 "mainAxisAlignment": "start"
-              },
-              "suffixIcon": "SortSvg"
+              }
             }
           ],
           "properties": {
@@ -385,7 +416,7 @@ final dynamic sampleComplaintFlows = {
                   },
                   {
                     "key": "COMPLAINT_INBOX_COMPLAINT_DATE",
-                    "value": "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, dateTime, 'date', dd MMM yyyy)}}"
+                    "value": "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, 'date', dd MMM yyyy)}}"
                   },
                   {
                     "key": "COMPLAINT_INBOX_COMPLAINT_AREA",
@@ -524,6 +555,7 @@ final dynamic sampleComplaintFlows = {
           "properties": [
             {
               "type": "string",
+              "enums": [],
               "label": "COMPLAINT_TYPE_complaintType_LABEL",
               "order": 1,
               "value": "",
@@ -802,6 +834,16 @@ final dynamic sampleComplaintFlows = {
                   "type": "required",
                   "value": true,
                   "message": "COMPLAINT_DETAILS_name_REQUIRED_ERROR"
+                },
+                {
+                  "type": "minLength",
+                  "value": 2,
+                  "message": "COMPLAINT_DETAILS_name_LABEL_MIN_VALIDATION"
+                },
+                {
+                  "type": "maxLength",
+                  "value": 64,
+                  "message": "COMPLAINT_DETAILS_name_LABEL_MAX_VALIDATION"
                 }
               ],
               "errorMessage": "",
@@ -871,6 +913,18 @@ final dynamic sampleComplaintFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
+              "validations": [
+                {
+                  "type": "minLength",
+                  "value": 2,
+                  "message": "SUPERVISOR_name_LABEL_MIN_VALIDATION"
+                },
+                {
+                  "type": "maxLength",
+                  "value": 64,
+                  "message": "SUPERVISOR_DETAILS_name_LABEL_MAX_VALIDATION"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false
             },
@@ -985,7 +1039,9 @@ final dynamic sampleComplaintFlows = {
                   "message": "Navigation failed."
                 }
               }
-            ]
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "complaintInbox"
           }
         }
       ],
@@ -1070,37 +1126,37 @@ final dynamic sampleComplaintFlows = {
               "data": [
                 {
                   "key": "COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-                  "value": "{{0.PgrServiceModel.serviceRequestId}}",
+                  "value": "{{contextData.0.PgrServiceModel.serviceRequestId}}",
                   "defaultValue": "Sync data to generate complaint number"
                 },
                 {
                   "key": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-                  "value": "{{0.PgrServiceModel.serviceCode}}",
+                  "value": "{{contextData.0.PgrServiceModel.serviceCode}}",
                   "defaultValue": "NA"
                 },
                 {
                   "key": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-                  "value": "{{fn:formatDate(0.PgrServiceModel.auditDetails.createdTime, 'date', dd MMM yyyy)}}",
+                  "value": "{{fn:formatDate(contextData.0.PgrServiceModel.auditDetails.createdTime, 'date', dd MMM yyyy)}}",
                   "defaultValue": "NA"
                 },
                 {
                   "key": "COMPLAINT_VIEW_COMPLAINTS_AREA",
-                  "value": "{{0.PgrServiceModel.address.locality.code}}",
+                  "value": "{{contextData.0.PgrServiceModel.address.locality.code}}",
                   "defaultValue": "NA"
                 },
                 {
                   "key": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-                  "value": "{{0.PgrServiceModel.user.mobileNumber}}",
+                  "value": "{{contextData.0.PgrServiceModel.user.mobileNumber}}",
                   "defaultValue": "NA"
                 },
                 {
                   "key": "COMPLAINT_VIEW_COMPLAINT_STATUS",
-                  "value": "{{0.PgrServiceModel.applicationStatus}}",
+                  "value": "{{contextData.0.PgrServiceModel.applicationStatus}}",
                   "defaultValue": "NA"
                 },
                 {
                   "key": "COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-                  "value": "{{0.PgrServiceModel.description}}",
+                  "value": "{{contextData.0.PgrServiceModel.description}}",
                   "defaultValue": "NA"
                 }
               ],
@@ -1186,7 +1242,7 @@ final dynamic sampleComplaintFlows = {
   ],
   "order": 4,
   "active": true,
-  "project": "MR-DN",
+  "project": "Oncho",
   "version": 1,
   "disabled": false,
   "isSelected": true,

@@ -6,6 +6,17 @@ import 'package:intl/intl.dart';
 
 import 'interpolation.dart';
 
+class TaskStatus {
+  static const String administrationSuccess = 'ADMINISTRATION_SUCCESS';
+  static const String delivered = 'DELIVERED';
+  static const String ineligible = 'INELIGIBLE';
+  static const String notDelivered = 'NOT_DELIVERED';
+  static const String beneficiaryDied = 'BENEFICIARY_DIED';
+  static const String beneficiaryMigrated = 'BENEFICIARY_MIGRATED';
+  static const String beneficiaryAbsent = 'BENEFICIARY_ABSENT';
+  static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
+}
+
 /// The signature for a function that can be registered in the [FunctionRegistry].
 ///
 /// - `args`: A list of dynamic arguments passed to the function.
@@ -227,6 +238,49 @@ void initializeFunctionRegistry() {
         if (date == null) return '--';
         return DateFormat(format ?? "dd MMM yyyy HH:mm").format(date);
 
+      case 'ageinmonths':
+        DateTime? birthDate;
+
+        if (rawValue is int) {
+          birthDate = DateTime.fromMillisecondsSinceEpoch(rawValue);
+        } else if (rawValue is String) {
+          // Try parsing as timestamp first
+          final timestamp = int.tryParse(rawValue);
+          if (timestamp != null) {
+            birthDate = DateTime.fromMillisecondsSinceEpoch(timestamp);
+          } else if (rawValue.contains('/')) {
+            // Handle dd/MM/yyyy format
+            try {
+              final parts = rawValue.split('/');
+              if (parts.length == 3) {
+                final day = int.parse(parts[0]);
+                final month = int.parse(parts[1]);
+                final year = int.parse(parts[2]);
+                birthDate = DateTime(year, month, day);
+              }
+            } catch (_) {
+              // Fall through to DateTime.tryParse
+            }
+          }
+          // Try parsing as ISO date string
+          birthDate ??= DateTime.tryParse(rawValue);
+        } else if (rawValue is DateTime) {
+          birthDate = rawValue;
+        }
+
+        if (birthDate == null) return 0;
+
+        final now = DateTime.now();
+        final months =
+            (now.year - birthDate.year) * 12 + (now.month - birthDate.month);
+
+        // Adjust if the day hasn't occurred yet this month
+        if (now.day < birthDate.day) {
+          return months - 1;
+        }
+
+        return months;
+
       default:
         return rawValue.toString();
     }
@@ -283,25 +337,55 @@ void initializeFunctionRegistry() {
     bool recordedSideEffect = false;
 
     if (tasks.isNotEmpty) {
-      final item = tasks.last;
+      // Get currentRunningCycle from third argument if provided
+      final currentRunningCycle = args.length > 2
+          ? int.tryParse(args[2]?.toString() ?? '')
+          : null;
 
-      Map<String, dynamic> lastTask;
+      for (final item in tasks) {
+        Map<String, dynamic> task;
 
-      if (item is Map<String, dynamic>) {
-        lastTask = item;
-      } else {
-        try {
-          lastTask = (item as dynamic).toMap() as Map<String, dynamic>;
-        } catch (_) {
+        if (item is Map<String, dynamic>) {
+          task = item;
+        } else {
           try {
-            lastTask = (item as dynamic).toJson() as Map<String, dynamic>;
+            task = (item as dynamic).toMap() as Map<String, dynamic>;
           } catch (_) {
-            lastTask = <String, dynamic>{};
+            try {
+              task = (item as dynamic).toJson() as Map<String, dynamic>;
+            } catch (_) {
+              continue;
+            }
           }
         }
-      }
 
-      if (lastTask['status'] == "INELIGIBLE") return false;
+        // BENEFICIARY_DIED returns false immediately regardless of cycle
+        if (task['status'] == TaskStatus.beneficiaryDied) return false;
+
+        // For other ineligible statuses, only check tasks matching the current cycle
+        if (currentRunningCycle != null) {
+          final additionalFields = task['additionalFields'];
+          final fields = additionalFields is Map
+              ? additionalFields['fields'] as List?
+              : null;
+          int? taskCycleIndex;
+          if (fields != null) {
+            for (final field in fields) {
+              if (field is Map && field['key'] == 'cycleIndex') {
+                taskCycleIndex =
+                    int.tryParse(field['value']?.toString() ?? '');
+                break;
+              }
+            }
+          }
+          if (taskCycleIndex != currentRunningCycle) continue;
+        }
+
+        if (task['status'] == TaskStatus.ineligible ||
+            task['status'] == TaskStatus.beneficiaryMigrated ||
+            task['status'] == TaskStatus.beneficiaryAbsent ||
+            task['status'] == TaskStatus.beneficiaryRefused) return false;
+      }
     }
 
     if (tasks.isNotEmpty && sideEffects.isNotEmpty) {
@@ -337,6 +421,73 @@ void initializeFunctionRegistry() {
     }
   });
 
+  FunctionRegistry.register("getInEligibleStatus", (args, stateData) {
+    // No arguments passed
+    if (args.isEmpty) return TaskStatus.ineligible;
+
+    // --- ProjectType comes from FlowBuilderSingleton ---
+    final projectType = FlowBuilderSingleton().projectType;
+    if (projectType == null) return TaskStatus.ineligible;
+
+    // --- Current active cycle ---
+    Map<String, dynamic>? currentCycle;
+    for (final e in projectType.cycles ?? []) {
+      if ((e.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+          (e.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch) {
+        currentCycle = {
+          "startDate": e.startDate,
+          "endDate": e.endDate,
+        };
+        break;
+      }
+    }
+    if (currentCycle == null) return TaskStatus.ineligible;
+
+    final tasks = args.first;
+
+    // Must be a non-empty list of tasks
+    if (tasks is! List || tasks.isEmpty) return TaskStatus.ineligible;
+
+    // Get the last task and convert to Map if needed
+    final item = tasks.last;
+    Map<String, dynamic>? lastTask;
+    if (item is Map<String, dynamic>) {
+      lastTask = item;
+    } else if (item is Map) {
+      lastTask = Map<String, dynamic>.from(item);
+    } else {
+      try {
+        lastTask = (item as dynamic).toMap() as Map<String, dynamic>;
+      } catch (_) {
+        try {
+          lastTask = (item as dynamic).toJson() as Map<String, dynamic>;
+        } catch (_) {
+          return '';
+        }
+      }
+    }
+
+    if (lastTask == null) return TaskStatus.ineligible.toString();
+
+    // Get and normalize the status
+    final status = lastTask['status']?.toString().trim().toUpperCase() ?? '';
+
+    if (status.isEmpty) return TaskStatus.ineligible.toString();
+
+    // Return the status string for ineligible/non-delivered statuses
+    if (status == TaskStatus.ineligible ||
+        status == TaskStatus.beneficiaryDied ||
+        status == TaskStatus.beneficiaryMigrated ||
+        status == TaskStatus.beneficiaryAbsent ||
+        status == TaskStatus.beneficiaryRefused ||
+        status == TaskStatus.notDelivered) {
+      return status;
+    }
+
+    // Default to ineligible
+    return TaskStatus.ineligible;
+  });
+
   FunctionRegistry.register("isDelivered", (args, stateData) {
     // No arguments passed
     if (args.isEmpty) return false;
@@ -350,7 +501,7 @@ void initializeFunctionRegistry() {
     final status = value.trim().toUpperCase();
 
     // Match valid delivered statuses
-    if (status == "ADMINISTRATION_SUCCESS" || status == "DELIVERED") {
+    if (status == TaskStatus.administrationSuccess || status == TaskStatus.delivered) {
       return true;
     }
 
@@ -988,6 +1139,177 @@ void initializeFunctionRegistry() {
     return '';
   });
 
+  /// Registers a function to check if the edit button should be disabled.
+  ///
+  /// - **Function Name**: `'disableEdit'`
+  /// - **Arguments**:
+  ///   - First argument: task - the task list for the beneficiary
+  ///   - Second argument (optional): referral - the referral data
+  /// - **Returns**: `true` if editing should be disabled, `false` otherwise.
+  ///
+  /// Editing is disabled when:
+  /// 1. Any task has a success status (ADMINISTRATION_SUCCESS or DELIVERED)
+  /// 2. Any task is not eligible (INELIGIBLE status)
+  /// 3. A referral exists (not null/empty)
+  FunctionRegistry.register("disableEdit", (args, stateData) {
+    // Check task statuses - if ANY task is delivered or ineligible, disable
+    if (args.isNotEmpty && args.first != null) {
+      final tasks = args.first;
+
+      if (tasks is List && tasks.isNotEmpty) {
+        for (final item in tasks) {
+          Map<String, dynamic>? taskMap;
+          if (item is Map<String, dynamic>) {
+            taskMap = item;
+          } else if (item is Map) {
+            taskMap = Map<String, dynamic>.from(item);
+          } else {
+            try {
+              taskMap = (item as dynamic).toMap() as Map<String, dynamic>;
+            } catch (_) {
+              try {
+                taskMap = (item as dynamic).toJson() as Map<String, dynamic>;
+              } catch (_) {
+                taskMap = null;
+              }
+            }
+          }
+
+          if (taskMap != null) {
+            final status = taskMap['status']?.toString().toUpperCase().trim();
+
+            // Disable if any task status is success
+            if (status == TaskStatus.administrationSuccess ||
+                status == TaskStatus.delivered ) {
+              return true;
+            }
+
+            // Disable if any task is not eligible
+            if (status == TaskStatus.ineligible ||
+                status == TaskStatus.beneficiaryDied ||
+                status == TaskStatus.beneficiaryMigrated ||
+                status == TaskStatus.beneficiaryAbsent ||
+                status == TaskStatus.beneficiaryRefused) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+
+    // Disable if referral exists for the current cycle
+    if (args.length > 1 && args[1] != null) {
+      final referral = args[1];
+
+      if (referral is List && referral.isNotEmpty) {
+        // Check if any referral matches the current running cycle
+        final projectType = FlowBuilderSingleton().projectType;
+        final selectedCycle = projectType?.cycles?.firstWhereOrNull(
+          (e) =>
+              e.startDate < DateTime.now().millisecondsSinceEpoch &&
+              e.endDate > DateTime.now().millisecondsSinceEpoch,
+        );
+
+        if (selectedCycle != null) {
+          for (final item in referral) {
+            Map<String, dynamic>? refMap;
+            if (item is Map<String, dynamic>) {
+              refMap = item;
+            } else if (item is Map) {
+              refMap = Map<String, dynamic>.from(item);
+            } else {
+              try {
+                refMap = (item as dynamic).toMap() as Map<String, dynamic>;
+              } catch (_) {
+                continue;
+              }
+            }
+
+            final additionalFields = refMap['additionalFields'];
+            final fields = additionalFields?['fields'] as List?;
+            if (fields != null) {
+              for (final field in fields) {
+                if (field is Map && field['key'] == 'referralCycle') {
+                  final referralCycle =
+                      int.tryParse(field['value']?.toString() ?? '');
+                  if (referralCycle == selectedCycle.id) return true;
+                }
+              }
+            }
+          }
+        }
+      }
+      if (referral is Map && referral.isNotEmpty) {
+        return true;
+      }
+    }
+
+    return false;
+  });
+
+  /// Returns the current running cycle's id from the project configuration.
+  /// Reuses the same cycle lookup logic as hasReferralForCurrentCycle.
+  FunctionRegistry.register("getCurrentCycleIndex", (args, stateData) {
+    final projectType = FlowBuilderSingleton().projectType;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    return projectType?.cycles
+        ?.firstWhereOrNull(
+          (e) => e.startDate < now && e.endDate > now,
+        )
+        ?.id;
+  });
+
+  /// Checks if a referral exists for the current running cycle.
+  ///
+  /// - **Function Name**: `'hasReferralForCurrentCycle'`
+  /// - **Arguments**: First argument is the hFReferral list.
+  /// - **Returns**: `true` if a referral exists for the current cycle, `false` otherwise.
+  FunctionRegistry.register("hasReferralForCurrentCycle", (args, stateData) {
+    if (args.isEmpty || args.first == null) return false;
+
+    final referrals = args.first;
+    if (referrals is! List || referrals.isEmpty) return false;
+
+    // Get current active cycle from FlowBuilderSingleton
+    final projectType = FlowBuilderSingleton().projectType;
+    final selectedCycle = projectType?.cycles?.firstWhereOrNull(
+      (e) =>
+          e.startDate < DateTime.now().millisecondsSinceEpoch &&
+          e.endDate > DateTime.now().millisecondsSinceEpoch,
+    );
+
+    if (selectedCycle == null) return false;
+
+    for (final item in referrals) {
+      Map<String, dynamic>? refMap;
+      if (item is Map<String, dynamic>) {
+        refMap = item;
+      } else if (item is Map) {
+        refMap = Map<String, dynamic>.from(item);
+      } else {
+        try {
+          refMap = (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          continue;
+        }
+      }
+
+      final additionalFields = refMap['additionalFields'];
+      final fields = additionalFields?['fields'] as List?;
+      if (fields != null) {
+        for (final field in fields) {
+          if (field is Map && field['key'] == 'referralCycle') {
+            final referralCycle =
+                int.tryParse(field['value']?.toString() ?? '');
+            if (referralCycle == selectedCycle.id) return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  });
+
   FunctionRegistry.register("canRecordDelivery", (args, stateData) {
     final projectType = FlowBuilderSingleton().projectType;
     if (projectType == null || projectType.cycles == null) {
@@ -1036,5 +1358,181 @@ void initializeFunctionRegistry() {
     }
 
     return true;
+  });
+
+  /// Registers a function to calculate age in months from a date of birth.
+  ///
+  /// - **Function Name**: `'calculateAgeInMonths'`
+  /// - **Arguments**: A list where the first element is the date of birth string.
+  /// - **Returns**: The total age in months as an integer, or 0 if the input is invalid.
+  FunctionRegistry.register('calculateAgeInMonths', (args, stateData) {
+    if (args.isEmpty) return 0;
+
+    final rawValue = args.first;
+    if (rawValue == null) return 0;
+
+    DateTime? dob;
+    if (rawValue is int) {
+      dob = DateTime.fromMillisecondsSinceEpoch(rawValue);
+    } else if (rawValue is String) {
+      // Try parsing as int timestamp first
+      final timestamp = int.tryParse(rawValue);
+      if (timestamp != null) {
+        dob = DateTime.fromMillisecondsSinceEpoch(timestamp);
+      } else {
+        // Otherwise, parse as formatted date string
+        dob = DigitDateUtils.getFormattedDateToDateTime(rawValue);
+      }
+    }
+
+    if (dob == null) return 0;
+
+    final age = DigitDateUtils.calculateAge(dob);
+    return age.years * 12 + age.months;
+  });
+
+  /// Registers a function to compute the referral button label based on symptom and checklist data.
+  ///
+  /// - **Function Name**: `'computeReferralButtonLabel'`
+  /// - **Arguments**:
+  ///   - First argument: symptom (e.g., 'FEVER', 'SICK', 'DRUG_SE_CC', 'DRUG_SE_PC')
+  ///   - Second argument: additionalFields.fields (List of {key, value} maps)
+  /// - **Returns**: 'CORE_COMMON_GO_BACK' if checklist exists, 'CORE_COMMON_CONTINUE' if not.
+  ///
+  /// This function checks if the related checklist key exists for the given symptom:
+  /// - FEVER → feverQ1
+  /// - SICK → sickQ1
+  /// - DRUG_SE_CC → sideEffectQ1
+  /// - DRUG_SE_PC → sideEffectPQ1
+  /// hf-referral impel
+  FunctionRegistry.register('computeReferralButtonLabel', (args, stateData) {
+    if (args.isEmpty) return 'HF_REFERRAL_CONTINUE';
+
+    final symptom = args[0]?.toString().toUpperCase() ?? '';
+    final fields = args.length > 1 ? args[1] : null;
+
+    // Map symptom to its corresponding checklist key
+    final symptomToChecklistKey = {
+      'FEVER': 'feverQ1',
+      'SICK': 'sickQ1',
+      'DRUG_SE_CC': 'sideEffectQ1',
+      'DRUG_SE_PC': 'sideEffectPQ1',
+    };
+
+    final checklistKey = symptomToChecklistKey[symptom];
+    if (checklistKey == null) {
+      // Unknown symptom, default to continue
+      return 'HF_REFERRAL_CONTINUE';
+    }
+
+    // Check if the checklist key exists in additionalFields.fields
+    bool checklistExists = false;
+
+    if (fields is List) {
+      for (final field in fields) {
+        if (field is Map && field['key'] == checklistKey) {
+          final value = field['value'];
+          if (value != null && value.toString().trim().isNotEmpty) {
+            checklistExists = true;
+            break;
+          }
+        }
+      }
+    }
+
+    // If checklist exists → Go Back, otherwise → Continue
+    return checklistExists ? 'HF_REFERRAL_GO_BACK' : 'HF_REFERRAL_CONTINUE';
+  });
+
+  /// Registers a function to compute the referral status  based on symptom and checklist data.
+  ///
+  /// - **Function Name**: `'computeReferralstatus'`
+  /// - **Arguments**:
+  ///   - First argument: symptom (e.g., 'FEVER', 'SICK', 'DRUG_SE_CC', 'DRUG_SE_PC')
+  ///   - Second argument: additionalFields.fields (List of {key, value} maps)
+  /// - **Returns**: 'CORE_COMMON_GO_BACK' if checklist exists, 'CORE_COMMON_CONTINUE' if not.
+  ///
+  /// This function checks if the related checklist key exists for the given symptom:
+  /// - FEVER → feverQ1
+  /// - SICK → sickQ1
+  /// - DRUG_SE_CC → sideEffectQ1
+  /// - DRUG_SE_PC → sideEffectPQ1
+  /// hf-referral impel
+  FunctionRegistry.register('computeReferralStatus', (args, stateData) {
+    if (args.isEmpty) return 'CORE_COMMON_NOT_VISITED';
+
+    final symptom = args[0]?.toString().toUpperCase() ?? '';
+    final fields = args.length > 1 ? args[1] : null;
+
+    // Map symptom to its corresponding checklist key
+    final symptomToChecklistKey = {
+      'FEVER': 'feverQ1',
+      'SICK': 'sickQ1',
+      'DRUG_SE_CC': 'sideEffectQ1',
+      'DRUG_SE_PC': 'sideEffectPQ1',
+    };
+
+    final checklistKey = symptomToChecklistKey[symptom];
+    if (checklistKey == null) {
+      // Unknown symptom, default to continue
+      return 'HF_REFERRAL_NOT_VISITED';
+    }
+
+    // Check if the checklist key exists in additionalFields.fields
+    bool checklistExists = false;
+
+    if (fields is List) {
+      for (final field in fields) {
+        if (field is Map && field['key'] == checklistKey) {
+          final value = field['value'];
+          if (value != null && value.toString().trim().isNotEmpty) {
+            checklistExists = true;
+            break;
+          }
+        }
+      }
+    }
+
+    // If checklist exists → Visited, otherwise → Not Visited
+    return checklistExists ? 'VISITED' : 'HF_REFERRAL_NOT_VISITED';
+  });
+
+  /// Checks if the individual was registered before the current running cycle.
+  ///
+  /// - **Function Name**: `'isRegisteredBeforeCurrentCycle'`
+  /// - **Arguments**:
+  ///   - First argument: dateOfRegistration (timestamp in milliseconds)
+  ///   - Second argument: currentRunningCycle (cycle id/index)
+  /// - **Returns**: `true` if registered before the current cycle, `false` if registered in the current cycle.
+  ///
+  /// This is used to conditionally show buttons only for individuals registered
+  /// in a previous cycle (not the current one).
+  FunctionRegistry.register('isRegisteredBeforeCurrentCycle',
+      (args, stateData) {
+    if (args.isEmpty) return false;
+
+    // Parse dateOfRegistration timestamp
+    final rawDate = args.first;
+    int? registrationTime;
+    if (rawDate is int) {
+      registrationTime = rawDate;
+    } else if (rawDate is String) {
+      registrationTime = int.tryParse(rawDate);
+    }
+    if (registrationTime == null) return false;
+
+    // Get current running cycle from project config
+    final projectType = FlowBuilderSingleton().projectType;
+    if (projectType == null || projectType.cycles == null) return false;
+
+    // Find the current active cycle
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final currentCycle = projectType.cycles!.firstWhereOrNull(
+      (e) => (e.startDate ?? 0) < now && (e.endDate ?? 0) > now,
+    );
+    if (currentCycle == null) return false;
+
+    // If registered before the current cycle's start date, return true
+    return registrationTime < (currentCycle.startDate ?? 0);
   });
 }

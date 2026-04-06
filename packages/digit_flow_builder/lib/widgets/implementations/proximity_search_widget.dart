@@ -5,19 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../action_handler/action_config.dart';
-import '../flow_widget_interface.dart';
 import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class ProximitySearchWidget implements FlowWidget {
+class ProximitySearchWidget extends ResolvedFlowWidget {
   @override
   String get format => 'proximitySearch';
 
   @override
-  Widget build(
-      Map<String, dynamic> json,
-      BuildContext context,
-      void Function(ActionConfig) onAction,
-      ) {
+  Widget buildResolved(
+    Map<String, dynamic> json,
+    BuildContext context,
+    void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
+  ) {
     return _ProximitySearchStateful(
       json: json,
       onAction: onAction,
@@ -105,7 +106,7 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
     // Split only after parser evaluates the condition part
     // Extract condition and outcomes
     if (!replaced.contains("?") || !replaced.contains(":")) {
-      return replaced; // No ternary expression → return as-is
+      return replaced; // No ternary expression -> return as-is
     }
 
     final condition = replaced.split("?")[0].trim();
@@ -188,4 +189,3 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
   }
 
 }
-

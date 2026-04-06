@@ -29,8 +29,9 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
   static String? _$facilityId(StockSearchModel v) => v.facilityId;
   static const Field<StockSearchModel, String> _f$facilityId =
       Field('facilityId', _$facilityId, opt: true);
-  static String? _$productVariantId(StockSearchModel v) => v.productVariantId;
-  static const Field<StockSearchModel, String> _f$productVariantId =
+  static List<String>? _$productVariantId(StockSearchModel v) =>
+      v.productVariantId;
+  static const Field<StockSearchModel, List<String>> _f$productVariantId =
       Field('productVariantId', _$productVariantId, opt: true);
   static String? _$referenceId(StockSearchModel v) => v.referenceId;
   static const Field<StockSearchModel, String> _f$referenceId =
@@ -46,8 +47,8 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
       v.transactingPartyType;
   static const Field<StockSearchModel, String> _f$transactingPartyType =
       Field('transactingPartyType', _$transactingPartyType, opt: true);
-  static List<String>? _$receiverId(StockSearchModel v) => v.receiverId;
-  static const Field<StockSearchModel, List<String>> _f$receiverId =
+  static String? _$receiverId(StockSearchModel v) => v.receiverId;
+  static const Field<StockSearchModel, String> _f$receiverId =
       Field('receiverId', _$receiverId, opt: true);
   static String? _$receiverType(StockSearchModel v) => v.receiverType;
   static const Field<StockSearchModel, String> _f$receiverType =
@@ -196,7 +197,8 @@ extension StockSearchModelValueCopy<$R, $Out>
 
 abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
     implements EntitySearchModelCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get receiverId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get productVariantId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
@@ -208,12 +210,12 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
       {String? id,
       String? tenantId,
       String? facilityId,
-      String? productVariantId,
+      List<String>? productVariantId,
       String? referenceId,
       String? referenceIdType,
       String? transactingPartyId,
       String? transactingPartyType,
-      List<String>? receiverId,
+      String? receiverId,
       String? receiverType,
       String? senderId,
       String? senderType,
@@ -236,11 +238,11 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
       StockSearchModelMapper.ensureInitialized();
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
-      get receiverId => $value.receiverId != null
+      get productVariantId => $value.productVariantId != null
           ? ListCopyWith(
-              $value.receiverId!,
+              $value.productVariantId!,
               (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(receiverId: v))
+              (v) => call(productVariantId: v))
           : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?

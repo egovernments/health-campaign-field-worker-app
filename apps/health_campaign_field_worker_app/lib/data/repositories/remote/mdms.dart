@@ -183,6 +183,12 @@ class MdmsRepository {
       ..syncTrigger = appConfig?.syncTrigger
       ..tenantId = appConfig?.tenantId
       ..maxRadius = appConfig?.maxRadius
+      ..boundaryLastLevelMaxSelection =
+          appConfig?.boundaryLastLevelMaxSelection
+      // TODO: Populate stockThresholdConfig from MDMS when available
+      ..stockThresholdConfig = (StockThresholdConfig()
+        ..minThreshold = 0
+        ..maxThreshold = 0)
       ..backgroundServiceConfig = backgroundServiceConfig
       ..firebaseConfig = firebaseConfig;
 
@@ -450,7 +456,17 @@ class MdmsRepository {
       return reasonTypes;
     }).toList();
 
-    appConfiguration.stockThresholdConfig = null;
+    appConfiguration.boundaryRelationship =
+        result.hcmWrapperModel?.boundaryRelationship?.map((e) {
+      final boundaryRelConfig = BoundaryRelationshipConfig()
+        ..boundaryType = e.boundaryType
+        ..order = e.order
+        ..parentBoundaryType = e.parent?.boundaryType ?? ''
+        ..childBoundaryTypes =
+            e.children?.map((c) => c.boundaryType).toList() ?? [];
+
+      return boundaryRelConfig;
+    }).toList();
 
     isar.writeTxnSync(() {
       isar.appConfigurations.putSync(appConfiguration);

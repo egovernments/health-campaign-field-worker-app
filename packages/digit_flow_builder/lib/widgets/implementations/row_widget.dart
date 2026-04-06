@@ -2,24 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../layout_renderer.dart';
-import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/widget_parsers.dart';
 import '../../widget_registry.dart';
-import '../flow_widget_interface.dart';
+import '../resolved_flow_widget.dart';
 
-class RowWidget implements FlowWidget {
+class RowWidget extends ResolvedFlowWidget {
   @override
   String get format => 'row';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final flowState = WidgetStateContext.of(context);
-    final stateData = flowState.stateData;
+    final stateData = resolved.stateData;
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
 
     return WidgetParsers.wrapWithBottomGap(
@@ -31,20 +30,20 @@ class RowWidget implements FlowWidget {
               ? preprocessConfigWithState(
                   Map<String, dynamic>.from(childJson),
                   stateData,
-                  listIndex: flowState.listIndex,
-                  item: flowState.itemData,
+                  listIndex: resolved.state.listIndex,
+                  item: resolved.state.itemData,
                 )
               : Map<String, dynamic>.from(childJson);
 
           return CrudItemContext(
             stateData: stateData,
-            listIndex: flowState.listIndex,
-            item: flowState.itemData,
-            screenKey: flowState.screenKey,
-            compositeKey: flowState.compositeKey,
+            listIndex: resolved.state.listIndex,
+            item: resolved.state.itemData,
+            screenKey: resolved.screenKey,
+            compositeKey: resolved.compositeKey,
             child: LayoutMapper.map(processedChild, stateData, context, onAction,
-                item: flowState.itemData, listIndex: flowState.listIndex,
-                compositeKey: flowState.compositeKey),
+                item: resolved.state.itemData, listIndex: resolved.state.listIndex,
+                compositeKey: resolved.compositeKey),
           );
         }).toList(),
       ),

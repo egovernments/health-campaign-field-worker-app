@@ -4,38 +4,39 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class ActionPopupWidget implements FlowWidget {
+class ActionPopupWidget extends ResolvedFlowWidget {
   @override
   String get format => 'actionPopup';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final flowState = WidgetStateContext.of(context);
-    final localization = LocalizationContext.maybeOf(context);
+    final localization = resolved.localization;
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final popupConfig = props['popupConfig'] as Map<String, dynamic>?;
 
-    // Use flowState for context data
-    final stateData = flowState.stateData;
-    final item = flowState.itemData;
-    final listIndex = flowState.listIndex;
-    final screenKey = flowState.screenKey;
-    final compositeKey = flowState.compositeKey;
+    // Use resolved state for context data
+    final stateData = resolved.stateData;
+    final item = resolved.state.itemData;
+    final listIndex = resolved.state.listIndex;
+    final screenKey = resolved.screenKey;
+    final compositeKey = resolved.compositeKey;
 
     return DigitButton(
+        capitalizeLetters: false,
         mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
-        label: localization?.translate( json['label']) ?? json['label'] ?? '',
+        label: localization?.translate(json['label']) ?? json['label'] ?? '',
         onPressed: () async {
           // Trigger configured actions if any
           if (json['onAction'] != null && json['onAction'] is List) {
@@ -50,6 +51,18 @@ class ActionPopupWidget implements FlowWidget {
 
           // Show popup if popupConfig is provided
           if (popupConfig != null) {
+            // Execute onOpenAction before showing popup
+            final onOpenActions =
+                popupConfig['onOpenAction'] as List<dynamic>?;
+            if (onOpenActions != null) {
+              for (var raw in onOpenActions) {
+                if (raw is Map<String, dynamic>) {
+                  final action = ActionConfig.fromJson(raw);
+                  onAction(action);
+                }
+              }
+            }
+
             await _showActionPopup(context, popupConfig, onAction, screenKey,
                 stateData, item, listIndex, compositeKey);
           }
@@ -120,7 +133,7 @@ class ActionPopupWidget implements FlowWidget {
                     child: Builder(
                       builder: (innerCtx) => FlowWidgetFactory.build(
                         widgetJson,
-                        innerCtx,
+                        context,
                         onAction,
                       ),
                     ),

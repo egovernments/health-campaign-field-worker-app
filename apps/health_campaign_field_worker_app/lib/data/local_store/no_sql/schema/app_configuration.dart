@@ -93,8 +93,14 @@ class AppConfiguration {
   late List<RefusalReasons>? refusalReasons;
   late PrivacyPolicy? privacyPolicyConfig;
 
+  @Name("BOUNDARY_LAST_LEVEL_MAX_SELECTION")
+  late int? boundaryLastLevelMaxSelection;
+
   @Name('STOCK_THRESHOLD_CONFIG')
-  late StockThresholdConfig? stockThresholdConfig;
+  StockThresholdConfig? stockThresholdConfig;
+
+  @Name('BOUNDARY_RELATIONSHIP')
+  List<BoundaryRelationshipConfig>? boundaryRelationship;
 }
 
 @embedded
@@ -255,8 +261,9 @@ class ReferralReasons {
   late String name;
   late bool active;
 }
+
 @embedded
-class ManualAttendanceReasons{
+class ManualAttendanceReasons {
   late String code;
   late String name;
   late bool active;
@@ -312,5 +319,13 @@ class StockThresholdConfig {
   late double minThreshold; // Below this = red
   @Name('MAX_THRESHOLD')
   late double maxThreshold; // Above this = green
-  // Between min and max = blue
+// Between min and max = blue
+}
+
+@embedded
+class BoundaryRelationshipConfig {
+  late String boundaryType;
+  late int order;
+  late String parentBoundaryType;
+  late List<String> childBoundaryTypes;
 }

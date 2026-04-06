@@ -20,12 +20,15 @@ import 'blocs/push_notification/push_notification.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'executors/stock_balance_executor.dart';
+import 'blocs/push_notification/push_notification.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/remote_client.dart';
 import 'data/repositories/remote/bandwidth_check.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
+import 'data/repositories/remote/notification_token.dart';
+import 'executors/stock_balance_executor.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
@@ -100,11 +103,13 @@ class MainApplicationState extends State<MainApplication>
             providers: [
               // INFO : Need to add bloc of package Here
               BlocProvider(
-                create: (_) => PushNotificationBloc()
-                  ..add(const PushNotificationEvent.initialize()),
+                create: (_) => PushNotificationBloc(
+                  notificationTokenRepository:
+                      NotificationTokenRepository(widget.client),
+                )..add(const PushNotificationEvent.initialize()),
                 lazy: false,
               ),
-  
+
               BlocProvider(
                 create: (_) {
                   return LocationBloc(location: Location())
@@ -153,7 +158,17 @@ class MainApplicationState extends State<MainApplication>
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {
-                return BlocBuilder<AuthBloc, AuthState>(
+                return BlocListener<AuthBloc, AuthState>(
+                  listener: (context, authState) {
+                    if (authState is AuthAuthenticatedState) {
+                      context.read<PushNotificationBloc>().add(
+                            PushNotificationEvent.login(
+                              userId: authState.userModel.uuid,
+                            ),
+                          );
+                    }
+                  },
+                  child: BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
                     if (appConfigState is! AppInitialized) {
                       return const MaterialApp(
@@ -187,7 +202,7 @@ class MainApplicationState extends State<MainApplication>
                                       widget.client, widget.sql),
                                   widget.sql)
                                 ..add(
-  LocalizationEvent.onLoadLocalization(
+                                  LocalizationEvent.onLoadLocalization(
                                     module:
                                         "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule && Constants.initialLocalizationModules.contains(element.name.toString())).map((e) => e.name.toString()).join(',')}",
                                     tenantId: envConfig.variables.tenantId,
@@ -408,6 +423,7 @@ class MainApplicationState extends State<MainApplication>
                       }),
                     );
                   },
+                ),
                 );
               },
             ),

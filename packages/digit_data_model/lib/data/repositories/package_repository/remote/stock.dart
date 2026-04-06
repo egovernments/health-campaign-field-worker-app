@@ -22,106 +22,117 @@ class StockRemoteRepository
     StockSearchModel query, {
     int? offSet,
     int? limit,
-    int? lastChangedSince,
+    int? lastSyncedTime,
   }) async {
-    int defaultBatchSize = limit ?? 100; // Default batch size for fetching data
-    int currentOffset = offSet ?? 0;
+    Response response;
 
-    List<StockModel> allResults = [];
+    try {
+      response = await executeFuture(
+        future: () async {
+          return await dio.post(
+            searchPath,
+            queryParameters: {
+              'offset': offSet ?? 0,
+              'limit': limit ?? 100,
+              if (lastSyncedTime != null)
+                'lastChangedSince': lastSyncedTime,
+              'tenantId': DigitDataModelSingleton().tenantId,
+              if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
+            },
+            data: {
+              isPlural ? entityNamePlural : entityName:
+                  isPlural ? [query.toMap()] : query.toMap(),
+            },
+          );
+        },
+      );
+    } catch (error) {
+      rethrow;
+    }
 
-    //To fetch the totalCount from the first Response
-    bool flag = true;
+    final responseMap = response.data;
 
-    //Total count of stock
-    var totalCount = 0;
+    if (responseMap is! Map<String, dynamic>) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
+    }
 
-    do {
-      Response response;
+    String key = (isSearchResponsePlural) ? entityNamePlural : entityName;
 
-      //Execute the request
-      try {
-        response = await executeFuture(
-          future: () async {
-            return await dio.post(
-              searchPath,
-              queryParameters: {
-                'offset': currentOffset,
-                'limit': defaultBatchSize,
-                if (lastChangedSince != null)
-                  'lastChangedSince': lastChangedSince,
-                'tenantId': DigitDataModelSingleton().tenantId,
-                if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
-              },
-              data: {
-                isPlural ? entityNamePlural : entityName:
-                    isPlural ? [query.toMap()] : query.toMap(),
-              },
-            );
-          },
-        );
-      } catch (error) {
-        break; // Break out of the loop if an error occurs
-      }
+    if (!responseMap.containsKey(key)) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
+    }
 
-      final responseMap = response.data;
+    final entityResponse = await responseMap[key];
 
-      if (responseMap is! Map<String, dynamic>) {
-        throw InvalidApiResponseException(
-          data: query.toMap(),
-          path: searchPath,
-          response: responseMap,
-        );
-      }
+    if (entityResponse is! List) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
+    }
 
-      String key = (isSearchResponsePlural) ? entityNamePlural : entityName;
+    final entityList =
+        entityResponse.whereType<Map<String, dynamic>>().toList();
 
-      //Check whether the response contains valid key and totalCount
-      if (!responseMap.containsKey(key) ||
-          (flag && !responseMap.containsKey('TotalCount'))) {
-        throw InvalidApiResponseException(
-          data: query.toMap(),
-          path: searchPath,
-          response: responseMap,
-        );
-      }
+    return entityList
+        .map((e) => MapperContainer.globals.fromMap<StockModel>(e))
+        .toList();
+  }
 
-      //Fetch the totalCount of records only from the first response
-      if (flag && responseMap.containsKey('TotalCount')) {
-        totalCount = responseMap['TotalCount'];
-        flag = false;
-      }
+  /// Fetches the total count of stock records matching the query from the API.
+  /// Makes a single call with limit=0 to get only the TotalCount without
+  /// fetching actual records.
+  Future<int> fetchTotalCount(
+    StockSearchModel query, {
+    int? offSet,
+    int? lastSyncedTime,
+  }) async {
+    Response response;
 
-      final entityResponse = await responseMap[key];
+    try {
+      response = await executeFuture(
+        future: () async {
+          return await dio.post(
+            searchPath,
+            queryParameters: {
+              'offset': offSet ?? 0,
+              'limit': 0,
+              if (lastSyncedTime != null)
+                'lastChangedSince': lastSyncedTime,
+              'tenantId': DigitDataModelSingleton().tenantId,
+              if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
+            },
+            data: {
+              isPlural ? entityNamePlural : entityName:
+                  isPlural ? [query.toMap()] : query.toMap(),
+            },
+          );
+        },
+      );
+    } catch (error) {
+      rethrow;
+    }
 
-      if (entityResponse is! List) {
-        throw InvalidApiResponseException(
-          data: query.toMap(),
-          path: searchPath,
-          response: responseMap,
-        );
-      }
+    final responseMap = response.data;
 
-      final entityList =
-          entityResponse.whereType<Map<String, dynamic>>().toList();
+    if (responseMap is! Map<String, dynamic> ||
+        !responseMap.containsKey('TotalCount')) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
+    }
 
-      List<StockModel> currentBatch;
-
-      try {
-        currentBatch = entityList
-            .map((e) => MapperContainer.globals.fromMap<StockModel>(e))
-            .toList();
-      } catch (e) {
-        rethrow;
-      }
-
-      allResults.addAll(currentBatch);
-      currentOffset += defaultBatchSize;
-      totalCount -= defaultBatchSize;
-
-      //If remaining record is less than defaultBatchSize, adjust the Batch size
-      if (totalCount < defaultBatchSize) defaultBatchSize = totalCount;
-    } while (totalCount > 0);
-
-    return allResults;
+    return responseMap['TotalCount'] as int;
   }
 }

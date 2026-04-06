@@ -2,26 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../utils/flow_widget_state.dart';
 import '../../utils/utils.dart';
-import '../flow_widget_interface.dart';
+import '../resolved_flow_widget.dart';
 
-class QrViewWidget implements FlowWidget {
+class QrViewWidget extends ResolvedFlowWidget {
   @override
   String get format => 'qr_view';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final flowState = WidgetStateContext.of(context);
-
-    // Resolve the QR data using flowState.evalContext
+    // Resolve the QR data using evalContext
     final dataTemplate = json['data'] as String? ?? '';
     final qrData =
-        resolveTemplate(dataTemplate, flowState.evalContext, screenKey: flowState.screenKey);
+        resolveTemplate(dataTemplate, resolved.evalContext, screenKey: resolved.screenKey);
 
     // If no data, return empty widget
     if (qrData.isEmpty) {

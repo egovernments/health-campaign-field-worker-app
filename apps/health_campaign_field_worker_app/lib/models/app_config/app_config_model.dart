@@ -112,6 +112,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'FIREBASE_CONFIG')
     required List<FirebaseConfig>? firebaseConfig,
     @JsonKey(name: 'TRANSIT_POST_TYPE') List<TransitPostType>? transitPostType,
+    @JsonKey(name: 'BOUNDARY_RELATIONSHIP')
+    List<BoundaryRelationship>? boundaryRelationship,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(
@@ -196,6 +198,8 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
     @JsonKey(name: 'TENANT_ID') final String? tenantId,
     @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
+    @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+    final int? boundaryLastLevelMaxSelection,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>
@@ -435,4 +439,28 @@ class FirebaseConfig with _$FirebaseConfig {
 
   factory FirebaseConfig.fromJson(Map<String, dynamic> json) =>
       _$FirebaseConfigFromJson(json);
+}
+
+@freezed
+class BoundaryRelationship with _$BoundaryRelationship {
+  factory BoundaryRelationship({
+    required String boundaryType,
+    required int order,
+    BoundaryRelationshipRef? parent,
+    List<BoundaryRelationshipRef>? children,
+  }) = _BoundaryRelationship;
+
+  factory BoundaryRelationship.fromJson(Map<String, dynamic> json) =>
+      _$BoundaryRelationshipFromJson(json);
+}
+
+@freezed
+class BoundaryRelationshipRef with _$BoundaryRelationshipRef {
+  factory BoundaryRelationshipRef({
+    required String boundaryType,
+    required int order,
+  }) = _BoundaryRelationshipRef;
+
+  factory BoundaryRelationshipRef.fromJson(Map<String, dynamic> json) =>
+      _$BoundaryRelationshipRefFromJson(json);
 }

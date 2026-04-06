@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 
 import '../utils/stock_calculation_utils.dart';
+import '../utils/utils.dart';
 
 /// Executor that maintains running stock balances in UserAction records.
 ///
@@ -25,7 +26,11 @@ class StockBalanceExecutor extends ActionExecutor {
     Map<String, dynamic> contextData,
   ) async {
     try {
-      final entities = contextData['entities'];
+      var entities = contextData['entities'];
+      if (entities == null || entities is! List || entities.isEmpty) {
+        // Fallback to existingModels (e.g., when accept flow only updates existing models)
+        entities = contextData['existingModels'];
+      }
       if (entities == null || entities is! List || entities.isEmpty) {
         debugPrint('UPDATE_STOCK_BALANCE: No entities found');
         return contextData;
@@ -155,18 +160,18 @@ class StockBalanceExecutor extends ActionExecutor {
     final balanceKey = 'stock_balance_${facilityId}_$productVariantId';
 
     // Search for existing stock balance UserAction
-    // final existingBalances = await userActionRepo.search(
-    //   UserActionSearchModel(
-    //     clientReferenceId: [balanceKey],
-    //   ),
-    // );
+    final existingBalances = await userActionRepo.search(
+      UserActionSearchModel(
+        clientReferenceId: [balanceKey],
+      ),
+    );
 
     // Calculate the current balance from stock transactions
     final stockRepo =
         context.read<LocalRepository<StockModel, StockSearchModel>>();
 
     final receivedStocks = await stockRepo.search(
-      StockSearchModel(receiverId: [facilityId]),
+      StockSearchModel(receiverId: facilityId),
     );
     final sentStocks = await stockRepo.search(
       StockSearchModel(senderId: facilityId),
@@ -191,11 +196,49 @@ class StockBalanceExecutor extends ActionExecutor {
 
     final now = DateTime.now().millisecondsSinceEpoch;
     final loggedInUserUuid = FlowBuilderSingleton().loggedInUserUuid ?? '';
-    // final existing = existingBalances.isNotEmpty ? existingBalances.first : null;
+    final existing = existingBalances.isNotEmpty ? existingBalances.first : null;
 
-  
+    final balanceAction = UserActionModel(
+      clientReferenceId: balanceKey,
+      action: 'STOCK_BALANCE',
+      projectId: projectId,
+      boundaryCode: boundaryCode,
+      latitude: 0.0,
+      longitude: 0.0,
+      locationAccuracy: 0.0,
+      isSync: false,
+      timestamp: now,
+      id: existing?.id,
+      rowVersion: existing?.rowVersion,
+      tenantId: existing?.tenantId ?? context.selectedProject.tenantId,
+      nonRecoverableError: false,
+      additionalFields: UserActionAdditionalFields(
+        version: 1,
+        fields: [
+          AdditionalField('balance', balance.toString()),
+          AdditionalField('facilityId', facilityId),
+          AdditionalField('productVariantId', productVariantId),
+        ],
+      ),
+      // auditDetails is required for oplog creation — must not be null
+      auditDetails: existing?.auditDetails ??
+          AuditDetails(
+            createdBy: loggedInUserUuid,
+            createdTime: now,
+          ),
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: existing?.clientAuditDetails?.createdBy ?? loggedInUserUuid,
+        createdTime: existing?.clientAuditDetails?.createdTime ?? now,
+        lastModifiedBy: loggedInUserUuid,
+        lastModifiedTime: now,
+      ),
+    );
 
-
+    if (existing != null) {
+      await userActionRepo.update(balanceAction);
+    } else {
+      await userActionRepo.create(balanceAction);
+    }
 
     debugPrint(
       'UPDATE_STOCK_BALANCE: Updated balance for $facilityId/$productVariantId = $balance',

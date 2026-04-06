@@ -148,6 +148,7 @@ class Constants {
 
   static const String dashboardAnalyticsPath =
       '/dashboard-analytics/dashboard/getChartV2';
+  static const String logoutUserPath = '/user/_logout';
 
   static RegExp mobileNumberRegExp =
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
@@ -236,14 +237,15 @@ class Constants {
     final config = appConfigs.firstOrNull;
 
     // Always initialize Firebase Core (required for FCM, analytics, etc.)
-    await firebase_services.initializeFirebaseCore(
+    await firebase_services.initialize(
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
     final enableCrashlytics =
         config?.firebaseConfig?.enableCrashlytics ?? false;
     if (enableCrashlytics) {
-      await firebase_services.initializeCrashlytics(
+      await firebase_services.initialize(
+        options: DefaultFirebaseOptions.currentPlatform,
         onErrorMessage: (value) {
           AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
         },
@@ -424,11 +426,28 @@ enum DigitProgressDialogType {
   pendingSync,
 }
 
+class DownloadProgressData {
+  final double progress;
+  final String boundaryName;
+  final int syncedCount;
+  final int totalCount;
+  final int currentIndex;
+  final int totalBoundaries;
+
+  const DownloadProgressData({
+    required this.progress,
+    required this.boundaryName,
+    required this.syncedCount,
+    required this.totalCount,
+    required this.currentIndex,
+    required this.totalBoundaries,
+  });
+}
+
 class DownloadBeneficiary {
   String title;
   String projectId;
-  String boundary;
-  String boundaryName;
+  List<BoundaryModel> boundaries;
   int? pendingSyncCount;
   int? syncCount;
   int? totalCount;
@@ -439,12 +458,12 @@ class DownloadBeneficiary {
   String? prefixLabel;
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
+  Map<String, int> boundaryCounts;
 
   DownloadBeneficiary({
     required this.title,
     required this.projectId,
-    required this.boundary,
-    required this.boundaryName,
+    required this.boundaries,
     this.appConfiguartion,
     this.pendingSyncCount,
     this.batchSize,
@@ -455,5 +474,6 @@ class DownloadBeneficiary {
     this.secondaryButtonLabel,
     this.prefixLabel,
     this.suffixLabel,
+    this.boundaryCounts = const {},
   });
 }

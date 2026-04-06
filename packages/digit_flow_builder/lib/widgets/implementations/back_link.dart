@@ -4,32 +4,21 @@ import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../utils/flow_widget_state.dart';
 import '../../utils/utils.dart';
-import '../flow_widget_interface.dart';
-import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class BackLinkWidget implements FlowWidget {
+class BackLinkWidget extends ResolvedFlowWidget {
   @override
   String get format => 'backLink';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final flowState = WidgetStateContext.of(context);
-    final localization = LocalizationContext.maybeOf(context);
-
-    // Resolve template using flowState.evalContext
-    final labelText = json['label'] ?? '';
-    final label = resolveTemplate(
-          labelText,
-          flowState.evalContext,
-          localization: localization,
-        ) ??
-        labelText;
+    final label = resolved.resolvedLabel ?? (json['label'] ?? '');
 
     return DigitBackButton(
       label: label,
@@ -48,8 +37,8 @@ class BackLinkWidget implements FlowWidget {
                 final key = entry['key'] as String;
                 final rawValue = entry['value'];
 
-                // Resolve using flowState.evalContext which contains all data sources
-                final resolvedValue = resolveValue(rawValue, flowState.evalContext);
+                // Resolve using evalContext which contains all data sources
+                final resolvedValue = resolveValue(rawValue, resolved.evalContext);
 
                 return {
                   "key": key,

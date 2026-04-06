@@ -60,6 +60,8 @@ class _StockReconciliationCardState
     'stockReturned': 0,
     'stockLost': 0,
     'stockDamaged': 0,
+    'stockExcess': 0,
+    'stockLess': 0,
     'stockInHand': 0,
   };
 
@@ -187,7 +189,7 @@ class _StockReconciliationCardState
 
             // Cache facilities and product variants when they're loaded
             // This prevents them from being cleared when stock search happens
-            if (facilities.isNotEmpty && _cachedFacilities.isEmpty) {
+            if (facilities.isNotEmpty) {
               _cachedFacilities = facilities;
             }
             if (productVariants.isNotEmpty && _cachedProductVariants.isEmpty) {
@@ -360,6 +362,20 @@ class _StockReconciliationCardState
                       const DigitDivider(),
                       LabelValueItem(
                         label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockExcess),
+                        value: _stockMetrics['stockExcess']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockLess),
+                        value: _stockMetrics['stockLess']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
                             i18.stockReconciliationMetrics.stockOnHand),
                         value: _stockMetrics['stockInHand']!.toStringAsFixed(0),
                         labelFlex: 5,
@@ -499,44 +515,58 @@ class _StockReconciliationCardState
 
   List<FacilityModel> _getFacilities(FlowCrudState? flowState) {
     try {
-      // Access data from FlowCrudState's stateWrapper
       final stateWrapper = flowState?.stateWrapper;
       if (stateWrapper == null || stateWrapper.isEmpty) return [];
 
-      // stateWrapper is a List<Map<String, List<dynamic>>>
-      for (final wrapperMap in stateWrapper) {
-        if (wrapperMap is Map &&
-            wrapperMap.containsKey('ProjectFacilityModel')) {
-          final projectFacilities = wrapperMap['ProjectFacilityModel'] as List?;
-          if (projectFacilities == null || projectFacilities.isEmpty) continue;
+      // Extract ProjectFacilityModel and FacilityModel from wrapper
+      // Same pattern as custom_facility_widgets.dart
+      List<dynamic>? projectFacilities;
+      List<dynamic>? allFacilities;
 
-          // Extract facilities from project facilities
-          final facilities = <FacilityModel>[];
-          for (final pf in projectFacilities) {
-            if (pf is Map && pf.containsKey('facility')) {
-              final facilityData = pf['facility'];
-              if (facilityData is FacilityModel) {
-                facilities.add(facilityData);
-              } else if (facilityData is Map) {
-                facilities.add(FacilityModelMapper.fromMap(
-                    facilityData as Map<String, dynamic>));
-              }
-            }
-          }
-          if (facilities.isNotEmpty) return facilities;
+      if (stateWrapper is List && stateWrapper.isNotEmpty) {
+        final firstItem = stateWrapper.first;
+        if (firstItem is Map) {
+          final wrapperList =
+              stateWrapper as List<Map<String, List<dynamic>>>;
+          projectFacilities = wrapperList
+              .firstWhere(
+                (m) => m.containsKey('ProjectFacilityModel'),
+                orElse: () => {'ProjectFacilityModel': []},
+              )['ProjectFacilityModel'];
+          allFacilities = wrapperList
+              .firstWhere(
+                (m) => m.containsKey('FacilityModel'),
+                orElse: () => {'FacilityModel': []},
+              )['FacilityModel'];
         }
+      }
 
-        // Fallback: Try direct FacilityModel list
-        if (wrapperMap is Map && wrapperMap.containsKey('FacilityModel')) {
-          final facilityData = wrapperMap['FacilityModel'] as List?;
-          if (facilityData != null && facilityData.isNotEmpty) {
-            return facilityData
-                .map((e) => e is FacilityModel
-                    ? e
-                    : FacilityModelMapper.fromMap(e as Map<String, dynamic>))
-                .toList();
-          }
-        }
+      if (projectFacilities == null || projectFacilities.isEmpty) return [];
+
+      // Filter by facilityLevel == 'current' (same as custom_facility_widgets.dart)
+      final filteredProjectFacilities = projectFacilities.where((e) {
+        final model = e as ProjectFacilityModel;
+        final facilityLevel = model.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
+      // Get the filtered facility IDs
+      final facilityIds = filteredProjectFacilities
+          .cast<ProjectFacilityModel>()
+          .map((pf) => pf.facilityId)
+          .toSet();
+
+      // Return FacilityModel entries matching filtered IDs
+      if (allFacilities != null && allFacilities.isNotEmpty) {
+        return allFacilities
+            .map((e) => e is FacilityModel
+                ? e
+                : FacilityModelMapper.fromMap(e as Map<String, dynamic>))
+            .where((f) => facilityIds.contains(f.id))
+            .toList();
       }
     } catch (e) {
       // Silently handle parsing errors

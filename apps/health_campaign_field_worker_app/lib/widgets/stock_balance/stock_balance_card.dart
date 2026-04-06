@@ -1,13 +1,12 @@
 import 'dart:math';
 
+import 'package:digit_data_model/data/repositories/package_repository/local/stock.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:transit_post/data/repositories/local/user_action.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -63,25 +62,31 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
     try {
       // Get project facilities
       final projectFacilityRepo = context.read<
-          LocalRepository<ProjectFacilityModel,
-              ProjectFacilitySearchModel>>();
+          LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
       final projectFacilities = await projectFacilityRepo.search(
         ProjectFacilitySearchModel(projectId: [context.projectId]),
       );
 
+      // Filter to only show current level facilities
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
       // Get facility details for names
-      final facilityIds =
-          projectFacilities.map((pf) => pf.facilityId).toList();
-      final facilityRepo = context
-          .read<LocalRepository<FacilityModel, FacilitySearchModel>>();
+      final facilityIds = currentFacilities.map((pf) => pf.facilityId).toList();
+      final facilityRepo =
+          context.read<LocalRepository<FacilityModel, FacilitySearchModel>>();
       final facilities = await facilityRepo.search(
         FacilitySearchModel(id: facilityIds),
       );
 
       // Get project resources to know which product variants
       final projectResourceRepo = context.read<
-          LocalRepository<ProjectResourceModel,
-              ProjectResourceSearchModel>>();
+          LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>>();
       final projectResources = await projectResourceRepo.search(
         ProjectResourceSearchModel(projectId: [context.projectId]),
       );
@@ -94,8 +99,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
 
       // Get product variant details for display names
       final productVariantRepo = context.read<
-          LocalRepository<ProductVariantModel,
-              ProductVariantSearchModel>>();
+          LocalRepository<ProductVariantModel, ProductVariantSearchModel>>();
       final productVariants = await productVariantRepo.search(
         ProductVariantSearchModel(id: productVariantIds),
       );
@@ -119,7 +123,9 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         _isLoading = false;
       });
 
-
+      if (autoSelectedFacility != null) {
+        _setupStockListener(autoSelectedFacility.id);
+      }
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -129,37 +135,45 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
     }
   }
 
-
-  /// Fallback: calculate balances from stock transactions when no UserAction
-  /// records exist (e.g., first login or migration from older version).
-  Future<Map<String, double>> _calculateFromStockTransactions(
-    String facilityId,
-  ) async {
+  void _setupStockListener(String facilityId) {
     final stockRepo =
-        context.read<LocalRepository<StockModel, StockSearchModel>>();
+        context.read<LocalRepository<StockModel, StockSearchModel>>()
+            as StockLocalRepository;
 
-    final receivedStocks = await stockRepo.search(
-      StockSearchModel(receiverId: [facilityId]),
-    );
-    final sentStocks = await stockRepo.search(
-      StockSearchModel(senderId: facilityId),
-    );
+    stockRepo.listenToChanges(
+      query: StockSearchModel(receiverId: facilityId),
+      listener: (receivedStocks) async {
+        if (!mounted) return;
 
-    // Deduplicate by clientReferenceId
-    final allStocksMap = <String, StockModel>{};
-    for (final stock in receivedStocks) {
-      allStocksMap[stock.clientReferenceId] = stock;
-    }
-    for (final stock in sentStocks) {
-      allStocksMap[stock.clientReferenceId] = stock;
-    }
-    final allStocks = allStocksMap.values.toList();
+        // Also fetch sent stocks to calculate complete balance
+        final sentStocks = await stockRepo.search(
+          StockSearchModel(senderId: facilityId),
+        );
 
-    final productIds = _productVariants.map((pv) => pv.id).toList();
-    return StockCalculationUtils.calculateStockInHandForProducts(
-      stockList: allStocks,
-      facilityId: facilityId,
-      productIds: productIds,
+        // Deduplicate by clientReferenceId
+        final allStocksMap = <String, StockModel>{};
+        for (final stock in receivedStocks) {
+          allStocksMap[stock.clientReferenceId] = stock;
+        }
+        for (final stock in sentStocks) {
+          allStocksMap[stock.clientReferenceId] = stock;
+        }
+        final allStocks = allStocksMap.values.toList();
+
+        final productIds = _productVariants.map((pv) => pv.id).toList();
+        final balances = StockCalculationUtils.calculateStockInHandForProducts(
+          stockList: allStocks,
+          facilityId: facilityId,
+          productIds: productIds,
+          loggedInUserUuid: context.loggedInUserUuid,
+        );
+
+        if (mounted) {
+          setState(() {
+            _stockBalances = balances;
+          });
+        }
+      },
     );
   }
 
@@ -194,8 +208,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
                   .toList(),
               selectedOption: _selectedFacility != null
                   ? DropdownItem(
-                      name:
-                          localizations.translate(_selectedFacility!.id),
+                      name: localizations.translate(_selectedFacility!.id),
                       code: _selectedFacility!.id,
                     )
                   : null,
@@ -206,7 +219,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
                 setState(() {
                   _selectedFacility = selected;
                 });
-
+                _setupStockListener(selected.id);
               },
             ),
           ),
@@ -214,19 +227,23 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         // Title
         Padding(
           padding: const EdgeInsets.only(bottom: spacer1),
-          child: Text(
-            localizations.translate(i18.home.stockBalanceLabel),
-            style: theme.textTheme.headlineSmall,
+          child: Center(
+            child: Text(
+              localizations.translate(i18.home.stockBalanceLabel),
+              style: theme
+                  .digitTextTheme(context)
+                  .bodyL
+                  .copyWith(color: theme.colorTheme.text.primary),
+            ),
           ),
         ),
 
         // Per-commodity stock balance bars
         ..._productVariants.map((product) {
-          final balance = _stockBalances[product.id] ?? 0.0;
+          final balance = max(_stockBalances[product.id] ?? 0.0, 0.0);
           final color = _getColorForBalance(balance);
-          final progress = _maxThreshold > 0
-              ? min(balance / _maxThreshold, 1.0)
-              : 0.0;
+          final progress =
+              _maxThreshold > 0 ? min(balance / _maxThreshold, 1.0) : 0.0;
           final displayName =
               localizations.translate(product.sku ?? product.id);
 

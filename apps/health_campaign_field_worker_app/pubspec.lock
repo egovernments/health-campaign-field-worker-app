@@ -368,14 +368,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  closed_household:
-    dependency: "direct main"
-    description:
-      name: closed_household
-      sha256: "3a1f82d50996a6593643f7bb5a28d89b2b0f01b02997374a90180cf3ca9e7856"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0-dev.1-console"
   code_builder:
     dependency: transitive
     description:
@@ -533,14 +525,14 @@ packages:
       path: "../../packages/digit_crud_bloc"
       relative: true
     source: path
-    version: "0.0.3-dev"
+    version: "0.0.1"
   digit_data_converter:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_converter"
       relative: true
     source: path
-    version: "0.0.4-dev"
+    version: "0.0.1"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -582,7 +574,7 @@ packages:
       path: "../../packages/digit_formula_parser"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   digit_location_tracker:
     dependency: "direct main"
     description:
@@ -608,10 +600,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "5225979fe85d59a1054a870c798c536a9cb29e37d2a99037d28b7c596c38b646"
+      sha256: dca1305d280dd65250beb0a9bbb9d6d04cc8f848e7134c5ebc5839ec75acd785
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.4+1"
+    version: "0.3.0+3"
   dio:
     dependency: "direct main"
     description:
@@ -1896,14 +1888,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  registration_delivery:
-    dependency: transitive
-    description:
-      name: registration_delivery
-      sha256: e0594d5ec0b3feaacbfc10d7c6447cf4d6ca0ffd7bb7a12502f5fc8ba81721de
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1-dev.8-console"
   rxdart:
     dependency: transitive
     description:

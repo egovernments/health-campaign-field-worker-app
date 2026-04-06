@@ -18,7 +18,7 @@ dependencies:
   sqlcipher_flutter_libs: ^0.6.4
   path_provider: ^2.1.3
   path: ^1.9.0
-  digit_ui_components: ^0.2.4+1
+  digit_ui_components: ^0.3.0+1
   auto_route: ^8.3.0
   flutter_bloc: ^8.1.5
   collection: ^1.18.0
@@ -63,7 +63,6 @@ dependencies:
   digit_data_model: ^1.2.0-dev.1-console
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.4+2
-  closed_household: ^1.1.0-dev.1-console
   digit_location_tracker: ^1.0.0
   permission_handler: ^11.3.1
   survey_form: ^1.0.3
@@ -83,6 +82,7 @@ dependencies:
   digit_flow_builder:
     path: ../../packages/digit_flow_builder
   jailbreak_root_detection: ^1.1.6
+  firebase_messaging: ^14.6.5
 
 dev_dependencies:
   flutter_test:

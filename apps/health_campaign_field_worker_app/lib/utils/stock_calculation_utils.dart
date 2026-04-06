@@ -5,18 +5,24 @@ import 'package:digit_data_model/data_model.dart';
 /// This provides common stock calculation methods that can be reused across
 /// different widgets like StockReconciliationCard and ProductSelectionCard.
 class StockCalculationUtils {
-  /// Extracts the stockEntryType from a StockModel's additionalFields.
-  /// Returns uppercase value (e.g., 'RECEIPT', 'ISSUED', 'RETURNED', 'DAMAGED', 'LOSS')
-  /// or empty string if not found.
-  static String _getStockEntryType(StockModel stock) {
+  /// Extracts a value from a StockModel's additionalFields by key.
+  /// Returns uppercase string value or empty string if not found.
+  static String _getAdditionalFieldValue(StockModel stock, String key) {
     final fields = stock.additionalFields?.fields;
     if (fields == null) return '';
     for (final field in fields) {
-      if (field.key == 'stockEntryType') {
+      if (field.key == key) {
         return field.value?.toString().toUpperCase() ?? '';
       }
     }
     return '';
+  }
+
+  /// Extracts the stockEntryType from a StockModel's additionalFields.
+  /// Returns uppercase value (e.g., 'RECEIPT', 'ISSUED', 'RETURNED', 'DAMAGED', 'LOSS')
+  /// or empty string if not found.
+  static String _getStockEntryType(StockModel stock) {
+    return _getAdditionalFieldValue(stock, 'stockEntryType');
   }
 
   /// Calculates stock metrics for a given facility and product from a list of stocks.
@@ -53,9 +59,10 @@ class StockCalculationUtils {
       final matchesSender = stock.senderId == facilityId;
       if (!matchesReceiver && !matchesSender) return false;
 
-      // Optionally filter by logged-in user
+      // Optionally filter by logged-in user (created by OR modified by)
       if (loggedInUserUuid != null &&
-          stock.auditDetails?.createdBy != loggedInUserUuid) {
+          stock.auditDetails?.createdBy != loggedInUserUuid &&
+          stock.clientAuditDetails?.lastModifiedBy != loggedInUserUuid) {
         return false;
       }
 
@@ -68,6 +75,8 @@ class StockCalculationUtils {
     double stockReturned = 0;
     double stockLost = 0;
     double stockDamaged = 0;
+    double stockExcess = 0;
+    double stockLess = 0;
 
     for (final stock in filteredStock) {
       final transactionType = stock.transactionType?.toUpperCase() ?? '';
@@ -81,11 +90,18 @@ class StockCalculationUtils {
       final isReceiver = stock.receiverId == facilityId;
       final isSender = stock.senderId == facilityId;
 
-      // Stock Received: This facility is the receiver AND transactionType == RECEIVED
+      // Stock Received/Excess/Less: This facility is the receiver AND transactionType == RECEIVED
+      // Both LESS and EXCESS use RECEIVED transactionType, differentiated by stockEntryType
       if (isReceiver && transactionType == 'RECEIVED') {
         if (transactionReason == 'RETURNED' ||
             stockEntryType == 'RETURNED') {
           stockReturned += quantity;
+        } else if (stockEntryType == 'EXCESS') {
+          // Stock Excess: recorded via less/excess flow
+          stockExcess += quantity;
+        } else if (stockEntryType == 'LESS') {
+          // Stock Less: recorded via less/excess flow
+          stockLess += quantity;
         } else if (transactionReason.isEmpty ||
             transactionReason == 'RECEIVED') {
           stockReceived += quantity;
@@ -102,7 +118,12 @@ class StockCalculationUtils {
       // Stock Issued/Lost/Damaged: This facility is the sender AND transactionType == DISPATCHED
       // Check sender first so damage/loss is counted correctly when senderId == receiverId
       else if (isSender && transactionType == 'DISPATCHED') {
-        if (transactionReason == 'LOST_IN_TRANSIT' ||
+        final status = _getAdditionalFieldValue(stock, 'status');
+        // If the receiver rejected this stock, it comes back to the sender.
+        // Don't count as issued so the quantity stays in sender's balance.
+        if (status == 'REJECTED') {
+          // Skip - rejected stock is not subtracted from sender's balance
+        } else if (transactionReason == 'LOST_IN_TRANSIT' ||
             transactionReason == 'LOST_IN_STORAGE' ||
             stockEntryType == 'LOSS') {
           stockLost += quantity;
@@ -110,30 +131,30 @@ class StockCalculationUtils {
             transactionReason == 'DAMAGED_IN_STORAGE' ||
             stockEntryType == 'DAMAGED') {
           stockDamaged += quantity;
+        } else if (stockEntryType == 'REJECTED') {
+          // Rejected stock - not counted as issued since it was never accepted
+        } else if (stockEntryType == 'RETURNED') {
+          // Returned stock dispatched out should decrease stock in hand
+          stockIssued += quantity;
         } else {
           // Regular dispatch (issued)
           stockIssued += quantity;
         }
       }
       // Stock Received from dispatch: This facility is the receiver AND transactionType == DISPATCHED
-      // This handles stock received when another facility dispatches TO this facility
+      // Incoming dispatches are only counted as received if the status is ACCEPTED.
+      // Pending/IN_TRANSIT dispatches are not counted until explicitly accepted.
       else if (isReceiver && transactionType == 'DISPATCHED') {
-        if (transactionReason == 'LOST_IN_TRANSIT' ||
-            transactionReason == 'LOST_IN_STORAGE' ||
-            transactionReason == 'DAMAGED_IN_TRANSIT' ||
-            transactionReason == 'DAMAGED_IN_STORAGE' ||
-            stockEntryType == 'LOSS' ||
-            stockEntryType == 'DAMAGED') {
-          // Damage/loss entries - don't count as received
-        } else {
+        final status = _getAdditionalFieldValue(stock, 'status');
+        if (status == 'ACCEPTED') {
           stockReceived += quantity;
         }
       }
     }
 
-    // Stock in hand = (received + returned) - (issued + damaged + lost)
-    final stockInHand = (stockReceived + stockReturned) -
-        (stockIssued + stockDamaged + stockLost);
+    // Stock in hand = (received + returned + excess) - (issued + damaged + lost + less)
+    final stockInHand = (stockReceived + stockReturned + stockExcess) -
+        (stockIssued + stockDamaged + stockLost + stockLess);
 
     return {
       'stockReceived': stockReceived,
@@ -141,6 +162,8 @@ class StockCalculationUtils {
       'stockReturned': stockReturned,
       'stockLost': stockLost,
       'stockDamaged': stockDamaged,
+      'stockExcess': stockExcess,
+      'stockLess': stockLess,
       'stockInHand': stockInHand,
     };
   }
@@ -182,6 +205,8 @@ class StockCalculationUtils {
         'stockReturned': 0,
         'stockLost': 0,
         'stockDamaged': 0,
+        'stockExcess': 0,
+        'stockLess': 0,
         'stockInHand': 0,
       };
 

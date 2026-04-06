@@ -268,6 +268,11 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                           cardIndex: index,
                           totalItems: _controllers.length,
                           variants: productVariants,
+                          onProductChanged: (index, product) {
+                            setState(() {
+                              _maxQuantities[index] = product.quantity;
+                            });
+                          },
                           onDelete: (index) {
                             (form.control(_resourceDeliveredKey) as FormArray)
                                 .removeAt(index);

@@ -3,24 +3,22 @@ import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../utils/flow_widget_state.dart';
 import '../../utils/utils.dart';
-import '../flow_widget_interface.dart';
-import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class LabelPairListWidget implements FlowWidget {
+class LabelPairListWidget extends ResolvedFlowWidget {
   @override
   String get format => 'labelPairList';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final flowState = WidgetStateContext.of(context);
     final List<dynamic> data = json['data'] ?? [];
-    final localization = LocalizationContext.maybeOf(context);
+    final localization = resolved.localization;
 
     // Filter out null items if hideIfNull is true
     final filteredItems = <LabelValueItem>[];
@@ -29,7 +27,7 @@ class LabelPairListWidget implements FlowWidget {
       // Check if this is an iterate directive
       if (e['iterate'] != null) {
         final iterateItems =
-            _processIterateDirective(e, flowState.evalContext, localization);
+            _processIterateDirective(e, resolved.evalContext, localization);
         filteredItems.addAll(iterateItems);
         continue;
       }
@@ -39,16 +37,16 @@ class LabelPairListWidget implements FlowWidget {
       final defaultValue = e['defaultValue'];
       final hideIfNull = e['hideIfNull'] == true;
 
-      // Resolve template using flowState.evalContext
+      // Resolve template using evalContext
       final keyText = resolveTemplate(
         key,
-        flowState.evalContext,
+        resolved.evalContext,
         localization: localization,
       );
 
       var valueText = resolveTemplate(
         value ?? '',
-        flowState.evalContext,
+        resolved.evalContext,
         localization: localization,
       );
 
@@ -65,7 +63,7 @@ class LabelPairListWidget implements FlowWidget {
       if (isValueEmpty && defaultValue != null) {
         valueText = resolveTemplate(
           defaultValue,
-          flowState.evalContext,
+          resolved.evalContext,
           localization: localization,
         );
       }
@@ -104,7 +102,7 @@ class LabelPairListWidget implements FlowWidget {
         {};
     final hideIfNull = config['hideIfNull'] == true;
 
-    // Resolve the iterate path to get the list using flowState.evalContext
+    // Resolve the iterate path to get the list using evalContext
     final resolvedList = resolveValue(iteratePath, contextData as Map<String, dynamic>);
 
     if (resolvedList == null || resolvedList is! List) {

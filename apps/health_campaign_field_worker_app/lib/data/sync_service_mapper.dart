@@ -83,6 +83,11 @@ class SyncServiceMapper extends SyncEntityMapperListener {
             .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
             .toList();
         await local.bulkCreate(entity);
+      case "HFReferrals":
+        final entity = entityList
+            .map((e) => HFReferralModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
       case "Services":
         final entity = entityList
             .map((e) => ServiceModelMapper.fromJson(jsonEncode(e)))
@@ -118,7 +123,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.hFReferral:
           case DataModelType.attendance:
           case DataModelType.service:
-          case DataModelType.userAction:
+            // case DataModelType.userAction:
             return true;
           default:
             return false;
@@ -900,7 +905,46 @@ class SyncServiceMapper extends SyncEntityMapperListener {
       //   }
       //   break;
 
+      case DataModelType.userAction:
+        responseEntities = await remote.search(UserActionSearchModel(
+          clientReferenceId: entities
+              .whereType<UserActionModel>()
+              .map((e) => e.clientReferenceId)
+              .toList(),
+        ));
 
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as UserActionModel;
+          final responseEntity =
+              responseEntities.whereType<UserActionModel>().firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+          if (serverGeneratedId != null) {
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: entity.clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+              ),
+            );
+          } else {
+            final bool markAsNonRecoverable = await local.opLogManager
+                .updateSyncDownRetry(entity.clientReferenceId);
+            if (markAsNonRecoverable) {
+              await local.update(
+                entity.copyWith(nonRecoverableError: true),
+                createOpLog: false,
+              );
+            }
+          }
+        }
+
+        break;
 
       default:
         break;

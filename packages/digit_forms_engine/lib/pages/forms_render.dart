@@ -34,6 +34,7 @@ class FormsRenderPage extends LocalizedStatefulWidget {
   final bool isSummary;
   final bool isEdit;
   final Map<String, dynamic>? navigationParams;
+  final void Function({Map<String, dynamic>? popupData})? onSecondaryAction;
 
   const FormsRenderPage({
     super.key,
@@ -45,6 +46,7 @@ class FormsRenderPage extends LocalizedStatefulWidget {
     this.defaultValues,
     this.navigationParams,
     @QueryParam() this.isSummary = false,
+    this.onSecondaryAction,
   });
 
   @override
@@ -579,9 +581,38 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             mainAxisSize: MainAxisSize.max,
                           ),
                         ),
+                        if (schema.secondaryActionLabel != null &&
+                            widget.onSecondaryAction != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: spacer1),
+                            child: DigitButton(
+                              label: localizations
+                                  .translate(schema.secondaryActionLabel!),
+                              onPressed: () {
+                                if (schema.showSecondaryAlertPopUp != null) {
+                                  _showSecondaryAlertPopUp(
+                                    context,
+                                    schema,
+                                    localizations,
+                                    widget.onSecondaryAction!,
+                                  );
+                                } else {
+                                  widget.onSecondaryAction!();
+                                }
+                              },
+                              type: DigitButtonType.tertiary,
+                              size: DigitButtonSize.large,
+                              mainAxisSize: MainAxisSize.max,
+                            ),
+                          ),
                       ],
                     ),
                     children: [
+                      if (_hasDisplayOnlyProperties(schema))
+                        ...[
+                        _buildDisplayOnlyCard(context, schema),
+                          const SizedBox(height: spacer4,)
+                      ],
                       DigitCard(
                         margin: const EdgeInsets.symmetric(
                           horizontal: spacer2,
@@ -687,11 +718,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           evaluateSingleCondition(condition.expression, contextValues);
 
       if (isConditionTrue) {
-        return template?.replaceAll("{value}", condition.value);
+        return template?.replaceAll(
+            "{value}", localizations.translate(condition.value));
       }
 
       if (condition.expression == "DEFAULT") {
-        return template?.replaceAll("{value}", condition.value);
+        return template?.replaceAll(
+            "{value}", localizations.translate(condition.value));
       }
     }
 
@@ -913,6 +946,30 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       mainAxisSize: MainAxisSize.max,
                     ),
                   ),
+                  if (schema.secondaryActionLabel != null &&
+                      widget.onSecondaryAction != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: spacer1),
+                      child: DigitButton(
+                        label: localizations
+                            .translate(schema.secondaryActionLabel!),
+                        onPressed: () {
+                          if (schema.showSecondaryAlertPopUp != null) {
+                            _showSecondaryAlertPopUp(
+                              context,
+                              schema,
+                              localizations,
+                              widget.onSecondaryAction!,
+                            );
+                          } else {
+                            widget.onSecondaryAction!();
+                          }
+                        },
+                        type: DigitButtonType.tertiary,
+                        size: DigitButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                      ),
+                    ),
                 ],
               ),
               children: [
@@ -1263,5 +1320,209 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         padding: const EdgeInsets.symmetric(vertical: spacer1),
       );
     }).toList();
+  }
+
+  void _showSecondaryAlertPopUp(
+    BuildContext context,
+    PropertySchema schema,
+    dynamic localizations,
+    void Function({Map<String, dynamic>? popupData}) onConfirm,
+  ) {
+    final popUpConfig = schema.showSecondaryAlertPopUp!;
+    final commentController = TextEditingController();
+    final bodyFields = popUpConfig.body ?? [];
+    final hasMandatoryFields =
+        bodyFields.any((field) => field.mandatory);
+
+    bool showValidationError = false;
+
+    showCustomPopup(
+      context: context,
+      builder: (BuildContext ctx) {
+        return StatefulBuilder(
+          builder: (popupCtx, setPopupState) {
+            return Popup(
+              title: localizations
+                  .translate(popUpConfig.title),
+              description: popUpConfig.description != null
+                  ? localizations
+                      .translate(popUpConfig.description!)
+                  : null,
+              additionalWidgets: [
+                ...bodyFields.map((field) {
+                  final hasError = showValidationError &&
+                      field.mandatory &&
+                      commentController.text
+                          .trim()
+                          .isEmpty;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                        top: spacer2),
+                    child: LabeledField(
+                      label: localizations
+                          .translate(field.label),
+                      isRequired: field.mandatory,
+                      child: DigitTextAreaFormInput(
+                        initialValue:
+                            commentController.text,
+                        onChange: (value) {
+                          commentController.text =
+                              value;
+                          setPopupState(() {
+                            showValidationError =
+                                false;
+                          });
+                        },
+                        errorMessage: hasError
+                            ? '${localizations.translate(field.label)} is required'
+                            : null,
+                      ),
+                    ),
+                  );
+                }),
+              ],
+              actions: [
+                DigitButton(
+                  label: localizations.translate(
+                      popUpConfig.primaryActionLabel),
+                  onPressed: () {
+                    final hasEmptyMandatory =
+                        bodyFields.any((field) =>
+                            field.mandatory &&
+                            commentController.text
+                                .trim()
+                                .isEmpty);
+                    if (hasEmptyMandatory) {
+                      setPopupState(() {
+                        showValidationError = true;
+                      });
+                      return;
+                    }
+                    final popupData =
+                        <String, dynamic>{};
+                    for (final field
+                        in bodyFields) {
+                      popupData[field.fieldName] =
+                          commentController.text
+                              .trim();
+                    }
+                    Navigator.of(ctx,
+                            rootNavigator: true)
+                        .pop();
+                    onConfirm(
+                        popupData: popupData);
+                  },
+                  type: DigitButtonType.primary,
+                  size: DigitButtonSize.large,
+                ),
+                DigitButton(
+                  label: localizations.translate(
+                      popUpConfig.secondaryActionLabel),
+                  onPressed: () {
+                    Navigator.of(ctx,
+                            rootNavigator: true)
+                        .pop();
+                  },
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.large,
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  bool _hasDisplayOnlyProperties(PropertySchema schema) {
+    return schema.properties?.values.any((p) => p.displayOnly == true) ?? false;
+  }
+
+  Widget _buildDisplayOnlyCard(BuildContext context, PropertySchema schema) {
+    final displayOnlyEntries = schema.properties!.entries
+        .where((entry) => entry.value.displayOnly == true)
+        .toList()
+      ..sort((a, b) => (a.value.order ?? 0).compareTo(b.value.order ?? 0));
+
+    // Build resolve context from navigation params and form defaults
+    final resolveContext = <String, dynamic>{
+      if (widget.navigationParams != null)
+        'navigation': widget.navigationParams,
+      if (widget.navigationParams != null) ...widget.navigationParams!,
+      if (widget.defaultValues != null) ...widget.defaultValues!,
+    };
+
+    final items = displayOnlyEntries.map((entry) {
+      final label = localizations.translate(entry.value.label ?? entry.key);
+      final rawValue = entry.value.value;
+
+      // Try to resolve template expressions like {{navigation.fieldName}}
+      String? resolvedValue;
+      if (rawValue != null && rawValue.toString().trim().isNotEmpty) {
+        final valueStr = rawValue.toString();
+        if (valueStr.contains('{{') && valueStr.contains('}}')) {
+          final templateMatch = RegExp(r'\{\{([^}]+)\}\}').firstMatch(valueStr);
+          if (templateMatch != null) {
+            final path = templateMatch.group(1)!.trim();
+            final parts = path.split('.');
+            dynamic current = resolveContext;
+            for (final part in parts) {
+              if (current is Map && current.containsKey(part)) {
+                current = current[part];
+              } else {
+                current = null;
+                break;
+              }
+            }
+            if (current != null && current is! Map && current is! List) {
+              resolvedValue = current.toString();
+            }
+          }
+        } else {
+          resolvedValue = valueStr;
+        }
+      }
+
+      // Also check if fieldName matches a key in navigation params or defaults
+      if ((resolvedValue == null || resolvedValue.isEmpty) &&
+          resolveContext.containsKey(entry.key)) {
+        final val = resolveContext[entry.key];
+        if (val != null && val is! Map && val is! List) {
+          resolvedValue = val.toString();
+        }
+      }
+
+      final displayValue =
+          resolvedValue != null && resolvedValue.trim().isNotEmpty
+              ? localizations.translate(resolvedValue)
+              : '--';
+
+      return LabelValueItem(
+        label: label,
+        value: displayValue,
+        isInline: true,
+        labelFlex: 5,
+        maxLines: 3,
+        padding: const EdgeInsets.symmetric(vertical: spacer1),
+      );
+    }).toList();
+
+    return DigitCard(
+      margin: const EdgeInsets.symmetric(horizontal: spacer2),
+      children: [
+        LabelValueSummary(
+          padding: EdgeInsets.zero,
+          heading: schema.label != null
+              ? localizations.translate(schema.label!)
+              : null,
+          headingStyle:
+              Theme.of(context).digitTextTheme(context).headingXl.copyWith(
+                    color: Theme.of(context).colorTheme.primary.primary2,
+                  ),
+          items: items,
+        ),
+      ],
+    );
   }
 }

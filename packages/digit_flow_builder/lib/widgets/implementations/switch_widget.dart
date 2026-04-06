@@ -2,23 +2,21 @@ import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../flow_widget_interface.dart';
-import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class SwitchWidget implements FlowWidget {
+class SwitchWidget extends ResolvedFlowWidget {
   @override
   String get format => 'switch';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final localization = LocalizationContext.maybeOf(context);
-
     return DigitSwitch(
-      label: localization?.translate(json['label'] ?? ''),
+      label: resolved.resolvedLabel,
       value: false,
       mainAxisAlignment: MainAxisAlignment.start,
       onChanged: (value) {
