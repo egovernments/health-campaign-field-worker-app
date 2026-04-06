@@ -223,11 +223,7 @@ class _FacilityCardContent extends StatelessWidget {
       } else if (transactionType == 'DISPATCHED' ||
           transactionType == 'ISSUED') {
         if (isToField) return facilityLevel == 'child';
-        if (isFromField) {
-          return hasDeliveryTeamInConfig
-              ? facilityLevel == 'parent'
-              : facilityLevel == 'current';
-        }
+        if (isFromField) return facilityLevel == 'current';
       } else if (transactionType == 'RECEIVED' ||
           transactionType == 'RECEIPT') {
         if (isToField) return facilityLevel == 'current';
@@ -291,12 +287,38 @@ class _FacilityCardContent extends StatelessWidget {
           });
         }
 
+        // For ISSUED/DISPATCHED, auto-prefill the from field with current facility
+        if (isFromField &&
+            (transactionType == 'DISPATCHED' ||
+                transactionType == 'ISSUED') &&
+            (selectedValue == null || selectedValue.isEmpty) &&
+            facilities.isNotEmpty) {
+          final currentFacility = facilities.first.code;
+          selectedValue = currentFacility;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            field.control.value = currentFacility;
+            context.read<FormsBloc>().add(
+                  FormsEvent.updateField(
+                    schemaKey: pageSchema,
+                    context: context,
+                    key: formKey,
+                    value: currentFacility,
+                  ),
+                );
+          });
+        }
+
         final selectedOption = (selectedValue != null && selectedValue.isNotEmpty)
             ? DropdownItem(
                 code: selectedValue,
                 name: _getDisplayName(selectedValue, deliveryTeamCode),
               )
             : null;
+
+        // Make from field read-only for ISSUED/DISPATCHED
+        final isReadOnlyFrom = isFromField &&
+            (transactionType == 'DISPATCHED' ||
+                transactionType == 'ISSUED');
 
         return LabeledField(
           label: labelFromSchema != null
@@ -310,6 +332,7 @@ class _FacilityCardContent extends StatelessWidget {
             emptyItemText: localizations.translate('NOT_FOUND'),
             items: facilities,
             selectedOption: selectedOption,
+            readOnly: isReadOnlyFrom,
             onSelect: (value) {
               field.control.value = value.code;
 
