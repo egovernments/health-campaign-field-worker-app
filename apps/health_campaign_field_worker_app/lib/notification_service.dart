@@ -27,6 +27,7 @@ class NotificationService {
   /// The map contains the FCM data payload.
   void Function(Map<String, dynamic>)? onNotificationTap;
 
+  static const String _fcmTokenKey = 'fcm_device_token';
   static const String _fcmTokenMapKey = 'fcm_device_token_map';
   static const String _channelId = 'fcm_default_channel';
   static const String _channelName = 'Push Notifications';
@@ -88,59 +89,6 @@ class NotificationService {
       badge: true,
       sound: true,
       provisional: false,
-    );
-
-    debugPrint('FCM: Permission status = ${settings.authorizationStatus}');
-
-    if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      debugPrint('FCM: User denied notification permissions');
-      return null;
-    }
-
-    // Get the FCM token
-    final token = await messaging.getToken();
-    debugPrint('FCM: Token received = ${token != null ? 'YES' : 'NULL'}');
-
-    // Handle foreground messages
-    FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-
-    // Handle notification tap when app is in background (not terminated)
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
-
-    // Handle notification tap when app was terminated
-    final initialMessage = await messaging.getInitialMessage();
-    if (initialMessage != null) {
-      _handleMessageOpenedApp(initialMessage);
-    }
-
-    return token;
-  }
-
-  /// Show a local notification banner for foreground FCM messages.
-  void _handleForegroundMessage(RemoteMessage message) {
-    final notification = message.notification;
-    if (notification == null) return;
-
-    flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channelId,
-          _channelName,
-          channelDescription: _channelDescription,
-          importance: Importance.high,
-          priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
-        ),
-        iOS: const DarwinNotificationDetails(
-          presentAlert: true,
-          presentBadge: true,
-          presentSound: true,
-        ),
-      ),
-      payload: _encodePayload(message.data),
     );
 
     debugPrint('FCM: Permission status = ${settings.authorizationStatus}');
@@ -255,20 +203,6 @@ class NotificationService {
     return map;
   }
 
-  /// Called when user taps on a local notification.
-  void _onNotificationTapped(NotificationResponse response) {
-    final payload = response.payload;
-    if (payload != null && payload.isNotEmpty) {
-      final data = _decodePayload(payload);
-      onNotificationTap?.call(data);
-    }
-  }
-
-  /// Called when user taps on an FCM notification (background/terminated).
-  void _handleMessageOpenedApp(RemoteMessage message) {
-    onNotificationTap?.call(message.data);
-  }
-
   /// Store FCM token in SharedPreferences map against userId.
   static Future<void> storeTokenForUser(String userId, String token) async {
     final prefs = await SharedPreferences.getInstance();
@@ -290,22 +224,5 @@ class NotificationService {
     final raw = prefs.getString(_fcmTokenMapKey);
     if (raw == null) return {};
     return Map<String, String>.from(jsonDecode(raw) as Map);
-  }
-
-  /// Encode a data map as a simple key=value payload string.
-  String _encodePayload(Map<String, dynamic> data) {
-    return data.entries.map((e) => '${e.key}=${e.value}').join('&');
-  }
-
-  /// Decode a payload string back to a map.
-  Map<String, dynamic> _decodePayload(String payload) {
-    final map = <String, dynamic>{};
-    for (final part in payload.split('&')) {
-      final index = part.indexOf('=');
-      if (index > 0) {
-        map[part.substring(0, index)] = part.substring(index + 1);
-      }
-    }
-    return map;
   }
 }

@@ -89,6 +89,7 @@ class _HomePageState extends LocalizedState<HomePage> {
   final storage = const FlutterSecureStorage();
   late StreamSubscription<List<ConnectivityResult>> subscription;
   bool isTriggerLocalisation = true;
+  final _syncDebouncer = Debouncer(seconds: 5);
   final StreamController<double> stockDownloadProgress =
       StreamController<double>.broadcast();
 
@@ -997,8 +998,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   state.maybeWhen(
                     orElse: () => null,
                     pendingSync: (count) {
-                      final debouncer = Debouncer(seconds: 5);
-                      debouncer.run(() async {
+                      _syncDebouncer.run(() async {
                         if (count != 0) {
                           await localSecureStore.setManualSyncTrigger(false);
                           if (context.mounted) {
@@ -1026,6 +1026,24 @@ class _HomePageState extends LocalizedState<HomePage> {
                         );
                       }
                     },
+                    nothingPending: () async {
+                      if (context.mounted) {
+                        DigitSyncDialog.show(context,
+                            type: DialogType.complete,
+                            label: localizations.translate(
+                              i18.syncDialog.noDataToSyncTitle,
+                            ),
+                            primaryAction: DigitDialogActions(
+                              label: localizations.translate(
+                                i18.syncDialog.closeButtonLabel,
+                              ),
+                              action: (ctx) {
+                                Navigator.pop(ctx);
+                              },
+                            ),
+                            barrierDismissible: true);
+                      }
+                    },
                     completedSync: () async {
                       Navigator.of(context, rootNavigator: true).pop();
                       await localSecureStore.setManualSyncTrigger(true);
@@ -1046,7 +1064,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                             barrierDismissible: true);
                       }
                     },
-                    failedSync: () async {
+                    failedSync: (message) async {
                       await localSecureStore.setManualSyncTrigger(true);
                       if (context.mounted) {
                         _showSyncFailedDialog(
@@ -1054,10 +1072,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                           message: localizations.translate(
                             i18.syncDialog.syncFailedTitle,
                           ),
+                          errorMessage: message.isNotEmpty
+                              ? localizations.translate(message)
+                              : null,
                         );
                       }
                     },
-                    failedDownSync: () async {
+                    failedDownSync: (message) async {
                       await localSecureStore.setManualSyncTrigger(true);
                       if (context.mounted) {
                         _showSyncFailedDialog(
@@ -1065,10 +1086,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                           message: localizations.translate(
                             i18.syncDialog.downSyncFailedTitle,
                           ),
+                          errorMessage: message.isNotEmpty
+                              ? localizations.translate(message)
+                              : null,
                         );
                       }
                     },
-                    failedUpSync: () async {
+                    failedUpSync: (message) async {
                       await localSecureStore.setManualSyncTrigger(true);
                       if (context.mounted) {
                         _showSyncFailedDialog(
@@ -1076,6 +1100,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                           message: localizations.translate(
                             i18.syncDialog.upSyncFailedTitle,
                           ),
+                          errorMessage: message.isNotEmpty
+                              ? localizations.translate(message)
+                              : null,
                         );
                       }
                     },
