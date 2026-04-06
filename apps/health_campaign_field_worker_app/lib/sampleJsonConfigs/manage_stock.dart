@@ -653,14 +653,7 @@ final dynamic sampleInventoryFlows = {
               "systemDate": false,
               "includeInSummary": true,
               "includeInForm": true,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
-                }
-              ],
+              "validations": [],
               "errorMessage": "",
               "isMultiSelect": false,
               "dropDownOptions": []

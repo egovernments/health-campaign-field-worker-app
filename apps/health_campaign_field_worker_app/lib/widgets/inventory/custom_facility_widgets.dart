@@ -176,21 +176,28 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
               ),
             );
 
-        // If delivery team is prefilled, also sync the team code
-        if (deliveryTeamSelected && teamCodeController.text.isNotEmpty) {
+        // If delivery team is prefilled, also sync the team code and add validation
+        if (deliveryTeamSelected) {
           final form = ReactiveForm.of(context);
           if (form is FormGroup && form.contains(widget.dependantFormKey)) {
-            form.control(widget.dependantFormKey).value =
-                teamCodeController.text;
+            final teamCodeControl =
+                form.control(widget.dependantFormKey);
+            if (teamCodeController.text.isNotEmpty) {
+              teamCodeControl.value = teamCodeController.text;
+            }
+            teamCodeControl.setValidators([Validators.required]);
+            teamCodeControl.updateValueAndValidity();
           }
-          context.read<FormsBloc>().add(
-                FormsEvent.updateField(
-                  schemaKey: widget.pageSchema,
-                  context: context,
-                  key: widget.dependantFormKey,
-                  value: teamCodeController.text,
-                ),
-              );
+          if (teamCodeController.text.isNotEmpty) {
+            context.read<FormsBloc>().add(
+                  FormsEvent.updateField(
+                    schemaKey: widget.pageSchema,
+                    context: context,
+                    key: widget.dependantFormKey,
+                    value: teamCodeController.text,
+                  ),
+                );
+          }
         }
 
         debugPrint(
@@ -316,7 +323,13 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
       } else if (transactionType == 'DISPATCHED' ||
           transactionType == 'ISSUED') {
         if (isToField) return facilityLevel == 'child';
-        if (isFromField) return facilityLevel == 'current';
+        // Least-level users (distributors) don't have a 'current' facility;
+        // show parent facility as the source they distribute from
+        if (isFromField) {
+          return isLeastLevel
+              ? facilityLevel == 'parent'
+              : facilityLevel == 'current';
+        }
       } else if (transactionType == 'RECEIVED' ||
           transactionType == 'RECEIPT') {
         if (isToField) return facilityLevel == 'current';
@@ -330,9 +343,10 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
     var facilities = <DropdownItem>[];
 
     // Show Delivery Team option:
-    // 1. In "to" field for DISPATCHED/ISSUED when user is distributor or no child facilities
+    // 1. In "to" field for DISPATCHED/ISSUED (not return flow) when user is distributor or no child facilities
     // 2. In "from" field for RETURNED flow when user is distributor (least level)
     final showDeliveryTeam = (isToField &&
+            !isReturnFlow &&
             (transactionType == 'DISPATCHED' || transactionType == 'ISSUED') &&
             (showDeliveryTeamOption || filteredFacilities.isEmpty)) ||
         (isFromField && isReturnFlow && isLeastLevel);
@@ -428,11 +442,23 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
 
                       final form = ReactiveForm.of(context) as FormGroup;
 
+                      // Toggle team code validation based on delivery team selection
+                      if (form.contains(widget.dependantFormKey)) {
+                        final teamCodeControl =
+                            form.control(widget.dependantFormKey);
+                        if (deliveryTeamSelected) {
+                          teamCodeControl
+                              .setValidators([Validators.required]);
+                        } else {
+                          teamCodeControl
+                            ..clearValidators()
+                            ..value = '';
+                        }
+                        teamCodeControl.updateValueAndValidity();
+                      }
+
                       // Clear team code when switching facilities
                       if (!deliveryTeamSelected) {
-                        if (form.contains(widget.dependantFormKey)) {
-                          form.control(widget.dependantFormKey).value = '';
-                        }
                         teamCodeController.clear();
                         context.read<DigitScannerBloc>().add(
                             const DigitScannerEvent.handleScanner(
