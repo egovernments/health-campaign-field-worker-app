@@ -9,15 +9,90 @@ import 'package:sync_service/utils/utils.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
 
+/// Cross-isolate lock to prevent concurrent sync operations.
+///
+/// Uses [FlutterSecureStorage] with a timestamp so that stale locks
+/// (e.g. from a killed process) auto-expire after [_staleDuration].
+class SyncLock {
+  static const _key = 'syncLockTimestamp';
+  static const _staleDuration = Duration(minutes: 2);
+  static const _storage = FlutterSecureStorage();
+
+  /// Tries to acquire the lock.
+  /// Returns `true` if the lock was acquired, `false` if another sync is
+  /// already in progress.
+  ///
+  /// Uses a read-check-write pattern. The TOCTOU window is minimal (~ms)
+  /// and acceptable given FlutterSecureStorage limitations.
+  static Future<bool> tryAcquire() async {
+    final existing = await _storage.read(key: _key);
+    if (existing != null) {
+      final lockTime = DateTime.tryParse(existing);
+      if (lockTime != null &&
+          DateTime.now().difference(lockTime).abs() < _staleDuration) {
+        return false;
+      }
+    }
+    await _storage.write(
+      key: _key,
+      value: DateTime.now().toIso8601String(),
+    );
+    return true;
+  }
+
+  /// Returns `true` when a non-stale lock is held.
+  static Future<bool> isLocked() async {
+    final existing = await _storage.read(key: _key);
+    if (existing == null) return false;
+    final lockTime = DateTime.tryParse(existing);
+    if (lockTime == null) return false;
+    return DateTime.now().difference(lockTime).abs() < _staleDuration;
+  }
+
+  /// Refreshes the lock timestamp to prevent stale expiry during long syncs.
+  static Future<void> refresh() async {
+    await _storage.write(
+      key: _key,
+      value: DateTime.now().toIso8601String(),
+    );
+  }
+
+  /// Releases the lock.
+  static Future<void> release() async {
+    await _storage.delete(key: _key);
+  }
+}
+
 /// The `SyncService` class provides methods to perform sync operations.
 class SyncService {
-  /// This function reads the params and gets the records which are not synced
-  /// and pushes to the sync-up and sync-down methods.
+  /// Public entry point that acquires [SyncLock] before syncing.
   ///
-  /// It accepts a list of `LocalRepository` objects, a list of `RemoteRepository` objects,
-  /// a `BandwidthModel`, and an optional `ServiceInstance` as parameters.
-  /// It returns a `Future` that resolves to a `bool` indicating whether the sync operation is completed.
+  /// Returns `false` immediately if another sync is already running.
   FutureOr<bool> performSync({
+    required List<LocalRepository> localRepositories,
+    required List<RemoteRepository> remoteRepositories,
+    required BandwidthModel bandwidthModel,
+    ServiceInstance? service,
+  }) async {
+    if (!await SyncLock.tryAcquire()) {
+      return false;
+    }
+
+    try {
+      return await _performSyncInternal(
+        localRepositories: localRepositories,
+        remoteRepositories: remoteRepositories,
+        bandwidthModel: bandwidthModel,
+        service: service,
+      );
+    } finally {
+      await SyncLock.release();
+    }
+  }
+
+  /// Internal implementation called by [performSync].
+  /// Loops until all pending entries are synced. Does NOT re-acquire the lock.
+  FutureOr<bool> _performSyncInternal({
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
     required BandwidthModel bandwidthModel,
@@ -28,67 +103,74 @@ class SyncService {
     if (configuration == PersistenceConfiguration.onlineOnly) {
       throw Exception('Sync up is not valid for online only configuration');
     }
-    bool isSyncCompleted = false;
 
-    final futuresSyncDown = await Future.wait(
-      localRepositories
-          .map((e) => e.getItemsToBeSyncedDown(bandwidthModel.userId)),
-    );
-    final pendingSyncDownEntries = futuresSyncDown.expand((e) => e).toList();
-
-    final futuresSyncUp = await Future.wait(
-      localRepositories
-          .map((e) => e.getItemsToBeSyncedUp(bandwidthModel.userId)),
-    );
-    final pendingSyncUpEntries = futuresSyncUp.expand((e) => e).toList();
-
-    SyncError? syncError;
-
-// Perform the sync Down Operation
-
-    try {
-      await PerformSyncDown.syncDown(
-        bandwidthModel: bandwidthModel,
-        localRepositories: localRepositories.toSet().toList(),
-        remoteRepositories: remoteRepositories.toSet().toList(),
-        configuration: configuration!,
+    const maxIterations = 10;
+    for (var iteration = 0; iteration < maxIterations; iteration++) {
+      final futuresSyncDown = await Future.wait(
+        localRepositories
+            .map((e) => e.getItemsToBeSyncedDown(bandwidthModel.userId)),
       );
-    } catch (e) {
-      syncError = SyncDownError(e);
-      service?.invoke('stopService');
-    }
+      final pendingSyncDownEntries =
+          futuresSyncDown.expand((e) => e).toList();
 
-// Perform the sync up Operation
-
-    try {
-      await PerformSyncUp.syncUp(
-        bandwidthModel: bandwidthModel,
-        localRepositories: localRepositories.toSet().toList(),
-        remoteRepositories: remoteRepositories.toSet().toList(),
+      final futuresSyncUp = await Future.wait(
+        localRepositories
+            .map((e) => e.getItemsToBeSyncedUp(bandwidthModel.userId)),
       );
-    } catch (e) {
-      syncError ??= SyncUpError(e);
-      service?.invoke('stopService');
-    }
+      final pendingSyncUpEntries =
+          futuresSyncUp.expand((e) => e).toList();
 
-    if (syncError != null) throw syncError;
+      if (pendingSyncUpEntries.isEmpty && pendingSyncDownEntries.isEmpty) {
+        return true;
+      }
 
-    // Recursive function which will call the Perform Sync
+      SyncError? syncError;
 
-    if (pendingSyncUpEntries.isNotEmpty || pendingSyncDownEntries.isNotEmpty) {
+      // Perform the sync Down Operation
+      if (pendingSyncDownEntries.isNotEmpty) {
+        SyncServiceSingleton().reportProgress(const SyncProgress(
+          entityType: 'Downloading from server...',
+          operation: 'syncDown',
+        ));
+        try {
+          await PerformSyncDown.syncDown(
+            bandwidthModel: bandwidthModel,
+            localRepositories: localRepositories.toSet().toList(),
+            remoteRepositories: remoteRepositories.toSet().toList(),
+            configuration: configuration!,
+          );
+        } catch (e) {
+          syncError = SyncDownError(e);
+        }
+      }
+
+      // Perform the sync up Operation
+      if (pendingSyncUpEntries.isNotEmpty) {
+        SyncServiceSingleton().reportProgress(const SyncProgress(
+          entityType: 'Uploading to server...',
+          operation: 'syncUp',
+        ));
+        try {
+          await PerformSyncUp.syncUp(
+            bandwidthModel: bandwidthModel,
+            localRepositories: localRepositories.toSet().toList(),
+            remoteRepositories: remoteRepositories.toSet().toList(),
+          );
+        } catch (e) {
+          syncError ??= SyncUpError(e);
+        }
+      }
+
+      if (syncError != null) {
+        service?.invoke('stopService');
+        throw syncError;
+      }
+
       await Future.delayed(const Duration(seconds: 3));
-      isSyncCompleted = await performSync(
-        bandwidthModel: bandwidthModel,
-        localRepositories: localRepositories,
-        remoteRepositories: remoteRepositories,
-      );
-    } else if (pendingSyncUpEntries.isEmpty && pendingSyncDownEntries.isEmpty) {
-      await const FlutterSecureStorage()
-          .write(key: 'manualSyncKey', value: false.toString());
-      isSyncCompleted = true;
+      await SyncLock.refresh();
     }
 
-    return isSyncCompleted;
+    return true;
   }
 
   /// Writes the given response to the entity database.
@@ -112,12 +194,13 @@ class SyncService {
   FutureOr<int> getPendingSyncRecordsCount(
     List<LocalRepository> localRepositories,
     String userId,
-  ) async =>
-      (await Future.wait(localRepositories.map((e) {
-        return e.getItemsToBeSyncedUp(userId);
-      })))
-          .expand((element) => element)
-          .length;
+  ) async {
+    final results = await Future.wait([
+      ...localRepositories.map((e) => e.getItemsToBeSyncedUp(userId)),
+      ...localRepositories.map((e) => e.getItemsToBeSyncedDown(userId)),
+    ]);
+    return results.expand((element) => element).length;
+  }
 }
 
 /// This function filters the entities by the given bandwidth.

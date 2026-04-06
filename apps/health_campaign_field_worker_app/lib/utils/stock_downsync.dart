@@ -141,7 +141,7 @@ class StockDownsyncService {
     if (receiverIds.isEmpty) return;
 
     final stockSearchModel = StockSearchModel(
-      receiverId: receiverIds,
+      receiverId: receiverIds.first,
       transactionType: [TransactionType.dispatched.toValue()],
       productVariantId: productVariantIds.isNotEmpty ? productVariantIds : null,
     );

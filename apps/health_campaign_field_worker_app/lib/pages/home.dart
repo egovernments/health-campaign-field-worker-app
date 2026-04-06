@@ -33,6 +33,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:sync_service/data/sync_service.dart';
 import 'package:transit_post/router/transit_post_router.gm.dart';
 import 'package:transit_post/utils/utils.dart';
 
@@ -100,12 +101,28 @@ class _HomePageState extends LocalizedState<HomePage> {
   final storage = const FlutterSecureStorage();
   late StreamSubscription<List<ConnectivityResult>> subscription;
   bool isTriggerLocalisation = true;
+  final _syncDebouncer = Debouncer(seconds: 5);
   final StreamController<double> stockDownloadProgress =
       StreamController<double>.broadcast();
 
   @override
   initState() {
     super.initState();
+
+    // If background service was killed with the app, release orphaned lock
+    // and restart the service.
+    FlutterBackgroundService().isRunning().then((isRunning) {
+      if (!isRunning) {
+        SyncLock.release();
+        if (context.mounted) {
+          performBackgroundService(
+            isBackground: false,
+            stopService: false,
+            context: context,
+          );
+        }
+      }
+    });
 
     subscription = Connectivity()
         .onConnectivityChanged
@@ -412,7 +429,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     FunctionRegistry.register('getSecondaryType', (args, stateData) {
       if (args.isEmpty) return 'WAREHOUSE';
       final facilityFromWhich = args.first?.toString() ?? '';
-      return facilityFromWhich == 'Delivery Team' ? 'STAFF' : 'WAREHOUSE';
+      return facilityFromWhich == 'DELIVERY_TEAM' ? 'STAFF' : 'WAREHOUSE';
     });
 
     // Attendance
@@ -2053,8 +2070,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   state.maybeWhen(
                     orElse: () => null,
                     pendingSync: (count) {
-                      final debouncer = Debouncer(seconds: 5);
-                      debouncer.run(() async {
+                      _syncDebouncer.run(() async {
                         if (count != 0) {
                           await localSecureStore.setManualSyncTrigger(false);
                           if (context.mounted) {
@@ -2082,6 +2098,24 @@ class _HomePageState extends LocalizedState<HomePage> {
                         );
                       }
                     },
+                    nothingPending: () async {
+                      if (context.mounted) {
+                        DigitSyncDialog.show(context,
+                            type: DialogType.complete,
+                            label: localizations.translate(
+                              i18.syncDialog.noDataToSyncTitle,
+                            ),
+                            primaryAction: DigitDialogActions(
+                              label: localizations.translate(
+                                i18.syncDialog.closeButtonLabel,
+                              ),
+                              action: (ctx) {
+                                Navigator.pop(ctx);
+                              },
+                            ),
+                            barrierDismissible: true);
+                      }
+                    },
                     completedSync: () async {
                       Navigator.of(context, rootNavigator: true).pop();
                       await localSecureStore.setManualSyncTrigger(true);
@@ -2102,7 +2136,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                             barrierDismissible: true);
                       }
                     },
-                    failedSync: () async {
+                    failedSync: (message) async {
                       await localSecureStore.setManualSyncTrigger(true);
                       if (context.mounted) {
                         _showSyncFailedDialog(
@@ -2110,10 +2144,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                           message: localizations.translate(
                             i18.syncDialog.syncFailedTitle,
                           ),
+                          errorMessage: message.isNotEmpty
+                              ? localizations.translate(message)
+                              : null,
                         );
                       }
                     },
-                    failedDownSync: () async {
+                    failedDownSync: (message) async {
                       await localSecureStore.setManualSyncTrigger(true);
                       if (context.mounted) {
                         _showSyncFailedDialog(
@@ -2121,10 +2158,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                           message: localizations.translate(
                             i18.syncDialog.downSyncFailedTitle,
                           ),
+                          errorMessage: message.isNotEmpty
+                              ? localizations.translate(message)
+                              : null,
                         );
                       }
                     },
-                    failedUpSync: () async {
+                    failedUpSync: (message) async {
                       await localSecureStore.setManualSyncTrigger(true);
                       if (context.mounted) {
                         _showSyncFailedDialog(
@@ -2132,6 +2172,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                           message: localizations.translate(
                             i18.syncDialog.upSyncFailedTitle,
                           ),
+                          errorMessage: message.isNotEmpty
+                              ? localizations.translate(message)
+                              : null,
                         );
                       }
                     },
@@ -2171,13 +2214,14 @@ class _HomePageState extends LocalizedState<HomePage> {
   void _showSyncFailedDialog(
     BuildContext context, {
     required String message,
+    String? errorMessage,
   }) {
     Navigator.of(context, rootNavigator: true).pop();
 
     DigitSyncDialog.show(
       context,
       type: DialogType.failed,
-      label: message,
+      label: errorMessage != null ? '$message\n$errorMessage' : message,
       primaryAction: DigitDialogActions(
         label: localizations.translate(
           i18.syncDialog.retryButtonLabel,
@@ -2637,6 +2681,26 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
           builder: (context, snapshot) {
+            final syncError = snapshot.data?['syncError'] as String?;
+            if (syncError != null && context.mounted) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  DigitSyncDialog.show(
+                    context,
+                    type: DialogType.failed,
+                    label:
+                        '${localizations.translate(i18.syncDialog.syncFailedTitle)}\n${localizations.translate(syncError)}',
+                    primaryAction: DigitDialogActions(
+                      label: localizations.translate(
+                        i18.syncDialog.closeButtonLabel,
+                      ),
+                      action: (ctx) => Navigator.pop(ctx),
+                    ),
+                    barrierDismissible: true,
+                  );
+                }
+              });
+            }
             return HomeItemCard(
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,

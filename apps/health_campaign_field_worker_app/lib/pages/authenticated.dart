@@ -25,8 +25,6 @@ import 'package:sync_service/sync_service_lib.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
-import 'package:digit_data_model/models/entities/hf_referral.dart';
-
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';

@@ -5936,6 +5936,18 @@ final dynamic sampleFlows = {
           }
         },
         {
+          "actionType": "UPDATE_STOCK_BALANCE",
+          "properties": {
+            "entity": "TASK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to update stock balance."}
+              }
+            ]
+          }
+        },
+        {
           "actions": [
             {
               "actionType": "FETCH_TRANSFORMER_CONFIG",

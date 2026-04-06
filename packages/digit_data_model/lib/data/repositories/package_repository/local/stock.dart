@@ -17,7 +17,7 @@ class StockLocalRepository
         ..where(
           (tbl) => buildAnd([
             if (query.receiverId != null)
-              tbl.receiverId.isIn(query.receiverId!),
+              tbl.receiverId.equals(query.receiverId!),
             if (query.senderId != null) tbl.senderId.equals(query.senderId!),
             if (query.productVariantId != null)
               tbl.productVariantId.isIn(query.productVariantId!),
@@ -102,7 +102,7 @@ class StockLocalRepository
                 [
                   if (query.id != null) sql.stock.id.equals(query.id!),
                   if (query.receiverId != null)
-                    sql.stock.receiverId.isIn(query.receiverId!),
+                    sql.stock.receiverId.equals(query.receiverId!),
                   if (query.senderId != null)
                     sql.stock.senderId.equals(query.senderId!),
                   if (query.productVariantId != null)

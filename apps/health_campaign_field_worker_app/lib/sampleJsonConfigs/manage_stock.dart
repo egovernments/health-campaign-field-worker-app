@@ -324,25 +324,30 @@ final dynamic sampleInventoryFlows = {
       ],
       "body": [
         {
-          "type": "template",
-          "format": "dropdownTemplate",
-          "label":
-              "APP_CONFIG_INVENTORY_returnOrIssueSelection_TRANSACTION_TYPE_LABEL",
-          "fieldName": "transactionType",
-          "valueKey": "code",
-          "enums": [
+          "format": "card",
+          "children": [
             {
-              "name":
-                  "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_ISSUED",
-              "code": "ISSUED"
-            },
-            {
-              "name":
-                  "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_RETURNED",
-              "code": "RETURNED"
+              "type": "template",
+              "format": "dropdownTemplate",
+              "label":
+                  "APP_CONFIG_INVENTORY_returnOrIssueSelection_TRANSACTION_TYPE_LABEL",
+              "fieldName": "transactionType",
+              "valueKey": "code",
+              "enums": [
+                {
+                  "name":
+                      "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_ISSUED",
+                  "code": "ISSUED"
+                },
+                {
+                  "name":
+                      "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_RETURNED",
+                  "code": "RETURNED"
+                }
+              ]
             }
           ]
-        }
+        },
       ]
     },
     {
@@ -636,11 +641,16 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "enums": [],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "warehouseDetails.facilityToWhich==DELIVERY_TEAM"}
+                ]
+              },
               "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": true,
+              "hidden": false,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -652,6 +662,7 @@ final dynamic sampleInventoryFlows = {
               "innerLabel": "",
               "systemDate": false,
               "includeInSummary": true,
+              "includeInForm": true,
               "validations": [
                 {
                   "type": "required",
@@ -762,7 +773,7 @@ final dynamic sampleInventoryFlows = {
               "type": "string",
               "visibilityCondition": {
                 "expression": [
-                  {"condition": "stockDetails.facilityFromWhich==Delivery Team"}
+                  {"condition": "stockDetails.facilityFromWhich==DELIVERY_TEAM"}
                 ]
               },
               "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
@@ -1494,11 +1505,16 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "enums": [],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "warehouseDetails.facilityToWhich==DELIVERY_TEAM"}
+                ]
+              },
               "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": true,
+              "hidden": false,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -1858,6 +1874,11 @@ final dynamic sampleInventoryFlows = {
                 "key": "clientCreatedBy,clientModifiedBy",
                 "value": "{{singleton.loggedInUserUuid}}",
                 "operation": "equalsAny"
+              },
+              {
+                "key": "additionalFields",
+                "value": "\"value\":\"REJECTED\"",
+                "operation": "notContains"
               }
             ]
           }
@@ -1903,7 +1924,7 @@ final dynamic sampleInventoryFlows = {
                   {
                     "format": "tag",
                     "type": "",
-                    "label": "INVENTORY_MRN_TAG_LABEL{{item.groupKey}}"
+                    "label": "MRN {{item.groupKey}}"
                   },
                   {
                     "format": "textTemplate",

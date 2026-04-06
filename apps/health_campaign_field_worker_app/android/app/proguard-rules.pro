@@ -62,5 +62,9 @@
     static ** CREATOR;
 }
 
+# Firebase Cloud Messaging
+-keep class com.google.firebase.messaging.** { *; }
+-dontwarn com.google.firebase.messaging.**
+
 # Keep annotations and signatures
 -keepattributes *Annotation*,Signature,Exceptions
