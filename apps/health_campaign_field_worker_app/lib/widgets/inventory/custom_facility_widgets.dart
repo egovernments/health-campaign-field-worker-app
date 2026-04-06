@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../models/entities/roles_type.dart';
 import '../../utils/extensions/extensions.dart';
 import '../localized.dart';
 
@@ -173,9 +174,13 @@ class _FacilityCardContent extends StatelessWidget {
     final stockEntryType =
         navigationParams['stockEntryType']?.toString() ?? '';
     final isReturnFlow = stockEntryType == 'RETURNED';
+    final isLessExcessFlow = stockEntryType == 'LESS_EXCESS';
 
     final deliveryTeamCode = _getDeliveryTeamCodeFromConfig(transactionType);
     final hasDeliveryTeamInConfig = deliveryTeamCode != null;
+
+    final isWareHouseMgr = context.loggedInUserRoles
+        .any((role) => role.code == RolesType.warehouseManager.toValue());
 
     // Get wrapper data for project facilities
     var wrapperData = stateData?.stateWrapper;
@@ -217,7 +222,10 @@ class _FacilityCardContent extends StatelessWidget {
 
       if (facilityLevel == null) return true;
 
-      if (isReturnFlow) {
+      if (isLessExcessFlow) {
+        if (isToField) return facilityLevel == 'parent';
+        if (isFromField) return facilityLevel == 'current';
+      } else if (isReturnFlow) {
         if (isToField) return facilityLevel == 'parent';
         if (isFromField) return facilityLevel == 'current';
       } else if (transactionType == 'DISPATCHED' ||
@@ -241,7 +249,7 @@ class _FacilityCardContent extends StatelessWidget {
                 !isReturnFlow &&
                 (transactionType == 'DISPATCHED' ||
                     transactionType == 'ISSUED')) ||
-            (isFromField && isReturnFlow));
+            (isFromField && isReturnFlow && !isWareHouseMgr));
     if (showDeliveryTeam) {
       facilities.add(DropdownItem(
         code: deliveryTeamCode!,
@@ -268,14 +276,18 @@ class _FacilityCardContent extends StatelessWidget {
         // Read selected value from the form control (source of truth)
         var selectedValue = _getCurrentValue(field.control);
 
-        // For return flow, auto-prefill delivery team if no value yet
+        // For return flow, auto-prefill delivery team if no value yet (distributors only)
         if (isReturnFlow &&
             isFromField &&
             hasDeliveryTeamInConfig &&
+            !isWareHouseMgr &&
             (selectedValue == null || selectedValue.isEmpty)) {
           selectedValue = deliveryTeamCode;
+          final loggedInUserId = context.loggedInUserUuid;
           WidgetsBinding.instance.addPostFrameCallback((_) {
             field.control.value = deliveryTeamCode;
+            field.control.markAsTouched();
+            field.control.markAsDirty();
             context.read<FormsBloc>().add(
                   FormsEvent.updateField(
                     schemaKey: pageSchema,
@@ -284,19 +296,31 @@ class _FacilityCardContent extends StatelessWidget {
                     value: deliveryTeamCode,
                   ),
                 );
+            // Auto-fill team code with logged-in user ID
+            context.read<FormsBloc>().add(
+                  FormsEvent.updateField(
+                    schemaKey: pageSchema,
+                    context: context,
+                    key: dependantFormKey,
+                    value: loggedInUserId,
+                  ),
+                );
           });
         }
 
-        // For ISSUED/DISPATCHED, auto-prefill the from field with current facility
+        // For ISSUED/DISPATCHED/LESS_EXCESS, auto-prefill the from field with current facility
         if (isFromField &&
             (transactionType == 'DISPATCHED' ||
-                transactionType == 'ISSUED') &&
+                transactionType == 'ISSUED' ||
+                isLessExcessFlow) &&
             (selectedValue == null || selectedValue.isEmpty) &&
             facilities.isNotEmpty) {
           final currentFacility = facilities.first.code;
           selectedValue = currentFacility;
           WidgetsBinding.instance.addPostFrameCallback((_) {
             field.control.value = currentFacility;
+            field.control.markAsTouched();
+            field.control.markAsDirty();
             context.read<FormsBloc>().add(
                   FormsEvent.updateField(
                     schemaKey: pageSchema,
@@ -315,10 +339,8 @@ class _FacilityCardContent extends StatelessWidget {
               )
             : null;
 
-        // Make from field read-only for ISSUED/DISPATCHED
-        final isReadOnlyFrom = isFromField &&
-            (transactionType == 'DISPATCHED' ||
-                transactionType == 'ISSUED');
+        // From field is always read-only
+        final isReadOnlyFrom = isFromField;
 
         return LabeledField(
           label: labelFromSchema != null
