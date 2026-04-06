@@ -85,10 +85,24 @@ class StockBalanceExecutor extends ActionExecutor {
       // For dispatched/loss/damaged stock, the facility is the sender
       final transactionType = stock.transactionType?.toUpperCase() ?? '';
       String? facilityId;
-      if (transactionType == 'RECEIVED') {
-        facilityId = stock.receiverId;
-      } else {
-        facilityId = stock.senderId;
+
+      final projectFacilityRepo = context.read<ProjectFacilityLocalRepository>();
+
+      final projectFacilities = await projectFacilityRepo.search(
+        ProjectFacilitySearchModel(projectId: [projectId]),
+      );
+
+      // Filter to only include facilities where facilityLevel is 'current'
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
+      if(currentFacilities.isNotEmpty){
+        facilityId = currentFacilities.first.facilityId;
       }
 
       if (facilityId == null) continue;
@@ -123,19 +137,28 @@ class StockBalanceExecutor extends ActionExecutor {
         final productVariantId = resource.productVariantId;
         if (productVariantId == null) continue;
 
-        // For task delivery, the facility is the current user's facility
-        // Get facility from project facilities
-        final projectFacilityRepo = context.read<
-            LocalRepository<ProjectFacilityModel,
-                ProjectFacilitySearchModel>>();
+        String? facilityId;
+
+        final projectFacilityRepo = context.read<ProjectFacilityLocalRepository>();
+
         final projectFacilities = await projectFacilityRepo.search(
           ProjectFacilitySearchModel(projectId: [projectId]),
         );
 
-        if (projectFacilities.isEmpty) continue;
+        // Filter to only include facilities where facilityLevel is 'current'
+        final currentFacilities = projectFacilities.where((pf) {
+          final facilityLevel = pf.additionalFields?.fields
+              .where((f) => f.key == 'facilityLevel')
+              .firstOrNull
+              ?.value;
+          return facilityLevel == null || facilityLevel == 'current';
+        }).toList();
 
-        // Use the first facility (or find the relevant one)
-        final facilityId = projectFacilities.first.facilityId;
+        if(currentFacilities.isNotEmpty){
+          facilityId = currentFacilities.first.facilityId;
+        }
+
+        if (facilityId == null) continue;
 
         await _updateStockBalance(
           context: context,
