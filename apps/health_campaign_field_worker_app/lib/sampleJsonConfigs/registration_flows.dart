@@ -7350,7 +7350,7 @@ final dynamic sampleFlows = {
         }
       ],
       "name": "referralSuccess",
-      "order": 7,
+      "order": 8,
       "footer": [],
       "header": [
         {
@@ -7556,7 +7556,7 @@ final dynamic sampleFlows = {
         }
       ],
       "name": "beneficiaryDetails",
-      "order": 8,
+      "order": 9,
       "footer": [
         {
           "type": "template",
@@ -7954,7 +7954,7 @@ final dynamic sampleFlows = {
         }
       ],
       "name": "deliverySuccess",
-      "order": 10,
+      "order": 11,
       "footer": [],
       "header": [
         {
@@ -9581,7 +9581,7 @@ final dynamic sampleFlows = {
     },
     {
       "name": "REFER_BENEFICIARY",
-      "order": 6,
+      "order": 7,
       "pages": [
         {
           "body": null,
@@ -10600,8 +10600,108 @@ final dynamic sampleFlows = {
       "scrollListener": {}
     },
     {
-      "name": "CHECKLIST",
+      "name": "dataRecordedSuccess",
       "order": 5,
+      "screenType": "TEMPLATE",
+      "preventScreenCapture": false,
+      "header": [
+        {
+          "type": "template",
+          "label": "DELIVERY_BACK",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
+            }
+          ],
+          "fieldName": "back",
+          "mandatory": true
+        }
+      ],
+      "body": [
+        {
+          "type": "template",
+          "format": "panelCard",
+          "fieldName": "successCard",
+          "mandatory": true,
+          "label": "DATA_RECORDED_SUCCESSFULLY",
+          "heading": "DATA_RECORDED_SUCCESSFULLY",
+          "description": "DATA_RECORDED_SUCCESSFULLY_DESC",
+          "properties": {"type": "success"},
+          "children": [
+            {
+              "type": "template",
+              "format": "text",
+              "label": "BENEFICIARY_ID_LABEL",
+              "value": "Beneficiary ID",
+              "fieldName": "beneficiaryIdLabel",
+              "mandatory": true
+            },
+            {
+              "type": "template",
+              "format": "text",
+              "label": "BENEFICIARY_ID_VALUE",
+              "value": "{{beneficiary.id}}",
+              "fieldName": "beneficiaryIdValue",
+              "mandatory": true,
+              "properties": {"style": "bold"}
+            }
+          ],
+          "primaryAction": {
+            "type": "template",
+            "label": "VIEW_HOUSEHOLD_DETAILS",
+            "format": "button",
+            "fieldName": "viewHouseholdButton",
+            "mandatory": true,
+            "hidden": false,
+            "properties": {"type": "primary"},
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "name": "householdOverview",
+                  "type": "TEMPLATE",
+                  "data": [
+                    {
+                      "key": "HouseholdClientReferenceId",
+                      "value": "{{navigation.HouseholdClientReferenceId}}"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "secondaryAction": {
+            "type": "template",
+            "label": "BACK_TO_SEARCH",
+            "format": "button",
+            "fieldName": "backToSearch",
+            "mandatory": true,
+            "hidden": false,
+            "properties": {"type": "secondary"},
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
+              }
+            ]
+          }
+        },
+        {
+          "type": "template",
+          "format": "text",
+          "label": "DATA_RECORDED_SUCCESSFULLY_DESC",
+          "value": "The data has been recorded successfully",
+          "fieldName": "successMessage",
+          "mandatory": true
+        }
+      ],
+      "footer": []
+    },
+    {
+      "name": "CHECKLIST",
+      "order": 6,
       "pages": [
         {
           "body": null,
@@ -11332,7 +11432,7 @@ final dynamic sampleFlows = {
     },
     {
       "name": "DELIVERY",
-      "order": 9,
+      "order": 10,
       "pages": [
         {
           "body": null,
@@ -11998,7 +12098,7 @@ final dynamic sampleFlows = {
     },
     {
       "name": "UNABLETODELIVER",
-      "order": 11,
+      "order": 12,
       "pages": [
         {
           "body": null,
