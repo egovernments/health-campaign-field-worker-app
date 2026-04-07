@@ -641,8 +641,10 @@ final jsonConfig = {
           "transactingPartyId": "stockDetails.transactingPartyId",
           "senderId": "stockDetails.facilityFromWhich",
           "senderType": "__value:WAREHOUSE",
-          "receiverId": "warehouseDetails.facilityToWhich",
-          "receiverType": "__value:WAREHOUSE",
+          "receiverId":
+              "__switch:__context:receiverPartyType:{STAFF:warehouseDetails.teamCode,default:warehouseDetails.facilityToWhich}",
+          "receiverType":
+              "__switch:__context:receiverPartyType:{STAFF:__value:STAFF,default:__value:WAREHOUSE}",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",

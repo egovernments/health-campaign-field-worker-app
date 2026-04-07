@@ -39,7 +39,7 @@ class StockCalculationUtils {
   /// - stockReturned: Total quantity returned
   /// - stockLost: Total quantity lost
   /// - stockDamaged: Total quantity damaged
-  /// - stockInHand: Calculated as (received + returned) - (issued + damaged + lost). Excess/less are tracked but do not affect balance.
+  /// - stockInHand: Calculated as (received) - (issued + returned + damaged + lost). Excess/less are tracked but do not affect balance.
   static Map<String, double> calculateStockMetrics({
     required List<StockModel> stockList,
     required String facilityId,
@@ -133,8 +133,8 @@ class StockCalculationUtils {
         } else if (stockEntryType == 'REJECTED') {
           // Rejected stock - not counted as issued since it was never accepted
         } else if (stockEntryType == 'RETURNED') {
-          // Returned stock dispatched out should decrease stock in hand
-          stockIssued += quantity;
+          // Reverse logistics: returned stock dispatched out
+          stockReturned += quantity;
         } else {
           // Regular dispatch (issued)
           stockIssued += quantity;
@@ -153,8 +153,8 @@ class StockCalculationUtils {
 
     // Stock in hand = (received + returned) - (issued + damaged + lost)
     // Note: excess and less are tracked for backend reporting only and do not affect balance
-    final stockInHand = (stockReceived + stockReturned) -
-        (stockIssued + stockDamaged + stockLost);
+    final stockInHand = stockReceived -
+        (stockIssued + stockReturned + stockDamaged + stockLost);
 
     return {
       'stockReceived': stockReceived,

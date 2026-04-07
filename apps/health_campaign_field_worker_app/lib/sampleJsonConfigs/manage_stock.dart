@@ -1286,7 +1286,12 @@ final dynamic sampleInventoryFlows = {
               {
                 "key": "secondaryType",
                 "value":
-                    "{{fn:getSecondaryType(stockDetails.facilityFromWhich)}}"
+                    "{{fn:getSecondaryType(formData.stockDetails.facilityFromWhich)}}"
+              },
+              {
+                "key": "receiverPartyType",
+                "value":
+                    "{{fn:getSecondaryType(formData.warehouseDetails.facilityToWhich)}}"
               },
               {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"}
             ],
