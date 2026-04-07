@@ -230,7 +230,7 @@ class AppInitializationBloc
     return MdmsConfig(
       appConfigs: configs,
       serviceRegistryList: serviceRegistryList,
-      dashboardConfigSchema: dashboardConfigs.first.dashboardConfigs,
+      dashboardConfigSchema: dashboardConfigs.firstOrNull?.dashboardConfigs,
     );
   }
 }
