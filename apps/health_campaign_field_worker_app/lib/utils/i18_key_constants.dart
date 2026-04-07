@@ -1090,6 +1090,8 @@ class SyncDialog {
 
   String get dataSyncedTitle => 'SYNC_DIALOG_DATA_SYNCED_TITLE';
 
+  String get noDataToSyncTitle => 'SYNC_DIALOG_NO_DATA_TO_SYNC_TITLE';
+
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
@@ -1097,6 +1099,14 @@ class SyncDialog {
   String get pendingSyncLabel => 'PENDING_SYNC_LABEL';
 
   String get pendingSyncContent => 'PENDING_SYNC_CONTENT';
+
+  String get noInternetConnection => 'SYNC_DIALOG_NO_INTERNET_CONNECTION';
+
+  String get connectionTimedOut => 'SYNC_DIALOG_CONNECTION_TIMED_OUT';
+
+  String get serverError => 'SYNC_DIALOG_SERVER_ERROR';
+
+  String get networkError => 'SYNC_DIALOG_NETWORK_ERROR';
 }
 
 class StockReconciliationShowcase {

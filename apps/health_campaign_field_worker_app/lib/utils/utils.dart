@@ -30,6 +30,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:sync_service/data/sync_service.dart' show SyncLock;
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
@@ -132,6 +133,8 @@ performBackgroundService({
           type: ToastType.success,
         );
       }
+    } else if (context != null && context.mounted) {
+      debugPrint('Background service not started: isRunning=$isRunning, isOnline=$isOnline');
     }
   }
 }
@@ -576,7 +579,18 @@ void attemptSyncUp(BuildContext context) async {
     return;
   }
 
-  await LocalSecureStore.instance.setManualSyncTrigger(true);
+  if (await SyncLock.isLocked()) {
+    if (context.mounted) {
+      Toast.showToast(
+        context,
+        message: AppLocalizations.of(context).translate(
+          i18.common.coreCommonSyncInProgress,
+        ),
+        type: ToastType.success,
+      );
+    }
+    return;
+  }
 
   if (context.mounted) {
     context.read<SyncBloc>().add(

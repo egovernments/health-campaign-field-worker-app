@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,6 +26,7 @@ class NotificationService {
   /// The map contains the FCM data payload.
   void Function(Map<String, dynamic>)? onNotificationTap;
 
+  static const String _fcmTokenKey = 'fcm_device_token';
   static const String _fcmTokenMapKey = 'fcm_device_token_map';
   static const String _channelId = 'fcm_default_channel';
   static const String _channelName = 'Push Notifications';
@@ -97,9 +97,19 @@ class NotificationService {
       return null;
     }
 
-    // Get the FCM token
+    // Get and store the FCM token
     final token = await messaging.getToken();
     debugPrint('FCM: Token received = ${token != null ? 'YES' : 'NULL'}');
+    if (token != null) {
+      await _storeFcmToken(token);
+    } else {
+      debugPrint('FCM: WARNING - getToken() returned null');
+    }
+
+    // Listen for token refresh
+    messaging.onTokenRefresh.listen((newToken) async {
+      await _storeFcmToken(newToken);
+    });
 
     // Handle foreground messages
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
@@ -158,6 +168,40 @@ class NotificationService {
     onNotificationTap?.call(message.data);
   }
 
+  /// Store FCM token in SharedPreferences.
+  Future<void> _storeFcmToken(String token) async {
+    debugPrint('═══════════════════════════════════════════');
+    debugPrint('FCM TOKEN (copied to clipboard):');
+    debugPrint(token);
+    debugPrint('═══════════════════════════════════════════');
+    // await Clipboard.setData(ClipboardData(text: token));
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_fcmTokenKey, token);
+  }
+
+  /// Retrieve stored FCM token.
+  static Future<String?> getStoredFcmToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_fcmTokenKey);
+  }
+
+  /// Encode a data map as a simple key=value payload string.
+  String _encodePayload(Map<String, dynamic> data) {
+    return data.entries.map((e) => '${e.key}=${e.value}').join('&');
+  }
+
+  /// Decode a payload string back to a map.
+  Map<String, dynamic> _decodePayload(String payload) {
+    final map = <String, dynamic>{};
+    for (final part in payload.split('&')) {
+      final index = part.indexOf('=');
+      if (index > 0) {
+        map[part.substring(0, index)] = part.substring(index + 1);
+      }
+    }
+    return map;
+  }
+
   /// Store FCM token in SharedPreferences map against userId.
   static Future<void> storeTokenForUser(String userId, String token) async {
     final prefs = await SharedPreferences.getInstance();
@@ -179,22 +223,5 @@ class NotificationService {
     final raw = prefs.getString(_fcmTokenMapKey);
     if (raw == null) return {};
     return Map<String, String>.from(jsonDecode(raw) as Map);
-  }
-
-  /// Encode a data map as a simple key=value payload string.
-  String _encodePayload(Map<String, dynamic> data) {
-    return data.entries.map((e) => '${e.key}=${e.value}').join('&');
-  }
-
-  /// Decode a payload string back to a map.
-  Map<String, dynamic> _decodePayload(String payload) {
-    final map = <String, dynamic>{};
-    for (final part in payload.split('&')) {
-      final index = part.indexOf('=');
-      if (index > 0) {
-        map[part.substring(0, index)] = part.substring(index + 1);
-      }
-    }
-    return map;
   }
 }

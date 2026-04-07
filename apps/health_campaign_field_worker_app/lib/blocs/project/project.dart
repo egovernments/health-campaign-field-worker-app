@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
@@ -17,6 +18,7 @@ import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
+
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
@@ -24,17 +26,15 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
-import '../../utils/download_image.dart';
-import '../push_notification/push_notification.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../utils/background_service.dart';
-import '../../models/entities/transaction_type.dart';
+import '../../utils/download_image.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/utils.dart';
-import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
+import '../push_notification/push_notification.dart';
 
 part 'project.freezed.dart';
 

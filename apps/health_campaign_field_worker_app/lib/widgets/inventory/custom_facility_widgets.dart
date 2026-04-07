@@ -1,11 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/models/entities/project_facility.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
 import 'package:digit_forms_engine/widgets/base_reactive_field_wrapper.dart';
-import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +33,6 @@ class FacilityCard extends LocalizedStatefulWidget {
 class _FacilityCardState extends LocalizedState<FacilityCard> {
   @override
   Widget build(BuildContext context) {
-    // Get schema from FormsBloc
     final pages =
         context.read<FormsBloc>().state.cachedSchemas[widget.schemaName]?.pages;
 
@@ -44,7 +40,6 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
       return const SizedBox.shrink();
     }
 
-    // Find the field schema
     PropertySchema? fieldSchema;
     void findSchema(Map<String, PropertySchema> node) {
       for (final entry in node.entries) {
@@ -65,7 +60,6 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
       return const SizedBox.shrink();
     }
 
-    // Wrap with ValueListenableBuilder to rebuild when state changes
     return ValueListenableBuilder<FlowCrudState?>(
       valueListenable:
           FlowCrudStateRegistry().listen('FORM::${widget.schemaName}'),
@@ -83,7 +77,7 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
   }
 }
 
-class _FacilityCardContent extends StatefulWidget {
+class _FacilityCardContent extends StatelessWidget {
   final String formKey;
   final String dependantFormKey;
   final PropertySchema fieldSchema;
@@ -100,206 +94,125 @@ class _FacilityCardContent extends StatefulWidget {
     required this.localizations,
   });
 
-  @override
-  State<_FacilityCardContent> createState() => __FacilityCardContentState();
-}
+  /// Extract the delivery team code from the facilityHierarchy validation in config.
+  String? _getDeliveryTeamCodeFromConfig(String transactionType) {
+    final hierarchyValidation = fieldSchema.validations?.firstWhere(
+      (v) => v.type == 'facilityHierarchy',
+      orElse: () => const ValidationRule(type: ''),
+    );
 
-class __FacilityCardContentState extends State<_FacilityCardContent> {
-  bool deliveryTeamSelected = false;
-  String? selectedFacilityId;
-  TextEditingController teamCodeController = TextEditingController();
-  bool _initialized = false;
-  bool _formControlUpdated = false;
+    if (hierarchyValidation == null || hierarchyValidation.type.isEmpty) {
+      return null;
+    }
 
-  @override
-  void initState() {
-    super.initState();
-    // Clear QR codes on init
-    context.read<DigitScannerBloc>().add(const DigitScannerEvent.handleScanner(
-          barCode: [],
-          qrCode: [],
-        ));
+    final value = hierarchyValidation.value;
+    if (value is! Map) return null;
 
-    // Initialize from prefilled formData if available
-    _initializeFromFormData();
-  }
+    final hierarchyMapping = value['hierarchyMapping'];
+    if (hierarchyMapping is! Map) return null;
 
-  void _initializeFromFormData() {
-    if (_initialized) return;
+    final isReceipt = transactionType == 'RECEIVED' ||
+        transactionType == 'RECEIPT' ||
+        transactionType == 'RETURNED';
+    final directionKey = isReceipt ? 'forReceipt' : 'forIssue';
 
-    // Get prefilled value from stateData.formData
-    final formData = widget.stateData?.formData as Map<String, dynamic>?;
-    debugPrint('FacilityCard: formData for ${widget.formKey} = $formData');
-
-    if (formData != null) {
-      // Try to get facility value - check both nested and flat structure
-      final facilityValue = formData['warehouseDetails.${widget.formKey}'] ??
-          formData[widget.formKey] ??
-          (formData['warehouseDetails']
-              as Map<String, dynamic>?)?[widget.formKey] ??
-          (formData['stockDetails'] as Map<String, dynamic>?)?[widget.formKey];
-
-      debugPrint(
-          'FacilityCard: Looking for ${widget.formKey}, found: $facilityValue');
-
-      if (facilityValue != null && facilityValue.toString().isNotEmpty) {
-        selectedFacilityId = facilityValue.toString();
-        deliveryTeamSelected = selectedFacilityId == 'DELIVERY_TEAM';
-        _initialized = true;
-        _formControlUpdated =
-            false; // Need to update form control when available
-        debugPrint(
-            'FacilityCard: Initialized ${widget.formKey} with prefilled value: $selectedFacilityId');
+    for (final entry in hierarchyMapping.entries) {
+      final directions = entry.value;
+      if (directions is Map && directions.containsKey(directionKey)) {
+        final targets = directions[directionKey];
+        if (targets is List) {
+          for (final target in targets) {
+            if (target is String && target.startsWith('DELIVERY')) {
+              return target;
+            }
+          }
+        }
       }
     }
+
+    return null;
   }
 
-  /// Updates the form control with the prefilled value
-  /// This must be called after the form is built and the control is accessible
-  void _updateFormControlIfNeeded(
-      ReactiveFormFieldState<dynamic, dynamic> field) {
-    if (_initialized && !_formControlUpdated && selectedFacilityId != null) {
-      // Schedule the update for after the current build
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-
-        // Update the form control value
-        field.control.value = selectedFacilityId;
-
-        // Also update FormsBloc to sync state
-        context.read<FormsBloc>().add(
-              FormsEvent.updateField(
-                schemaKey: widget.pageSchema,
-                context: context,
-                key: widget.formKey,
-                value: selectedFacilityId,
-              ),
-            );
-
-        // If delivery team is prefilled, also sync the team code
-        if (deliveryTeamSelected && teamCodeController.text.isNotEmpty) {
-          final form = ReactiveForm.of(context);
-          if (form is FormGroup && form.contains(widget.dependantFormKey)) {
-            form.control(widget.dependantFormKey).value =
-                teamCodeController.text;
-          }
-          context.read<FormsBloc>().add(
-                FormsEvent.updateField(
-                  schemaKey: widget.pageSchema,
-                  context: context,
-                  key: widget.dependantFormKey,
-                  value: teamCodeController.text,
-                ),
-              );
-        }
-
-        debugPrint(
-            'FacilityCard: Updated form control ${widget.formKey} with value: $selectedFacilityId');
-      });
-      _formControlUpdated = true;
+  /// Read current selected value from form data or form control
+  String? _getCurrentValue(AbstractControl<dynamic>? control) {
+    // First try form control (most up-to-date after user interaction)
+    final controlValue = control?.value?.toString();
+    if (controlValue != null && controlValue.isNotEmpty) {
+      return controlValue;
     }
+
+    // Fallback to stateData.formData (for prefilled values)
+    final formData = stateData?.formData as Map<String, dynamic>?;
+    if (formData == null) return null;
+
+    final value = formData['warehouseDetails.$formKey'] ??
+        formData[formKey] ??
+        (formData['warehouseDetails'] as Map<String, dynamic>?)?[formKey] ??
+        (formData['stockDetails'] as Map<String, dynamic>?)?[formKey];
+
+    return (value != null && value.toString().isNotEmpty)
+        ? value.toString()
+        : null;
   }
 
-  @override
-  void didUpdateWidget(covariant _FacilityCardContent oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Re-initialize if stateData changed and we haven't initialized yet
-    if (!_initialized && widget.stateData != oldWidget.stateData) {
-      _initializeFromFormData();
+  String _getDisplayName(String facilityId, String? deliveryTeamCode) {
+    if (facilityId == deliveryTeamCode) {
+      return localizations.translate('DELIVERY_TEAM');
     }
-  }
-
-  @override
-  void dispose() {
-    teamCodeController.dispose();
-    super.dispose();
+    final isUuid = facilityId.contains('-') && !facilityId.startsWith('F-');
+    return isUuid ? facilityId : localizations.translate('FAC_$facilityId');
   }
 
   @override
   Widget build(BuildContext context) {
-    // Check if user is distributor but not warehouse manager
-    final isDistributor = context.loggedInUserRoles
-        .where(
-          (role) => role.code == RolesType.distributor.toValue(),
-        )
-        .toList()
-        .isNotEmpty;
+    final navigationParams = FlowCrudStateRegistry()
+            .getNavigationParams('FORM::$pageSchema') ??
+        FlowCrudStateRegistry().getNavigationParams(pageSchema) ??
+        {};
+    final transactionType =
+        navigationParams['transactionType']?.toString() ?? '';
+    final stockEntryType =
+        navigationParams['stockEntryType']?.toString() ?? '';
+    final isReturnFlow = stockEntryType == 'RETURNED';
+    final isLessExcessFlow = stockEntryType == 'LESS_EXCESS';
+
+    final deliveryTeamCode = _getDeliveryTeamCodeFromConfig(transactionType);
+    final hasDeliveryTeamInConfig = deliveryTeamCode != null;
+
     final isWareHouseMgr = context.loggedInUserRoles
-        .where((role) => role.code == RolesType.warehouseManager.toValue())
-        .toList()
-        .isNotEmpty;
+        .any((role) => role.code == RolesType.warehouseManager.toValue());
 
-    final showDeliveryTeamOption = isDistributor && !isWareHouseMgr;
-
-    // Try to get wrapper data from multiple sources
-    // First try the passed stateData, then try current form state directly
-    var wrapperData = widget.stateData?.stateWrapper;
-
-    // If stateData wrapper is null, try to get from FlowCrudStateRegistry
+    // Get wrapper data for project facilities
+    var wrapperData = stateData?.stateWrapper;
     if (wrapperData == null) {
-      final formState =
-          FlowCrudStateRegistry().get('FORM::${widget.pageSchema}') ??
-              FlowCrudStateRegistry().get(widget.pageSchema);
+      final formState = FlowCrudStateRegistry().get('FORM::$pageSchema') ??
+          FlowCrudStateRegistry().get(pageSchema);
       wrapperData = formState?.stateWrapper;
     }
 
-    // Extract ProjectFacilityModel from wrapper data
-    // Handle different wrapper data structures
     List<dynamic>? projectFacilities;
-
     if (wrapperData != null && wrapperData is List && wrapperData.isNotEmpty) {
       final firstItem = wrapperData.first;
       if (firstItem is Map) {
-        // Old structure: List<Map<String, List<dynamic>>>
         final wrapperList = wrapperData as List<Map<String, List<dynamic>>>;
         projectFacilities = wrapperList.firstWhere(
             (m) => m.containsKey('ProjectFacilityModel'),
             orElse: () => {'ProjectFacilityModel': []})['ProjectFacilityModel'];
       } else if (firstItem is ProjectFacilityModel) {
-        // Direct list of ProjectFacilityModel
         projectFacilities = wrapperData;
       } else {
-        // Mixed EntityModel list - filter for ProjectFacilityModel
         projectFacilities =
             wrapperData.whereType<ProjectFacilityModel>().toList();
       }
     }
-
     projectFacilities ??= [];
 
-    final labelFromSchema =
-        widget.fieldSchema.label ?? widget.fieldSchema.innerLabel;
+    final labelFromSchema = fieldSchema.label ?? fieldSchema.innerLabel;
 
-    // Get transaction type from navigation params for hierarchy filtering
-    // Try current form's navigation params
-    final navigationParams = FlowCrudStateRegistry()
-            .getNavigationParams('FORM::${widget.pageSchema}') ??
-        FlowCrudStateRegistry().getNavigationParams(widget.pageSchema) ??
-        {};
-    final transactionType =
-        navigationParams['transactionType']?.toString() ?? '';
-    final stockEntryType = navigationParams['stockEntryType']?.toString() ?? '';
-    final isReturnFlow = stockEntryType == 'RETURNED';
+    final isToField = formKey == 'facilityToWhich';
+    final isFromField = formKey == 'facilityFromWhich';
 
-    debugPrint(
-        'FacilityCard: Transaction type: $transactionType, stockEntryType: $stockEntryType');
-
-    // Filter facilities by facilityLevel based on transaction type and field
-    // facilityToWhich = destination, facilityFromWhich = source
-    final isToField = widget.formKey == 'facilityToWhich';
-    final isFromField = widget.formKey == 'facilityFromWhich';
-
-    // For return flow, prefill facilityFromWhich with "Delivery Team"
-    // and set team code to logged-in user's UUID
-    final isLeastLevel = showDeliveryTeamOption;
-    if (isReturnFlow && isFromField && isLeastLevel && !_initialized) {
-      selectedFacilityId = 'DELIVERY_TEAM';
-      deliveryTeamSelected = true;
-      teamCodeController.text = context.loggedInUserUuid;
-      _initialized = true;
-      _formControlUpdated = false;
-    }
-
+    // Filter facilities
     final filteredFacilities = projectFacilities.where((e) {
       final model = e as ProjectFacilityModel;
       final facilityLevel = model.additionalFields?.fields
@@ -307,10 +220,12 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
           .firstOrNull
           ?.value;
 
-      // If no facilityLevel (e.g. from ProjectFacilities list), always include
       if (facilityLevel == null) return true;
 
-      if (isReturnFlow) {
+      if (isLessExcessFlow) {
+        if (isToField) return facilityLevel == 'parent';
+        if (isFromField) return facilityLevel == 'current';
+      } else if (isReturnFlow) {
         if (isToField) return facilityLevel == 'parent';
         if (isFromField) return facilityLevel == 'current';
       } else if (transactionType == 'DISPATCHED' ||
@@ -326,184 +241,133 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
       return true;
     }).toList();
 
-    // Build facility list with Delivery Team option if applicable
+    // Build facility dropdown items
     var facilities = <DropdownItem>[];
 
-    // Show Delivery Team option:
-    // 1. In "to" field for DISPATCHED/ISSUED when user is distributor or no child facilities
-    // 2. In "from" field for RETURNED flow when user is distributor (least level)
-    final showDeliveryTeam = (isToField &&
-            (transactionType == 'DISPATCHED' || transactionType == 'ISSUED') &&
-            (showDeliveryTeamOption || filteredFacilities.isEmpty)) ||
-        (isFromField && isReturnFlow && isLeastLevel);
+    final showDeliveryTeam = hasDeliveryTeamInConfig &&
+        ((isToField &&
+                !isReturnFlow &&
+                (transactionType == 'DISPATCHED' ||
+                    transactionType == 'ISSUED')) ||
+            (isFromField && isReturnFlow && !isWareHouseMgr));
     if (showDeliveryTeam) {
-      facilities.add(const DropdownItem(
-        code: 'DELIVERY_TEAM',
-        name: 'Delivery Team',
+      facilities.add(DropdownItem(
+        code: deliveryTeamCode!,
+        name: localizations.translate('DELIVERY_TEAM'),
       ));
     }
 
-    // Add actual facilities
     facilities.addAll(filteredFacilities.map((e) {
       final model = e as ProjectFacilityModel;
       final facilityId = model.facilityId;
-      // Don't prepend FAC_ for UUIDs (distributor's own ID)
       final isUuid = facilityId.contains('-') && !facilityId.startsWith('F-');
       return DropdownItem(
         code: facilityId,
         name: isUuid
             ? facilityId
-            : widget.localizations.translate('FAC_$facilityId'),
+            : localizations.translate('FAC_$facilityId'),
       );
     }).toList());
 
-    final enums = facilities;
+    return BaseReactiveFieldWrapper(
+      formControlName: formKey,
+      schema: fieldSchema,
+      builder: (field) {
+        // Read selected value from the form control (source of truth)
+        var selectedValue = _getCurrentValue(field.control);
 
-    return BlocBuilder<DigitScannerBloc, DigitScannerState>(
-      builder: (context, scannerState) {
-        // Update team code from scanner
-        if (deliveryTeamSelected && scannerState.qrCodes.isNotEmpty) {
-          final scannedCode = scannerState.qrCodes.first;
-          if (teamCodeController.text != scannedCode) {
-            teamCodeController.text = scannedCode;
-            // Sync scanned value to form
-            final form = ReactiveForm.of(context);
-            if (form is FormGroup && form.contains(widget.dependantFormKey)) {
-              form.control(widget.dependantFormKey).value = scannedCode;
-            }
+        // For return flow, auto-prefill delivery team if no value yet (distributors only)
+        if (isReturnFlow &&
+            isFromField &&
+            hasDeliveryTeamInConfig &&
+            !isWareHouseMgr &&
+            (selectedValue == null || selectedValue.isEmpty)) {
+          selectedValue = deliveryTeamCode;
+          final loggedInUserId = context.loggedInUserUuid;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            field.control.value = deliveryTeamCode;
+            field.control.markAsTouched();
+            field.control.markAsDirty();
             context.read<FormsBloc>().add(
                   FormsEvent.updateField(
-                    schemaKey: widget.pageSchema,
+                    schemaKey: pageSchema,
                     context: context,
-                    key: widget.dependantFormKey,
-                    value: scannedCode,
+                    key: formKey,
+                    value: deliveryTeamCode,
                   ),
                 );
-          }
+            // Auto-fill team code with logged-in user ID
+            context.read<FormsBloc>().add(
+                  FormsEvent.updateField(
+                    schemaKey: pageSchema,
+                    context: context,
+                    key: dependantFormKey,
+                    value: loggedInUserId,
+                  ),
+                );
+          });
         }
 
-        // Use BaseReactiveFieldWrapper to automatically handle all validation messages
-        return BaseReactiveFieldWrapper(
-          formControlName: widget.formKey,
-          schema: widget
-              .fieldSchema, // Pass the schema - it handles all validations!
-          builder: (field) {
-            // Update form control with prefilled value if needed
-            _updateFormControlIfNeeded(field);
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                LabeledField(
-                  label: labelFromSchema != null
-                      ? widget.localizations.translate(
-                          labelFromSchema,
-                        )
-                      : widget.localizations.translate("SELECT_FACILITY"),
-                  capitalizedFirstLetter: false,
-                  isRequired: true,
-                  child: DigitDropdown(
-                    errorMessage: field.errorText,
-                    emptyItemText: widget.localizations.translate(
-                      'NOT_FOUND',
-                    ),
-                    items: enums,
-                    selectedOption: selectedFacilityId != null
-                        ? DropdownItem(
-                            code: selectedFacilityId!,
-                            name: selectedFacilityId == 'DELIVERY_TEAM'
-                                ? 'Delivery Team'
-                                : (selectedFacilityId!.contains('-') &&
-                                        !selectedFacilityId!.startsWith('F-'))
-                                    ? selectedFacilityId!
-                                    : widget.localizations
-                                        .translate('FAC_$selectedFacilityId'),
-                          )
-                        : const DropdownItem(name: '', code: ''),
-                    onSelect: (value) {
-                      setState(() {
-                        selectedFacilityId = value.code;
-                        deliveryTeamSelected = value.code == 'DELIVERY_TEAM';
-                      });
-
-                      final form = ReactiveForm.of(context) as FormGroup;
-
-                      // Clear team code when switching facilities
-                      if (!deliveryTeamSelected) {
-                        if (form.contains(widget.dependantFormKey)) {
-                          form.control(widget.dependantFormKey).value = '';
-                        }
-                        teamCodeController.clear();
-                        context.read<DigitScannerBloc>().add(
-                            const DigitScannerEvent.handleScanner(
-                                barCode: [], qrCode: []));
-                      }
-
-                      field.control.value = value.code;
-
-                      if (deliveryTeamSelected) {
-                        context.read<FormsBloc>().add(
-                              FormsEvent.updateField(
-                                schemaKey: widget.pageSchema,
-                                context: context,
-                                key: widget.formKey,
-                                value: value.code,
-                              ),
-                            );
-                      } else {
-                        final selectedModel = projectFacilities!
-                            .map((e) => e as ProjectFacilityModel)
-                            .firstWhere((m) => m.facilityId == value.code);
-
-                        context.read<FormsBloc>().add(
-                              FormsEvent.updateField(
-                                  schemaKey: widget.pageSchema,
-                                  context: context,
-                                  key: widget.formKey,
-                                  value: selectedModel.facilityId),
-                            );
-                      }
-                    },
+        // For ISSUED/DISPATCHED/LESS_EXCESS, auto-prefill the from field with current facility
+        if (isFromField &&
+            (transactionType == 'DISPATCHED' ||
+                transactionType == 'ISSUED' ||
+                isLessExcessFlow) &&
+            (selectedValue == null || selectedValue.isEmpty) &&
+            facilities.isNotEmpty) {
+          final currentFacility = facilities.first.code;
+          selectedValue = currentFacility;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            field.control.value = currentFacility;
+            field.control.markAsTouched();
+            field.control.markAsDirty();
+            context.read<FormsBloc>().add(
+                  FormsEvent.updateField(
+                    schemaKey: pageSchema,
+                    context: context,
+                    key: formKey,
+                    value: currentFacility,
                   ),
-                ),
-                if (deliveryTeamSelected) ...[
-                  const SizedBox(height: 16),
-                  LabeledField(
-                    label: widget.localizations
-                        .translate('INVENTORY_TEAM_CODE_LABEL'),
-                    isRequired: true,
-                    child: DigitTextFormInput(
-                      controller: teamCodeController,
-                      keyboardType: TextInputType.text,
-                      onChange: (value) {
-                        final form = ReactiveForm.of(context) as FormGroup;
-                        if (form.contains(widget.dependantFormKey)) {
-                          form.control(widget.dependantFormKey).value = value;
-                        }
-                        context.read<FormsBloc>().add(
-                              FormsEvent.updateField(
-                                schemaKey: widget.pageSchema,
-                                context: context,
-                                key: widget.dependantFormKey,
-                                value: value,
-                              ),
-                            );
-                      },
-                      suffixIcon: Icons.qr_code_scanner,
-                      onSuffixTap: (value) {
-                        context.router.push(DigitScannerRoute(
-                          singleValue: true,
-                          quantity: 1,
-                          isGS1code: false,
-                          scannerId: widget.dependantFormKey,
-                        ));
-                      },
+                );
+          });
+        }
+
+        final selectedOption = (selectedValue != null && selectedValue.isNotEmpty)
+            ? DropdownItem(
+                code: selectedValue,
+                name: _getDisplayName(selectedValue, deliveryTeamCode),
+              )
+            : null;
+
+        // From field is always read-only
+        final isReadOnlyFrom = isFromField;
+
+        return LabeledField(
+          label: labelFromSchema != null
+              ? localizations.translate(labelFromSchema)
+              : localizations.translate("SELECT_FACILITY"),
+          capitalizedFirstLetter: false,
+          isRequired: true,
+          child: DigitDropdown(
+            key: ValueKey('dropdown_${formKey}_$selectedValue'),
+            errorMessage: field.errorText,
+            emptyItemText: localizations.translate('NOT_FOUND'),
+            items: facilities,
+            selectedOption: selectedOption,
+            readOnly: isReadOnlyFrom,
+            onSelect: (value) {
+              field.control.value = value.code;
+
+              context.read<FormsBloc>().add(
+                    FormsEvent.updateField(
+                      schemaKey: pageSchema,
+                      context: context,
+                      key: formKey,
+                      value: value.code,
                     ),
-                  ),
-                ],
-              ],
-            );
-          },
+                  );
+            },
+          ),
         );
       },
     );

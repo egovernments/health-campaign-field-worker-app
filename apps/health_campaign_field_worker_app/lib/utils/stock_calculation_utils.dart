@@ -39,7 +39,7 @@ class StockCalculationUtils {
   /// - stockReturned: Total quantity returned
   /// - stockLost: Total quantity lost
   /// - stockDamaged: Total quantity damaged
-  /// - stockInHand: Calculated as (received + returned) - (issued + damaged + lost)
+  /// - stockInHand: Calculated as (received + returned) - (issued + damaged + lost). Excess/less are tracked but do not affect balance.
   static Map<String, double> calculateStockMetrics({
     required List<StockModel> stockList,
     required String facilityId,
@@ -151,9 +151,10 @@ class StockCalculationUtils {
       }
     }
 
-    // Stock in hand = (received + returned + excess) - (issued + damaged + lost + less)
-    final stockInHand = (stockReceived + stockReturned + stockExcess) -
-        (stockIssued + stockDamaged + stockLost + stockLess);
+    // Stock in hand = (received + returned) - (issued + damaged + lost)
+    // Note: excess and less are tracked for backend reporting only and do not affect balance
+    final stockInHand = (stockReceived + stockReturned) -
+        (stockIssued + stockDamaged + stockLost);
 
     return {
       'stockReceived': stockReceived,

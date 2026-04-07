@@ -86,7 +86,7 @@ abstract class RemoteRepository<D extends EntityModel,
                 'limit': limit ?? 100,
                 'tenantId': DigitDataModelSingleton().tenantId,
                 if (lastSyncedTime != null)
-                  'lastChangedSince': lastSyncedTime,
+                  'lastSyncedTime': lastSyncedTime,
                 if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
               },
               data: entityName == 'User'
@@ -137,7 +137,8 @@ abstract class RemoteRepository<D extends EntityModel,
     if (!responseMap.containsKey(
       (isSearchResponsePlural ||
               entityName == 'ServiceDefinition' ||
-              entityName == 'Service')
+              entityName == 'Service' ||
+              entityName == 'UserAction')
           ? entityNamePlural
           : entityName,
     )) {
@@ -150,7 +151,8 @@ abstract class RemoteRepository<D extends EntityModel,
 
     final entityResponse = await responseMap[(isSearchResponsePlural ||
             entityName == 'ServiceDefinition' ||
-            entityName == 'Service')
+            entityName == 'Service' ||
+            entityName == 'UserAction')
         ? entityNamePlural
         : entityName];
 
