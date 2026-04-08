@@ -1,0 +1,33 @@
+name: digit_face_verification
+description: Offline face verification for field worker attendance using MobileFaceNet + Google ML Kit.
+version: 0.0.1
+
+environment:
+  sdk: '>=2.19.4 <3.9.0'
+  flutter: '>=1.17.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.5
+  freezed_annotation: ^2.4.1
+  google_mlkit_face_detection: ">=0.10.0 <0.13.0"
+  tflite_flutter: ^0.11.0
+  camera: ^0.11.0+1
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  path_provider: ^2.1.2
+  image: ^4.1.4
+  crypto: ^3.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.8
+  freezed: ^2.5.2
+  isar_generator: ^3.1.0+1
+  flutter_lints: ^3.0.1
+
+flutter:
+  assets:
+    - assets/models/

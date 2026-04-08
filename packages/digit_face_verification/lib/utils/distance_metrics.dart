@@ -2,9 +2,8 @@ import 'dart:math';
 
 class DistanceMetrics {
   /// Default cosine similarity threshold for face verification.
-  /// Tuned for African faces via ROC analysis on RFW African pairs.
-  /// Update this value with the optimal threshold from the training notebook.
-  static const double defaultThreshold = 0.55;
+  /// Typical range for MobileFaceNet: 0.5–0.7 for cosine similarity.
+  static const double defaultThreshold = 0.80;
 
   /// Computes cosine similarity between two embedding vectors.
   /// Returns a value between -1.0 and 1.0, where 1.0 means identical.
@@ -46,6 +45,39 @@ class DistanceMetrics {
     }
 
     return sqrt(sum);
+  }
+
+  /// Computes an adaptive verification threshold based on enrollment quality.
+  ///
+  /// Enrollment quality is measured by the consistency of angle embeddings:
+  /// high inter-angle similarity → high quality → stricter threshold.
+  /// Low inter-angle similarity → challenging capture → slightly relaxed threshold.
+  ///
+  /// Returns a threshold in [minThreshold, maxThreshold].
+  static double adaptiveThreshold({
+    required List<double> averagedEmbedding,
+    required List<List<double>> angleEmbeddings,
+    double baseThreshold = defaultThreshold,
+    double minThreshold = 0.72,
+    double maxThreshold = 0.88,
+  }) {
+    if (angleEmbeddings.length < 2) return baseThreshold;
+
+    // Compute average pairwise cosine similarity among angle embeddings
+    double totalSim = 0.0;
+    int pairs = 0;
+    for (int i = 0; i < angleEmbeddings.length; i++) {
+      for (int j = i + 1; j < angleEmbeddings.length; j++) {
+        totalSim += cosineSimilarity(angleEmbeddings[i], angleEmbeddings[j]);
+        pairs++;
+      }
+    }
+    final avgConsistency = pairs > 0 ? totalSim / pairs : 0.5;
+
+    // Map consistency [0.5, 1.0] → threshold [minThreshold, maxThreshold]
+    // Low consistency (≤0.5) → minThreshold, high consistency (≥1.0) → maxThreshold
+    final normalized = ((avgConsistency - 0.5) / 0.5).clamp(0.0, 1.0);
+    return minThreshold + normalized * (maxThreshold - minThreshold);
   }
 
   /// Verifies if two embeddings belong to the same person.
