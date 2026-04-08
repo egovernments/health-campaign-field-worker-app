@@ -79,13 +79,10 @@ class StockCalculationUtils {
     double stockLess = 0;
 
     for (final stock in filteredStock) {
-      // Skip transactions that are in transit or rejected
-      final status = _getAdditionalFieldValue(stock, 'status');
-      if (status == 'IN_TRANSIT' || status == 'REJECTED') continue;
-
       final transactionType = stock.transactionType?.toUpperCase() ?? '';
       final transactionReason = stock.transactionReason?.toUpperCase() ?? '';
       final quantity = num.tryParse(stock.quantity ?? '0') ?? 0.0;
+      final status = _getAdditionalFieldValue(stock, 'status');
 
       // Extract stockEntryType from additionalFields as fallback
       final stockEntryType = _getStockEntryType(stock);
@@ -121,7 +118,10 @@ class StockCalculationUtils {
       // Stock Issued/Lost/Damaged: This facility is the sender AND transactionType == DISPATCHED
       // Check sender first so damage/loss is counted correctly when senderId == receiverId
       else if (isSender && transactionType == 'DISPATCHED') {
-        if (transactionReason == 'LOST_IN_TRANSIT' ||
+        // Rejected stock comes back to the sender — don't count as issued
+        if (status == 'REJECTED') {
+          // Skip - rejected stock is not subtracted from sender's balance
+        } else if (transactionReason == 'LOST_IN_TRANSIT' ||
             transactionReason == 'LOST_IN_STORAGE' ||
             stockEntryType == 'LOSS') {
           stockLost += quantity;
