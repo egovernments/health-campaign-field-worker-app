@@ -1686,7 +1686,7 @@ final dynamic sampleInventoryFlows = {
               "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
             },
             {
-              "type": "string",
+              "type": "integer",
               "label": "INVENTORY_QUANTITY_LABEL",
               "order": 4,
               "value": "",
@@ -2733,7 +2733,7 @@ final dynamic sampleInventoryFlows = {
             //   "enums": null
             // },
             {
-              "type": "string",
+              "type": "integer",
               "label": "INVENTORY_QUANTITY_SENT_BY_WAREHOUSE_LABEL",
               "order": 7,
               "value": "",
