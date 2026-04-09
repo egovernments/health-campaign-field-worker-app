@@ -99,6 +99,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: DeviceChangeReasonPage(
           key: args.key,
+          appLocalizations: args.appLocalizations,
           username: args.username,
           password: args.password,
         ),
@@ -492,6 +493,7 @@ class DeviceChangeReasonRoute
     extends PageRouteInfo<DeviceChangeReasonRouteArgs> {
   DeviceChangeReasonRoute({
     Key? key,
+    AppLocalizations? appLocalizations,
     required String username,
     required String password,
     List<PageRouteInfo>? children,
@@ -499,6 +501,7 @@ class DeviceChangeReasonRoute
           DeviceChangeReasonRoute.name,
           args: DeviceChangeReasonRouteArgs(
             key: key,
+            appLocalizations: appLocalizations,
             username: username,
             password: password,
           ),
@@ -514,11 +517,14 @@ class DeviceChangeReasonRoute
 class DeviceChangeReasonRouteArgs {
   const DeviceChangeReasonRouteArgs({
     this.key,
+    this.appLocalizations,
     required this.username,
     required this.password,
   });
 
   final Key? key;
+
+  final AppLocalizations? appLocalizations;
 
   final String username;
 
@@ -526,7 +532,7 @@ class DeviceChangeReasonRouteArgs {
 
   @override
   String toString() {
-    return 'DeviceChangeReasonRouteArgs{key: $key, username: $username, password: $password}';
+    return 'DeviceChangeReasonRouteArgs{key: $key, appLocalizations: $appLocalizations, username: $username, password: $password}';
   }
 }
 

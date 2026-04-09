@@ -160,6 +160,10 @@ class Constants {
   static const String stateBoundaryLevel = 'State';
   static const String stateFacility = 'State Facility';
   static const String lgaFacility = 'LGA Facility';
+  static const String deviceSwitch = 'DEVICE_SWITCH';
+  static const String deviceSwitchReason = 'DEVICE_SWITCH_REASON';
+  static const String oldDeviceToken = 'OLD_TOKEN';
+  static const String newDeviceToken = 'NEW_TOKEN';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -340,6 +344,22 @@ class Constants {
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
         .firstWhereOrNull((element) => element.entityName == entityName)
+        ?.path;
+
+    return actionResult ?? '';
+  }
+
+  static String getMultiLoginEndPoint({
+    required List<ServiceRegistry> serviceRegistry,
+    required String service,
+    required String action,
+    required String entityName,
+  }) {
+    final actionResult = serviceRegistry
+        .firstWhereOrNull((element) => element.service == service)
+        ?.actions
+        .firstWhereOrNull((element) =>
+            element.entityName == entityName && element.action == action)
         ?.path;
 
     return actionResult ?? '';

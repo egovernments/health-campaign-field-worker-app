@@ -1,23 +1,27 @@
 import 'package:dio/dio.dart';
 
+import '../../../models/auth/auth_model.dart';
+
 class ValidateRepository {
   final Dio _client;
 
   ValidateRepository(this._client);
 
-  Future<bool> isLoggedInOnOtherDevice({
+  Future<ValidateResponseModel> isLoggedInOnOtherDevice({
     required String endpoint,
     required Map<String, dynamic> payload,
   }) async {
     final response = await _client.post(endpoint, data: payload);
-    if (response.statusCode == 200) {
-      final data = response.data;
-      print("ValidateRepository API response: $data");
-      print("isDuplicateLogin value: ${data['isDuplicateLogin']}");
-      
-      return true;
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw Exception('Invalid response');
     }
-    throw Exception('Failed to check device login');
+
+    try {
+      return ValidateResponseModel.fromJson(data);
+    } catch (error) {
+      rethrow;
+    }
   }
 }
 
@@ -27,19 +31,21 @@ class DeviceSwitchRepository {
 
   DeviceSwitchRepository(this._client);
 
-  Future<bool> switchDevice({
+  Future<AuthModel> switchDevice({
     required String endpoint,
     required Map<String, dynamic> payload,
   }) async {
     final response = await _client.post(endpoint, data: payload);
-    print("response status code: ${response.statusCode}");
-    
-    if (response.statusCode == 200) {
-      final data = response.data;
-      print("DeviceSwitchRepository API response: $data");
-      
-      return true;
+
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw Exception('Invalid response');
     }
-    throw Exception('Failed to switch device');
+
+    try {
+      return AuthModel.fromJson(data);
+    } catch (error) {
+      rethrow;
+    }
   }
 }

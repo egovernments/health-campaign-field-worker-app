@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:dio/dio.dart';
 
 import '../../../models/auth/auth_model.dart';
@@ -53,4 +54,49 @@ class AuthRepository {
     }
   }
 
+  Future<ValidateResponseModel> isLoggedInOnOtherDevice({
+    required String endpoint,
+    required Map<String, dynamic> payload,
+  }) async {
+    final response = await _client.post(endpoint, data: payload);
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw Exception('Invalid response');
+    }
+
+    try {
+      return ValidateResponseModel.fromJson(data);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<AuthModel> switchDevice({
+    required String endpoint,
+    required Map<String, dynamic> payload,
+  }) async {
+    final response = await _client.post(endpoint, data: payload);
+
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw Exception('Invalid response');
+    }
+
+    try {
+      return AuthModel.fromJson(data);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> switchDeviceUserAction({
+    required String endpoint,
+    required UserActionModel userActionModel,
+  }) async {
+    try {
+      await _client.post(endpoint, data: userActionModel);
+    } catch (error) {
+      rethrow;
+    }
+  }
 }

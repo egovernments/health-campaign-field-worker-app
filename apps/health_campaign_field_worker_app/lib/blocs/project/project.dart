@@ -6,6 +6,7 @@ import 'dart:core';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,7 @@ import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
@@ -23,12 +25,12 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
+import '../auth/auth.dart';
 import '../push_notification/push_notification.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../utils/background_service.dart';
-import '../../models/entities/transaction_type.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/utils.dart';
@@ -110,6 +112,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
       productVariantLocalRepository;
   final DashboardRemoteRepository dashboardRemoteRepository;
+  final RemoteRepository<UserActionModel, UserActionSearchModel>
+      userActionRemoteRepository;
   BuildContext context;
 
   ProjectBloc({
@@ -142,6 +146,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.attendanceLogLocalRepository,
     required this.attendanceLogRemoteRepository,
     required this.dashboardRemoteRepository,
+    required this.userActionRemoteRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -852,6 +857,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
+    // Create useraction for device switch
+    try {
+      await _createUserActionForDeviceSwitch(event.model);
+    } catch (_) {
+      emit(state.copyWith(
+        selectedProject: event.model,
+        loading: false,
+        syncError: ProjectSyncErrorType.userAction,
+      ));
+      return;
+    }
+
     // Load project facilities after project selection
     try {
       await _loadProjectFacilities(event.model);
@@ -912,8 +929,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         receiverIds = currentFacilities.map((e) => e.facilityId).toList();
       } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
         receiverIds = currentFacilities.map((e) => e.facilityId).toList();
-      } else if (userRoles
-          .contains(RolesType.communityDistributor.toValue())) {
+      } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
         receiverIds = [userObject.uuid];
       }
 
@@ -924,12 +940,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         senderId: receiverIds.first,
       );
 
-      final totalCount = await (stockRemoteRepository
-              as StockRemoteRepository)
+      final totalCount = await (stockRemoteRepository as StockRemoteRepository)
           .fetchTotalCount(stockSearchModel, offSet: 0);
 
       if (totalCount <= 0) return;
-
 
       const batchSize = 50;
       int offset = 0;
@@ -1091,6 +1105,54 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       rethrow;
     }
   }
+
+  Future<void> _createUserActionForDeviceSwitch(ProjectModel project) async {
+    final deviceSwitchReason = await localSecureStore.deviceSwitchReason;
+    final existingDeviceToken = await localSecureStore.existingDeviceToken;
+    try {
+      if (deviceSwitchReason != null && existingDeviceToken != null) {
+        final currentToken = context.currentRegisteredToken;
+        if (currentToken != null) {
+          await localSecureStore.setUserDeviceToken(currentToken);
+        }
+
+        UserActionModel userActionModel = UserActionModel(
+            latitude: 0,
+            longitude: 0,
+            locationAccuracy: 0,
+            clientReferenceId: IdGen.i.identifier,
+            projectId: project.id,
+            boundaryCode:
+                project.address?.locality?.code ?? Constants.deviceSwitch,
+            action: Constants.deviceSwitch,
+            additionalFields: UserActionAdditionalFields(version: 1, fields: [
+              AdditionalField(Constants.deviceSwitchReason, deviceSwitchReason),
+              AdditionalField(Constants.oldDeviceToken, existingDeviceToken),
+              if (currentToken != null)
+                AdditionalField(Constants.newDeviceToken, currentToken),
+            ]));
+
+        await localSecureStore.deleteDeviceSwitchReason();
+        await localSecureStore.deleteExistingDeviceToken();
+
+        final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+        final apiEndPoint = Constants.getEndPoint(
+          serviceRegistry: serviceRegistry,
+          service: 'USER_ACTION',
+          action: ApiOperation.bulkCreate.toValue(),
+          entityName: 'userAction',
+        );
+
+        context.read<AuthBloc>().add(
+              AuthEvent.switchDeviceUserAction(
+                  userActionModel: userActionModel, apiEndPoint: apiEndPoint),
+            );
+      }
+    } catch (error) {
+      print(error);
+      // Skip the error as not creating the user action shouldn't block the flow
+    }
+  }
 }
 
 @freezed
@@ -1131,4 +1193,5 @@ enum ProjectSyncErrorType {
   boundary,
   appConfig,
   attendance,
+  userAction,
 }

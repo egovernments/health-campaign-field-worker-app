@@ -168,6 +168,21 @@ extension ContextUtilityExtensions on BuildContext {
     return individualUUID;
   }
 
+  String? get currentRegisteredToken {
+    final authBloc = _get<PushNotificationBloc>();
+    final fcmToken = authBloc.state.whenOrNull(
+      initialized: (fcmToken) {
+        return fcmToken;
+      },
+    );
+
+    if (fcmToken == null) {
+      return null;
+    }
+
+    return fcmToken;
+  }
+
   UserModel? get loggedInUserModel {
     final userRequestModel = loggedInUser;
     final userModel = UserModel(
