@@ -99,7 +99,8 @@ class StockDownsyncService {
             projectFacilities.map((e) => e.facilityId).toList();
 
         await _processStock(receiverIds, lastChangedSince, productVariantIds);
-      } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+      } else if (userRoles.contains(RolesType.distributor.toValue()) ||
+          userRoles.contains(RolesType.communityDistributor.toValue())) {
         final receiverIds = [userObject.uuid];
 
         await _processStock(receiverIds, lastChangedSince, productVariantIds);
