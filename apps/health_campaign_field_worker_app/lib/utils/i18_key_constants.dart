@@ -5,6 +5,7 @@ const attendance = Attendance();
 const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
+const beneficiaryId = BeneficiaryID();
 const dataShare = DataShare();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const adverseEvents = AdverseEvents();
@@ -29,6 +30,7 @@ const selectSurveyFormShowcase = SelectSurveyFormShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
 const stockReconciliationMetrics = StockReconciliationMetrics();
+
 
 class Attendance {
   const Attendance();
@@ -401,6 +403,8 @@ class Common {
   String get stockDataFoundContent => 'STOCK_DATA_FOUND_CONTENT';
 
   String get stockNoDataFoundContent => 'STOCK_NO_DATA_FOUND_CONTENT';
+
+  String get coreCommonDownloading => 'CORE_COMMON_DOWNLOADING';
 }
 
 class HomeShowcase {
@@ -861,6 +865,46 @@ class Home {
   String get stockBalanceLabel => 'HOME_STOCK_BALANCE_LABEL';
 
   String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
+
+  String get coreCommonNoInternet => 'CORE_COMMON_NO_INTERNET';
+
+  String get coreCommonSkipContinue => 'CORE_COMMON_SKIP_CONTINUE';
+
+}
+
+class BeneficiaryID {
+  const BeneficiaryID();
+
+  String get downloadedon => 'DOWNLOADED_ON';
+
+  String get beneficiaryIdsLabel => 'BENEFICIARY_IDS_LABEL';
+
+  String get downloadBeneficiaryIds => 'DOWNLOAD_BENEFICIARY_IDS';
+
+  String get noOfBeneficiaryIdsLeft => 'NO_OF_BENEFICIARY_IDS_LEFT';
+
+  String get availableBeneficiaryIdsText => 'AVAILABLE_BENEFICIARY_IDS_TEXT';
+
+  String get lowBeneficiaryIdsLabel => 'LOW_BENEFICIARY_IDS_LABEL';
+
+  String get lowBeneficiaryIdsText => 'LOW_BENEFICIARY_IDS_TEXT';
+
+  String get lowBeneficiaryIdsAlertText => 'LOW_BENEFICIARY_IDS_ALERT_TEXT';
+
+  String get noBeneficiaryIdsLabel => 'NO_BENEFICIARY_IDS_LABEL';
+
+  String get noBeneficiaryIdsText => 'NO_BENEFICIARY_IDS_TEXT';
+
+  String get noInternetBeneficiaryIdsText => 'NO_INTERNET_BENEFICIARY_IDS_TEXT';
+
+  String get failedBeneficiaryIds => 'FAILED_BENEFICIARY_IDS';
+
+  String get beneficiaryIdsLimitError => 'BENEFICIARY_IDS_LIMIT_ERROR';
+
+  String get beneficiaryIdsReFetch => 'BENEFICIARY_IDS_RE_FETCH';
+
+  String get totalBeneficiaryIds => 'TOTAL_BENEFICIARY_IDS';
+
 }
 
 class DataShare {

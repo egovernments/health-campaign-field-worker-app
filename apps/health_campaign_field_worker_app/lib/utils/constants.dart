@@ -164,6 +164,12 @@ class Constants {
   static const String stateFacility = 'State Facility';
   static const String lgaFacility = 'LGA Facility';
 
+  static const String downloadAnimation =
+      'assets/animated_json/download_animation.json';
+
+  static const String downloadSuccessAnimation =
+      'assets/animated_json/download_success.json';
+
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
     Isar isar,

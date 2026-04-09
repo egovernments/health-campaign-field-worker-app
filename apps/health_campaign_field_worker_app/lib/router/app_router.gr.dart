@@ -57,6 +57,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BeneficiariesReportPage(),
       );
     },
+    BeneficiaryIdDownSyncRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryIdDownSyncRouteArgs>(
+          orElse: () => const BeneficiaryIdDownSyncRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BeneficiaryIdDownSyncPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     BoundarySelectionRoute.name: (routeData) {
       final args = routeData.argsAs<BoundarySelectionRouteArgs>(
           orElse: () => const BoundarySelectionRouteArgs());
@@ -292,9 +303,9 @@ class AttendanceDigitScannerRoute
       ScannedIndividualDataModel,
       AttendanceValidationResult,
     ) onScanResult,
-    required int quantity,
+    required int quantity = 1,
     bool singleValue = false,
-    required bool isGS1code,
+    required bool isGS1code = false,
     List<PageRouteInfo>? children,
   }) : super(
           AttendanceDigitScannerRoute.name,
@@ -322,9 +333,9 @@ class AttendanceDigitScannerRouteArgs {
     required this.enableDynamicQRScanning,
     required this.attendees,
     required this.onScanResult,
-    required this.quantity,
+    required this.quantity = 1,
     this.singleValue = false,
-    required this.isGS1code,
+    required this.isGS1code = false,
   });
 
   final Key? key;
@@ -376,6 +387,45 @@ class BeneficiariesReportRoute extends PageRouteInfo<void> {
   static const String name = 'BeneficiariesReportRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [BeneficiaryIdDownSyncPage]
+class BeneficiaryIdDownSyncRoute
+    extends PageRouteInfo<BeneficiaryIdDownSyncRouteArgs> {
+  BeneficiaryIdDownSyncRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BeneficiaryIdDownSyncRoute.name,
+          args: BeneficiaryIdDownSyncRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BeneficiaryIdDownSyncRoute';
+
+  static const PageInfo<BeneficiaryIdDownSyncRouteArgs> page =
+      PageInfo<BeneficiaryIdDownSyncRouteArgs>(name);
+}
+
+class BeneficiaryIdDownSyncRouteArgs {
+  const BeneficiaryIdDownSyncRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BeneficiaryIdDownSyncRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
 }
 
 /// generated route for

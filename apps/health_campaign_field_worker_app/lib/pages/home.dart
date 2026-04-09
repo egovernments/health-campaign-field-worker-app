@@ -2455,25 +2455,25 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (schemaJsonRaw != null) {
-                    final allSchemas =
-                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                    final data = allSchemas['REGISTRATION'];
-
-                    final registrationDeliveryData = data?['data'];
-                    final flowsData = (registrationDeliveryData['flows']
-                                as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                    FlowRegistry.setConfig(flowsData);
-                    NavigationRegistry.setupNavigation(ctx);
-
-                    ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName: registrationDeliveryData["initialPage"]),
-                    );
-                  } else {
+                  // if (schemaJsonRaw != null) {
+                  //   final allSchemas =
+                  //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                  //   final data = allSchemas['REGISTRATION'];
+                  //
+                  //   final registrationDeliveryData = data?['data'];
+                  //   final flowsData = (registrationDeliveryData['flows']
+                  //               as List<dynamic>?)
+                  //           ?.map((e) => Map<String, dynamic>.from(e as Map))
+                  //           .toList() ??
+                  //       [];
+                  //   FlowRegistry.setConfig(flowsData);
+                  //   NavigationRegistry.setupNavigation(ctx);
+                  //
+                  //   ctx.router.push(
+                  //     FlowBuilderHomeRoute(
+                  //         pageName: registrationDeliveryData["initialPage"]),
+                  //   );
+                  // } else {
                     FlowRegistry.setConfig(
                         sampleFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
@@ -2481,7 +2481,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       FlowBuilderHomeRoute(
                           pageName: sampleFlows["initialPage"]),
                     );
-                  }
+                  // }
                 } catch (e) {
                   debugPrint('error $e');
                 }
@@ -2991,22 +2991,22 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
 
       /// TODO: NEED TO PICK CHANGES RELATED TO BENEFICIARY DOWNSYNC
-      // i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
-      //   child: HomeItemCard(
-      //     label: i18.home.beneficiaryIdLabel,
-      //     onPressed: () {
-      //       // if (isTriggerLocalisation) {
-      //       triggerLocalization();
-      //       isTriggerLocalisation = false;
-      //       // }
-      //       context.router.push(BeneficiaryIdDownSyncRoute());
-      //     },
-      //     icon: Icons.account_box,
-      //     enableCustomIcon: true,
-      //     customIconSize: spacer9,
-      //     customIcon: Constants.beneficiaryIdDownload,
-      //   ),
-      // ),
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
+        child: HomeItemCard(
+          label: i18.home.beneficiaryIdLabel,
+          onPressed: () {
+            // if (isTriggerLocalisation) {
+            triggerLocalization();
+            isTriggerLocalisation = false;
+            // }
+            context.router.push(BeneficiaryIdDownSyncRoute());
+          },
+          icon: Icons.account_box,
+          enableCustomIcon: true,
+          customIconSize: spacer9,
+          customIcon: Constants.beneficiaryIdDownload,
+        ),
+      ),
 
       i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
           child: HomeItemCard(
@@ -3045,7 +3045,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
-      // i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey, // TODO: Uncomment when beneficiary downsync is implemented
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey, // TODO: Uncomment when beneficiary downsync is implemented
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.showcaseKey,
@@ -3066,7 +3066,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
       i18.home.dashboard,
-      // i18.home.beneficiaryIdLabel, // TODO: Uncomment when beneficiary downsync is implemented
+      i18.home.beneficiaryIdLabel, // TODO: Uncomment when beneficiary downsync is implemented
       i18.home.faceRegistrationLabel,
       i18.home.dataShare,
       i18.home.stockSyncDataLabel,
@@ -3090,6 +3090,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
+    filteredLabels.add(i18.home.beneficiaryIdLabel);
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
