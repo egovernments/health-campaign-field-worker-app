@@ -10025,7 +10025,7 @@ final dynamic sampleFlows = {
                         "value": "{{formData.household.clientReferenceId}}"
                       }
                     ],
-                    "name": "beneficiary-details",
+                    "name": "ACKNOWLEDGEMENT",
                     "type": "template"
                   }
                 }
@@ -10114,7 +10114,7 @@ final dynamic sampleFlows = {
                 "value": "{{formData.household.clientReferenceId}}"
               }
             ],
-            "name": "beneficiary-details",
+            "name": "ACKNOWLEDGEMENT",
             "type": "template"
           },
           "properties": [
@@ -10498,7 +10498,7 @@ final dynamic sampleFlows = {
                 "value": "{{navigation.HouseholdClientReferenceId}}"
               }
             ],
-            "name": "householdOverview",
+            "name": "ACKNOWLEDGEMENT",
             "type": "TEMPLATE",
             "onError": [
               {
@@ -10600,7 +10600,7 @@ final dynamic sampleFlows = {
       "scrollListener": {}
     },
     {
-      "name": "dataRecordedSuccess",
+      "name": "ACKNOWLEDGEMENT",
       "order": 5,
       "screenType": "TEMPLATE",
       "preventScreenCapture": false,
