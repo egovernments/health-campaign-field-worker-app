@@ -70,6 +70,11 @@ class FlowCrudBloc extends CrudBloc {
 
       final newEntities =
           crudState.results.values.expand((list) => list).toList();
+      debugPrint('DEBUG_FLOWCRUD: CrudStateLoaded - ${newEntities.length} entities, '
+          'screenKey=$screenKey, compositeKey=$compositeKey');
+      for (final entry in crudState.results.entries) {
+        debugPrint('DEBUG_FLOWCRUD:   ${entry.key}: ${entry.value.length} items');
+      }
       final wrapperConfig =
           flowConfig['wrapperConfig'] as Map<String, dynamic>?;
       final newWrapper = wrapperConfig != null
@@ -79,6 +84,7 @@ class FlowCrudBloc extends CrudBloc {
               screenKey: screenKey,
             ).build()
           : newEntities;
+      debugPrint('DEBUG_FLOWCRUD: wrapper built with ${newWrapper.length} items');
       if (scrollDirection != null && existingState?.stateWrapper != null) {
         // Bidirectional pagination mode
         wrapper = _handleBidirectionalPagination(

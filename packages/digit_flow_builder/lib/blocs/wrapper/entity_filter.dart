@@ -1,4 +1,5 @@
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/foundation.dart';
 
 import '../flow_crud_bloc.dart';
 import 'entity_field_accessor.dart';
@@ -105,13 +106,21 @@ class EntityFilter {
         ? _resolver.resolveList(inFrom, localContext).toSet()
         : null;
 
+    debugPrint('DEBUG_FILTER: findRelatedEntities for "${relation['name']}" '
+        '(entity=$entityType): candidates=${candidates.length}, '
+        'targetField=$targetField, equalsFrom=$equalsFrom, equalsValue=$equalsValue');
+
     var related = candidates.where((e) {
       if (targetField == null) return false;
       final candidateValue =
           _resolver.resolveValue(targetField, e, localContext);
-      if (equalsValue != null) return candidateValue == equalsValue;
-      if (inValues != null) return inValues.contains(candidateValue);
-      return false;
+      final matches = equalsValue != null ? candidateValue == equalsValue :
+          (inValues != null ? inValues.contains(candidateValue) : false);
+      if (relation['name'] == 'headOfHousehold' || relation['name'] == 'headIndividual') {
+        debugPrint('DEBUG_FILTER:   candidate ${e.runtimeType}: '
+            '$targetField=$candidateValue vs equalsValue=$equalsValue → matches=$matches');
+      }
+      return matches;
     }).toList();
 
     final filters = relation['filters'] as List<dynamic>? ?? [];

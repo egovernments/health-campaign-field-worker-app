@@ -540,25 +540,18 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
   }
 
   getProductVariants() {
-    final data = widget.stateData;
     final projectType = context.selectedProjectType;
     final cycles = projectType?.cycles;
-    final eligible =
-        data?.stateWrapper?.first?['eligibleProductVariants'] as List?;
-    final productVariants = (eligible != null && eligible.isNotEmpty)
-        ? eligible
-            .whereType<Map<String, dynamic>>() // safety
-            .expand((item) =>
-                (item['ProductVariants'] as List?)
-                    ?.whereType<Map<String, dynamic>>()
-                    .map((e) => DeliveryProductVariantMapper.fromMap(e)) ??
-                const <DeliveryProductVariant>[])
-            .toList()
-        : (data?.stateWrapper?.first?['ProductVariants'] as List?)
-                ?.map((e) => DeliveryProductVariantMapper.fromMap(
-                    e as Map<String, dynamic>))
-                .toList() ??
-            [];
+
+    // Get ALL product variants from project config without eligibility filtering
+    final productVariants = cycles
+            ?.expand((cycle) => cycle.deliveries ?? <ProjectCycleDelivery>[])
+            .expand((delivery) =>
+                delivery.doseCriteria ?? <DeliveryDoseCriteria>[])
+            .expand((dose) =>
+                dose.productVariants ?? <DeliveryProductVariant>[])
+            .toList() ??
+        [];
 
     return productVariants;
   }

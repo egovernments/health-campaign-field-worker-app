@@ -175,6 +175,18 @@ bool _recordedSideEffectInternal(
 /// This function should be called at application startup to populate the
 /// registry with all necessary business logic functions.
 void initializeFunctionRegistry() {
+  /// Registers a function to add two numeric values.
+  ///
+  /// - **Function Name**: `'add'`
+  /// - **Arguments**: Two numeric values to add together.
+  /// - **Returns**: The sum as an integer.
+  FunctionRegistry.register('add', (args, stateData) {
+    if (args.length < 2) return 0;
+    final a = int.tryParse(args[0]?.toString() ?? '') ?? 0;
+    final b = int.tryParse(args[1]?.toString() ?? '') ?? 0;
+    return a + b;
+  });
+
   /// Registers a function to calculate age from a date of birth.
   ///
   /// - **Function Name**: `'calculateAge'`

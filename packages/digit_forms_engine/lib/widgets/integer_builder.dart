@@ -35,6 +35,7 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
         capitalizedFirstLetter: false,
         isRequired: isRequired ?? false,
         child: DigitNumericFormInput(
+          editable: true,
           helpText: helpText,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           readOnly: readOnly,

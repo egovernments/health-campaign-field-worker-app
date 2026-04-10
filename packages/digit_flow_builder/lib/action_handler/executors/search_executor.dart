@@ -203,6 +203,10 @@ class SearchExecutor extends ActionExecutor {
       final filterRoot =
           filterData['root'] as String? ?? data['name'] as String?;
 
+      debugPrint('DEBUG_SEARCH: filter key=$resolvedKey, value=$resolvedValue, '
+          'operation=$operation, root=$filterRoot (from filterData root=${filterData['root']}, '
+          'fallback name=${data['name']})');
+
       // Store resolved filter as map for accumulation
       resolvedFilters.add({
         'key': resolvedKey.toString(),
@@ -443,6 +447,13 @@ class SearchExecutor extends ActionExecutor {
       debugPrint('SEARCH_EVENT: No searchConfig in config, skipping search. primaryModel=$primaryModel, select=$select');
       return contextData;
     }
+
+    debugPrint('DEBUG_SEARCH: Final filters count=${filters.length}');
+    for (final f in filters) {
+      debugPrint('DEBUG_SEARCH:   filter root=${f.root}, field=${f.field}, '
+          'operator=${f.operator}, value=${f.value}');
+    }
+    debugPrint('DEBUG_SEARCH: primaryModel=$primaryModel, select=$select');
 
     final searchParams = GlobalSearchParameters(
       filters: filters,

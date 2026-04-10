@@ -705,6 +705,15 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 ),
                               );
 
+                              // Auto-close scanner when scan limit is reached
+                              if (updatedBarcodes.length >=
+                                  widget.effectiveQuantity) {
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+                                }
+                                return;
+                              }
+
                               initializeCameras();
                             } catch (e) {
                               debugPrint(

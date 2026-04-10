@@ -95,6 +95,12 @@ class UserActionLocalRepository
                     sql.userAction.clientReferenceId.isIn(
                       query.clientReferenceId!,
                     ),
+                  if (query.action != null)
+                    sql.userAction.action.equals(query.action!),
+                  if (query.projectId != null)
+                    sql.userAction.projectId.equals(query.projectId!),
+                  if (query.isDeleted != null)
+                    sql.userAction.isDeleted.equals(query.isDeleted!),
                 ],
               ),
             ))

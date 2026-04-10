@@ -54,6 +54,8 @@ class ValueResolver implements IValueResolver {
       // FIRST check wrapperData
       if (wrapperData.containsKey(parts[0])) {
         current = wrapperData[parts[0]];
+        debugPrint('DEBUG_VRESOLVER: path=$path, found "${parts[0]}" in wrapperData, '
+            'type=${current.runtimeType}, is List=${current is List}${current is List ? ", length=${(current as List).length}" : ""}');
         parts.removeAt(0);
         if (parts.isEmpty) return current;
       }

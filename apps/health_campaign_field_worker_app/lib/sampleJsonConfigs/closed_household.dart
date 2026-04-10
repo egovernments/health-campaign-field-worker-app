@@ -1,42 +1,52 @@
 final dynamic sampleCloseHouseholdFlows = {
-  "name": "CLOSEDHOUSEHOLD",
-  "initialPage": "CLOSEHOUSEHOLD",
-  "order": 7,
-  "project": "LLIN-mz",
+  "name": "CLOSEHOUSEHOLD",
+  "initialPage": "closeHouseholdRegistration",
+  "order": 2,
+  "active": true,
+  "project": "MR-DN",
   "version": 1,
   "disabled": false,
   "isSelected": true,
   "flows": [
     {
+      "name": "closeHouseholdRegistration",
       "screenType": "FORM",
-      "name": "CLOSEHOUSEHOLD",
-      "project": "LLIN-mz",
       "version": 1,
+      "category": "CLOSE_HOUSEHOLD",
       "disabled": false,
       "isSelected": true,
+      "summary": true,
       "pages": [
         {
           "page": "closeHouseholdDetails",
-          "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
-          "order": 1,
           "type": "object",
-          "description": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
-          "actionLabel": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
+          "label": "Missed Children Details",
+          "order": 1,
+          "value": null,
+          "hidden": null,
+          "endDate": null,
+          "tooltip": null,
+          "helpText": null,
+          "readOnly": null,
+          "required": null,
+          "charCount": null,
+          "startDate": null,
+          "autoEnable": null,
+          "innerLabel": null,
           "properties": [
             {
               "type": "string",
-              "label":
-                  "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+              "label": "Village name",
               "order": 1,
               "value": "",
               "format": "locality",
               "hidden": false,
               "tooltip": "",
-              "helpText":
-                  "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "administrativeArea",
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -44,8 +54,7 @@ final dynamic sampleCloseHouseholdFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR"
+                  "message": "Required field can not be empty"
                 }
               ],
               "errorMessage": "",
@@ -53,7 +62,7 @@ final dynamic sampleCloseHouseholdFlows = {
             },
             {
               "type": "string",
-              "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
+              "label": "GPS coordinate accuracy",
               "order": 2,
               "value": "",
               "format": "latLng",
@@ -63,6 +72,7 @@ final dynamic sampleCloseHouseholdFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "latLng",
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -70,8 +80,7 @@ final dynamic sampleCloseHouseholdFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR"
+                  "message": "Required field can not be empty"
                 }
               ],
               "errorMessage": "",
@@ -79,7 +88,8 @@ final dynamic sampleCloseHouseholdFlows = {
             },
             {
               "type": "string",
-              "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
+              "enums": [],
+              "label": "Household head name",
               "order": 3,
               "value": "",
               "format": "text",
@@ -89,29 +99,40 @@ final dynamic sampleCloseHouseholdFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "headName",
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "includeInForm": true,
               "validations": [
                 {
-                  "type": "min",
-                  "value": 3,
+                  "type": "minLength",
+                  "value": "2",
                   "message":
-                      "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR"
+                      "Length must be 2 to 200 characters"
+                },
+                {
+                  "type": "maxLength",
+                  "value": "200",
+                  "message":
+                      "Length must be 2 to 200 characters"
+                },
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "This is required field."
                 }
               ],
               "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": []
+              "includeInForm": true,
+              "isMultiSelect": false
             },
             {
               "type": "string",
-              "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
+              "label": "Scan Voucher",
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
@@ -122,40 +143,34 @@ final dynamic sampleCloseHouseholdFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
-              "isMultiSelect": false
+              "isMultiSelect": false,
+              "includeInSummary": true
             }
           ],
-          "value": null,
-          "required": null,
-          "hidden": null,
-          "helpText": null,
-          "innerLabel": null,
-          "validations": null,
-          "tooltip": null,
-          "startDate": null,
-          "endDate": null,
-          "readOnly": null,
-          "charCount": null,
           "systemDate": null,
-          "isMultiSelect": null,
+          "actionLabel": "Next",
+          "description":
+              "Make sure the village name matches the one where you are today. If not, click on the village dropdown on the top right corner to change it.",
+          "validations": null,
           "includeInForm": null,
-          "includeInSummary": null,
-          "autoEnable": null
+          "isMultiSelect": null,
+          "includeInSummary": null
         }
       ],
-      "summary": true,
       "onAction": [
         {
           "actionType": "FETCH_TRANSFORMER_CONFIG",
           "properties": {
-            "configName": "closeHouseholdRegistration",
             "data": [],
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {
+                  "message": "Failed to fetch config."
+                }
               }
-            ]
+            ],
+            "configName": "closeHouseholdRegistration"
           }
         },
         {
@@ -165,7 +180,9 @@ final dynamic sampleCloseHouseholdFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create stock."}
+                "properties": {
+                  "message": "Failed to create stock."
+                }
               }
             ]
           }
@@ -173,46 +190,65 @@ final dynamic sampleCloseHouseholdFlows = {
         {
           "actionType": "NAVIGATION",
           "properties": {
-            "type": "TEMPLATE",
+            "data": [],
             "name": "closeHouseholdSuccess",
+            "type": "TEMPLATE",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
-              }
-            ],
-            "data": []
-          }
-        }
-      ]
-    },
-    {
-      "screenType": "TEMPLATE",
-      "name": "closeHouseholdSuccess",
-      "heading": "",
-      "description": "",
-      "header": [],
-      "footer": [],
-      "initActions": [],
-      "body": [
-        {
-          "type": "template",
-          "format": "panelCard",
-          "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
-          "description": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
-          "properties": {"type": "success"},
-          "primaryAction": {
-            "label":
-                "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
-            "onAction": [
-              {
-                "actionType": "NAVIGATION",
-                "properties": {"type": "HOME"}
+                "properties": {
+                  "message": "Navigation failed."
+                }
               }
             ]
           }
         }
       ]
+    },
+    {
+      "body": [
+        {
+          "type": "template",
+          "label": "Data recorded successfully",
+          "format": "panelCard",
+          "heading": "Data recorded successfully",
+          "fieldName": "closeHouseholdSuccess",
+          "mandatory": true,
+          "properties": {
+            "type": "success"
+          },
+          "description":
+              "The data has been recorded successfully",
+          "primaryAction": {
+            "type": "template",
+            "label": "Go Back",
+            "format": "button",
+            "hidden": false,
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "name": "Home",
+                  "type": "HOME"
+                }
+              }
+            ],
+            "fieldName": "GoHome",
+            "mandatory": true,
+            "properties": {
+              "type": "primary"
+            }
+          }
+        }
+      ],
+      "name": "closeHouseholdSuccess",
+      "footer": [],
+      "header": [],
+      "heading": "",
+      "category": "CLOSE_HOUSEHOLD",
+      "screenType": "TEMPLATE",
+      "description": "",
+      "initActions": []
     }
   ]
 };

@@ -294,9 +294,9 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
       ),
       RepositoryProvider<
           LocalRepository<UserActionModel, UserActionSearchModel>>(
-        create: (_) => LocationTrackerLocalBaseRepository(
+        create: (_) => UserActionLocalRepository(
           sql,
-          LocationTrackerOpLogManager(isar),
+          UserActionOpLogManager(isar),
         ),
       ),
       // INFO Need to add packages here

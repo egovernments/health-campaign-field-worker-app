@@ -43,6 +43,10 @@ import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../sampleJsonConfigs/closed_household.dart';
+import '../sampleJsonConfigs/polio_stock_details.dart';
+import '../sampleJsonConfigs/polio_afp_case.dart';
+import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
+
 import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
 import '../sampleJsonConfigs/inventory_reports.dart';
@@ -63,12 +67,13 @@ import '../widgets/home/home_item_card.dart';
 import '../widgets/inventory/custom_facility_widgets.dart';
 import '../widgets/inventory/custom_product_selection_card.dart';
 import '../widgets/localized.dart';
-import '../widgets/progress_bar/beneficiary_progress.dart';
+import '../widgets/polio_stats_card.dart';
+// import '../widgets/progress_bar/beneficiary_progress.dart';
 import '../widgets/progress_bar/hf_referral_progress.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
-import '../widgets/stock_balance/stock_balance_card.dart';
+// import '../widgets/stock_balance/stock_balance_card.dart';
 import '../widgets/stock_reconciliation/stock_reconciliation_card.dart';
 import '../widgets/task_functions.dart';
 
@@ -124,7 +129,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         // Build your component with access to all this data
         return ResourceCard(
           stateData: beneficiaryDetails,
-          pageSchema: 'DELIVERY',
+          pageSchema: stateAccessor.currentPageName ?? 'DELIVERY',
         );
       },
     );
@@ -936,23 +941,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     showcaseFor: showcaseKeys.toSet().toList(),
                   ),
                 ),
-                // Show stock balance card for users with stock management access
-                if (state.actionsWrapper.actions
-                    .map((e) => e.displayName)
-                    .contains(i18.home.manageStockLabel))
-                  const StockBalanceCard(),
-                skipProgressBar
-                    ? const SizedBox.shrink()
-                    : homeShowcaseData.distributorProgressBar.buildWith(
-                        child: BeneficiaryProgressBar(
-                          label: localizations.translate(
-                            i18.home.progressIndicatorTitle,
-                          ),
-                          prefixLabel: localizations.translate(
-                            i18.home.progressIndicatorPrefixLabel,
-                          ),
-                        ),
-                      ),
+                const PolioStatsCard(),
               /////   hfreferral progress matrics
               if (state.actionsWrapper.actions
                   .map((e) => e.displayName)
@@ -1387,13 +1376,201 @@ class _HomePageState extends LocalizedState<HomePage> {
       //   ),
       // ),
 
-      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
+      // i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.home,
+      //     enableCustomIcon: true,
+      //     customIconSize: 40,
+      //     customIcon: Constants.closedHouseholdSvg,
+      //     label: i18.home.closedHouseHoldLabel,
+      //     onPressed: () async {
+      //       context.router.push(CurrentBoundaryRoute(
+      //         onBoundarySelected: (ctx) async {
+      //           final moduleName =
+      //               'hcm-closehousehold-${context.selectedProject.referenceID}';
+      //           triggerLocalization(module: moduleName);
+      //           isTriggerLocalisation = false;
+      //
+      //           await FlowNavigationUtils.navigateToFlowModule(
+      //             context: ctx,
+      //             config: FlowModuleConfig(
+      //               schemaKey: 'CLOSEHOUSEHOLD',
+      //               sampleFlows: sampleCloseHouseholdFlows,
+      //             ),
+      //           );
+      //         },
+      //       ));
+      //     },
+      //   ),
+      // ),
+      i18.home.polioRegistrationLabel:
+          homeShowcaseData.polioRegistration.buildWith(
         child: HomeItemCard(
-          icon: Icons.home,
-          enableCustomIcon: true,
-          customIconSize: 40,
-          customIcon: Constants.closedHouseholdSvg,
-          label: i18.home.closedHouseHoldLabel,
+          icon: Icons.vaccines,
+          label: i18.home.polioRegistrationLabel,
+          onPressed: () async  {
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                final moduleName =
+                    'hcm-registration-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
+
+                final prefs = await SharedPreferences.getInstance();
+                // final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+                FlowBuilderSingleton().setPersistenceConfiguration(
+                    persistenceConfiguration:
+                    PersistenceConfiguration.offlineFirst);
+                WidgetRegistry.initialize();
+                CrudBlocSingleton().setData(
+                  crudService: DigitCrudService(
+                    context: ctx,
+                    relationshipMap: [
+                      const RelationshipMapping(
+                          from: 'name',
+                          to: 'individual',
+                          localKey: 'individualClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'identifier',
+                          to: 'individual',
+                          localKey: 'individualClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'householdMember',
+                          to: 'individual',
+                          localKey: 'individualClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'address',
+                          to: 'household',
+                          localKey: 'relatedClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'householdMember',
+                          to: 'household',
+                          localKey: 'householdClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'projectBeneficiary',
+                          to: 'task',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'projectBeneficiaryClientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'identifier',
+                          to: 'hFReferral',
+                          localKey: 'identifierId',
+                          foreignKey: 'beneficiaryId'),
+                      // Conditional mapping
+                      if (FlowBuilderSingleton().beneficiaryType ==
+                          BeneficiaryType.household)
+                        const RelationshipMapping(
+                          from: 'projectBeneficiary',
+                          to: 'household',
+                          localKey: 'beneficiaryClientReferenceId',
+                          foreignKey: 'clientReferenceId',
+                        )
+                      else
+                        const RelationshipMapping(
+                          from: 'projectBeneficiary',
+                          to: 'individual',
+                          localKey: 'beneficiaryClientReferenceId',
+                          foreignKey: 'clientReferenceId',
+                        ),
+                    ],
+                    nestedModelMappings: [
+                      const NestedModelMapping(
+                        rootModel: 'individual',
+                        fields: {
+                          'name': NestedFieldMapping(
+                            table: 'name',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'individualClientReferenceId',
+                            type: NestedMappingType.one,
+                          ),
+                          'address': NestedFieldMapping(
+                            table: 'address',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'relatedClientReferenceId',
+                            type: NestedMappingType.many,
+                          ),
+                          'identifiers': NestedFieldMapping(
+                            table: 'identifier',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'individualClientReferenceId',
+                            type: NestedMappingType.many,
+                          ),
+                        },
+                      ),
+                      const NestedModelMapping(
+                        rootModel: 'household',
+                        fields: {
+                          'address': NestedFieldMapping(
+                            table: 'address',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'relatedClientReferenceId',
+                            type: NestedMappingType.one,
+                          ),
+                        },
+                      ),
+                      const NestedModelMapping(
+                        rootModel: 'task',
+                        fields: {
+                          'resource': NestedFieldMapping(
+                            table: 'resource',
+                            localKey: 'taskclientReferenceId',
+                            foreignKey: 'clientReferenceId',
+                            type: NestedMappingType.many,
+                          ),
+                        },
+                      ),
+                    ],
+                    searchEntityRepository: ctx.read<SearchEntityRepository>(),
+                  ),
+                  dynamicEntityModelListener: EntityModelMapMapper(),
+                );
+                try {
+                  // if (schemaJsonRaw != null) {
+                  //   final allSchemas =
+                  //   json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                  //   final data = allSchemas['REGISTRATION'];
+                  //
+                  //   final registrationDeliveryData = data?['data'];
+                  //   final flowsData = (registrationDeliveryData['flows']
+                  //   as List<dynamic>?)
+                  //       ?.map((e) => Map<String, dynamic>.from(e as Map))
+                  //       .toList() ??
+                  //       [];
+                  //   FlowRegistry.setConfig(flowsData);
+                  //   NavigationRegistry.setupNavigation(ctx);
+                  //
+                  //   ctx.router.push(
+                  //     FlowBuilderHomeRoute(
+                  //         pageName: registrationDeliveryData["initialPage"]),
+                  //   );
+                  // } else {
+                    FlowRegistry.setConfig(
+                        sampleFlows["flows"] as List<Map<String, dynamic>>);
+                    NavigationRegistry.setupNavigation(ctx);
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: sampleFlows["initialPage"]),
+                    );
+                  // }
+                } catch (e) {
+                  debugPrint('error $e');
+                }
+              },
+            ));
+          },
+        ),
+      ),
+      i18.home.polioMissedChildrenLabel:
+          homeShowcaseData.polioMissedChildren.buildWith(
+        child: HomeItemCard(
+          icon: Icons.child_care,
+          label: i18.home.polioMissedChildrenLabel,
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) async {
@@ -1407,6 +1584,81 @@ class _HomePageState extends LocalizedState<HomePage> {
                   config: FlowModuleConfig(
                     schemaKey: 'CLOSEHOUSEHOLD',
                     sampleFlows: sampleCloseHouseholdFlows,
+                  ),
+                );
+              },
+            ));
+          },
+        ),
+      ),
+      i18.home.polioStockDetailsLabel:
+          homeShowcaseData.polioStockDetails.buildWith(
+        child: HomeItemCard(
+          icon: Icons.inventory_2,
+          label: i18.home.polioStockDetailsLabel,
+          onPressed: () async {
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                final moduleName =
+                    'hcm-poliostockdetails-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
+
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'POLIO_STOCK_DETAILS',
+                    sampleFlows: samplePolioStockDetailsFlows,
+                  ),
+                );
+              },
+            ));
+          },
+        ),
+      ),
+      i18.home.polioAfpCaseLabel:
+          homeShowcaseData.polioAfpCase.buildWith(
+        child: HomeItemCard(
+          icon: Icons.medical_services,
+          label: i18.home.polioAfpCaseLabel,
+          onPressed: () async {
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                final moduleName =
+                    'hcm-polioafpcase-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
+
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'POLIO_AFP_CASE',
+                    sampleFlows: samplePolioAfpCaseFlows,
+                  ),
+                );
+              },
+            ));
+          },
+        ),
+      ),
+      i18.home.polioLqaDataCollectionLabel:
+          homeShowcaseData.polioLqaDataCollection.buildWith(
+        child: HomeItemCard(
+          icon: Icons.checklist,
+          label: i18.home.polioLqaDataCollectionLabel,
+          onPressed: () async {
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                final moduleName =
+                    'hcm-poliolqa-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
+
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'POLIO_LQA_DATA_COLLECTION',
+                    sampleFlows: samplePolioLqaDataCollectionFlows,
                   ),
                 );
               },
@@ -1787,10 +2039,10 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
-      i18.home.beneficiaryLabel:
-          homeShowcaseData.distributorBeneficiaries.showcaseKey,
-      i18.home.manageStockLabel:
-          homeShowcaseData.warehouseManagerManageStock.showcaseKey,
+      // i18.home.beneficiaryLabel:
+      //     homeShowcaseData.distributorBeneficiaries.showcaseKey,
+      // i18.home.manageStockLabel:
+      //     homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
       i18.home.mySurveyForm:
@@ -1804,8 +2056,18 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
-      i18.home.closedHouseHoldLabel:
-          homeShowcaseData.closedHouseHold.showcaseKey,
+      // i18.home.closedHouseHoldLabel:
+      //     homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.polioRegistrationLabel:
+          homeShowcaseData.polioRegistration.showcaseKey,
+      i18.home.polioMissedChildrenLabel:
+          homeShowcaseData.polioMissedChildren.showcaseKey,
+      i18.home.polioStockDetailsLabel:
+          homeShowcaseData.polioStockDetails.showcaseKey,
+      i18.home.polioAfpCaseLabel:
+          homeShowcaseData.polioAfpCase.showcaseKey,
+      i18.home.polioLqaDataCollectionLabel:
+          homeShowcaseData.polioLqaDataCollection.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
@@ -1817,11 +2079,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
-      i18.home.beneficiaryLabel,
+      // i18.home.beneficiaryLabel,
       // i18.home.clfLabel, // TODO: Uncomment when CLF is implemented
       i18.home.transitPostLabel,
-      i18.home.closedHouseHoldLabel,
-      i18.home.manageStockLabel,
+      // i18.home.closedHouseHoldLabel,
+      i18.home.polioRegistrationLabel,
+      i18.home.polioMissedChildrenLabel,
+      i18.home.polioStockDetailsLabel,
+      i18.home.polioAfpCaseLabel,
+      i18.home.polioLqaDataCollectionLabel,
+      // i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.mySurveyForm,
       i18.home.fileComplaint,
@@ -1843,7 +2110,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            element == i18.home.polioRegistrationLabel ||
+            element == i18.home.polioMissedChildrenLabel ||
+            element == i18.home.polioStockDetailsLabel ||
+            element == i18.home.polioAfpCaseLabel ||
+            element == i18.home.polioLqaDataCollectionLabel ||
+            element == i18.home.transitPostLabel)
         .toList();
 
     final showcaseKeys = filteredLabels

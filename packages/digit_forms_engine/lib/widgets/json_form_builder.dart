@@ -309,9 +309,13 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         ?.value;
 
     if (v == null) return null;
-    if (v is! int) return null; // avoid type mismatch
+    if (v is int) return v;
+    if (v is String && v == 'TODAY') {
+      final now = DateTime.now();
+      return DateTime(now.year, now.month, now.day).millisecondsSinceEpoch;
+    }
 
-    return v;
+    return null;
   }
 
   /// Handle `string` type formats
@@ -441,6 +445,17 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           label: translateIfPresent(widget.schema.label, localizations),
           enums: widget.schema.enums ?? [],
+        );
+
+      case PropertySchemaFormat.photo:
+        return JsonSchemaImageBuilder(
+          form: form,
+          formControlName: widget.formControlName,
+          label: translateIfPresent(widget.schema.label, localizations),
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          validations: widget.schema.validations,
         );
 
       case PropertySchemaFormat.custom:
@@ -688,6 +703,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         final subName = mapEntry.key;
 
         final field = JsonFormBuilder(
+          key: ValueKey(subName),
           pageName: widget.pageName,
           currentSchemaKey: widget.currentSchemaKey,
           formControlName: subName,

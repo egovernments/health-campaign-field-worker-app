@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:digit_data_converter/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 
 class EntityModelJsonMapper extends DynamicEntityModelListener {
   @override
@@ -40,5 +41,7 @@ class EntityModelJsonMapper extends DynamicEntityModelListener {
             PgrAddressModelMapper.fromJson(jsonEncode(json)),
         'HFReferralModel': (json) =>
             HFReferralModelMapper.fromJson(jsonEncode(json)),
+        'UserActionModel': (json) =>
+            UserActionModelMapper.fromJson(jsonEncode(json)),
       };
 }

@@ -93,6 +93,13 @@ class MultiTableFilterResolver {
     // Group filters by their root table
     final filtersByTable = _groupFiltersByTable(filters);
 
+    _log('DEBUG: primaryTable=$primaryTable, tables with filters: ${filtersByTable.keys.toList()}');
+    for (final entry in filtersByTable.entries) {
+      for (final f in entry.value) {
+        _log('DEBUG:   table=${entry.key}: field=${f.field}, op=${f.operator}, value=${f.value}');
+      }
+    }
+
     // Extract primary table filters
     final primaryTableFilters = filtersByTable[primaryTable] ?? [];
 

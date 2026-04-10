@@ -1,6 +1,7 @@
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_flow_builder/utils/context_utility.dart';
 import 'package:flutter/material.dart';
 
@@ -48,6 +49,9 @@ class DigitCrudService extends CrudService {
           .repository<HFReferralModel, HFReferralSearchModel>(context);
     } else if (entity is ReferralModel) {
       return context.repository<ReferralModel, ReferralSearchModel>(context);
+    } else if (entity is UserActionModel) {
+      return context
+          .repository<UserActionModel, UserActionSearchModel>(context);
     } else {
       return context.repository<EntityModel, EntitySearchModel>(context);
     }
@@ -93,6 +97,8 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return HFReferralModelMapper.fromMap(normalizedMap);
       case 'referral':
         return ReferralModelMapper.fromMap(normalizedMap);
+      case 'userAction':
+        return UserActionModelMapper.fromMap(normalizedMap);
       default:
         return EntityModelMapper.fromMap(normalizedMap);
     }

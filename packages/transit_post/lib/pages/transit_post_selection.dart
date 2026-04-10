@@ -96,6 +96,41 @@ class TransitPostSelectionPageState
                         children: [
                           DigitButton(
                             label: localizations.translate(
+                              i18.transitPost.recordDeliveryLabel,
+                            ),
+                            isDisabled: !form.valid,
+                            onPressed: () {
+                              form.markAllAsTouched();
+                              if (!form.valid) return;
+
+                              final transitPostType =
+                                  form.control(_transitPostType).value;
+                              final transitPostName =
+                                  form.control(_transitPostName).value;
+                              final lat = form.control(_latKey).value;
+                              final lng = form.control(_lngKey).value;
+                              final accuracy = form.control(_accuracyKey).value;
+
+                              context
+                                  .read<TransitPostBloc>()
+                                  .add(TransitPostSelectionEvent(
+                                    longitude: lng,
+                                    latitude: lat,
+                                    locationAccuracy: accuracy,
+                                    transitPostName: transitPostName,
+                                    transitPostType: transitPostType,
+                                  ));
+
+                              context.router.push(
+                                  const TransitPostRecordVaccinationRoute());
+                            },
+                            type: DigitButtonType.primary,
+                            size: DigitButtonSize.large,
+                            mainAxisSize: MainAxisSize.max,
+                          ),
+                          const SizedBox(height: spacer2),
+                          DigitButton(
+                            label: localizations.translate(
                               i18.transitPost.scanResourceLabel,
                             ),
                             isDisabled: !form.valid,
@@ -172,7 +207,7 @@ class TransitPostSelectionPageState
                                 }
                               }
                             },
-                            type: DigitButtonType.primary,
+                            type: DigitButtonType.secondary,
                             size: DigitButtonSize.large,
                             mainAxisSize: MainAxisSize.max,
                             prefixIcon: Icons.document_scanner_sharp,

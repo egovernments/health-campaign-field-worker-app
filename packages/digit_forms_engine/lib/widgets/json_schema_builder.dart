@@ -23,8 +23,11 @@ import 'package:digit_ui_components/widgets/atoms/digit_dob_picker.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:intl/intl.dart';
@@ -50,6 +53,7 @@ part 'scanner_builder.dart';
 part 'selection_builder.dart';
 part 'string_builder.dart';
 part 'text_area_builder.dart';
+part 'image_builder.dart';
 
 abstract class JsonSchemaBuilder<T> extends StatelessWidget {
   final FormGroup form;

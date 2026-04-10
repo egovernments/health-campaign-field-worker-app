@@ -52,9 +52,35 @@ class FormEntityMapper {
             // If list is empty or null, skip model creation
           }
         } else {
-          // Normal single model creation
-          final model = _mapModel(modelName, formValues, modelConfig, context);
-          entities.add(model);
+          // Check if model has repeatCount for count-based bulk creation
+          final repeatCountPath = modelConfig['repeatCount'] as String?;
+
+          if (repeatCountPath != null) {
+            // Get count value from form data
+            final countValue = getValueFromMapping(
+                repeatCountPath, formValues, modelName, context);
+            final count = countValue is int
+                ? countValue
+                : int.tryParse(countValue?.toString() ?? '') ?? 0;
+
+            if (count > 0) {
+              for (int index = 0; index < count; index++) {
+                final model = _mapModel(
+                  modelName,
+                  formValues,
+                  modelConfig,
+                  context,
+                  listItemIndex: index,
+                );
+                entities.add(model);
+              }
+            }
+          } else {
+            // Normal single model creation
+            final model =
+                _mapModel(modelName, formValues, modelConfig, context);
+            entities.add(model);
+          }
         }
       } catch (e) {
         throw Exception('Error mapping model $modelName: $e');

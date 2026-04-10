@@ -119,6 +119,14 @@ class WrapperBuilder {
         wrapperData,
         entityMap,
       );
+      debugPrint('DEBUG_WRAPPER: relation "${relation['name']}" '
+          '(entity=${relation['entity']}) → found ${relatedEntities.length} items');
+      if (relatedEntities.isNotEmpty) {
+        debugPrint('DEBUG_WRAPPER:   first item type=${relatedEntities.first.runtimeType}');
+        if (relatedEntities.first is EntityModel) {
+          debugPrint('DEBUG_WRAPPER:   first item map=${(relatedEntities.first as EntityModel).toMap()}');
+        }
+      }
       wrapperData[relation['name']] = relatedEntities;
 
       // Handle nested relations

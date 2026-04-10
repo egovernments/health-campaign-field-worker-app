@@ -1,4 +1,5 @@
 import 'package:digit_forms_engine/helper/validator_helper.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/property_schema/property_schema.dart';
@@ -116,8 +117,14 @@ FormControl buildFormControl(
           validators: validators,
         );
       } else {
+        // Handle systemDate for text fields - formats as date+time string
+        String? defaultVal = getDefaultValue(name);
+        if (defaultVal == null && schema.systemDate == true) {
+          defaultVal = DateFormat('dd MMMM yyyy - hh:mm a').format(DateTime.now());
+        }
+
         return FormControl<String>(
-          value: getDefaultValue(name) ??
+          value: defaultVal ??
               (rawValue?.toString().isEmpty ?? true
                   ? null
                   : rawValue.toString()),

@@ -697,6 +697,19 @@ class Home {
   String get stockBalanceLabel => 'HOME_STOCK_BALANCE_LABEL';
 
   String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
+
+  String get polioRegistrationLabel => 'Polio Registration';
+
+  String get polioMissedChildrenLabel => 'Record Missed Children';
+
+  String get polioStockDetailsLabel => 'Stock Details';
+
+  String get polioAfpCaseLabel => 'AFP Case';
+
+  String get polioTallySheetLabel => 'Tally Sheet';
+
+  String get polioLqaDataCollectionLabel => 'LQA Data Collection';
+
 }
 
 class DataShare {

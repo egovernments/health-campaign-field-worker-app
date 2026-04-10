@@ -215,44 +215,53 @@ class TransitPostRecordVaccinationPageState
                     )
                   ]),
                   BlocBuilder<DigitScannerBloc, DigitScannerState>(
-                      builder: (context, scannerState) => DigitCard(
-                              margin: const EdgeInsets.all(spacer2),
-                              children: [
-                                LabelValueSummary(
-                                  heading: localizations.translate(
-                                    i18.transitPost.resourceScannedLabel,
-                                  ),
-                                  items: scannerState.barCodes.isNotEmpty
-                                      ? (DigitScannerUtils()
-                                              .getGs1CodeFormattedStringAtIndex(
-                                                  scannerState.barCodes, 0))
-                                          .entries
-                                          .map((entry) {
-                                          return LabelValueItem(
-                                            labelFlex: 5,
-                                            label: localizations.translate(
-                                              "GS1_${entry.key}",
-                                            ),
-                                            value: entry.value is DateTime
-                                                ? DateFormat('d MMMM yyyy')
-                                                    .format(entry.value)
-                                                    .toString()
-                                                : entry.value,
-                                            maxLines: 5,
-                                          );
-                                        }).toList()
-                                      : [
-                                          LabelValueItem(
-                                            labelFlex: 5,
-                                            label: localizations.translate(
-                                              i18.transitPost.resourceCodeLabel,
-                                            ),
-                                            value: scannerState.qrCodes.first,
-                                            maxLines: 5,
-                                          )
-                                        ],
-                                )
-                              ]))
+                      builder: (context, scannerState) {
+                    final hasBarCodes = scannerState.barCodes.isNotEmpty;
+                    final hasQrCodes = scannerState.qrCodes.isNotEmpty;
+
+                    if (!hasBarCodes && !hasQrCodes) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return DigitCard(
+                        margin: const EdgeInsets.all(spacer2),
+                        children: [
+                          LabelValueSummary(
+                            heading: localizations.translate(
+                              i18.transitPost.resourceScannedLabel,
+                            ),
+                            items: hasBarCodes
+                                ? (DigitScannerUtils()
+                                        .getGs1CodeFormattedStringAtIndex(
+                                            scannerState.barCodes, 0))
+                                    .entries
+                                    .map((entry) {
+                                    return LabelValueItem(
+                                      labelFlex: 5,
+                                      label: localizations.translate(
+                                        "GS1_${entry.key}",
+                                      ),
+                                      value: entry.value is DateTime
+                                          ? DateFormat('d MMMM yyyy')
+                                              .format(entry.value)
+                                              .toString()
+                                          : entry.value,
+                                      maxLines: 5,
+                                    );
+                                  }).toList()
+                                : [
+                                    LabelValueItem(
+                                      labelFlex: 5,
+                                      label: localizations.translate(
+                                        i18.transitPost.resourceCodeLabel,
+                                      ),
+                                      value: scannerState.qrCodes.first,
+                                      maxLines: 5,
+                                    )
+                                  ],
+                          )
+                        ]);
+                  })
                 ],
               ));
         },

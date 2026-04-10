@@ -41,6 +41,10 @@ class TransformerExecutor extends ActionExecutor {
     final fallBackModel = jsonConfig[configName]?['fallbackModel'] as String?;
     final multiEntityField =
         jsonConfig[configName]?['multiEntityField'] as String?;
+    final sourcePages =
+        jsonConfig[configName]?['sourcePages'] as List<dynamic>?;
+    final sourcePageBase =
+        jsonConfig[configName]?['sourcePageBase'] as String?;
 
     // Determine which form data to use
     Map<String, dynamic>? formValuesToUse = contextData['formData'];
@@ -294,6 +298,33 @@ class TransformerExecutor extends ActionExecutor {
           context: contextMap,
           fallbackFormDataString: fallBackModel,
         );
+      }
+    } else if (sourcePages != null && sourcePageBase != null) {
+      // Iterate over separate pages, mapping each to the base page key
+      for (final pageName in sourcePages) {
+        var modifiedFormValues =
+            Map<String, dynamic>.from(formValuesToUse ?? {});
+
+        // Copy source page data to base page key so mappings resolve
+        final pageData = modifiedFormValues[pageName as String];
+        if (pageData != null) {
+          modifiedFormValues[sourcePageBase] = pageData;
+        }
+
+        // Reset generatedValues so each iteration gets fresh UUIDs
+        formEntityMapper.generatedValues.clear();
+
+        try {
+          final pageEntities = formEntityMapper.mapFormToEntities(
+            formValues: modifiedFormValues,
+            modelsConfig: transformerConfig,
+            context: contextMap,
+            fallbackFormDataString: fallBackModel,
+          );
+          entities.addAll(pageEntities);
+        } catch (e) {
+          debugPrint('TRANSFORMER: Error processing page $pageName: $e');
+        }
       }
     } else {
       // No multiEntityField configured, create entities normally
