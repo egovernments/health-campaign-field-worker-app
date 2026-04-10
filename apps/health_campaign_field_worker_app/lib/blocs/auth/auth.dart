@@ -236,7 +236,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final payload = {
       'username': event.username,
       "tenantId": event.tenantId,
-      "deviceToken": null,
+      "deviceToken": deviceToken,
     };
 
     try {

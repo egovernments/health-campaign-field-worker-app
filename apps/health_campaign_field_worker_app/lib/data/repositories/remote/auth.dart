@@ -94,7 +94,20 @@ class AuthRepository {
     required UserActionModel userActionModel,
   }) async {
     try {
-      await _client.post(endpoint, data: userActionModel);
+      await _client.post(
+        endpoint,
+        data: {
+          "UserActions": [
+            userActionModel.toMap(),
+          ],
+        },
+        queryParameters: {
+          "tenantId": userActionModel.tenantId,
+        },
+        options: Options(headers: {
+          "content-type": 'application/json',
+        }),
+      );
     } catch (error) {
       rethrow;
     }

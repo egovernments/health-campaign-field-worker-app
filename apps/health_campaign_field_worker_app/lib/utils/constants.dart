@@ -161,6 +161,7 @@ class Constants {
   static const String stateFacility = 'State Facility';
   static const String lgaFacility = 'LGA Facility';
   static const String deviceSwitch = 'DEVICE_SWITCH';
+  static const String other = 'OTHER';
   static const String deviceSwitchReason = 'DEVICE_SWITCH_REASON';
   static const String oldDeviceToken = 'OLD_TOKEN';
   static const String newDeviceToken = 'NEW_TOKEN';

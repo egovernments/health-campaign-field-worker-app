@@ -17,7 +17,6 @@ import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
-import 'package:transit_post/data/repositories/remote/user_action.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
@@ -112,8 +111,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
       productVariantLocalRepository;
   final DashboardRemoteRepository dashboardRemoteRepository;
-  final RemoteRepository<UserActionModel, UserActionSearchModel>
-      userActionRemoteRepository;
   BuildContext context;
 
   ProjectBloc({
@@ -146,7 +143,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.attendanceLogLocalRepository,
     required this.attendanceLogRemoteRepository,
     required this.dashboardRemoteRepository,
-    required this.userActionRemoteRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -1122,9 +1118,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             locationAccuracy: 0,
             clientReferenceId: IdGen.i.identifier,
             projectId: project.id,
+            action: Constants.other,
+            beneficiaryTag: Constants.deviceSwitch,
+            tenantId: envConfig.variables.tenantId,
             boundaryCode:
                 project.address?.locality?.code ?? Constants.deviceSwitch,
-            action: Constants.deviceSwitch,
             additionalFields: UserActionAdditionalFields(version: 1, fields: [
               AdditionalField(Constants.deviceSwitchReason, deviceSwitchReason),
               AdditionalField(Constants.oldDeviceToken, existingDeviceToken),
@@ -1136,9 +1134,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         await localSecureStore.deleteExistingDeviceToken();
 
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
-        final apiEndPoint = Constants.getEndPoint(
+        final apiEndPoint = Constants.getMultiLoginEndPoint(
           serviceRegistry: serviceRegistry,
-          service: 'USER_ACTION',
+          service: 'USER-ACTION',
           action: ApiOperation.bulkCreate.toValue(),
           entityName: 'userAction',
         );
