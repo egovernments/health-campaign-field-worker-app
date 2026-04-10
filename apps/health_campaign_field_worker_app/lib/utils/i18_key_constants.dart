@@ -227,6 +227,8 @@ class Common {
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get permissionContinue => 'PERMISSION_CONTINUE';
+  String get coreCommonWarning => 'CORE_COMMON_WARNING';
+  String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
 
   String get coreCommonOr => 'CORE_COMMON_OR';
   String get commentKey => 'COMMENT_KEY';
@@ -621,6 +623,7 @@ class Login {
   String get userIdPlaceholder => 'USER_ID_PLACEHOLDER';
 
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
+  String get noInternetError => 'ERR_NOT_CONNECTED_TO_INTERNET';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
 

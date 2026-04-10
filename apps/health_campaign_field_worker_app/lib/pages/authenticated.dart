@@ -709,17 +709,75 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
               ],
               logOutDigitButtonLabel: AppLocalizations.of(context)
                   .translate(i18.common.coreCommonLogout),
-              onLogOut: () {
-                context.read<BoundaryBloc>().add(const BoundaryResetEvent());
-                context.read<LocalizationBloc>().add(
-                      LocalizationEvent.onLoadLocalization(
-                        module: Constants.homeLocalizationModules.join(','),
-                        tenantId: envConfig.variables.tenantId,
-                        locale: AppSharedPreferences().getSelectedLocale ?? '',
-                        path: Constants.localizationApiPath,
+              onLogOut: () async {
+                final isConnected = await getIsConnected();
+                if (context.mounted) {
+                  if (isConnected) {
+                    await showCustomPopup(
+                      context: context,
+                      builder: (ctx) => Popup(
+                        title: AppLocalizations.of(context).translate(
+                          i18.common.coreCommonWarning,
+                        ),
+                        description: AppLocalizations.of(context).translate(
+                          i18.common.logOutWarningMsg,
+                        ),
+                        onOutsideTap: () {
+                          Navigator.of(ctx).pop();
+                        },
+                        type: PopUpType.simple,
+                        actions: [
+                          DigitButton(
+                              label: AppLocalizations.of(context).translate(
+                                i18.common.coreCommonOk,
+                              ),
+                              onPressed: () {
+                                context
+                                    .read<BoundaryBloc>()
+                                    .add(const BoundaryResetEvent());
+                                context.read<LocalizationBloc>().add(
+                                      LocalizationEvent.onLoadLocalization(
+                                        module: Constants
+                                            .homeLocalizationModules
+                                            .join(','),
+                                        tenantId: envConfig.variables.tenantId,
+                                        locale: AppSharedPreferences()
+                                                .getSelectedLocale ??
+                                            '',
+                                        path: Constants.localizationApiPath,
+                                      ),
+                                    );
+                                context
+                                    .read<AuthBloc>()
+                                    .add(const AuthLogoutEvent());
+                              },
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large),
+                          DigitButton(
+                              label: AppLocalizations.of(context).translate(
+                                i18.common.coreCommonNo,
+                              ),
+                              onPressed: () {
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(true);
+                              },
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large)
+                        ],
                       ),
                     );
-                context.read<AuthBloc>().add(const AuthLogoutEvent());
+                  } else {
+                    Toast.showToast(
+                      context,
+                      message: AppLocalizations.of(context).translate(
+                        i18.login.noInternetError,
+                      ),
+                      type: ToastType.error,
+                    );
+                  }
+                }
               },
               footer: PoweredByDigit(
                 version: Constants().version,
