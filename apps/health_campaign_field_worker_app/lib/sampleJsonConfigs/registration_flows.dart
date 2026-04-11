@@ -2615,15 +2615,17 @@ final dynamic sampleFlows = {
                   }
                 }
               ],
-              "condition": {"expression": "consentToParticipate==NO"}
+              "condition": {
+                "expression": "caregiverConsent.consentToParticipate==FALSE"
+              }
             },
           ],
           "properties": [
             {
               "type": "string",
               "enums": [
-                {"code": "YES", "name": "APPONE_CAREGIVER_CONSENT_YES"},
-                {"code": "NO", "name": "APPONE_CAREGIVER_CONSENT_NO"}
+                {"code": "TRUE", "name": "APPONE_CAREGIVER_CONSENT_YES"},
+                {"code": "FALSE", "name": "APPONE_CAREGIVER_CONSENT_NO"}
               ],
               "label":
                   "APPONE_REGISTRATION_CAREGIVER_CONSENT_label_consentToParticipate",
@@ -2670,24 +2672,24 @@ final dynamic sampleFlows = {
             "secondaryActionLabel": "ACTION_CANCEL",
             "conditions": [
               {
-                "expression": "consentToParticipate==NO",
+                "expression": "caregiverConsent.consentToParticipate==FALSE",
                 "value": "APPONE_CAREGIVER_CONSENT_POPUP_NO_VALUE"
               }
             ]
           },
-          // "conditionalNavigateTo": [
-          //   {
-          //     "condition": "consentToParticipate==YES",
-          //     "navigateTo": {"name": "householdDetails", "type": "form"}
-          //   },
-          //   {
-          //     "condition": "consentToParticipate==NO",
-          //     "navigateTo": {
-          //       "name": "caregiverAcknowledgement",
-          //       "type": "template"
-          //     }
-          //   }
-          // ],
+          "conditionalNavigateTo": [
+            {
+              "condition": "caregiverConsent.consentToParticipate==TRUE",
+              "navigateTo": {"name": "householdDetails", "type": "form"}
+            },
+            {
+              "condition": "caregiverConsent.consentToParticipate==FALSE",
+              "navigateTo": {
+                "name": "caregiverAcknowledgement",
+                "type": "template"
+              }
+            }
+          ],
         },
         {
           "body": null,
