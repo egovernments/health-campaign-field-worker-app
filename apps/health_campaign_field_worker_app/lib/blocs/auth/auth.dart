@@ -232,6 +232,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _onCheckOtherDeviceLogin(
       AuthCheckOtherDeviceLoginEvent event, AuthEmitter emit) async {
+    emit(const AuthLoadingState());
     final deviceToken = await localSecureStore.getDeviceToken(event.username);
     final payload = {
       'username': event.username,

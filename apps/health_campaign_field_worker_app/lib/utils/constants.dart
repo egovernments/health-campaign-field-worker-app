@@ -165,6 +165,12 @@ class Constants {
   static const String deviceSwitchReason = 'DEVICE_SWITCH_REASON';
   static const String oldDeviceToken = 'OLD_TOKEN';
   static const String newDeviceToken = 'NEW_TOKEN';
+  static const String deviceSelectionOtherReason = 'OTHERS';
+  static const String multiLoginService = 'MULTILOGIN';
+  static const String multiLoginEntity = 'MultiLogin';
+  static const String multiLoginSwitchOperation = 'switch';
+  static const String userActionService = 'USER-ACTION';
+  static const String userActionEntity = 'userAction';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

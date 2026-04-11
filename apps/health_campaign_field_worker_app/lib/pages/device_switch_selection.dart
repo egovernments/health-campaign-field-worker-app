@@ -12,6 +12,7 @@ import 'package:isar/isar.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../router/app_router.dart';
 import '../utils/constants.dart';
@@ -29,7 +30,7 @@ class DeviceChangeReasonPage extends LocalizedStatefulWidget {
     super.appLocalizations,
     required this.username,
     required this.password,
-  });
+  }) : super();
 
   @override
   State<DeviceChangeReasonPage> createState() => _DeviceChangeReasonPageState();
@@ -66,14 +67,13 @@ class _DeviceChangeReasonPageState extends State<DeviceChangeReasonPage> {
                       const Center(child: CircularProgressIndicator()),
                 );
               },
-              // authenticated: (_, __, ___, ____, _____) {
-              //   Navigator.pop(context);
-              //   context.router.replaceAll([HomeRoute()]);
-              // },
               error: (error) {
+                Navigator.of(context, rootNavigator: true).pop();
                 Toast.showToast(
                   context,
-                  message: error ?? "Unable to Login",
+                  message: error ??
+                      AppLocalizations.of(context)
+                          .translate(i18.login.unableToLoginText),
                   type: ToastType.error,
                 );
 
@@ -106,7 +106,8 @@ class _DeviceChangeReasonPageState extends State<DeviceChangeReasonPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 DigitBackButton(
-                                  label: "Back to Login",
+                                  label: AppLocalizations.of(context)
+                                      .translate(i18.common.coreCommonBack),
                                   digitBackButtonThemeData:
                                       const DigitBackButtonThemeData().copyWith(
                                     context: context,
@@ -130,13 +131,6 @@ class _DeviceChangeReasonPageState extends State<DeviceChangeReasonPage> {
                                     context.router.replaceAll([LoginRoute()]);
                                   },
                                 ),
-                                Text(
-                                  "Help",
-                                  style: textTheme.headingXl.copyWith(
-                                    color: theme.colorTheme.primary.primary1,
-                                    fontSize: 20,
-                                  ),
-                                ),
                               ],
                             ),
                           ),
@@ -149,14 +143,16 @@ class _DeviceChangeReasonPageState extends State<DeviceChangeReasonPage> {
                             margin: const EdgeInsets.all(spacer4),
                             children: [
                               Text(
-                                "Why are you changing your phone?",
+                                AppLocalizations.of(context)
+                                    .translate(i18.login.switchReasonHeader),
                                 style: textTheme.headingXl.copyWith(
                                   color: theme.colorTheme.primary.primary2,
                                 ),
                               ),
 
                               Text(
-                                "This helps us understand your situation.",
+                                AppLocalizations.of(context)
+                                    .translate(i18.login.switchReason),
                                 style: textTheme.headingXl.copyWith(
                                   color: theme.colorTheme.primary.primary2,
                                   fontSize: 16,
@@ -166,13 +162,15 @@ class _DeviceChangeReasonPageState extends State<DeviceChangeReasonPage> {
                               /// Radio List
                               RadioList(
                                 errorMessage: _showReasonError
-                                    ? "Please select a reason"
+                                    ? AppLocalizations.of(context).translate(
+                                        i18.login.switchReasonRequiredError)
                                     : null,
                                 radioDigitButtons: reasons
                                     .map(
                                       (reason) => RadioButtonModel(
                                         code: reason.code,
-                                        name: reason.name,
+                                        name: AppLocalizations.of(context)
+                                            .translate(reason.code),
                                       ),
                                     )
                                     .toList(),
@@ -186,7 +184,8 @@ class _DeviceChangeReasonPageState extends State<DeviceChangeReasonPage> {
                               ),
 
                               /// Others textarea
-                              if (_selectedReason == 'OTHERS')
+                              if (_selectedReason ==
+                                  Constants.deviceSelectionOtherReason)
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: spacer4,
@@ -195,7 +194,9 @@ class _DeviceChangeReasonPageState extends State<DeviceChangeReasonPage> {
                                     controller: _otherReasonController,
                                     isRequired: true,
                                     errorMessage: _showOtherReasonError
-                                        ? "This field is required"
+                                        ? AppLocalizations.of(context)
+                                            .translate(
+                                                i18.common.corecommonRequired)
                                         : null,
                                   ),
                                 ),
@@ -212,7 +213,8 @@ class _DeviceChangeReasonPageState extends State<DeviceChangeReasonPage> {
                         horizontal: spacer4,
                       ),
                       child: DigitButton(
-                        label: "Continue",
+                        label: AppLocalizations.of(context)
+                            .translate(i18.login.switchReasonContinue),
                         onPressed: () => _userDeviceSwitch(
                           blocContext: blocContext,
                           selectedReason: _selectedReason,
@@ -238,7 +240,7 @@ class _DeviceChangeReasonPageState extends State<DeviceChangeReasonPage> {
     required String? selectedReason,
     String? otherReason,
   }) async {
-    if (selectedReason == 'OTHERS' &&
+    if (selectedReason == Constants.deviceSelectionOtherReason &&
         (otherReason == null || otherReason.trim().isEmpty)) {
       setState(() {
         _showOtherReasonError = true;
@@ -264,9 +266,9 @@ class _DeviceChangeReasonPageState extends State<DeviceChangeReasonPage> {
 
     final apiEndPoint = Constants.getMultiLoginEndPoint(
       serviceRegistry: serviceRegistry,
-      service: 'MULTILOGIN',
-      action: 'switch',
-      entityName: 'MultiLogin',
+      service: Constants.multiLoginService,
+      action: Constants.multiLoginSwitchOperation,
+      entityName: Constants.multiLoginEntity,
     );
 
     blocContext.read<AuthBloc>().add(

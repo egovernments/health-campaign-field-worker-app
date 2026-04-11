@@ -14,6 +14,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../router/app_router.dart';
@@ -56,9 +57,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
     final apiEndPoint = Constants.getMultiLoginEndPoint(
       serviceRegistry: serviceRegistry,
-      service: 'MULTILOGIN',
+      service: Constants.multiLoginService,
+      entityName: Constants.multiLoginEntity,
       action: ApiOperation.validate.toValue(),
-      entityName: 'MultiLogin',
     );
 
     authBloc.add(
@@ -82,13 +83,13 @@ class _LoginPageState extends LocalizedState<LoginPage> {
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          debugPrint('AuthBloc State Changed: $state');
           state.maybeWhen(
             orElse: () {},
             loading: () {
               DigitLoaders.overlayLoader(context: context);
             },
             allow: () {
+              Navigator.of(context, rootNavigator: true).pop();
               context.read<AuthBloc>().add(
                     AuthLoginEvent(
                       userId: _pendingUserId as String,
@@ -98,6 +99,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                   );
             },
             otherDevice: () {
+              Navigator.of(context, rootNavigator: true).pop();
               _showMultiDeviceLoginPopUp(
                 context,
                 username: _pendingUserId as String,
@@ -353,18 +355,21 @@ void _showMultiDeviceLoginPopUp(
   showCustomPopup(
     context: context,
     builder: (ctx) => Popup(
-      title: 'Switch to this Mobile?',
+      title: AppLocalizations.of(context)
+          .translate(i18.login.switchMobileDialogTitle),
       titleIcon: Icon(Icons.error_outline, color: const Light().alertError),
       additionalWidgets: [
         Text(
-          'You are moving to a new phone. Make sure all your data from the old phone is synced before you continue.',
+          AppLocalizations.of(context)
+              .translate(i18.login.switchMobileDialogContent),
           textAlign: TextAlign.center,
           style: Theme.of(ctx).textTheme.bodyMedium,
         ),
       ],
       actions: [
         DigitButton(
-          label: 'Continue',
+          label: AppLocalizations.of(context)
+              .translate(i18.login.switchMobileDialogContine),
           onPressed: () {
             Navigator.of(ctx).pop(); // Close popup
             // Use the parent context to navigate
@@ -380,7 +385,8 @@ void _showMultiDeviceLoginPopUp(
           size: DigitButtonSize.large,
         ),
         DigitButton(
-          label: 'Back to Login',
+          label: AppLocalizations.of(context)
+              .translate(i18.login.switchMobileDialogBack),
           prefixIcon: Icons.undo,
           onPressed: () {
             context.read<AuthBloc>().add(const AuthEvent.reset());

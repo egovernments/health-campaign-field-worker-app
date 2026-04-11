@@ -1121,8 +1121,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             action: Constants.other,
             beneficiaryTag: Constants.deviceSwitch,
             tenantId: envConfig.variables.tenantId,
-            boundaryCode:
-                project.address?.locality?.code ?? Constants.deviceSwitch,
+            boundaryCode: project.address?.boundary ?? Constants.deviceSwitch,
             additionalFields: UserActionAdditionalFields(version: 1, fields: [
               AdditionalField(Constants.deviceSwitchReason, deviceSwitchReason),
               AdditionalField(Constants.oldDeviceToken, existingDeviceToken),
@@ -1136,9 +1135,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
         final apiEndPoint = Constants.getMultiLoginEndPoint(
           serviceRegistry: serviceRegistry,
-          service: 'USER-ACTION',
+          service: Constants.userActionService,
           action: ApiOperation.bulkCreate.toValue(),
-          entityName: 'userAction',
+          entityName: Constants.userActionEntity,
         );
 
         context.read<AuthBloc>().add(
