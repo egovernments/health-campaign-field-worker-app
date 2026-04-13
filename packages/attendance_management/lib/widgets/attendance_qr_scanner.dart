@@ -37,9 +37,9 @@ class AttendanceDigitScannerPage extends DigitScannerPage {
       {super.key,
       required this.registerModel,
       required this.onScanResult,
-      required super.quantity,
+       super.quantity,
       super.singleValue,
-      required super.isGS1code});
+       super.isGS1code});
 
   @override
   AttendanceScannerPageState createState() => AttendanceScannerPageState();

@@ -55,6 +55,8 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
 class _LatLngBuilderStatefulWrapperState
     extends State<_LatLngBuilderStatefulWrapper> {
   double? _accuracy;
+  double? _latitude;
+  double? _longitude;
   String? _latLngValue;
   bool _isDialogOpen = false;
   bool _isFetchingLocation = false;
@@ -71,8 +73,12 @@ class _LatLngBuilderStatefulWrapperState
     if (isLatLngPreFilled) {
       _latLngValue = controlValue.toString();
 
-      // Parse accuracy if present (3rd comma-separated part)
+      // Parse lat, lng, accuracy from comma-separated parts
       final parts = _latLngValue!.split(',');
+      if (parts.length >= 2) {
+        _latitude = double.tryParse(parts[0]);
+        _longitude = double.tryParse(parts[1]);
+      }
       if (parts.length == 3) {
         _accuracy = double.tryParse(parts[2]);
       } else {
@@ -144,6 +150,14 @@ class _LatLngBuilderStatefulWrapperState
             setState(() {
               _latLngValue = incomingLatLng;
               _accuracy = incomingAccuracy;
+              // Parse lat/lng from incoming value
+              if (incomingLatLng != null) {
+                final parts = incomingLatLng.split(',');
+                if (parts.length >= 2) {
+                  _latitude = double.tryParse(parts[0]);
+                  _longitude = double.tryParse(parts[1]);
+                }
+              }
               _isFetchingLocation = false; // Stop listening after first update
             });
 
@@ -163,11 +177,12 @@ class _LatLngBuilderStatefulWrapperState
         }
       },
       builder: (context, state) {
-        // Determine display text for accuracy
+        // Determine display text for lat/lng coordinates
         String displayText = '';
-        if (_accuracy != null) {
-          final accuracyValue = _accuracy!.toStringAsFixed(2);
-          displayText = '$accuracyValue ${loc.translate('CORE_COMMON_METERS')}';
+        if (_latitude != null && _longitude != null) {
+          final latDir = _latitude! >= 0 ? 'N' : 'S';
+          final lngDir = _longitude! >= 0 ? 'E' : 'W';
+          displayText = '${_latitude!.abs().toStringAsFixed(4)}\u00B0 $latDir ${_longitude!.abs().toStringAsFixed(4)}\u00B0 $lngDir';
         }
 
         // Determine color based on accuracy

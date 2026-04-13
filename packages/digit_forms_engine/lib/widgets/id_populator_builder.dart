@@ -72,6 +72,9 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
           form.control(idAutoFilledKey).value = true;
         }
         form.control(formControlName).value = defaultValue;
+      } else if (parts.length == 1 && parts[0].trim().isNotEmpty) {
+        // Single value like "DEFAULT" — just set the type
+        form.control(idTypeKey).value = parts[0].trim();
       }
     }
 
@@ -90,7 +93,20 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
           form.control(idKey).value = number;
           form.control(idAutoFilledKey).value = true;
         }
+      } else if (parts.length == 1 &&
+          parts[0].trim().isNotEmpty &&
+          form.control(idTypeKey).value == null) {
+        // Single value like "DEFAULT" — just set the type
+        form.control(idTypeKey).value = parts[0].trim();
       }
+    }
+
+    /// Auto-select when there is only one option and nothing is selected yet
+    if (form.control(idTypeKey).value == null &&
+        enums != null &&
+        enums!.length == 1) {
+      final onlyOption = enums!.first.code;
+      form.control(idTypeKey).value = onlyOption;
     }
 
     /// Helper to update combined value

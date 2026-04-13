@@ -175,9 +175,9 @@ class AttendanceDigitScannerRoute
       _i10.ScannedIndividualDataModel,
       _i2.AttendanceValidationResult,
     ) onScanResult,
-    required int quantity,
+    int quantity = 1,
     bool singleValue = false,
-    required bool isGS1code,
+    bool isGS1code = false,
     List<_i5.PageRouteInfo>? children,
   }) : super(
           AttendanceDigitScannerRoute.name,
@@ -203,9 +203,9 @@ class AttendanceDigitScannerRouteArgs {
     this.key,
     required this.registerModel,
     required this.onScanResult,
-    required this.quantity,
+    this.quantity = 1,
     this.singleValue = false,
-    required this.isGS1code,
+    this.isGS1code = false,
   });
 
   final _i8.Key? key;

@@ -2116,7 +2116,8 @@ class _HomePageState extends LocalizedState<HomePage> {
             element == i18.home.polioStockDetailsLabel ||
             element == i18.home.polioAfpCaseLabel ||
             element == i18.home.polioLqaDataCollectionLabel ||
-            element == i18.home.transitPostLabel)
+            element == i18.home.transitPostLabel ||
+            element == i18.home.manageAttendanceLabel)
         .toList();
 
     final showcaseKeys = filteredLabels
