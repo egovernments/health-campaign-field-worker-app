@@ -259,6 +259,8 @@ final dynamic sampleFlows = {
           "child": {
             "type": "template",
             "format": "card",
+            "visible":
+                "{{fn:projectBeneficiaryAvailable(item.projectBeneficiaries) > 0}}",
             "children": [
               {
                 "type": "template",
@@ -606,42 +608,42 @@ final dynamic sampleFlows = {
             {
               "format": "row",
               "children": [
-                // {
-                //   "type": "template",
-                //   "label": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
-                //   "format": "button",
-                //   "onAction": [
-                //     {
-                //       "actionType": "REVERSE_TRANSFORM",
-                //       "properties": {
-                //         "configName": "beneficiaryRegistration",
-                //         "entityTypes": ["HouseholdModel"]
-                //       }
-                //     },
-                //     {
-                //       "actionType": "NAVIGATION",
-                //       "properties": {
-                //         "data": [
-                //           {
-                //             "key": "HouseholdClientReferenceId",
-                //             "value": "{{ context.household.clientReferenceId }}"
-                //           },
-                //           {"key": "isEdit", "value": "true"}
-                //         ],
-                //         "name": "HOUSEHOLD",
-                //         "type": "FORM"
-                //       }
-                //     }
-                //   ],
-                //   "fieldName": "householdEditButton",
-                //   "properties": {
-                //     "icon": "Edit",
-                //     "size": "large",
-                //     "type": "tertiary",
-                //     "mainAxisSize": "min",
-                //     "mainAxisAlignment": "center"
-                //   }
-                // }
+                {
+                  "type": "template",
+                  "label": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "REVERSE_TRANSFORM",
+                      "properties": {
+                        "configName": "beneficiaryRegistration",
+                        "entityTypes": ["HouseholdModel"]
+                      }
+                    },
+                    {
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "data": [
+                          {
+                            "key": "HouseholdClientReferenceId",
+                            "value": "{{ context.household.clientReferenceId }}"
+                          },
+                          {"key": "isEdit", "value": "true"}
+                        ],
+                        "name": "HOUSEHOLD",
+                        "type": "FORM"
+                      }
+                    }
+                  ],
+                  "fieldName": "householdEditButton",
+                  "properties": {
+                    "icon": "Edit",
+                    "size": "large",
+                    "type": "tertiary",
+                    "mainAxisSize": "min",
+                    "mainAxisAlignment": "center"
+                  }
+                }
               ],
               "properties": {"mainAxisAlignment": "end"}
             },
@@ -663,6 +665,11 @@ final dynamic sampleFlows = {
                   "key": "MEMBER_COUNT",
                   "value":
                       "{{contextData.0.household.HouseholdModel.memberCount}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IS_HEAD_OF_HOUSEHOLD",
+                  "value": "{{fn:isHead(contextData.0.member)}}",
                   "isActive": true
                 },
                 {
@@ -801,7 +808,7 @@ final dynamic sampleFlows = {
                     "label": "DELIVERY",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item)}} == false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}} == false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -2625,40 +2632,6 @@ final dynamic sampleFlows = {
               "tooltip": "",
               "helpText": "",
               "infoText": "",
-              "readOnly": true,
-              "required": true,
-              "fieldName": "dateOfRegistration",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": true,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                      "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_mandatory_message"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "required.message":
-                  "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_mandatory_message"
-            },
-            {
-              "type": "integer",
-              "label":
-                  "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount",
-              "order": 2,
-              "value": "0",
-              "format": "numeric",
-              "hidden": true,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText":
-                  "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_helpText",
-              "infoText": "",
               "readOnly": false,
               "fieldName": "childrenCount",
               "mandatory": false,
@@ -2680,8 +2653,7 @@ final dynamic sampleFlows = {
               "hidden": true,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-                  "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "pregnantWomenCount",
@@ -3008,11 +2980,6 @@ final dynamic sampleFlows = {
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "lengthRange": {
-                "minLength": "2",
-                "errorMessage":
-                    "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message"
-              },
               "validations": [
                 {
                   "type": "required",
@@ -3192,6 +3159,7 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
+              "includeInForm": true,
               "isMultiSelect": false,
               "dropDownOptions": [
                 {"code": "PERMANENT", "name": "BENEFICIARYLOCATION_PERMANENT"},
@@ -4715,10 +4683,10 @@ final dynamic sampleFlows = {
           "heading": "DATA_RECORDED_SUCCESSFULLY",
           "description": "DATA_RECORDED_SUCCESSFULLY_DESC",
           "properties": {"type": "success"},
-          "additionalWidgets": [
+          "children": [
             {
               "type": "template",
-              "format": "textTemplate",
+              "format": "text",
               "label": "BENEFICIARY_ID_LABEL",
               "value": "Beneficiary ID",
               "fieldName": "beneficiaryIdLabel",
@@ -4726,7 +4694,7 @@ final dynamic sampleFlows = {
             },
             {
               "type": "template",
-              "format": "textTemplate",
+              "format": "text",
               "label": "BENEFICIARY_ID_VALUE",
               "value": "{{beneficiary.id}}",
               "fieldName": "beneficiaryIdValue",
@@ -4773,6 +4741,14 @@ final dynamic sampleFlows = {
               }
             ]
           }
+        },
+        {
+          "type": "template",
+          "format": "text",
+          "label": "DATA_RECORDED_SUCCESSFULLY_DESC",
+          "value": "The data has been recorded successfully",
+          "fieldName": "successMessage",
+          "mandatory": true
         }
       ],
       "footer": []
@@ -5707,7 +5683,7 @@ final dynamic sampleFlows = {
               "tooltip": "",
               "helpText": "",
               "infoText": "",
-              "readOnly": true,
+              "readOnly": false,
               "required": true,
               "fieldName": "resourceCard",
               "mandatory": true,
