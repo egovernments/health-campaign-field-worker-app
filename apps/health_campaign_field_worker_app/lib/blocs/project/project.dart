@@ -1120,6 +1120,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             beneficiaryTag: Constants.deviceSwitch,
             tenantId: envConfig.variables.tenantId,
             boundaryCode: project.address?.boundary ?? Constants.deviceSwitch,
+            auditDetails: AuditDetails(
+              createdBy: context.loggedInUserUuid,
+              createdTime: DateTime.now().millisecondsSinceEpoch,
+              lastModifiedBy: context.loggedInUserUuid,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            ),
+            clientAuditDetails: ClientAuditDetails(
+              createdBy: context.loggedInUserUuid,
+              createdTime: DateTime.now().millisecondsSinceEpoch,
+              lastModifiedBy: context.loggedInUserUuid,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            ),
             additionalFields: UserActionAdditionalFields(version: 1, fields: [
               AdditionalField(Constants.deviceSwitchReason, deviceSwitchReason),
               AdditionalField(Constants.oldDeviceToken, existingDeviceToken),
