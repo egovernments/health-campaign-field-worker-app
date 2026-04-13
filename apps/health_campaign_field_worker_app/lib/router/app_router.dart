@@ -62,11 +62,7 @@ class AppRouter extends _$AppRouter {
       page: UnauthenticatedRouteWrapper.page,
       path: '/',
       children: [
-        AutoRoute(
-            page: LanguageSelectionRoute.page,
-            path: 'language_selection',
-            initial: true),
-        AutoRoute(page: LoginRoute.page, path: 'login'),
+        AutoRoute(page: LoginRoute.page, path: 'login', initial: true),
         AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
       ],
     ),

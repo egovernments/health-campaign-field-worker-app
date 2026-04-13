@@ -2449,9 +2449,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (schemaJsonRaw != null) {
+                  if (false) {
                     final allSchemas =
-                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                        json.decode(schemaJsonRaw!) as Map<String, dynamic>;
                     final data = allSchemas['REGISTRATION'];
 
                     final registrationDeliveryData = data?['data'];
@@ -3103,7 +3103,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           ) {
             final appConfig = appConfiguration;
             final localizationModulesList = appConfiguration.backendInterface;
-            final selectedLocale = AppSharedPreferences().getSelectedLocale;
+            final selectedLocale =
+                "en_MZ" ?? AppSharedPreferences().getSelectedLocale;
             LocalizationParams()
                 .setCode(LeastLevelBoundarySingleton().boundary);
             if (loadOnline == true) {
