@@ -664,6 +664,12 @@ final dynamic sampleFlows = {
                   "value":
                       "{{contextData.0.household.HouseholdModel.memberCount}}",
                   "isActive": true
+                },
+                {
+                  "key": "CAREGIVER_CONSENT",
+                  "value":
+                      "{{contextData.0.household.HouseholdModel.additionalFields.fields.caregiverConsent}}",
+                  "isActive": true
                 }
               ],
               "type": "template",
