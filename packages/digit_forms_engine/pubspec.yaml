@@ -27,6 +27,7 @@ dependencies:
   digit_formula_parser: ^1.0.0
   screen_protector: 1.4.1
   gs1_barcode_parser: ^1.0.5
+  image_picker: ^1.0.0
 
 dev_dependencies:
   flutter_test:
