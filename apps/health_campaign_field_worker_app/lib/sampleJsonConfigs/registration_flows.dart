@@ -4709,10 +4709,10 @@ final dynamic sampleFlows = {
           "heading": "DATA_RECORDED_SUCCESSFULLY",
           "description": "DATA_RECORDED_SUCCESSFULLY_DESC",
           "properties": {"type": "success"},
-          "children": [
+          "additionalWidgets": [
             {
               "type": "template",
-              "format": "text",
+              "format": "textTemplate",
               "label": "BENEFICIARY_ID_LABEL",
               "value": "Beneficiary ID",
               "fieldName": "beneficiaryIdLabel",
@@ -4720,7 +4720,7 @@ final dynamic sampleFlows = {
             },
             {
               "type": "template",
-              "format": "text",
+              "format": "textTemplate",
               "label": "BENEFICIARY_ID_VALUE",
               "value": "{{beneficiary.id}}",
               "fieldName": "beneficiaryIdValue",
@@ -4767,14 +4767,6 @@ final dynamic sampleFlows = {
               }
             ]
           }
-        },
-        {
-          "type": "template",
-          "format": "text",
-          "label": "DATA_RECORDED_SUCCESSFULLY_DESC",
-          "value": "The data has been recorded successfully",
-          "fieldName": "successMessage",
-          "mandatory": true
         }
       ],
       "footer": []
