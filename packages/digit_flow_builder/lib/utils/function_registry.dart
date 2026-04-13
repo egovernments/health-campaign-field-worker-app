@@ -1274,6 +1274,52 @@ void initializeFunctionRegistry() {
         ?.id;
   });
 
+  /// Checks if the current member is the head of household.
+  ///
+  /// - **Function Name**: `'isHead'`
+  /// - **Arguments**: First argument is the member/household data.
+  /// - **Returns**: `true` if the member is the head of household, `false` otherwise.
+  ///
+  /// This function checks for an `isHeadOfHousehold` indicator which can be:
+  /// 1. A direct boolean field in the member data
+  /// 2. A field in additionalFields with key 'isHeadOfHousehold'
+  FunctionRegistry.register("isHead", (args, stateData) {
+    if (args.isEmpty || args.first == null) return false;
+
+    // Helper to convert any object to Map
+    Map<String, dynamic>? _toMap(dynamic obj) {
+      if (obj is Map<String, dynamic>) return obj;
+      if (obj is Map) return Map<String, dynamic>.from(obj);
+      try {
+        return (obj as dynamic).toMap() as Map<String, dynamic>;
+      } catch (_) {
+        try {
+          return (obj as dynamic).toJson() as Map<String, dynamic>;
+        } catch (_) {
+          return null;
+        }
+      }
+    }
+
+    final dataMap = _toMap(args.first);
+    if (dataMap == null) return false;
+
+    // Get member(s) list - try 'member' first, then 'members'
+    final membersList = (dataMap['member'] ?? dataMap['members']) as List?;
+    if (membersList == null || membersList.isEmpty) return false;
+
+    // Check if any member is head of household
+    return membersList.any((member) {
+      final memberMap = _toMap(member);
+      if (memberMap == null) return false;
+
+      final isHead = memberMap['isHeadOfHousehold'];
+      return isHead is bool 
+          ? isHead 
+          : isHead is String && (isHead.toLowerCase() == 'true' || isHead == '1');
+    });
+  });
+
   /// Checks if a referral exists for the current running cycle.
   ///
   /// - **Function Name**: `'hasReferralForCurrentCycle'`
