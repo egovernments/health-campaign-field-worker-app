@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter/foundation.dart';
@@ -15,15 +15,13 @@ import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../models/downsync/downsync.dart';
 import '../../models/entities/roles_type.dart';
-import '../../models/entities/transaction_type.dart';
 import '../../utils/background_service.dart';
 
 part 'stock_downsync.freezed.dart';
 
 typedef StockDownSyncEmitter = Emitter<StockDownSyncState>;
 
-class StockDownSyncBloc
-    extends Bloc<StockDownSyncEvent, StockDownSyncState> {
+class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
   final LocalSecureStore localSecureStore;
 
   final LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
@@ -99,7 +97,8 @@ class StockDownSyncBloc
       receiverIds = currentFacilities.map((e) => e.facilityId).toList();
     } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
       receiverIds = currentFacilities.map((e) => e.facilityId).toList();
-    } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+    } else if (userRoles.contains(RolesType.communityDistributor.toValue()) ||
+        userRoles.contains(RolesType.distributor.toValue())) {
       receiverIds = [userObject.uuid];
     }
 
@@ -109,8 +108,7 @@ class StockDownSyncBloc
       receiverId: receiverIds.first,
       senderId: receiverIds.first,
       // transactionType: [TransactionType.dispatched.toValue()],
-      // productVariantId:
-      //     productVariantIds.isNotEmpty ? productVariantIds : null,
+      //productVariantId://     productVariantIds.isNotEmpty ? productVariantIds : null,
     );
   }
 
@@ -174,8 +172,8 @@ class StockDownSyncBloc
 
       // Always start from offset 0 for total count check since
       // lastChangedSince already scopes the query to new/modified records
-      final totalCount =
-          await (stockRemoteRepository as StockRemoteRepository).fetchTotalCount(
+      final totalCount = await (stockRemoteRepository as StockRemoteRepository)
+          .fetchTotalCount(
         stockSearchModel,
         offSet: 0,
         lastSyncedTime: lastSyncedTime,

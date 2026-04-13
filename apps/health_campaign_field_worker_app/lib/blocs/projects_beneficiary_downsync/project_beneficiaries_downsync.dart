@@ -323,8 +323,7 @@ class BeneficiaryDownSyncBloc
         );
 
         if (initialResults.isNotEmpty) {
-          final count =
-              initialResults["DownsyncCriteria"]["totalCount"] as int;
+          final count = initialResults["DownsyncCriteria"]["totalCount"] as int;
           if (count > 0) {
             boundaryCounts[boundaryCode] = count;
             totalServerCount += count;
@@ -379,9 +378,8 @@ class BeneficiaryDownSyncBloc
             locality: boundaryCode,
           ));
 
-          int offset = loopDownSyncData.isEmpty
-              ? 0
-              : loopDownSyncData.first.offset ?? 0;
+          int offset =
+              loopDownSyncData.isEmpty ? 0 : loopDownSyncData.first.offset ?? 0;
           int totalCount = boundaryTotalCount;
           int? loopLastSyncedTime = loopDownSyncData.isEmpty
               ? null

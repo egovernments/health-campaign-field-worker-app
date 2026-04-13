@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
+import '../../models/entities/roles_type.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/stock_calculation_utils.dart';
 import '../../utils/utils.dart';
@@ -29,6 +30,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
   double _minThreshold = 100;
   double _maxThreshold = 500;
   bool _isLoading = true;
+  bool _isDistributorWithoutFacilities = false;
 
   @override
   void didChangeDependencies() {
@@ -60,6 +62,10 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
 
   Future<void> _loadData() async {
     try {
+      // Check if user is a distributor
+      final isDistributor = context.loggedInUserRoles
+          .any((role) => role.code == RolesType.distributor.toValue());
+
       // Get project facilities
       final projectFacilityRepo = context.read<
           LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
@@ -106,6 +112,9 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
 
       if (!mounted) return;
 
+      // For distributors without facilities, use user UUID
+      final distributorWithoutFacilities = isDistributor && facilities.isEmpty;
+
       final previousFacilityId = _selectedFacility?.id;
       final autoSelectedFacility = facilities.isNotEmpty
           ? (previousFacilityId != null
@@ -121,9 +130,13 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         _productVariants = productVariants;
         _selectedFacility = autoSelectedFacility;
         _isLoading = false;
+        _isDistributorWithoutFacilities = distributorWithoutFacilities;
       });
 
-      if (autoSelectedFacility != null) {
+      // Use user UUID for distributors without facilities
+      if (distributorWithoutFacilities) {
+        _setupStockListener(context.loggedInUserUuid);
+      } else if (autoSelectedFacility != null) {
         _setupStockListener(autoSelectedFacility.id);
       }
     } catch (e) {
@@ -139,6 +152,8 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
     final stockRepo =
         context.read<LocalRepository<StockModel, StockSearchModel>>()
             as StockLocalRepository;
+
+    final isDistributor = _isDistributorWithoutFacilities;
 
     stockRepo.listenToChanges(
       query: StockSearchModel(receiverId: facilityId),
@@ -161,9 +176,12 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         final allStocks = allStocksMap.values.toList();
 
         final productIds = _productVariants.map((pv) => pv.id).toList();
+        // For distributors, use user UUID as facilityId for calculation
+        final effectiveFacilityId =
+            isDistributor ? context.loggedInUserUuid : facilityId;
         final balances = StockCalculationUtils.calculateStockInHandForProducts(
           stockList: allStocks,
-          facilityId: facilityId,
+          facilityId: effectiveFacilityId,
           productIds: productIds,
           loggedInUserUuid: context.loggedInUserUuid,
         );
@@ -194,8 +212,8 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
     return DigitCard(
       margin: const EdgeInsets.all(spacer2),
       children: [
-        // Facility selector (only show if multiple facilities)
-        if (_facilities.length > 1)
+        // Facility selector (only show if multiple facilities and not distributor without facilities)
+        if (_facilities.length > 1 && !_isDistributorWithoutFacilities)
           Padding(
             padding: const EdgeInsets.only(bottom: spacer2),
             child: DigitDropdown(

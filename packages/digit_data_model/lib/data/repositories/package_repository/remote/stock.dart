@@ -34,8 +34,7 @@ class StockRemoteRepository
             queryParameters: {
               'offset': offSet ?? 0,
               'limit': limit ?? 100,
-              if (lastSyncedTime != null)
-                'lastChangedSince': lastSyncedTime,
+              if (lastSyncedTime != null) 'lastChangedSince': lastSyncedTime,
               'tenantId': DigitDataModelSingleton().tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
             },
@@ -106,8 +105,7 @@ class StockRemoteRepository
             queryParameters: {
               'offset': offSet ?? 0,
               'limit': 0,
-              if (lastSyncedTime != null)
-                'lastChangedSince': lastSyncedTime,
+              if (lastSyncedTime != null) 'lastChangedSince': lastSyncedTime,
               'tenantId': DigitDataModelSingleton().tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
             },

@@ -608,10 +608,11 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       ],
                     ),
                     children: [
-                      if (_hasDisplayOnlyProperties(schema))
-                        ...[
+                      if (_hasDisplayOnlyProperties(schema)) ...[
                         _buildDisplayOnlyCard(context, schema),
-                          const SizedBox(height: spacer4,)
+                        const SizedBox(
+                          height: spacer4,
+                        )
                       ],
                       DigitCard(
                         margin: const EdgeInsets.symmetric(
@@ -1331,8 +1332,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final popUpConfig = schema.showSecondaryAlertPopUp!;
     final commentController = TextEditingController();
     final bodyFields = popUpConfig.body ?? [];
-    final hasMandatoryFields =
-        bodyFields.any((field) => field.mandatory);
+    final hasMandatoryFields = bodyFields.any((field) => field.mandatory);
 
     bool showValidationError = false;
 
@@ -1342,36 +1342,27 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         return StatefulBuilder(
           builder: (popupCtx, setPopupState) {
             return Popup(
-              title: localizations
-                  .translate(popUpConfig.title),
+              title: localizations.translate(popUpConfig.title),
               description: popUpConfig.description != null
-                  ? localizations
-                      .translate(popUpConfig.description!)
+                  ? localizations.translate(popUpConfig.description!)
                   : null,
               additionalWidgets: [
                 ...bodyFields.map((field) {
                   final hasError = showValidationError &&
                       field.mandatory &&
-                      commentController.text
-                          .trim()
-                          .isEmpty;
+                      commentController.text.trim().isEmpty;
 
                   return Padding(
-                    padding: const EdgeInsets.only(
-                        top: spacer2),
+                    padding: const EdgeInsets.only(top: spacer2),
                     child: LabeledField(
-                      label: localizations
-                          .translate(field.label),
+                      label: localizations.translate(field.label),
                       isRequired: field.mandatory,
                       child: DigitTextAreaFormInput(
-                        initialValue:
-                            commentController.text,
+                        initialValue: commentController.text,
                         onChange: (value) {
-                          commentController.text =
-                              value;
+                          commentController.text = value;
                           setPopupState(() {
-                            showValidationError =
-                                false;
+                            showValidationError = false;
                           });
                         },
                         errorMessage: hasError
@@ -1384,45 +1375,34 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               ],
               actions: [
                 DigitButton(
-                  label: localizations.translate(
-                      popUpConfig.primaryActionLabel),
+                  label:
+                      localizations.translate(popUpConfig.primaryActionLabel),
                   onPressed: () {
-                    final hasEmptyMandatory =
-                        bodyFields.any((field) =>
-                            field.mandatory &&
-                            commentController.text
-                                .trim()
-                                .isEmpty);
+                    final hasEmptyMandatory = bodyFields.any((field) =>
+                        field.mandatory &&
+                        commentController.text.trim().isEmpty);
                     if (hasEmptyMandatory) {
                       setPopupState(() {
                         showValidationError = true;
                       });
                       return;
                     }
-                    final popupData =
-                        <String, dynamic>{};
-                    for (final field
-                        in bodyFields) {
+                    final popupData = <String, dynamic>{};
+                    for (final field in bodyFields) {
                       popupData[field.fieldName] =
-                          commentController.text
-                              .trim();
+                          commentController.text.trim();
                     }
-                    Navigator.of(ctx,
-                            rootNavigator: true)
-                        .pop();
-                    onConfirm(
-                        popupData: popupData);
+                    Navigator.of(ctx, rootNavigator: true).pop();
+                    onConfirm(popupData: popupData);
                   },
                   type: DigitButtonType.primary,
                   size: DigitButtonSize.large,
                 ),
                 DigitButton(
-                  label: localizations.translate(
-                      popUpConfig.secondaryActionLabel),
+                  label:
+                      localizations.translate(popUpConfig.secondaryActionLabel),
                   onPressed: () {
-                    Navigator.of(ctx,
-                            rootNavigator: true)
-                        .pop();
+                    Navigator.of(ctx, rootNavigator: true).pop();
                   },
                   type: DigitButtonType.secondary,
                   size: DigitButtonSize.large,
