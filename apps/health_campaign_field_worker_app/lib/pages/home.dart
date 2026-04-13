@@ -497,37 +497,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
     });
 
-    FunctionRegistry.register('buttonColor', (args, stateData) {
-      final widgetData = args.isNotEmpty ? args[0] : null;
-      final attendee = args.length > 1 ? args[1] : null;
-
-      double? currentStatus;
-
-      final individualId = attendee?["individualId"];
-
-      var attendanceCollectionData =
-          widgetData["attendanceCollection"]?[individualId];
-
-      if (attendanceCollectionData == 'present') {
-        currentStatus = 1.0;
-      } else if (attendanceCollectionData == 'absent') {
-        currentStatus = 0.0;
-      }
-
-      var status = currentStatus ?? attendee?['status'] ?? -1.0;
-
-      if (status == 1.0) {
-        return "green";
-      } else if (status == 0.0) {
-        return "red";
-      } else if (status == -1.0) {
-        return null;
-      }
-    });
-
     FunctionRegistry.register('buttonType', (args, stateData) {
       final widgetData = args.isNotEmpty ? args[0] : null;
       final attendee = args.length > 1 ? args[1] : null;
+      final targetStatus = args.length > 2 ? args[2] : null;
 
       double? currentStatus;
 
@@ -544,11 +517,9 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       var status = currentStatus ?? attendee?['status'] ?? -1.0;
 
-      if (status == 1.0) {
+      if (status == targetStatus) {
         return "primary";
-      } else if (status == 0.0) {
-        return "primary";
-      } else if (status == -1.0) {
+      } else {
         return "secondary";
       }
     });
