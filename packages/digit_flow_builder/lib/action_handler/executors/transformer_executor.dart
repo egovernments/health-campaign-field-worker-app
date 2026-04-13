@@ -190,6 +190,7 @@ class TransformerExecutor extends ActionExecutor {
       "selectedBoundaryCode": FlowBuilderSingleton().boundary?.code,
       // converting in json format to match nested object value as passing model will cause issue
       'userUUID': FlowBuilderSingleton().loggedInUser?.uuid,
+      'loggedInUserUuid': FlowBuilderSingleton().loggedInUserUuid,
       'householdType': HouseholdType.family.toValue(),
       ...extraContext,
       "beneficiaryType": FlowBuilderSingleton().beneficiaryType?.toValue(),

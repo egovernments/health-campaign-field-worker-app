@@ -12,6 +12,13 @@ import '../models/entities/roles_type.dart';
 import '../utils/stock_calculation_utils.dart';
 import '../utils/utils.dart';
 
+// For validation of 64char in backend
+String _generateShortBalanceKey(String facilityId, String productVariantId) {
+  final combined = '$facilityId$productVariantId';
+  final hash = combined.hashCode.abs().toRadixString(36);
+  return 'bal_$hash';
+}
+
 /// Executor that maintains running stock balances in UserAction records.
 ///
 /// When a stock transaction or task delivery occurs, this executor creates or
@@ -84,10 +91,14 @@ class StockBalanceExecutor extends ActionExecutor {
 
     final userActionRepo = context.read<UserActionLocalRepository>();
 
-    final isDistributor = FlowBuilderSingleton()
-            .userRoles
-            ?.any((role) => role['code'] == RolesType.distributor.toValue()) ??
-        false;
+    final userRoles = context.loggedInUserRoles;
+    debugPrint(
+        '_handleStockEntity: userRoles = ${userRoles.map((r) => r.code).toList()}');
+    debugPrint(
+        '_handleStockEntity: looking for ${RolesType.distributor.toValue()}');
+    final isDistributor =
+        userRoles.any((role) => role.code == RolesType.distributor.toValue());
+    debugPrint('_handleStockEntity: isDistributor = $isDistributor');
 
     final productQuantities = <String, double>{};
     for (final stock in stockEntities) {
@@ -136,10 +147,8 @@ class StockBalanceExecutor extends ActionExecutor {
     final userActionRepo = context.read<UserActionLocalRepository>();
 
     // Check if user is a distributor
-    final isDistributor = FlowBuilderSingleton()
-            .userRoles
-            ?.any((role) => role['code'] == RolesType.distributor.toValue()) ??
-        false;
+    final isDistributor = context.loggedInUserRoles
+        .any((role) => role.code == RolesType.distributor.toValue());
     debugPrint('_handleTaskEntity: isDistributor = $isDistributor');
 
     // Aggregate delivered quantities by product variant
@@ -228,12 +237,8 @@ class StockBalanceExecutor extends ActionExecutor {
     required String boundaryCode,
     required bool isDistributor,
   }) async {
-    debugPrint(
-        '_updateStockBalanceFromDelivery: facilityId=$facilityId, isDistributor=$isDistributor');
+    final balanceKey = _generateShortBalanceKey(facilityId, productVariantId);
 
-    final balanceKey = 'stock_balance_${facilityId}_$productVariantId';
-
-    // Search for existing stock balance UserAction
     final existingBalances = await userActionRepo.search(
       UserActionSearchModel(
         clientReferenceId: [balanceKey],
@@ -250,9 +255,13 @@ class StockBalanceExecutor extends ActionExecutor {
     List<StockModel> sentStocks = [];
 
     if (isDistributor) {
-      // Distributors: use receiverId (their user UUID) to find stocks
+      // Distributors: use receiverId (their user UUID) to find received stocks
+      // and senderId to find returned/dispatched stocks
       receivedStocks = await stockRepo.search(
         StockSearchModel(receiverId: facilityId),
+      );
+      sentStocks = await stockRepo.search(
+        StockSearchModel(senderId: facilityId),
       );
     } else {
       // Warehouse managers: use both receiverId and senderId (facility IDs)
@@ -359,7 +368,7 @@ class StockBalanceExecutor extends ActionExecutor {
     required String boundaryCode,
     bool isDistributor = false,
   }) async {
-    final balanceKey = 'stock_balance_${facilityId}_$productVariantId';
+    final balanceKey = _generateShortBalanceKey(facilityId, productVariantId);
 
     final existingBalances = await userActionRepo.search(
       UserActionSearchModel(clientReferenceId: [balanceKey]),
@@ -374,6 +383,8 @@ class StockBalanceExecutor extends ActionExecutor {
     if (isDistributor) {
       receivedStocks =
           await stockRepo.search(StockSearchModel(receiverId: facilityId));
+      sentStocks =
+          await stockRepo.search(StockSearchModel(senderId: facilityId));
     } else {
       receivedStocks =
           await stockRepo.search(StockSearchModel(receiverId: facilityId));

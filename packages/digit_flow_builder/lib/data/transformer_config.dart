@@ -639,8 +639,10 @@ final jsonConfig = {
           "transactionReason":
               "__switch:__context:stockEntryType:{RECEIPT:__value:RECEIVED,RETURNED:__value:RETURNED,ISSUED:__value:null,DAMAGED:stockDetails.transactionReason,LOSS:stockDetails.transactionReason}",
           "transactingPartyId": "stockDetails.transactingPartyId",
-          "senderId": "stockDetails.facilityFromWhich",
-          "senderType": "__value:WAREHOUSE",
+          "senderId":
+              "__switch:__context:primaryRole:{SENDER:__context:loggedInUserUuid,default:stockDetails.facilityFromWhich}",
+          "senderType":
+              "__switch:__context:primaryRole:{SENDER:__value:STAFF,default:__value:WAREHOUSE}",
           "receiverId":
               "__switch:__context:receiverPartyType:{STAFF:warehouseDetails.teamCode,default:warehouseDetails.facilityToWhich}",
           "receiverType":
@@ -662,7 +664,9 @@ final jsonConfig = {
             "secondaryRole": "__context:secondaryRole",
             "status":
                 "__switch:__context:stockEntryType:{ISSUED:__value:IN_TRANSIT,RETURNED:__value:IN_TRANSIT,LOSS:__value:LOST,DAMAGED:__value:DAMAGED}",
-            "scanResource": "stockProductDetails.scanResource"
+            "scanResource": "stockProductDetails.scanResource",
+            "quantityWastage": "stockProductDetails.quantityWastage",
+            "quantityPartialUsed": "stockProductDetails.quantityPartialUsed"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
