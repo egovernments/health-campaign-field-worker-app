@@ -426,17 +426,121 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                                     // Handle direct form submission (skip remaining pages)
                                     if (targetPageType == 'submit') {
-                                      context.read<FormsBloc>().add(
-                                          FormsSubmitEvent(
-                                              isEdit: widget.isEdit,
-                                              schemaKey:
-                                                  widget.currentSchemaKey));
-                                      // Pop all form pages
-                                      context.router.popUntil((route) {
-                                        return route.settings.name !=
-                                            FormsRenderRoute.name;
-                                      });
-                                      return; // Skip default logic
+                                      final contextValue =
+                                          buildVisibilityEvaluationContext(
+                                        currentPageKey: currentPageKey,
+                                        currentForm: formGroup,
+                                        pages: schemaObject.pages,
+
+                                        /// TODO: fix hardcode not null condition
+                                      );
+                                      if (schema.showAlertPopUp != null) {
+                                        showCustomPopup(
+                                          context: context,
+                                          builder: (BuildContext ctx) => Popup(
+                                              title: localizations.translate(
+                                                  _resolveTemplate(
+                                                      schema.showAlertPopUp!
+                                                          .title,
+                                                      schema.showAlertPopUp
+                                                          ?.conditions,
+                                                      contextValue)!),
+                                              description: localizations
+                                                  .translate(_resolveTemplate(
+                                                          translateIfPresent(
+                                                              schema
+                                                                  .showAlertPopUp
+                                                                  ?.description,
+                                                              localizations),
+                                                          schema.showAlertPopUp
+                                                              ?.conditions,
+                                                          contextValue) ??
+                                                      ""),
+
+                                              /// FIXME: need to send null as empty string will take space
+                                              actions: [
+                                                DigitButton(
+                                                    label: localizations
+                                                        .translate(schema
+                                                            .showAlertPopUp!
+                                                            .primaryActionLabel),
+                                                    onPressed: () {
+                                                      context
+                                                          .read<FormsBloc>()
+                                                          .add(FormsSubmitEvent(
+                                                              isEdit:
+                                                                  widget.isEdit,
+                                                              schemaKey: widget
+                                                                  .currentSchemaKey));
+                                                      // Pop all form pages (FormsRenderRoute)
+                                                      Navigator.of(
+                                                        ctx,
+                                                        rootNavigator: true,
+                                                      ).pop();
+                                                      context.router
+                                                          .popUntil((route) {
+                                                        return route.settings
+                                                                .name !=
+                                                            FormsRenderRoute
+                                                                .name;
+                                                      });
+                                                    },
+                                                    type:
+                                                        DigitButtonType.primary,
+                                                    size:
+                                                        DigitButtonSize.large),
+                                                DigitButton(
+                                                    label: localizations
+                                                        .translate(schema
+                                                            .showAlertPopUp!
+                                                            .secondaryActionLabel),
+                                                    onPressed: () {
+                                                      Navigator.of(
+                                                        ctx,
+                                                        rootNavigator: true,
+                                                      ).pop();
+                                                      _isSubmitting = false;
+                                                      setState(() {});
+                                                    },
+                                                    type: DigitButtonType
+                                                        .secondary,
+                                                    size: DigitButtonSize.large)
+                                              ]),
+                                        ).then((_) {
+                                          // Reset flag if popup dismissed without submitting
+                                          // (e.g. tapping outside the popup)
+                                          if (_isSubmitting) {
+                                            _isSubmitting = false;
+                                            setState(() {});
+                                          }
+                                        });
+                                        return; // Skip default logic
+                                      } else {
+                                        context.read<FormsBloc>().add(
+                                            FormsSubmitEvent(
+                                                isEdit: widget.isEdit,
+                                                schemaKey:
+                                                    widget.currentSchemaKey));
+                                        // Pop all form pages (FormsRenderRoute)
+
+                                        /// FIXME: NOT BACKWARD COMPATIBLE
+                                        context.router.popUntil((route) {
+                                          return route.settings.name !=
+                                              FormsRenderRoute.name;
+                                        });
+                                        return; // Skip default logic
+                                      }
+                                      // context.read<FormsBloc>().add(
+                                      //     FormsSubmitEvent(
+                                      //         isEdit: widget.isEdit,
+                                      //         schemaKey:
+                                      //             widget.currentSchemaKey));
+                                      // // Pop all form pages
+                                      // context.router.popUntil((route) {
+                                      //   return route.settings.name !=
+                                      //       FormsRenderRoute.name;
+                                      // });
+                                      // return; // Skip default logic
                                     }
                                   }
                                 }
