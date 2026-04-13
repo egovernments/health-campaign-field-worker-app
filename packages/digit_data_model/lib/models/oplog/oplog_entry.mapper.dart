@@ -99,6 +99,10 @@ class ApiOperationMapper extends EnumMapper<ApiOperation> {
         return ApiOperation.update;
       case 'delete':
         return ApiOperation.delete;
+      case 'validate':
+        return ApiOperation.validate;
+      case 'switch_user':
+        return ApiOperation.switchUser;
       case 'bulk_create':
         return ApiOperation.bulkCreate;
       case 'bulk_update':
@@ -129,6 +133,10 @@ class ApiOperationMapper extends EnumMapper<ApiOperation> {
         return 'update';
       case ApiOperation.delete:
         return 'delete';
+      case ApiOperation.validate:
+        return 'validate';
+      case ApiOperation.switchUser:
+        return 'switch_user';
       case ApiOperation.bulkCreate:
         return 'bulk_create';
       case ApiOperation.bulkUpdate:

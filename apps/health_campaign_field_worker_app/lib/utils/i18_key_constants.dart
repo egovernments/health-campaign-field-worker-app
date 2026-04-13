@@ -627,6 +627,22 @@ class Login {
   String get unableToLoginText => 'UNABLE_TO_LOGIN';
 
   String get qrLogin => 'QR_LOGIN';
+
+  String get switchMobileDialogTitle => 'SWITCH_MOBILE_DIALOG_TITLE';
+
+  String get switchMobileDialogContent => 'SWITCH_MOBILE_DIALOG_CONTENT';
+
+  String get switchMobileDialogContine => 'SWITCH_MOBILE_DIALOG_CONTINUE';
+
+  String get switchMobileDialogBack => 'SWITCH_MOBILE_DIALOG_BACK';
+
+  String get switchReasonRequiredError => 'SWITCH_REASON_REQUIRED_ERROR';
+
+  String get switchReason => 'SWITCH_REASON_LABEL';
+
+  String get switchReasonHeader => 'SWITCH_REASON_HEADER_LABEL';
+
+  String get switchReasonContinue => 'SWITCH_REASON_CONTINUE';
 }
 
 class SelectSurveyFormShowcase {

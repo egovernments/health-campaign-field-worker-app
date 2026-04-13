@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sync_service/data/repositories/sync/sync_down.dart';
@@ -30,13 +31,16 @@ class SyncLock {
       final lockTime = DateTime.tryParse(existing);
       if (lockTime != null &&
           DateTime.now().difference(lockTime).abs() < _staleDuration) {
+        debugPrint('SyncLock: tryAcquire FAILED — lock held since $existing (age: ${DateTime.now().difference(lockTime).inSeconds}s, stale after: ${_staleDuration.inSeconds}s)');
         return false;
       }
+      debugPrint('SyncLock: existing lock is stale ($existing), overriding');
     }
     await _storage.write(
       key: _key,
       value: DateTime.now().toIso8601String(),
     );
+    debugPrint('SyncLock: tryAcquire SUCCESS');
     return true;
   }
 
@@ -74,7 +78,9 @@ class SyncService {
     required BandwidthModel bandwidthModel,
     ServiceInstance? service,
   }) async {
+    debugPrint('SyncService: performSync called (service=${service != null ? "background" : "manual"})');
     if (!await SyncLock.tryAcquire()) {
+      debugPrint('SyncService: performSync aborted — could not acquire lock');
       return false;
     }
 
@@ -104,6 +110,11 @@ class SyncService {
       throw Exception('Sync up is not valid for online only configuration');
     }
 
+    debugPrint('SyncService: _performSyncInternal started (userId=${bandwidthModel.userId}, batchSize=${bandwidthModel.batchSize})');
+    debugPrint('SyncService: localRepositories=${localRepositories.length}, remoteRepositories=${remoteRepositories.length}');
+    debugPrint('SyncService: remoteRepo types=${remoteRepositories.map((e) => e.type.name).toList()}');
+    debugPrint('SyncService: persistenceConfiguration=$configuration');
+
     const maxIterations = 10;
     for (var iteration = 0; iteration < maxIterations; iteration++) {
       final futuresSyncDown = await Future.wait(
@@ -120,9 +131,18 @@ class SyncService {
       final pendingSyncUpEntries =
           futuresSyncUp.expand((e) => e).toList();
 
+      debugPrint('SyncService: iteration=$iteration, pendingDown=${pendingSyncDownEntries.length}, pendingUp=${pendingSyncUpEntries.length}');
+
       if (pendingSyncUpEntries.isEmpty && pendingSyncDownEntries.isEmpty) {
+        debugPrint('SyncService: nothing to sync, returning true');
         return true;
       }
+
+      // Log which entity types have pending items
+      final pendingUpTypes = pendingSyncUpEntries.map((e) => e.type.name).toSet();
+      final pendingDownTypes = pendingSyncDownEntries.map((e) => e.type.name).toSet();
+      debugPrint('SyncService: pendingUp types=$pendingUpTypes');
+      debugPrint('SyncService: pendingDown types=$pendingDownTypes');
 
       SyncError? syncError;
 
@@ -140,6 +160,7 @@ class SyncService {
             configuration: configuration!,
           );
         } catch (e) {
+          debugPrint('SyncService: syncDown FAILED: $e');
           syncError = SyncDownError(e);
         }
       }
@@ -157,11 +178,13 @@ class SyncService {
             remoteRepositories: remoteRepositories.toSet().toList(),
           );
         } catch (e) {
+          debugPrint('SyncService: syncUp FAILED: $e');
           syncError ??= SyncUpError(e);
         }
       }
 
       if (syncError != null) {
+        debugPrint('SyncService: sync failed, invoking stopService. Error: ${syncError.error}');
         service?.invoke('stopService');
         throw syncError;
       }

@@ -163,6 +163,17 @@ class Constants {
   static const String stateBoundaryLevel = 'State';
   static const String stateFacility = 'State Facility';
   static const String lgaFacility = 'LGA Facility';
+  static const String deviceSwitch = 'DEVICE_SWITCH';
+  static const String other = 'OTHER';
+  static const String deviceSwitchReason = 'DEVICE_SWITCH_REASON';
+  static const String oldDeviceToken = 'OLD_TOKEN';
+  static const String newDeviceToken = 'NEW_TOKEN';
+  static const String deviceSelectionOtherReason = 'OTHERS';
+  static const String multiLoginService = 'MULTILOGIN';
+  static const String multiLoginEntity = 'MultiLogin';
+  static const String multiLoginSwitchOperation = 'switch';
+  static const String userActionService = 'USER-ACTION';
+  static const String userActionEntity = 'userAction';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -343,6 +354,22 @@ class Constants {
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
         .firstWhereOrNull((element) => element.entityName == entityName)
+        ?.path;
+
+    return actionResult ?? '';
+  }
+
+  static String getMultiLoginEndPoint({
+    required List<ServiceRegistry> serviceRegistry,
+    required String service,
+    required String action,
+    required String entityName,
+  }) {
+    final actionResult = serviceRegistry
+        .firstWhereOrNull((element) => element.service == service)
+        ?.actions
+        .firstWhereOrNull((element) =>
+            element.entityName == entityName && element.action == action)
         ?.path;
 
     return actionResult ?? '';
