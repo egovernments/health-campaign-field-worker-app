@@ -6551,6 +6551,7 @@ final dynamic sampleFlows = {
           "type": "template",
           "label": "REGISTER_BENEFICIARY",
           "format": "button",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "onAction": [
             {
               "actionType": "NAVIGATION",
