@@ -42,6 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on(_onDeviceSwitch);
     on(_onDeviceSwitchUserAction);
     on(_onReset);
+    on(_onAllow);
   }
 
   //_onAutoLogin event handles auto-login of the user when the user is already logged in and token is not expired, AuthenticatedWrapper is returned in UI
@@ -158,6 +159,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const AuthUnauthenticatedState());
   }
 
+  FutureOr<void> _onAllow(AuthAllowEvent event, AuthEmitter emit) async {
+    emit(const AuthAllowState());
+  }
+
   FutureOr<void> _onDeviceSwitch(
       AuthSwitchDeviceEventSwitchDevice event, AuthEmitter emit) async {
     try {
@@ -268,8 +273,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         endpoint: event.apiEndPoint, // Use dynamic endpoint from event
         userActionModel: event.userActionModel,
       );
+
+      await localSecureStore.deleteDeviceSwitchReason();
+      await localSecureStore.deleteExistingDeviceToken();
     } catch (e) {
-      // Skip error on user action failure
+      AppLogger.instance.error(
+        title: 'User Action error',
+        message: '$e',
+      );
     }
   }
 }
@@ -304,6 +315,8 @@ class AuthEvent with _$AuthEvent {
   }) = AuthSwitchDeviceEventSwitchDevice;
 
   const factory AuthEvent.reset() = AuthResetEvent;
+
+  const factory AuthEvent.allow() = AuthAllowEvent;
 
   const factory AuthEvent.switchDeviceUserAction({
     required UserActionModel userActionModel,

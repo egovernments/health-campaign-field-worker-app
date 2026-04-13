@@ -856,13 +856,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     // Create useraction for device switch
     try {
       await _createUserActionForDeviceSwitch(event.model);
-    } catch (_) {
-      emit(state.copyWith(
-        selectedProject: event.model,
-        loading: false,
-        syncError: ProjectSyncErrorType.userAction,
-      ));
-      return;
+    } catch (error) {
+      AppLogger.instance.error(
+        title: 'ProjectBloc',
+        message: '$error',
+      );
     }
 
     // Load project facilities after project selection
@@ -1129,9 +1127,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 AdditionalField(Constants.newDeviceToken, currentToken),
             ]));
 
-        await localSecureStore.deleteDeviceSwitchReason();
-        await localSecureStore.deleteExistingDeviceToken();
-
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
         final apiEndPoint = Constants.getMultiLoginEndPoint(
           serviceRegistry: serviceRegistry,
@@ -1146,8 +1141,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             );
       }
     } catch (error) {
-      print(error);
-      // Skip the error as not creating the user action shouldn't block the flow
+      rethrow;
     }
   }
 }

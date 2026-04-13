@@ -34,6 +34,7 @@ mixin _$AuthEvent {
             String apiEndPoint)
         switchDevice,
     required TResult Function() reset,
+    required TResult Function() allow,
     required TResult Function(
             UserActionModel userActionModel, String apiEndPoint)
         switchDeviceUserAction,
@@ -55,6 +56,7 @@ mixin _$AuthEvent {
             String apiEndPoint)?
         switchDevice,
     TResult? Function()? reset,
+    TResult? Function()? allow,
     TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
   }) =>
@@ -75,6 +77,7 @@ mixin _$AuthEvent {
             String apiEndPoint)?
         switchDevice,
     TResult Function()? reset,
+    TResult Function()? allow,
     TResult Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -90,6 +93,7 @@ mixin _$AuthEvent {
     required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
         switchDevice,
     required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
     required TResult Function(AuthSwitchDeviceUserActionEvent value)
         switchDeviceUserAction,
   }) =>
@@ -103,6 +107,7 @@ mixin _$AuthEvent {
         checkOtherDeviceLogin,
     TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
     TResult? Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
   }) =>
@@ -116,6 +121,7 @@ mixin _$AuthEvent {
         checkOtherDeviceLogin,
     TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
     TResult Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -240,6 +246,7 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
             String apiEndPoint)
         switchDevice,
     required TResult Function() reset,
+    required TResult Function() allow,
     required TResult Function(
             UserActionModel userActionModel, String apiEndPoint)
         switchDeviceUserAction,
@@ -264,6 +271,7 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
             String apiEndPoint)?
         switchDevice,
     TResult? Function()? reset,
+    TResult? Function()? allow,
     TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
   }) {
@@ -287,6 +295,7 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
             String apiEndPoint)?
         switchDevice,
     TResult Function()? reset,
+    TResult Function()? allow,
     TResult Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -308,6 +317,7 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
     required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
         switchDevice,
     required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
     required TResult Function(AuthSwitchDeviceUserActionEvent value)
         switchDeviceUserAction,
   }) {
@@ -324,6 +334,7 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
         checkOtherDeviceLogin,
     TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
     TResult? Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
   }) {
@@ -340,6 +351,7 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
         checkOtherDeviceLogin,
     TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
     TResult Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -447,6 +459,7 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
             String apiEndPoint)
         switchDevice,
     required TResult Function() reset,
+    required TResult Function() allow,
     required TResult Function(
             UserActionModel userActionModel, String apiEndPoint)
         switchDeviceUserAction,
@@ -471,6 +484,7 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
             String apiEndPoint)?
         switchDevice,
     TResult? Function()? reset,
+    TResult? Function()? allow,
     TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
   }) {
@@ -494,6 +508,7 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
             String apiEndPoint)?
         switchDevice,
     TResult Function()? reset,
+    TResult Function()? allow,
     TResult Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -515,6 +530,7 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
     required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
         switchDevice,
     required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
     required TResult Function(AuthSwitchDeviceUserActionEvent value)
         switchDeviceUserAction,
   }) {
@@ -531,6 +547,7 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
         checkOtherDeviceLogin,
     TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
     TResult? Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
   }) {
@@ -547,6 +564,7 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
         checkOtherDeviceLogin,
     TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
     TResult Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -622,6 +640,7 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
             String apiEndPoint)
         switchDevice,
     required TResult Function() reset,
+    required TResult Function() allow,
     required TResult Function(
             UserActionModel userActionModel, String apiEndPoint)
         switchDeviceUserAction,
@@ -646,6 +665,7 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
             String apiEndPoint)?
         switchDevice,
     TResult? Function()? reset,
+    TResult? Function()? allow,
     TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
   }) {
@@ -669,6 +689,7 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
             String apiEndPoint)?
         switchDevice,
     TResult Function()? reset,
+    TResult Function()? allow,
     TResult Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -690,6 +711,7 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
     required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
         switchDevice,
     required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
     required TResult Function(AuthSwitchDeviceUserActionEvent value)
         switchDeviceUserAction,
   }) {
@@ -706,6 +728,7 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
         checkOtherDeviceLogin,
     TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
     TResult? Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
   }) {
@@ -722,6 +745,7 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
         checkOtherDeviceLogin,
     TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
     TResult Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -844,6 +868,7 @@ class _$AuthCheckOtherDeviceLoginEventImpl
             String apiEndPoint)
         switchDevice,
     required TResult Function() reset,
+    required TResult Function() allow,
     required TResult Function(
             UserActionModel userActionModel, String apiEndPoint)
         switchDeviceUserAction,
@@ -868,6 +893,7 @@ class _$AuthCheckOtherDeviceLoginEventImpl
             String apiEndPoint)?
         switchDevice,
     TResult? Function()? reset,
+    TResult? Function()? allow,
     TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
   }) {
@@ -891,6 +917,7 @@ class _$AuthCheckOtherDeviceLoginEventImpl
             String apiEndPoint)?
         switchDevice,
     TResult Function()? reset,
+    TResult Function()? allow,
     TResult Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -912,6 +939,7 @@ class _$AuthCheckOtherDeviceLoginEventImpl
     required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
         switchDevice,
     required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
     required TResult Function(AuthSwitchDeviceUserActionEvent value)
         switchDeviceUserAction,
   }) {
@@ -928,6 +956,7 @@ class _$AuthCheckOtherDeviceLoginEventImpl
         checkOtherDeviceLogin,
     TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
     TResult? Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
   }) {
@@ -944,6 +973,7 @@ class _$AuthCheckOtherDeviceLoginEventImpl
         checkOtherDeviceLogin,
     TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
     TResult Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -1116,6 +1146,7 @@ class _$AuthSwitchDeviceEventSwitchDeviceImpl
             String apiEndPoint)
         switchDevice,
     required TResult Function() reset,
+    required TResult Function() allow,
     required TResult Function(
             UserActionModel userActionModel, String apiEndPoint)
         switchDeviceUserAction,
@@ -1141,6 +1172,7 @@ class _$AuthSwitchDeviceEventSwitchDeviceImpl
             String apiEndPoint)?
         switchDevice,
     TResult? Function()? reset,
+    TResult? Function()? allow,
     TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
   }) {
@@ -1165,6 +1197,7 @@ class _$AuthSwitchDeviceEventSwitchDeviceImpl
             String apiEndPoint)?
         switchDevice,
     TResult Function()? reset,
+    TResult Function()? allow,
     TResult Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -1187,6 +1220,7 @@ class _$AuthSwitchDeviceEventSwitchDeviceImpl
     required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
         switchDevice,
     required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
     required TResult Function(AuthSwitchDeviceUserActionEvent value)
         switchDeviceUserAction,
   }) {
@@ -1203,6 +1237,7 @@ class _$AuthSwitchDeviceEventSwitchDeviceImpl
         checkOtherDeviceLogin,
     TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
     TResult? Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
   }) {
@@ -1219,6 +1254,7 @@ class _$AuthSwitchDeviceEventSwitchDeviceImpl
         checkOtherDeviceLogin,
     TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
     TResult Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -1306,6 +1342,7 @@ class _$AuthResetEventImpl implements AuthResetEvent {
             String apiEndPoint)
         switchDevice,
     required TResult Function() reset,
+    required TResult Function() allow,
     required TResult Function(
             UserActionModel userActionModel, String apiEndPoint)
         switchDeviceUserAction,
@@ -1330,6 +1367,7 @@ class _$AuthResetEventImpl implements AuthResetEvent {
             String apiEndPoint)?
         switchDevice,
     TResult? Function()? reset,
+    TResult? Function()? allow,
     TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
   }) {
@@ -1353,6 +1391,7 @@ class _$AuthResetEventImpl implements AuthResetEvent {
             String apiEndPoint)?
         switchDevice,
     TResult Function()? reset,
+    TResult Function()? allow,
     TResult Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -1374,6 +1413,7 @@ class _$AuthResetEventImpl implements AuthResetEvent {
     required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
         switchDevice,
     required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
     required TResult Function(AuthSwitchDeviceUserActionEvent value)
         switchDeviceUserAction,
   }) {
@@ -1390,6 +1430,7 @@ class _$AuthResetEventImpl implements AuthResetEvent {
         checkOtherDeviceLogin,
     TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
     TResult? Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
   }) {
@@ -1406,6 +1447,7 @@ class _$AuthResetEventImpl implements AuthResetEvent {
         checkOtherDeviceLogin,
     TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
     TResult Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -1419,6 +1461,181 @@ class _$AuthResetEventImpl implements AuthResetEvent {
 
 abstract class AuthResetEvent implements AuthEvent {
   const factory AuthResetEvent() = _$AuthResetEventImpl;
+}
+
+/// @nodoc
+abstract class _$$AuthAllowEventImplCopyWith<$Res> {
+  factory _$$AuthAllowEventImplCopyWith(_$AuthAllowEventImpl value,
+          $Res Function(_$AuthAllowEventImpl) then) =
+      __$$AuthAllowEventImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$AuthAllowEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthAllowEventImpl>
+    implements _$$AuthAllowEventImplCopyWith<$Res> {
+  __$$AuthAllowEventImplCopyWithImpl(
+      _$AuthAllowEventImpl _value, $Res Function(_$AuthAllowEventImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$AuthAllowEventImpl implements AuthAllowEvent {
+  const _$AuthAllowEventImpl();
+
+  @override
+  String toString() {
+    return 'AuthEvent.allow()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$AuthAllowEventImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String userId, String password, String tenantId)
+        login,
+    required TResult Function(String tenantId) autoLogin,
+    required TResult Function() logout,
+    required TResult Function(
+            String username, String tenantId, String apiEndPoint)
+        checkOtherDeviceLogin,
+    required TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)
+        switchDevice,
+    required TResult Function() reset,
+    required TResult Function() allow,
+    required TResult Function(
+            UserActionModel userActionModel, String apiEndPoint)
+        switchDeviceUserAction,
+  }) {
+    return allow();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? autoLogin,
+    TResult? Function()? logout,
+    TResult? Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult? Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult? Function()? reset,
+    TResult? Function()? allow,
+    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+  }) {
+    return allow?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? autoLogin,
+    TResult Function()? logout,
+    TResult Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult Function()? reset,
+    TResult Function()? allow,
+    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (allow != null) {
+      return allow();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
+        checkOtherDeviceLogin,
+    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
+        switchDevice,
+    required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
+    required TResult Function(AuthSwitchDeviceUserActionEvent value)
+        switchDeviceUserAction,
+  }) {
+    return allow(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
+    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+  }) {
+    return allow?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
+    TResult Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (allow != null) {
+      return allow(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthAllowEvent implements AuthEvent {
+  const factory AuthAllowEvent() = _$AuthAllowEventImpl;
 }
 
 /// @nodoc
@@ -1517,6 +1734,7 @@ class _$AuthSwitchDeviceUserActionEventImpl
             String apiEndPoint)
         switchDevice,
     required TResult Function() reset,
+    required TResult Function() allow,
     required TResult Function(
             UserActionModel userActionModel, String apiEndPoint)
         switchDeviceUserAction,
@@ -1541,6 +1759,7 @@ class _$AuthSwitchDeviceUserActionEventImpl
             String apiEndPoint)?
         switchDevice,
     TResult? Function()? reset,
+    TResult? Function()? allow,
     TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
   }) {
@@ -1564,6 +1783,7 @@ class _$AuthSwitchDeviceUserActionEventImpl
             String apiEndPoint)?
         switchDevice,
     TResult Function()? reset,
+    TResult Function()? allow,
     TResult Function(UserActionModel userActionModel, String apiEndPoint)?
         switchDeviceUserAction,
     required TResult orElse(),
@@ -1585,6 +1805,7 @@ class _$AuthSwitchDeviceUserActionEventImpl
     required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
         switchDevice,
     required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
     required TResult Function(AuthSwitchDeviceUserActionEvent value)
         switchDeviceUserAction,
   }) {
@@ -1601,6 +1822,7 @@ class _$AuthSwitchDeviceUserActionEventImpl
         checkOtherDeviceLogin,
     TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
     TResult? Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
   }) {
@@ -1617,6 +1839,7 @@ class _$AuthSwitchDeviceUserActionEventImpl
         checkOtherDeviceLogin,
     TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
     TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
     TResult Function(AuthSwitchDeviceUserActionEvent value)?
         switchDeviceUserAction,
     required TResult orElse(),

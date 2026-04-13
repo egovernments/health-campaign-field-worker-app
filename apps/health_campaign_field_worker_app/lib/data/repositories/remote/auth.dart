@@ -93,6 +93,9 @@ class AuthRepository {
     required String endpoint,
     required UserActionModel userActionModel,
   }) async {
+    if (userActionModel.tenantId == null) {
+      throw ArgumentError('tenantId is required for switchDeviceUserAction');
+    }
     try {
       await _client.post(
         endpoint,
@@ -102,7 +105,7 @@ class AuthRepository {
           ],
         },
         queryParameters: {
-          "tenantId": userActionModel.tenantId,
+          "tenantId": userActionModel.tenantId!,
         },
         options: Options(headers: {
           "content-type": 'application/json',

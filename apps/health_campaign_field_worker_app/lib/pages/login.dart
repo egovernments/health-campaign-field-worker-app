@@ -52,23 +52,34 @@ class _LoginPageState extends LocalizedState<LoginPage> {
   void _checkOtherDeviceLogin(BuildContext context, String username) async {
     final authBloc = context.read<AuthBloc>();
 
-    final isar = await Constants().isar;
-    final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+    try {
+      final isar = await Constants().isar;
+      final serviceRegistry = await isar.serviceRegistrys.where().findAll();
 
-    final apiEndPoint = Constants.getMultiLoginEndPoint(
-      serviceRegistry: serviceRegistry,
-      service: Constants.multiLoginService,
-      entityName: Constants.multiLoginEntity,
-      action: ApiOperation.validate.toValue(),
-    );
+      if (serviceRegistry.isEmpty) {
+        // Fall back to regular login if service registry is empty
+        authBloc.add(const AuthEvent.allow());
+        return;
+      }
 
-    authBloc.add(
-      AuthEvent.checkOtherDeviceLogin(
-        username: username,
-        apiEndPoint: apiEndPoint,
-        tenantId: envConfig.variables.tenantId,
-      ),
-    );
+      final apiEndPoint = Constants.getMultiLoginEndPoint(
+        serviceRegistry: serviceRegistry,
+        service: Constants.multiLoginService,
+        entityName: Constants.multiLoginEntity,
+        action: ApiOperation.validate.toValue(),
+      );
+
+      authBloc.add(
+        AuthEvent.checkOtherDeviceLogin(
+          username: username,
+          apiEndPoint: apiEndPoint,
+          tenantId: envConfig.variables.tenantId,
+        ),
+      );
+    } catch (e) {
+      // Fall back to regular login on error
+      authBloc.add(const AuthEvent.allow());
+    }
   }
 
   @override
