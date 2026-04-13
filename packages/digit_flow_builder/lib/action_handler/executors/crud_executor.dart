@@ -142,7 +142,8 @@ class UpdateExecutor extends ActionExecutor {
 
     // Get existing models for change comparison
     final existingModels = contextData['existingModels'] as List<dynamic>?;
-    final existingModelsList = existingModels?.whereType<EntityModel>().toList() ?? [];
+    final existingModelsList =
+        existingModels?.whereType<EntityModel>().toList() ?? [];
 
     // Cast List<dynamic> to List<EntityModel>
     var entityList = entities.whereType<EntityModel>().toList();
@@ -290,8 +291,9 @@ class UpdateExecutor extends ActionExecutor {
           if (additionalFieldUpdates.isNotEmpty) {
             final existingAF = entityMap['additionalFields'];
             if (existingAF is Map<String, dynamic>) {
-              final existingFields =
-                  (existingAF['fields'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
+              final existingFields = (existingAF['fields'] as List<dynamic>?)
+                      ?.cast<Map<String, dynamic>>() ??
+                  [];
               final updatedFields = <Map<String, dynamic>>[];
 
               // Keep existing fields, replacing any with matching keys
@@ -342,7 +344,8 @@ class UpdateExecutor extends ActionExecutor {
           }
         } else {
           // No field updates, just update audit
-          updatedEntity = entity.copyWith(clientAuditDetails: updatedClientAudit);
+          updatedEntity =
+              entity.copyWith(clientAuditDetails: updatedClientAudit);
         }
       } else {
         // No field updates, just update audit
@@ -353,16 +356,18 @@ class UpdateExecutor extends ActionExecutor {
       final originalEntity = existingModelsList.isEmpty
           ? null
           : existingModelsList.cast<EntityModel?>().firstWhere(
-              (e) => getEntityTypeName(e!) == entityType,
-              orElse: () => null,
-            );
+                (e) => getEntityTypeName(e!) == entityType,
+                orElse: () => null,
+              );
 
       // If no original found, treat as changed (always update)
-      if (originalEntity == null || _hasEntityChanged(originalEntity, updatedEntity)) {
+      if (originalEntity == null ||
+          _hasEntityChanged(originalEntity, updatedEntity)) {
         processedEntities.add(updatedEntity);
         debugPrint('UPDATE_EVENT: $entityType has changes - will be updated');
       } else {
-        debugPrint('UPDATE_EVENT: $entityType has NO changes - skipping update');
+        debugPrint(
+            'UPDATE_EVENT: $entityType has NO changes - skipping update');
       }
     }
 
@@ -371,7 +376,8 @@ class UpdateExecutor extends ActionExecutor {
       return contextData;
     }
 
-    debugPrint('UPDATE_EVENT: Updating ${processedEntities.length} entities (${entityList.length - processedEntities.length} unchanged)');
+    debugPrint(
+        'UPDATE_EVENT: Updating ${processedEntities.length} entities (${entityList.length - processedEntities.length} unchanged)');
     // Use CrudService directly to await the update, ensuring DB is updated
     // before subsequent actions (e.g., UPDATE_STOCK_BALANCE) query it.
     await CrudBlocSingleton().crudService.updateEntities(processedEntities);

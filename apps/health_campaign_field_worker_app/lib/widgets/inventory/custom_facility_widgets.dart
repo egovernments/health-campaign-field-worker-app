@@ -172,7 +172,9 @@ class _FacilityCardContent extends StatelessWidget {
     final transactionType =
         navigationParams['transactionType']?.toString() ?? '';
     final stockEntryType = navigationParams['stockEntryType']?.toString() ?? '';
-    final isReturnFlow = stockEntryType == 'RETURNED';
+    final isReturnFlow = stockEntryType == 'RETURNED' ||
+        stockEntryType == 'LOSS' ||
+        stockEntryType == 'DAMAGED';
     final isLessExcessFlow = stockEntryType == 'LESS_EXCESS';
 
     final deliveryTeamCode = _getDeliveryTeamCodeFromConfig(transactionType);
@@ -235,6 +237,10 @@ class _FacilityCardContent extends StatelessWidget {
           transactionType == 'RECEIPT') {
         if (isToField) return facilityLevel == 'current';
         if (isFromField) return facilityLevel == 'parent';
+      } else if (stockEntryType == 'LOSS' || stockEntryType == 'DAMAGED') {
+        // For loss and damaged, to field should show parent facility
+        if (isToField) return facilityLevel == 'parent';
+        if (isFromField) return facilityLevel == 'current';
       }
 
       return true;

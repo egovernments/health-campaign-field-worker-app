@@ -29,9 +29,10 @@ class StockCalculationUtils {
   ///
   /// Parameters:
   /// - [stockList]: List of StockModel entries to calculate from
-  /// - [facilityId]: The facility ID to filter stocks by (as sender or receiver)
+  /// - [facilityId]: The facility ID or user UUID to filter stocks by
   /// - [productId]: The product variant ID to filter stocks by
   /// - [loggedInUserUuid]: Optional user UUID to filter stocks created by this user
+  /// - [isDistributor]: Whether the current user is a distributor
   ///
   /// Returns a Map with the following keys:
   /// - stockReceived: Total quantity received
@@ -45,25 +46,22 @@ class StockCalculationUtils {
     required String facilityId,
     required String productId,
     String? loggedInUserUuid,
+    bool isDistributor = false,
   }) {
-    // Filter stocks matching the criteria:
-    // 1. Filter by productVariantId
-    // 2. Filter by facility (either as receiver or sender)
-    // 3. Optionally filter by logged-in user (stocks created by current user only)
+    // Filter stocks matching the criteria
     final filteredStock = stockList.where((stock) {
       // Must match product
       if (stock.productVariantId != productId) return false;
 
-      // Must match facility (as receiver OR sender)
-      final matchesReceiver = stock.receiverId == facilityId;
-      final matchesSender = stock.senderId == facilityId;
-      if (!matchesReceiver && !matchesSender) return false;
-
-      // Optionally filter by logged-in user (created by OR modified by)
-      if (loggedInUserUuid != null &&
-          stock.auditDetails?.createdBy != loggedInUserUuid &&
-          stock.clientAuditDetails?.lastModifiedBy != loggedInUserUuid) {
-        return false;
+      // For distributors: match by receiverId only (user UUID)
+      // For warehouse managers: match by facilityId (either as receiver or sender)
+      if (isDistributor) {
+        final matchesReceiver = stock.receiverId == facilityId;
+        if (!matchesReceiver) return false;
+      } else {
+        final matchesReceiver = stock.receiverId == facilityId;
+        final matchesSender = stock.senderId == facilityId;
+        if (!matchesReceiver && !matchesSender) return false;
       }
 
       return true;
@@ -83,42 +81,58 @@ class StockCalculationUtils {
       final transactionReason = stock.transactionReason?.toUpperCase() ?? '';
       final quantity = num.tryParse(stock.quantity ?? '0') ?? 0.0;
       final status = _getAdditionalFieldValue(stock, 'status');
-
-      // Extract stockEntryType from additionalFields as fallback
       final stockEntryType = _getStockEntryType(stock);
 
-      // Check if this facility is the receiver or sender
+      // For distributors: only receiverId is used (user UUID)
+      // senderId = delivery team UUID, receiverId = distributor UUID
       final isReceiver = stock.receiverId == facilityId;
       final isSender = stock.senderId == facilityId;
 
-      // Stock Received/Excess/Less: This facility is the receiver AND transactionType == RECEIVED
-      // Both LESS and EXCESS use RECEIVED transactionType, differentiated by stockEntryType
+      // Distributor calculations
+      if (isDistributor) {
+        // Distributors: received stocks are counted, LOSS/DAMAGED are counted as lost/damaged
+        if (transactionType == 'RECEIVED') {
+          if (transactionReason == 'RETURNED' || stockEntryType == 'RETURNED') {
+            stockReturned += quantity;
+          } else if (stockEntryType == 'EXCESS') {
+            stockExcess += quantity;
+          } else if (stockEntryType == 'LESS') {
+            stockLess += quantity;
+          } else {
+            stockReceived += quantity;
+          }
+        } else if (transactionType == 'DISPATCHED') {
+          // For DISPATCHED: LOSS/DAMAGED are counted against distributor
+          if (status == 'ACCEPTED') {
+            stockReceived += quantity;
+          }
+          // Count LOSS/DAMAGED as lost/damaged
+          if (stockEntryType == 'LOSS') {
+            stockLost += quantity;
+          } else if (stockEntryType == 'DAMAGED') {
+            stockDamaged += quantity;
+          }
+        }
+        continue;
+      }
+
+      // Warehouse Manager calculations
       if (isReceiver && transactionType == 'RECEIVED') {
         if (transactionReason == 'RETURNED' || stockEntryType == 'RETURNED') {
           stockReturned += quantity;
         } else if (stockEntryType == 'EXCESS') {
-          // Stock Excess: recorded via less/excess flow
           stockExcess += quantity;
         } else if (stockEntryType == 'LESS') {
-          // Stock Less: recorded via less/excess flow
           stockLess += quantity;
         } else if (transactionReason.isEmpty ||
             transactionReason == 'RECEIVED') {
           stockReceived += quantity;
         }
-      }
-      // Stock Lost: transactionType == LOSS
-      else if (isSender && transactionType == 'LOSS') {
+      } else if (isSender && stockEntryType == 'LOSS') {
         stockLost += quantity;
-      }
-      // Stock Damaged: transactionType == DAMAGED
-      else if (isSender && transactionType == 'DAMAGED') {
+      } else if (isSender && stockEntryType == 'DAMAGED') {
         stockDamaged += quantity;
-      }
-      // Stock Issued/Lost/Damaged: This facility is the sender AND transactionType == DISPATCHED
-      // Check sender first so damage/loss is counted correctly when senderId == receiverId
-      else if (isSender && transactionType == 'DISPATCHED') {
-        // Rejected stock comes back to the sender — don't count as issued
+      } else if (isSender && transactionType == 'DISPATCHED') {
         if (status == 'REJECTED') {
           // Skip - rejected stock is not subtracted from sender's balance
         } else if (transactionReason == 'LOST_IN_TRANSIT' ||
@@ -130,17 +144,11 @@ class StockCalculationUtils {
             stockEntryType == 'DAMAGED') {
           stockDamaged += quantity;
         } else if (stockEntryType == 'RETURNED') {
-          // Reverse logistics: returned stock dispatched out
           stockReturned += quantity;
         } else {
-          // Regular dispatch (issued)
           stockIssued += quantity;
         }
-      }
-      // Stock Received from dispatch: This facility is the receiver AND transactionType == DISPATCHED
-      // Incoming dispatches are only counted as received if the status is ACCEPTED.
-      // Pending/IN_TRANSIT dispatches are not counted until explicitly accepted.
-      else if (isReceiver && transactionType == 'DISPATCHED') {
+      } else if (isReceiver && transactionType == 'DISPATCHED') {
         if (status == 'ACCEPTED') {
           stockReceived += quantity;
         }

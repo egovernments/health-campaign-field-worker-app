@@ -2542,58 +2542,58 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
           onPressed: () async {
-            context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) async {
-                final moduleName =
-                    'hcm-inventory-${context.selectedProject.referenceID}';
-                triggerLocalization(module: moduleName);
-                isTriggerLocalisation = false;
+            FlowBuilderSingleton().setBoundary(
+                boundary: BoundaryModel(
+                    code: LeastLevelBoundarySingleton().boundary?.first));
 
-                await FlowNavigationUtils.navigateToFlowModule(
-                  context: ctx,
-                  config: FlowModuleConfig(
-                    schemaKey: 'INVENTORY',
-                    sampleFlows: sampleInventoryFlows,
-                    relationshipMappings: const [
-                      RelationshipMapping(
-                          from: 'facility',
-                          to: 'projectFacility',
-                          localKey: 'id',
-                          foreignKey: 'facilityId'),
-                      RelationshipMapping(
-                          from: 'projectResource',
-                          to: 'projectFacility',
-                          localKey: 'projectId',
-                          foreignKey: 'projectId'),
-                      RelationshipMapping(
-                          from: 'productVariant',
-                          to: 'projectResource',
-                          localKey: 'id',
-                          foreignKey: 'resource'),
-                    ],
-                    nestedModelMappings: const [
-                      NestedModelMapping(
-                        rootModel: 'projectFacility',
-                        fields: {
-                          'facility': NestedFieldMapping(
-                            table: 'facility',
-                            localKey: 'facilityId',
-                            foreignKey: 'id',
-                            type: NestedMappingType.one,
-                          ),
-                          'projectResources': NestedFieldMapping(
-                            table: 'projectResource',
-                            localKey: 'projectId',
-                            foreignKey: 'projectId',
-                            type: NestedMappingType.many,
-                          ),
-                        },
+            final moduleName =
+                'hcm-inventory-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+
+            await FlowNavigationUtils.navigateToFlowModule(
+              context: context,
+              config: FlowModuleConfig(
+                schemaKey: 'INVENTORY',
+                sampleFlows: sampleInventoryFlows,
+                relationshipMappings: const [
+                  RelationshipMapping(
+                      from: 'facility',
+                      to: 'projectFacility',
+                      localKey: 'id',
+                      foreignKey: 'facilityId'),
+                  RelationshipMapping(
+                      from: 'projectResource',
+                      to: 'projectFacility',
+                      localKey: 'projectId',
+                      foreignKey: 'projectId'),
+                  RelationshipMapping(
+                      from: 'productVariant',
+                      to: 'projectResource',
+                      localKey: 'id',
+                      foreignKey: 'resource'),
+                ],
+                nestedModelMappings: const [
+                  NestedModelMapping(
+                    rootModel: 'projectFacility',
+                    fields: {
+                      'facility': NestedFieldMapping(
+                        table: 'facility',
+                        localKey: 'facilityId',
+                        foreignKey: 'id',
+                        type: NestedMappingType.one,
                       ),
-                    ],
+                      'projectResources': NestedFieldMapping(
+                        table: 'projectResource',
+                        localKey: 'projectId',
+                        foreignKey: 'projectId',
+                        type: NestedMappingType.many,
+                      ),
+                    },
                   ),
-                );
-              },
-            ));
+                ],
+              ),
+            );
           },
         ),
       ),
@@ -2603,63 +2603,63 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
           onPressed: () async {
-            context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) async {
-                final moduleName =
-                    'hcm-stockreconciliation-${context.selectedProject.referenceID}';
-                triggerLocalization(module: moduleName);
-                isTriggerLocalisation = false;
+            FlowBuilderSingleton().setBoundary(
+                boundary: BoundaryModel(
+                    code: LeastLevelBoundarySingleton().boundary?.first));
 
-                await FlowNavigationUtils.navigateToFlowModule(
-                  context: ctx,
-                  config: FlowModuleConfig(
-                    schemaKey: 'STOCKRECONCILIATION',
-                    sampleFlows: stockReconciliationFlows,
-                    relationshipMappings: const [
-                      RelationshipMapping(
-                          from: 'facility',
-                          to: 'projectFacility',
-                          localKey: 'id',
-                          foreignKey: 'facilityId'),
-                      RelationshipMapping(
-                          from: 'projectResource',
-                          to: 'projectFacility',
-                          localKey: 'projectId',
-                          foreignKey: 'projectId'),
-                      RelationshipMapping(
-                          from: 'productVariant',
-                          to: 'projectResource',
-                          localKey: 'id',
-                          foreignKey: 'resource'),
-                      RelationshipMapping(
-                          from: 'stock',
-                          to: 'facility',
-                          localKey: 'facilityId',
-                          foreignKey: 'id'),
-                    ],
-                    nestedModelMappings: const [
-                      NestedModelMapping(
-                        rootModel: 'projectFacility',
-                        fields: {
-                          'facility': NestedFieldMapping(
-                            table: 'facility',
-                            localKey: 'facilityId',
-                            foreignKey: 'id',
-                            type: NestedMappingType.one,
-                          ),
-                          'projectResources': NestedFieldMapping(
-                            table: 'projectResource',
-                            localKey: 'projectId',
-                            foreignKey: 'projectId',
-                            type: NestedMappingType.many,
-                          ),
-                        },
+            final moduleName =
+                'hcm-stockreconciliation-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+
+            await FlowNavigationUtils.navigateToFlowModule(
+              context: context,
+              config: FlowModuleConfig(
+                schemaKey: 'STOCKRECONCILIATION',
+                sampleFlows: stockReconciliationFlows,
+                relationshipMappings: const [
+                  RelationshipMapping(
+                      from: 'facility',
+                      to: 'projectFacility',
+                      localKey: 'id',
+                      foreignKey: 'facilityId'),
+                  RelationshipMapping(
+                      from: 'projectResource',
+                      to: 'projectFacility',
+                      localKey: 'projectId',
+                      foreignKey: 'projectId'),
+                  RelationshipMapping(
+                      from: 'productVariant',
+                      to: 'projectResource',
+                      localKey: 'id',
+                      foreignKey: 'resource'),
+                  RelationshipMapping(
+                      from: 'stock',
+                      to: 'facility',
+                      localKey: 'facilityId',
+                      foreignKey: 'id'),
+                ],
+                nestedModelMappings: const [
+                  NestedModelMapping(
+                    rootModel: 'projectFacility',
+                    fields: {
+                      'facility': NestedFieldMapping(
+                        table: 'facility',
+                        localKey: 'facilityId',
+                        foreignKey: 'id',
+                        type: NestedMappingType.one,
                       ),
-                    ],
+                      'projectResources': NestedFieldMapping(
+                        table: 'projectResource',
+                        localKey: 'projectId',
+                        foreignKey: 'projectId',
+                        type: NestedMappingType.many,
+                      ),
+                    },
                   ),
-                );
-              },
-            ));
+                ],
+              ),
+            );
           },
         ),
       ),
@@ -2772,68 +2772,68 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
           onPressed: () async {
-            context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) async {
-                final moduleName =
-                    'hcm-stockreports-${context.selectedProject.referenceID}';
-                triggerLocalization(module: moduleName);
-                isTriggerLocalisation = false;
+            FlowBuilderSingleton().setBoundary(
+                boundary: BoundaryModel(
+                    code: LeastLevelBoundarySingleton().boundary?.first));
 
-                await FlowNavigationUtils.navigateToFlowModule(
-                  context: ctx,
-                  config: FlowModuleConfig(
-                    schemaKey: 'STOCKREPORTS',
-                    sampleFlows: inventoryReportFlows,
-                    relationshipMappings: const [
-                      RelationshipMapping(
-                          from: 'facility',
-                          to: 'projectFacility',
-                          localKey: 'id',
-                          foreignKey: 'facilityId'),
-                      RelationshipMapping(
-                          from: 'projectResource',
-                          to: 'projectFacility',
-                          localKey: 'projectId',
-                          foreignKey: 'projectId'),
-                      RelationshipMapping(
-                          from: 'productVariant',
-                          to: 'projectResource',
-                          localKey: 'id',
-                          foreignKey: 'resource'),
-                      RelationshipMapping(
-                          from: 'stockReconciliation',
-                          to: 'facility',
-                          localKey: 'facilityId',
-                          foreignKey: 'id'),
-                      RelationshipMapping(
-                          from: 'stockReconciliation',
-                          to: 'productVariant',
-                          localKey: 'productVariantId',
-                          foreignKey: 'id'),
-                    ],
-                    nestedModelMappings: const [
-                      NestedModelMapping(
-                        rootModel: 'projectFacility',
-                        fields: {
-                          'facility': NestedFieldMapping(
-                            table: 'facility',
-                            localKey: 'facilityId',
-                            foreignKey: 'id',
-                            type: NestedMappingType.one,
-                          ),
-                          'projectResources': NestedFieldMapping(
-                            table: 'projectResource',
-                            localKey: 'projectId',
-                            foreignKey: 'projectId',
-                            type: NestedMappingType.many,
-                          ),
-                        },
+            final moduleName =
+                'hcm-stockreports-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+
+            await FlowNavigationUtils.navigateToFlowModule(
+              context: context,
+              config: FlowModuleConfig(
+                schemaKey: 'STOCKREPORTS',
+                sampleFlows: inventoryReportFlows,
+                relationshipMappings: const [
+                  RelationshipMapping(
+                      from: 'facility',
+                      to: 'projectFacility',
+                      localKey: 'id',
+                      foreignKey: 'facilityId'),
+                  RelationshipMapping(
+                      from: 'projectResource',
+                      to: 'projectFacility',
+                      localKey: 'projectId',
+                      foreignKey: 'projectId'),
+                  RelationshipMapping(
+                      from: 'productVariant',
+                      to: 'projectResource',
+                      localKey: 'id',
+                      foreignKey: 'resource'),
+                  RelationshipMapping(
+                      from: 'stockReconciliation',
+                      to: 'facility',
+                      localKey: 'facilityId',
+                      foreignKey: 'id'),
+                  RelationshipMapping(
+                      from: 'stockReconciliation',
+                      to: 'productVariant',
+                      localKey: 'productVariantId',
+                      foreignKey: 'id'),
+                ],
+                nestedModelMappings: const [
+                  NestedModelMapping(
+                    rootModel: 'projectFacility',
+                    fields: {
+                      'facility': NestedFieldMapping(
+                        table: 'facility',
+                        localKey: 'facilityId',
+                        foreignKey: 'id',
+                        type: NestedMappingType.one,
                       ),
-                    ],
+                      'projectResources': NestedFieldMapping(
+                        table: 'projectResource',
+                        localKey: 'projectId',
+                        foreignKey: 'projectId',
+                        type: NestedMappingType.many,
+                      ),
+                    },
                   ),
-                );
-              },
-            ));
+                ],
+              ),
+            );
           },
         ),
       ),
