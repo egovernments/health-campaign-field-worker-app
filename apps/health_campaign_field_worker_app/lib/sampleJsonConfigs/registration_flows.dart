@@ -857,7 +857,7 @@ final dynamic sampleFlows = {
                           "icon": "Edit",
                           "size": "large",
                           "type": "tertiary",
-                          "mainAxisSize": "min",
+                          "mainAxisSize": "max",
                           "mainAxisAlignment": "center"
                         }
                       }
