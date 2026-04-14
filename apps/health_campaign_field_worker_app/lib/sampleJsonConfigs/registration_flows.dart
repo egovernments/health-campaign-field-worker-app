@@ -1799,8 +1799,7 @@ final dynamic sampleFlows = {
           "child": {
             "type": "template",
             "format": "card",
-            "visible":
-                "{{fn:projectBeneficiaryAvailable(item.projectBeneficiaries)}}",
+            "visible": "{{fn:length(item.projectBeneficiaries)}} > 0",
             "children": [
               {
                 "type": "template",
