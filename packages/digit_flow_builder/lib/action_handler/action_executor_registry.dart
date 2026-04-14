@@ -15,6 +15,7 @@ import 'executors/toast_executor.dart';
 import 'executors/clear_state_executor.dart';
 import 'executors/open_scanner_executor.dart';
 import 'executors/reverse_transformer_executor.dart';
+import 'executors/load_unique_id_pool_executor.dart';
 
 /// Registry for managing action executors
 class ActionExecutorRegistry {
@@ -46,6 +47,7 @@ class ActionExecutorRegistry {
     register('OPEN_POPUP', OpenPopupExecutor());
     register('CLOSE_POPUP', ClosePopupExecutor());
     register('CUSTOM_DATA', CustomDataExecutor());
+    register('LOAD_UNIQUE_ID_POOL', LoadUniqueIdPoolExecutor());
   }
 
   /// Register a custom executor

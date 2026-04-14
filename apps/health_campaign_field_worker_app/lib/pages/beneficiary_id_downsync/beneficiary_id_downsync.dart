@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../blocs/unique_beneficiary_id/unique_id.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -65,7 +66,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
             final beneficiaryIdBatchSize =
                 appConfiguration.beneficiaryIdConfig?.first.batchSize.toInt() ??
                     10;
-            final tenantId = appConfiguration.tenantId ?? '';
+            final tenantId = envConfig.variables.tenantId;
 
             return BlocProvider<UniqueIdBloc>(
               create: (context) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../action_handler/action_config.dart';
 import '../blocs/flow_crud_bloc.dart';
 import '../utils/conditional_evaluator.dart';
+import '../utils/function_registry.dart';
 import '../widget_registry.dart';
 
 /// Base interface for all flow widgets
@@ -33,6 +34,9 @@ class FlowWidgetFactory {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
+    // Set context for FunctionRegistry so fn: functions can access repositories
+    FunctionRegistry.setContext(context);
+
     // Handle visibility check at factory level before building widget
     final crudCtx = CrudItemContext.of(context);
     final modelMap = crudCtx?.stateData?.modelMap ?? {};
@@ -40,9 +44,8 @@ class FlowWidgetFactory {
 
     // Get screenKey and widget data for visibility evaluation
     final screenKey = crudCtx?.screenKey;
-    final flowState = screenKey != null
-        ? FlowCrudStateRegistry().get(screenKey)
-        : null;
+    final flowState =
+        screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
     final widgetData = flowState?.widgetData ?? {};
     final formData = flowState?.formData ?? {};
 

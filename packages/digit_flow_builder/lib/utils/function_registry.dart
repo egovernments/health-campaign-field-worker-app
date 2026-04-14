@@ -1,9 +1,13 @@
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
-import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
+import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
+import 'package:digit_flow_builder/widget_registry.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import 'interpolation.dart';
@@ -33,6 +37,11 @@ typedef RegistryFunction = dynamic Function(
 /// It supports direct invocation and type-safe helpers for common return types.
 class FunctionRegistry {
   static final Map<String, RegistryFunction> _registry = {};
+  static BuildContext? _context;
+
+  static void setContext(BuildContext context) => _context = context;
+  static void clearContext() => _context = null;
+  static BuildContext? get context => _context;
 
   /// Registers a function with a given name.
   ///
@@ -1549,5 +1558,51 @@ void initializeFunctionRegistry() {
 
     // If registered before the current cycle's start date, return true
     return registrationTime < (currentCycle.startDate ?? 0);
+  });
+
+  FunctionRegistry.register('hasMinimumBeneficiaryId', (args, stateData) {
+    final minCountArg = args.isNotEmpty ? args.first : null;
+    final minCount = minCountArg is int
+        ? minCountArg
+        : int.tryParse(minCountArg?.toString() ?? '');
+
+    if (minCount == null) return false;
+
+    final currentCountArg = args.length > 1 ? args[1] : null;
+    final currentCount = currentCountArg is int
+        ? currentCountArg
+        : int.tryParse(currentCountArg?.toString() ?? '');
+
+    return (currentCount ?? 0) >= minCount;
+  });
+
+  FunctionRegistry.register('getLatestBeneficiaryId', (args, stateData) {
+    final context = FunctionRegistry.context;
+    if (context == null) return null;
+
+    final crudCtx = CrudItemContext.of(context);
+    if (crudCtx == null || crudCtx.compositeKey == null) return null;
+
+    final flowState = FlowCrudStateRegistry().get(crudCtx.compositeKey!);
+    final widgetData = Map<String, dynamic>.from(flowState?.widgetData ?? {});
+
+    return widgetData['latestBeneficiaryId'] as String?;
+  });
+
+  FunctionRegistry.register('getLatestBeneficiaryId', (args, stateData) {
+    final context = FunctionRegistry.context;
+    if (context == null) return null;
+
+    final crudCtx = CrudItemContext.of(context);
+    if (crudCtx == null || crudCtx.compositeKey == null) return null;
+
+    final flowState = FlowCrudStateRegistry().get(crudCtx.compositeKey!);
+    final stateWrapper = flowState?.stateWrapper;
+    final wrapperData = stateWrapper is List && stateWrapper.isNotEmpty
+        ? Map<String, dynamic>.from(
+            stateWrapper.first as Map<String, dynamic>? ?? {})
+        : <String, dynamic>{};
+
+    return wrapperData['latestBeneficiaryId'] as String?;
   });
 }

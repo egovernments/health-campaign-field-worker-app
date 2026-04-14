@@ -72,16 +72,16 @@ class ActionPopupWidget extends ResolvedFlowWidget {
       },
       type: _parseButtonType(props['type']),
       size: _parseButtonSize(props['size']),
-      digitButtonThemeData: DigitButtonThemeData(
-        DigitButtonColor: colorMap[props["color"]],
-        radius: BorderRadius.circular(spacer3),
-        largeRadius: BorderRadius.circular(spacer3),
-        smallMediumRadius: BorderRadius.circular(spacer3),
-        padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
-        disabledColor: DigitButtonThemeData.defaultTheme(context).disabledColor,
-      ),
-      iconColor: colorMap[props["color"]],
-      textColor: colorMap[props["color"]],
+      // digitButtonThemeData: DigitButtonThemeData(
+      //   DigitButtonColor: colorMap[props["color"]],
+      //   radius: BorderRadius.circular(spacer3),
+      //   largeRadius: BorderRadius.circular(spacer3),
+      //   smallMediumRadius: BorderRadius.circular(spacer3),
+      //   padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
+      //   disabledColor: DigitButtonThemeData.defaultTheme(context).disabledColor,
+      // ),
+      // iconColor: colorMap[props["color"]],
+      // textColor: colorMap[props["color"]],
       suffixIcon: props['suffixIcon'] != null
           ? DigitIconMapping.getIcon(props['suffixIcon'])
           : null,
@@ -111,12 +111,14 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         popupConfig['barrierDismissible'] as bool? ?? true;
     final bodyWidgets = popupConfig['body'] as List<dynamic>? ?? [];
     final footerActions = popupConfig['footerActions'] as List<dynamic>? ?? [];
+    final popupType = popupConfig['type'] as String? ?? 'simple';
 
     return showCustomPopup(
       context: context,
       barrierDismissible: barrierDismissible,
       builder: (ctx) {
         return Popup(
+          type: _parsePopupType(popupType),
           title: localization?.translate(title) ?? title,
           description: description != null &&
                   localization!.translate(description).trim().isNotEmpty
@@ -227,6 +229,17 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         return MainAxisAlignment.spaceBetween;
       default:
         return MainAxisAlignment.start;
+    }
+  }
+
+  PopUpType _parsePopupType(String? type) {
+    switch (type) {
+      case 'alert':
+        return PopUpType.alert;
+      case 'simple':
+      case 'default':
+      default:
+        return PopUpType.simple;
     }
   }
 

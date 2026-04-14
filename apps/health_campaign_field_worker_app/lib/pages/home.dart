@@ -3169,6 +3169,7 @@ void setPackagesSingleton(BuildContext context) {
           maxAge: context.selectedProjectType?.validMaxAge,
         );
         FlowBuilderSingleton().setInitialData(
+          beneficiaryIdMinCount: appConfiguration.beneficiaryIdConfig?.first.minCount.toInt(),
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
