@@ -2336,7 +2336,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) async {
                 final moduleName =
-                    'hcm-registration-${context.selectedProject.referenceID}';
+                    'hcm-registration-${context.selectedProject.referenceID},hcm-beneficiary';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
@@ -2455,25 +2455,25 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  // if (schemaJsonRaw != null) {
-                  //   final allSchemas =
-                  //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                  //   final data = allSchemas['REGISTRATION'];
-                  //
-                  //   final registrationDeliveryData = data?['data'];
-                  //   final flowsData = (registrationDeliveryData['flows']
-                  //               as List<dynamic>?)
-                  //           ?.map((e) => Map<String, dynamic>.from(e as Map))
-                  //           .toList() ??
-                  //       [];
-                  //   FlowRegistry.setConfig(flowsData);
-                  //   NavigationRegistry.setupNavigation(ctx);
-                  //
-                  //   ctx.router.push(
-                  //     FlowBuilderHomeRoute(
-                  //         pageName: registrationDeliveryData["initialPage"]),
-                  //   );
-                  // } else {
+                  if (schemaJsonRaw != null) {
+                    final allSchemas =
+                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    final data = allSchemas['REGISTRATION'];
+
+                    final registrationDeliveryData = data?['data'];
+                    final flowsData = (registrationDeliveryData['flows']
+                                as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                    FlowRegistry.setConfig(flowsData);
+                    NavigationRegistry.setupNavigation(ctx);
+
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: registrationDeliveryData["initialPage"]),
+                    );
+                  } else {
                     FlowRegistry.setConfig(
                         sampleFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
@@ -2481,7 +2481,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       FlowBuilderHomeRoute(
                           pageName: sampleFlows["initialPage"]),
                     );
-                  // }
+                  }
                 } catch (e) {
                   debugPrint('error $e');
                 }
@@ -2996,7 +2996,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.beneficiaryIdLabel,
           onPressed: () {
             // if (isTriggerLocalisation) {
-            triggerLocalization();
+            const module = "hcm-beneficiary";
+            triggerLocalization(module: module);
             isTriggerLocalisation = false;
             // }
             context.router.push(BeneficiaryIdDownSyncRoute());
@@ -3090,7 +3091,6 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
-    filteredLabels.add(i18.home.beneficiaryIdLabel);
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
@@ -3128,7 +3128,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
                     module: module != null && module.isNotEmpty
-                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist"
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary"
                         : localizationModulesList?.interfaces
                                 .where(
                                     (e) => e.type == Modules.localizationModule)
