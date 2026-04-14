@@ -38,9 +38,9 @@ class AttendanceDigitScannerPage extends DigitScannerPage {
       required this.enableDynamicQRScanning,
       required this.attendees,
       required this.onScanResult,
-      required super.quantity,
-      super.singleValue,
-      required super.isGS1code});
+        super.quantity = 1,
+      super.singleValue = false,
+       super.isGS1code = false});
 
   @override
   AttendanceScannerPageState createState() => AttendanceScannerPageState();

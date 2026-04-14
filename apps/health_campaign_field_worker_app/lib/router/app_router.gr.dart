@@ -303,9 +303,9 @@ class AttendanceDigitScannerRoute
       ScannedIndividualDataModel,
       AttendanceValidationResult,
     ) onScanResult,
-    required int quantity = 1,
+    int quantity = 1,
     bool singleValue = false,
-    required bool isGS1code = false,
+    bool isGS1code = false,
     List<PageRouteInfo>? children,
   }) : super(
           AttendanceDigitScannerRoute.name,
@@ -333,9 +333,9 @@ class AttendanceDigitScannerRouteArgs {
     required this.enableDynamicQRScanning,
     required this.attendees,
     required this.onScanResult,
-    required this.quantity = 1,
+    this.quantity = 1,
     this.singleValue = false,
-    required this.isGS1code = false,
+    this.isGS1code = false,
   });
 
   final Key? key;
