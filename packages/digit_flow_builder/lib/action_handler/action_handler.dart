@@ -1,10 +1,8 @@
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
-import '../utils/utils.dart';
-import '../blocs/flow_crud_bloc.dart';
+
 import '../utils/interpolation.dart';
-import 'action_config.dart';
 import 'action_executor_registry.dart';
 
 /// ActionHandler using the executor pattern for better modularity and extensibility
@@ -111,7 +109,8 @@ class ActionHandler {
         flatData.isEmpty ? {'dummy': {}} : flatData,
       );
 
-      debugPrint('CONDITION_EVAL_FLAT: parsedExpression=${parser.parsedExpression}');
+      debugPrint(
+          'CONDITION_EVAL_FLAT: parsedExpression=${parser.parsedExpression}');
       final result = parser.parse;
       debugPrint('CONDITION_EVAL_FLAT: result=$result');
       return result["isSuccess"] && result["value"] == true;
@@ -142,7 +141,8 @@ class ActionHandler {
 
         // Evaluate conditions and execute the first matching one
         final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
-        final navigation = contextData['navigation'] as Map<String, dynamic>? ?? {};
+        final navigation =
+            contextData['navigation'] as Map<String, dynamic>? ?? {};
 
         // Get screen key - try route args first, then contextData['parentScreenKey']
         // (set by CLOSE_POPUP action when used from popup)
@@ -173,7 +173,8 @@ class ActionHandler {
         addWithTypeConversion(navigation);
 
         debugPrint('CONDITION_EVAL: navigation=$navigation');
-        debugPrint('CONDITION_EVAL: evaluationData after adding navigation=$evaluationData');
+        debugPrint(
+            'CONDITION_EVAL: evaluationData after adding navigation=$evaluationData');
 
         // Add widgetData - flatten list values to check membership
         // For selection cards, convert list of selected codes to individual keys
@@ -228,10 +229,7 @@ class ActionHandler {
           final resolvedCondition = Map<String, dynamic>.from(condition);
           resolvedCondition['expression'] = expression;
 
-          debugPrint('CONDITION_EVAL: expression=$expression, data=$evaluationData');
-
           if (evaluateCondition(resolvedCondition, evaluationData)) {
-            debugPrint('CONDITION_EVAL: Condition matched!');
             final subActions = condActionJson['actions'] as List? ?? [];
             for (final subActionJson in subActions) {
               final action = ActionConfig.fromJson(subActionJson);

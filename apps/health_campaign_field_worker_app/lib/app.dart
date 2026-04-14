@@ -1,5 +1,6 @@
 import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_dss/digit_dss.dart';

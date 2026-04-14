@@ -228,8 +228,14 @@ class DropdownWidget extends ResolvedFlowWidget {
       }
     }
 
-    // Hide dropdown when only one item (search triggered via initActions)
-    if (items.length <= 1) {
+    final showWhenSingleOption = json['showWhenSingleOption'] == true;
+
+    // Hide dropdown when no items available (search triggered via initActions)
+    // or when only 1 item and showWhenSingleOption is not enabled
+    if (items.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    if (items.length <= 1 && !showWhenSingleOption) {
       return const SizedBox.shrink();
     }
 

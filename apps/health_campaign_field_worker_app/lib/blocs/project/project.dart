@@ -6,6 +6,7 @@ import 'dart:core';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_dss/digit_dss.dart';
@@ -26,6 +27,8 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
+import '../auth/auth.dart';
+import '../push_notification/push_notification.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
@@ -874,6 +877,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
+    // Create useraction for device switch
+    try {
+      await _createUserActionForDeviceSwitch(event.model);
+    } catch (error) {
+      AppLogger.instance.error(
+        title: 'ProjectBloc',
+        message: '$error',
+      );
+    }
+
     // Load project facilities after project selection
     try {
       await _loadProjectFacilities(event.model);
@@ -1110,6 +1123,63 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       rethrow;
     }
   }
+
+  Future<void> _createUserActionForDeviceSwitch(ProjectModel project) async {
+    final deviceSwitchReason = await localSecureStore.deviceSwitchReason;
+    final existingDeviceToken = await localSecureStore.existingDeviceToken;
+    try {
+      if (deviceSwitchReason != null && existingDeviceToken != null) {
+        final currentToken = context.currentRegisteredToken;
+        if (currentToken != null) {
+          await localSecureStore.setUserDeviceToken(currentToken);
+        }
+
+        UserActionModel userActionModel = UserActionModel(
+            latitude: 0,
+            longitude: 0,
+            locationAccuracy: 0,
+            clientReferenceId: IdGen.i.identifier,
+            projectId: project.id,
+            action: Constants.other,
+            beneficiaryTag: Constants.deviceSwitch,
+            tenantId: envConfig.variables.tenantId,
+            boundaryCode: project.address?.boundary ?? Constants.deviceSwitch,
+            auditDetails: AuditDetails(
+              createdBy: context.loggedInUserUuid,
+              createdTime: DateTime.now().millisecondsSinceEpoch,
+              lastModifiedBy: context.loggedInUserUuid,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            ),
+            clientAuditDetails: ClientAuditDetails(
+              createdBy: context.loggedInUserUuid,
+              createdTime: DateTime.now().millisecondsSinceEpoch,
+              lastModifiedBy: context.loggedInUserUuid,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            ),
+            additionalFields: UserActionAdditionalFields(version: 1, fields: [
+              AdditionalField(Constants.deviceSwitchReason, deviceSwitchReason),
+              AdditionalField(Constants.oldDeviceToken, existingDeviceToken),
+              if (currentToken != null)
+                AdditionalField(Constants.newDeviceToken, currentToken),
+            ]));
+
+        final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+        final apiEndPoint = Constants.getMultiLoginEndPoint(
+          serviceRegistry: serviceRegistry,
+          service: Constants.userActionService,
+          action: ApiOperation.bulkCreate.toValue(),
+          entityName: Constants.userActionEntity,
+        );
+
+        context.read<AuthBloc>().add(
+              AuthEvent.switchDeviceUserAction(
+                  userActionModel: userActionModel, apiEndPoint: apiEndPoint),
+            );
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
 }
 
 @freezed
@@ -1150,4 +1220,5 @@ enum ProjectSyncErrorType {
   boundary,
   appConfig,
   attendance,
+  userAction,
 }

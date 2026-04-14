@@ -344,7 +344,25 @@ final dynamic sampleInventoryFlows = {
                       "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_RETURNED",
                   "code": "RETURNED"
                 }
-              ]
+              ],
+              "visible": "{{fn:hasRole('DISTRIBUTOR')}} == false",
+            },
+            {
+              "type": "template",
+              "format": "dropdownTemplate",
+              "label":
+                  "APP_CONFIG_INVENTORY_returnOrIssueSelection_TRANSACTION_TYPE_LABEL",
+              "fieldName": "transactionType",
+              "valueKey": "code",
+              "enums": [
+                {
+                  "name":
+                      "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_RETURNED",
+                  "code": "RETURNED"
+                }
+              ],
+              "visible": "{{fn:hasRole('DISTRIBUTOR')}} == true",
+              "showWhenSingleOption": true
             }
           ]
         },
@@ -643,7 +661,10 @@ final dynamic sampleInventoryFlows = {
               "enums": [],
               "visibilityCondition": {
                 "expression": [
-                  {"condition": "warehouseDetails.facilityToWhich==DELIVERY_TEAM"}
+                  {
+                    "condition":
+                        "warehouseDetails.facilityToWhich==DELIVERY_TEAM"
+                  }
                 ]
               },
               "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
@@ -969,7 +990,7 @@ final dynamic sampleInventoryFlows = {
             //   "enums": null
             // },
             {
-              "type": "string",
+              "type": "integer",
               "label": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
               "order": 4,
               "value": "",
@@ -1008,7 +1029,7 @@ final dynamic sampleInventoryFlows = {
               }
             },
             {
-              "type": "string",
+              "type": "integer",
               "label": "APPONE_INVENTORY_QUANTITY_LOST_LABEL",
               "order": 4,
               "value": "",
@@ -1047,7 +1068,7 @@ final dynamic sampleInventoryFlows = {
               }
             },
             {
-              "type": "string",
+              "type": "integer",
               "label": "APPONE_INVENTORY_QUANTITY_DAMAGED_LABEL",
               "order": 4,
               "value": "",
@@ -1086,7 +1107,7 @@ final dynamic sampleInventoryFlows = {
               }
             },
             {
-              "type": "string",
+              "type": "integer",
               "label": "APPONE_INVENTORY_QUANTITY_RETURNED_LABEL",
               "order": 4,
               "value": "",
@@ -1125,7 +1146,7 @@ final dynamic sampleInventoryFlows = {
               "enums": null
             },
             {
-              "type": "string",
+              "type": "integer",
               "label": "APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL",
               "order": 4,
               "value": "",
@@ -1286,7 +1307,12 @@ final dynamic sampleInventoryFlows = {
               {
                 "key": "secondaryType",
                 "value":
-                    "{{fn:getSecondaryType(stockDetails.facilityFromWhich)}}"
+                    "{{fn:getSecondaryType(formData.stockDetails.facilityFromWhich)}}"
+              },
+              {
+                "key": "receiverPartyType",
+                "value":
+                    "{{fn:getSecondaryType(formData.warehouseDetails.facilityToWhich)}}"
               },
               {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"}
             ],
@@ -1507,7 +1533,10 @@ final dynamic sampleInventoryFlows = {
               "enums": [],
               "visibilityCondition": {
                 "expression": [
-                  {"condition": "warehouseDetails.facilityToWhich==DELIVERY_TEAM"}
+                  {
+                    "condition":
+                        "warehouseDetails.facilityToWhich==DELIVERY_TEAM"
+                  }
                 ]
               },
               "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
@@ -1657,7 +1686,7 @@ final dynamic sampleInventoryFlows = {
               "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
             },
             {
-              "type": "string",
+              "type": "integer",
               "label": "INVENTORY_QUANTITY_LABEL",
               "order": 4,
               "value": "",
@@ -2704,7 +2733,7 @@ final dynamic sampleInventoryFlows = {
             //   "enums": null
             // },
             {
-              "type": "string",
+              "type": "integer",
               "label": "INVENTORY_QUANTITY_SENT_BY_WAREHOUSE_LABEL",
               "order": 7,
               "value": "",

@@ -165,15 +165,16 @@ class _FacilityCardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navigationParams = FlowCrudStateRegistry()
-            .getNavigationParams('FORM::$pageSchema') ??
-        FlowCrudStateRegistry().getNavigationParams(pageSchema) ??
-        {};
+    final navigationParams =
+        FlowCrudStateRegistry().getNavigationParams('FORM::$pageSchema') ??
+            FlowCrudStateRegistry().getNavigationParams(pageSchema) ??
+            {};
     final transactionType =
         navigationParams['transactionType']?.toString() ?? '';
-    final stockEntryType =
-        navigationParams['stockEntryType']?.toString() ?? '';
-    final isReturnFlow = stockEntryType == 'RETURNED';
+    final stockEntryType = navigationParams['stockEntryType']?.toString() ?? '';
+    final isReturnFlow = stockEntryType == 'RETURNED' ||
+        stockEntryType == 'LOSS' ||
+        stockEntryType == 'DAMAGED';
     final isLessExcessFlow = stockEntryType == 'LESS_EXCESS';
 
     final deliveryTeamCode = _getDeliveryTeamCodeFromConfig(transactionType);
@@ -236,10 +237,19 @@ class _FacilityCardContent extends StatelessWidget {
           transactionType == 'RECEIPT') {
         if (isToField) return facilityLevel == 'current';
         if (isFromField) return facilityLevel == 'parent';
+      } else if (stockEntryType == 'LOSS' || stockEntryType == 'DAMAGED') {
+        // For loss and damaged, to field should show parent facility
+        if (isToField) return facilityLevel == 'parent';
+        if (isFromField) return facilityLevel == 'current';
       }
 
       return true;
     }).toList();
+
+    // Check if there are child facilities (for warehouse managers at lowest level)
+    final hasNoChildFacilities = isToField &&
+        (transactionType == 'DISPATCHED' || transactionType == 'ISSUED') &&
+        filteredFacilities.isEmpty;
 
     // Build facility dropdown items
     var facilities = <DropdownItem>[];
@@ -248,7 +258,8 @@ class _FacilityCardContent extends StatelessWidget {
         ((isToField &&
                 !isReturnFlow &&
                 (transactionType == 'DISPATCHED' ||
-                    transactionType == 'ISSUED')) ||
+                    transactionType == 'ISSUED') &&
+                (!isWareHouseMgr || hasNoChildFacilities)) ||
             (isFromField && isReturnFlow && !isWareHouseMgr));
     if (showDeliveryTeam) {
       facilities.add(DropdownItem(
@@ -263,9 +274,7 @@ class _FacilityCardContent extends StatelessWidget {
       final isUuid = facilityId.contains('-') && !facilityId.startsWith('F-');
       return DropdownItem(
         code: facilityId,
-        name: isUuid
-            ? facilityId
-            : localizations.translate('FAC_$facilityId'),
+        name: isUuid ? facilityId : localizations.translate('FAC_$facilityId'),
       );
     }).toList());
 
@@ -332,12 +341,13 @@ class _FacilityCardContent extends StatelessWidget {
           });
         }
 
-        final selectedOption = (selectedValue != null && selectedValue.isNotEmpty)
-            ? DropdownItem(
-                code: selectedValue,
-                name: _getDisplayName(selectedValue, deliveryTeamCode),
-              )
-            : null;
+        final selectedOption =
+            (selectedValue != null && selectedValue.isNotEmpty)
+                ? DropdownItem(
+                    code: selectedValue,
+                    name: _getDisplayName(selectedValue, deliveryTeamCode),
+                  )
+                : null;
 
         // From field is always read-only
         final isReadOnlyFrom = isFromField;

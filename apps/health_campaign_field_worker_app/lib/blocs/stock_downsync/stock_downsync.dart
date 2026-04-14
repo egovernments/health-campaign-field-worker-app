@@ -97,7 +97,8 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       receiverIds = currentFacilities.map((e) => e.facilityId).toList();
     } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
       receiverIds = currentFacilities.map((e) => e.facilityId).toList();
-    } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+    } else if (userRoles.contains(RolesType.communityDistributor.toValue()) ||
+        userRoles.contains(RolesType.distributor.toValue())) {
       receiverIds = [userObject.uuid];
     }
 

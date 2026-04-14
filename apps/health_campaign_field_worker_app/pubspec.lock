@@ -593,10 +593,11 @@ packages:
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_showcase"
-      relative: true
-    source: path
-    version: "1.0.2+1"
+      name: digit_showcase
+      sha256: c1810508f03bece3310b136d36d80265c39ec8cca89384b7a1f1fd0a2132b3c5
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   digit_ui_components:
     dependency: "direct main"
     description:
