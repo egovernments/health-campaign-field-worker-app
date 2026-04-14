@@ -2966,7 +2966,12 @@ final dynamic sampleFlows = {
                       {
                         "key": "cycleIndex",
                         "value": "{{navigation.cycleIndex}}"
-                      }
+                      },
+                      {"key": "ec1", "value": "{{eligibilityChecklist.ec1}}"},
+                      {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
+                      {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
+                      {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
+                      {"key": "sourceFlow", "value": "CHECKLIST"}
                     ],
                     "name": "REFER_BENEFICIARY",
                     "type": "FORM",
@@ -3116,7 +3121,12 @@ final dynamic sampleFlows = {
                       {
                         "key": "cycleIndex",
                         "value": "{{navigation.cycleIndex}}"
-                      }
+                      },
+                      {"key": "ec1", "value": "{{eligibilityChecklist.ec1}}"},
+                      {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
+                      {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
+                      {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
+                      {"key": "sourceFlow", "value": "CHECKLIST"}
                     ],
                     "name": "REFER_BENEFICIARY",
                     "type": "FORM",
@@ -4591,6 +4601,11 @@ final dynamic sampleFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "navigation.sourceFlow != 'CHECKLIST'"}
+                ]
+              },
               "required.message":
                   "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR"
             }

@@ -1244,7 +1244,11 @@ final jsonConfig = {
             "referralCycle": "__context:cycleIndex",
             "gender": "__context:selectedIndividualGender",
             "ageInMonths": "__context:selectedIndividualAgeInMonths",
-            "dateOfEvaluation": "__value:DATETIME.NOW"
+            "dateOfEvaluation": "__value:DATETIME.NOW",
+            "ec1Value": "__context:ec1",
+            "ec2Value": "__context:ec2",
+            "ec3Value": "__context:ec3",
+            "ec4Value": "__context:ec4"
           }
         }
       }
