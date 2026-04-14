@@ -923,7 +923,7 @@ final dynamic sampleFlows = {
                     "label": "DELIVERY",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(contextData.0.member)}} == false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1925,6 +1925,7 @@ final dynamic sampleFlows = {
           "type": "template",
           "label": "REGISTER_BENEFICIARY",
           "format": "button",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -1951,6 +1952,7 @@ final dynamic sampleFlows = {
           "isGS1": false,
           "label": "SCAN_BENEFICIARY",
           "format": "qrScanner",
+          "hidden": true,
           "onAction": [
             {
               "actionType": "OPEN_SCANNER",
@@ -2588,7 +2590,7 @@ final dynamic sampleFlows = {
               "tooltip": "",
               "helpText": "",
               "infoText": "",
-              "readOnly": false,
+              "readOnly": true,
               "required": true,
               "fieldName": "resourceCard",
               "mandatory": true,
@@ -2648,7 +2650,7 @@ final dynamic sampleFlows = {
               "order": 5,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -2673,7 +2675,7 @@ final dynamic sampleFlows = {
               "order": 4,
               "value": "",
               "format": "latLng",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -2698,6 +2700,14 @@ final dynamic sampleFlows = {
           "description":
               "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
           "showTabView": false,
+          "showAlertPopUp": {
+            "title": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
+            "conditions": [],
+            "description":
+                "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
+            "primaryActionLabel": "ACTION_SUBMIT",
+            "secondaryActionLabel": "ACTION_CANCEL"
+          },
           "submitCondition": null,
           "preventScreenCapture": false
         }
@@ -3756,7 +3766,7 @@ final dynamic sampleFlows = {
               "order": 2,
               "value": "",
               "format": "text",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -3934,7 +3944,7 @@ final dynamic sampleFlows = {
               "order": 6,
               "value": "",
               "format": "mobileNumber",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "pattern": "^\\d+",
               "tooltip":
@@ -3982,7 +3992,7 @@ final dynamic sampleFlows = {
               "order": 7,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -4014,6 +4024,14 @@ final dynamic sampleFlows = {
               "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
           "showTabView": false,
           "submitCondition": null,
+          "showAlertPopUp": {
+            "title": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
+            "conditions": [],
+            "description":
+                "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
+            "primaryActionLabel": "ACTION_SUBMIT",
+            "secondaryActionLabel": "ACTION_CANCEL"
+          },
           "preventScreenCapture": false,
           "conditionalNavigateTo": null
         }
@@ -4909,7 +4927,7 @@ final dynamic sampleFlows = {
               "order": 2,
               "value": "",
               "format": "text",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -4951,7 +4969,7 @@ final dynamic sampleFlows = {
               "label":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
               "order": 3,
-              "value": "",
+              "value": "true",
               "format": "checkbox",
               "hidden": false,
               "isMdms": false,
@@ -5148,7 +5166,7 @@ final dynamic sampleFlows = {
               "order": 8,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -5419,7 +5437,7 @@ final dynamic sampleFlows = {
               "order": 2,
               "value": "0",
               "format": "numeric",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -5442,7 +5460,7 @@ final dynamic sampleFlows = {
               "order": 3,
               "value": "0",
               "format": "numeric",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
