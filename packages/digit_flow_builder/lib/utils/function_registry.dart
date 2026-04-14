@@ -349,6 +349,9 @@ void initializeFunctionRegistry() {
     }
     if (currentCycle == null) return false;
 
+    int validMinAge = projectType.validMinAge ?? 3;
+    int validMaxAge = projectType.validMaxAge ?? 59;
+
 // --- Eligibility logic ---
     bool recordedSideEffect = false;
 
@@ -400,6 +403,12 @@ void initializeFunctionRegistry() {
             task['status'] == TaskStatus.beneficiaryAbsent ||
             task['status'] == TaskStatus.beneficiaryRefused) return false;
       }
+    } else {
+      final isWithinAge =
+          totalAgeMonths >= validMinAge && totalAgeMonths <= validMaxAge;
+      totalAgeMonths <= validMaxAge;
+
+      if (!isWithinAge) return false;
     }
 
     if (tasks.isNotEmpty && sideEffects.isNotEmpty) {
@@ -415,10 +424,9 @@ void initializeFunctionRegistry() {
           (lastTaskTime >= (currentCycle['startDate'] ?? 0) &&
               lastTaskTime <= (currentCycle['endDate'] ?? 0));
 
-      final isWithinAge = projectType.validMinAge != null &&
-          projectType.validMaxAge != null &&
-          totalAgeMonths >= projectType.validMinAge! &&
-          totalAgeMonths <= projectType.validMaxAge!;
+      final isWithinAge =
+          totalAgeMonths >= validMinAge && totalAgeMonths <= validMaxAge;
+      totalAgeMonths <= validMaxAge;
 
       if (!isWithinAge) return false;
 
