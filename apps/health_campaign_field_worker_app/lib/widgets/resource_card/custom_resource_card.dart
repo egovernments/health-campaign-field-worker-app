@@ -255,7 +255,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                       ),
                     ],
                     Column(
-                      children: List.generate(_controllers.length * 2 - 1, (i) {
+                      children: _controllers.isEmpty ? [] : List.generate(_controllers.length * 2 - 1, (i) {
                         if (i.isOdd) {
                           return const SizedBox(height: 16); // Middle spacing
                         }

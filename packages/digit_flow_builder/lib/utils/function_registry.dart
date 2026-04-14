@@ -17,6 +17,7 @@ class TaskStatus {
   static const String beneficiaryMigrated = 'BENEFICIARY_MIGRATED';
   static const String beneficiaryAbsent = 'BENEFICIARY_ABSENT';
   static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
+  static const String visited = 'VISITED';
 }
 
 /// The signature for a function that can be registered in the [FunctionRegistry].
@@ -597,7 +598,24 @@ void initializeFunctionRegistry() {
 
     // Check if tasks exist
     if ((tasks ?? []).isNotEmpty) {
-      final lastTask = tasks!.last;
+      // Filter out REDOSE tasks to evaluate based on delivery tasks only
+      final deliveryTasks = tasks!.where((t) {
+        final af = t['additionalFields'];
+        final fields = af?['fields'] as List?;
+        if (fields != null) {
+          for (final f in fields) {
+            if (f is Map &&
+                f['key'] == 'taskType' &&
+                f['value']?.toString().toUpperCase() == 'REDOSE') {
+              return false;
+            }
+          }
+        }
+        return true;
+      }).toList();
+
+      if (deliveryTasks.isEmpty) return false;
+      final lastTask = deliveryTasks.last;
 
       // Extract cycleIndex from additionalFields
       final additionalFields = lastTask['additionalFields'];
@@ -1549,5 +1567,142 @@ void initializeFunctionRegistry() {
 
     // If registered before the current cycle's start date, return true
     return registrationTime < (currentCycle.startDate ?? 0);
+  });
+
+  /// Registers a function to check if the 30-minute redose window has expired.
+  ///
+  /// - **Function Name**: `'isRedoseWindowExpired'`
+  /// - **Arguments**: A list where the first element is the tasks list.
+  /// - **Returns**: `true` if 30 minutes have passed since the last delivery
+  ///   task was completed (redose window closed), `false` otherwise (window still open).
+  ///
+  /// The redose window opens immediately after delivery completion and stays
+  /// open for 30 minutes. After that, the redose button becomes disabled.
+  FunctionRegistry.register("isRedoseWindowExpired", (args, stateData) {
+    if (args.isEmpty || args.first == null) return true;
+
+    List<Map<String, dynamic>>? tasks;
+    if (args.first is List) {
+      final rawList = args.first as List;
+      tasks = rawList.map((item) {
+        if (item is Map<String, dynamic>) return item;
+        if (item is Map) return Map<String, dynamic>.from(item);
+        try {
+          return (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          try {
+            return (item as dynamic).toJson() as Map<String, dynamic>;
+          } catch (_) {
+            return <String, dynamic>{};
+          }
+        }
+      }).toList();
+    }
+
+    if (tasks == null || tasks.isEmpty) return true;
+
+    // Find the last delivery task (status ADMINISTRATION_SUCCESS or DELIVERED)
+    // Iterate in reverse to find the most recent delivery task
+    Map<String, dynamic>? lastDeliveryTask;
+    for (int i = tasks.length - 1; i >= 0; i--) {
+      final status = tasks[i]['status']?.toString().toUpperCase() ?? '';
+      if (status == TaskStatus.administrationSuccess ||
+          status == TaskStatus.delivered) {
+        lastDeliveryTask = tasks[i];
+        break;
+      }
+    }
+
+    if (lastDeliveryTask == null) return true;
+
+    // Get the creation time of the last delivery task from clientAuditDetails
+    int? deliveryCompletionTime;
+
+    // Try clientAuditDetails.createdTime first
+    final clientAuditDetails = lastDeliveryTask['clientAuditDetails'];
+    if (clientAuditDetails is Map) {
+      deliveryCompletionTime =
+          int.tryParse(clientAuditDetails['createdTime']?.toString() ?? '');
+    }
+
+    // Fallback to auditDetails.createdTime
+    if (deliveryCompletionTime == null) {
+      final auditDetails = lastDeliveryTask['auditDetails'];
+      if (auditDetails is Map) {
+        deliveryCompletionTime =
+            int.tryParse(auditDetails['createdTime']?.toString() ?? '');
+      }
+    }
+
+    if (deliveryCompletionTime == null) return true;
+
+    // Check if 30 minutes (1800000 ms) have passed since delivery
+    final now = DateTime.now().millisecondsSinceEpoch;
+    const redoseWindowMs = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+    return (now - deliveryCompletionTime) > redoseWindowMs;
+  });
+
+  /// Registers a function to check if a redose has already been completed.
+  ///
+  /// - **Function Name**: `'isRedoseCompleted'`
+  /// - **Arguments**: A list where the first element is the tasks list.
+  /// - **Returns**: `true` if a task with status `VISITED` exists for the
+  ///   current cycle, indicating redose was already administered.
+  FunctionRegistry.register("isRedoseCompleted", (args, stateData) {
+    if (args.isEmpty || args.first == null) return false;
+
+    List<Map<String, dynamic>>? tasks;
+    if (args.first is List) {
+      final rawList = args.first as List;
+      tasks = rawList.map((item) {
+        if (item is Map<String, dynamic>) return item;
+        if (item is Map) return Map<String, dynamic>.from(item);
+        try {
+          return (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          try {
+            return (item as dynamic).toJson() as Map<String, dynamic>;
+          } catch (_) {
+            return <String, dynamic>{};
+          }
+        }
+      }).toList();
+    }
+
+    if (tasks == null || tasks.isEmpty) return false;
+
+    // Get current running cycle
+    final projectType = FlowBuilderSingleton().projectType;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final selectedCycle = projectType?.cycles?.firstWhereOrNull(
+      (e) =>
+          (e.startDate ?? 0) < now && (e.endDate ?? 0) > now,
+    );
+
+    if (selectedCycle == null) return false;
+
+    // Check if any task has status VISITED for the current cycle
+    for (final task in tasks) {
+      final status = task['status']?.toString().toUpperCase() ?? '';
+      if (status == TaskStatus.visited) {
+        // Verify it belongs to the current cycle
+        final additionalFields = task['additionalFields'];
+        final fields = additionalFields?['fields'] as List?;
+        if (fields != null) {
+          for (final field in fields) {
+            if (field is Map && field['key'] == 'cycleIndex') {
+              final cycleIndex =
+                  int.tryParse(field['value']?.toString() ?? '');
+              if (cycleIndex == selectedCycle.id) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return false;
   });
 }
