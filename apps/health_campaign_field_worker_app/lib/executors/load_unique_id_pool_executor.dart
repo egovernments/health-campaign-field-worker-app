@@ -1,13 +1,12 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/id_status.dart';
+import 'package:digit_flow_builder/action_handler/action_config.dart';
+import 'package:digit_flow_builder/action_handler/executors/action_executor.dart';
+import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
+import 'package:digit_flow_builder/utils/interpolation.dart';
+import 'package:digit_flow_builder/widget_registry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../blocs/flow_crud_bloc.dart';
-import '../../utils/interpolation.dart';
-import '../../widget_registry.dart';
-import '../action_config.dart';
-import 'action_executor.dart';
 
 class LoadUniqueIdPoolExecutor extends ActionExecutor {
   @override
@@ -41,14 +40,14 @@ class LoadUniqueIdPoolExecutor extends ActionExecutor {
       }
 
       final count = availableIds.length;
-      String? latestId;
+      UniqueIdPoolModel? latestIdModel;
       if (availableIds.isNotEmpty) {
         availableIds.sort((a, b) {
           final aTime = a.auditDetails?.createdTime ?? 0;
           final bTime = b.auditDetails?.createdTime ?? 0;
           return aTime.compareTo(bTime);
         });
-        latestId = availableIds.first.id;
+        latestIdModel = availableIds.first;
       }
 
       final currentState = FlowCrudStateRegistry().get(compositeKey);
@@ -56,7 +55,8 @@ class LoadUniqueIdPoolExecutor extends ActionExecutor {
           Map<String, dynamic>.from(currentState?.widgetData ?? {});
 
       currentWidgetData['uniqueIdPoolCount'] = count;
-      currentWidgetData['latestBeneficiaryId'] = latestId;
+      currentWidgetData['latestBeneficiaryIdModel'] = latestIdModel;
+      currentWidgetData['latestBeneficiaryId'] = latestIdModel?.id;
 
       final updatedState =
           currentState?.copyWith(widgetData: currentWidgetData);
@@ -67,7 +67,8 @@ class LoadUniqueIdPoolExecutor extends ActionExecutor {
       return {
         ...contextData,
         'uniqueIdPoolCount': count,
-        'latestBeneficiaryId': latestId,
+        'latestBeneficiaryId': latestIdModel?.id,
+        'latestBeneficiaryIdModel': latestIdModel,
       };
     } catch (e) {
       return contextData;

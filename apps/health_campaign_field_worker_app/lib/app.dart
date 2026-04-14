@@ -20,8 +20,6 @@ import 'blocs/error/error.dart';
 import 'blocs/push_notification/push_notification.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
-import 'executors/stock_balance_executor.dart';
-import 'blocs/push_notification/push_notification.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/remote_client.dart';
@@ -30,6 +28,9 @@ import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'data/repositories/remote/notification_token.dart';
 import 'executors/stock_balance_executor.dart';
+import 'executors/update_identifier_status_executor.dart';
+import 'executors/navigate_to_downsync_executor.dart';
+import 'executors/load_unique_id_pool_executor.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
@@ -69,6 +70,18 @@ class MainApplicationState extends State<MainApplication>
     ActionHandler.registry.register(
       'UPDATE_STOCK_BALANCE',
       StockBalanceExecutor(),
+    );
+    ActionHandler.registry.register(
+      'UPDATE_IDENTIFIER_STATUS',
+      UpdateIdentifierStatusExecutor(),
+    );
+    ActionHandler.registry.register(
+      'NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC',
+      NavigateToBeneficiaryIdDownSyncExecutor(),
+    );
+    ActionHandler.registry.register(
+      'LOAD_UNIQUE_ID_POOL',
+      LoadUniqueIdPoolExecutor(),
     );
   }
 
