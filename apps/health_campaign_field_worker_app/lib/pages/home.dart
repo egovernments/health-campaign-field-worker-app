@@ -292,6 +292,15 @@ class _HomePageState extends LocalizedState<HomePage> {
       return formattedUniqueId;
     });
     registerTaskFunctions();
+
+    FunctionRegistry.register('projectBeneficiaryAvailable', (args, stateData) {
+      if (args.isEmpty) return false;
+
+      final projectBeneficiary = args.first;
+
+      return projectBeneficiary.isNotEmpty;
+    });
+
     FunctionRegistry.register('getQuantityLabel', (args, stateData) {
       if (args.isEmpty) return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
 

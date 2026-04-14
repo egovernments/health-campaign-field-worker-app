@@ -260,7 +260,7 @@ final dynamic sampleFlows = {
             "type": "template",
             "format": "card",
             "visible":
-                "{{fn:projectBeneficiaryAvailable(item.projectBeneficiaries) > 0}}",
+                "{{fn:projectBeneficiaryAvailable(item.projectBeneficiaries)}}",
             "children": [
               {
                 "type": "template",
@@ -3261,7 +3261,10 @@ final dynamic sampleFlows = {
             },
             {
               "condition": "caregiverConsent.consentToParticipate==FALSE",
-              "navigateTo": {"name": "acknowledgement", "type": "submit"}
+              "navigateTo": {
+                "name": "caregiverAcknowledgement",
+                "type": "submit"
+              }
             }
           ],
         },
@@ -3629,28 +3632,6 @@ final dynamic sampleFlows = {
           "description":
               "CAREGIVER_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_DESCRIPTION",
           "primaryAction": {
-            "type": "template",
-            "data": [
-              {
-                "key": "HouseholdClientReferenceId",
-                "value":
-                    "{{contextData.entities.HouseholdModel.clientReferenceId}}"
-              }
-            ],
-            "label": "VIEW_HOUSEHOLD_DETAILS_BUTTON_LABEL",
-            "format": "button",
-            "hidden": false,
-            "onAction": [
-              {
-                "actionType": "NAVIGATION",
-                "properties": {"name": "householdOverview", "type": "FORM"}
-              }
-            ],
-            "fieldName": "viewHouseholdDetails",
-            "mandatory": true,
-            "properties": {"type": "primary"}
-          },
-          "secondaryAction": {
             "type": "template",
             "label": "BACK_TO_SEARCH_BUTTON_LABEL",
             "format": "button",
