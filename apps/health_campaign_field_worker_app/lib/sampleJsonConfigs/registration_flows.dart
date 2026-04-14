@@ -720,48 +720,48 @@ final dynamic sampleFlows = {
           "type": "template",
           "format": "card",
           "children": [
-            {
-              "format": "row",
-              "children": [
-                {
-                  "type": "template",
-                  "label": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
-                  "format": "button",
-                  "onAction": [
-                    {
-                      "actionType": "REVERSE_TRANSFORM",
-                      "properties": {
-                        "configName": "beneficiaryRegistration",
-                        "entityTypes": ["HouseholdModel"]
-                      }
-                    },
-                    {
-                      "actionType": "NAVIGATION",
-                      "properties": {
-                        "data": [
-                          {
-                            "key": "HouseholdClientReferenceId",
-                            "value": "{{ context.household.clientReferenceId }}"
-                          },
-                          {"key": "isEdit", "value": "true"}
-                        ],
-                        "name": "HOUSEHOLD",
-                        "type": "FORM"
-                      }
-                    }
-                  ],
-                  "fieldName": "householdEditButton",
-                  "properties": {
-                    "icon": "Edit",
-                    "size": "large",
-                    "type": "tertiary",
-                    "mainAxisSize": "min",
-                    "mainAxisAlignment": "center"
-                  }
-                }
-              ],
-              "properties": {"mainAxisAlignment": "end"}
-            },
+            // {
+            //   "format": "row",
+            //   "children": [
+            //     {
+            //       "type": "template",
+            //       "label": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
+            //       "format": "button",
+            //       "onAction": [
+            //         {
+            //           "actionType": "REVERSE_TRANSFORM",
+            //           "properties": {
+            //             "configName": "beneficiaryRegistration",
+            //             "entityTypes": ["HouseholdModel"]
+            //           }
+            //         },
+            //         {
+            //           "actionType": "NAVIGATION",
+            //           "properties": {
+            //             "data": [
+            //               {
+            //                 "key": "HouseholdClientReferenceId",
+            //                 "value": "{{ context.household.clientReferenceId }}"
+            //               },
+            //               {"key": "isEdit", "value": "true"}
+            //             ],
+            //             "name": "HOUSEHOLD",
+            //             "type": "FORM"
+            //           }
+            //         }
+            //       ],
+            //       "fieldName": "householdEditButton",
+            //       "properties": {
+            //         "icon": "Edit",
+            //         "size": "large",
+            //         "type": "tertiary",
+            //         "mainAxisSize": "min",
+            //         "mainAxisAlignment": "center"
+            //       }
+            //     }
+            //   ],
+            //   "properties": {"mainAxisAlignment": "end"}
+            // },
             {
               "data": [
                 {
@@ -918,7 +918,7 @@ final dynamic sampleFlows = {
                     "label": "DELIVERY",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(contextData.0.member)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}} == false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
