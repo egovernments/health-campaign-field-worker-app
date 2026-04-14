@@ -1796,6 +1796,8 @@ final dynamic sampleFlows = {
           "child": {
             "type": "template",
             "format": "card",
+            "visible":
+                "{{fn:projectBeneficiaryAvailable(item.projectBeneficiaries)}}",
             "children": [
               {
                 "type": "template",
@@ -6072,54 +6074,54 @@ final dynamic sampleFlows = {
                     "properties": {"message": "Failed to fetch config."}
                   }
                 ],
-                "configName": "beneficiaryRegistration"
+                "configName": "householdConsentRegistration"
               }
             },
             {
-              "actions": [
-                {
-                  "actionType": "FETCH_TRANSFORMER_CONFIG",
-                  "properties": {
-                    "onError": [
-                      {
-                        "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
-                      }
-                    ],
-                    "configName": "householdConsentRegistration"
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "HOUSEHOLD",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to create household."}
                   }
-                },
-                {
-                  "actionType": "CREATE_EVENT",
-                  "properties": {
-                    "entity": "HOUSEHOLD",
-                    "onError": [
-                      {
-                        "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to create household."}
-                      }
-                    ]
+                ]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "name": "caregiverAcknowledgement",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Navigation failed."}
                   }
-                },
-                {
-                  "actionType": "NAVIGATION",
-                  "properties": {
-                    "name": "caregiverAcknowledgement",
-                    "type": "TEMPLATE",
-                    "onError": [
-                      {
-                        "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
-                      }
-                    ],
-                    "navigationMode": "popUntilAndPush",
-                    "popUntilPageName": "searchBeneficiary"
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "searchBeneficiary"
+              }
+            }
+          ],
+          "condition": {
+            "type": "custom",
+            "expression": "caregiverConsent.consentToParticipate==FALSE"
+          }
+        },
+        {
+          "actions": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to fetch config."}
                   }
-                }
-              ],
-              "condition": {
-                "type": "custom",
-                "expression": "caregiverConsent.consentToParticipate==FALSE"
+                ],
+                "configName": "beneficiaryRegistration"
               }
             },
             {
