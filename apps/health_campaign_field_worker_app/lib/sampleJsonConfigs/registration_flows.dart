@@ -857,7 +857,7 @@ final dynamic sampleFlows = {
                           "icon": "Edit",
                           "size": "large",
                           "type": "tertiary",
-                          "mainAxisSize": "max",
+                          "mainAxisSize": "min",
                           "mainAxisAlignment": "center"
                         }
                       }
@@ -1130,7 +1130,7 @@ final dynamic sampleFlows = {
                 "icon": "AddIcon",
                 "size": "medium",
                 "type": "tertiary",
-                "mainAxisSize": "min",
+                "mainAxisSize": "max",
                 "mainAxisAlignment": "center"
               }
             }
@@ -4093,7 +4093,7 @@ final dynamic sampleFlows = {
                 "value": "{{navigation.HouseholdClientReferenceId}}"
               }
             ],
-            "name": "householdOverview",
+            "name": "ACKNOWLEDGEMENT",
             "type": "TEMPLATE",
             "onError": [
               {
