@@ -879,10 +879,18 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
+                    "label": "IS_HEAD",
+                    "format": "tag",
+                    "visible": "{{fn:isHead(item.member)}}",
+                    "fieldName": "isHead",
+                    "properties": {"tagType": "error"}
+                  },
+                  {
+                    "type": "template",
                     "label": "NOT_ELIGIBLE",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false && {{fn:isHead(item.member)}}==false",
                     "fieldName": "notEligible",
                     "properties": {"tagType": "error"}
                   },
