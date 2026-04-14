@@ -4275,14 +4275,6 @@ final dynamic sampleFlows = {
             ]
           }
         },
-        {
-          "type": "template",
-          "format": "text",
-          "label": "DATA_RECORDED_SUCCESSFULLY_DESC",
-          "value": "The data has been recorded successfully",
-          "fieldName": "successMessage",
-          "mandatory": true
-        }
       ],
       "footer": []
     },
