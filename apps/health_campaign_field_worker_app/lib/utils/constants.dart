@@ -113,6 +113,7 @@ class Constants {
     'hcm-login',
     'hcm-common',
     'hcm-scanner',
+    'hcm-beneficiary',
     'hcm-peer-to-peer',
     'hcm-transit-post',
     'hcm-attendance',
@@ -124,6 +125,7 @@ class Constants {
     'hcm-common',
     'hcm-login',
     'hcm-scanner',
+    'hcm-beneficiary',
     'hcm-peer-to-peer',
     'hcm-transit-post',
     'hcm-attendance',
@@ -134,6 +136,7 @@ class Constants {
   static const List<String> homeLocalizationModules = [
     'hcm-login',
     'hcm-common',
+    'hcm-beneficiary',
     'digit-privacy-policy',
     'hcm-scanner',
     'hcm-peer-to-peer',
@@ -174,6 +177,12 @@ class Constants {
   static const String multiLoginSwitchOperation = 'switch';
   static const String userActionService = 'USER-ACTION';
   static const String userActionEntity = 'userAction';
+
+  static const String downloadAnimation =
+      'assets/animated_json/download_animation.json';
+
+  static const String downloadSuccessAnimation =
+      'assets/animated_json/download_success.json';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

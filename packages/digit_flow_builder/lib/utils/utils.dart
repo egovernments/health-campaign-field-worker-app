@@ -34,6 +34,7 @@ class FlowBuilderSingleton {
   Map<String, TemplateConfig>? _templateConfigs;
   List<Map<String, dynamic>>?
       _userRoles; // User roles from app level (e.g., [{"code": "WAREHOUSE_MANAGER", "name": "Warehouse Manager"}])
+  int? _beneficiaryIdMinCount;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -53,6 +54,7 @@ class FlowBuilderSingleton {
     required ProjectModel selectedProject,
     required UserModel? loggedInUser,
     List<Map<String, dynamic>>? userRoles,
+    int? beneficiaryIdMinCount,
   }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
@@ -62,6 +64,7 @@ class FlowBuilderSingleton {
     _selectedProject = selectedProject;
     _loggedInUser = loggedInUser;
     _userRoles = userRoles;
+    _beneficiaryIdMinCount = beneficiaryIdMinCount;
   }
 
   void setUserRoles(List<Map<String, dynamic>>? userRoles) {
@@ -100,6 +103,8 @@ class FlowBuilderSingleton {
   Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
 
   List<Map<String, dynamic>>? get userRoles => _userRoles;
+
+  int? get beneficiaryIdMinCount => _beneficiaryIdMinCount;
 }
 
 /// TODO: WILL REMOVE THIS FUNCTION ALSO : TEMPORARY
@@ -474,6 +479,7 @@ Map<String, dynamic> singletonToMap() {
     "userRoles": s.userRoles,
     "templateConfigs":
         s.templateConfigs?.map((k, v) => MapEntry(k, v.toJson())),
+    "beneficiaryIdMinCount": s.beneficiaryIdMinCount
   };
 }
 

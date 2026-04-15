@@ -184,7 +184,7 @@ class MdmsRepository {
       ..tenantId = appConfig?.tenantId
       ..maxRadius = appConfig?.maxRadius
       ..boundaryLastLevelMaxSelection =
-          appConfig?.boundaryLastLevelMaxSelection
+           appConfig?.boundaryLastLevelMaxSelection
       // TODO: Populate stockThresholdConfig from MDMS when available
       ..stockThresholdConfig = (StockThresholdConfig()
         ..minThreshold = 0
