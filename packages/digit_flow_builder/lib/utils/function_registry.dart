@@ -515,26 +515,6 @@ void initializeFunctionRegistry() {
     return TaskStatus.ineligible;
   });
 
-  FunctionRegistry.register("isIneligible", (args, stateData) {
-    // No arguments passed
-    if (args.isEmpty) return false;
-
-    final value = args.first;
-
-    // Must be a string
-    if (value is! String) return false;
-
-    // Normalize (uppercase + trim)
-    final status = value.trim().toUpperCase();
-
-    // Match valid delivered statuses
-    if (status == TaskStatus.ineligible) {
-      return true;
-    }
-
-    return false;
-  });
-
   FunctionRegistry.register("isDelivered", (args, stateData) {
     // No arguments passed
     if (args.isEmpty) return false;

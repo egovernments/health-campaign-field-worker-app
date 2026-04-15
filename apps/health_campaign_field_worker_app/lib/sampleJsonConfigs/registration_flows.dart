@@ -977,17 +977,8 @@ final dynamic sampleFlows = {
                     "label": "NOT_ELIGIBLE",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false && {{fn:isHead(item.member)}}==false && {{fn:isIneligible(item.task.last.status)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false && && {{fn:length(item.hFReferral)}}>0 && {{fn:isHead(item.member)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                     "fieldName": "notEligible",
-                    "properties": {"tagType": "error", "bottomGap": 16}
-                  },
-                  {
-                    "type": "template",
-                    "label": "BENEFICIARY_REFERRED",
-                    "format": "tag",
-                    "visible":
-                        "{{fn:hasReferralForCurrentCycle(item.hFReferral)}}==true",
-                    "fieldName": "beneficiaryReferred",
                     "properties": {"tagType": "error", "bottomGap": 16}
                   },
                   {
@@ -1001,12 +992,22 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
-                    "label": "INELIGIBLE",
+                    "label": "{{fn:getInEligibleStatus(item.task)}}",
                     "format": "tag",
                     "visible":
-                        "{{fn:isIneligible(item.task.last.status)}}==true",
-                    "fieldName": "ineligible",
-                    "properties": {"tagType": "error", "bottomGap": 16}
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false && {{fn:length(item.hFReferral)}}<=0 && {{fn:isHead(item.member)}}==false",
+                    "fieldName": "notEligible",
+                    "properties": {"tagType": "error"}
+                  },
+                  {
+                    "type": "template",
+                    "label": "BENEFICIARY_REFERRED",
+                    "format": "tag",
+                    "hidden": false,
+                    "visible":
+                        "{{fn:hasReferralForCurrentCycle(item.hFReferral)}}==true && {{fn:isHead(item.member)}}==false",
+                    "fieldName": "beneficiaryReferred",
+                    "properties": {"tagType": "error"}
                   },
                   {
                     "type": "template",
@@ -1022,7 +1023,7 @@ final dynamic sampleFlows = {
                     "label": "NOT_VISITED",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isIneligible(item.task.last.status)}}==false && {{fn:isRedoseCompleted(item.task)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isRedoseCompleted(item.task)}}==false",
                     "fieldName": "notVisited",
                     "properties": {"tagType": "info", "bottomGap": 16}
                   },
@@ -1094,7 +1095,7 @@ final dynamic sampleFlows = {
                     "label": "HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0 && {{fn:isRegisteredBeforeCurrentCycle(item.individual.0.clientCreatedTime)}} == true",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}} == false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -5170,7 +5171,11 @@ final dynamic sampleFlows = {
                 "key": "selectedIndividualAgeInMonths",
                 "value": "{{navigation.selectedIndividualAgeInMonths}}"
               },
-              {"key": "cycleIndex", "value": "{{fn:getCurrentCycleIndex()}}"}
+              {"key": "cycleIndex", "value": "{{fn:getCurrentCycleIndex()}}"},
+              {"key": "ec1", "value": "{{navigation.ec1}}"},
+              {"key": "ec2", "value": "{{navigation.ec2}}"},
+              {"key": "ec3", "value": "{{navigation.ec3}}"},
+              {"key": "ec4", "value": "{{navigation.ec4}}"}
             ],
             "onError": [
               {
