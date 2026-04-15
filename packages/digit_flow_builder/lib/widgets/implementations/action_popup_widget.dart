@@ -122,7 +122,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
           title: localization?.translate(title) ?? title,
           description: description != null &&
                   localization!.translate(description).trim().isNotEmpty
-              ? description
+              ?  localization.translate(description)
               : null,
           titleIcon: titleIconName != null
               ? Icon(
