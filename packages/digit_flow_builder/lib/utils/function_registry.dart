@@ -350,8 +350,15 @@ void initializeFunctionRegistry() {
     }
     if (currentCycle == null) return false;
 
+// --- Check age eligibility ---
     int validMinAge = projectType.validMinAge ?? 3;
     int validMaxAge = projectType.validMaxAge ?? 59;
+
+    final isWithinAge =
+        totalAgeMonths >= validMinAge && totalAgeMonths <= validMaxAge;
+    totalAgeMonths <= validMaxAge;
+
+    if (!isWithinAge) return false;
 
 // --- Eligibility logic ---
     bool recordedSideEffect = false;
@@ -381,6 +388,9 @@ void initializeFunctionRegistry() {
         // BENEFICIARY_DIED returns false immediately regardless of cycle
         if (task['status'] == TaskStatus.beneficiaryDied) return false;
 
+        // INELIGIBLE status returns false immediately if no cycle filtering is needed
+        if (task['status'] == TaskStatus.ineligible) return false;
+
         // For other ineligible statuses, only check tasks matching the current cycle
         if (currentRunningCycle != null) {
           final additionalFields = task['additionalFields'];
@@ -404,12 +414,6 @@ void initializeFunctionRegistry() {
             task['status'] == TaskStatus.beneficiaryAbsent ||
             task['status'] == TaskStatus.beneficiaryRefused) return false;
       }
-    } else {
-      final isWithinAge =
-          totalAgeMonths >= validMinAge && totalAgeMonths <= validMaxAge;
-      totalAgeMonths <= validMaxAge;
-
-      if (!isWithinAge) return false;
     }
 
     if (tasks.isNotEmpty && sideEffects.isNotEmpty) {
@@ -509,6 +513,26 @@ void initializeFunctionRegistry() {
 
     // Default to ineligible
     return TaskStatus.ineligible;
+  });
+
+  FunctionRegistry.register("isIneligible", (args, stateData) {
+    // No arguments passed
+    if (args.isEmpty) return false;
+
+    final value = args.first;
+
+    // Must be a string
+    if (value is! String) return false;
+
+    // Normalize (uppercase + trim)
+    final status = value.trim().toUpperCase();
+
+    // Match valid delivered statuses
+    if (status == TaskStatus.ineligible) {
+      return true;
+    }
+
+    return false;
   });
 
   FunctionRegistry.register("isDelivered", (args, stateData) {
@@ -1712,8 +1736,7 @@ void initializeFunctionRegistry() {
     final projectType = FlowBuilderSingleton().projectType;
     final now = DateTime.now().millisecondsSinceEpoch;
     final selectedCycle = projectType?.cycles?.firstWhereOrNull(
-      (e) =>
-          (e.startDate ?? 0) < now && (e.endDate ?? 0) > now,
+      (e) => (e.startDate ?? 0) < now && (e.endDate ?? 0) > now,
     );
 
     if (selectedCycle == null) return false;
@@ -1728,8 +1751,7 @@ void initializeFunctionRegistry() {
         if (fields != null) {
           for (final field in fields) {
             if (field is Map && field['key'] == 'cycleIndex') {
-              final cycleIndex =
-                  int.tryParse(field['value']?.toString() ?? '');
+              final cycleIndex = int.tryParse(field['value']?.toString() ?? '');
               if (cycleIndex == selectedCycle.id) {
                 return true;
               }
