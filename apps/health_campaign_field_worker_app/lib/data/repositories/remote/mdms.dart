@@ -183,8 +183,8 @@ class MdmsRepository {
       ..syncTrigger = appConfig?.syncTrigger
       ..tenantId = appConfig?.tenantId
       ..maxRadius = appConfig?.maxRadius
-      ..boundaryLastLevelMaxSelection = 3
-          // appConfig?.boundaryLastLevelMaxSelection // TODO: enabled it once added in mdms
+      ..boundaryLastLevelMaxSelection =
+           appConfig?.boundaryLastLevelMaxSelection
       // TODO: Populate stockThresholdConfig from MDMS when available
       ..stockThresholdConfig = (StockThresholdConfig()
         ..minThreshold = 0
