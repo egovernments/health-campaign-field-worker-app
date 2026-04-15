@@ -2326,12 +2326,20 @@ final dynamic sampleFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "ACTION1",
-              "mandatory": false,
+              "required": true,
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": true,
-              "validations": [],
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_REQUIRED_MESSAGE"
+                }
+              ],
               "errorMessage": ""
             },
             {
@@ -2347,12 +2355,20 @@ final dynamic sampleFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "ACTION2",
-              "mandatory": false,
+              "required": true,
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": true,
-              "validations": [],
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_REQUIRED_MESSAGE"
+                }
+              ],
               "errorMessage": ""
             },
             {
@@ -2368,12 +2384,20 @@ final dynamic sampleFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "ACTION3",
-              "mandatory": false,
+              "required": true,
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": true,
-              "validations": [],
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_REQUIRED_MESSAGE"
+                }
+              ],
               "errorMessage": ""
             }
           ],
