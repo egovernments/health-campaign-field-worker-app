@@ -566,7 +566,7 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
-          "status": "__context:status",
+          "status": "__value:INELIGIBLE",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "tenantId": "__context:tenantId",
