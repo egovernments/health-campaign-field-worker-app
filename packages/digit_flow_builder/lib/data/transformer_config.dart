@@ -678,6 +678,92 @@ final jsonConfig = {
       }
     }
   },
+  "redose": {
+    "fallbackModel": "TaskModel",
+    "models": {
+      "TaskModel": {
+        "mappings": {
+          "id": "taskDetails.id",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
+          "projectBeneficiaryClientReferenceId":
+              "__context:ProjectBeneficiaryClientReferenceId",
+          "createdBy": "__context:userId",
+          "status": "__value:VISITED",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "resources": "list:TaskResourceModel",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "plannedStartDate": "taskDetails.plannedStartDate",
+          "plannedEndDate": "taskDetails.plannedEndDate",
+          "actualStartDate": "taskDetails.actualStartDate",
+          "actualEndDate": "taskDetails.actualEndDate",
+          "createdDate": "__generate:timestamp",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "address.latLng[0]",
+            "longitude": "address.latLng[1]",
+            "locationAccuracy": "address.latLng[1]",
+            "addressLine1": "address.addressLine1",
+            "addressLine2": "address.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "type": "__value:PERMANENT",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion"
+            },
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "additionalFields": {
+            "doseIndex": "__context:doseIndex",
+            "cycleIndex": "__context:cycleIndex",
+            "reasonForRedose": "RedoseDetails.reasonForRedose",
+            "redoseComments": "RedoseDetails.redoseComments",
+            "taskType": "__value:REDOSE"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        },
+        "listMappings": {
+          "TaskResourceModel": {
+            "listSource": "RedoseDetails.resourceCard",
+            "mappings": {
+              "id": "id",
+              "clientReferenceId": "__generate:uuid",
+              "taskId": "taskId",
+              "productVariantId":
+                  "RedoseDetails.resourceCard.resourceDelivered.productId",
+              "quantity": "RedoseDetails.resourceCard.quantityDistributed",
+              "isDelivered": "__value:true",
+              "deliveryComment": "__value:REDOSE",
+              "nonRecoverableError": "error.nonRecoverable",
+              "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit",
+            }
+          }
+        }
+      }
+    }
+  },
   "stock": {
     "fallbackModel": "StockModel",
     "multiEntityField": "stockDetails.productdetail",

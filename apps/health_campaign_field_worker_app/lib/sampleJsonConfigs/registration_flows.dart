@@ -96,6 +96,93 @@ final dynamic sampleFlows = {
       "body": [
         {
           "type": "template",
+          "label": "REDOSE_SUCCESSFUL_PANEL_CARD_HEADING",
+          "format": "panelCard",
+          "heading": "REDOSE_SUCCESSFUL_PANEL_CARD_HEADING",
+          "fieldName": "successCard",
+          "mandatory": true,
+          "properties": {"type": "success"},
+          "description": "REDOSE_SUCCESSFUL_PANEL_CARD_DESC",
+          "primaryAction": {
+            "type": "template",
+            "label": "VIEW_HOUSEHOLD_DETAILS",
+            "format": "button",
+            "hidden": false,
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "HouseholdClientReferenceId",
+                      "value": "{{navigation.HouseholdClientReferenceId}}"
+                    }
+                  ],
+                  "name": "householdOverview",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "viewHouseholdButton",
+            "mandatory": true,
+            "properties": {"type": "primary"}
+          },
+          "secondaryAction": {
+            "type": "template",
+            "label": "GO_BACK",
+            "format": "button",
+            "hidden": false,
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
+              }
+            ],
+            "fieldName": "goBack",
+            "mandatory": true,
+            "properties": {"type": "secondary"}
+          },
+          "primaryActionLabel": "VIEW_HOUSEHOLD_DETAILS",
+          "secondaryActionLabel": "GO_BACK"
+        }
+      ],
+      "name": "redoseSuccess",
+      "order": 13,
+      "footer": [],
+      "header": [
+        {
+          "type": "template",
+          "label": "REDOSE_BACK",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  }
+                ],
+                "name": "searchBeneficiary",
+                "type": "TEMPLATE"
+              }
+            }
+          ],
+          "fieldName": "redoseBack",
+          "mandatory": true
+        }
+      ],
+      "category": "REDOSE",
+      "navigateTo": null,
+      "screenType": "TEMPLATE",
+      "submitCondition": null,
+      "preventScreenCapture": false
+    },
+    {
+      "body": [
+        {
+          "type": "template",
           "format": "card",
           "children": [
             {
@@ -914,10 +1001,19 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
+                    "label": "REDOSE_COMPLETED",
+                    "format": "tag",
+                    "visible":
+                        "{{fn:isRedoseCompleted(item.task)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                    "fieldName": "redoseCompleted",
+                    "properties": {"tagType": "success", "bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
                     "label": "NOT_VISITED",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isRedoseCompleted(item.task)}}==false",
                     "fieldName": "notVisited",
                     "properties": {"tagType": "info", "bottomGap": 16}
                   },
@@ -1088,7 +1184,77 @@ final dynamic sampleFlows = {
                       "size": "medium",
                       "type": "secondary",
                       "mainAxisSize": "max",
-                      "mainAxisAlignment": "center"
+                      "mainAxisAlignment": "center",
+                      "bottomGap": 16
+                    }
+                  },
+                  {
+                    "type": "template",
+                    "label": "REDOSE_ADMINISTRATION",
+                    "format": "button",
+                    "visible":
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                    "disabled":
+                        "{{fn:isRedoseWindowExpired(item.task)}}==true || {{fn:isRedoseCompleted(item.task)}}==true",
+                    "onAction": [
+                      {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "data": [
+                            {
+                              "key": "selectedIndividualClientReferenceId",
+                              "value": "{{item.individual.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "selectedIndividualIdentifierId",
+                              "value":
+                                  "{{item.individual.0.identifiers.0.identifierId}}"
+                            },
+                            {
+                              "key": "HouseholdClientReferenceId",
+                              "value":
+                                  "{{item.member.0.householdClientReferenceId}}"
+                            },
+                            {
+                              "key": "ProjectBeneficiaryClientReferenceId",
+                              "value":
+                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "selectedIndividualName",
+                              "value": "{{item.individual.0.name.givenName}}"
+                            },
+                            {
+                              "key": "selectedIndividualGender",
+                              "value": "{{item.individual.0.gender}}"
+                            },
+                            {
+                              "key": "selectedIndividualAgeInMonths",
+                              "value":
+                                  "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                            },
+                            {
+                              "key": "cycleIndex",
+                              "value": "{{contextData.0.currentRunningCycle}}"
+                            },
+                            {
+                              "key": "lastDeliveredTaskClientReferenceId",
+                              "value": "{{item.task.last.clientReferenceId}}"
+                            }
+                          ],
+                          "name": "REDOSE",
+                          "type": "FORM"
+                        }
+                      }
+                    ],
+                    "fieldName": "redoseButton",
+                    "mandatory": true,
+                    "properties": {
+                      "size": "medium",
+                      "type": "primary",
+                      "mainAxisSize": "max",
+                      "mainAxisAlignment": "center",
+                      "bottomGap": 16
                     }
                   }
                 ],
@@ -2851,6 +3017,315 @@ final dynamic sampleFlows = {
               }
             ],
             "name": "deliverySuccess",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Navigation failed."}
+              }
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "householdOverview"
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {},
+      "scrollListener": {}
+    },
+    {
+      "name": "REDOSE",
+      "order": 12,
+      "pages": [
+        {
+          "body": null,
+          "flow": "REDOSE",
+          "page": "RedoseDetails",
+          "type": "object",
+          "label": "REDOSE_DETAILS_SCREEN_HEADING",
+          "order": 1,
+          "footer": [
+            {
+              "label": "REDOSE_SUBMIT_BUTTON_LABEL",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "name": "household-acknowledgement",
+                    "type": "template"
+                  }
+                }
+              ],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "REDOSE_DETAILS_SCREEN_HEADING",
+          "summary": false,
+          "version": 1,
+          "onAction": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+                  {
+                    "key": "lastDeliveredTaskClientReferenceId",
+                    "value": "{{navigation.lastDeliveredTaskClientReferenceId}}"
+                  }
+                ],
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to fetch redose config."}
+                  }
+                ],
+                "configName": "redose"
+              }
+            },
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "TASK",
+                "status": "VISITED",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to create redose task."}
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  }
+                ],
+                "name": "redoseSuccess",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Navigation failed."}
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "householdOverview"
+              }
+            }
+          ],
+          "navigateTo": null,
+          "properties": [
+            {
+              "type": "string",
+              "label": "REDOSE_DATE_OF_ADMINISTRATION",
+              "order": 1,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "dateOfRedose",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": true,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            {
+              "type": "dynamic",
+              "enums": [
+                {"code": "SP1", "name": "SP1"},
+                {"code": "SP2", "name": "SP2"},
+                {"code": "AQ1", "name": "AQ1"},
+                {"code": "AQ2", "name": "AQ2"}
+              ],
+              "label": "REDOSE_RESOURCE_DELIVERED",
+              "order": 2,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "resourceCard",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "SP1", "name": "SP1"},
+                {"code": "SP2", "name": "SP2"},
+                {"code": "AQ1", "name": "AQ1"},
+                {"code": "AQ2", "name": "AQ2"}
+              ],
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "label": "REDOSE_REASON",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonForRedose",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "enums": [
+                {"code": "VOMITTING", "name": "REDOSE_REASON_VOMITTING"},
+                {"code": "OTHERS", "name": "REDOSE_REASON_OTHERS"}
+              ],
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "REDOSE_REASON_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "label": "REDOSE_COMMENTS",
+              "order": 4,
+              "value": "",
+              "format": "textArea",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "redoseComments",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "RedoseDetails.reasonForRedose==OTHERS"}
+                ]
+              }
+            }
+          ],
+          "actionLabel": "REDOSE_SUBMIT_BUTTON_LABEL",
+          "description": "REDOSE_DETAILS_SCREEN_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false,
+          "conditionalNavigateTo": null
+        }
+      ],
+      "summary": false,
+      "version": 1,
+      "category": "REDOSE",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+              {
+                "key": "lastDeliveredTaskClientReferenceId",
+                "value": "{{navigation.lastDeliveredTaskClientReferenceId}}"
+              }
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch redose config."}
+              }
+            ],
+            "configName": "redose"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "TASK",
+            "status": "VISITED",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to create redose task."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {
+                "key": "HouseholdClientReferenceId",
+                "value": "{{navigation.HouseholdClientReferenceId}}"
+              }
+            ],
+            "name": "redoseSuccess",
             "type": "TEMPLATE",
             "onError": [
               {
@@ -5228,10 +5703,6 @@ final dynamic sampleFlows = {
               "readOnly": false,
               "required": true,
               "fieldName": "gender",
-              "enums": [
-                {"code": "MALE", "name": "MALE"},
-                {"code": "FEMALE", "name": "Female"}
-              ],
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
