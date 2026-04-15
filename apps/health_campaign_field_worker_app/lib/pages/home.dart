@@ -2455,25 +2455,25 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  // if (schemaJsonRaw != null) {
-                  //   final allSchemas =
-                  //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                  //   final data = allSchemas['REGISTRATION'];
-                  //
-                  //   final registrationDeliveryData = data?['data'];
-                  //   final flowsData = (registrationDeliveryData['flows']
-                  //               as List<dynamic>?)
-                  //           ?.map((e) => Map<String, dynamic>.from(e as Map))
-                  //           .toList() ??
-                  //       [];
-                  //   FlowRegistry.setConfig(flowsData);
-                  //   NavigationRegistry.setupNavigation(ctx);
-                  //
-                  //   ctx.router.push(
-                  //     FlowBuilderHomeRoute(
-                  //         pageName: registrationDeliveryData["initialPage"]),
-                  //   );
-                  // } else {
+                  if (schemaJsonRaw != null) {
+                    final allSchemas =
+                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    final data = allSchemas['REGISTRATION'];
+
+                    final registrationDeliveryData = data?['data'];
+                    final flowsData = (registrationDeliveryData['flows']
+                                as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                    FlowRegistry.setConfig(flowsData);
+                    NavigationRegistry.setupNavigation(ctx);
+
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: registrationDeliveryData["initialPage"]),
+                    );
+                  } else {
                     FlowRegistry.setConfig(
                         sampleFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
@@ -2481,7 +2481,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       FlowBuilderHomeRoute(
                           pageName: sampleFlows["initialPage"]),
                     );
-                  // }
+                  }
                 } catch (e) {
                   debugPrint('error $e');
                 }
