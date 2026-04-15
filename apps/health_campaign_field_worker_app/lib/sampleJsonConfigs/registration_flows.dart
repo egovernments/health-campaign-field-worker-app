@@ -2814,7 +2814,15 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "enums": null,
+              "enums": [
+                {"code": "BENEFICIARY_ABSENT", "name": "BENEFICIARY_ABSENT"},
+                {"code": "BENEFICIARY_REFUSED", "name": "BENEFICIARY_REFUSED"},
+                {
+                  "code": "INSUFFICIENT_RESOURCES",
+                  "name": "INSUFFICIENT_RESOURCES"
+                },
+                {"code": "SUCCESSFUL_DELIVERY", "name": "SUCCESSFUL_DELIVERY"}
+              ],
               "label":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_deliveryComments",
               "order": 3,
