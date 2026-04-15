@@ -932,7 +932,11 @@ final dynamic sampleFlows = {
                                   "value":
                                       "{{item.member.0.householdClientReferenceId}}"
                                 },
-                                {"key": "isEdit", "value": "true"}
+                                {"key": "isEdit", "value": "true"},
+                                {
+                                  "key": "isHead",
+                                  "value": "{{fn:isHead(item.member)}}"
+                                },
                               ],
                               "name": "ADD_MEMBER",
                               "type": "FORM"
@@ -4475,7 +4479,11 @@ final dynamic sampleFlows = {
               "order": 6,
               "value": "",
               "format": "mobileNumber",
-              "hidden": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "navigation.isHead==true"}
+                ]
+              },
               "isMdms": false,
               "pattern": "^\\d+",
               "tooltip":
