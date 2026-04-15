@@ -15,18 +15,12 @@ class NavigateToBeneficiaryIdDownSyncExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    debugPrint(
-        'NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC: ========== STARTING ==========');
 
     final router = context.router;
 
-    router.popUntil((route) => route.settings.name == 'home');
+    router.popUntil((route) => route.settings.name == 'HomeRoute');
 
-    await router.push(BeneficiaryIdDownSyncRoute(
-      key: action.properties['key'] as Key?,
-    ));
-
-    debugPrint('NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC: Done');
+    await router.push(BeneficiaryIdDownSyncRoute());
 
     return contextData;
   }
