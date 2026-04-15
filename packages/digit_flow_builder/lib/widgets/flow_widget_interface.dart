@@ -43,9 +43,9 @@ class FlowWidgetFactory {
     final stateData = crudCtx?.stateData;
 
     // Get screenKey and widget data for visibility evaluation
-    final screenKey = crudCtx?.screenKey ?? crudCtx?.compositeKey;
+    final stateKey = crudCtx?.compositeKey ?? crudCtx?.screenKey;
     final flowState =
-        screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
+        stateKey != null ? FlowCrudStateRegistry().get(stateKey) : null;
     final widgetData = flowState?.widgetData ?? {};
     final formData = flowState?.formData ?? {};
 
@@ -68,7 +68,7 @@ class FlowWidgetFactory {
       final hiddenResult = ConditionalEvaluator.evaluate(
         json['hidden'],
         evalContext,
-        screenKey: screenKey,
+        screenKey: stateKey,
         stateData: stateData,
       );
       if (hiddenResult == true) {
@@ -81,7 +81,7 @@ class FlowWidgetFactory {
       final visibleResult = ConditionalEvaluator.evaluate(
         json['visible'],
         evalContext,
-        screenKey: screenKey,
+        screenKey: stateKey,
         stateData: stateData,
         widgetdata: widgetData
       );

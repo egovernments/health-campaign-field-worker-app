@@ -24,7 +24,7 @@ class ConditionalEvaluator {
     // This ensures widgetData from WidgetStateContext is not overwritten
     Map<String, dynamic>? widgetData = widgetdata;
     if ((widgetData == null || widgetData.isEmpty) && screenKey != null) {
-      final currentState = FlowCrudStateRegistry().getByCompositeKey(screenKey);
+      final currentState = FlowCrudStateRegistry().get(screenKey);
       widgetData = currentState?.widgetData;
     }
 

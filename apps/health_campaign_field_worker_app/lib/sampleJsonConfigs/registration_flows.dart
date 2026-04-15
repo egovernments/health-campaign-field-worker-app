@@ -1589,7 +1589,16 @@ final dynamic sampleFlows = {
           "type": "template",
           "label": "ID_SEARCH_REGISTRATION",
           "format": "switch",
-          "onAction": [],
+          "onAction": [
+            {
+              "actionType": "CLEAR_STATE",
+              "properties": {
+                "widgetKeys": ["searchBar"],
+                "filterKeys": ["givenName", "identifierId"],
+                "triggerSearch": true
+              }
+            }
+          ],
           "fieldName": "idSearch",
           "mandatory": true,
           "schemaCode": null,

@@ -144,11 +144,13 @@ class ActionHandler {
         final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
         final navigation = contextData['navigation'] as Map<String, dynamic>? ?? {};
 
-        // Get screen key - try route args first, then contextData['parentScreenKey']
-        // (set by CLOSE_POPUP action when used from popup)
-        final screenKey = getEffectiveScreenKey(context, contextData);
+        // Use the active page instance key when reading instance-specific UI state.
+        final stateKey =
+            getEffectiveCompositeKey(context, contextData) ??
+            getEffectiveScreenKey(context, contextData) ??
+            '';
 
-        final currentState = FlowCrudStateRegistry().get(screenKey ?? '');
+        final currentState = FlowCrudStateRegistry().get(stateKey);
 
         // Get widgetData from the current state (contains filter selections, etc.)
         final widgetData = currentState?.widgetData ?? {};

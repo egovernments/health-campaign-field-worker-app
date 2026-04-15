@@ -315,13 +315,14 @@ abstract class ResolvedFlowWidget implements FlowWidget {
   ) {
     final state = WidgetStateContext.of(context);
     final localization = LocalizationContext.maybeOf(context);
+    final stateKey = state.compositeKey ?? state.screenKey;
 
     // Auto-resolve visibility
     if (json['visible'] != null) {
       final visible = ConditionalEvaluator.evaluate(
         json['visible'],
         state.evalContext,
-        screenKey: state.screenKey,
+        screenKey: stateKey,
         stateData: state.stateData,
         widgetdata: state.widgetData
       );
@@ -336,7 +337,7 @@ abstract class ResolvedFlowWidget implements FlowWidget {
       final disabledResult = ConditionalEvaluator.evaluate(
         json['disabled'],
         state.evalContext,
-        screenKey: state.screenKey,
+        screenKey: stateKey,
         stateData: state.stateData,
           widgetdata: state.widgetData
       );
@@ -361,7 +362,7 @@ abstract class ResolvedFlowWidget implements FlowWidget {
               labelText,
               state.evalContext,
               localization: localization,
-              screenKey: state.screenKey,
+              screenKey: stateKey,
               stateData: state.stateData,
             ) ??
             labelText;
@@ -375,7 +376,7 @@ abstract class ResolvedFlowWidget implements FlowWidget {
             descriptionText,
             state.evalContext,
             localization: localization,
-            screenKey: state.screenKey,
+            screenKey: stateKey,
             stateData: state.stateData,
           ) ??
           descriptionText;
