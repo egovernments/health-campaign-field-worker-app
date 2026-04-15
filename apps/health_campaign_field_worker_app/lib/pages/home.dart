@@ -1235,6 +1235,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         final additionalDetails = <String, dynamic>{
           if (boundaryCode.isNotEmpty)
             EnumValues.boundaryCode.toValue(): boundaryCode,
+          'SESSION_TYPE': isMorning ? 'MORNING' : 'EVENING',
           if (qrCreatedTime != null) 'qrCreatedTime': qrCreatedTime,
           if (isFirstSignature)
             'isFirstSignature': isFirstSignature ? "true" : "false",
