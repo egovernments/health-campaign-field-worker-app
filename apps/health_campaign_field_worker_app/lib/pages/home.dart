@@ -2372,7 +2372,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) async {
                 final moduleName =
-                    'hcm-registration-${context.selectedProject.referenceID}';
+                    'hcm-registration-${context.selectedProject.referenceID},hcm-beneficiary';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
@@ -3027,22 +3027,23 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
 
       /// TODO: NEED TO PICK CHANGES RELATED TO BENEFICIARY DOWNSYNC
-      // i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
-      //   child: HomeItemCard(
-      //     label: i18.home.beneficiaryIdLabel,
-      //     onPressed: () {
-      //       // if (isTriggerLocalisation) {
-      //       triggerLocalization();
-      //       isTriggerLocalisation = false;
-      //       // }
-      //       context.router.push(BeneficiaryIdDownSyncRoute());
-      //     },
-      //     icon: Icons.account_box,
-      //     enableCustomIcon: true,
-      //     customIconSize: spacer9,
-      //     customIcon: Constants.beneficiaryIdDownload,
-      //   ),
-      // ),
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
+        child: HomeItemCard(
+          label: i18.home.beneficiaryIdLabel,
+          onPressed: () {
+            // if (isTriggerLocalisation) {
+            const module = "hcm-beneficiary";
+            triggerLocalization(module: module);
+            isTriggerLocalisation = false;
+            // }
+            context.router.push(BeneficiaryIdDownSyncRoute());
+          },
+          icon: Icons.account_box,
+          enableCustomIcon: true,
+          customIconSize: spacer9,
+          customIcon: Constants.beneficiaryIdDownload,
+        ),
+      ),
 
       i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
           child: HomeItemCard(
@@ -3081,7 +3082,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
-      // i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey, // TODO: Uncomment when beneficiary downsync is implemented
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey, // TODO: Uncomment when beneficiary downsync is implemented
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.showcaseKey,
@@ -3102,7 +3103,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
       i18.home.dashboard,
-      // i18.home.beneficiaryIdLabel, // TODO: Uncomment when beneficiary downsync is implemented
+      i18.home.beneficiaryIdLabel, // TODO: Uncomment when beneficiary downsync is implemented
       i18.home.faceRegistrationLabel,
       i18.home.dataShare,
       i18.home.stockSyncDataLabel,
@@ -3126,6 +3127,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
+    filteredLabels.add(i18.home.beneficiaryIdLabel);
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
@@ -3164,7 +3166,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
                     module: module != null && module.isNotEmpty
-                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist"
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary"
                         : localizationModulesList?.interfaces
                                 .where(
                                     (e) => e.type == Modules.localizationModule)
@@ -3205,6 +3207,7 @@ void setPackagesSingleton(BuildContext context) {
           maxAge: context.selectedProjectType?.validMaxAge,
         );
         FlowBuilderSingleton().setInitialData(
+          beneficiaryIdMinCount: appConfiguration.beneficiaryIdConfig?.first.minCount.toInt(),
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
