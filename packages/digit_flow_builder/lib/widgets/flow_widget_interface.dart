@@ -43,7 +43,7 @@ class FlowWidgetFactory {
     final stateData = crudCtx?.stateData;
 
     // Get screenKey and widget data for visibility evaluation
-    final screenKey = crudCtx?.screenKey;
+    final screenKey = crudCtx?.screenKey ?? crudCtx?.compositeKey;
     final flowState =
         screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
     final widgetData = flowState?.widgetData ?? {};
@@ -83,6 +83,7 @@ class FlowWidgetFactory {
         evalContext,
         screenKey: screenKey,
         stateData: stateData,
+        widgetdata: widgetData
       );
       if (visibleResult == false) {
         visible = false;

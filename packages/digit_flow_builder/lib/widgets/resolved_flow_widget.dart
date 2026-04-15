@@ -323,6 +323,7 @@ abstract class ResolvedFlowWidget implements FlowWidget {
         state.evalContext,
         screenKey: state.screenKey,
         stateData: state.stateData,
+        widgetdata: state.widgetData
       );
       if (visible == false) {
         return const SizedBox.shrink();
@@ -337,6 +338,7 @@ abstract class ResolvedFlowWidget implements FlowWidget {
         state.evalContext,
         screenKey: state.screenKey,
         stateData: state.stateData,
+          widgetdata: state.widgetData
       );
       isDisabled = disabledResult == true;
     }

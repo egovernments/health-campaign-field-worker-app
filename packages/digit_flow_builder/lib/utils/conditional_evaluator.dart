@@ -17,11 +17,14 @@ class ConditionalEvaluator {
   /// If it's a conditional config, evaluates it; otherwise returns as-is
   /// IMPORTANT: This method is PURE - it never modifies the input value
   static dynamic evaluate(dynamic value, dynamic context,
-      {String? screenKey, CrudStateData? stateData}) {
-    // Get widgetData from registry if screenKey is provided
-    Map<String, dynamic>? widgetData;
-    if (screenKey != null) {
-      final currentState = FlowCrudStateRegistry().get(screenKey);
+      {String? screenKey,
+      CrudStateData? stateData,
+      Map<String, dynamic>? widgetdata}) {
+    // Use passed widgetdata as primary source, fallback to registry lookup
+    // This ensures widgetData from WidgetStateContext is not overwritten
+    Map<String, dynamic>? widgetData = widgetdata;
+    if ((widgetData == null || widgetData.isEmpty) && screenKey != null) {
+      final currentState = FlowCrudStateRegistry().getByCompositeKey(screenKey);
       widgetData = currentState?.widgetData;
     }
 

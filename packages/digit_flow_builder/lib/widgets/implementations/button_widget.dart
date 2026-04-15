@@ -36,20 +36,20 @@ class ButtonWidget extends ResolvedFlowWidget {
         },
         type: WidgetParsers.parseButtonType(props['type']),
         size: WidgetParsers.parseButtonSize(props['size']),
-        digitButtonThemeData: DigitButtonThemeData(
-          primaryDigitButtonColor: DigitButtonThemeData.defaultTheme(context)
-              .primaryDigitButtonColor,
-          DigitButtonColor: colorMap[props["color"]] ??
-              DigitButtonThemeData.defaultTheme(context).DigitButtonColor,
-          disabledColor:
-              DigitButtonThemeData.defaultTheme(context).disabledColor,
-          radius: BorderRadius.circular(spacer3),
-          largeRadius: BorderRadius.circular(spacer3),
-          smallMediumRadius: BorderRadius.circular(spacer3),
-          padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
-        ),
-        iconColor: colorMap[props["color"]],
-        textColor: colorMap[props["color"]],
+        // digitButtonThemeData: DigitButtonThemeData(
+        //   primaryDigitButtonColor: DigitButtonThemeData.defaultTheme(context)
+        //       .primaryDigitButtonColor,
+        //   DigitButtonColor: colorMap[props["color"]] ??
+        //       DigitButtonThemeData.defaultTheme(context).DigitButtonColor,
+        //   disabledColor:
+        //       DigitButtonThemeData.defaultTheme(context).disabledColor,
+        //   radius: BorderRadius.circular(spacer3),
+        //   largeRadius: BorderRadius.circular(spacer3),
+        //   smallMediumRadius: BorderRadius.circular(spacer3),
+        //   padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
+        // ),
+        // iconColor: colorMap[props["color"]],
+        // textColor: colorMap[props["color"]],
         mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment:
             WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),

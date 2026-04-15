@@ -1103,8 +1103,7 @@ final dynamic sampleFlows = {
                     "data": [
                       {
                         "key": "HouseholdClientReferenceId",
-                        "value":
-                            "{{contextData.0.household.HouseholdModel.clientReferenceId}}"
+                        "value":"{{contextData.0.household.HouseholdModel.clientReferenceId}}"
                       },
                       {"key": "UNIQUE_BENEFICIARY_ID", "value": "{{latestBeneficiaryId}}"}
                     ],
@@ -1113,9 +1112,9 @@ final dynamic sampleFlows = {
                   }
                 }
               ],
-              "fieldName": "addMember",
+              "fieldName": "member",
               "properties": {
-                "icon": "AddIcon",
+                "prefixIcon": "AddIcon",
                 "size": "medium",
                 "type": "tertiary",
                 "mainAxisSize": "min",
@@ -1123,15 +1122,16 @@ final dynamic sampleFlows = {
               }
             },
             {
-              "icon": "FilterAlt",
+              "icon": "AddIcon",
               "type": "template",
               "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
               "label": "ADD_MEMBER",
               "format": "actionPopup",
               "fieldName": "beneficiaryIdMinCheck",
               "properties": {
-                "size": "large",
-                "type": "primary",
+                "prefixIcon": "AddIcon",
+                "size": "medium",
+                "type": "tertiary",
                 "popupConfig": {
                   "body": [],
                   "type": "alert",
@@ -1141,28 +1141,6 @@ final dynamic sampleFlows = {
                     {
                       "type": "template",
                       "label": "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
-                      "format": "button",
-                      "onAction": [
-                        {
-                          "actionType": "CLOSE_POPUP",
-                          "properties": {"parentScreenKey": "searchBeneficiary"}
-                        },
-                        {
-                          "actionType": "NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC",
-                          "properties": {}
-                        }
-                      ],
-                      "fieldName": "clearFilter",
-                      "properties": {
-                        "size": "large",
-                        "type": "secondary",
-                        "mainAxisSize": "max"
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "label":
-                      "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
                       "format": "button",
                       "onAction": [
                         {
@@ -1185,6 +1163,28 @@ final dynamic sampleFlows = {
                           }
                         }
                       ],
+                      "fieldName": "clearFilter",
+                      "properties": {
+                        "size": "large",
+                        "type": "secondary",
+                        "mainAxisSize": "max"
+                      }
+                    },
+                    {
+                      "type": "template",
+                      "label":
+                      "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
+                      "format": "button",
+                      "onAction": [
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {"parentScreenKey": "searchBeneficiary"}
+                        },
+                        {
+                          "actionType": "NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC",
+                          "properties": {}
+                        }
+                      ],
                       "fieldName": "saveFilter",
                       "properties": {
                         "size": "large",
@@ -1196,7 +1196,7 @@ final dynamic sampleFlows = {
                   "showCloseButton": true,
                   "barrierDismissible": true
                 },
-                "mainAxisSize": "max",
+                "mainAxisSize": "min",
                 "mainAxisAlignment": "center"
               },
               "schemaCode": null,
@@ -1228,6 +1228,9 @@ final dynamic sampleFlows = {
       "description": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
       "initActions": [
         {
+          "actionType": "LOAD_UNIQUE_ID_POOL"
+        },
+        {
           "actionType": "SEARCH_EVENT",
           "properties": {
             "data": [
@@ -1240,9 +1243,6 @@ final dynamic sampleFlows = {
             "name": "household",
             "type": "SEARCH_EVENT"
           }
-        },
-        {
-          "actionType": "LOAD_UNIQUE_ID_POOL"
         }
       ],
       "wrapperConfig": {
@@ -2044,8 +2044,16 @@ final dynamic sampleFlows = {
                       "properties": {"parentScreenKey": "searchBeneficiary"}
                     },
                     {
-                      "actionType": "NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC",
-                      "properties": {}
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "data": [
+                          {"key": "nameOfIndividual", "value": "{{searchBar}}"},
+                          {"key": "UNIQUE_BENEFICIARY_ID", "value": "{{latestBeneficiaryId}}"},
+                          {"key": "uniqueBeneficiaryIdModel", "value": "{{latestBeneficiaryIdModel}}"}
+                        ],
+                        "name": "HOUSEHOLD",
+                        "type": "FORM"
+                      }
                     }
                   ],
                   "fieldName": "clearFilter",
@@ -2066,16 +2074,8 @@ final dynamic sampleFlows = {
                       "properties": {"parentScreenKey": "searchBeneficiary"}
                     },
                     {
-                      "actionType": "NAVIGATION",
-                      "properties": {
-                        "data": [
-                          {"key": "nameOfIndividual", "value": "{{searchBar}}"},
-                          {"key": "UNIQUE_BENEFICIARY_ID", "value": "{{latestBeneficiaryId}}"},
-                          {"key": "uniqueBeneficiaryIdModel", "value": "{{latestBeneficiaryIdModel}}"}
-                        ],
-                        "name": "HOUSEHOLD",
-                        "type": "FORM"
-                      }
+                      "actionType": "NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC",
+                      "properties": {}
                     }
                   ],
                   "fieldName": "saveFilter",
@@ -3907,7 +3907,11 @@ final dynamic sampleFlows = {
             {
               "type": "string",
               "enums": [
-                {"code": "DEFAULT", "name": "DEFAULT"}
+                {"code": "DEFAULT", "name": "DEFAULT"},
+                {
+                  "code": "UNIQUE_BENEFICIARY_ID",
+                  "name": "UNIQUE_BENEFICIARY_ID"
+                }
               ],
               "label":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers_addmember",
