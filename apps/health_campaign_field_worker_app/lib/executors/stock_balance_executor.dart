@@ -101,12 +101,33 @@ class StockBalanceExecutor extends ActionExecutor {
       productQuantities[productVariantId] =
           (productQuantities[productVariantId] ?? 0) + quantity;
     }
+    final projectFacilityRepo = context.read<
+        LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
+
+    final projectFacilities = await projectFacilityRepo.search(
+      ProjectFacilitySearchModel(projectId: [projectId]),
+    );
+
+    // Filter to only include facilities where facilityLevel is 'current'
+    final currentFacilities = projectFacilities.where((pf) {
+      final facilityLevel = pf.additionalFields?.fields
+          .where((f) => f.key == 'facilityLevel')
+          .firstOrNull
+          ?.value;
+      return facilityLevel == null || facilityLevel == 'current';
+    }).toList();
 
     String? facilityId;
+
+
     if (isDistributor) {
       facilityId = FlowBuilderSingleton().loggedInUserUuid;
     } else {
-      facilityId = stockEntities.first.facilityId;
+      if(currentFacilities.isNotEmpty) {
+        facilityId = currentFacilities.first.facilityId;
+      } else{
+        facilityId = stockEntities.first.facilityId;
+      }
     }
 
     if (facilityId == null) return;
@@ -176,8 +197,8 @@ class StockBalanceExecutor extends ActionExecutor {
     if (isDistributor) {
       facilityId = FlowBuilderSingleton().loggedInUserUuid;
     } else {
-      final projectFacilityRepo =
-          context.read<ProjectFacilityLocalRepository>();
+      final projectFacilityRepo = context.read<
+          LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
 
       final projectFacilities = await projectFacilityRepo.search(
         ProjectFacilitySearchModel(projectId: [projectId]),
