@@ -9,6 +9,7 @@ FormControl buildFormControl(
   PropertySchema parentSchema, {
   String? defaultLatlng,
   Map<String, dynamic>? defaultValues,
+  Map<String, dynamic>? navigationParams,
   String? schemaKey,
 }) {
   final validators = buildValidators(schema, schemaKey: schemaKey);
@@ -56,7 +57,8 @@ FormControl buildFormControl(
 
     case PropertySchemaType.boolean:
       return FormControl<bool>(
-        value: parseBoolValue(getDefaultValue(name)) ?? parseBoolValue(rawValue),
+        value:
+            parseBoolValue(getDefaultValue(name)) ?? parseBoolValue(rawValue),
         validators: validators,
       );
 
@@ -89,10 +91,17 @@ FormControl buildFormControl(
         }
 
         // New registration - determine which ID to use and its label
-        final selectedLabel = availableIDs?['UNIQUE_BENEFICIARY_ID'] != null
+        var selectedLabel = availableIDs?['UNIQUE_BENEFICIARY_ID'] != null
             ? 'UNIQUE_BENEFICIARY_ID'
             : 'DEFAULT';
-        final selectedId = availableIDs?[selectedLabel]?.toString();
+        var selectedId = availableIDs?[selectedLabel]?.toString();
+
+        final uniqueBeneficiaryId =
+            navigationParams?['UNIQUE_BENEFICIARY_ID'] as String?;
+        if (uniqueBeneficiaryId != null && uniqueBeneficiaryId.isNotEmpty) {
+          selectedLabel = 'UNIQUE_BENEFICIARY_ID';
+          selectedId = uniqueBeneficiaryId;
+        }
 
         return FormControl<String>(
           value: schema.hidden == true
