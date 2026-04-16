@@ -14,6 +14,7 @@ import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
 import 'package:digit_flow_builder/data/digit_crud_service.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
@@ -145,18 +146,73 @@ class _HomePageState extends LocalizedState<HomePage> {
     FlowWidgetFactory.register(CustomRowWidget());
     FlowWidgetFactory.register(SignatureCompareWidget());
 
-    // Example 1: Register a dynamic resource card with multi-page state access
+    // Register resource card for DELIVERY and REDOSE
     CustomComponentRegistry().registerBuilder(
       'resourceCard',
       (context, stateAccessor) {
-        // Access data from any page in the flow
         final beneficiaryDetails =
             stateAccessor.getPageData('beneficiaryDetails');
 
-        // Build your component with access to all this data
+        if (beneficiaryDetails != null) {
+          // DELIVERY flow
+          return ResourceCard(
+            stateData: beneficiaryDetails,
+            pageSchema: 'DELIVERY',
+          );
+        }
+
+        // REDOSE flow - compute product variants same as DELIVERY
+        // Use navigation params to filter by age condition
+        final navParams =
+            FlowCrudStateRegistry().getNavigationParams('REDOSE');
+        final cycleIndex = navParams?['cycleIndex'];
+        final ageStr = navParams?['selectedIndividualAgeInMonths'];
+        final age = int.tryParse(ageStr?.toString() ?? '');
+
+        final projectType = context.selectedProjectType;
+        final cycles = projectType?.cycles;
+
+        // Find the cycle matching cycleIndex from nav params
+        final currentCycle = cycles?.firstWhereOrNull(
+          (c) => c.id.toString() == cycleIndex?.toString(),
+        );
+
+        // Use first delivery's dose criteria (all deliveries have same criteria)
+        final firstDelivery = currentCycle?.deliveries?.firstOrNull;
+        final matchingCriteria = <Map<String, dynamic>>[];
+
+        if (firstDelivery?.doseCriteria != null && age != null) {
+          for (final dc in firstDelivery!.doseCriteria!) {
+            if (dc.condition != null && dc.condition!.isNotEmpty) {
+              // Evaluate condition e.g. "3<=ageandage<=11"
+              final sanitized = dc.condition!
+                  .replaceAll(' and ', ' && ')
+                  .replaceAll('and', '&&');
+              try {
+                final parser = FormulaParser(sanitized, {'age': age});
+                final result = parser.parse;
+                if (result['isSuccess'] && result['value'] == true) {
+                  matchingCriteria.add(dc.toMap());
+                }
+              } catch (e) {
+                debugPrint('REDOSE condition eval error: $e');
+              }
+            } else {
+              // No condition - include by default
+              matchingCriteria.add(dc.toMap());
+            }
+          }
+        }
+
+        final redoseState = FlowCrudState(
+          stateWrapper: [
+            {'eligibleProductVariants': matchingCriteria}
+          ],
+        );
+
         return ResourceCard(
-          stateData: beneficiaryDetails,
-          pageSchema: 'DELIVERY',
+          stateData: redoseState,
+          pageSchema: 'REDOSE',
         );
       },
     );
@@ -2455,25 +2511,25 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (schemaJsonRaw != null) {
-                    final allSchemas =
-                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                    final data = allSchemas['REGISTRATION'];
-
-                    final registrationDeliveryData = data?['data'];
-                    final flowsData = (registrationDeliveryData['flows']
-                                as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                    FlowRegistry.setConfig(flowsData);
-                    NavigationRegistry.setupNavigation(ctx);
-
-                    ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName: registrationDeliveryData["initialPage"]),
-                    );
-                  } else {
+                  // if (schemaJsonRaw != null) {
+                  //   final allSchemas =
+                  //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                  //   final data = allSchemas['REGISTRATION'];
+                  //
+                  //   final registrationDeliveryData = data?['data'];
+                  //   final flowsData = (registrationDeliveryData['flows']
+                  //               as List<dynamic>?)
+                  //           ?.map((e) => Map<String, dynamic>.from(e as Map))
+                  //           .toList() ??
+                  //       [];
+                  //   FlowRegistry.setConfig(flowsData);
+                  //   NavigationRegistry.setupNavigation(ctx);
+                  //
+                  //   ctx.router.push(
+                  //     FlowBuilderHomeRoute(
+                  //         pageName: registrationDeliveryData["initialPage"]),
+                  //   );
+                  // } else {
                     FlowRegistry.setConfig(
                         sampleFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
@@ -2481,7 +2537,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       FlowBuilderHomeRoute(
                           pageName: sampleFlows["initialPage"]),
                     );
-                  }
+                  // }
                 } catch (e) {
                   debugPrint('error $e');
                 }
