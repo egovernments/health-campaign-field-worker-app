@@ -242,7 +242,7 @@ dynamic resolveNavigationDataValue({
     }
   }
 
-  return resolvedValue ?? rawValue;
+  return resolvedValue;
 }
 
 /// New method: resolves strings with multiple placeholders
