@@ -57,10 +57,6 @@ class StockBalanceExecutor extends ActionExecutor {
       final projectId = FlowBuilderSingleton().projectId;
       final boundaryCode = FlowBuilderSingleton().boundary?.code;
 
-      debugPrint('UPDATE_STOCK_BALANCE: entities = ${entities?.length ?? 0}');
-      debugPrint(
-          'UPDATE_STOCK_BALANCE: entity type from action = ${action.properties['entity']}');
-
       if (projectId == null || boundaryCode == null) {
         debugPrint('UPDATE_STOCK_BALANCE: Missing projectId or boundaryCode');
         return contextData;
@@ -71,9 +67,6 @@ class StockBalanceExecutor extends ActionExecutor {
       final hasStock = entities.any((e) => e is StockModel);
       final hasTask = entities.any((e) => e is TaskModel);
       final entityType = action.properties['entity'] as String?;
-
-      debugPrint(
-          'UPDATE_STOCK_BALANCE: hasStock=$hasStock, hasTask=$hasTask, entityType=$entityType');
 
       if (hasStock || entityType == 'STOCK') {
         await _handleStockEntity(context, entities, projectId, boundaryCode);
