@@ -67,14 +67,18 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
         final number = parts.sublist(1).join(',').trim();
 
         form.control(idTypeKey).value = type;
-        if (type != 'DEFAULT') {
-          form.control(idKey).value = number;
-          form.control(idAutoFilledKey).value = true;
-        }
+        form.control(idKey).value = number;
+        form.control(idAutoFilledKey).value = true;
         form.control(formControlName).value = defaultValue;
       } else if (parts.length == 1 && parts[0].trim().isNotEmpty) {
-        // Single value like "DEFAULT" — just set the type
-        form.control(idTypeKey).value = parts[0].trim();
+        final type = parts[0].trim();
+        form.control(idTypeKey).value = type;
+        if (type == 'DEFAULT') {
+          final generatedId = IdGen.i.identifier;
+          form.control(idKey).value = generatedId;
+          form.control(idAutoFilledKey).value = true;
+          form.control(formControlName).value = 'DEFAULT, $generatedId';
+        }
       }
     }
 
@@ -96,8 +100,14 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
       } else if (parts.length == 1 &&
           parts[0].trim().isNotEmpty &&
           form.control(idTypeKey).value == null) {
-        // Single value like "DEFAULT" — just set the type
-        form.control(idTypeKey).value = parts[0].trim();
+        final type = parts[0].trim();
+        form.control(idTypeKey).value = type;
+        if (type == 'DEFAULT') {
+          final generatedId = IdGen.i.identifier;
+          form.control(idKey).value = generatedId;
+          form.control(idAutoFilledKey).value = true;
+          form.control(formControlName).value = 'DEFAULT, $generatedId';
+        }
       }
     }
 
@@ -107,6 +117,12 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
         enums!.length == 1) {
       final onlyOption = enums!.first.code;
       form.control(idTypeKey).value = onlyOption;
+      if (onlyOption == 'DEFAULT') {
+        final generatedId = IdGen.i.identifier;
+        form.control(idKey).value = generatedId;
+        form.control(idAutoFilledKey).value = true;
+        form.control(formControlName).value = 'DEFAULT, $generatedId';
+      }
     }
 
     /// Helper to update combined value
@@ -118,6 +134,14 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
           idNumber != null &&
           idNumber.toString().trim().isNotEmpty) {
         form.control(formControlName).value = '$idType, $idNumber';
+      } else if (idType == 'DEFAULT') {
+        final existingId = form.control(idKey).value;
+        final id = (existingId != null &&
+                existingId.toString().trim().isNotEmpty)
+            ? existingId
+            : IdGen.i.identifier;
+        form.control(idKey).value = id;
+        form.control(formControlName).value = 'DEFAULT, $id';
       } else {
         form.control(formControlName).value = null;
       }
@@ -183,6 +207,13 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
 
                   form.control(formControlName).value =
                   '${value.code}, $defaultIdentifier';
+                } else if (value.code == 'DEFAULT') {
+                  final generatedId = IdGen.i.identifier;
+                  form.control(idTypeKey).value = value.code;
+                  form.control(idKey).value = generatedId;
+                  form.control(idAutoFilledKey).value = true;
+                  form.control(formControlName).value =
+                      'DEFAULT, $generatedId';
                 } else {
                   form.control(idTypeKey).value = value.code;
                   form.control(idKey).value = null;

@@ -77,6 +77,8 @@ class QueryBuilder {
           return '$column IS NOT NULL';
         case 'isNull':
           return '$column IS NULL';
+        case 'notExists':
+          return '1 = 1'; // Handled at resolver level, no-op in raw query
         case 'in':
           final values = _normalizeToList(filter.value);
           if (values.isEmpty) return '1 = 1';
@@ -136,6 +138,7 @@ class QueryBuilder {
         case 'isNotNull':
         case 'isNull':
         case 'within':
+        case 'notExists':
           break;
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
@@ -276,6 +279,9 @@ class QueryBuilder {
           } else if (col is GeneratedColumn<String>) {
             whereClauses.add(col.isNotIn(list.map((v) => v.toString()).toList()));
           }
+          break;
+        case 'notExists':
+          // Handled at MultiTableFilterResolver level, skip in direct query
           break;
         default:
           throw Exception('Unsupported operator: ${filter.operator}');

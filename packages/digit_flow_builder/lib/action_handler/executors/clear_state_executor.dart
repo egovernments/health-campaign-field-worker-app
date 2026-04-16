@@ -17,6 +17,7 @@ import 'action_executor.dart';
 /// - clearOrderBy: bool - If true, also clears orderBy
 /// - triggerSearch: bool - If true, triggers search after clearing (via SearchStateManager callback)
 /// - clearAll: bool - If true, clears entire state (original behavior)
+/// - clearResults: bool - If true, clears stateWrapper (old results) while preserving widgetData
 class ClearStateExecutor extends ActionExecutor {
   @override
   bool canHandle(String actionType) => actionType == 'CLEAR_STATE';
@@ -49,6 +50,7 @@ class ClearStateExecutor extends ActionExecutor {
     final clearAll = properties['clearAll'] as bool? ?? false;
     final triggerSearch = properties['triggerSearch'] as bool? ?? false;
     final clearOrderBy = properties['clearOrderBy'] as bool? ?? false;
+    final clearResults = properties['clearResults'] as bool? ?? false;
 
     // Get filter keys to remove
     final filterKeys = <String>[];
@@ -66,6 +68,27 @@ class ClearStateExecutor extends ActionExecutor {
       if (keys is List) {
         widgetKeys.addAll(keys.map((k) => k.toString()));
       }
+    }
+
+    // Save widgetData to contextData before clearing, so subsequent
+    // conditional actions can still read widget values (e.g., selectedStatus)
+    // even after FlowCrudStateRegistry is cleared.
+    final currentState = FlowCrudStateRegistry().get(compositeKey);
+    if (currentState?.widgetData != null) {
+      final savedWidgetData = <String, dynamic>{};
+      currentState!.widgetData!.forEach((key, value) {
+        // Flatten single-element lists to match widgetData evaluation behavior
+        if (value is List && value.length == 1) {
+          savedWidgetData[key] = value.first;
+        } else {
+          savedWidgetData[key] = value;
+        }
+      });
+      // Merge into formData so the action handler's condition evaluator picks it up
+      final existingFormData =
+          contextData['formData'] as Map<String, dynamic>? ?? {};
+      contextData['formData'] = {...existingFormData, ...savedWidgetData};
+      debugPrint('✅ CLEAR_STATE: Saved widgetData to contextData: ${savedWidgetData.keys.toList()}');
     }
 
     // If clearAll is true or no specific keys provided, clear everything
@@ -103,22 +126,37 @@ class ClearStateExecutor extends ActionExecutor {
 
       // 3. Remove specific keys from widgetData
       if (widgetKeys.isNotEmpty) {
-        final currentState = FlowCrudStateRegistry().get(compositeKey);
-        if (currentState != null) {
+        final currentStateForWidgets = FlowCrudStateRegistry().get(compositeKey);
+        if (currentStateForWidgets != null) {
           final updatedWidgetData =
-              Map<String, dynamic>.from(currentState.widgetData ?? {});
+              Map<String, dynamic>.from(currentStateForWidgets.widgetData ?? {});
 
           for (final key in widgetKeys) {
             updatedWidgetData.remove(key);
           }
 
-          final updatedState = currentState.copyWith(
+          final updatedState = currentStateForWidgets.copyWith(
             widgetData: updatedWidgetData,
           );
           FlowCrudStateRegistry().update(compositeKey, updatedState);
 
           debugPrint('✅ CLEAR_STATE: Removed widgetData keys: $widgetKeys');
         }
+      }
+    }
+
+    // Clear stateWrapper (old results) while preserving widgetData
+    // This ensures old results are visually removed before new search results appear
+    if (clearResults) {
+      final stateForClear = FlowCrudStateRegistry().get(compositeKey);
+      if (stateForClear != null) {
+        final clearedState = FlowCrudState(
+          widgetData: stateForClear.widgetData,
+          formData: stateForClear.formData,
+          isLoading: true,
+        );
+        FlowCrudStateRegistry().update(compositeKey, clearedState);
+        debugPrint('✅ CLEAR_STATE: Cleared stateWrapper (preserving widgetData)');
       }
     }
 

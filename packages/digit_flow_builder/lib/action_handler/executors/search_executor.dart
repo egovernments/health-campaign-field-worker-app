@@ -82,12 +82,18 @@ class SearchExecutor extends ActionExecutor {
       ...navigationFromContext,
     };
 
+    // Include formData from contextData as fallback (e.g., saved by ClearStateExecutor
+    // before clearing FlowCrudStateRegistry, so templates like {{selectedStatus}} still resolve)
+    final contextFormData =
+        contextData['formData'] as Map<String, dynamic>? ?? {};
+
     // Build context data that includes entities, form values, widgetData, and navigation params
     // widgetData is included at root level so templates like {{selectedStatus}} resolve directly
     final resolveContext = {
-      if (contexts != null) ...contexts,
-      ...formData,
-      ...widgetData, // Include widgetData at root for direct access
+      if (contexts != null && contexts is Map) ...contexts,
+      ...contextFormData, // Fallback from action chain
+      ...formData, // FlowCrudStateRegistry formData overrides
+      ...widgetData, // FlowCrudStateRegistry widgetData overrides
       'widgetData': widgetData, // Also include with prefix for explicit access
       'navigation': mergedNavigation,
     };
@@ -467,7 +473,28 @@ class SearchExecutor extends ActionExecutor {
     // Check if we should wait for results (for chained actions like REVERSE_TRANSFORM)
     final awaitResults = action.properties['awaitResults'] as bool? ?? false;
 
+    // Get the bloc FIRST (before clearing state) so that if context.read fails,
+    // we don't leave the UI in a stuck loading state.
     final crudBloc = context.read<CrudBloc>();
+
+    // Clear old stateWrapper right before dispatching the search.
+    // This ensures old results are removed visually (shows loader) only when
+    // we are certain the search will execute. Clearing here (after bloc lookup
+    // succeeds but before dispatch) is safer than clearing in CLEAR_STATE,
+    // where any failure between CLEAR_STATE and SEARCH_EVENT would leave
+    // the UI stuck in a loading state.
+    if (compositeKey != null) {
+      final currentState = FlowCrudStateRegistry().get(compositeKey);
+      if (currentState != null && currentState.stateWrapper != null) {
+        final loadingState = FlowCrudState(
+          widgetData: currentState.widgetData,
+          formData: currentState.formData,
+          isLoading: true,
+        );
+        FlowCrudStateRegistry().update(compositeKey, loadingState);
+        debugPrint('SEARCH_EVENT: Cleared old stateWrapper before dispatching search');
+      }
+    }
 
     if (awaitResults) {
       // Wait for search results before returning

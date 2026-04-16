@@ -21,6 +21,10 @@ class MultiTableFilterResult {
   /// These are the IDs that satisfy filters on related tables.
   final Set<dynamic> resolvedPrimaryKeyConstraints;
 
+  /// Primary key constraints to EXCLUDE from results.
+  /// These are IDs that should NOT appear in results (used by notExists operator).
+  final Set<dynamic> excludedPrimaryKeyConstraints;
+
   /// Whether any related table filters were processed.
   final bool hasRelatedTableFilters;
 
@@ -31,6 +35,7 @@ class MultiTableFilterResult {
   const MultiTableFilterResult({
     required this.primaryTableFilters,
     required this.resolvedPrimaryKeyConstraints,
+    this.excludedPrimaryKeyConstraints = const {},
     required this.hasRelatedTableFilters,
     required this.isEmptyResult,
   });
@@ -39,6 +44,7 @@ class MultiTableFilterResult {
   const MultiTableFilterResult.empty()
       : primaryTableFilters = const [],
         resolvedPrimaryKeyConstraints = const {},
+        excludedPrimaryKeyConstraints = const {},
         hasRelatedTableFilters = true,
         isEmptyResult = true;
 
@@ -47,6 +53,7 @@ class MultiTableFilterResult {
     return MultiTableFilterResult(
       primaryTableFilters: filters,
       resolvedPrimaryKeyConstraints: const {},
+      excludedPrimaryKeyConstraints: const {},
       hasRelatedTableFilters: false,
       isEmptyResult: false,
     );
@@ -113,10 +120,39 @@ class MultiTableFilterResolver {
       return MultiTableFilterResult.primaryOnly(primaryTableFilters);
     }
 
-    // Resolve each related table's filters to primary key constraints
-    final resolvedConstraintSets = <Set<dynamic>>[];
+    // Separate notExists filters from regular filters.
+    // Further split notExists into:
+    //   - scoped (value is Map with 'scope' key) → produces INCLUSION constraints
+    //   - non-scoped → produces EXCLUSION constraints (legacy behavior)
+    final notExistsFilters = <String, List<SearchFilter>>{};
+    final scopedNotExistsFilters = <SearchFilter>[];
+    final regularRelatedTables = <String>[];
 
     for (final relatedTable in relatedTablesWithFilters) {
+      final relatedFilters = filtersByTable[relatedTable]!;
+      final hasNotExists = relatedFilters.any((f) => f.operator == 'notExists');
+
+      if (hasNotExists) {
+        final nonScopedForThisTable = <SearchFilter>[];
+        for (final f in relatedFilters) {
+          if (f.operator == 'notExists' && _isScopedValue(f.value)) {
+            scopedNotExistsFilters.add(f);
+          } else {
+            nonScopedForThisTable.add(f);
+          }
+        }
+        if (nonScopedForThisTable.isNotEmpty) {
+          notExistsFilters[relatedTable] = nonScopedForThisTable;
+        }
+      } else {
+        regularRelatedTables.add(relatedTable);
+      }
+    }
+
+    // Resolve regular related table filters to primary key constraints
+    final resolvedConstraintSets = <Set<dynamic>>[];
+
+    for (final relatedTable in regularRelatedTables) {
       final relatedFilters = filtersByTable[relatedTable]!;
 
       try {
@@ -145,11 +181,122 @@ class MultiTableFilterResolver {
       }
     }
 
-    // Combine constraint sets based on filter logic
+    // Resolve scoped notExists: find scope-level entities that LACK matching
+    // related rows, then traverse from scope to primary → INCLUDE those keys.
+    //
+    // Example: notExists with scope=projectBeneficiary on task.status=SUCCESS
+    // finds projectBeneficiaries WITHOUT a SUCCESS task, then gets their
+    // household IDs → include those households.
+    for (final scopedFilter in scopedNotExistsFilters) {
+      try {
+        final includedKeys = await _resolveScopedNotExists(
+          scopedFilter: scopedFilter,
+          primaryTable: primaryTable,
+          primaryKeyField: primaryKeyField,
+        );
+
+        if (filterLogic == MultiTableFilterLogic.and && includedKeys.isEmpty) {
+          _log('Scoped notExists: No matching records, returning empty');
+          return const MultiTableFilterResult.empty();
+        }
+
+        resolvedConstraintSets.add(includedKeys);
+      } catch (e, stackTrace) {
+        _logError('Failed to resolve scoped notExists', e, stackTrace);
+        rethrow;
+      }
+    }
+
+    // Resolve non-scoped notExists filters: find primary keys that DO have
+    // rows in the related table matching the filter criteria, then exclude them.
+    //
+    // Semantics:
+    // - If the notExists filter has a meaningful field+value (e.g.,
+    //   {field: status, value: [ADMINISTRATION_SUCCESS], op: notExists}),
+    //   the resolver finds primary keys whose related rows MATCH that
+    //   criteria, and excludes them. This means "find primary keys with NO
+    //   related row matching the given filter".
+    // - If the filter is a placeholder (e.g., value="true" on an id field),
+    //   the resolver falls back to the legacy behavior of excluding any
+    //   primary key that has ANY related row.
+    final excludedConstraints = <Set<dynamic>>[];
+
+    for (final entry in notExistsFilters.entries) {
+      final relatedTable = entry.key;
+      final relatedFilters = entry.value;
+
+      try {
+        // Convert notExists filters to equivalent regular filters (in/equals)
+        // so we can find primary keys whose related rows match the criteria.
+        // Skip placeholder filters (where value is a boolean-like string on
+        // an id field) to preserve legacy behavior.
+        final matchingFilters = <SearchFilter>[];
+        for (final f in relatedFilters) {
+          if (f.operator != 'notExists') {
+            matchingFilters.add(f);
+            continue;
+          }
+
+          final isPlaceholderValue =
+              f.value == null ||
+                  f.value == 'true' ||
+                  f.value == 'false' ||
+                  f.value == true ||
+                  f.value == false;
+          final isIdField = f.field == 'clientReferenceId' ||
+              f.field == 'id';
+
+          if (isPlaceholderValue && isIdField) {
+            // Legacy placeholder pattern — skip adding a matching filter so
+            // we fall through to "all rows" behavior below.
+            continue;
+          }
+
+          // Convert to equivalent positive filter
+          final positiveOp = f.value is List ? 'in' : 'equals';
+          matchingFilters.add(SearchFilter(
+            field: f.field,
+            operator: positiveOp,
+            value: f.value,
+            root: f.root,
+          ));
+        }
+
+        // If no real matching filters were produced, fall back to the legacy
+        // "exclude any primary key with any related row" behavior.
+        final filtersToUse = matchingFilters.any((f) => f.operator != 'notExists')
+            ? matchingFilters
+            : <SearchFilter>[];
+
+        final allRelatedKeys = await _resolveRelatedTableToPrimaryKeys(
+          relatedTable: relatedTable,
+          relatedFilters: filtersToUse,
+          primaryTable: primaryTable,
+          primaryKeyField: primaryKeyField,
+        );
+
+        _log('notExists: Found ${allRelatedKeys.length} primary keys with matching rows in $relatedTable - these will be excluded (filtersUsed=${filtersToUse.length})');
+        excludedConstraints.add(allRelatedKeys);
+      } catch (e, stackTrace) {
+        _logError(
+          'Failed to resolve notExists filters for table: $relatedTable',
+          e,
+          stackTrace,
+        );
+        rethrow;
+      }
+    }
+
+    // Combine regular constraint sets based on filter logic
     final combinedConstraints = _combineConstraintSets(
       resolvedConstraintSets,
       filterLogic,
     );
+
+    // Combine excluded constraint sets (union - exclude all)
+    final combinedExcluded = excludedConstraints.isEmpty
+        ? <dynamic>{}
+        : excludedConstraints.reduce((a, b) => a.union(b));
 
     // If combined constraints are empty after resolution, no results
     if (resolvedConstraintSets.isNotEmpty && combinedConstraints.isEmpty) {
@@ -157,7 +304,7 @@ class MultiTableFilterResolver {
       // For OR logic: union is empty → no related rows matched, and if
       //   there are no primary table filters either, return empty
       if (filterLogic == MultiTableFilterLogic.and ||
-          primaryTableFilters.isEmpty) {
+          (primaryTableFilters.isEmpty && excludedConstraints.isEmpty)) {
         return const MultiTableFilterResult.empty();
       }
     }
@@ -165,6 +312,7 @@ class MultiTableFilterResolver {
     return MultiTableFilterResult(
       primaryTableFilters: primaryTableFilters,
       resolvedPrimaryKeyConstraints: combinedConstraints,
+      excludedPrimaryKeyConstraints: combinedExcluded,
       hasRelatedTableFilters: true,
       isEmptyResult: false,
     );
@@ -333,6 +481,151 @@ class MultiTableFilterResolver {
 
     final steps = path.map((r) => '${r.from} -> ${r.to}').join(' -> ');
     return steps;
+  }
+
+  /// Returns true if [value] encodes a scoped notExists filter.
+  /// Scoped values are Maps with 'scope' and 'values' keys.
+  bool _isScopedValue(dynamic value) {
+    return value is Map && value.containsKey('scope') && value.containsKey('values');
+  }
+
+  /// Resolves a scoped notExists filter to primary key values to INCLUDE.
+  ///
+  /// This implements "at least one scope-level entity lacks a matching related
+  /// row" semantics. For example, with scope=projectBeneficiary and
+  /// root=task, this finds projectBeneficiaries WITHOUT a matching task,
+  /// then traverses to household to get primary keys to include.
+  ///
+  /// Steps:
+  /// 1. Query related table with positive filter → traverse to scope → get
+  ///    scope keys WITH match
+  /// 2. Query ALL scope rows → get all scope keys
+  /// 3. Subtract to get scope keys WITHOUT match
+  /// 4. Traverse scope → primary table → get primary keys to INCLUDE
+  Future<Set<dynamic>> _resolveScopedNotExists({
+    required SearchFilter scopedFilter,
+    required String primaryTable,
+    required String primaryKeyField,
+  }) async {
+    final valueMap = scopedFilter.value as Map;
+    final scope = valueMap['scope'] as String;
+    final actualValues = valueMap['values'];
+    final relatedTable = scopedFilter.root;
+
+    _log('Scoped notExists: scope=$scope, related=$relatedTable, '
+        'field=${scopedFilter.field}, values=$actualValues');
+
+    // Step 1: Find scope keys that HAVE matching related rows.
+    // Query related table with a positive version of the filter, then
+    // traverse from related table → scope table.
+    final positiveOp = actualValues is List ? 'in' : 'equals';
+    final positiveFilter = SearchFilter(
+      field: scopedFilter.field,
+      operator: positiveOp,
+      value: actualValues,
+      root: relatedTable,
+    );
+
+    // Find path from related table to scope table
+    final pathToScope = await RelationshipGraphHelper.findShortestPath(
+      fromModels: {relatedTable},
+      toModel: scope,
+      graph: _relationshipGraph,
+    );
+
+    Set<dynamic> scopeKeysWithMatch;
+    if (pathToScope.isEmpty) {
+      // No path: maybe related and scope are the same table, or no relation
+      _log('Scoped notExists: No path from $relatedTable to $scope, '
+          'assuming no scope keys with match');
+      scopeKeysWithMatch = {};
+    } else {
+      // Query related table with positive filter
+      final matchingRelatedRows = await QueryBuilder.queryRawTable(
+        sql: _sql,
+        table: relatedTable,
+        filters: [positiveFilter],
+        select: ['*'],
+        isPrimaryTable: false,
+      );
+
+      if (matchingRelatedRows.isEmpty) {
+        scopeKeysWithMatch = {};
+      } else {
+        // Traverse from related rows → scope table to get scope keys
+        scopeKeysWithMatch = await _traversePathToPrimaryKeys(
+          startRows: matchingRelatedRows,
+          path: pathToScope,
+          primaryKeyField: 'clientReferenceId',
+        );
+      }
+    }
+
+    _log('Scoped notExists: ${scopeKeysWithMatch.length} $scope keys '
+        'WITH matching $relatedTable rows');
+
+    // Step 2: Get ALL scope keys
+    final allScopeRows = await QueryBuilder.queryRawTable(
+      sql: _sql,
+      table: scope,
+      filters: [],
+      select: ['*'],
+      isPrimaryTable: false,
+    );
+
+    if (allScopeRows.isEmpty) {
+      _log('Scoped notExists: No rows in scope table $scope');
+      return {};
+    }
+
+    final scopeKeySnake = QueryBuilder.camelToSnake('clientReferenceId');
+    final allScopeKeys = allScopeRows
+        .map((row) => row[scopeKeySnake])
+        .where((v) => v != null)
+        .toSet();
+
+    _log('Scoped notExists: ${allScopeKeys.length} total $scope keys');
+
+    // Step 3: Subtract to get scope keys WITHOUT matching related rows
+    final scopeKeysWithoutMatch = allScopeKeys.difference(scopeKeysWithMatch);
+
+    _log('Scoped notExists: ${scopeKeysWithoutMatch.length} $scope keys '
+        'WITHOUT matching $relatedTable rows');
+
+    if (scopeKeysWithoutMatch.isEmpty) {
+      return {};
+    }
+
+    // Step 4: Traverse scope → primary table to get primary keys to INCLUDE.
+    // Filter scope rows to only those without match.
+    final scopeRowsWithoutMatch = allScopeRows
+        .where((row) => scopeKeysWithoutMatch.contains(row[scopeKeySnake]))
+        .toList();
+
+    final pathToPrimary = await RelationshipGraphHelper.findShortestPath(
+      fromModels: {scope},
+      toModel: primaryTable,
+      graph: _relationshipGraph,
+    );
+
+    if (pathToPrimary.isEmpty) {
+      throw StateError(
+        'No relationship path from scope "$scope" to primary "$primaryTable". '
+        'Ensure RelationshipMapping is configured.',
+      );
+    }
+
+    _log('Scoped notExists: Path ${_formatPath(scope, pathToPrimary, primaryTable)}');
+
+    final primaryKeys = await _traversePathToPrimaryKeys(
+      startRows: scopeRowsWithoutMatch,
+      path: pathToPrimary,
+      primaryKeyField: primaryKeyField,
+    );
+
+    _log('Scoped notExists: Resolved ${primaryKeys.length} primary keys to include');
+
+    return primaryKeys;
   }
 
   /// Logs debug information in debug mode only.

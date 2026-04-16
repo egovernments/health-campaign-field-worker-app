@@ -2086,7 +2086,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.polioRegistrationLabel,
       i18.home.polioMissedChildrenLabel,
       i18.home.polioStockDetailsLabel,
-      i18.home.polioAfpCaseLabel,
       i18.home.polioLqaDataCollectionLabel,
       // i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
@@ -2111,13 +2110,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db ||
-            element == i18.home.polioRegistrationLabel ||
-            element == i18.home.polioMissedChildrenLabel ||
             element == i18.home.polioStockDetailsLabel ||
-            element == i18.home.polioAfpCaseLabel ||
             element == i18.home.polioLqaDataCollectionLabel ||
-            element == i18.home.transitPostLabel ||
-            element == i18.home.manageAttendanceLabel)
+            element == i18.home.transitPostLabel)
         .toList();
 
     final showcaseKeys = filteredLabels

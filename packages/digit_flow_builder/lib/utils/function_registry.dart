@@ -327,6 +327,29 @@ void initializeFunctionRegistry() {
     final projectType = FlowBuilderSingleton().projectType;
     if (projectType == null) return false;
 
+// --- Resolve validMinAge / validMaxAge, fallback to doseCriteria condition ---
+    int? minAge = projectType.validMinAge;
+    int? maxAge = projectType.validMaxAge;
+    if (minAge == null || maxAge == null) {
+      for (final cycle in projectType.cycles ?? []) {
+        if ((cycle.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+            (cycle.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch) {
+          for (final delivery in cycle.deliveries ?? []) {
+            for (final dc in delivery.doseCriteria ?? []) {
+              final condition = dc.condition ?? '';
+              final match = RegExp(r'(\d+)<=ageandage<=(\d+)')
+                  .firstMatch(condition);
+              if (match != null) {
+                minAge ??= int.tryParse(match.group(1) ?? '');
+                maxAge ??= int.tryParse(match.group(2) ?? '');
+              }
+            }
+          }
+          break;
+        }
+      }
+    }
+
 // --- Tasks & SideEffects come from stateData ---
     final tasks = args.length > 1 ? args[1] : [];
     final sideEffects = (stateData.modelMap['sideEffects'] as List?) ?? [];
@@ -413,10 +436,10 @@ void initializeFunctionRegistry() {
           (lastTaskTime >= (currentCycle['startDate'] ?? 0) &&
               lastTaskTime <= (currentCycle['endDate'] ?? 0));
 
-      final isWithinAge = projectType.validMinAge != null &&
-          projectType.validMaxAge != null &&
-          totalAgeMonths >= projectType.validMinAge! &&
-          totalAgeMonths <= projectType.validMaxAge!;
+      final isWithinAge = minAge != null &&
+          maxAge != null &&
+          totalAgeMonths >= minAge &&
+          totalAgeMonths <= maxAge;
 
       if (!isWithinAge) return false;
 
@@ -425,9 +448,8 @@ void initializeFunctionRegistry() {
 
       return recordedSideEffect && !statusOk ? false : true;
     } else {
-      if (projectType.validMaxAge != null && projectType.validMinAge != null) {
-        return totalAgeMonths >= projectType.validMinAge! &&
-            totalAgeMonths <= projectType.validMaxAge!;
+      if (minAge != null && maxAge != null) {
+        return totalAgeMonths >= minAge && totalAgeMonths <= maxAge;
       }
       return true;
     }

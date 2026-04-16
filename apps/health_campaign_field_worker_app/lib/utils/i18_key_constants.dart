@@ -698,9 +698,9 @@ class Home {
 
   String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
 
-  String get polioRegistrationLabel => 'Polio Registration';
+  String get polioRegistrationLabel => 'HOME_BENEFICIARY_LABEL';
 
-  String get polioMissedChildrenLabel => 'Record Missed Children';
+  String get polioMissedChildrenLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 
   String get polioStockDetailsLabel => 'Stock Details';
 

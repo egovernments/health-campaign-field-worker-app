@@ -145,6 +145,122 @@ final dynamic sampleCloseHouseholdFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "ABSENT", "name": "Absent"},
+                {"code": "REFUSAL", "name": "Refusal"},
+                {"code": "NOT_VISITED", "name": "Not Visited"},
+                {"code": "HOUSE_NOT_REVISITED", "name": "House Not Revisited"},
+                {"code": "ASLEEP", "name": "Asleep"},
+                {"code": "CHILD_VACCINATED_IN_ROUTINE", "name": "Child Vaccinated in Routine"},
+                {"code": "OTHER", "name": "Other"}
+              ],
+              "label": "Reason child was not vaccinated",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotVaccinated",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Required field can not be empty"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "PLAY_AREAS", "name": "Play areas"},
+                {"code": "MARKET", "name": "Market"},
+                {"code": "SCHOOL", "name": "School"},
+                {"code": "FARM", "name": "Farm"},
+                {"code": "SOCIAL_EVENT", "name": "Social event"},
+                {"code": "TRAVELLING", "name": "Travelling"},
+                {"code": "PARENT_NOT_AT_HOME", "name": "Parent not at home"}
+              ],
+              "label": "Where was the child?",
+              "order": 6,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "whereWasChild",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Required field can not be empty"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "closeHouseholdDetails.reasonNotVaccinated=='ABSENT'"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "RELIGIOUS_BELIEFS", "name": "Religious beliefs"},
+                {"code": "VACCINE_SIDE_EFFECTS", "name": "Vaccine Side Effects"},
+                {"code": "TOO_MANY_DOSES", "name": "Too many doses"},
+                {"code": "CHILD_WAS_SICK", "name": "Child was sick"},
+                {"code": "NOT_DECISION_MAKER", "name": "Not decision maker"},
+                {"code": "AFRICA_IS_POLIO_FREE", "name": "Africa is Polio Free"},
+                {"code": "CONCERNS_ABOUT_NOPV", "name": "Concerns about nOPV"},
+                {"code": "CONCERNS_ABOUT_COVID19", "name": "Concerns about COVID-19"}
+              ],
+              "label": "Reason for refusal?",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonForRefusal",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Required field can not be empty"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "closeHouseholdDetails.reasonNotVaccinated=='REFUSAL'"}
+                ]
+              }
             }
           ],
           "systemDate": null,

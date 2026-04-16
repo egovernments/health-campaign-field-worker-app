@@ -147,6 +147,7 @@ class SearchEntityRepository extends LocalRepository {
     final primaryFilters = _buildPrimaryTableFilters(
       primaryTableFilters: filterResult.primaryTableFilters,
       resolvedConstraints: filterResult.resolvedPrimaryKeyConstraints,
+      excludedConstraints: filterResult.excludedPrimaryKeyConstraints,
       primaryTable: primaryTable,
       primaryKeyField: primaryKeyField,
     );
@@ -202,6 +203,7 @@ class SearchEntityRepository extends LocalRepository {
   List<SearchFilter> _buildPrimaryTableFilters({
     required List<SearchFilter> primaryTableFilters,
     required Set<dynamic> resolvedConstraints,
+    Set<dynamic> excludedConstraints = const {},
     required String primaryTable,
     required String primaryKeyField,
   }) {
@@ -219,11 +221,28 @@ class SearchEntityRepository extends LocalRepository {
       );
     }
 
-    // Ensure at least one filter exists (required by QueryBuilder)
+    // Add excluded constraints (notExists) from related tables if any
+    if (excludedConstraints.isNotEmpty) {
+      combinedFilters.add(
+        SearchFilter(
+          root: primaryTable,
+          field: primaryKeyField,
+          operator: 'notIn',
+          value: excludedConstraints.toList(),
+        ),
+      );
+    }
+
+    // When notExists is the only filter and no exclusions were found
+    // (no rows in related table), use isNotNull on primary key to return all rows
     if (combinedFilters.isEmpty) {
-      throw StateError(
-        'No filters available for primary table query. '
-        'This should not happen - check filter resolution logic.',
+      combinedFilters.add(
+        SearchFilter(
+          root: primaryTable,
+          field: primaryKeyField,
+          operator: 'isNotNull',
+          value: true,
+        ),
       );
     }
 

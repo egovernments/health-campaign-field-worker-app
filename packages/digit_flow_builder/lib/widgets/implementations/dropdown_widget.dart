@@ -238,6 +238,7 @@ class DropdownWidget extends ResolvedFlowWidget {
       isRequired: isRequired,
       child: DigitDropdown(
         key: ValueKey('${compositeKey}_${key}_${currentValue ?? ''}'),
+        isSearchable: false,
         selectedOption: selectedItem,
         sentenceCaseEnabled: false,
         items: items,

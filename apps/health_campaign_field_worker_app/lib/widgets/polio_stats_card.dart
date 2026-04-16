@@ -16,7 +16,6 @@ class PolioStatsCard extends StatefulWidget {
 
 class _PolioStatsCardState extends State<PolioStatsCard>
     with WidgetsBindingObserver {
-  int afpCasesCount = 0;
   int vialsOpened = 0;
   int vialsUsable = 0;
   int vialsUnusable = 0;
@@ -58,31 +57,6 @@ class _PolioStatsCardState extends State<PolioStatsCard>
           .read<LocalRepository<UserActionModel, UserActionSearchModel>>();
 
       final projectId = context.projectId;
-
-      // Fetch AFP cases
-      final afpResults = await userActionRepo.search(
-        UserActionSearchModel(
-          action: 'AFP_CASE',
-          projectId: projectId,
-          isDeleted: false,
-        ),
-      );
-
-      // Sum up AFP counts from additionalFields
-      int totalAfp = 0;
-      for (final ua in afpResults) {
-        if (ua.action != 'AFP_CASE') continue;
-        final afpCountField = ua.additionalFields?.fields
-            .where((f) => f.key == 'afpCount')
-            .firstOrNull;
-        if (afpCountField != null) {
-          final count =
-              int.tryParse(afpCountField.value?.toString() ?? '1') ?? 1;
-          totalAfp += count;
-        } else {
-          totalAfp += 1;
-        }
-      }
 
       // Fetch Stock Details (vials) from tally sheet entries
       final tallyResults = await userActionRepo.search(
@@ -141,7 +115,6 @@ class _PolioStatsCardState extends State<PolioStatsCard>
 
       if (mounted) {
         setState(() {
-          afpCasesCount = totalAfp;
           vialsOpened = totalVialsOpened;
           vialsUsable = usable;
           vialsUnusable = unusable;
@@ -165,24 +138,6 @@ class _PolioStatsCardState extends State<PolioStatsCard>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total AFP Cases detected',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  Text(
-                    '$afpCasesCount',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: spacer1),
-              const Divider(),
-              const SizedBox(height: spacer1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

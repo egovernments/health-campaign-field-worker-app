@@ -144,11 +144,14 @@ class ActionHandler {
         final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
         final navigation = contextData['navigation'] as Map<String, dynamic>? ?? {};
 
-        // Get screen key - try route args first, then contextData['parentScreenKey']
-        // (set by CLOSE_POPUP action when used from popup)
+        // Get screen key and composite key for FlowCrudStateRegistry lookup
+        // Use composite key (more reliable) with screenKey as fallback
         final screenKey = getEffectiveScreenKey(context, contextData);
+        final compositeKey = CrudItemContext.of(context)?.compositeKey ??
+            getEffectiveCompositeKey(context, contextData);
 
-        final currentState = FlowCrudStateRegistry().get(screenKey ?? '');
+        final currentState = FlowCrudStateRegistry()
+            .get(compositeKey ?? screenKey ?? '');
 
         // Get widgetData from the current state (contains filter selections, etc.)
         final widgetData = currentState?.widgetData ?? {};
@@ -171,6 +174,22 @@ class ActionHandler {
 
         addWithTypeConversion(formData);
         addWithTypeConversion(navigation);
+
+        // Include contextData['formData'] as fallback (e.g., saved by
+        // ClearStateExecutor before clearing FlowCrudStateRegistry)
+        final ctxFormData =
+            contextData['formData'] as Map<String, dynamic>? ?? {};
+        ctxFormData.forEach((key, value) {
+          if (!evaluationData.containsKey(key)) {
+            if (value == 'true') {
+              evaluationData[key] = true;
+            } else if (value == 'false') {
+              evaluationData[key] = false;
+            } else {
+              evaluationData[key] = value;
+            }
+          }
+        });
 
         debugPrint('CONDITION_EVAL: navigation=$navigation');
         debugPrint('CONDITION_EVAL: evaluationData after adding navigation=$evaluationData');
