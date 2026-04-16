@@ -640,9 +640,9 @@ final jsonConfig = {
               "__switch:__context:stockEntryType:{RECEIPT:__value:RECEIVED,RETURNED:__value:RETURNED,ISSUED:__value:null,DAMAGED:stockDetails.transactionReason,LOSS:stockDetails.transactionReason}",
           "transactingPartyId": "stockDetails.transactingPartyId",
           "senderId":
-              "__switch:__context:primaryRole:{SENDER:__context:loggedInUserUuid,default:stockDetails.facilityFromWhich}",
+              "__switch:__context:senderPartyType:{STAFF:__context:loggedInUserUuid,default:stockDetails.facilityFromWhich}",
           "senderType":
-              "__switch:__context:primaryRole:{SENDER:__value:STAFF,default:__value:WAREHOUSE}",
+              "__switch:__context:senderPartyType:{STAFF:__value:STAFF,default:__value:WAREHOUSE}",
           "receiverId":
               "__switch:__context:receiverPartyType:{STAFF:warehouseDetails.teamCode,default:warehouseDetails.facilityToWhich}",
           "receiverType":

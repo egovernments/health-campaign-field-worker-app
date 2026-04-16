@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:attendance_management/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:crypto/crypto.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
@@ -59,6 +57,7 @@ import '../utils/date_util_attendance.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
+import '../utils/function_registries.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
 import '../utils/stock_downsync_utils.dart';
@@ -258,185 +257,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         );
       },
     );
-    FunctionRegistry.register('generateUniqueMaterialNoteNumber',
-        (args, stateData) {
-      // Generate a synchronous unique ID without async operations
-      int timestamp = DateTime.now().millisecondsSinceEpoch;
-      String userUuid = context.loggedInUserUuid;
-
-      // Create a combined string with timestamp and user UUID
-      String combinedId = '$userUuid$timestamp';
-
-      // Generate SHA-256 hash
-      List<int> bytes = utf8.encode(combinedId);
-      Digest sha256Hash = sha256.convert(bytes);
-
-      // Convert the hash to a 12-character string and make it uppercase
-      String hashString = sha256Hash.toString();
-      String uniqueId = hashString.substring(0, 12).toUpperCase();
-
-      // Add a hyphen every 4 characters
-      String formattedUniqueId = uniqueId.replaceAllMapped(
-        RegExp(r'.{1,4}'),
-        (match) => '${match.group(0)}-',
-      );
-
-      // Remove the last hyphen
-      formattedUniqueId =
-          formattedUniqueId.substring(0, formattedUniqueId.length - 1);
-
-      if (kDebugMode) {
-        print('uniqueId : $formattedUniqueId');
-      }
-
-      return formattedUniqueId;
-    });
+    FunctionRegistries(context).registerAll();
     registerTaskFunctions();
-    FunctionRegistry.register('getQuantityLabel', (args, stateData) {
-      if (args.isEmpty) return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
-
-      final sku = args.first?.toString() ?? '';
-
-      // Check if the resource is SPAQ-250 mg
-      if (sku.trim().toString() == 'SPAQ - 250 mg' ||
-          sku.trim().toString() == 'SPAQ - 500 mg') {
-        return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
-      }
-
-      return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
-    });
-
-    // Stock Transaction Quantity Label Function
-    FunctionRegistry.register('getStockQuantityLabel', (args, stateData) {
-      if (args.isEmpty) return 'APPONE_INVENTORY_QUANTITY_LABEL';
-      final stockEntryType = args.first?.toString().toUpperCase() ?? '';
-
-      const labels = {
-        'RECEIPT': 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL',
-        'RETURNED': 'APPONE_INVENTORY_QUANTITY_RETURNED_LABEL',
-        'ISSUED': 'APPONE_INVENTORY_QUANTITY_SENT_LABEL',
-        'DISPATCH': 'APPONE_INVENTORY_QUANTITY_SENT_LABEL',
-        'LOSS': 'APPONE_INVENTORY_QUANTITY_LOST_LABEL',
-        'DAMAGED': 'APPONE_INVENTORY_QUANTITY_DAMAGED_LABEL'
-      };
-      return labels[stockEntryType] ?? 'APPONE_INVENTORY_QUANTITY_LABEL';
-    });
-
-    // Inventory Report Functions
-    FunctionRegistry.register('getReportTitle', (args, stateData) {
-      if (args.isEmpty) return '';
-      final reportType = args.first?.toString() ?? '';
-
-      const titles = {
-        'receipt': 'INVENTORY_REPORT_DETAILS_RECEIPT_REPORT_TITLE',
-        'dispatch': 'INVENTORY_REPORT_DETAILS_DISPATCH_REPORT_TITLE',
-        'returned': 'INVENTORY_REPORT_DETAILS_RETURNED_REPORT_TITLE',
-        'damage': 'INVENTORY_REPORT_DETAILS_DAMAGE_REPORT_TITLE',
-        'loss': 'INVENTORY_REPORT_DETAILS_LOSS_REPORT_TITLE',
-        'reconciliation': 'INVENTORY_REPORT_DETAILS_RECONCILIATION_REPORT_TITLE'
-      };
-      return titles[reportType] ?? '';
-    });
-
-    FunctionRegistry.register('getTransactingPartyLabel', (args, stateData) {
-      if (args.isEmpty) return '';
-      final reportType = args.first?.toString() ?? '';
-
-      const labels = {
-        'receipt': 'INVENTORY_REPORT_DETAILS_RECEIPT_TRANSACTING_PARTY_LABEL',
-        'dispatch': 'INVENTORY_REPORT_DETAILS_DISPATCH_TRANSACTING_PARTY_LABEL',
-        'returned': 'INVENTORY_REPORT_DETAILS_RETURNED_TRANSACTING_PARTY_LABEL',
-        'damage': 'INVENTORY_REPORT_DETAILS_DAMAGED_TRANSACTING_PARTY_LABEL',
-        'loss': 'INVENTORY_REPORT_DETAILS_LOSS_TRANSACTING_PARTY_LABEL'
-      };
-      return labels[reportType] ?? '';
-    });
-
-    FunctionRegistry.register('getTransactingParty', (args, stateData) {
-      if (args.length < 2) return '';
-      final reportType = args[0]?.toString() ?? '';
-      final item = args[1];
-
-      if (item == null) return '';
-
-      // For dispatch, show receiver; for others, show sender
-      if (reportType == 'dispatch') {
-        return item['receiverId']?.toString() ??
-            item['receiverType']?.toString() ??
-            '';
-      }
-      return item['senderId']?.toString() ??
-          item['senderType']?.toString() ??
-          '';
-    });
-
-    FunctionRegistry.register('getTransactionType', (args, stateData) {
-      if (args.isEmpty) return [];
-      final reportType = args.first?.toString() ?? '';
-
-      const types = {
-        'receipt': ['RECEIVED'],
-        'dispatch': ['DISPATCHED'],
-        'returned': ['RECEIVED'],
-        'damage': ['DISPATCHED'],
-        'loss': ['DISPATCHED']
-      };
-      return types[reportType] ?? [];
-    });
-
-    FunctionRegistry.register('getTransactionReason', (args, stateData) {
-      if (args.isEmpty) return [];
-      final reportType = args.first?.toString() ?? '';
-
-      const reasons = {
-        'receipt': ['RECEIVED'],
-        'dispatch': [],
-        'returned': ['RETURNED'],
-        'damage': ['DAMAGED_IN_STORAGE', 'DAMAGED_IN_TRANSIT'],
-        'loss': ['LOST_IN_STORAGE', 'LOST_IN_TRANSIT']
-      };
-      return reasons[reportType] ?? [];
-    });
-
-    FunctionRegistry.register('getStockEntryType', (args, stateData) {
-      if (args.isEmpty) return '';
-      final reportType = args.first?.toString() ?? '';
-
-      const entryTypes = {
-        'receipt': 'RECEIPT',
-        'dispatch': 'ISSUED',
-        'returned': 'RETURNED',
-        'damage': 'DAMAGED',
-        'loss': 'LOSS',
-        'excess': 'EXCESS',
-        'less': 'LESS',
-      };
-      return entryTypes[reportType] ?? '';
-    });
-
-    FunctionRegistry.register('getSenderOrReceiver', (args, stateData) {
-      if (args.isEmpty) return 'receiverId';
-      final reportType = args.first?.toString() ?? '';
-      // For dispatch/damage/loss the warehouse is the sender
-      const senderTypes = {'dispatch', 'damage', 'loss'};
-      return senderTypes.contains(reportType) ? 'senderId' : 'receiverId';
-    });
-
-    // For received reports, filter by modifiedBy (receiver updates the transaction)
-    // For other reports, filter by createdBy (sender creates the transaction)
-    FunctionRegistry.register('getAuditFilterKey', (args, stateData) {
-      if (args.isEmpty) return 'clientCreatedBy';
-      final reportType = args.first?.toString() ?? '';
-      return reportType == 'receipt' ? 'clientModifiedBy' : 'clientCreatedBy';
-    });
-
-    // Get secondary party type based on facility selection
-    // Returns 'STAFF' if Delivery Team is selected, otherwise 'WAREHOUSE'
-    FunctionRegistry.register('getSecondaryType', (args, stateData) {
-      if (args.isEmpty) return 'WAREHOUSE';
-      final facilityFromWhich = args.first?.toString() ?? '';
-      return facilityFromWhich == 'DELIVERY_TEAM' ? 'STAFF' : 'WAREHOUSE';
-    });
 
     // Attendance
 
@@ -999,19 +821,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       return status; // 1.0 for present, 0.0 for absent, 0.5 for half day, -1.0 for unmarked
     });
 
-    // Helper to extract stockEntryType from additionalFields array
-    String getStockEntryTypeFromFields(dynamic fields) {
-      if (fields == null) return '';
-      if (fields is List) {
-        for (var field in fields) {
-          if (field is Map && field['key'] == 'stockEntryType') {
-            return field['value']?.toString().toUpperCase() ?? '';
-          }
-        }
-      }
-      return '';
-    }
-
     FunctionRegistry.register('showOpenRegisterButton', (args, stateData) {
       if (args.isEmpty || args.first == null) return false;
 
@@ -1504,291 +1313,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
 
       return entities;
-    });
-
-    // First page (viewTransaction) - shows sender for RECEIPT/RETURNED, receiver for ISSUED/DAMAGED/LOSS
-    FunctionRegistry.register('getFirstPagePartyLabel', (args, stateData) {
-      if (args.isEmpty) return 'INVENTORY_TRANSACTING_PARTY_LABEL';
-      final stockEntryType = getStockEntryTypeFromFields(args.first);
-
-      switch (stockEntryType) {
-        case 'RECEIPT':
-        case 'RETURNED':
-          return 'INVENTORY_SENDER_LABEL';
-        case 'ISSUED':
-        case 'DAMAGED':
-        case 'LOSS':
-          return 'INVENTORY_RECEIVER_LABEL';
-        default:
-          return 'INVENTORY_TRANSACTING_PARTY_LABEL';
-      }
-    });
-
-    FunctionRegistry.register('getFirstPageParty', (args, stateData) {
-      if (args.length < 3) return '';
-      final stockEntryType = getStockEntryTypeFromFields(args[0]);
-      final senderId = args[1]?.toString() ?? '';
-      final receiverId = args[2]?.toString() ?? '';
-
-      switch (stockEntryType) {
-        case 'RECEIPT':
-        case 'RETURNED':
-          return senderId;
-        case 'ISSUED':
-        case 'DAMAGED':
-        case 'LOSS':
-          return receiverId;
-        default:
-          return senderId;
-      }
-    });
-
-    // Second page (viewTransactionDetails) - shows receiver for RECEIPT/RETURNED, sender for ISSUED/DAMAGED/LOSS
-    FunctionRegistry.register('getSecondPagePartyLabel', (args, stateData) {
-      if (args.isEmpty) return 'INVENTORY_TRANSACTING_PARTY_LABEL';
-      final stockEntryType = getStockEntryTypeFromFields(args.first);
-
-      switch (stockEntryType) {
-        case 'RECEIPT':
-        case 'RETURNED':
-          return 'INVENTORY_RECEIVER_LABEL';
-        case 'ISSUED':
-        case 'DAMAGED':
-        case 'LOSS':
-          return 'INVENTORY_SENDER_LABEL';
-        default:
-          return 'INVENTORY_TRANSACTING_PARTY_LABEL';
-      }
-    });
-
-    FunctionRegistry.register('getSecondPageParty', (args, stateData) {
-      if (args.length < 3) return '';
-      final stockEntryType = getStockEntryTypeFromFields(args[0]);
-      final senderId = args[1]?.toString() ?? '';
-      final receiverId = args[2]?.toString() ?? '';
-
-      switch (stockEntryType) {
-        case 'RECEIPT':
-        case 'RETURNED':
-          return receiverId;
-        case 'ISSUED':
-        case 'DAMAGED':
-        case 'LOSS':
-          return senderId;
-        default:
-          return receiverId;
-      }
-    });
-
-    // Get user's assigned facility ID based on their role and boundary level
-    // For distributors: returns the logged-in user UUID
-    // For warehouse managers: returns the facility ID based on boundary type
-    FunctionRegistry.register('getUserFacilityId', (args, stateData) {
-      final isDistributor = context.loggedInUserRoles
-          .where(
-            (role) => role.code == RolesType.distributor.toValue(),
-          )
-          .toList()
-          .isNotEmpty;
-      final isWareHouseMgr = context.loggedInUserRoles
-          .where((role) => role.code == RolesType.warehouseManager.toValue())
-          .toList()
-          .isNotEmpty;
-
-      // For distributors who are not warehouse managers, return their user UUID
-      if (isDistributor && !isWareHouseMgr) {
-        return context.loggedInUserUuid ?? '';
-      }
-
-      // For warehouse managers and other roles, get facility from wrapper data
-      try {
-        // Get facility list from stateData - CrudStateData has modelMap property
-        List<Map<String, dynamic>>? projectFacilities;
-
-        // stateData is CrudStateData which has modelMap: Map<String, List<Map<String, dynamic>>>
-        if (stateData?.modelMap != null) {
-          projectFacilities = stateData!.modelMap['ProjectFacilityModel'];
-        }
-
-        // Fallback: read from manageStock page's state
-        if (projectFacilities == null || projectFacilities.isEmpty) {
-          final manageStockState = FlowCrudStateRegistry().get('manageStock');
-          final base = manageStockState?.base;
-          if (base is CrudStateLoaded) {
-            final pfModels = base.results['projectFacility'];
-            if (pfModels != null && pfModels.isNotEmpty) {
-              projectFacilities = pfModels
-                  .whereType<ProjectFacilityModel>()
-                  .map((pf) => <String, dynamic>{
-                        'facilityId': pf.facilityId,
-                      })
-                  .toList();
-            }
-          }
-        }
-
-        if (projectFacilities == null || projectFacilities.isEmpty) {
-          return '';
-        }
-
-        // Return first facility ID (user's assigned facility)
-        for (var facility in projectFacilities) {
-          final facilityId = facility['facilityId']?.toString() ?? '';
-          if (facilityId.isNotEmpty) {
-            return facilityId;
-          }
-        }
-
-        return '';
-      } catch (e) {
-        debugPrint('getUserFacilityId error: $e');
-        return '';
-      }
-    });
-
-    // Get list of project facilities for dropdown selection
-    // Reads from manageStock page state in FlowCrudStateRegistry
-    FunctionRegistry.register('getProjectFacilities', (args, stateData) {
-      try {
-        // Try current page's stateData first
-        List<Map<String, dynamic>>? projectFacilities;
-        if (stateData?.modelMap != null) {
-          projectFacilities = stateData!.modelMap['ProjectFacilityModel'];
-        }
-
-        // Fallback: read from manageStock page's state
-        if (projectFacilities == null || projectFacilities.isEmpty) {
-          final manageStockState = FlowCrudStateRegistry().get('manageStock');
-          final base = manageStockState?.base;
-          if (base is CrudStateLoaded) {
-            final pfModels = base.results['projectFacility'];
-            if (pfModels != null && pfModels.isNotEmpty) {
-              projectFacilities = pfModels
-                  .whereType<ProjectFacilityModel>()
-                  .where((pf) {
-                    final facilityLevel = pf.additionalFields?.fields
-                        .where((f) => f.key == 'facilityLevel')
-                        .firstOrNull
-                        ?.value;
-                    return facilityLevel == null || facilityLevel == 'current';
-                  })
-                  .map((pf) => <String, dynamic>{
-                        'facilityId': pf.facilityId,
-                      })
-                  .toList();
-            }
-          }
-        }
-
-        if (projectFacilities == null || projectFacilities.isEmpty) {
-          return <Map<String, dynamic>>[];
-        }
-
-        // Filter to only show current level facilities
-        final filtered = projectFacilities.where((pf) {
-          final additionalFields =
-              pf['additionalFields'] as Map<String, dynamic>?;
-          if (additionalFields == null) return true;
-          final fields = additionalFields['fields'] as List?;
-          if (fields == null) return true;
-          for (final field in fields) {
-            if (field is Map &&
-                field['key'] == 'facilityLevel' &&
-                field['value'] != null) {
-              return field['value'] == 'current';
-            }
-          }
-          return true;
-        }).toList();
-
-        return filtered
-            .map((pf) => {
-                  'code': pf['facilityId']?.toString() ?? '',
-                  'name': 'FAC_${pf['facilityId']?.toString() ?? ''}',
-                })
-            .where((item) => item['code']!.isNotEmpty)
-            .toList();
-      } catch (e) {
-        debugPrint('getProjectFacilities error: $e');
-        return <Map<String, dynamic>>[];
-      }
-    });
-
-    // Get product variant IDs from project resources
-    FunctionRegistry.register('getProjectProductVariantIds', (args, stateData) {
-      try {
-        List<Map<String, dynamic>>? productVariants;
-        if (stateData?.modelMap != null) {
-          productVariants = stateData!.modelMap['ProductVariantModel'];
-        }
-
-        // Fallback: read from manageStock page's state
-        if (productVariants == null || productVariants.isEmpty) {
-          final manageStockState = FlowCrudStateRegistry().get('manageStock');
-          final base = manageStockState?.base;
-          if (base is CrudStateLoaded) {
-            final pvModels = base.results['productVariant'];
-            if (pvModels != null && pvModels.isNotEmpty) {
-              productVariants = pvModels
-                  .whereType<ProductVariantModel>()
-                  .map((pv) => <String, dynamic>{'id': pv.id})
-                  .toList();
-            }
-          }
-        }
-
-        if (productVariants == null || productVariants.isEmpty) {
-          return '';
-        }
-
-        return productVariants
-            .map((pv) => pv['id']?.toString() ?? '')
-            .where((id) => id.isNotEmpty)
-            .join(',');
-      } catch (e) {
-        debugPrint('getProjectProductVariantIds error: $e');
-        return '';
-      }
-    });
-
-    // Get facility name from facility ID
-    FunctionRegistry.register('getFacilityName', (args, stateData) {
-      if (args.isEmpty) return '';
-      final facilityId = args.first?.toString() ?? '';
-      if (facilityId.isEmpty) return '';
-
-      // Return a localization key that can be translated
-      return 'FAC_$facilityId';
-    });
-
-    // Get transaction status type for tag styling
-    // Check if a model has results (for hidden/visible conditions)
-    FunctionRegistry.register('hasResults', (args, stateData) {
-      if (args.isEmpty) return false;
-      final modelKey = args.first?.toString() ?? '';
-      if (modelKey.isEmpty || stateData?.modelMap == null) return false;
-
-      final results = stateData!.modelMap[modelKey];
-      return results != null && results.isNotEmpty;
-    });
-
-    FunctionRegistry.register('getTransactionStatusType', (args, stateData) {
-      if (args.isEmpty) return 'default';
-      final transactionType = args.first?.toString().toUpperCase() ?? '';
-
-      switch (transactionType) {
-        case 'DISPATCHED':
-          return 'warning'; // Orange/Yellow - pending action
-        case 'RECEIVED':
-          return 'success'; // Green - completed
-        case 'RETURNED':
-          return 'info'; // Blue - returned
-        case 'DAMAGED':
-        case 'LOSS':
-          return 'error'; // Red - issue
-        default:
-          return 'default';
-      }
     });
   }
 
@@ -2455,33 +1979,32 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (schemaJsonRaw != null) {
-                    final allSchemas =
-                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                    final data = allSchemas['REGISTRATION'];
-
-                    final registrationDeliveryData = data?['data'];
-                    final flowsData = (registrationDeliveryData['flows']
-                                as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                    FlowRegistry.setConfig(flowsData);
-                    NavigationRegistry.setupNavigation(ctx);
-
-                    ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName: registrationDeliveryData["initialPage"]),
-                    );
-                  } else {
-                    FlowRegistry.setConfig(
-                        sampleFlows["flows"] as List<Map<String, dynamic>>);
-                    NavigationRegistry.setupNavigation(ctx);
-                    ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName: sampleFlows["initialPage"]),
-                    );
-                  }
+                  // if (schemaJsonRaw != null) {
+                  //   final allSchemas =
+                  //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                  //   final data = allSchemas['REGISTRATION'];
+                  //
+                  //   final registrationDeliveryData = data?['data'];
+                  //   final flowsData = (registrationDeliveryData['flows']
+                  //               as List<dynamic>?)
+                  //           ?.map((e) => Map<String, dynamic>.from(e as Map))
+                  //           .toList() ??
+                  //       [];
+                  //   FlowRegistry.setConfig(flowsData);
+                  //   NavigationRegistry.setupNavigation(ctx);
+                  //
+                  //   ctx.router.push(
+                  //     FlowBuilderHomeRoute(
+                  //         pageName: registrationDeliveryData["initialPage"]),
+                  //   );
+                  // } else {
+                  FlowRegistry.setConfig(
+                      sampleFlows["flows"] as List<Map<String, dynamic>>);
+                  NavigationRegistry.setupNavigation(ctx);
+                  ctx.router.push(
+                    FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+                  );
+                  // }
                 } catch (e) {
                   debugPrint('error $e');
                 }

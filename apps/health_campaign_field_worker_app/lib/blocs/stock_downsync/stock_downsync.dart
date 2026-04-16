@@ -13,6 +13,7 @@ import 'package:transit_post/data/repositories/remote/user_action.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
+import '../../utils/stock_calculation_utils.dart';
 import '../../models/downsync/downsync.dart';
 import '../../models/entities/roles_type.dart';
 import '../../utils/background_service.dart';
@@ -280,36 +281,52 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
   /// and creates or updates them locally.
   Future<void> _downSyncStockBalances(String projectId) async {
     try {
+      final userObject = await localSecureStore.userRequestModel;
+      final userRoles = userObject?.roles.map((e) => e.code) ?? [];
+      final isDistributor =
+          userRoles.contains(RolesType.distributor.toValue()) ||
+              userRoles.contains(RolesType.communityDistributor.toValue());
+
       final projectFacilities = await projectFacilityLocalRepository.search(
         ProjectFacilitySearchModel(projectId: [projectId]),
       );
+
       final projectResources = await projectResourceLocalRepository.search(
         ProjectResourceSearchModel(projectId: [projectId]),
       );
 
-      final facilityIds =
-          projectFacilities.map((e) => e.facilityId).toSet().toList();
+      List<String> facilityIds;
+      if (isDistributor) {
+        facilityIds = [userObject?.uuid ?? ''];
+      } else {
+        facilityIds = projectFacilities
+            .map((e) => e.facilityId)
+            .whereType<String>()
+            .toSet()
+            .toList();
+      }
+
       final productVariantIds = projectResources
           .map((pr) => pr.resource.productVariantId)
           .whereType<String>()
           .toSet()
           .toList();
 
-      if (facilityIds.isEmpty || productVariantIds.isEmpty) return;
+      if (facilityIds.isEmpty ||
+          productVariantIds.isEmpty ||
+          facilityIds.first.isEmpty) return;
 
       // Build balance keys for all facility × product variant combinations
       final balanceKeys = <String>[];
       for (final facilityId in facilityIds) {
         for (final productVariantId in productVariantIds) {
-          balanceKeys.add('stock_balance_${facilityId}_$productVariantId');
+          balanceKeys.add(generateBalanceKey(facilityId, productVariantId));
         }
       }
 
       // Fetch from server
       final remoteBalances = await userActionRemoteRepository.search(
-        UserActionSearchModel(
-          clientReferenceId: balanceKeys,
-        ),
+        UserActionSearchModel(clientReferenceId: balanceKeys),
       );
 
       if (remoteBalances.isEmpty) return;

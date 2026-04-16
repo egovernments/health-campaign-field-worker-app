@@ -672,6 +672,35 @@ class FlowCrudStateRegistry {
     final compositeKey = key;
     return _navParams[compositeKey];
   }
+
+  FlowCrudState? getFirstOf(String screenKey) {
+    final currentCompositeKey = _currentCompositeKey(screenKey);
+    if (currentCompositeKey != null) {
+      final state = _map[currentCompositeKey]?.value;
+      if (state != null) return state;
+    }
+
+    for (final entry in _map.entries) {
+      if (entry.key.startsWith('$screenKey::') && entry.value.value != null) {
+        return entry.value.value;
+      }
+    }
+
+    return _map[screenKey]?.value;
+  }
+
+  Map<String, FlowCrudState> getAllOf(String screenKey) {
+    final result = <String, FlowCrudState>{};
+
+    for (final entry in _map.entries) {
+      if ((entry.key.startsWith('$screenKey::') || entry.key == screenKey) &&
+          entry.value.value != null) {
+        result[entry.key] = entry.value.value!;
+      }
+    }
+
+    return result;
+  }
 }
 
 class FlowCrudState {

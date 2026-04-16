@@ -1384,6 +1384,11 @@ final dynamic sampleInventoryFlows = {
               {"key": "primaryRole", "value": "{{navigation.primaryRole}}"},
               {"key": "secondaryRole", "value": "{{navigation.secondaryRole}}"},
               {
+                "key": "senderPartyType",
+                "value":
+                    "{{fn:getSecondaryType(formData.stockDetails.facilityFromWhich)}}"
+              },
+              {
                 "key": "secondaryType",
                 "value":
                     "{{fn:getSecondaryType(formData.stockDetails.facilityFromWhich)}}"
@@ -2320,46 +2325,6 @@ final dynamic sampleInventoryFlows = {
         }
       },
       "body": [
-        // {
-        //   "format": "dropdownTemplate",
-        //   "fieldName": "selectedFacility",
-        //   "label": "INVENTORY_SELECT_FACILITY_LABEL",
-        //   "valueKey": "code",
-        //   "displayKey": "name",
-        //   "source": "{{fn:getProjectFacilities()}}",
-        //   "onChange": [
-        //     {
-        //       "actionType": "SEARCH_EVENT",
-        //       "properties": {
-        //         "type": "SEARCH_EVENT",
-        //         "name": "stock",
-        //         "awaitResults": true,
-        //         "data": [
-        //           {
-        //             "key": "receiverId",
-        //             "value": "{{selectedFacility}}",
-        //             "operation": "equals"
-        //           },
-        //           {
-        //             "key": "auditCreatedBy",
-        //             "value": "{{singleton.loggedInUserUuid}}",
-        //             "operation": "notEquals"
-        //           },
-        //           {
-        //             "key": "additionalFields",
-        //             "value": "\"key\":\"status\"",
-        //             "operation": "notContains"
-        //           },
-        //           {
-        //             "key": "productVariantId",
-        //             "value": "{{fn:getProjectProductVariantIds()}}",
-        //             "operation": "in"
-        //           }
-        //         ]
-        //       }
-        //     }
-        //   ]
-        // },
         {
           "format": "infoCard",
           "hidden": "{{fn:hasResults('StockModel')}} == true",

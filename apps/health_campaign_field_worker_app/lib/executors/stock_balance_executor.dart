@@ -12,13 +12,6 @@ import '../models/entities/roles_type.dart';
 import '../utils/stock_calculation_utils.dart';
 import '../utils/utils.dart';
 
-// For validation of 64char in backend
-String _generateShortBalanceKey(String facilityId, String productVariantId) {
-  final combined = '$facilityId$productVariantId';
-  final hash = combined.hashCode.abs().toRadixString(36);
-  return 'bal_$hash';
-}
-
 /// Executor that maintains running stock balances in UserAction records.
 ///
 /// When a stock transaction or task delivery occurs, this executor creates or
@@ -147,8 +140,9 @@ class StockBalanceExecutor extends ActionExecutor {
     final userActionRepo = context.read<UserActionLocalRepository>();
 
     // Check if user is a distributor
-    final isDistributor = context.loggedInUserRoles
-        .any((role) => role.code == RolesType.distributor.toValue());
+    final isDistributor = context.loggedInUserRoles.any((role) =>
+        role.code == RolesType.distributor.toValue() ||
+        role.code == RolesType.communityDistributor.toValue());
     debugPrint('_handleTaskEntity: isDistributor = $isDistributor');
 
     // Aggregate delivered quantities by product variant
@@ -237,7 +231,7 @@ class StockBalanceExecutor extends ActionExecutor {
     required String boundaryCode,
     required bool isDistributor,
   }) async {
-    final balanceKey = _generateShortBalanceKey(facilityId, productVariantId);
+    final balanceKey = generateBalanceKey(facilityId, productVariantId);
 
     final existingBalances = await userActionRepo.search(
       UserActionSearchModel(
@@ -368,7 +362,7 @@ class StockBalanceExecutor extends ActionExecutor {
     required String boundaryCode,
     bool isDistributor = false,
   }) async {
-    final balanceKey = _generateShortBalanceKey(facilityId, productVariantId);
+    final balanceKey = generateBalanceKey(facilityId, productVariantId);
 
     final existingBalances = await userActionRepo.search(
       UserActionSearchModel(clientReferenceId: [balanceKey]),
