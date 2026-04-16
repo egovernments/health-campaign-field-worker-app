@@ -1434,6 +1434,7 @@ final dynamic sampleFlows = {
       "screenType": "TEMPLATE",
       "description": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
       "initActions": [
+        {"actionType": "LOAD_UNIQUE_ID_POOL"},
         {
           "actionType": "SEARCH_EVENT",
           "properties": {
@@ -2256,7 +2257,7 @@ final dynamic sampleFlows = {
           "type": "template",
           "visible":
               "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-          "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_LABEL",
+          "label": "REGISTER_BENEFICIARY",
           "format": "actionPopup",
           "fieldName": "beneficiaryIdMinCheck",
           "properties": {
