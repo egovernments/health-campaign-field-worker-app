@@ -221,6 +221,7 @@ const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
+const summaryReport = SummaryReport();
 const nonMobileUser = NonMobileUser();
 const databaseError = DatabaseError();
 
@@ -889,6 +890,7 @@ class Home {
 
   String get coreCommonSkipContinue => 'CORE_COMMON_SKIP_CONTINUE';
 
+  String get summaryReportLabel => 'HOME_SUMMARY_REPORT_LABEL';
 }
 
 class BeneficiaryID {
@@ -1509,6 +1511,36 @@ class Dashboard {
   const Dashboard();
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
+}
+
+class SummaryReport {
+  const SummaryReport();
+
+  String get heading => 'SUMMARY_REPORT_HEADING';
+
+  String get description => 'SUMMARY_REPORT_DESCRIPTION';
+
+  String get infoCardTitle => 'SUMMARY_REPORT_INFO_TITLE';
+
+  String get infoCardDescription => 'SUMMARY_REPORT_INFO_DESCRIPTION';
+
+  String get dateColumn => 'SUMMARY_REPORT_DATE';
+
+  String get householdsRegistered => 'SUMMARY_REPORT_HOUSEHOLDS_REGISTERED';
+
+  String get childrenTreated => 'SUMMARY_REPORT_CHILDREN_TREATED';
+
+  String get childrenTreatedPercent => 'SUMMARY_REPORT_CHILDREN_TREATED_PERCENT';
+
+  String get backToHome => 'SUMMARY_REPORT_BACK_TO_HOME';
+
+  String get stockReceived => 'SUMMARY_REPORT_STOCK_RECEIVED';
+
+  String get stockConsumed => 'SUMMARY_REPORT_STOCK_CONSUMED';
+
+  String get stockReturned => 'SUMMARY_REPORT_STOCK_RETURNED';
+
+  String get stockBalance => 'SUMMARY_REPORT_STOCK_BALANCE';
 }
 
 class NonMobileUser {
