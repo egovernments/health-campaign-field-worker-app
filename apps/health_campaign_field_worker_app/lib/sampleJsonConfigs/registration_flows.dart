@@ -358,10 +358,62 @@ final dynamic sampleFlows = {
         {
           "type": "template",
           "label": "RECORD_CYCLE_DOSE",
+          "format": "actionPopup",
+          "fieldName": "insufficientStockPopUp",
+          "visible":
+              "{{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == false",
+          "properties": {
+            "icon": "Warning",
+            "size": "large",
+            "type": "primary",
+            "suffixIcon": null,
+            "popupConfig": {
+              "body": [
+                {
+                  "type": "template",
+                  "value": "{{fn:getInsufficientStockMessage()}}",
+                  "format": "textTemplate",
+                },
+              ],
+              "type": "default",
+              "title": "INSUFFICIENT_STOCK_TITLE",
+              "titleIcon": "Warning",
+              "footerActions": [
+                {
+                  "type": "template",
+                  "label": "GO_BACK",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {"parentScreenKey": "beneficiaryDetails"}
+                    }
+                  ],
+                  "fieldName": "closePopUp",
+                  "properties": {
+                    "size": "large",
+                    "type": "primary",
+                    "mainAxisSize": "max"
+                  }
+                }
+              ],
+              "showCloseButton": true,
+              "barrierDismissible": true
+            },
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "schemaCode": null,
+          "suffixIcon": null
+        },
+        {
+          "type": "template",
+          "label": "RECORD_CYCLE_DOSE",
           "format": "button",
           "visible":
-              "{{fn:canRecordDelivery(contextData.0.nextCycleId)}}==true",
-          "disabled": "{{eligibleProductVariants}} == null",
+              "{{fn:canRecordDelivery(contextData.0.nextCycleId)}}==true && {{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == true",
+          "disabled":
+              "{{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == false",
           "onAction": [
             {
               "actionType": "NAVIGATION",

@@ -32,6 +32,7 @@ import 'executors/stock_balance_executor.dart';
 import 'executors/update_identifier_status_executor.dart';
 import 'executors/navigate_to_downsync_executor.dart';
 import 'executors/load_unique_id_pool_executor.dart';
+import 'models/downsync/downsync.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
@@ -311,6 +312,9 @@ class MainApplicationState extends State<MainApplication>
                               attendanceLogRemoteRepository: ctx.read<
                                   RemoteRepository<AttendanceLogModel,
                                       AttendanceLogSearchModel>>(),
+                              downSyncLocalRepository: ctx.read<
+                                  LocalRepository<DownsyncModel,
+                                      DownsyncSearchModel>>(),
                               stockLocalRepository: ctx.read<
                                   LocalRepository<StockModel,
                                       StockSearchModel>>(),

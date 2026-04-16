@@ -12,13 +12,6 @@ import '../models/entities/roles_type.dart';
 import '../utils/stock_calculation_utils.dart';
 import '../utils/utils.dart';
 
-// For validation of 64char in backend
-String _generateShortBalanceKey(String facilityId, String productVariantId) {
-  final combined = '$facilityId$productVariantId';
-  final hash = combined.hashCode.abs().toRadixString(36);
-  return 'bal_$hash';
-}
-
 /// Executor that maintains running stock balances in UserAction records.
 ///
 /// When a stock transaction or task delivery occurs, this executor creates or
@@ -108,12 +101,33 @@ class StockBalanceExecutor extends ActionExecutor {
       productQuantities[productVariantId] =
           (productQuantities[productVariantId] ?? 0) + quantity;
     }
+    final projectFacilityRepo = context.read<
+        LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
+
+    final projectFacilities = await projectFacilityRepo.search(
+      ProjectFacilitySearchModel(projectId: [projectId]),
+    );
+
+    // Filter to only include facilities where facilityLevel is 'current'
+    final currentFacilities = projectFacilities.where((pf) {
+      final facilityLevel = pf.additionalFields?.fields
+          .where((f) => f.key == 'facilityLevel')
+          .firstOrNull
+          ?.value;
+      return facilityLevel == null || facilityLevel == 'current';
+    }).toList();
 
     String? facilityId;
+
+
     if (isDistributor) {
       facilityId = FlowBuilderSingleton().loggedInUserUuid;
     } else {
-      facilityId = stockEntities.first.facilityId;
+      if(currentFacilities.isNotEmpty) {
+        facilityId = currentFacilities.first.facilityId;
+      } else{
+        facilityId = stockEntities.first.facilityId;
+      }
     }
 
     if (facilityId == null) return;
@@ -147,8 +161,9 @@ class StockBalanceExecutor extends ActionExecutor {
     final userActionRepo = context.read<UserActionLocalRepository>();
 
     // Check if user is a distributor
-    final isDistributor = context.loggedInUserRoles
-        .any((role) => role.code == RolesType.distributor.toValue());
+    final isDistributor = context.loggedInUserRoles.any((role) =>
+        role.code == RolesType.distributor.toValue() ||
+        role.code == RolesType.communityDistributor.toValue());
     debugPrint('_handleTaskEntity: isDistributor = $isDistributor');
 
     // Aggregate delivered quantities by product variant
@@ -182,8 +197,8 @@ class StockBalanceExecutor extends ActionExecutor {
     if (isDistributor) {
       facilityId = FlowBuilderSingleton().loggedInUserUuid;
     } else {
-      final projectFacilityRepo =
-          context.read<ProjectFacilityLocalRepository>();
+      final projectFacilityRepo = context.read<
+          LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
 
       final projectFacilities = await projectFacilityRepo.search(
         ProjectFacilitySearchModel(projectId: [projectId]),
@@ -237,7 +252,7 @@ class StockBalanceExecutor extends ActionExecutor {
     required String boundaryCode,
     required bool isDistributor,
   }) async {
-    final balanceKey = _generateShortBalanceKey(facilityId, productVariantId);
+    final balanceKey = generateBalanceKey(facilityId, productVariantId);
 
     final existingBalances = await userActionRepo.search(
       UserActionSearchModel(
@@ -368,7 +383,7 @@ class StockBalanceExecutor extends ActionExecutor {
     required String boundaryCode,
     bool isDistributor = false,
   }) async {
-    final balanceKey = _generateShortBalanceKey(facilityId, productVariantId);
+    final balanceKey = generateBalanceKey(facilityId, productVariantId);
 
     final existingBalances = await userActionRepo.search(
       UserActionSearchModel(clientReferenceId: [balanceKey]),

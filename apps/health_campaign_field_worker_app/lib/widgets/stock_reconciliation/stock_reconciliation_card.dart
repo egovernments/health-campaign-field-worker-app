@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../utils/stock_calculation_utils.dart';
+import '../../utils/utils.dart';
 import '../localized.dart';
 
 /// GlobalKey to access StockReconciliationCard state for validation
@@ -173,8 +174,11 @@ class _StockReconciliationCardState
       formControlName: 'stockReconciliationCard',
       schema: fieldSchema,
       builder: (field) {
-        // When form control is touched and invalid, trigger internal validation
-        if (field.control.touched && !_facilityTouched && !_productTouched) {
+        // When submit touches the combined control, propagate validation to any
+        // dropdown that has not been interacted with yet.
+        if (field.control.touched &&
+            field.control.invalid &&
+            (!_facilityTouched || !_productTouched)) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) validate();
           });
@@ -246,8 +250,6 @@ class _StockReconciliationCardState
                       setState(() {
                         _facilityTouched = true;
                         _selectedFacility = selected;
-                        // Mark product as touched too - so error shows if not selected
-                        _productTouched = true;
                         // Reset flags when facility changes
                         _manualCountInitialized = false;
                         _needsMetricsRecalculation = true;
@@ -257,7 +259,7 @@ class _StockReconciliationCardState
                     },
                   ),
                 ),
-                const SizedBox(height: spacer2),
+                const SizedBox(height: spacer4),
 
                 // Product Variant Dropdown
                 LabeledField(
@@ -288,7 +290,8 @@ class _StockReconciliationCardState
                       setState(() {
                         _productTouched = true;
                         _selectedProduct = selected;
-                        // Mark facility as touched too - so error shows if not selected
+                        // If user interacts with product first, facility should
+                        // show as required until it is selected.
                         _facilityTouched = true;
                         // Reset flags when product changes
                         _manualCountInitialized = false;
@@ -299,6 +302,7 @@ class _StockReconciliationCardState
                     },
                   ),
                 ),
+                if (_selectedFacility != null && _selectedProduct != null)
                 const SizedBox(height: spacer4),
 
                 // Stock Metrics Display (only show if both facility and product are selected)
@@ -382,11 +386,11 @@ class _StockReconciliationCardState
                       ),
                     ],
                   ),
-                  const SizedBox(height: spacer2),
+                  const SizedBox(height: spacer4),
                   InfoCard(
                     type: InfoType.info,
                     description: localizations.translate(
-                      'STOCK_RECONCILIATION_INFO_CARD_CONTENT',
+                      '${context.selectedProject.projectType}_STOCK_RECONCILIATION_INFO_CARD_CONTENT',
                     ),
                     title: localizations
                         .translate('STOCK_RECONCILIATION_INFO_CARD_TITLE'),

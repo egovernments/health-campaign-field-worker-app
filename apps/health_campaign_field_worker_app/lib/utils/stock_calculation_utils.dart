@@ -1,5 +1,10 @@
 import 'package:digit_data_model/data_model.dart';
 
+/// Generates a balance key for UserAction STOCK_BALANCE records.
+/// Uses format: bal_{facilityId}{productVariantId}
+String generateBalanceKey(String facilityId, String productVariantId) =>
+    'bal_$facilityId$productVariantId';
+
 class StockCalculationUtils {
   static String _getAdditionalFieldValue(StockModel stock, String key) {
     final fields = stock.additionalFields?.fields;
@@ -22,6 +27,7 @@ class StockCalculationUtils {
     required String productId,
     String? loggedInUserUuid,
     bool isDistributor = false,
+    bool calculatePartial = false,
   }) {
     final filteredStock = stockList.where((stock) {
       if (stock.productVariantId != productId) return false;
@@ -36,6 +42,7 @@ class StockCalculationUtils {
     double stockExcess = 0;
     double stockLess = 0;
     double stockWastage = 0;
+    double stockPartialUsed = 0;
     bool hasDistributorReturns = isDistributor;
 
     for (final stock in filteredStock) {
@@ -47,6 +54,9 @@ class StockCalculationUtils {
       final wastage =
           double.tryParse(_getAdditionalFieldValue(stock, 'quantityWastage')) ??
               0.0;
+      final partialUsed = double.tryParse(
+              _getAdditionalFieldValue(stock, 'quantityPartialUsed')) ??
+          0.0;
       final isReceiver = stock.receiverId == facilityId;
       final isSender = stock.senderId == facilityId;
 
@@ -60,10 +70,12 @@ class StockCalculationUtils {
           stockEntryType: stockEntryType,
           quantity: quantity,
           wastage: wastage,
+          partialUsed: calculatePartial ? partialUsed : 0,
           status: status,
           stockReceived: (v) => stockReceived += v,
           stockReturned: (v) => stockReturned += v,
           stockWastage: (v) => stockWastage += v,
+          stockPartialUsed: (v) => stockPartialUsed += v,
           stockExcess: (v) => stockExcess += v,
           stockLess: (v) => stockLess += v,
           stockLost: (v) => stockLost += v,
@@ -105,10 +117,12 @@ class StockCalculationUtils {
     }
 
     // Use distributor calculation if user has distributor role OR if any return was made as sender
+    // For distributor, partial used is also deducted from stock in hand
     final double stockInHand = hasDistributorReturns
         ? stockReceived -
             (stockReturned +
                 stockWastage +
+                stockPartialUsed +
                 stockIssued +
                 stockDamaged +
                 stockLost)
@@ -125,6 +139,7 @@ class StockCalculationUtils {
       'stockExcess': stockExcess,
       'stockLess': stockLess,
       'stockWastage': stockWastage,
+      'stockPartialUsed': stockPartialUsed,
       'stockInHand': stockInHand,
     };
   }
@@ -134,10 +149,12 @@ class StockCalculationUtils {
     required String stockEntryType,
     required double quantity,
     required double wastage,
+    required double partialUsed,
     required String status,
     required void Function(double) stockReceived,
     required void Function(double) stockReturned,
     required void Function(double) stockWastage,
+    required void Function(double) stockPartialUsed,
     required void Function(double) stockExcess,
     required void Function(double) stockLess,
     required void Function(double) stockLost,
@@ -147,6 +164,7 @@ class StockCalculationUtils {
       if (stockEntryType == 'RETURNED') {
         stockReturned(quantity);
         stockWastage(wastage);
+        stockPartialUsed(partialUsed);
       } else if (stockEntryType == 'EXCESS') {
         stockExcess(quantity);
       } else if (stockEntryType == 'LESS') {
@@ -158,6 +176,7 @@ class StockCalculationUtils {
       if (stockEntryType == 'RETURNED') {
         stockReturned(quantity);
         stockWastage(wastage);
+        stockPartialUsed(partialUsed);
       } else if (status == 'ACCEPTED') {
         stockReceived(quantity);
       } else if (stockEntryType == 'LOSS') {
@@ -219,6 +238,7 @@ class StockCalculationUtils {
     required String facilityId,
     required List<String> productIds,
     String? loggedInUserUuid,
+    bool isDistributor = false,
   }) {
     final result = <String, double>{};
     for (final productId in productIds) {
@@ -227,6 +247,7 @@ class StockCalculationUtils {
         facilityId: facilityId,
         productId: productId,
         loggedInUserUuid: loggedInUserUuid,
+        isDistributor: isDistributor,
       );
       result[productId] = metrics['stockInHand'] ?? 0.0;
     }
@@ -242,8 +263,46 @@ class StockCalculationUtils {
         'stockExcess': 0,
         'stockLess': 0,
         'stockWastage': 0,
+        'stockPartialUsed': 0,
         'stockInHand': 0,
       };
+
+  static double getStockBalance({
+    required List<StockModel> stockList,
+    required String facilityId,
+    required String productId,
+    String? loggedInUserUuid,
+    bool isDistributor = false,
+    bool calculatePartial = false,
+  }) {
+    final metrics = calculateStockMetrics(
+      stockList: stockList,
+      facilityId: facilityId,
+      productId: productId,
+      loggedInUserUuid: loggedInUserUuid,
+      isDistributor: isDistributor,
+      calculatePartial: calculatePartial,
+    );
+    return metrics['stockInHand'] ?? 0.0;
+  }
+
+  static Map<String, double> getStockMetrics({
+    required List<StockModel> stockList,
+    required String facilityId,
+    required String productId,
+    String? loggedInUserUuid,
+    bool isDistributor = false,
+    bool calculatePartial = false,
+  }) {
+    return calculateStockMetrics(
+      stockList: stockList,
+      facilityId: facilityId,
+      productId: productId,
+      loggedInUserUuid: loggedInUserUuid,
+      isDistributor: isDistributor,
+      calculatePartial: calculatePartial,
+    );
+  }
 
   static List<StockModel> extractStockListFromWrapper(
       List<dynamic>? stateWrapper) {

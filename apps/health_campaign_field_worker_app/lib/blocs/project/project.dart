@@ -27,6 +27,7 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
+import '../../models/downsync/downsync.dart';
 import '../auth/auth.dart';
 import '../push_notification/push_notification.dart';
 import '../../models/app_config/app_config_model.dart';
@@ -90,6 +91,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   /// Stock Repositories
   final RemoteRepository<StockModel, StockSearchModel> stockRemoteRepository;
   final LocalRepository<StockModel, StockSearchModel> stockLocalRepository;
+  final LocalRepository<DownsyncModel, DownsyncSearchModel>
+      downSyncLocalRepository;
 
   /// Service Definition Repositories
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
@@ -147,6 +150,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.attendanceLogLocalRepository,
     required this.attendanceLogRemoteRepository,
     required this.dashboardRemoteRepository,
+    required this.downSyncLocalRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -915,6 +919,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   /// Runs in the background after project selection.
   Future<void> _silentStockDownSync(String projectId) async {
     try {
+      final localityKey = 'stock_$projectId';
       final userObject = await localSecureStore.userRequestModel;
       if (userObject == null) return;
 
@@ -947,7 +952,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         receiverIds = currentFacilities.map((e) => e.facilityId).toList();
       } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
         receiverIds = currentFacilities.map((e) => e.facilityId).toList();
-      } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+      } else if (userRoles.contains(RolesType.communityDistributor.toValue()) ||
+          userRoles.contains(RolesType.distributor.toValue())) {
         receiverIds = [userObject.uuid];
       }
 
@@ -958,25 +964,58 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         senderId: receiverIds.first,
       );
 
+      final existingDownSyncData =
+          await downSyncLocalRepository.search(DownsyncSearchModel(
+        locality: localityKey,
+      ));
+
+      final lastSyncedTime = existingDownSyncData.isEmpty
+          ? null
+          : existingDownSyncData.first.lastSyncedTime;
+
+      if (existingDownSyncData.isEmpty) {
+        await downSyncLocalRepository.create(DownsyncModel(
+          offset: 0,
+          limit: 50,
+          lastSyncedTime: lastSyncedTime,
+          totalCount: 0,
+          locality: localityKey,
+        ));
+      }
+
       final totalCount = await (stockRemoteRepository as StockRemoteRepository)
-          .fetchTotalCount(stockSearchModel, offSet: 0);
+          .fetchTotalCount(
+        stockSearchModel,
+        offSet: 0,
+        lastSyncedTime: lastSyncedTime,
+      );
 
       if (totalCount <= 0) return;
 
       const batchSize = 50;
       int offset = 0;
       int syncedCount = 0;
+      final currentSyncTime = DateTime.now().millisecondsSinceEpoch;
 
       while (syncedCount < totalCount) {
         final stockEntries = await stockRemoteRepository.search(
           stockSearchModel,
           offSet: offset,
           limit: batchSize,
+          lastSyncedTime: lastSyncedTime,
         );
 
         if (stockEntries.isEmpty) break;
 
         await stockLocalRepository.bulkCreate(stockEntries);
+
+        await downSyncLocalRepository.update(DownsyncModel(
+          offset: 0,
+          limit: batchSize,
+          lastSyncedTime: currentSyncTime,
+          totalCount: totalCount,
+          locality: localityKey,
+        ));
 
         offset += stockEntries.length;
         syncedCount += stockEntries.length;
