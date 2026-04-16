@@ -944,9 +944,10 @@ final dynamic sampleFlows = {
                     "children": [
                       {
                         "type": "template",
-                        "value": "{{ item.individual.0.name.givenName }}",
-                        "format": "textTemplate",
-                        "fieldName": "individualName"
+                        "label":
+                            "{{ item.individual.0.identifiers.0.identifierId }}",
+                        "format": "tag",
+                        "fieldName": "isHead",
                       },
                       {
                         "type": "template",
@@ -1011,6 +1012,13 @@ final dynamic sampleFlows = {
                       "mainAxisSize": "max",
                       "mainAxisAlignment": "spaceBetween"
                     }
+                  },
+                  {
+                    "type": "template",
+                    "value": "{{ item.individual.0.name.givenName }}",
+                    "format": "textTemplate",
+                    "fieldName": "individualName",
+                    "properties": {"bottomGap": 16}
                   },
                   {
                     "type": "template",
@@ -4703,9 +4711,10 @@ final dynamic sampleFlows = {
               "tooltip":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip_addmember",
               "ageRange": {
-                "maxAge": 60,
-                "minAge": 3,
-                "errorMessage": "AGE_VALIDATION_ADDMEMBER"
+                "maxAge": "{{ isHead ? 1800 : 60}}",
+                "minAge": "{{isHead ? 216 : 3}}",
+                "errorMessage":
+                    "{{isHead ? AGE_VALIDATION : AGE_VALIDATION_ADDMEMBER}}"
               },
               "helpText":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText_addmember",
@@ -4727,13 +4736,15 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "minAge",
-                  "value": 3,
-                  "message": "AGE_VALIDATION_ADDMEMBER"
+                  "value": "{{isHead ? 216 : 3}}",
+                  "message":
+                      "{{isHead ? AGE_VALIDATION : AGE_VALIDATION_ADDMEMBER}}"
                 },
                 {
                   "type": "maxAge",
-                  "value": 60,
-                  "message": "AGE_VALIDATION_ADDMEMBER"
+                  "value": "{{isHead ? 1800 : 60}}",
+                  "message":
+                      "{{isHead ? AGE_VALIDATION : AGE_VALIDATION_ADDMEMBER}}"
                 }
               ],
               "errorMessage": "",
@@ -5974,7 +5985,8 @@ final dynamic sampleFlows = {
               "order": 4,
               "value": "",
               "format": "idPopulator",
-              "hidden": false,
+              "hidden": true,
+              "includeInForm": true,
               "isMdms": true,
               "tooltip": "",
               "helpText": "",
