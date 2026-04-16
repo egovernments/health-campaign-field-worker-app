@@ -184,7 +184,7 @@ class MdmsRepository {
       ..tenantId = appConfig?.tenantId
       ..maxRadius = appConfig?.maxRadius
       ..boundaryLastLevelMaxSelection =
-          appConfig?.boundaryLastLevelMaxSelection
+           appConfig?.boundaryLastLevelMaxSelection
       // TODO: Populate stockThresholdConfig from MDMS when available
       ..stockThresholdConfig = (StockThresholdConfig()
         ..minThreshold = 0
@@ -302,6 +302,25 @@ class MdmsRepository {
       return idOption;
     }).toList();
 
+    final List<DeviceChangeReasons>? deviceChangeReasons =
+        element?.deviceChangeReasons.map((element) {
+      final deviceChangeReason = DeviceChangeReasons()
+        ..name = element.name
+        ..code = element.code;
+
+      return deviceChangeReason;
+    }).toList();
+
+    final List<SingleUserLogin>? singleUserLogin =
+        element?.singleUserLogin.map((element) {
+      final singleUserLogin = SingleUserLogin()
+        ..enabled = element.enabled
+        ..id = element.id;
+
+      return singleUserLogin;
+    }).toList();
+
+
     final List<RelationShipTypeOptions>? relationShipTypes =
         element?.relationShipTypeOptions.map((element) {
       final relationShipOption = RelationShipTypeOptions()
@@ -378,6 +397,8 @@ class MdmsRepository {
     appConfiguration.languages = languageList;
     appConfiguration.complaintTypes = complaintTypesList;
     appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
+    appConfiguration.deviceChangeReasons = deviceChangeReasons;
+    appConfiguration.singleUserLogin = singleUserLogin;
     appConfiguration.beneficiaryIdConfig = beneficiaryIdConfig;
     appConfiguration.downSyncBandwidthBatchSize = downSyncBandWidthBatchSize;
     appConfiguration.searchHouseHoldFilters =

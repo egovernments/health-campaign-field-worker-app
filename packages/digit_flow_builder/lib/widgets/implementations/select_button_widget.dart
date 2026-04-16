@@ -231,6 +231,11 @@ class SelectButtonWidget extends ResolvedFlowWidget {
       } else if (condition == "NOT_EMPTY") {
         result = (target != null && target.toString().isNotEmpty);
       } else if (condition == "EQUALS") {
+        if (target is Map) {
+          var key = resolved.resolveText(value.toString().split("==")[0]);
+          var expectedValue = value.toString().split("==")[1];
+          result = target[key] == expectedValue;
+        }
         result = (target == value);
       } else if (condition == "CONTAINS") {
         if (target is Map) {

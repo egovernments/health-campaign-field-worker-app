@@ -111,7 +111,9 @@ class AppInitializationBloc
                     MasterEnums.searchHouseHoldFilters.toValue(),
                     MasterEnums.transitPostType.toValue(),
                     MasterEnums.searchCLFFilters.toValue(),
-                    MasterEnums.boundaryRelationShip.toValue()
+                    MasterEnums.boundaryRelationShip.toValue(),
+                    MasterEnums.deviceChangeReasons.toValue(),
+                    MasterEnums.singleUserLogin.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -131,6 +133,7 @@ class AppInitializationBloc
             ),
           ).toJson(),
         );
+
         final pgrServiceDefinitions =
             await mdmsRepository.searchPGRServiceDefinitions(
           envConfig.variables.mdmsApiPath,
@@ -230,7 +233,7 @@ class AppInitializationBloc
     return MdmsConfig(
       appConfigs: configs,
       serviceRegistryList: serviceRegistryList,
-      dashboardConfigSchema: dashboardConfigs.first.dashboardConfigs,
+      dashboardConfigSchema: dashboardConfigs.firstOrNull?.dashboardConfigs,
     );
   }
 }

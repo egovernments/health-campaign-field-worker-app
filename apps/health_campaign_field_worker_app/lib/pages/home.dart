@@ -12,6 +12,7 @@ import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
 import 'package:digit_flow_builder/data/digit_crud_service.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
@@ -144,18 +145,72 @@ class _HomePageState extends LocalizedState<HomePage> {
     FlowWidgetFactory.register(CustomRowWidget());
     FlowWidgetFactory.register(SignatureCompareWidget());
 
-    // Example 1: Register a dynamic resource card with multi-page state access
+    // Register resource card for DELIVERY and REDOSE
     CustomComponentRegistry().registerBuilder(
       'resourceCard',
       (context, stateAccessor) {
-        // Access data from any page in the flow
         final beneficiaryDetails =
             stateAccessor.getPageData('beneficiaryDetails');
 
-        // Build your component with access to all this data
+        if (beneficiaryDetails != null) {
+          // DELIVERY flow
+          return ResourceCard(
+            stateData: beneficiaryDetails,
+            pageSchema: 'DELIVERY',
+          );
+        }
+
+        // REDOSE flow - compute product variants same as DELIVERY
+        // Use navigation params to filter by age condition
+        final navParams = FlowCrudStateRegistry().getNavigationParams('REDOSE');
+        final cycleIndex = navParams?['cycleIndex'];
+        final ageStr = navParams?['selectedIndividualAgeInMonths'];
+        final age = int.tryParse(ageStr?.toString() ?? '');
+
+        final projectType = context.selectedProjectType;
+        final cycles = projectType?.cycles;
+
+        // Find the cycle matching cycleIndex from nav params
+        final currentCycle = cycles?.firstWhereOrNull(
+          (c) => c.id.toString() == cycleIndex?.toString(),
+        );
+
+        // Use first delivery's dose criteria (all deliveries have same criteria)
+        final firstDelivery = currentCycle?.deliveries?.firstOrNull;
+        final matchingCriteria = <Map<String, dynamic>>[];
+
+        if (firstDelivery?.doseCriteria != null && age != null) {
+          for (final dc in firstDelivery!.doseCriteria!) {
+            if (dc.condition != null && dc.condition!.isNotEmpty) {
+              // Evaluate condition e.g. "3<=ageandage<=11"
+              final sanitized = dc.condition!
+                  .replaceAll(' and ', ' && ')
+                  .replaceAll('and', '&&');
+              try {
+                final parser = FormulaParser(sanitized, {'age': age});
+                final result = parser.parse;
+                if (result['isSuccess'] && result['value'] == true) {
+                  matchingCriteria.add(dc.toMap());
+                }
+              } catch (e) {
+                debugPrint('REDOSE condition eval error: $e');
+              }
+            } else {
+              // No condition - include by default
+              matchingCriteria.add(dc.toMap());
+            }
+          }
+        }
+
+        final redoseState = FlowCrudState(
+          stateWrapper: [
+            {'eligibleProductVariants': matchingCriteria}
+          ],
+        );
+
         return ResourceCard(
-          stateData: beneficiaryDetails,
-          pageSchema: 'DELIVERY',
+          stateData: redoseState,
+          pageSchema: 'REDOSE',
         );
       },
     );
@@ -325,37 +380,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
     });
 
-    FunctionRegistry.register('buttonColor', (args, stateData) {
-      final widgetData = args.isNotEmpty ? args[0] : null;
-      final attendee = args.length > 1 ? args[1] : null;
-
-      double? currentStatus;
-
-      final individualId = attendee?["individualId"];
-
-      var attendanceCollectionData =
-          widgetData["attendanceCollection"]?[individualId];
-
-      if (attendanceCollectionData == 'present') {
-        currentStatus = 1.0;
-      } else if (attendanceCollectionData == 'absent') {
-        currentStatus = 0.0;
-      }
-
-      var status = currentStatus ?? attendee?['status'] ?? -1.0;
-
-      if (status == 1.0) {
-        return "green";
-      } else if (status == 0.0) {
-        return "red";
-      } else if (status == -1.0) {
-        return null;
-      }
-    });
-
     FunctionRegistry.register('buttonType', (args, stateData) {
       final widgetData = args.isNotEmpty ? args[0] : null;
       final attendee = args.length > 1 ? args[1] : null;
+      final targetStatus = args.length > 2 ? args[2] : null;
 
       double? currentStatus;
 
@@ -372,11 +400,9 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       var status = currentStatus ?? attendee?['status'] ?? -1.0;
 
-      if (status == 1.0) {
+      if (status == targetStatus) {
         return "primary";
-      } else if (status == 0.0) {
-        return "primary";
-      } else if (status == -1.0) {
+      } else {
         return "secondary";
       }
     });
@@ -1009,6 +1035,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         final additionalDetails = <String, dynamic>{
           if (boundaryCode.isNotEmpty)
             EnumValues.boundaryCode.toValue(): boundaryCode,
+          'SESSION_TYPE': isMorning ? 'MORNING' : 'EVENING',
           if (qrCreatedTime != null) 'qrCreatedTime': qrCreatedTime,
           if (isFirstSignature)
             'isFirstSignature': isFirstSignature ? "true" : "false",
@@ -1860,7 +1887,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) async {
                 final moduleName =
-                    'hcm-registration-${context.selectedProject.referenceID}';
+                    'hcm-registration-${context.selectedProject.referenceID},hcm-beneficiary';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
@@ -1979,9 +2006,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  // if (schemaJsonRaw != null) {
+                  // if (false) {
                   //   final allSchemas =
-                  //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                  //       json.decode(schemaJsonRaw!) as Map<String, dynamic>;
                   //   final data = allSchemas['REGISTRATION'];
                   //
                   //   final registrationDeliveryData = data?['data'];
@@ -2514,22 +2541,23 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
 
       /// TODO: NEED TO PICK CHANGES RELATED TO BENEFICIARY DOWNSYNC
-      // i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
-      //   child: HomeItemCard(
-      //     label: i18.home.beneficiaryIdLabel,
-      //     onPressed: () {
-      //       // if (isTriggerLocalisation) {
-      //       triggerLocalization();
-      //       isTriggerLocalisation = false;
-      //       // }
-      //       context.router.push(BeneficiaryIdDownSyncRoute());
-      //     },
-      //     icon: Icons.account_box,
-      //     enableCustomIcon: true,
-      //     customIconSize: spacer9,
-      //     customIcon: Constants.beneficiaryIdDownload,
-      //   ),
-      // ),
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
+        child: HomeItemCard(
+          label: i18.home.beneficiaryIdLabel,
+          onPressed: () {
+            // if (isTriggerLocalisation) {
+            const module = "hcm-beneficiary";
+            triggerLocalization(module: module);
+            isTriggerLocalisation = false;
+            // }
+            context.router.push(BeneficiaryIdDownSyncRoute());
+          },
+          icon: Icons.account_box,
+          enableCustomIcon: true,
+          customIconSize: spacer9,
+          customIcon: Constants.beneficiaryIdDownload,
+        ),
+      ),
 
       i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
           child: HomeItemCard(
@@ -2568,7 +2596,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
-      // i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey, // TODO: Uncomment when beneficiary downsync is implemented
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey, // TODO: Uncomment when beneficiary downsync is implemented
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.showcaseKey,
@@ -2589,7 +2617,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
       i18.home.dashboard,
-      // i18.home.beneficiaryIdLabel, // TODO: Uncomment when beneficiary downsync is implemented
+      i18.home.beneficiaryIdLabel, // TODO: Uncomment when beneficiary downsync is implemented
       i18.home.faceRegistrationLabel,
       i18.home.dataShare,
       i18.home.stockSyncDataLabel,
@@ -2613,6 +2641,9 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
+    if (!filteredLabels.contains(i18.home.beneficiaryIdLabel)) {
+      filteredLabels.add(i18.home.beneficiaryIdLabel);
+    }
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
@@ -2632,7 +2663,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           ) {
             final appConfig = appConfiguration;
             final localizationModulesList = appConfiguration.backendInterface;
-            final selectedLocale = AppSharedPreferences().getSelectedLocale;
+            final selectedLocale =
+                "en_MZ" ?? AppSharedPreferences().getSelectedLocale;
             LocalizationParams()
                 .setCode(LeastLevelBoundarySingleton().boundary);
             if (loadOnline == true) {
@@ -2650,7 +2682,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
                     module: module != null && module.isNotEmpty
-                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist"
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary"
                         : localizationModulesList?.interfaces
                                 .where(
                                     (e) => e.type == Modules.localizationModule)
@@ -2691,6 +2723,7 @@ void setPackagesSingleton(BuildContext context) {
           maxAge: context.selectedProjectType?.validMaxAge,
         );
         FlowBuilderSingleton().setInitialData(
+          beneficiaryIdMinCount: appConfiguration.beneficiaryIdConfig?.first.minCount.toInt(),
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,

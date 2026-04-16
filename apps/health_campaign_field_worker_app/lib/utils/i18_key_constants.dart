@@ -5,6 +5,7 @@ const attendance = Attendance();
 const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
+const beneficiaryId = BeneficiaryID();
 const dataShare = DataShare();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const adverseEvents = AdverseEvents();
@@ -29,6 +30,7 @@ const selectSurveyFormShowcase = SelectSurveyFormShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
 const stockReconciliationMetrics = StockReconciliationMetrics();
+
 
 class Attendance {
   const Attendance();
@@ -227,6 +229,8 @@ class Common {
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get permissionContinue => 'PERMISSION_CONTINUE';
+  String get coreCommonWarning => 'CORE_COMMON_WARNING';
+  String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
 
   String get coreCommonOr => 'CORE_COMMON_OR';
   String get commentKey => 'COMMENT_KEY';
@@ -401,6 +405,8 @@ class Common {
   String get stockDataFoundContent => 'STOCK_DATA_FOUND_CONTENT';
 
   String get stockNoDataFoundContent => 'STOCK_NO_DATA_FOUND_CONTENT';
+
+  String get coreCommonDownloading => 'CORE_COMMON_DOWNLOADING';
 }
 
 class HomeShowcase {
@@ -621,12 +627,29 @@ class Login {
   String get userIdPlaceholder => 'USER_ID_PLACEHOLDER';
 
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
+  String get noInternetError => 'ERR_NOT_CONNECTED_TO_INTERNET';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
 
   String get unableToLoginText => 'UNABLE_TO_LOGIN';
 
   String get qrLogin => 'QR_LOGIN';
+
+  String get switchMobileDialogTitle => 'SWITCH_MOBILE_DIALOG_TITLE';
+
+  String get switchMobileDialogContent => 'SWITCH_MOBILE_DIALOG_CONTENT';
+
+  String get switchMobileDialogContine => 'SWITCH_MOBILE_DIALOG_CONTINUE';
+
+  String get switchMobileDialogBack => 'SWITCH_MOBILE_DIALOG_BACK';
+
+  String get switchReasonRequiredError => 'SWITCH_REASON_REQUIRED_ERROR';
+
+  String get switchReason => 'SWITCH_REASON_LABEL';
+
+  String get switchReasonHeader => 'SWITCH_REASON_HEADER_LABEL';
+
+  String get switchReasonContinue => 'SWITCH_REASON_CONTINUE';
 }
 
 class SelectSurveyFormShowcase {
@@ -861,6 +884,46 @@ class Home {
   String get stockBalanceLabel => 'HOME_STOCK_BALANCE_LABEL';
 
   String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
+
+  String get coreCommonNoInternet => 'CORE_COMMON_NO_INTERNET';
+
+  String get coreCommonSkipContinue => 'CORE_COMMON_SKIP_CONTINUE';
+
+}
+
+class BeneficiaryID {
+  const BeneficiaryID();
+
+  String get downloadedon => 'DOWNLOADED_ON';
+
+  String get beneficiaryIdsLabel => 'BENEFICIARY_IDS_LABEL';
+
+  String get downloadBeneficiaryIds => 'DOWNLOAD_BENEFICIARY_IDS';
+
+  String get noOfBeneficiaryIdsLeft => 'NO_OF_BENEFICIARY_IDS_LEFT';
+
+  String get availableBeneficiaryIdsText => 'AVAILABLE_BENEFICIARY_IDS_TEXT';
+
+  String get lowBeneficiaryIdsLabel => 'LOW_BENEFICIARY_IDS_LABEL';
+
+  String get lowBeneficiaryIdsText => 'LOW_BENEFICIARY_IDS_TEXT';
+
+  String get lowBeneficiaryIdsAlertText => 'LOW_BENEFICIARY_IDS_ALERT_TEXT';
+
+  String get noBeneficiaryIdsLabel => 'NO_BENEFICIARY_IDS_LABEL';
+
+  String get noBeneficiaryIdsText => 'NO_BENEFICIARY_IDS_TEXT';
+
+  String get noInternetBeneficiaryIdsText => 'NO_INTERNET_BENEFICIARY_IDS_TEXT';
+
+  String get failedBeneficiaryIds => 'FAILED_BENEFICIARY_IDS';
+
+  String get beneficiaryIdsLimitError => 'BENEFICIARY_IDS_LIMIT_ERROR';
+
+  String get beneficiaryIdsReFetch => 'BENEFICIARY_IDS_RE_FETCH';
+
+  String get totalBeneficiaryIds => 'TOTAL_BENEFICIARY_IDS';
+
 }
 
 class DataShare {

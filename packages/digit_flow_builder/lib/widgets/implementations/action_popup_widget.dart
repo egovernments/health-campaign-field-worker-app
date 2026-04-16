@@ -109,16 +109,18 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         popupConfig['barrierDismissible'] as bool? ?? true;
     final bodyWidgets = popupConfig['body'] as List<dynamic>? ?? [];
     final footerActions = popupConfig['footerActions'] as List<dynamic>? ?? [];
+    final popupType = popupConfig['type'] as String? ?? 'simple';
 
     return showCustomPopup(
       context: context,
       barrierDismissible: barrierDismissible,
       builder: (ctx) {
         return Popup(
+          type: _parsePopupType(popupType),
           title: localization?.translate(title) ?? title,
           description: description != null &&
                   localization!.translate(description).trim().isNotEmpty
-              ? description
+              ?  localization.translate(description)
               : null,
           titleIcon: titleIconName != null
               ? Icon(
@@ -225,6 +227,17 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         return MainAxisAlignment.spaceBetween;
       default:
         return MainAxisAlignment.start;
+    }
+  }
+
+  PopUpType _parsePopupType(String? type) {
+    switch (type) {
+      case 'alert':
+        return PopUpType.alert;
+      case 'simple':
+      case 'default':
+      default:
+        return PopUpType.simple;
     }
   }
 

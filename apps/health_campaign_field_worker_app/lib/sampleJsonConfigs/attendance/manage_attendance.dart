@@ -111,10 +111,16 @@ final dynamic manageAttendanceFlow = {
   "footer": [],
   "body": [
     {
+      "type": "template",
+      "format": "noResultCard",
+      "visible": "{{fn:isEmpty(contextData)}}",
+      "label": "NO_RESULTS_FOUND"
+    },
+    {
       "data": "AttendanceWrapper",
       "type": "template",
       "format": "listView",
-      "hidden": false,
+      "hidden": "{{fn:isEmpty(contextData)}}",
       "fieldName": "listView",
       "properties": {"spacing": "spacer4"},
       "child": {
@@ -160,7 +166,7 @@ final dynamic manageAttendanceFlow = {
             ],
             "type": "template",
             "format": "labelPairList",
-            "fieldName": "labelPairComplaint"
+            "fieldName": "labelPairAttendance",
           },
           {
             "type": "template",

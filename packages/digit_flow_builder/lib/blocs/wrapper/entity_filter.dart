@@ -21,8 +21,9 @@ class EntityFilter {
     if (filters == null || filters.isEmpty) return true;
 
     // Get navigation params from registry for template resolution
-    final navigationParams = screenKey != null
-        ? FlowCrudStateRegistry().getNavigationParams(screenKey!) ?? {}
+    final stateKey = screenKey;
+    final navigationParams = stateKey != null
+        ? FlowCrudStateRegistry().getNavigationParams(stateKey) ?? {}
         : <String, dynamic>{};
 
     // Build context for resolving equalsFrom templates
@@ -117,8 +118,9 @@ class EntityFilter {
     final filters = relation['filters'] as List<dynamic>? ?? [];
 
     // Get widgetData from registry using screenKey
-    final widgetData = screenKey != null
-        ? FlowCrudStateRegistry().get(screenKey!)?.widgetData
+    final stateKey = screenKey;
+    final widgetData = stateKey != null
+        ? FlowCrudStateRegistry().get(stateKey)?.widgetData
         : null;
 
     related = related.where((entity) {

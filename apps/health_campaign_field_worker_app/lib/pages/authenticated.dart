@@ -621,65 +621,6 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   },
                   icon: Icons.home,
                 ),
-                if (appInitializationBloc.state is AppInitialized) ...[
-                  SidebarItem(
-                    title: AppLocalizations.of(context).translate(
-                      i18.common.coreCommonlanguage,
-                    ),
-                    isSearchEnabled: false,
-                    icon: Icons.language,
-                    onPressed: () {},
-                    children: (localizationModulesList != null)
-                        ? buildLanguage(localizationModulesList, languages,
-                            context, appConfig)
-                        : null,
-                  )
-                ],
-                SidebarItem(
-                  title: AppLocalizations.of(context).translate(
-                    i18.common.coreCommonProfile,
-                  ),
-                  icon: Icons.person,
-                  onPressed: () async {
-                    final connectivityResult =
-                        await (Connectivity().checkConnectivity());
-                    final isOnline = connectivityResult
-                            .contains(ConnectivityResult.wifi) ||
-                        connectivityResult.contains(ConnectivityResult.mobile);
-
-                    if (isOnline) {
-                      if (context.mounted) {
-                        Navigator.of(context, rootNavigator: true).pop();
-                        context.router.push(ProfileRoute());
-                      }
-                    } else {
-                      if (context.mounted) {
-                        showCustomPopup(
-                          context: context,
-                          builder: (ctx) => Popup(
-                            title: AppLocalizations.of(context).translate(
-                              i18.common.connectionLabel,
-                            ),
-                            description: AppLocalizations.of(context).translate(
-                              i18.common.connectionContent,
-                            ),
-                            actions: [
-                              DigitButton(
-                                  label: AppLocalizations.of(context).translate(
-                                    i18.common.coreCommonOk,
-                                  ),
-                                  onPressed: () =>
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop(),
-                                  type: DigitButtonType.primary,
-                                  size: DigitButtonSize.large)
-                            ],
-                          ),
-                        );
-                      }
-                    }
-                  },
-                ),
                 if (isDistributor) ...[
                   SidebarItem(
                     title: AppLocalizations.of(context).translate(
@@ -693,33 +634,79 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   ),
 
                   // TODO: Non system user
-
-                  SidebarItem(
-                    title: AppLocalizations.of(context).translate(
-                      //TODO: TO append the total count of non- system users
-                      i18.nonMobileUser.nonMobileUserLabel,
-                    ),
-                    icon: Icons.group,
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      context.router.push(const NonMobileUserListRoute());
-                    },
-                  ),
                 ],
               ],
               logOutDigitButtonLabel: AppLocalizations.of(context)
                   .translate(i18.common.coreCommonLogout),
-              onLogOut: () {
-                context.read<BoundaryBloc>().add(const BoundaryResetEvent());
-                context.read<LocalizationBloc>().add(
-                      LocalizationEvent.onLoadLocalization(
-                        module: Constants.homeLocalizationModules.join(','),
-                        tenantId: envConfig.variables.tenantId,
-                        locale: AppSharedPreferences().getSelectedLocale ?? '',
-                        path: Constants.localizationApiPath,
+              onLogOut: () async {
+                final isConnected = await getIsConnected();
+                if (context.mounted) {
+                  if (isConnected) {
+                    await showCustomPopup(
+                      context: context,
+                      builder: (ctx) => Popup(
+                        title: AppLocalizations.of(context).translate(
+                          i18.common.coreCommonWarning,
+                        ),
+                        description: AppLocalizations.of(context).translate(
+                          i18.common.logOutWarningMsg,
+                        ),
+                        onOutsideTap: () {
+                          Navigator.of(ctx).pop();
+                        },
+                        type: PopUpType.simple,
+                        actions: [
+                          DigitButton(
+                              label: AppLocalizations.of(context).translate(
+                                i18.common.coreCommonOk,
+                              ),
+                              onPressed: () {
+                                context
+                                    .read<BoundaryBloc>()
+                                    .add(const BoundaryResetEvent());
+                                context.read<LocalizationBloc>().add(
+                                      LocalizationEvent.onLoadLocalization(
+                                        module: Constants
+                                            .homeLocalizationModules
+                                            .join(','),
+                                        tenantId: envConfig.variables.tenantId,
+                                        locale: AppSharedPreferences()
+                                                .getSelectedLocale ??
+                                            '',
+                                        path: Constants.localizationApiPath,
+                                      ),
+                                    );
+                                context
+                                    .read<AuthBloc>()
+                                    .add(const AuthLogoutEvent());
+                              },
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large),
+                          DigitButton(
+                              label: AppLocalizations.of(context).translate(
+                                i18.common.coreCommonNo,
+                              ),
+                              onPressed: () {
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(true);
+                              },
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large)
+                        ],
                       ),
                     );
-                context.read<AuthBloc>().add(const AuthLogoutEvent());
+                  } else {
+                    Toast.showToast(
+                      context,
+                      message: AppLocalizations.of(context).translate(
+                        i18.login.noInternetError,
+                      ),
+                      type: ToastType.error,
+                    );
+                  }
+                }
               },
               footer: PoweredByDigit(
                 version: Constants().version,
