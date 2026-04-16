@@ -97,14 +97,6 @@ class StockBalanceExecutor extends ActionExecutor {
     final isDistributor =
         userRoles.any((role) => role.code == RolesType.distributor.toValue());
 
-    final productQuantities = <String, double>{};
-    for (final stock in stockEntities) {
-      final productVariantId = stock.productVariantId;
-      if (productVariantId == null) continue;
-      final quantity = double.tryParse(stock.quantity ?? '0') ?? 0;
-      productQuantities[productVariantId] =
-          (productQuantities[productVariantId] ?? 0) + quantity;
-    }
     final projectFacilityRepo = context.read<
         LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
 
@@ -123,30 +115,97 @@ class StockBalanceExecutor extends ActionExecutor {
 
     String? facilityId;
 
-
     if (isDistributor) {
       facilityId = _getLoggedInUserUuid(context);
     } else {
-      if(currentFacilities.isNotEmpty) {
+      if (currentFacilities.isNotEmpty) {
         facilityId = currentFacilities.first.facilityId;
-      } else{
+      } else {
         facilityId = stockEntities.first.facilityId;
       }
     }
 
     if (facilityId == null || facilityId.isEmpty) return;
 
-    for (final entry in productQuantities.entries) {
+    // Calculate the delta for each product variant based on transaction type
+    final productDeltas = <String, double>{};
+    for (final stock in stockEntities) {
+      final productVariantId = stock.productVariantId;
+      if (productVariantId == null) continue;
+
+      final quantity = double.tryParse(stock.quantity ?? '0') ?? 0;
+      final transactionType = stock.transactionType?.toUpperCase() ?? '';
+      final stockEntryType = _getStockEntryType(stock);
+      final isReceiver = stock.receiverId == facilityId;
+      final isSender = stock.senderId == facilityId;
+
+      double delta = 0;
+
+      // Determine if this is a distributor context
+      final isDistributorReturn = isSender && stockEntryType == 'RETURNED';
+      final isDistContext = isDistributor || isDistributorReturn;
+
+      if (isDistContext) {
+        // For distributors: received adds, everything else (issued, returned, lost, damaged, wastage) subtracts
+        if (transactionType == 'RECEIVED' && isReceiver) {
+          delta = quantity; // Add received stock
+        } else if (stockEntryType == 'RETURNED' && isReceiver) {
+          delta = quantity; // Add returned stock (coming back to distributor)
+        } else if (stockEntryType == 'RETURNED' && isSender) {
+          delta = -quantity; // Sent return (going out)
+        } else {
+          delta = -quantity; // All other transactions subtract
+        }
+      } else {
+        // For non-distributors (warehouses, facilities)
+        if (isReceiver && transactionType == 'RECEIVED') {
+          delta = quantity; // Add received stock
+        } else if (isReceiver &&
+            transactionType == 'DISPATCHED' &&
+            stock.additionalFields?.fields
+                    ?.firstWhere((f) => f.key == 'status',
+                        orElse: () => const AdditionalField('', ''))
+                    .value ==
+                'ACCEPTED') {
+          delta = quantity; // Add accepted stock from dispatch
+        } else if (isSender && transactionType == 'DISPATCHED') {
+          delta = -quantity; // Subtract issued/dispatched stock
+        } else if (isSender && stockEntryType == 'RETURNED') {
+          delta = quantity; // Add returned stock (coming back)
+        } else if (isSender && stockEntryType == 'LOSS') {
+          delta = -quantity; // Subtract loss
+        } else if (isSender && stockEntryType == 'DAMAGED') {
+          delta = -quantity; // Subtract damaged
+        }
+      }
+
+      productDeltas[productVariantId] =
+          (productDeltas[productVariantId] ?? 0) + delta;
+    }
+
+    for (final entry in productDeltas.entries) {
       await _updateStockBalanceFromStock(
         context: context,
         userActionRepo: userActionRepo,
         facilityId: facilityId,
         productVariantId: entry.key,
+        quantityDelta: entry.value,
         projectId: projectId,
         boundaryCode: boundaryCode,
         isDistributor: isDistributor,
       );
     }
+  }
+
+  String _getStockEntryType(StockModel stock) {
+    final fields = stock.additionalFields?.fields;
+    if (fields == null) return '';
+    for (final field in fields) {
+      if (field.key == 'stockEntryType') {
+        return field.value?.toString().toUpperCase() ?? '';
+      }
+    }
+    return '';
   }
 
   Future<void> _handleTaskEntity(
@@ -248,51 +307,19 @@ class StockBalanceExecutor extends ActionExecutor {
 
     final existing =
         existingBalances.isNotEmpty ? existingBalances.first : null;
-    double currentBalance = 0.0;
 
+    // Get the current balance from UserAction (reflects all previous transactions including deliveries/returns)
+    double currentBalance = 0.0;
     if (existing != null) {
       final existingBalanceField = existing.additionalFields?.fields
-          .firstWhereOrNull((f) => f.key == 'balance');
+          ?.firstWhereOrNull((f) => f.key == 'balance');
       currentBalance =
           double.tryParse(existingBalanceField?.value ?? '0') ?? 0.0;
-    } else {
-      final stockRepo =
-          context.read<LocalRepository<StockModel, StockSearchModel>>();
-
-      List<StockModel> receivedStocks = [];
-      List<StockModel> sentStocks = [];
-
-      if (isDistributor) {
-        receivedStocks =
-            await stockRepo.search(StockSearchModel(receiverId: facilityId));
-        sentStocks =
-            await stockRepo.search(StockSearchModel(senderId: facilityId));
-      } else {
-        receivedStocks =
-            await stockRepo.search(StockSearchModel(receiverId: facilityId));
-        sentStocks =
-            await stockRepo.search(StockSearchModel(senderId: facilityId));
-      }
-
-      final allStocksMap = <String, StockModel>{};
-      for (final stock in receivedStocks) {
-        allStocksMap[stock.clientReferenceId] = stock;
-      }
-      for (final stock in sentStocks) {
-        allStocksMap[stock.clientReferenceId] = stock;
-      }
-      final allStocks = allStocksMap.values.toList();
-
-      final metrics = StockCalculationUtils.calculateStockMetrics(
-        stockList: allStocks,
-        facilityId: facilityId,
-        productId: productVariantId,
-        isDistributor: isDistributor,
-      );
-
-      currentBalance = metrics['stockInHand'] ?? 0.0;
     }
 
+    // deliveredQuantity can be positive (delivery) or negative (return)
+    // For delivery: new balance = current - delivered
+    // For return: new balance = current + |returned| (since returned quantity comes as negative)
     final stockInHand = currentBalance - deliveredQuantity;
 
     final now = DateTime.now().millisecondsSinceEpoch;
@@ -340,7 +367,7 @@ class StockBalanceExecutor extends ActionExecutor {
     }
 
     debugPrint(
-      'UPDATE_STOCK_BALANCE: Updated balance for $facilityId/$productVariantId = $stockInHand (previous: $currentBalance, delivered: $deliveredQuantity)',
+      'UPDATE_STOCK_BALANCE: Updated balance for $facilityId/$productVariantId = $stockInHand (current: $currentBalance, delivered: $deliveredQuantity, existing record: ${existing != null})',
     );
   }
 
@@ -351,6 +378,7 @@ class StockBalanceExecutor extends ActionExecutor {
     required String productVariantId,
     required String projectId,
     required String boundaryCode,
+    required double quantityDelta,
     bool isDistributor = false,
   }) async {
     final loggedInUserUuid = _getLoggedInUserUuid(context);
@@ -362,50 +390,18 @@ class StockBalanceExecutor extends ActionExecutor {
 
     final existing =
         existingBalances.isNotEmpty ? existingBalances.first : null;
-    double currentBalance = 0.0;
 
+    // Always use the UserAction balance as the authoritative source
+    double currentBalance = 0.0;
     if (existing != null) {
       final existingBalanceField = existing.additionalFields?.fields
           ?.firstWhereOrNull((f) => f.key == 'balance');
       currentBalance =
           double.tryParse(existingBalanceField?.value ?? '0') ?? 0.0;
-    } else {
-      final stockRepo =
-          context.read<LocalRepository<StockModel, StockSearchModel>>();
-
-      List<StockModel> receivedStocks = [];
-      List<StockModel> sentStocks = [];
-
-      if (isDistributor) {
-        receivedStocks =
-            await stockRepo.search(StockSearchModel(receiverId: facilityId));
-        sentStocks =
-            await stockRepo.search(StockSearchModel(senderId: facilityId));
-      } else {
-        receivedStocks =
-            await stockRepo.search(StockSearchModel(receiverId: facilityId));
-        sentStocks =
-            await stockRepo.search(StockSearchModel(senderId: facilityId));
-      }
-
-      final allStocksMap = <String, StockModel>{};
-      for (final stock in receivedStocks) {
-        allStocksMap[stock.clientReferenceId] = stock;
-      }
-      for (final stock in sentStocks) {
-        allStocksMap[stock.clientReferenceId] = stock;
-      }
-      final allStocks = allStocksMap.values.toList();
-
-      final metrics = StockCalculationUtils.calculateStockMetrics(
-        stockList: allStocks,
-        facilityId: facilityId,
-        productId: productVariantId,
-        isDistributor: isDistributor,
-      );
-
-      currentBalance = metrics['stockInHand'] ?? 0.0;
     }
+
+    // Apply the transaction delta to the current balance
+    final newBalance = currentBalance + quantityDelta;
 
     final now = DateTime.now().millisecondsSinceEpoch;
 
@@ -426,7 +422,7 @@ class StockBalanceExecutor extends ActionExecutor {
       additionalFields: UserActionAdditionalFields(
         version: 1,
         fields: [
-          AdditionalField('balance', currentBalance.toString()),
+          AdditionalField('balance', newBalance.toString()),
           AdditionalField('facilityId', facilityId),
           AdditionalField('productVariantId', productVariantId),
         ],
@@ -446,5 +442,9 @@ class StockBalanceExecutor extends ActionExecutor {
     } else {
       await userActionRepo.create(balanceAction);
     }
+
+    debugPrint(
+      'UPDATE_STOCK_BALANCE: Updated balance for $facilityId/$productVariantId = $newBalance (previous: $currentBalance, delta: $quantityDelta, existing record: ${existing != null})',
+    );
   }
 }

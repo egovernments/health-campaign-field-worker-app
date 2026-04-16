@@ -14,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -321,6 +322,8 @@ class MainApplicationState extends State<MainApplication>
                               stockRemoteRepository: ctx.read<
                                   RemoteRepository<StockModel,
                                       StockSearchModel>>(),
+                              userActionLocalRepository:
+                                  ctx.read<UserActionLocalRepository>(),
                               context: context,
                             ),
                           ),
