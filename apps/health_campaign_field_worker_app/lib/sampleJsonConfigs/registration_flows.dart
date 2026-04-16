@@ -5090,6 +5090,13 @@ final dynamic sampleFlows = {
           "label": "DATA_RECORDED_SUCCESSFULLY",
           "heading": "DATA_RECORDED_SUCCESSFULLY",
           "description": "DATA_RECORDED_SUCCESSFULLY_DESC",
+          "additionalWidgets": [
+            {
+              "type": "template",
+              "format": "textTemplate",
+              "value": "{{formData.beneficiaryDetails.identifiers}}",
+            }
+          ],
           "properties": {"type": "success"},
           "children": [
             {
