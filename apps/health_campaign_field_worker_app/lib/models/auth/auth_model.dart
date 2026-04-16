@@ -18,6 +18,17 @@ class AuthModel with _$AuthModel {
 }
 
 @freezed
+class ValidateResponseModel with _$ValidateResponseModel {
+  const factory ValidateResponseModel({
+    @JsonKey(name: 'isDuplicateLogin') required bool isDuplicateLogin,
+    @JsonKey(name: 'existingDeviceToken') required String? existingDeviceToken,
+  }) = _ValidateResponseModel;
+
+  factory ValidateResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$ValidateResponseModelFromJson(json);
+}
+
+@freezed
 class LoginModel with _$LoginModel {
   const factory LoginModel({
     required String username,

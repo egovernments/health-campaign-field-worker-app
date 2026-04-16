@@ -125,6 +125,8 @@ enum ApiOperation {
   search,
   update,
   delete,
+  validate,
+  switchUser,
   bulkCreate,
   bulkUpdate,
   bulkDelete,

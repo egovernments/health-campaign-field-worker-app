@@ -36,7 +36,9 @@ import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
+import '../pages/beneficiary_id_downsync/beneficiary_id_downsync.dart';
 import '../pages/unauthenticated.dart';
+import '../pages/device_switch_selection.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -68,6 +70,7 @@ class AppRouter extends _$AppRouter {
             initial: true),
         AutoRoute(page: LoginRoute.page, path: 'login'),
         AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
+        AutoRoute(page: DeviceChangeReasonRoute.page, path: 'device-change-reason'),
       ],
     ),
     AutoRoute(
@@ -116,6 +119,9 @@ class AppRouter extends _$AppRouter {
                   path: 'surveyForm-acknowledgement'),
             ]),
         AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
+        AutoRoute(
+            page: BeneficiaryIdDownSyncRoute.page,
+            path: 'beneficiary-id-downsync'),
 
         AutoRoute(
           page: ProjectFacilitySelectionRoute.page,

@@ -257,12 +257,34 @@ void onStart(ServiceInstance service) async {
                       getActionMap(serviceRegistryList),
                     );
 
-                    final isSyncCompleted = await SyncService().performSync(
-                      localRepositories: localRepos,
-                      remoteRepositories: remoteRepos,
-                      bandwidthModel: bandwidthModel,
-                      service: service,
-                    );
+                    // Re-check lock right before sync since bandwidth
+                    // checks may have taken significant time.
+                    final isLockedBeforeSync = await SyncLock.isLocked();
+                    debugPrint('BG_SYNC: lock status before performSync=$isLockedBeforeSync');
+                    if (isLockedBeforeSync) {
+                      debugPrint('BG_SYNC: Lock acquired by another process during bandwidth check, skipping sync');
+                      await progressSub.cancel();
+                      service.invoke('serviceRunning', {
+                        "enablesManualSync": true,
+                      });
+                      return;
+                    }
+
+                    bool isSyncCompleted = false;
+                    try {
+                      isSyncCompleted = await SyncService().performSync(
+                        localRepositories: localRepos,
+                        remoteRepositories: remoteRepos,
+                        bandwidthModel: bandwidthModel,
+                        service: service,
+                      );
+                      debugPrint('BG_SYNC: performSync completed=$isSyncCompleted');
+                      if (!isSyncCompleted) {
+                        debugPrint('BG_SYNC: performSync returned false — lock was not acquired');
+                      }
+                    } catch (e) {
+                      debugPrint('BG_SYNC: performSync failed with error: $e');
+                    }
 
                     await progressSub.cancel();
 

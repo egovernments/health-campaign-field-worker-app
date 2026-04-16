@@ -57,11 +57,28 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
 
     /// Populate from defaultValues using formControlName key (first priority)
     final defaultValue = defaultValues[formControlName];
-    if (defaultValue != null &&
-        defaultValue is String &&
+
+    // Check if this field has a direct value from navigationParams
+    // (e.g., UNIQUE_BENEFICIARY_ID from navigation data)
+    String? navParamValue;
+    try {
+      final navigationParams = context.read<Map<String, dynamic>?>();
+      if (navigationParams != null &&
+          navigationParams.containsKey(formControlName)) {
+        navParamValue = navigationParams[formControlName] as String?;
+      }
+    } catch (_) {}
+
+    // Use navParamValue if defaultValue doesn't have type format
+    final valueToUse = (defaultValue is String && defaultValue.contains(','))
+        ? defaultValue
+        : (navParamValue ?? defaultValue as String?);
+
+    if (valueToUse != null &&
+        valueToUse is String &&
         form.control(idTypeKey).value == null &&
         form.control(idKey).value == null) {
-      final parts = defaultValue.split(',');
+      final parts = valueToUse.split(',');
       if (parts.length >= 2) {
         final type = parts[0].trim();
         final number = parts.sublist(1).join(',').trim();
@@ -71,7 +88,7 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
           form.control(idKey).value = number;
           form.control(idAutoFilledKey).value = true;
         }
-        form.control(formControlName).value = defaultValue;
+        form.control(formControlName).value = valueToUse;
       }
     }
 
@@ -108,10 +125,10 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
     }
 
     final isIdTypeMissing =
-    (form.control(idTypeKey).value?.toString().trim().isEmpty ?? true);
+        (form.control(idTypeKey).value?.toString().trim().isEmpty ?? true);
 
     final isIdNumberMissing =
-    (form.control(idKey).value?.toString().trim().isEmpty ?? true);
+        (form.control(idKey).value?.toString().trim().isEmpty ?? true);
 
     return Column(
       children: [
@@ -130,43 +147,42 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
               errorMessage: isIdTypeMissing ? field.errorText : null,
               selectedOption: form.control(idTypeKey).value != null
                   ? DropdownItem(
-                code: form.control(idTypeKey).value!,
-                name: loc.translate(
-                  (enums ?? [])
-                      .firstWhere(
-                        (e) =>
-                    e.code ==
-                        form.control(idTypeKey).value,
-                    orElse: () => Option(
-                      code: form.control(idTypeKey).value,
-                      name: form.control(idTypeKey).value!,
-                    ),
-                  )
-                      .name,
-                ),
-              )
+                      code: form.control(idTypeKey).value!,
+                      name: loc.translate(
+                        (enums ?? [])
+                            .firstWhere(
+                              (e) => e.code == form.control(idTypeKey).value,
+                              orElse: () => Option(
+                                code: form.control(idTypeKey).value,
+                                name: form.control(idTypeKey).value!,
+                              ),
+                            )
+                            .name,
+                      ),
+                    )
                   : null,
               items: (enums ?? [])
                   .map(
                     (e) => DropdownItem(
-                  code: e.code,
-                  name: loc.translate(e.name),
-                ),
-              )
+                      code: e.code,
+                      name: loc.translate(e.name),
+                    ),
+                  )
                   .toList(),
               onSelect: (value) {
                 form.control(formControlName).markAsTouched();
 
-                final defaultIdentifier = identifiers?[value.code];
 
-                if (defaultIdentifier != null &&
-                    defaultIdentifier is String) {
+                final navigationParams = context.read<Map<String, dynamic>?>();
+                final defaultIdentifier = identifiers?[value.code] ?? navigationParams?[value.code];
+
+                if (defaultIdentifier != null && defaultIdentifier is String) {
                   form.control(idTypeKey).value = value.code;
                   form.control(idKey).value = defaultIdentifier;
                   form.control(idAutoFilledKey).value = true;
 
                   form.control(formControlName).value =
-                  '${value.code}, $defaultIdentifier';
+                      '${value.code}, $defaultIdentifier';
                 } else {
                   form.control(idTypeKey).value = value.code;
                   form.control(idKey).value = null;
@@ -205,16 +221,14 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
                   isRequired: true,
                   child: DigitTextFormInput(
                     initialValue: form.control(idKey).value,
-                    readOnly:
-                    form.control(idAutoFilledKey).value == true,
+                    readOnly: form.control(idAutoFilledKey).value == true,
                     onChange: (value) {
                       form.control(formControlName).markAsTouched();
                       form.control(idAutoFilledKey).value = false;
                       form.control(idKey).value = value;
                       updateCombinedIdentifier();
                     },
-                    errorMessage:
-                    isIdNumberMissing ? field.errorText : null,
+                    errorMessage: isIdNumberMissing ? field.errorText : null,
                   ),
                 ),
               );
