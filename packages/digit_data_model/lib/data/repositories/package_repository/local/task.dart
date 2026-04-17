@@ -111,6 +111,28 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                 sql.task.auditCreatedBy.equals(
                   userId,
                 ),
+              if (query.projectId != null)
+                sql.task.projectId.equals(
+                  query.projectId!,
+                ),
+              if (query.createdBy != null)
+                sql.task.clientCreatedBy.equals(
+                  query.createdBy!,
+                ),
+              if (query.status != null)
+                sql.task.status.equals(
+                  query.status!,
+                ),
+              if (query.plannedEndDate != null &&
+                  query.plannedStartDate != null)
+                sql.task.clientModifiedTime.isBetweenValues(
+                  query.plannedStartDate!,
+                  query.plannedEndDate!,
+                ),
+              if (query.status != null)
+                sql.task.status.equals(
+                  query.status!,
+                ),
             ]))
             ..orderBy([
               OrderingTerm(
