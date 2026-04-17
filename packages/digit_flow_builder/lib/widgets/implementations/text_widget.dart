@@ -19,12 +19,28 @@ class TextWidget extends ResolvedFlowWidget {
   ) {
     // Use the pre-resolved label, or resolve 'value' field as fallback
     final value = json['value'] ?? '';
-    final resolvedValue = resolved.resolveText(value);
 
     // Get style from properties
     final properties = json['properties'] as Map<String, dynamic>? ?? {};
     final styleKey = properties['style']?.toString();
+    final separatedBy = properties['separatedBy'];
+    final replaceAll = properties['replaceAll'] as List?;
     final textStyle = _parseTextStyle(context, styleKey);
+
+    var resolvedValue = (separatedBy != null && value is String)
+        ? value
+            .split(separatedBy)
+            .map((part) => resolved.resolveText(part))
+            .join(separatedBy)
+        : resolved.resolveText(value);
+
+    if (replaceAll != null) {
+      for (var replacement in replaceAll) {
+        final searchValue = replacement['searchValue']?.toString() ?? '';
+        final replaceValue = replacement['replaceValue']?.toString() ?? '';
+        resolvedValue = resolvedValue.replaceAll(searchValue, replaceValue);
+      }
+    }
 
     final displayValue = (resolvedValue)
         .replaceAll(RegExp(r'\bnull\b', caseSensitive: false), '--');
