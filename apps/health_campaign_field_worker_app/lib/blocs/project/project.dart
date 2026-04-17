@@ -6,10 +6,9 @@ import 'dart:core';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
-import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +19,8 @@ import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -28,11 +29,9 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
-import '../../models/downsync/downsync.dart';
-import '../auth/auth.dart';
-import '../push_notification/push_notification.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
+import '../../models/downsync/downsync.dart';
 import '../../models/entities/roles_type.dart';
 import '../../utils/background_service.dart';
 import '../../utils/download_image.dart';
@@ -40,6 +39,7 @@ import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/stock_calculation_utils.dart';
 import '../../utils/utils.dart';
+import '../auth/auth.dart';
 import '../push_notification/push_notification.dart';
 
 part 'project.freezed.dart';
@@ -96,6 +96,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
       downSyncLocalRepository;
   final UserActionLocalRepository userActionLocalRepository;
+  final UserActionRemoteRepository userActionRemoteRepository;
 
   /// Service Definition Repositories
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
@@ -155,6 +156,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.dashboardRemoteRepository,
     required this.downSyncLocalRepository,
     required this.userActionLocalRepository,
+    required this.userActionRemoteRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -908,7 +910,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     // Trigger silent stock downsync after project facilities are loaded
-    _silentStockDownSync(event.model.id);
+    _silentStockDownSync(event.model);
 
     final getSelectedProject = await localSecureStore.selectedProject;
 
@@ -921,16 +923,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   /// Silently downloads dispatched stock from server without UI dialogs.
   /// Runs in the background after project selection.
-  Future<void> _silentStockDownSync(String projectId) async {
+  Future<void> _silentStockDownSync(ProjectModel project) async {
     try {
-      final localityKey = 'stock_$projectId';
+      final localityKey = 'stock_${project.id}';
       final userObject = await localSecureStore.userRequestModel;
       if (userObject == null) return;
 
       final userRoles = userObject.roles.map((e) => e.code);
 
       final projectFacilities = await projectFacilityLocalRepository.search(
-        ProjectFacilitySearchModel(projectId: [projectId]),
+        ProjectFacilitySearchModel(projectId: [project.id]),
       );
 
       // Filter to only include facilities where facilityLevel is 'current'
@@ -943,7 +945,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }).toList();
 
       final projectResources = await projectResourceLocalRepository.search(
-        ProjectResourceSearchModel(projectId: [projectId]),
+        ProjectResourceSearchModel(projectId: [project.id]),
       );
       final productVariantIds = projectResources
           .map((pr) => pr.resource.productVariantId)
@@ -1025,9 +1027,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         syncedCount += stockEntries.length;
       }
 
+      await downSyncStockBalances(project.id);
+
       // After stock download, calculate and create/update UserAction balance records
       await _createStockBalanceUserActions(
-        projectId: projectId,
+        project: project,
         receiverIds: receiverIds,
         productVariantIds: productVariantIds,
         userRoles: userRoles,
@@ -1041,11 +1045,96 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  Future<void> downSyncStockBalances(String projectId) async {
+    try {
+      final userObject = await localSecureStore.userRequestModel;
+      final userRoles = userObject?.roles.map((e) => e.code) ?? [];
+      final isDistributor =
+          userRoles.contains(RolesType.distributor.toValue()) ||
+              userRoles.contains(RolesType.communityDistributor.toValue());
+
+      final projectFacilities = await projectFacilityLocalRepository.search(
+        ProjectFacilitySearchModel(projectId: [projectId]),
+      );
+
+      final projectResources = await projectResourceLocalRepository.search(
+        ProjectResourceSearchModel(projectId: [projectId]),
+      );
+
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
+      List<String> facilityIds;
+      if (isDistributor) {
+        facilityIds = [userObject?.uuid ?? ''];
+      } else {
+        facilityIds = currentFacilities
+            .map((e) => e.facilityId)
+            .whereType<String>()
+            .toSet()
+            .toList();
+      }
+
+      final productVariantIds = projectResources
+          .map((pr) => pr.resource.productVariantId)
+          .whereType<String>()
+          .toSet()
+          .toList();
+
+      if (facilityIds.isEmpty ||
+          productVariantIds.isEmpty ||
+          facilityIds.first.isEmpty) return;
+
+      // Build balance keys for all facility × product variant combinations
+      final balanceKeys = <String>[];
+      for (final facilityId in facilityIds) {
+        for (final productVariantId in productVariantIds) {
+          balanceKeys.add(generateBalanceKey(facilityId, productVariantId));
+        }
+      }
+
+      // Fetch from server
+      final remoteBalances = await userActionRemoteRepository.search(
+        UserActionSearchModel(clientReferenceId: balanceKeys),
+      );
+
+      if (remoteBalances.isEmpty) return;
+
+      // For each fetched balance, create or update locally
+      for (final remoteBalance in remoteBalances) {
+        final existing = await userActionLocalRepository.search(
+          UserActionSearchModel(
+            clientReferenceId: [remoteBalance.clientReferenceId],
+          ),
+        );
+
+        if (existing.isNotEmpty) {
+          await userActionLocalRepository.update(
+            remoteBalance,
+            createOpLog: false,
+          );
+        } else {
+          await userActionLocalRepository.create(
+            remoteBalance,
+            createOpLog: false,
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Stock balance downsync error: $e');
+    }
+  }
+
   /// Creates or updates UserAction balance records after stock downsync.
   /// This ensures that balance records exist for all facility × product variant combinations
   /// based on the locally available stock data.
   Future<void> _createStockBalanceUserActions({
-    required String projectId,
+    required ProjectModel project,
     required List<String> receiverIds,
     required List<String> productVariantIds,
     required Iterable<String> userRoles,
@@ -1057,7 +1146,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               userRoles.contains(RolesType.communityDistributor.toValue());
 
       final projectFacilities = await projectFacilityLocalRepository.search(
-        ProjectFacilitySearchModel(projectId: [projectId]),
+        ProjectFacilitySearchModel(projectId: [project.id]),
       );
 
       final currentFacilities = projectFacilities.where((pf) {
@@ -1128,8 +1217,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           final balanceAction = UserActionModel(
             clientReferenceId: balanceKey,
             action: 'STOCK_BALANCE',
-            projectId: projectId,
-            boundaryCode: '',
+            projectId: project.id,
+            boundaryCode: project.address?.boundary ?? "",
             latitude: 0.0,
             longitude: 0.0,
             locationAccuracy: 0.0,
@@ -1162,15 +1251,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   ),
           );
 
+          /// INFO: need to revisit as user action is getting create and update to server also
           if (existingActions.isNotEmpty) {
             await userActionLocalRepository.update(
               balanceAction,
-              createOpLog: false,
+              createOpLog: true,
             );
           } else {
             await userActionLocalRepository.create(
               balanceAction,
-              createOpLog: false,
+              createOpLog: true,
             );
           }
 

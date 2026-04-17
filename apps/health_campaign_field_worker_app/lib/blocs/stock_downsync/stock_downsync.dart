@@ -267,7 +267,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         }
 
         // After stock download, downsync stock balance user actions
-        await _downSyncStockBalances(event.projectId);
+        await downSyncStockBalances(event.projectId);
 
         emit(StockDownSyncState.success(syncedCount, totalCount));
       } catch (e) {
@@ -279,7 +279,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
   /// Fetches stock balance UserAction records from the server
   /// using balance keys (stock_balance_{facilityId}_{productVariantId})
   /// and creates or updates them locally.
-  Future<void> _downSyncStockBalances(String projectId) async {
+  Future<void> downSyncStockBalances(String projectId) async {
     try {
       final userObject = await localSecureStore.userRequestModel;
       final userRoles = userObject?.roles.map((e) => e.code) ?? [];
@@ -295,11 +295,19 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         ProjectResourceSearchModel(projectId: [projectId]),
       );
 
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
       List<String> facilityIds;
       if (isDistributor) {
         facilityIds = [userObject?.uuid ?? ''];
       } else {
-        facilityIds = projectFacilities
+        facilityIds = currentFacilities
             .map((e) => e.facilityId)
             .whereType<String>()
             .toSet()
