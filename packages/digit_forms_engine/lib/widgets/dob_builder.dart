@@ -79,7 +79,7 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
 
     String evaluated = raw.trim();
 
-    // Handle templated expressions like {{isHead ? 1800 : 60}}
+    // Handle templated expressions like {{isHead ? 1800 : 59}}
     if (evaluated.startsWith('{{') && evaluated.endsWith('}}')) {
       final expr = evaluated.substring(2, evaluated.length - 2).trim();
 

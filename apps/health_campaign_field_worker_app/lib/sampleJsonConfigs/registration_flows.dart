@@ -215,7 +215,8 @@ final dynamic sampleFlows = {
                 {
                   "key": "MOBILE_NUMBER",
                   "value":
-                      "{{contextData.0.individuals.IndividualModel.mobileNumber}}"
+                      "{{contextData.0.individuals.IndividualModel.mobileNumber}}",
+                  "hideIfNull": true
                 },
                 {
                   "key": "DATE_OF_REGISTRATION",
@@ -4711,7 +4712,7 @@ final dynamic sampleFlows = {
               "tooltip":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip_addmember",
               "ageRange": {
-                "maxAge": "{{ isHead ? 1800 : 60}}",
+                "maxAge": "{{ isHead ? 1800 : 59}}",
                 "minAge": "{{isHead ? 216 : 3}}",
                 "errorMessage":
                     "{{isHead ? AGE_VALIDATION : AGE_VALIDATION_ADDMEMBER}}"
@@ -4742,7 +4743,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "maxAge",
-                  "value": "{{isHead ? 1800 : 60}}",
+                  "value": "{{isHead ? 1800 : 59}}",
                   "message":
                       "{{isHead ? AGE_VALIDATION : AGE_VALIDATION_ADDMEMBER}}"
                 }
