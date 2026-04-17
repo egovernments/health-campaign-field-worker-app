@@ -2578,6 +2578,16 @@ class _HomePageState extends LocalizedState<HomePage> {
           context.router.push(const TransitPostWrapperRoute());
         },
       )),
+
+      i18.home.summaryReportLabel: homeShowcaseData.summaryReport.buildWith(
+        child: HomeItemCard(
+          icon: Icons.summarize,
+          label: i18.home.summaryReportLabel,
+          onPressed: () {
+            context.router.push(const SummaryReportRoute());
+          },
+        ),
+      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -2609,6 +2619,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.showcaseKey,
+      i18.home.summaryReportLabel: homeShowcaseData.summaryReport.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -2631,6 +2642,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.faceRegistrationLabel,
       i18.home.dataShare,
       i18.home.stockSyncDataLabel,
+      i18.home.summaryReportLabel,
       i18.home.db,
     ];
 
@@ -2653,6 +2665,17 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
     if (!filteredLabels.contains(i18.home.beneficiaryIdLabel)) {
       filteredLabels.add(i18.home.beneficiaryIdLabel);
+    }
+    final userRoleCodes =
+        state.userModel.roles.map((e) => e.code).toList();
+    final isDistributor =
+        userRoleCodes.contains(RolesType.distributor.toValue());
+    if (isDistributor) {
+      if (!filteredLabels.contains(i18.home.summaryReportLabel)) {
+        filteredLabels.add(i18.home.summaryReportLabel);
+      }
+    } else {
+      filteredLabels.remove(i18.home.summaryReportLabel);
     }
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
