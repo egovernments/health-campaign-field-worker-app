@@ -4887,7 +4887,7 @@ final dynamic sampleFlows = {
             "title": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
             "conditions": [],
             "description":
-                "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
+                "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
             "primaryActionLabel": "ACTION_SUBMIT",
             "secondaryActionLabel": "ACTION_CANCEL"
           },
