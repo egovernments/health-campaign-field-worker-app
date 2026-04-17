@@ -139,6 +139,7 @@ final dynamic inventoryReportFlows = {
           "format": "menu_card",
           "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_HEADING",
           "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_DESCRIPTION",
+          "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}} == false",
           "icon": "Assessment",
           "onAction": [
             {
@@ -187,6 +188,7 @@ final dynamic inventoryReportFlows = {
           "format": "menu_card",
           "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_EXCESS_HEADING",
           "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_EXCESS_DESCRIPTION",
+          "visible": "{{fn:hasRole('DISTRIBUTOR')}} == true",
           "icon": "Assessment",
           "onAction": [
             {
@@ -211,6 +213,7 @@ final dynamic inventoryReportFlows = {
           "format": "menu_card",
           "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_HEADING",
           "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_DESCRIPTION",
+          "visible": "{{fn:hasRole('DISTRIBUTOR')}} == true",
           "icon": "Assessment",
           "onAction": [
             {

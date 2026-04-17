@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_flow_builder/utils/conditional_evaluator.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localization_context.dart';
@@ -370,14 +371,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                             const SizedBox(height: spacer2),
                             DigitTextBlock(
                               padding: EdgeInsets.zero,
-                              heading: (widget.config['heading'] != null &&
-                                      localizations
-                                          .translate(widget.config['heading'])
-                                          .trim()
-                                          .isNotEmpty)
-                                  ? localizations
-                                      .translate(widget.config['heading'])
-                                  : null,
+                              heading: _resolveHeading(
+                                  widget.config['heading'], screenKey),
                               headingStyle: Theme.of(context)
                                   .digitTextTheme(context)
                                   .headingXl
@@ -386,52 +381,53 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                           .colorTheme
                                           .primary
                                           .primary2),
-                              description: (widget.config['description'] !=
-                                          null &&
-                                      localizations
-                                          .translate(
-                                              widget.config['description'])
-                                          .trim()
-                                          .isNotEmpty)
-                                  ? localizations
-                                      .translate(widget.config['description'])
-                                  : null,
+                              description: _resolveDescription(
+                                  widget.config['description'], screenKey),
                             ),
                             const SizedBox(height: spacer4),
                             ...body
-                                .map((e) {
-                                  final processed =
-                                      preprocessConfigWithState(e, stateData);
+                                .asMap()
+                                .entries
+                                .map<MapEntry<bool, CrudItemContext>>((entry) {
+                              final e = entry.value;
+                              final processed =
+                                  preprocessConfigWithState(e, stateData);
+                              final isVisible = _checkWidgetVisibility(
+                                  processed, stateData, screenKey);
 
-                                  return CrudItemContext(
-                                    stateData: stateData,
-                                    screenKey: screenKey,
+                              return MapEntry(
+                                isVisible,
+                                CrudItemContext(
+                                  stateData: stateData,
+                                  screenKey: screenKey,
+                                  compositeKey: compositeKey,
+                                  child: LayoutMapper.map(
+                                    processed,
+                                    stateData,
+                                    context,
+                                    (action) {
+                                      ActionHandler.execute(action, context, {
+                                        'wrappers': const [],
+                                        '_compositeKey': compositeKey,
+                                      });
+                                    },
                                     compositeKey: compositeKey,
-                                    child: LayoutMapper.map(
-                                      processed,
-                                      stateData,
-                                      context,
-                                      (action) {
-                                        ActionHandler.execute(action, context, {
-                                          'wrappers': const [],
-                                          '_compositeKey': compositeKey,
-                                        });
-                                      },
-                                      compositeKey: compositeKey,
-                                    ),
-                                  );
-                                })
-                                .expand((widget) => [
-                                      widget,
-                                      const SizedBox(height: 16),
-                                    ])
-                                .toList()
+                                  ),
+                                ),
+                              );
+                            }).expand((entry) {
+                              if (!entry.key) return <Widget>[];
+                              return <Widget>[
+                                entry.value,
+                                const SizedBox(height: spacer4),
+                              ];
+                            }).toList()
                               ..removeLast(),
                             // Scroll loading indicator at bottom of content
                             if (_showLoadingIndicator && isLoading)
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16.0),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: spacer4),
                                 child: Center(
                                   child: DigitLoaders.inlineLoader(),
                                 ),
@@ -450,6 +446,46 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
         );
       },
     );
+  }
+
+  bool _checkWidgetVisibility(
+      Map<String, dynamic> json, CrudStateData? stateData, String? screenKey) {
+    final modelMap = stateData?.modelMap ?? {};
+    final evalContext = {
+      'item': null,
+      'contextData': stateData?.rawState ?? {},
+      ...modelMap,
+    };
+
+    bool visible = true;
+
+    // Check hidden condition first
+    if (json['hidden'] != null) {
+      final hiddenResult = ConditionalEvaluator.evaluate(
+        json['hidden'],
+        evalContext,
+        screenKey: screenKey,
+        stateData: stateData,
+      );
+      if (hiddenResult == true) {
+        visible = false;
+      }
+    }
+
+    // If not hidden, check visible condition
+    if (visible && json['visible'] != null) {
+      final visibleResult = ConditionalEvaluator.evaluate(
+        json['visible'],
+        evalContext,
+        screenKey: screenKey,
+        stateData: stateData,
+      );
+      if (visibleResult == false) {
+        visible = false;
+      }
+    }
+
+    return visible;
   }
 
   String? _resolveHeading(dynamic heading, String screenKey) {

@@ -200,6 +200,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading": "INVENTORY_RECORD_LESS_EXCESS_HEADING",
           "description": "INVENTORY_RECORD_LESS_EXCESS_DESCRIPTION",
+          "visible": "{{fn:hasRole('DISTRIBUTOR')}} == true",
           "icon": "Store",
           "onAction": [
             {
