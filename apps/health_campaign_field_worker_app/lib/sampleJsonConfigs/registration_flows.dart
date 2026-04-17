@@ -2316,6 +2316,7 @@ final dynamic sampleFlows = {
         {
           "icon": "FilterAlt",
           "type": "template",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "visible":
               "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
           "label": "REGISTER_BENEFICIARY",
@@ -2403,6 +2404,7 @@ final dynamic sampleFlows = {
           "type": "template",
           "label": "REGISTER_BENEFICIARY",
           "format": "button",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "visible":
               "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
           "onAction": [
