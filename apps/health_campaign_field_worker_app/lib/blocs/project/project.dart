@@ -6,10 +6,9 @@ import 'dart:core';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
-import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +19,7 @@ import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
@@ -29,11 +29,9 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
-import '../../models/downsync/downsync.dart';
-import '../auth/auth.dart';
-import '../push_notification/push_notification.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
+import '../../models/downsync/downsync.dart';
 import '../../models/entities/roles_type.dart';
 import '../../utils/background_service.dart';
 import '../../utils/download_image.dart';
@@ -41,6 +39,7 @@ import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/stock_calculation_utils.dart';
 import '../../utils/utils.dart';
+import '../auth/auth.dart';
 import '../push_notification/push_notification.dart';
 
 part 'project.freezed.dart';
@@ -1062,11 +1061,19 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         ProjectResourceSearchModel(projectId: [projectId]),
       );
 
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
       List<String> facilityIds;
       if (isDistributor) {
         facilityIds = [userObject?.uuid ?? ''];
       } else {
-        facilityIds = projectFacilities
+        facilityIds = currentFacilities
             .map((e) => e.facilityId)
             .whereType<String>()
             .toSet()
@@ -1243,7 +1250,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                     lastModifiedTime: now,
                   ),
           );
-
 
           /// INFO: need to revisit as user action is getting create and update to server also
           if (existingActions.isNotEmpty) {

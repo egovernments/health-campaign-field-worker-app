@@ -295,11 +295,19 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         ProjectResourceSearchModel(projectId: [projectId]),
       );
 
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
       List<String> facilityIds;
       if (isDistributor) {
         facilityIds = [userObject?.uuid ?? ''];
       } else {
-        facilityIds = projectFacilities
+        facilityIds = currentFacilities
             .map((e) => e.facilityId)
             .whereType<String>()
             .toSet()

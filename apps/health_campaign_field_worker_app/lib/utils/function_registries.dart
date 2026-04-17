@@ -162,7 +162,14 @@ class FunctionRegistries {
     FunctionRegistry.register('getSenderOrReceiver', (args, stateData) {
       if (args.isEmpty) return 'receiverId';
       final reportType = args.first?.toString() ?? '';
-      const senderTypes = {'dispatch', 'damage', 'loss'};
+      const senderTypes = {
+        'dispatch',
+        'damage',
+        'loss',
+        'returned',
+        'less',
+        'excess'
+      };
       return senderTypes.contains(reportType) ? 'senderId' : 'receiverId';
     });
 
@@ -334,6 +341,41 @@ class FunctionRegistries {
       } catch (e) {
         debugPrint('getProjectProductVariantIds error: $e');
         return '';
+      }
+    });
+
+    FunctionRegistry.register('getCurrentFacilities', (args, stateData) {
+      try {
+        List<dynamic>? projectFacilities;
+
+        if (args.isNotEmpty && args.first != null) {
+          projectFacilities = args.first as List<dynamic>?;
+        }
+
+        if (projectFacilities == null || projectFacilities.isEmpty) {
+          return <Map<String, dynamic>>[];
+        }
+
+        final currentFacilities = projectFacilities.where((pf) {
+          if (pf is! Map) return false;
+          final additionalFields =
+              pf['additionalFields'] as Map<String, dynamic>?;
+          if (additionalFields == null) return true;
+          final fields = additionalFields['fields'] as List?;
+          if (fields == null) return true;
+          for (final field in fields) {
+            if (field is Map && field['key'] == 'facilityLevel') {
+              final value = field['value'];
+              return value == null || value == 'current';
+            }
+          }
+          return true;
+        }).toList();
+
+        return currentFacilities;
+      } catch (e) {
+        debugPrint('getCurrentFacilities error: $e');
+        return <Map<String, dynamic>>[];
       }
     });
 
