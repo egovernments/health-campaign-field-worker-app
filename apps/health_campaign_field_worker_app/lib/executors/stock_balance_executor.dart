@@ -55,7 +55,7 @@ class StockBalanceExecutor extends ActionExecutor {
       }
 
       final projectId = FlowBuilderSingleton().projectId;
-      final boundaryCode = FlowBuilderSingleton().boundary?.code;
+      final boundaryCode = FlowBuilderSingleton().selectedProject?.address?.boundary;
 
       if (projectId == null || boundaryCode == null) {
         debugPrint('UPDATE_STOCK_BALANCE: Missing projectId or boundaryCode');

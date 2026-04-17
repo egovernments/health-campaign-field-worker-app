@@ -911,7 +911,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     // Trigger silent stock downsync after project facilities are loaded
-    _silentStockDownSync(event.model.id);
+    _silentStockDownSync(event.model);
 
     final getSelectedProject = await localSecureStore.selectedProject;
 
@@ -924,16 +924,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   /// Silently downloads dispatched stock from server without UI dialogs.
   /// Runs in the background after project selection.
-  Future<void> _silentStockDownSync(String projectId) async {
+  Future<void> _silentStockDownSync(ProjectModel project) async {
     try {
-      final localityKey = 'stock_$projectId';
+      final localityKey = 'stock_${project.id}';
       final userObject = await localSecureStore.userRequestModel;
       if (userObject == null) return;
 
       final userRoles = userObject.roles.map((e) => e.code);
 
       final projectFacilities = await projectFacilityLocalRepository.search(
-        ProjectFacilitySearchModel(projectId: [projectId]),
+        ProjectFacilitySearchModel(projectId: [project.id]),
       );
 
       // Filter to only include facilities where facilityLevel is 'current'
@@ -946,7 +946,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }).toList();
 
       final projectResources = await projectResourceLocalRepository.search(
-        ProjectResourceSearchModel(projectId: [projectId]),
+        ProjectResourceSearchModel(projectId: [project.id]),
       );
       final productVariantIds = projectResources
           .map((pr) => pr.resource.productVariantId)
@@ -1028,11 +1028,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         syncedCount += stockEntries.length;
       }
 
-      await downSyncStockBalances(projectId);
+      await downSyncStockBalances(project.id);
 
       // After stock download, calculate and create/update UserAction balance records
       await _createStockBalanceUserActions(
-        projectId: projectId,
+        project: project,
         receiverIds: receiverIds,
         productVariantIds: productVariantIds,
         userRoles: userRoles,
@@ -1127,7 +1127,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   /// This ensures that balance records exist for all facility × product variant combinations
   /// based on the locally available stock data.
   Future<void> _createStockBalanceUserActions({
-    required String projectId,
+    required ProjectModel project,
     required List<String> receiverIds,
     required List<String> productVariantIds,
     required Iterable<String> userRoles,
@@ -1139,7 +1139,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               userRoles.contains(RolesType.communityDistributor.toValue());
 
       final projectFacilities = await projectFacilityLocalRepository.search(
-        ProjectFacilitySearchModel(projectId: [projectId]),
+        ProjectFacilitySearchModel(projectId: [project.id]),
       );
 
       final currentFacilities = projectFacilities.where((pf) {
@@ -1210,8 +1210,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           final balanceAction = UserActionModel(
             clientReferenceId: balanceKey,
             action: 'STOCK_BALANCE',
-            projectId: projectId,
-            boundaryCode: '',
+            projectId: project.id,
+            boundaryCode: project.address?.boundary ?? "",
             latitude: 0.0,
             longitude: 0.0,
             locationAccuracy: 0.0,
