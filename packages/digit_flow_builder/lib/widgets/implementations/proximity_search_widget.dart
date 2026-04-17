@@ -93,12 +93,10 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
     );
   }
 
-  String resolveDynamicType(
-      String expression,
-      bool fieldValue
-      ) {
+  String resolveDynamicType(String expression, bool fieldValue) {
     // Replace field.value with actual value (true/false)
-    final replaced = expression.replaceAll("field.value", fieldValue.toString());
+    final replaced =
+        expression.replaceAll("field.value", fieldValue.toString());
 
     // Example expression after replacement:
     //   "true ? SEARCH_EVENT : CLEAR_EVENT"
@@ -116,10 +114,7 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
     final falseResult = outcomes[1].trim();
 
     /// ---- Evaluate using your formula parser ----
-    final parser = FormulaParser(
-      condition,
-      {'dummy': {}}
-    );
+    final parser = FormulaParser(condition, {'dummy': {}});
 
     debugPrint("CONDITION_EVAL: parsed=${parser.parsedExpression}");
 
@@ -136,7 +131,7 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
 
     // Validation lookup
     final radiusValidation = validations.firstWhere(
-          (v) => v['key'] == "proximityRadius",
+      (v) => v['key'] == "proximityRadius",
       orElse: () => null,
     );
     final radius = radiusValidation?['value'];
@@ -147,18 +142,36 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
       // When proximity is disabled, remove only this filter (not the entire state)
       if (isProximityDisabled) {
         final searchName = raw['properties']?['name'] as String? ?? 'default';
-        final filterKey = json['fieldName'] as String?;
+        final filterKeys = <String>[];
+
+        final rawData = raw['properties']?['filterKeys'] as List?;
+        if (rawData != null) {
+          for (final item in rawData) {
+            final key = item?.toString();
+            if (key != null && key.isNotEmpty) {
+              filterKeys.add(key);
+            }
+          }
+        }
+
+        final fieldName = json['fieldName'] as String?;
+        if (fieldName != null && fieldName.isNotEmpty) {
+          filterKeys.add(fieldName);
+        }
+
+        if (filterKeys.isEmpty) {
+          continue;
+        }
 
         widget.onAction(ActionConfig.fromJson({
           'actionType': 'CLEAR_STATE',
           'properties': {
             'type': 'CLEAR_STATE',
             'name': searchName,
-            'filterKeys': [filterKey],
+            'filterKeys': filterKeys.toSet().toList(),
             'triggerSearch': true,
           },
         }));
-        continue;
       }
 
       final updated = Map<String, dynamic>.from(raw);
@@ -171,21 +184,23 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
       updated['actionType'] = resolvedActionType;
       updated['properties']['type'] = resolvedActionType;
 
-      // Data override
-      final existingData = raw['properties']?['data'] ?? [];
-      updated['properties']['data'] = existingData.map((item) {
-        return {
-          "key": json['fieldName'],
-          if (radius != null) "value": radius,
-          "lat": _lat,
-          "long": _long,
-          "accuracy": _accuracy,
-          "operation": "within"
-        };
-      }).toList();
+      // Override proximity data only for enabled state.
+      // For disabled state, let configured false-path action run as-is.
+      if (value) {
+        final existingData = raw['properties']?['data'] ?? [];
+        updated['properties']['data'] = existingData.map((item) {
+          return {
+            "key": json['fieldName'],
+            if (radius != null) "value": radius,
+            "lat": _lat,
+            "long": _long,
+            "accuracy": _accuracy,
+            "operation": "within"
+          };
+        }).toList();
+      }
 
       widget.onAction(ActionConfig.fromJson(updated));
     }
   }
-
 }
