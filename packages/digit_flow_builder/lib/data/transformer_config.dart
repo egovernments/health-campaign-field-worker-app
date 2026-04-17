@@ -1314,7 +1314,7 @@ final jsonConfig = {
           "beneficiaryId": "__context:selectedIndividualIdentifierId",
           "referralCode": "__context:selectedIndividualClientReferenceId",
           "name": "__context:selectedIndividualName",
-          "symptom": "referBeneficiary.referralReason",
+          "symptom": "__switch:__context:sourceFlow:{CHECKLIST:__context:referralReasons,default:referBeneficiary.referralReason}",
           "nonRecoverableError": "referral.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "rowVersion": "meta.rowVersion",
@@ -1334,7 +1334,9 @@ final jsonConfig = {
             "ec1Value": "__context:ec1",
             "ec2Value": "__context:ec2",
             "ec3Value": "__context:ec3",
-            "ec4Value": "__context:ec4"
+            "ec4Value": "__context:ec4",
+            // Referral reasons mapped from checklist: SICK for ec1=YES, FEVER for ec2=YES
+            "referralReasons": "__context:referralReasons"
           }
         }
       }
