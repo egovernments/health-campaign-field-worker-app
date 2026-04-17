@@ -383,7 +383,7 @@ class FunctionRegistries {
       if (args.isEmpty) return '';
       final facilityId = args.first?.toString() ?? '';
       if (facilityId.isEmpty) return '';
-      return 'FAC_$facilityId';
+      return facilityId.contains('F') ? 'FAC_$facilityId' : facilityId;
     });
 
     FunctionRegistry.register('hasResults', (args, stateData) {
