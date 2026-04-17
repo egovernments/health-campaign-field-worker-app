@@ -5095,28 +5095,16 @@ final dynamic sampleFlows = {
               "type": "template",
               "format": "textTemplate",
               "value": "{{formData.beneficiaryDetails.identifiers}}",
+              "properties": {
+                "style": "bodyS",
+                "separatedBy": ", ",
+                "replaceAll": [
+                  {"searchValue": ",", "replaceValue": ":"},
+                ]
+              }
             }
           ],
           "properties": {"type": "success"},
-          "children": [
-            {
-              "type": "template",
-              "format": "text",
-              "label": "BENEFICIARY_ID_LABEL",
-              "value": "Beneficiary ID",
-              "fieldName": "beneficiaryIdLabel",
-              "mandatory": true
-            },
-            {
-              "type": "template",
-              "format": "text",
-              "label": "BENEFICIARY_ID_VALUE",
-              "value": "{{beneficiary.id}}",
-              "fieldName": "beneficiaryIdValue",
-              "mandatory": true,
-              "properties": {"style": "bold"}
-            }
-          ],
           "primaryAction": {
             "type": "template",
             "label": "VIEW_HOUSEHOLD_DETAILS",
