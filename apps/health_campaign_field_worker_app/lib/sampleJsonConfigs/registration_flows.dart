@@ -215,7 +215,8 @@ final dynamic sampleFlows = {
                 {
                   "key": "MOBILE_NUMBER",
                   "value":
-                      "{{contextData.0.individuals.IndividualModel.mobileNumber}}"
+                      "{{contextData.0.individuals.IndividualModel.mobileNumber}}",
+                  "hideIfNull": true
                 },
                 {
                   "key": "DATE_OF_REGISTRATION",
@@ -3761,6 +3762,11 @@ final dynamic sampleFlows = {
                       {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
                       {"key": "sourceFlow", "value": "CHECKLIST"},
                       {
+                        "key": "referralReasons",
+                        "value":
+                            "{{fn:getSymptomsReferral(eligibilityChecklist.ec1, eligibilityChecklist.ec2, eligibilityChecklist.ec3, eligibilityChecklist.ec4)}}"
+                      },
+                      {
                         "key": "selectedIndividualClientReferenceId",
                         "value":
                             "{{navigation.selectedIndividualClientReferenceId}}"
@@ -3948,7 +3954,12 @@ final dynamic sampleFlows = {
                       {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
                       {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
                       {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
-                      {"key": "sourceFlow", "value": "CHECKLIST"}
+                      {"key": "sourceFlow", "value": "CHECKLIST"},
+                      {
+                        "key": "referralReasons",
+                        "value":
+                            "{{fn:getSymptomsReferral(eligibilityChecklist.ec1, eligibilityChecklist.ec2, eligibilityChecklist.ec3, eligibilityChecklist.ec4)}}"
+                      },
                     ],
                     "name": "REFER_BENEFICIARY",
                     "type": "FORM",
@@ -4232,6 +4243,11 @@ final dynamic sampleFlows = {
                   {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
                   {"key": "sourceFlow", "value": "CHECKLIST"},
                   {
+                    "key": "referralReasons",
+                    "value":
+                        "{{fn:getSymptomsReferral(eligibilityChecklist.ec1, eligibilityChecklist.ec2, eligibilityChecklist.ec3, eligibilityChecklist.ec4)}}"
+                  },
+                  {
                     "key": "selectedIndividualClientReferenceId",
                     "value":
                         "{{navigation.selectedIndividualClientReferenceId}}"
@@ -4381,6 +4397,11 @@ final dynamic sampleFlows = {
                   {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
                   {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
                   {"key": "sourceFlow", "value": "CHECKLIST"},
+                  {
+                    "key": "referralReasons",
+                    "value":
+                        "{{fn:getSymptomsReferral(eligibilityChecklist.ec1, eligibilityChecklist.ec2, eligibilityChecklist.ec3, eligibilityChecklist.ec4)}}"
+                  },
                   {
                     "key": "selectedIndividualClientReferenceId",
                     "value":
@@ -4711,7 +4732,7 @@ final dynamic sampleFlows = {
               "tooltip":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip_addmember",
               "ageRange": {
-                "maxAge": "{{ isHead ? 1800 : 60}}",
+                "maxAge": "{{ isHead ? 1800 : 59}}",
                 "minAge": "{{isHead ? 216 : 3}}",
                 "errorMessage":
                     "{{isHead ? AGE_VALIDATION : AGE_VALIDATION_ADDMEMBER}}"
@@ -4742,7 +4763,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "maxAge",
-                  "value": "{{isHead ? 1800 : 60}}",
+                  "value": "{{isHead ? 1800 : 59}}",
                   "message":
                       "{{isHead ? AGE_VALIDATION : AGE_VALIDATION_ADDMEMBER}}"
                 }
@@ -5511,7 +5532,12 @@ final dynamic sampleFlows = {
               {"key": "ec1", "value": "{{navigation.ec1}}"},
               {"key": "ec2", "value": "{{navigation.ec2}}"},
               {"key": "ec3", "value": "{{navigation.ec3}}"},
-              {"key": "ec4", "value": "{{navigation.ec4}}"}
+              {"key": "ec4", "value": "{{navigation.ec4}}"},
+              {"key": "sourceFlow", "value": "{{navigation.sourceFlow}}"},
+              {
+                "key": "referralReasons",
+                "value": "{{navigation.referralReasons}}"
+              }
             ],
             "onError": [
               {
