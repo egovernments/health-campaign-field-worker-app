@@ -3762,11 +3762,6 @@ final dynamic sampleFlows = {
                       {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
                       {"key": "sourceFlow", "value": "CHECKLIST"},
                       {
-                        "key": "referralReasons",
-                        "value":
-                            "{{fn:getSymptomsReferral(eligibilityChecklist.ec1, eligibilityChecklist.ec2, eligibilityChecklist.ec3, eligibilityChecklist.ec4)}}"
-                      },
-                      {
                         "key": "selectedIndividualClientReferenceId",
                         "value":
                             "{{navigation.selectedIndividualClientReferenceId}}"
@@ -3955,11 +3950,6 @@ final dynamic sampleFlows = {
                       {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
                       {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
                       {"key": "sourceFlow", "value": "CHECKLIST"},
-                      {
-                        "key": "referralReasons",
-                        "value":
-                            "{{fn:getSymptomsReferral(eligibilityChecklist.ec1, eligibilityChecklist.ec2, eligibilityChecklist.ec3, eligibilityChecklist.ec4)}}"
-                      },
                     ],
                     "name": "REFER_BENEFICIARY",
                     "type": "FORM",
@@ -4243,11 +4233,6 @@ final dynamic sampleFlows = {
                   {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
                   {"key": "sourceFlow", "value": "CHECKLIST"},
                   {
-                    "key": "referralReasons",
-                    "value":
-                        "{{fn:getSymptomsReferral(eligibilityChecklist.ec1, eligibilityChecklist.ec2, eligibilityChecklist.ec3, eligibilityChecklist.ec4)}}"
-                  },
-                  {
                     "key": "selectedIndividualClientReferenceId",
                     "value":
                         "{{navigation.selectedIndividualClientReferenceId}}"
@@ -4397,11 +4382,6 @@ final dynamic sampleFlows = {
                   {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
                   {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
                   {"key": "sourceFlow", "value": "CHECKLIST"},
-                  {
-                    "key": "referralReasons",
-                    "value":
-                        "{{fn:getSymptomsReferral(eligibilityChecklist.ec1, eligibilityChecklist.ec2, eligibilityChecklist.ec3, eligibilityChecklist.ec4)}}"
-                  },
                   {
                     "key": "selectedIndividualClientReferenceId",
                     "value":
@@ -5533,6 +5513,10 @@ final dynamic sampleFlows = {
               {"key": "ec2", "value": "{{navigation.ec2}}"},
               {"key": "ec3", "value": "{{navigation.ec3}}"},
               {"key": "ec4", "value": "{{navigation.ec4}}"},
+              {
+                "key": "referralReasons",
+                "value": "{{fn:getSymptomsReferral(navigation)}}"
+              },
               {"key": "sourceFlow", "value": "{{navigation.sourceFlow}}"},
               {
                 "key": "referralReasons",
