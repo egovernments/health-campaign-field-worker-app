@@ -1407,7 +1407,11 @@ void initializeFunctionRegistry() {
     final List<String> symptoms = [];
 
     if (ec1 == 'YES') symptoms.add('SICK');
-    if (ec2 == 'YES') symptoms.add('FEVER');
+    if (ec2 == 'YES') {
+      symptoms.add('FEVER');
+    } else {
+      symptoms.add('DRUG_SE_PC');
+    }
 
     return symptoms.join(',');
   });
