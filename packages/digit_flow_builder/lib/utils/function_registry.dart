@@ -1416,6 +1416,18 @@ void initializeFunctionRegistry() {
     return symptoms.join(',');
   });
 
+  FunctionRegistry.register("hasBeneficiaryId", (args, stateData) {
+    final identifier = args.isNotEmpty ? args.first : null;
+
+    if (identifier == null) return false;
+
+    if (identifier["identifierType"] == 'UNIQUE_BENEFICIARY_ID') {
+      return true;
+    }
+
+    return false;
+  });
+
   FunctionRegistry.register("canRecordDelivery", (args, stateData) {
     final projectType = FlowBuilderSingleton().projectType;
     if (projectType == null || projectType.cycles == null) {

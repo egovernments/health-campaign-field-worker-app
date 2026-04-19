@@ -945,10 +945,26 @@ final dynamic sampleFlows = {
                     "children": [
                       {
                         "type": "template",
-                        "label":
-                            "{{ item.individual.0.identifiers.0.identifierId }}",
-                        "format": "tag",
-                        "fieldName": "isHead",
+                        "format": "column",
+                        "children": [
+                          {
+                            "type": "template",
+                            "visible":
+                                "{{fn:hasBeneficiaryId(item.individual.0.identifiers.0)}}==true",
+                            "label":
+                                "{{ item.individual.0.identifiers.0.identifierId }}",
+                            "format": "tag",
+                            "fieldName": "isHead",
+                          },
+                          {
+                            "type": "template",
+                            "visible":
+                                "{{fn:hasBeneficiaryId(item.individual.0.identifiers.0)}}==false",
+                            "label": "NO_BENEFICIARY_ID",
+                            "format": "tag",
+                            "fieldName": "isHead",
+                          },
+                        ]
                       },
                       {
                         "type": "template",
@@ -958,44 +974,105 @@ final dynamic sampleFlows = {
                             "{{fn:disableEdit(item.task, item.hFReferral)}}==true",
                         "onAction": [
                           {
-                            "actionType": "REVERSE_TRANSFORM",
-                            "properties": {
-                              "data": [
-                                {
-                                  "key": "entities",
-                                  "value": "{{item.individual}}"
-                                },
-                                {
-                                  "key": "entities",
-                                  "value": "{{item.projectBeneficiary}}"
+                            "actions": [
+                              {
+                                "actionType": "REVERSE_TRANSFORM",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "entities",
+                                      "value": "{{item.individual}}"
+                                    },
+                                    {
+                                      "key": "entities",
+                                      "value": "{{item.projectBeneficiary}}"
+                                    }
+                                  ],
+                                  "configName": "individualRegistration",
+                                  "entityTypes": [
+                                    "IndividualModel",
+                                    "ProjectBeneficiaryModel"
+                                  ]
                                 }
-                              ],
-                              "configName": "individualRegistration",
-                              "entityTypes": [
-                                "IndividualModel",
-                                "ProjectBeneficiaryModel"
-                              ]
+                              },
+                              {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value":
+                                          "{{item.member.0.householdClientReferenceId}}"
+                                    },
+                                    {"key": "isEdit", "value": "true"},
+                                    {
+                                      "key": "isHead",
+                                      "value": "{{fn:isHead(item.member)}}"
+                                    },
+                                    {
+                                      "key": "UNIQUE_BENEFICIARY_ID",
+                                      "value": "{{latestBeneficiaryId}}"
+                                    }
+                                  ],
+                                  "name": "ADD_MEMBER",
+                                  "type": "FORM"
+                                }
+                              }
+                            ],
+                            "condition": {
+                              "type": "custom",
+                              "expression":
+                                  "{{fn:hasBeneficiaryId(item.individual.0.identifiers.0)}}==false",
                             }
                           },
                           {
-                            "actionType": "NAVIGATION",
-                            "properties": {
-                              "data": [
-                                {
-                                  "key": "HouseholdClientReferenceId",
-                                  "value":
-                                      "{{item.member.0.householdClientReferenceId}}"
-                                },
-                                {"key": "isEdit", "value": "true"},
-                                {
-                                  "key": "isHead",
-                                  "value": "{{fn:isHead(item.member)}}"
-                                },
-                              ],
-                              "name": "ADD_MEMBER",
-                              "type": "FORM"
+                            "actions": [
+                              {
+                                "actionType": "REVERSE_TRANSFORM",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "entities",
+                                      "value": "{{item.individual}}"
+                                    },
+                                    {
+                                      "key": "entities",
+                                      "value": "{{item.projectBeneficiary}}"
+                                    }
+                                  ],
+                                  "configName": "individualRegistration",
+                                  "entityTypes": [
+                                    "IndividualModel",
+                                    "ProjectBeneficiaryModel"
+                                  ]
+                                }
+                              },
+                              {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value":
+                                          "{{item.member.0.householdClientReferenceId}}"
+                                    },
+                                    {"key": "isEdit", "value": "true"},
+                                    {
+                                      "key": "isHead",
+                                      "value": "{{fn:isHead(item.member)}}"
+                                    },
+                                  ],
+                                  "name": "ADD_MEMBER",
+                                  "type": "FORM"
+                                }
+                              }
+                            ],
+                            "condition": {
+                              "type": "custom",
+                              "expression":
+                                  "{{fn:hasBeneficiaryId(item.individual.0.identifiers.0)}}==true",
                             }
-                          }
+                          },
                         ],
                         "fieldName": "editIndividualButton",
                         "properties": {
