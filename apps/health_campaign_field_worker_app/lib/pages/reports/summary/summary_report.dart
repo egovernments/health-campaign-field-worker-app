@@ -78,9 +78,8 @@ class _SummaryReportPageState extends LocalizedState<SummaryReportPage> {
       final facilities = await facilityRepo
           .search(FacilitySearchModel(id: facilityIds));
 
-      final distributorWithoutFacilities =
-          isDistributor && facilities.isEmpty;
-      final effectiveFacilityId = distributorWithoutFacilities
+      // Match stock_balance_card: distributors always use userUuid
+      final effectiveFacilityId = isDistributor
           ? userUuid
           : (facilities.isNotEmpty ? facilities.first.id : userUuid);
 
@@ -133,10 +132,11 @@ class _SummaryReportPageState extends LocalizedState<SummaryReportPage> {
       }
 
       // ── Group tasks by date for children treated ──
-      // (filter by logged-in user AND status == 'ADMINISTRATION_SUCCESS')
+      // (filter by logged-in user AND status == 'ADMINISTRATION_SUCCESS' or 'VISITED')
       final tasksByDate = <String, Set<String>>{};
       for (final task in tasks) {
-        if (task.status != 'ADMINISTRATION_SUCCESS') continue;
+        if (task.status != 'ADMINISTRATION_SUCCESS' &&
+            task.status != 'VISITED') continue;
         final createdBy = task.clientAuditDetails?.createdBy ??
             task.auditDetails?.createdBy;
         if (createdBy != userUuid) continue;
@@ -165,9 +165,12 @@ class _SummaryReportPageState extends LocalizedState<SummaryReportPage> {
       }
 
       // ── Group stock consumed from task resources by date + productVariant ──
+      // Only count tasks with status 'ADMINISTRATION_SUCCESS' or 'VISITED'
       // Key: "date|productVariantId" -> sum of quantity
       final consumedByDateProduct = <String, double>{};
       for (final task in tasks) {
+        if (task.status != 'ADMINISTRATION_SUCCESS' &&
+            task.status != 'VISITED') continue;
         final createdBy = task.clientAuditDetails?.createdBy ??
             task.auditDetails?.createdBy;
         if (createdBy != userUuid) continue;
@@ -187,83 +190,104 @@ class _SummaryReportPageState extends LocalizedState<SummaryReportPage> {
         }
       }
 
-      // ── Group stock records by date + productVariant for received/returned ──
-      // Key: "date|productVariantId" -> metrics map
-      final stockByDateProduct = <String, List<StockModel>>{};
+      // ── Collect stock dates (for date rows) ──
+      final stockDates = <String>{};
       for (final stock in allStocks) {
         final epochMs = stock.clientAuditDetails?.createdTime ??
             stock.auditDetails?.createdTime;
         if (epochMs == null) continue;
-        final date = _epochToDateString(epochMs);
-        final pvId = stock.productVariantId;
-        if (pvId == null || pvId.isEmpty) continue;
-        final key = '$date|$pvId';
-        stockByDateProduct.putIfAbsent(key, () => []);
-        stockByDateProduct[key]!.add(stock);
+        stockDates.add(_epochToDateString(epochMs));
       }
 
-      // ── Collect all dates ──
-      final stockDates = <String>{};
-      for (final key in stockByDateProduct.keys) {
-        stockDates.add(key.split('|')[0]);
-      }
+      // ── Collect consumed dates ──
+      final consumedDates = <String>{};
       for (final key in consumedByDateProduct.keys) {
-        stockDates.add(key.split('|')[0]);
+        consumedDates.add(key.split('|')[0]);
       }
+
       final allDates = <String>{
         ...hhByDate.keys,
         ...tasksByDate.keys,
         ...stockDates,
+        ...consumedDates,
       };
 
       // ── Build rows ──
-      final rows = allDates.map((date) {
+      // Sort dates ascending for cumulative consumed calculation
+      final sortedDates = allDates.toList()..sort();
+
+      // Track cumulative consumed per product variant (for balance)
+      final cumulativeConsumed = <String, double>{};
+
+      final rows = <_SummaryReportRow>[];
+      for (final date in sortedDates) {
         final hhCount = hhByDate[date] ?? 0;
         final childrenCount = tasksByDate[date]?.length ?? 0;
         final nonHeadCount = nonHeadMembersByDate[date] ?? 0;
         final percentage =
             nonHeadCount > 0 ? (childrenCount / nonHeadCount) * 100 : 0.0;
 
+        // End-of-day timestamp for cumulative stock filtering
+        final endOfDay = DateTime.parse(date)
+            .add(const Duration(days: 1))
+            .subtract(const Duration(milliseconds: 1))
+            .millisecondsSinceEpoch;
+
+        // Filter all stocks up to and including this day
+        // Stocks without timestamps are included (assumed historical)
+        final cumulativeStocks = allStocks.where((stock) {
+          final epochMs = stock.clientAuditDetails?.createdTime ??
+              stock.auditDetails?.createdTime;
+          if (epochMs == null) return true;
+          return epochMs <= endOfDay;
+        }).toList();
+
         // Per-product stock data
         final stockData = <String, _ProductStockData>{};
         for (final pv in productVariants) {
-          final key = '$date|${pv.id}';
-
-          // Stock Received & Returned via StockCalculationUtils
-          final stocksForDateProduct = stockByDateProduct[key] ?? [];
-          final metrics = stocksForDateProduct.isNotEmpty
+          // Cumulative received & returned using same logic as stock_balance_card
+          final metrics = cumulativeStocks.isNotEmpty
               ? StockCalculationUtils.calculateStockMetrics(
-                  stockList: stocksForDateProduct,
+                  stockList: cumulativeStocks,
                   facilityId: effectiveFacilityId,
                   productId: pv.id,
                   loggedInUserUuid: userUuid,
-                  isDistributor: distributorWithoutFacilities,
+                  isDistributor: isDistributor,
                 )
               : StockCalculationUtils.emptyMetrics;
 
-          final received = metrics['stockReceived'] ?? 0.0;
-          final returned = metrics['stockReturned'] ?? 0.0;
-          final consumed = consumedByDateProduct[key] ?? 0.0;
-          final balance = received - consumed - returned;
+          final totalReceived = metrics['stockReceived'] ?? 0.0;
+          final totalReturned = metrics['stockReturned'] ?? 0.0;
+
+          // Daily consumed (for this day only)
+          final key = '$date|${pv.id}';
+          final dailyConsumed = consumedByDateProduct[key] ?? 0.0;
+
+          // Accumulate consumed for balance calculation
+          cumulativeConsumed[pv.id] =
+              (cumulativeConsumed[pv.id] ?? 0.0) + dailyConsumed;
+          final totalConsumed = cumulativeConsumed[pv.id]!;
+
+          final balance = totalReceived - totalConsumed - totalReturned;
 
           stockData[pv.id] = _ProductStockData(
-            received: received,
-            consumed: consumed,
-            returned: returned,
+            received: totalReceived,
+            consumed: dailyConsumed,
+            returned: totalReturned,
             balance: balance,
           );
         }
 
-        return _SummaryReportRow(
+        rows.add(_SummaryReportRow(
           date: date,
           householdsRegistered: hhCount,
           childrenTreated: childrenCount,
           childrenTreatedPercent: percentage,
           stockData: stockData,
-        );
-      }).toList();
+        ));
+      }
 
-      // Sort descending by date
+      // Sort descending by date for display
       rows.sort((a, b) => b.date.compareTo(a.date));
 
       if (mounted) {
