@@ -478,6 +478,10 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
 }
 
 /// Helper: Convert FlowBuilderSingleton into a Map<String, dynamic>
+///
+/// Uses toMap() instead of toJson() for model fields so that nested values
+/// are already Map objects and _resolvePath can navigate them directly
+/// without needing to decode JSON strings (which can silently fail).
 Map<String, dynamic> singletonToMap() {
   final s = FlowBuilderSingleton();
   return {
@@ -486,11 +490,11 @@ Map<String, dynamic> singletonToMap() {
     "maxRadius": s.maxRadius,
     "projectId": s.projectId,
     "beneficiaryType": s.beneficiaryType,
-    "projectType": s.projectType?.toJson(),
-    "selectedProject": s.selectedProject?.toJson(),
-    "boundary": s.boundary?.toJson(),
+    "projectType": s.projectType?.toMap(),
+    "selectedProject": s.selectedProject?.toMap(),
+    "boundary": s.boundary?.toMap(),
     "persistenceConfiguration": s.persistenceConfiguration?.toString(),
-    "loggedInUser": s.loggedInUser?.toJson(),
+    "loggedInUser": s.loggedInUser?.toMap(),
     "userRoles": s.userRoles,
     "templateConfigs":
         s.templateConfigs?.map((k, v) => MapEntry(k, v.toJson())),
@@ -532,7 +536,8 @@ dynamic _resolvePath(dynamic root, String path) {
         (current.trim().startsWith('{') || current.trim().startsWith('['))) {
       try {
         current = jsonDecode(current);
-      } catch (_) {
+      } catch (e) {
+        debugPrint('_resolvePath: jsonDecode failed for path="$path", part="$part": $e');
         return null; // invalid JSON, stop
       }
     }

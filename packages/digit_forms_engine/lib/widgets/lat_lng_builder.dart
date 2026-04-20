@@ -129,7 +129,6 @@ class _LatLngBuilderStatefulWrapperState
   @override
   Widget build(BuildContext context) {
     final loc = FormLocalization.of(context);
-    final theme = Theme.of(context);
 
     return BlocConsumer<LocationBloc, LocationState>(
       listener: (context, state) {
@@ -185,14 +184,6 @@ class _LatLngBuilderStatefulWrapperState
           displayText = '${_latitude!.abs().toStringAsFixed(4)}\u00B0 $latDir ${_longitude!.abs().toStringAsFixed(4)}\u00B0 $lngDir';
         }
 
-        // Determine color based on accuracy
-        Color? textColor;
-        if (_accuracy != null && _accuracy! <= 5) {
-          textColor = theme.colorTheme.alert.success;
-        } else if (_accuracy != null) {
-          textColor = theme.colorTheme.alert.error;
-        }
-
         return ReactiveFormConsumer(
           builder: (context, formGroup, child) {
             return ReactiveWrapperField(
@@ -202,33 +193,12 @@ class _LatLngBuilderStatefulWrapperState
                 label: widget.label,
                 isRequired: widget.isRequired ?? false,
                 capitalizedFirstLetter: false,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    BaseDigitFormInput(
-                      helpText: widget.helpText,
-                      readOnly: true,
-                      initialValue: displayText,
-                      textStyle: textColor != null
-                          ? TextStyle(color: textColor)
-                          : null,
-                      onChange: (value) {},
-                      errorMessage: field.errorText,
-                    ),
-                    if (_accuracy != null && _accuracy! > 5)
-                      Positioned(
-                        right: 0,
-                        top: -4,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.refresh,
-                            color: theme.colorTheme.primary.primary1,
-                          ),
-                          onPressed: _retryLocationFetch,
-                          tooltip: 'Retry',
-                        ),
-                      ),
-                  ],
+                child: BaseDigitFormInput(
+                  helpText: widget.helpText,
+                  readOnly: true,
+                  initialValue: displayText,
+                  onChange: (value) {},
+                  errorMessage: field.errorText,
                 ),
               ),
             );

@@ -75,6 +75,7 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
             : DigitDropdown<String>(
                 readOnly: readOnly,
                 sentenceCaseEnabled: false,
+                isSearchable: false,
                 helpText: helpText,
                 emptyItemText: loc.translate('NO_OPTIONS_AVAILABLE'),
                 errorMessage: field.errorText,

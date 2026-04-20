@@ -262,7 +262,15 @@ final dynamic samplePolioRegistrationFlows = {
             "task"
           ],
           "primary": "household",
-          "pagination": {"limit": 5, "maxItems": 15}
+          "pagination": {"limit": 5, "maxItems": 15},
+          "baseFilters": [
+            {
+              "key": "localityBoundaryCode",
+              "root": "address",
+              "value": "{{singleton.boundary.code}}",
+              "operation": "equals"
+            }
+          ]
         }
       },
       "scrollListener": {

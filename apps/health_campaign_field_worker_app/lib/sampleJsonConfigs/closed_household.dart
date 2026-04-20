@@ -20,7 +20,7 @@ final dynamic sampleCloseHouseholdFlows = {
         {
           "page": "closeHouseholdDetails",
           "type": "object",
-          "label": "Missed Children Details",
+          "label": "HCM_CLOSE_HOUSEHOLD_MISSED_CHILDREN_LABEL",
           "order": 1,
           "value": null,
           "hidden": null,
@@ -36,7 +36,7 @@ final dynamic sampleCloseHouseholdFlows = {
           "properties": [
             {
               "type": "string",
-              "label": "Village name",
+              "label": "HCM_CLOSE_HOUSEHOLD_VILLAGE_NAME_LABEL",
               "order": 1,
               "value": "",
               "format": "locality",
@@ -54,7 +54,7 @@ final dynamic sampleCloseHouseholdFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field can not be empty"
+                  "message": "HCM_VALIDATION_REQUIRED_NOT_EMPTY"
                 }
               ],
               "errorMessage": "",
@@ -62,7 +62,7 @@ final dynamic sampleCloseHouseholdFlows = {
             },
             {
               "type": "string",
-              "label": "GPS coordinate accuracy",
+              "label": "HCM_CLOSE_HOUSEHOLD_GPS_LABEL",
               "order": 2,
               "value": "",
               "format": "latLng",
@@ -80,16 +80,17 @@ final dynamic sampleCloseHouseholdFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field can not be empty"
+                  "message": "HCM_VALIDATION_REQUIRED_NOT_EMPTY"
                 }
               ],
               "errorMessage": "",
-              "isMultiSelect": false
+              "isMultiSelect": false,
+              "includeInForm": true
             },
             {
               "type": "string",
               "enums": [],
-              "label": "Household head name",
+              "label": "HCM_CLOSE_HOUSEHOLD_HEAD_NAME_LABEL",
               "order": 3,
               "value": "",
               "format": "text",
@@ -108,18 +109,18 @@ final dynamic sampleCloseHouseholdFlows = {
                   "type": "minLength",
                   "value": "2",
                   "message":
-                      "Length must be 2 to 200 characters"
+                      "HCM_VALIDATION_LENGTH_2_TO_200"
                 },
                 {
                   "type": "maxLength",
                   "value": "200",
                   "message":
-                      "Length must be 2 to 200 characters"
+                      "HCM_VALIDATION_LENGTH_2_TO_200"
                 },
                 {
                   "type": "required",
                   "value": true,
-                  "message": "This is required field."
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD_DOT"
                 }
               ],
               "errorMessage": "",
@@ -128,7 +129,7 @@ final dynamic sampleCloseHouseholdFlows = {
             },
             {
               "type": "string",
-              "label": "Scan Voucher",
+              "label": "HCM_CLOSE_HOUSEHOLD_SCAN_VOUCHER_LABEL",
               "order": 4,
               "value": "",
               "format": "scanner",
@@ -149,15 +150,15 @@ final dynamic sampleCloseHouseholdFlows = {
             {
               "type": "string",
               "enums": [
-                {"code": "ABSENT", "name": "Absent"},
-                {"code": "REFUSAL", "name": "Refusal"},
-                {"code": "NOT_VISITED", "name": "Not Visited"},
-                {"code": "HOUSE_NOT_REVISITED", "name": "House Not Revisited"},
-                {"code": "ASLEEP", "name": "Asleep"},
-                {"code": "CHILD_VACCINATED_IN_ROUTINE", "name": "Child Vaccinated in Routine"},
-                {"code": "OTHER", "name": "Other"}
+                {"code": "ABSENT", "name": "HCM_CLOSE_HOUSEHOLD_REASON_ABSENT"},
+                {"code": "REFUSAL", "name": "HCM_CLOSE_HOUSEHOLD_REASON_REFUSAL"},
+                {"code": "NOT_VISITED", "name": "HCM_CLOSE_HOUSEHOLD_REASON_NOT_VISITED"},
+                {"code": "HOUSE_NOT_REVISITED", "name": "HCM_CLOSE_HOUSEHOLD_REASON_HOUSE_NOT_REVISITED"},
+                {"code": "ASLEEP", "name": "HCM_CLOSE_HOUSEHOLD_REASON_ASLEEP"},
+                {"code": "CHILD_VACCINATED_IN_ROUTINE", "name": "HCM_CLOSE_HOUSEHOLD_REASON_CHILD_VACCINATED_ROUTINE"},
+                {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
               ],
-              "label": "Reason child was not vaccinated",
+              "label": "HCM_CLOSE_HOUSEHOLD_REASON_NOT_VACCINATED_LABEL",
               "order": 5,
               "value": "",
               "format": "dropdown",
@@ -175,7 +176,7 @@ final dynamic sampleCloseHouseholdFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field can not be empty"
+                  "message": "HCM_VALIDATION_REQUIRED_NOT_EMPTY"
                 }
               ],
               "errorMessage": "",
@@ -184,15 +185,15 @@ final dynamic sampleCloseHouseholdFlows = {
             {
               "type": "string",
               "enums": [
-                {"code": "PLAY_AREAS", "name": "Play areas"},
-                {"code": "MARKET", "name": "Market"},
-                {"code": "SCHOOL", "name": "School"},
-                {"code": "FARM", "name": "Farm"},
-                {"code": "SOCIAL_EVENT", "name": "Social event"},
-                {"code": "TRAVELLING", "name": "Travelling"},
-                {"code": "PARENT_NOT_AT_HOME", "name": "Parent not at home"}
+                {"code": "PLAY_AREAS", "name": "HCM_CLOSE_HOUSEHOLD_WHERE_PLAY_AREAS"},
+                {"code": "MARKET", "name": "HCM_CLOSE_HOUSEHOLD_WHERE_MARKET"},
+                {"code": "SCHOOL", "name": "HCM_CLOSE_HOUSEHOLD_WHERE_SCHOOL"},
+                {"code": "FARM", "name": "HCM_CLOSE_HOUSEHOLD_WHERE_FARM"},
+                {"code": "SOCIAL_EVENT", "name": "HCM_CLOSE_HOUSEHOLD_WHERE_SOCIAL_EVENT"},
+                {"code": "TRAVELLING", "name": "HCM_CLOSE_HOUSEHOLD_WHERE_TRAVELLING"},
+                {"code": "PARENT_NOT_AT_HOME", "name": "HCM_CLOSE_HOUSEHOLD_WHERE_PARENT_NOT_HOME"}
               ],
-              "label": "Where was the child?",
+              "label": "HCM_CLOSE_HOUSEHOLD_WHERE_WAS_CHILD_LABEL",
               "order": 6,
               "value": "",
               "format": "dropdown",
@@ -210,7 +211,7 @@ final dynamic sampleCloseHouseholdFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field can not be empty"
+                  "message": "HCM_VALIDATION_REQUIRED_NOT_EMPTY"
                 }
               ],
               "errorMessage": "",
@@ -224,16 +225,16 @@ final dynamic sampleCloseHouseholdFlows = {
             {
               "type": "string",
               "enums": [
-                {"code": "RELIGIOUS_BELIEFS", "name": "Religious beliefs"},
-                {"code": "VACCINE_SIDE_EFFECTS", "name": "Vaccine Side Effects"},
-                {"code": "TOO_MANY_DOSES", "name": "Too many doses"},
-                {"code": "CHILD_WAS_SICK", "name": "Child was sick"},
-                {"code": "NOT_DECISION_MAKER", "name": "Not decision maker"},
-                {"code": "AFRICA_IS_POLIO_FREE", "name": "Africa is Polio Free"},
-                {"code": "CONCERNS_ABOUT_NOPV", "name": "Concerns about nOPV"},
-                {"code": "CONCERNS_ABOUT_COVID19", "name": "Concerns about COVID-19"}
+                {"code": "RELIGIOUS_BELIEFS", "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_RELIGIOUS"},
+                {"code": "VACCINE_SIDE_EFFECTS", "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_SIDE_EFFECTS"},
+                {"code": "TOO_MANY_DOSES", "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_TOO_MANY"},
+                {"code": "CHILD_WAS_SICK", "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CHILD_SICK"},
+                {"code": "NOT_DECISION_MAKER", "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_NOT_DECISION_MAKER"},
+                {"code": "AFRICA_IS_POLIO_FREE", "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_AFRICA_POLIO_FREE"},
+                {"code": "CONCERNS_ABOUT_NOPV", "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CONCERNS_NOPV"},
+                {"code": "CONCERNS_ABOUT_COVID19", "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CONCERNS_COVID"}
               ],
-              "label": "Reason for refusal?",
+              "label": "HCM_CLOSE_HOUSEHOLD_REASON_REFUSAL_LABEL",
               "order": 7,
               "value": "",
               "format": "dropdown",
@@ -251,7 +252,7 @@ final dynamic sampleCloseHouseholdFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field can not be empty"
+                  "message": "HCM_VALIDATION_REQUIRED_NOT_EMPTY"
                 }
               ],
               "errorMessage": "",
@@ -264,9 +265,9 @@ final dynamic sampleCloseHouseholdFlows = {
             }
           ],
           "systemDate": null,
-          "actionLabel": "Next",
+          "actionLabel": "HCM_COMMON_NEXT_BUTTON",
           "description":
-              "Make sure the village name matches the one where you are today. If not, click on the village dropdown on the top right corner to change it.",
+              "HCM_CLOSE_HOUSEHOLD_DETAILS_DESCRIPTION",
           "validations": null,
           "includeInForm": null,
           "isMultiSelect": null,
@@ -282,7 +283,7 @@ final dynamic sampleCloseHouseholdFlows = {
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {
-                  "message": "Failed to fetch config."
+                  "message": "HCM_ERROR_FETCH_CONFIG"
                 }
               }
             ],
@@ -297,7 +298,7 @@ final dynamic sampleCloseHouseholdFlows = {
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {
-                  "message": "Failed to create stock."
+                  "message": "HCM_ERROR_CREATE_STOCK"
                 }
               }
             ]
@@ -313,7 +314,7 @@ final dynamic sampleCloseHouseholdFlows = {
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {
-                  "message": "Navigation failed."
+                  "message": "HCM_ERROR_NAVIGATION"
                 }
               }
             ]
@@ -325,19 +326,19 @@ final dynamic sampleCloseHouseholdFlows = {
       "body": [
         {
           "type": "template",
-          "label": "Data recorded successfully",
+          "label": "HCM_CLOSE_HOUSEHOLD_SUCCESS_HEADING",
           "format": "panelCard",
-          "heading": "Data recorded successfully",
+          "heading": "HCM_CLOSE_HOUSEHOLD_SUCCESS_HEADING",
           "fieldName": "closeHouseholdSuccess",
           "mandatory": true,
           "properties": {
             "type": "success"
           },
           "description":
-              "The data has been recorded successfully",
+              "HCM_CLOSE_HOUSEHOLD_SUCCESS_DESCRIPTION",
           "primaryAction": {
             "type": "template",
-            "label": "Go Back",
+            "label": "HCM_CLOSE_HOUSEHOLD_SUCCESS_GO_BACK_BUTTON",
             "format": "button",
             "hidden": false,
             "onAction": [

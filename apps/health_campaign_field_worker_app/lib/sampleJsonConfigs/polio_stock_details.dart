@@ -29,6 +29,32 @@ final dynamic samplePolioStockDetailsFlows = {
           "properties": [
             {
               "type": "string",
+              "label": "Detected Location",
+              "order": 0,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "latLng",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Location coordinates are required"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
               "label": "Batch/Lot Number",
               "order": 1,
               "value": "",

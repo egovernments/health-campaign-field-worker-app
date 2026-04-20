@@ -10,6 +10,13 @@ import '../utils/utils.dart';
 class PolioStatsCard extends StatefulWidget {
   const PolioStatsCard({super.key});
 
+  /// Call this to trigger a refresh of the stats card from anywhere in the app.
+  static final ValueNotifier<int> refreshNotifier = ValueNotifier<int>(0);
+
+  static void refresh() {
+    refreshNotifier.value++;
+  }
+
   @override
   State<PolioStatsCard> createState() => _PolioStatsCardState();
 }
@@ -25,6 +32,7 @@ class _PolioStatsCardState extends State<PolioStatsCard>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    PolioStatsCard.refreshNotifier.addListener(_onRefreshNotified);
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _loadCounts();
     });
@@ -32,8 +40,13 @@ class _PolioStatsCardState extends State<PolioStatsCard>
 
   @override
   void dispose() {
+    PolioStatsCard.refreshNotifier.removeListener(_onRefreshNotified);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  void _onRefreshNotified() {
+    _loadCounts();
   }
 
   @override

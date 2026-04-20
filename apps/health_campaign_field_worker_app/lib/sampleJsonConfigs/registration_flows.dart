@@ -9,16 +9,16 @@ final dynamic sampleFlows = {
       "body": [
         {
           "type": "template",
-          "label": "Delivery Successful",
+          "label": "HCM_DELIVERY_SUCCESS_HEADING",
           "format": "panelCard",
-          "heading": "Delivery Successful",
+          "heading": "HCM_DELIVERY_SUCCESS_HEADING",
           "fieldName": "successCard",
           "mandatory": true,
           "properties": {"type": "success"},
-          "description": "Resources has been delivered successfully.",
+          "description": "HCM_DELIVERY_SUCCESS_DESCRIPTION",
           "primaryAction": {
             "type": "template",
-            "label": "View Household Details",
+            "label": "HCM_DELIVERY_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
             "format": "button",
             "hidden": false,
             "onAction": [
@@ -42,7 +42,7 @@ final dynamic sampleFlows = {
           },
           "secondaryAction": {
             "type": "template",
-            "label": "Go Back",
+            "label": "HCM_DELIVERY_SUCCESS_GO_BACK_BUTTON",
             "format": "button",
             "hidden": false,
             "onAction": [
@@ -55,8 +55,8 @@ final dynamic sampleFlows = {
             "mandatory": true,
             "properties": {"type": "secondary"}
           },
-          "primaryActionLabel": "View Household Details",
-          "secondaryActionLabel": "Go Back"
+          "primaryActionLabel": "HCM_DELIVERY_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
+          "secondaryActionLabel": "HCM_DELIVERY_SUCCESS_GO_BACK_BUTTON"
         }
       ],
       "name": "deliverySuccess",
@@ -65,7 +65,7 @@ final dynamic sampleFlows = {
       "header": [
         {
           "type": "template",
-          "label": "Back",
+          "label": "HCM_COMMON_BACK_LABEL",
           "format": "backLink",
           "onAction": [
             {
@@ -101,32 +101,37 @@ final dynamic sampleFlows = {
             {
               "data": [
                 {
-                  "key": "Name of the individual",
+                  "key": "HCM_BENEFICIARY_NAME_LABEL",
                   "value":
                       "{{contextData.0.individuals.IndividualModel.name.givenName}}"
                 },
                 {
-                  "key": "ID Type",
+                  "key": "HCM_BENEFICIARY_ID_TYPE_LABEL",
                   "value":
                       "{{contextData.0.individuals.IndividualModel.identifiers.0.identifierType}}"
                 },
                 {
-                  "key": "Age",
+                  "key": "HCM_BENEFICIARY_ID_LABEL",
+                  "value":
+                      "{{contextData.0.individuals.IndividualModel.identifiers.0.identifierId}}"
+                },
+                {
+                  "key": "HCM_BENEFICIARY_AGE_LABEL",
                   "value":
                       "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, 'age')}}"
                 },
                 {
-                  "key": "Gender",
+                  "key": "HCM_BENEFICIARY_GENDER_LABEL",
                   "value":
                       "{{contextData.0.individuals.IndividualModel.gender}}"
                 },
                 {
-                  "key": "Mobile Number",
+                  "key": "HCM_BENEFICIARY_MOBILE_LABEL",
                   "value":
                       "{{contextData.0.individuals.IndividualModel.mobileNumber}}"
                 },
                 {
-                  "key": "Date of registration",
+                  "key": "HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
                   "value":
                       "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, 'date', dd MMM yyyy)}}"
                 }
@@ -150,30 +155,30 @@ final dynamic sampleFlows = {
                 "source": "contextData.targetCycle.deliveries",
                 "columns": [
                   {
-                    "header": "Delivery No.",
+                    "header": "HCM_DELIVERY_TABLE_DELIVERY_NO_HEADER",
                     "isActive": true,
                     "cellValue": "Dose {{item.id}}"
                   },
                   {
-                    "header": "Status",
+                    "header": "HCM_DELIVERY_TABLE_STATUS_HEADER",
                     "isActive": true,
                     "cellValue": {
-                      "@default": "To be administered",
+                      "@default": "HCM_DELIVERY_STATUS_TO_BE_ADMINISTERED",
                       "@condition": [
                         {
                           "when":
                               "{{fn:isDoseCompleted(item.id, contextData.0.currentRunningCycle)}} == true",
-                          "value": "Administered"
+                          "value": "HCM_DELIVERY_STATUS_ADMINISTERED"
                         },
                         {
                           "when": "{{item.id}} == {{contextData.0.nextDoseId}}",
-                          "value": "To be administered"
+                          "value": "HCM_DELIVERY_STATUS_TO_BE_ADMINISTERED"
                         }
                       ]
                     }
                   },
                   {
-                    "header": "Completed on",
+                    "header": "HCM_DELIVERY_TABLE_COMPLETED_ON_HEADER",
                     "isActive": true,
                     "cellValue":
                         "{{fn:getTaskCompletionDate(item.id, contextData.0.currentRunningCycle)}}"
@@ -207,26 +212,27 @@ final dynamic sampleFlows = {
                           "rows": "{{deliveries}}",
                           "columns": [
                             {
-                              "header": "Delivery No.",
+                              "header": "HCM_DELIVERY_TABLE_DELIVERY_NO_HEADER",
                               "isActive": true,
                               "cellValue": "Dose {{item.id}}"
                             },
                             {
-                              "header": "Status",
+                              "header": "HCM_DELIVERY_TABLE_STATUS_HEADER",
                               "isActive": true,
                               "cellValue": {
-                                "@default": "Pending",
+                                "@default": "HCM_DELIVERY_STATUS_PENDING",
                                 "@condition": [
                                   {
                                     "when":
                                         "{{fn:isDoseCompleted(item.id, currentItem.id)}} == true",
-                                    "value": "Administered"
+                                    "value": "HCM_DELIVERY_STATUS_ADMINISTERED"
                                   }
                                 ]
                               }
                             },
                             {
-                              "header": "Completed on",
+                              "header":
+                                  "HCM_DELIVERY_TABLE_COMPLETED_ON_HEADER",
                               "isActive": true,
                               "cellValue":
                                   "{{fn:getTaskCompletionDate(item.id, currentItem.id)}}"
@@ -261,7 +267,7 @@ final dynamic sampleFlows = {
       "footer": [
         {
           "type": "template",
-          "label": "Record Delivery",
+          "label": "HCM_DELIVERY_RECORD_DELIVERY_BUTTON",
           "format": "button",
           "visible":
               "{{fn:canRecordDelivery(contextData.0.nextCycleId)}}==true",
@@ -315,7 +321,7 @@ final dynamic sampleFlows = {
       ],
       "header": [
         {
-          "label": "Back",
+          "label": "HCM_COMMON_BACK_LABEL",
           "format": "backLink",
           "onAction": [
             {
@@ -325,11 +331,11 @@ final dynamic sampleFlows = {
           ]
         }
       ],
-      "heading": "Beneficiary Details",
+      "heading": "HCM_DELIVERY_BENEFICIARY_DETAILS_HEADING",
       "category": "DELIVERY",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "Delivery Overview of beneficiary",
+      "description": "HCM_DELIVERY_BENEFICIARY_DETAILS_DESCRIPTION",
       "initActions": [
         {
           "actionType": "SEARCH_EVENT",
@@ -613,16 +619,16 @@ final dynamic sampleFlows = {
       "body": [
         {
           "type": "template",
-          "label": "Referral recorded successfully",
+          "label": "HCM_REFERRAL_SUCCESS_HEADING",
           "format": "panelCard",
-          "heading": "Referral recorded successfully",
+          "heading": "HCM_REFERRAL_SUCCESS_HEADING",
           "fieldName": "successCard",
           "mandatory": true,
           "properties": {"type": "success"},
           "description": "ID-{{navigation.selectedIndividualIdentifierId}}",
           "primaryAction": {
             "type": "template",
-            "label": "View Household Details",
+            "label": "HCM_REFERRAL_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
             "format": "button",
             "hidden": false,
             "onAction": [
@@ -655,7 +661,7 @@ final dynamic sampleFlows = {
           },
           "secondaryAction": {
             "type": "template",
-            "label": "Go Back",
+            "label": "HCM_REFERRAL_SUCCESS_GO_BACK_BUTTON",
             "format": "button",
             "hidden": false,
             "onAction": [
@@ -668,8 +674,8 @@ final dynamic sampleFlows = {
             "mandatory": true,
             "properties": {"type": "secondary"}
           },
-          "primaryActionLabel": "View Household Details",
-          "secondaryActionLabel": "Go Back"
+          "primaryActionLabel": "HCM_REFERRAL_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
+          "secondaryActionLabel": "HCM_REFERRAL_SUCCESS_GO_BACK_BUTTON"
         }
       ],
       "name": "referralSuccess",
@@ -678,7 +684,7 @@ final dynamic sampleFlows = {
       "header": [
         {
           "type": "template",
-          "label": "Back",
+          "label": "HCM_COMMON_BACK_LABEL",
           "format": "backLink",
           "onAction": [
             {
@@ -716,7 +722,7 @@ final dynamic sampleFlows = {
               "children": [
                 {
                   "type": "template",
-                  "label": "Edit Household",
+                  "label": "HCM_HOUSEHOLD_OVERVIEW_EDIT_HOUSEHOLD_BUTTON",
                   "format": "button",
                   "onAction": [
                     {
@@ -756,19 +762,19 @@ final dynamic sampleFlows = {
             {
               "data": [
                 {
-                  "key": "Head of the household",
+                  "key": "HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
                   "value":
                       "{{contextData.0.headIndividual.IndividualModel.name.givenName}}",
                   "isActive": true
                 },
                 {
-                  "key": "Settlement Area",
+                  "key": "HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
                   "value":
                       "{{contextData.0.household.HouseholdModel.address.locality.code}}",
                   "isActive": true
                 },
                 {
-                  "key": "No. of children under 5",
+                  "key": "HCM_HOUSEHOLD_OVERVIEW_CHILDREN_COUNT_LABEL",
                   "value":
                       "{{contextData.0.household.HouseholdModel.additionalFields.fields.childrenCount}}",
                   "isActive": true
@@ -796,7 +802,8 @@ final dynamic sampleFlows = {
                       },
                       {
                         "type": "template",
-                        "label": "Edit Individual",
+                        "label":
+                            "HCM_HOUSEHOLD_OVERVIEW_EDIT_INDIVIDUAL_BUTTON",
                         "format": "button",
                         "disabled":
                             "{{fn:disableEdit(item.task, item.hFReferral)}}==true",
@@ -830,7 +837,12 @@ final dynamic sampleFlows = {
                                   "value":
                                       "{{item.member.0.householdClientReferenceId}}"
                                 },
-                                {"key": "isEdit", "value": "true"}
+                                {"key": "isEdit", "value": "true"},
+                                {
+                                  "key": "headMobileNumber",
+                                  "value":
+                                      "{{contextData.0.headIndividual.IndividualModel.mobileNumber}}"
+                                }
                               ],
                               "name": "ADD_MEMBER",
                               "type": "FORM"
@@ -864,46 +876,55 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
-                    "label": "Not Eligible",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_HEAD_TAG",
+                    "format": "tag",
+                    "visible": "{{item.member.0.isHeadOfHousehold}}==true",
+                    "fieldName": "headOfHouseholdTag",
+                    "properties": {"tagType": "info", "bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_NOT_ELIGIBLE_TAG",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==false && {{item.member.0.isHeadOfHousehold}}==false",
                     "fieldName": "notEligible",
                     "properties": {"tagType": "error"}
                   },
                   {
                     "type": "template",
-                    "label": "Beneficiary Referred",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_BENEFICIARY_REFERRED_TAG",
                     "format": "tag",
                     "visible":
-                        "{{fn:hasReferralForCurrentCycle(item.hFReferral)}}==true",
+                        "{{fn:hasReferralForCurrentCycle(item.hFReferral)}}==true && {{item.member.0.isHeadOfHousehold}}==false",
                     "fieldName": "beneficiaryReferred",
                     "properties": {"tagType": "error"}
                   },
                   {
                     "type": "template",
-                    "label": "Administered Successfully",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTERED_SUCCESS_TAG",
                     "format": "tag",
                     "visible":
-                        "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{item.member.0.isHeadOfHousehold}}==false",
                     "fieldName": "administrationSuccess",
                     "properties": {"tagType": "success", "bottomGap": 16}
                   },
                   {
                     "type": "template",
-                    "label": "Not Visited",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_NOT_VISITED_TAG",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{item.member.0.isHeadOfHousehold}}==false",
                     "fieldName": "notVisited",
                     "properties": {"tagType": "info", "bottomGap": 16}
                   },
                   {
                     "type": "template",
-                    "label": "Deliver Intervention",
+                    "label":
+                        "HCM_HOUSEHOLD_OVERVIEW_DELIVER_INTERVENTION_BUTTON",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{item.member.0.isHeadOfHousehold}}==false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -963,10 +984,10 @@ final dynamic sampleFlows = {
                   {
                     "icon": "add",
                     "type": "template",
-                    "label": "View Details",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_VIEW_DETAILS_BUTTON",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{item.member.0.isHeadOfHousehold}}==false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1038,7 +1059,7 @@ final dynamic sampleFlows = {
             },
             {
               "type": "template",
-              "label": "Add Members",
+              "label": "HCM_HOUSEHOLD_OVERVIEW_ADD_MEMBERS_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -1049,6 +1070,11 @@ final dynamic sampleFlows = {
                         "key": "HouseholdClientReferenceId",
                         "value":
                             "{{contextData.0.household.HouseholdModel.clientReferenceId}}"
+                      },
+                      {
+                        "key": "headMobileNumber",
+                        "value":
+                            "{{contextData.0.headIndividual.IndividualModel.mobileNumber}}"
                       }
                     ],
                     "name": "ADD_MEMBER",
@@ -1075,7 +1101,7 @@ final dynamic sampleFlows = {
       "footer": [],
       "header": [
         {
-          "label": "Back",
+          "label": "HCM_COMMON_BACK_LABEL",
           "format": "backLink",
           "onAction": [
             {
@@ -1085,11 +1111,11 @@ final dynamic sampleFlows = {
           ]
         }
       ],
-      "heading": "Household Overview",
+      "heading": "HCM_HOUSEHOLD_OVERVIEW_HEADING",
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "Overview of the household",
+      "description": "HCM_HOUSEHOLD_OVERVIEW_DESCRIPTION",
       "initActions": [
         {
           "actionType": "SEARCH_EVENT",
@@ -1208,7 +1234,7 @@ final dynamic sampleFlows = {
       "body": [
         {
           "type": "template",
-          "label": "Near by households",
+          "label": "HCM_SEARCH_NEARBY_HOUSEHOLDS_LABEL",
           "format": "proximitySearch",
           "onAction": [
             {
@@ -1235,7 +1261,7 @@ final dynamic sampleFlows = {
         },
         {
           "type": "template",
-          "label": "Name of the individual",
+          "label": "HCM_SEARCH_NAME_LABEL",
           "format": "searchBar",
           "onAction": [
             {
@@ -1263,7 +1289,7 @@ final dynamic sampleFlows = {
         {
           "icon": "FilterAlt",
           "type": "template",
-          "label": "Filter",
+          "label": "HCM_SEARCH_FILTER_LABEL",
           "format": "actionPopup",
           "fieldName": "filterPopUp",
           "properties": {
@@ -1278,22 +1304,24 @@ final dynamic sampleFlows = {
                   "enums": [
                     {
                       "code": "ADMINISTRATION_SUCCESS",
-                      "name": "Administration Success"
+                      "name": "HCM_SEARCH_FILTER_ADMINISTRATION_SUCCESS"
                     },
-                    {"code": "CLOSED_HOUSEHOLD", "name": "Missed Children"},
-                    {"code": "NOT_ADMINISTERED", "name": "Not Administered"}
+                    {
+                      "code": "CLOSED_HOUSEHOLD",
+                      "name": "HCM_SEARCH_FILTER_MISSED_CHILDREN"
+                    }
                   ],
                   "format": "selectionCard",
                   "fieldName": "selectedStatus"
                 }
               ],
               "type": "default",
-              "title": "Filter",
+              "title": "HCM_SEARCH_FILTER_LABEL",
               "titleIcon": "FilterAlt",
               "footerActions": [
                 {
                   "type": "template",
-                  "label": "Clear All",
+                  "label": "HCM_SEARCH_FILTER_CLEAR_ALL_BUTTON",
                   "format": "button",
                   "onAction": [
                     {
@@ -1320,7 +1348,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "template",
-                  "label": "Apply",
+                  "label": "HCM_SEARCH_FILTER_APPLY_BUTTON",
                   "format": "button",
                   "onAction": [
                     {
@@ -1387,30 +1415,6 @@ final dynamic sampleFlows = {
                           "properties": {
                             "data": [
                               {
-                                "key": "status",
-                                "root": "task",
-                                "value": {
-                                  "values": ["ADMINISTRATION_SUCCESS"],
-                                  "scope": "projectBeneficiary"
-                                },
-                                "operation": "notExists"
-                              }
-                            ],
-                            "name": "task"
-                          }
-                        }
-                      ],
-                      "condition": {
-                        "expression": "selectedStatus == NOT_ADMINISTERED"
-                      }
-                    },
-                    {
-                      "actions": [
-                        {
-                          "actionType": "SEARCH_EVENT",
-                          "properties": {
-                            "data": [
-                              {
                                 "key": "projectId",
                                 "root": "hFReferral",
                                 "value": "{{singleton.selectedProject.id}}",
@@ -1461,7 +1465,7 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
-                    "label": "Open",
+                    "label": "HCM_SEARCH_OPEN_BUTTON",
                     "format": "button",
                     "onAction": [
                       {
@@ -1537,19 +1541,19 @@ final dynamic sampleFlows = {
                   "source": "individuals",
                   "columns": [
                     {
-                      "header": "Beneficiary",
+                      "header": "HCM_SEARCH_TABLE_BENEFICIARY_HEADER",
                       "hidden": false,
                       "isActive": true,
                       "cellValue": "{{item.name.givenName}}"
                     },
                     {
-                      "header": "Age",
+                      "header": "HCM_SEARCH_TABLE_AGE_HEADER",
                       "hidden": false,
                       "isActive": true,
                       "cellValue": "{{fn:formatDate(item.dateOfBirth, 'age')}}"
                     },
                     {
-                      "header": "Gender",
+                      "header": "HCM_SEARCH_TABLE_GENDER_HEADER",
                       "hidden": false,
                       "isActive": true,
                       "cellValue": "{{item.gender}}"
@@ -1575,7 +1579,7 @@ final dynamic sampleFlows = {
       "footer": [
         {
           "type": "template",
-          "label": "Register Beneficiary",
+          "label": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
           "format": "button",
           "onAction": [
             {
@@ -1601,7 +1605,7 @@ final dynamic sampleFlows = {
         {
           "type": "template",
           "isGS1": false,
-          "label": "Scan Beneficiary",
+          "label": "HCM_SEARCH_SCAN_BENEFICIARY_BUTTON",
           "format": "qrScanner",
           "onAction": [
             {
@@ -1655,7 +1659,7 @@ final dynamic sampleFlows = {
       ],
       "header": [
         {
-          "label": "Back",
+          "label": "HCM_COMMON_BACK_LABEL",
           "format": "backLink",
           "onAction": [
             {
@@ -1665,11 +1669,11 @@ final dynamic sampleFlows = {
           ]
         }
       ],
-      "heading": "Search Beneficiary",
+      "heading": "HCM_SEARCH_BENEFICIARY_HEADING",
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "Search beneficiaries registered for the current campaign",
+      "description": "HCM_SEARCH_BENEFICIARY_DESCRIPTION",
       "wrapperConfig": {
         "filters": [],
         "relations": [
@@ -1752,7 +1756,15 @@ final dynamic sampleFlows = {
             "task"
           ],
           "primary": "household",
-          "pagination": {"limit": 5, "maxItems": 15}
+          "pagination": {"limit": 5, "maxItems": 15},
+          "baseFilters": [
+            {
+              "key": "localityBoundaryCode",
+              "root": "address",
+              "value": "{{singleton.boundary.code}}",
+              "operation": "equals"
+            }
+          ]
         }
       },
       "scrollListener": {
@@ -1788,11 +1800,11 @@ final dynamic sampleFlows = {
           "flow": "DELIVERY",
           "page": "DeliveryDetails",
           "type": "object",
-          "label": "Delivery Details",
+          "label": "HCM_DELIVERY_DETAILS_HEADING",
           "order": 1,
           "footer": [
             {
-              "label": "Save Delivery",
+              "label": "HCM_DELIVERY_SAVE_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -1812,7 +1824,7 @@ final dynamic sampleFlows = {
             }
           ],
           "module": "REGISTRATION",
-          "heading": "Delivery Details",
+          "heading": "HCM_DELIVERY_DETAILS_HEADING",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -1835,7 +1847,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
                 "configName": "delivery"
@@ -1848,7 +1860,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create household."}
+                    "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
                   }
                 ]
               }
@@ -1881,7 +1893,7 @@ final dynamic sampleFlows = {
                       {
                         "actionType": "SHOW_TOAST",
                         "properties": {
-                          "message": "Failed to fetch config for bulk delivery."
+                          "message": "HCM_ERROR_FETCH_BULK_DELIVERY_CONFIG"
                         }
                       }
                     ],
@@ -1895,9 +1907,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {
-                          "message": "Failed to create bulk tasks."
-                        }
+                        "properties": {"message": "HCM_ERROR_CREATE_BULK_TASKS"}
                       }
                     ]
                   }
@@ -1924,7 +1934,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -1939,7 +1949,7 @@ final dynamic sampleFlows = {
           "properties": [
             {
               "type": "string",
-              "label": "Date of delivery",
+              "label": "HCM_DELIVERY_DATE_LABEL",
               "order": 1,
               "value": "",
               "format": "date",
@@ -1969,7 +1979,7 @@ final dynamic sampleFlows = {
                 {"code": "AQ1", "name": "AQ1"},
                 {"code": "AQ2", "name": "AQ2"}
               ],
-              "label": "Resource",
+              "label": "HCM_DELIVERY_RESOURCE_LABEL",
               "order": 2,
               "value": "",
               "format": "custom",
@@ -1990,7 +2000,7 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Resource card selection is required"
+                  "message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
                 }
               ],
               "errorMessage": "",
@@ -2003,11 +2013,11 @@ final dynamic sampleFlows = {
                 {"code": "AQ2", "name": "AQ2"}
               ],
               "includeInSummary": true,
-              "required.message": "Resource card selection is required"
+              "required.message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
             },
             {
               "type": "string",
-              "label": "Delivery Comments",
+              "label": "HCM_DELIVERY_COMMENTS_LABEL",
               "order": 3,
               "value": "",
               "format": "dropdown",
@@ -2016,13 +2026,22 @@ final dynamic sampleFlows = {
               "tooltip": "",
               "helpText": "",
               "enums": [
-                {"code": "SUCCESSFUL_DELIVERY", "name": "Delivery Successful"},
+                {
+                  "code": "SUCCESSFUL_DELIVERY",
+                  "name": "HCM_DELIVERY_COMMENT_SUCCESSFUL"
+                },
                 {
                   "code": "INSUFFICIENT_RESOURCES",
-                  "name": "Insufficient Resources"
+                  "name": "HCM_DELIVERY_COMMENT_INSUFFICIENT"
                 },
-                {"code": "BENEFICIARY_REFUSED", "name": "Beneficiary Refused"},
-                {"code": "BENEFICIARY_ABSENT", "name": "Beneficiary Absent"}
+                {
+                  "code": "BENEFICIARY_REFUSED",
+                  "name": "HCM_DELIVERY_COMMENT_REFUSED"
+                },
+                {
+                  "code": "BENEFICIARY_ABSENT",
+                  "name": "HCM_DELIVERY_COMMENT_ABSENT"
+                }
               ],
               "infoText": "",
               "readOnly": false,
@@ -2040,7 +2059,7 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "label": "Scan Delivery",
+              "label": "HCM_DELIVERY_SCAN_LABEL",
               "order": 4,
               "value": "",
               "format": "scanner",
@@ -2062,10 +2081,41 @@ final dynamic sampleFlows = {
               "includeInForm": true,
               "isMultiSelect": false,
               "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "label": "HCM_DELIVERY_LAT_LONG_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "latLng",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             }
           ],
-          "actionLabel": "Save Delivery",
-          "description": "Capture details of the resources to be delivered ",
+          "actionLabel": "HCM_DELIVERY_SAVE_BUTTON",
+          "description": "HCM_DELIVERY_DETAILS_DESCRIPTION",
           "showTabView": false,
           "submitCondition": null,
           "preventScreenCapture": false
@@ -2094,7 +2144,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
               }
             ],
             "configName": "delivery"
@@ -2107,7 +2157,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create household."}
+                "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
               }
             ]
           }
@@ -2134,7 +2184,7 @@ final dynamic sampleFlows = {
                   {
                     "actionType": "SHOW_TOAST",
                     "properties": {
-                      "message": "Failed to fetch config for bulk delivery."
+                      "message": "HCM_ERROR_FETCH_BULK_DELIVERY_CONFIG"
                     }
                   }
                 ],
@@ -2148,7 +2198,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create bulk tasks."}
+                    "properties": {"message": "HCM_ERROR_CREATE_BULK_TASKS"}
                   }
                 ]
               }
@@ -2174,7 +2224,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
+                "properties": {"message": "HCM_ERROR_NAVIGATION"}
               }
             ],
             "navigationMode": "popUntilAndPush",
@@ -2197,11 +2247,11 @@ final dynamic sampleFlows = {
           "flow": "ADD_MEMBER",
           "page": "beneficiaryDetails",
           "type": "object",
-          "label": "Add Member",
+          "label": "HCM_ADD_MEMBER_HEADING",
           "order": 4,
           "footer": [
             {
-              "label": "Save Beneficiary",
+              "label": "HCM_ADD_MEMBER_SAVE_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -2227,7 +2277,7 @@ final dynamic sampleFlows = {
             }
           ],
           "module": "REGISTRATION",
-          "heading": "Add Member",
+          "heading": "HCM_ADD_MEMBER_HEADING",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -2238,12 +2288,16 @@ final dynamic sampleFlows = {
                   {
                     "key": "HouseholdClientReferenceId",
                     "value": "{{navigation.HouseholdClientReferenceId}}"
+                  },
+                  {
+                    "key": "headMobileNumber",
+                    "value": "{{navigation.headMobileNumber}}"
                   }
                 ],
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
                 "configName": "individualRegistration"
@@ -2285,7 +2339,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -2306,14 +2360,14 @@ final dynamic sampleFlows = {
           "properties": [
             {
               "type": "string",
-              "label": "Full name",
+              "label": "HCM_REGISTRATION_FIRST_NAME_LABEL",
               "order": 1,
               "value": "",
               "format": "text",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
-              "helpText": "Enter the full legal name of the individual.",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -2326,32 +2380,32 @@ final dynamic sampleFlows = {
               "lengthRange": {
                 "maxLength": "200",
                 "minLength": "2",
-                "errorMessage": "Size must be 2 to 200 characters"
+                "errorMessage": "HCM_VALIDATION_SIZE_2_TO_200"
               },
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field cannot be empty"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 },
                 {
                   "type": "minLength",
                   "value": "2",
-                  "message": "Size must be 2 to 200 characters"
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
                 },
                 {
                   "type": "maxLength",
                   "value": "200",
-                  "message": "Size must be 2 to 200 characters"
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "Required field cannot be empty"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "string",
-              "label": "Family name",
+              "label": "HCM_REGISTRATION_FAMILY_NAME_LABEL",
               "order": 2,
               "value": "",
               "format": "text",
@@ -2370,13 +2424,13 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "lengthRange": {
                 "minLength": "2",
-                "errorMessage": "Minimum 2 characters required"
+                "errorMessage": "HCM_VALIDATION_MIN_2_CHARS"
               },
               "validations": [
                 {
                   "type": "minLength",
                   "value": "2",
-                  "message": "Minimum 2 characters required"
+                  "message": "HCM_VALIDATION_MIN_2_CHARS"
                 }
               ],
               "errorMessage": "",
@@ -2387,7 +2441,7 @@ final dynamic sampleFlows = {
               "enums": [
                 {"code": "DEFAULT", "name": "Default"}
               ],
-              "label": "ID populator",
+              "label": "HCM_REGISTRATION_ID_POPULATOR_LABEL",
               "order": 3,
               "value": "DEFAULT",
               "format": "idPopulator",
@@ -2415,25 +2469,25 @@ final dynamic sampleFlows = {
                   "code": "UNIQUE_BENEFICIARY_ID",
                   "name": "Unique Beneficiary ID"
                 },
-                {"code": "OTHER", "name": "Other"}
+                {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
               ],
               "required.message": "ID is required"
             },
             {
               "type": "string",
-              "label": "Date of birth",
+              "label": "HCM_REGISTRATION_DOB_LABEL",
               "order": 4,
               "value": "",
               "format": "dob",
               "hidden": false,
               "isMdms": false,
-              "tooltip": "Used for age-based program eligibility.",
+              "tooltip": "HCM_REGISTRATION_DOB_TOOLTIP",
               "ageRange": {
                 "maxAge": 1800,
                 "minAge": 3,
-                "errorMessage": "Please enter a valid age"
+                "errorMessage": "HCM_VALIDATION_INVALID_AGE"
               },
-              "helpText": "Select the date of birth from the calendar.",
+              "helpText": "HCM_REGISTRATION_DOB_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -2447,30 +2501,30 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Please fill the required field"
+                  "message": "HCM_VALIDATION_REQUIRED"
                 },
                 {
                   "type": "minAge",
                   "value": 3,
-                  "message": "Please enter a valid age"
+                  "message": "HCM_VALIDATION_INVALID_AGE"
                 },
                 {
                   "type": "maxAge",
                   "value": 1800,
-                  "message": "Please enter a valid age"
+                  "message": "HCM_VALIDATION_INVALID_AGE"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "Please fill the required field"
+              "required.message": "HCM_VALIDATION_REQUIRED"
             },
             {
               "type": "string",
               "enums": [
-                {"code": "MALE", "name": "Male"},
-                {"code": "FEMALE", "name": "Female"}
+                {"code": "MALE", "name": "HCM_COMMON_MALE"},
+                {"code": "FEMALE", "name": "HCM_COMMON_FEMALE"}
               ],
-              "label": "Gender",
+              "label": "HCM_REGISTRATION_GENDER_LABEL",
               "order": 5,
               "value": "",
               "format": "select",
@@ -2491,29 +2545,28 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Please select a gender"
+                  "message": "HCM_VALIDATION_GENDER_REQUIRED"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
               "dropDownOptions": [
-                {"code": "MALE", "name": "Male"},
-                {"code": "FEMALE", "name": "Female"}
+                {"code": "MALE", "name": "HCM_COMMON_MALE"},
+                {"code": "FEMALE", "name": "HCM_COMMON_FEMALE"}
               ],
-              "required.message": "Please select a gender"
+              "required.message": "HCM_VALIDATION_GENDER_REQUIRED"
             },
             {
               "type": "string",
-              "label": "Mobile number",
+              "label": "HCM_REGISTRATION_MOBILE_LABEL",
               "order": 6,
               "value": "",
               "format": "mobileNumber",
               "hidden": false,
               "isMdms": false,
               "pattern": "^\\d+\$",
-              "tooltip":
-                  "Will be used for communication and OTP-based verification.",
-              "helpText": "Enter a valid mobile number.",
+              "tooltip": "HCM_REGISTRATION_MOBILE_TOOLTIP",
+              "helpText": "HCM_REGISTRATION_MOBILE_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "phone",
@@ -2525,32 +2578,38 @@ final dynamic sampleFlows = {
               "lengthRange": {
                 "maxLength": 10,
                 "minLength": 10,
-                "errorMessage": "Mobile number must be 10 digits"
+                "errorMessage": "HCM_VALIDATION_MOBILE_10_DIGITS"
               },
               "validations": [
                 {
                   "type": "pattern",
                   "value": "^\\d+\$",
-                  "message": "Only numbers are allowed"
+                  "message": "HCM_VALIDATION_ONLY_NUMBERS"
                 },
                 {
                   "type": "minLength",
                   "value": 10,
-                  "message": "Mobile number must be 10 digits"
+                  "message": "HCM_VALIDATION_MOBILE_10_DIGITS"
                 },
                 {
                   "type": "maxLength",
                   "value": 10,
-                  "message": "Mobile number must be 10 digits"
+                  "message": "HCM_VALIDATION_MOBILE_10_DIGITS"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "pattern.message": "Only numbers are allowed"
+              "pattern.message": "HCM_VALIDATION_ONLY_NUMBERS",
+              "autoFillCondition": [
+                {
+                  "value": "{{navigation.headMobileNumber}}",
+                  "expression": "true==true"
+                }
+              ]
             },
             {
               "type": "string",
-              "label": "QR Scan",
+              "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
               "order": 7,
               "value": "",
               "format": "scanner",
@@ -2573,8 +2632,8 @@ final dynamic sampleFlows = {
               "includeInSummary": true
             }
           ],
-          "actionLabel": "Save Beneficiary",
-          "description": "Enter details of each individual in the household.",
+          "actionLabel": "HCM_ADD_MEMBER_SAVE_BUTTON",
+          "description": "HCM_ADD_MEMBER_DESCRIPTION",
           "showTabView": false,
           "submitCondition": null,
           "preventScreenCapture": false,
@@ -2593,12 +2652,16 @@ final dynamic sampleFlows = {
               {
                 "key": "HouseholdClientReferenceId",
                 "value": "{{navigation.HouseholdClientReferenceId}}"
+              },
+              {
+                "key": "headMobileNumber",
+                "value": "{{navigation.headMobileNumber}}"
               }
             ],
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
               }
             ],
             "configName": "individualRegistration"
@@ -2638,7 +2701,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
+                "properties": {"message": "HCM_ERROR_NAVIGATION"}
               }
             ],
             "navigationMode": "popUntilAndPush",
@@ -2743,11 +2806,11 @@ final dynamic sampleFlows = {
           "flow": "REFER_BENEFICIARY",
           "page": "referBeneficiary",
           "type": "object",
-          "label": "Refer Beneficiary",
+          "label": "HCM_REFER_BENEFICIARY_HEADING",
           "order": 1,
           "footer": [
             {
-              "label": "Submit",
+              "label": "HCM_REFER_BENEFICIARY_SUBMIT_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -2764,7 +2827,7 @@ final dynamic sampleFlows = {
             }
           ],
           "module": "REGISTRATION",
-          "heading": "Refer Beneficiary",
+          "heading": "HCM_REFER_BENEFICIARY_HEADING",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -2810,7 +2873,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
                 "configName": "referralBeneficaryCreate"
@@ -2856,7 +2919,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create stock."}
+                    "properties": {"message": "HCM_ERROR_CREATE_STOCK"}
                   }
                 ]
               }
@@ -2902,7 +2965,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -2914,7 +2977,7 @@ final dynamic sampleFlows = {
           "properties": [
             {
               "type": "string",
-              "label": "Admnistrative unit",
+              "label": "HCM_REFER_ADMINISTRATIVE_UNIT_LABEL",
               "order": 1,
               "value": "",
               "format": "locality",
@@ -2935,15 +2998,15 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Please fill the mandatory field"
+                  "message": "HCM_VALIDATION_MANDATORY_FIELD"
                 }
               ],
               "errorMessage": "",
-              "required.message": "Please fill the mandatory field"
+              "required.message": "HCM_VALIDATION_MANDATORY_FIELD"
             },
             {
               "type": "string",
-              "label": "Referred by",
+              "label": "HCM_REFER_REFERRED_BY_LABEL",
               "order": 2,
               "value": "",
               "format": "text",
@@ -2964,11 +3027,11 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Please fill the mandatory field"
+                  "message": "HCM_VALIDATION_MANDATORY_FIELD"
                 }
               ],
               "errorMessage": "",
-              "required.message": "Please fill the mandatory field",
+              "required.message": "HCM_VALIDATION_MANDATORY_FIELD",
               "autoFillCondition": [
                 {"value": "{{loggedInUserUuid}}", "expression": "true==true"}
               ]
@@ -2976,7 +3039,7 @@ final dynamic sampleFlows = {
             {
               "type": "dynamic",
               "enums": null,
-              "label": "Health Facility",
+              "label": "HCM_REFER_HEALTH_FACILITY_LABEL",
               "order": 3,
               "value": "",
               "format": "custom",
@@ -2997,20 +3060,20 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Please fill the mandatory field"
+                  "message": "HCM_VALIDATION_MANDATORY_FIELD"
                 }
               ],
               "errorMessage": "",
               "includeInForm": true,
               "isMultiSelect": false,
-              "required.message": "Please fill the mandatory field"
+              "required.message": "HCM_VALIDATION_MANDATORY_FIELD"
             },
             {
               "type": "string",
               "enums": [
-                {"code": "FEVER", "name": "Fever"}
+                {"code": "FEVER", "name": "HCM_REFER_REASON_FEVER"}
               ],
-              "label": "What is the reason for referral?",
+              "label": "HCM_REFER_REASON_LABEL",
               "order": 4,
               "value": "",
               "format": "radio",
@@ -3031,15 +3094,15 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Please fill the mandatory field"
+                  "message": "HCM_VALIDATION_MANDATORY_FIELD"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "Please fill the mandatory field"
+              "required.message": "HCM_VALIDATION_MANDATORY_FIELD"
             }
           ],
-          "actionLabel": "Submit",
+          "actionLabel": "HCM_REFER_BENEFICIARY_SUBMIT_BUTTON",
           "description": " ",
           "showTabView": false,
           "submitCondition": null,
@@ -3089,7 +3152,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
               }
             ],
             "configName": "referralBeneficaryCreate"
@@ -3133,7 +3196,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create stock."}
+                "properties": {"message": "HCM_ERROR_CREATE_STOCK"}
               }
             ]
           }
@@ -3177,7 +3240,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
+                "properties": {"message": "HCM_ERROR_NAVIGATION"}
               }
             ],
             "navigationMode": "popUntilAndPush",
@@ -3200,11 +3263,11 @@ final dynamic sampleFlows = {
           "flow": "HOUSEHOLD",
           "page": "beneficiaryDetails",
           "type": "object",
-          "label": "Beneficiary Details",
+          "label": "HCM_REGISTRATION_BENEFICIARY_DETAILS_HEADING",
           "order": 4,
           "footer": [
             {
-              "label": "Save Beneficiary",
+              "label": "HCM_REGISTRATION_SAVE_BENEFICIARY_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -3230,7 +3293,7 @@ final dynamic sampleFlows = {
             }
           ],
           "module": "REGISTRATION",
-          "heading": "Beneficiary Details",
+          "heading": "HCM_REGISTRATION_BENEFICIARY_DETAILS_HEADING",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -3242,7 +3305,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -3259,7 +3322,7 @@ final dynamic sampleFlows = {
                       {
                         "actionType": "SHOW_TOAST",
                         "properties": {
-                          "message": "Failed to update missed children."
+                          "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
                         }
                       }
                     ]
@@ -3280,7 +3343,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -3301,7 +3364,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -3314,7 +3377,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to update household."}
+                        "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -3334,7 +3397,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -3352,7 +3415,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -3366,7 +3429,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to create household."}
+                        "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -3386,7 +3449,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -3410,14 +3473,14 @@ final dynamic sampleFlows = {
           "properties": [
             {
               "type": "string",
-              "label": "Full name",
+              "label": "HCM_REGISTRATION_FIRST_NAME_LABEL",
               "order": 1,
               "value": "",
               "format": "text",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
-              "helpText": "Enter the full legal name of the individual.",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -3430,32 +3493,32 @@ final dynamic sampleFlows = {
               "lengthRange": {
                 "maxLength": "200",
                 "minLength": "2",
-                "errorMessage": "Size must be 2 to 200 characters"
+                "errorMessage": "HCM_VALIDATION_SIZE_2_TO_200"
               },
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field cannot be empty"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 },
                 {
                   "type": "minLength",
                   "value": "2",
-                  "message": "Size must be 2 to 200 characters"
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
                 },
                 {
                   "type": "maxLength",
                   "value": "200",
-                  "message": "Size must be 2 to 200 characters"
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "Required field cannot be empty"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "string",
-              "label": "Family name",
+              "label": "HCM_REGISTRATION_FAMILY_NAME_LABEL",
               "order": 2,
               "value": "",
               "format": "text",
@@ -3474,13 +3537,13 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "lengthRange": {
                 "minLength": "2",
-                "errorMessage": "Minimum 2 characters needed"
+                "errorMessage": "HCM_VALIDATION_MIN_2_CHARS_NEEDED"
               },
               "validations": [
                 {
                   "type": "minLength",
                   "value": "2",
-                  "message": "Minimum 2 characters needed"
+                  "message": "HCM_VALIDATION_MIN_2_CHARS_NEEDED"
                 }
               ],
               "errorMessage": "",
@@ -3488,7 +3551,7 @@ final dynamic sampleFlows = {
             },
             {
               "type": "boolean",
-              "label": "Is head of family?",
+              "label": "HCM_REGISTRATION_IS_HEAD_LABEL",
               "order": 3,
               "value": true,
               "format": "checkbox",
@@ -3510,19 +3573,19 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field cannot be empty"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "Required field cannot be empty"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "string",
               "enums": [
                 {"code": "DEFAULT", "name": "Default"}
               ],
-              "label": "ID populator",
+              "label": "HCM_REGISTRATION_ID_POPULATOR_LABEL",
               "order": 4,
               "value": "DEFAULT",
               "format": "idPopulator",
@@ -3554,19 +3617,19 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "label": "Date of birth",
+              "label": "HCM_REGISTRATION_DOB_LABEL",
               "order": 5,
               "value": "",
               "format": "dob",
               "hidden": false,
               "isMdms": false,
-              "tooltip": "Used for age-based program eligibility.",
+              "tooltip": "HCM_REGISTRATION_DOB_TOOLTIP",
               "ageRange": {
                 "maxAge": 1800,
-                "minAge": 3,
-                "errorMessage": "Please enter a valid age"
+                "minAge": 216,
+                "errorMessage": "HCM_VALIDATION_AGE_18_PLUS"
               },
-              "helpText": "Select the date of birth from the calendar.",
+              "helpText": "HCM_REGISTRATION_DOB_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -3580,30 +3643,30 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Please fill the required field"
+                  "message": "HCM_VALIDATION_REQUIRED"
                 },
                 {
                   "type": "minAge",
-                  "value": 3,
-                  "message": "Please enter a valid age"
+                  "value": 216,
+                  "message": "HCM_VALIDATION_AGE_18_PLUS"
                 },
                 {
                   "type": "maxAge",
                   "value": 1800,
-                  "message": "Please enter a valid age"
+                  "message": "HCM_VALIDATION_INVALID_AGE"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "Please fill the required field"
+              "required.message": "HCM_VALIDATION_REQUIRED"
             },
             {
               "type": "string",
               "enums": [
-                {"code": "MALE", "name": "Male"},
-                {"code": "FEMALE", "name": "Female"}
+                {"code": "MALE", "name": "HCM_COMMON_MALE"},
+                {"code": "FEMALE", "name": "HCM_COMMON_FEMALE"}
               ],
-              "label": "Gender",
+              "label": "HCM_REGISTRATION_GENDER_LABEL",
               "order": 6,
               "value": "",
               "format": "select",
@@ -3624,25 +3687,24 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Please select a gender"
+                  "message": "HCM_VALIDATION_GENDER_REQUIRED"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "Please select a gender"
+              "required.message": "HCM_VALIDATION_GENDER_REQUIRED"
             },
             {
               "type": "string",
-              "label": "Mobile number",
+              "label": "HCM_REGISTRATION_MOBILE_LABEL",
               "order": 7,
               "value": "",
               "format": "mobileNumber",
               "hidden": false,
               "isMdms": false,
               "pattern": "^\\d+\$",
-              "tooltip":
-                  "Will be used for communication and OTP-based verification.",
-              "helpText": "Enter a valid mobile number.",
+              "tooltip": "HCM_REGISTRATION_MOBILE_TOOLTIP",
+              "helpText": "HCM_REGISTRATION_MOBILE_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "phone",
@@ -3654,32 +3716,32 @@ final dynamic sampleFlows = {
               "lengthRange": {
                 "maxLength": 10,
                 "minLength": 10,
-                "errorMessage": "Mobile number must be 10 digits"
+                "errorMessage": "HCM_VALIDATION_MOBILE_10_DIGITS"
               },
               "validations": [
                 {
                   "type": "pattern",
                   "value": "^\\d+\$",
-                  "message": "Only numbers are allowed"
+                  "message": "HCM_VALIDATION_ONLY_NUMBERS"
                 },
                 {
                   "type": "minLength",
                   "value": 10,
-                  "message": "Mobile number must be 10 digits"
+                  "message": "HCM_VALIDATION_MOBILE_10_DIGITS"
                 },
                 {
                   "type": "maxLength",
                   "value": 10,
-                  "message": "Mobile number must be 10 digits"
+                  "message": "HCM_VALIDATION_MOBILE_10_DIGITS"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "pattern.message": "Only numbers are allowed"
+              "pattern.message": "HCM_VALIDATION_ONLY_NUMBERS"
             },
             {
               "type": "string",
-              "label": "QR Scan",
+              "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
               "order": 8,
               "value": "",
               "format": "scanner",
@@ -3702,8 +3764,8 @@ final dynamic sampleFlows = {
               "includeInSummary": true
             }
           ],
-          "actionLabel": "Save Beneficiary",
-          "description": "Enter details of each individual in the household.",
+          "actionLabel": "HCM_REGISTRATION_SAVE_BENEFICIARY_BUTTON",
+          "description": "HCM_REGISTRATION_BENEFICIARY_DETAILS_DESCRIPTION",
           "showTabView": false,
           "submitCondition": null,
           "preventScreenCapture": false,
@@ -3714,11 +3776,11 @@ final dynamic sampleFlows = {
           "flow": "HOUSEHOLD",
           "page": "householdDetails",
           "type": "object",
-          "label": "Household Details",
+          "label": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_HEADING",
           "order": 3,
           "footer": [
             {
-              "label": "Save Household Details",
+              "label": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -3735,7 +3797,7 @@ final dynamic sampleFlows = {
             }
           ],
           "module": "REGISTRATION",
-          "heading": "Household Details",
+          "heading": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_HEADING",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -3747,7 +3809,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -3764,7 +3826,7 @@ final dynamic sampleFlows = {
                       {
                         "actionType": "SHOW_TOAST",
                         "properties": {
-                          "message": "Failed to update missed children."
+                          "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
                         }
                       }
                     ]
@@ -3785,7 +3847,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -3806,7 +3868,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -3819,7 +3881,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to update household."}
+                        "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -3839,7 +3901,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -3857,7 +3919,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -3871,7 +3933,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to create household."}
+                        "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -3891,7 +3953,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -3906,7 +3968,7 @@ final dynamic sampleFlows = {
           "properties": [
             {
               "type": "string",
-              "label": "Date of registration",
+              "label": "HCM_REGISTRATION_DATE_LABEL",
               "order": 1,
               "value": "",
               "format": "date",
@@ -3927,16 +3989,16 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field cannot be empty"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "Required field cannot be empty"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "integer",
-              "label": "Number of children under the age of 5",
+              "label": "HCM_REGISTRATION_CHILDREN_COUNT_LABEL",
               "order": 2,
               "value": "1",
               "format": "numeric",
@@ -3952,13 +4014,23 @@ final dynamic sampleFlows = {
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [],
+              "range": {
+                "min": "1",
+                "errorMessage": "HCM_VALIDATION_MIN_CHILDREN_1"
+              },
+              "validations": [
+                {
+                  "type": "min",
+                  "value": "1",
+                  "message": "HCM_VALIDATION_MIN_CHILDREN_1"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false
             },
             {
               "type": "integer",
-              "label": "Number of pregnant women",
+              "label": "HCM_REGISTRATION_PREGNANT_WOMEN_LABEL",
               "order": 3,
               "value": "0",
               "format": "numeric",
@@ -3981,12 +4053,12 @@ final dynamic sampleFlows = {
             },
             {
               "type": "integer",
-              "label": "Total household members",
+              "label": "HCM_REGISTRATION_TOTAL_MEMBERS_LABEL",
               "order": 4,
               "range": {
                 "max": "10",
                 "min": "1",
-                "errorMessage": "Total household members cannot be more than 10"
+                "errorMessage": "HCM_VALIDATION_MAX_MEMBERS"
               },
               "value": "1",
               "format": "numeric",
@@ -4008,27 +4080,26 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Please fill the required field"
+                  "message": "HCM_VALIDATION_REQUIRED"
                 },
                 {
                   "type": "min",
                   "value": "1",
-                  "message": "Total household members cannot be more than 10"
+                  "message": "HCM_VALIDATION_MAX_MEMBERS"
                 },
                 {
                   "type": "max",
                   "value": "10",
-                  "message": "Total household members cannot be more than 10"
+                  "message": "HCM_VALIDATION_MAX_MEMBERS"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "Please fill the required field"
+              "required.message": "HCM_VALIDATION_REQUIRED"
             }
           ],
-          "actionLabel": "Save Household Details",
-          "description":
-              "Enter family size, registration date, and demographics.",
+          "actionLabel": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
+          "description": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_DESCRIPTION",
           "showTabView": false,
           "submitCondition": {
             "expression": [
@@ -4042,11 +4113,11 @@ final dynamic sampleFlows = {
           "flow": "HOUSEHOLD",
           "page": "beneficiaryLocation",
           "type": "object",
-          "label": "Beneficiary Location",
+          "label": "HCM_REGISTRATION_BENEFICIARY_LOCATION_HEADING",
           "order": 1,
           "footer": [
             {
-              "label": "Save Location",
+              "label": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -4063,7 +4134,7 @@ final dynamic sampleFlows = {
             }
           ],
           "module": "REGISTRATION",
-          "heading": "Beneficiary Location",
+          "heading": "HCM_REGISTRATION_BENEFICIARY_LOCATION_HEADING",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -4075,7 +4146,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -4092,7 +4163,7 @@ final dynamic sampleFlows = {
                       {
                         "actionType": "SHOW_TOAST",
                         "properties": {
-                          "message": "Failed to update missed children."
+                          "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
                         }
                       }
                     ]
@@ -4113,7 +4184,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -4134,7 +4205,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -4147,7 +4218,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to update household."}
+                        "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -4167,7 +4238,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -4185,7 +4256,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -4199,7 +4270,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to create household."}
+                        "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -4219,7 +4290,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -4234,15 +4305,14 @@ final dynamic sampleFlows = {
           "properties": [
             {
               "type": "string",
-              "label": "Administrative area",
+              "label": "HCM_REGISTRATION_ADMIN_AREA_LABEL",
               "order": 1,
               "value": "",
               "format": "locality",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-                  "Enter the region or ward name where the beneficiary resides.",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -4256,24 +4326,23 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field cannot be empty"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "Required field cannot be empty"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "string",
-              "label": "Lat/Long",
+              "label": "HCM_REGISTRATION_LAT_LONG_LABEL",
               "order": 2,
               "value": "",
               "format": "latLng",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-                  "Provide latitude and longitude of the address, if available.",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -4287,23 +4356,23 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field cannot be empty"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "Required field cannot be empty"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "string",
-              "label": "Address line 1",
+              "label": "HCM_REGISTRATION_ADDRESS_LINE1_LABEL",
               "order": 3,
               "value": "",
               "format": "text",
               "hidden": true,
               "isMdms": false,
               "tooltip": "",
-              "helpText": "Provide the primary street address or house number.",
+              "helpText": "HCM_REGISTRATION_ADDRESS_LINE1_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "addressLine1",
@@ -4330,15 +4399,14 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "label": "Address line 2",
+              "label": "HCM_REGISTRATION_ADDRESS_LINE2_LABEL",
               "order": 4,
               "value": "",
               "format": "text",
               "hidden": true,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-                  "Additional address information, like block or apartment name.",
+              "helpText": "HCM_REGISTRATION_ADDRESS_LINE2_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "addressLine2",
@@ -4365,15 +4433,14 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "label": "Landmark",
+              "label": "HCM_REGISTRATION_LANDMARK_LABEL",
               "order": 5,
               "value": "",
               "format": "text",
               "hidden": true,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-                  "Mention a nearby landmark to help locate the address.",
+              "helpText": "HCM_REGISTRATION_LANDMARK_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "landmark",
@@ -4400,7 +4467,7 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "label": "Pincode",
+              "label": "HCM_REGISTRATION_PINCODE_LABEL",
               "order": 6,
               "value": "",
               "format": "text",
@@ -4408,7 +4475,7 @@ final dynamic sampleFlows = {
               "isMdms": false,
               "pattern": "^\\d+\$",
               "tooltip": "",
-              "helpText": "Enter the area postal code (PIN Code)",
+              "helpText": "HCM_REGISTRATION_PINCODE_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "pincode",
@@ -4421,20 +4488,26 @@ final dynamic sampleFlows = {
                 {
                   "type": "pattern",
                   "value": "^\\d+\$",
-                  "message": "Only numbers are allowed"
+                  "message": "HCM_VALIDATION_ONLY_NUMBERS"
                 }
               ],
               "errorMessage": "",
-              "pattern.message": "Only numbers are allowed"
+              "pattern.message": "HCM_VALIDATION_ONLY_NUMBERS"
             },
             {
               "type": "string",
               "enums": [
-                {"code": "PERMANENT", "name": "Permanent"},
-                {"code": "CORRESPONDENCE", "name": "Correspondence"},
-                {"code": "OTHER", "name": "Other"}
+                {
+                  "code": "PERMANENT",
+                  "name": "HCM_REGISTRATION_ADDRESS_PERMANENT"
+                },
+                {
+                  "code": "CORRESPONDENCE",
+                  "name": "HCM_REGISTRATION_ADDRESS_CORRESPONDENCE"
+                },
+                {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
               ],
-              "label": "Type of address",
+              "label": "HCM_REGISTRATION_ADDRESS_TYPE_LABEL",
               "order": 7,
               "value": "PERMANENT",
               "format": "dropdown",
@@ -4455,15 +4528,21 @@ final dynamic sampleFlows = {
               "includeInForm": true,
               "isMultiSelect": false,
               "dropDownOptions": [
-                {"code": "PERMANENT", "name": "Permanent"},
-                {"code": "CORRESPONDENCE", "name": "Correspondence"},
-                {"code": "OTHER", "name": "Other"}
+                {
+                  "code": "PERMANENT",
+                  "name": "HCM_REGISTRATION_ADDRESS_PERMANENT"
+                },
+                {
+                  "code": "CORRESPONDENCE",
+                  "name": "HCM_REGISTRATION_ADDRESS_CORRESPONDENCE"
+                },
+                {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
               ],
               "includeInSummary": false
             }
           ],
-          "actionLabel": "Save Location",
-          "description": "Capture house location details",
+          "actionLabel": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
+          "description": "HCM_REGISTRATION_LOCATION_DESCRIPTION",
           "showTabView": false,
           "submitCondition": null,
           "preventScreenCapture": false
@@ -4482,7 +4561,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
                 "configName": "beneficiaryRegistration"
@@ -4499,7 +4578,7 @@ final dynamic sampleFlows = {
                   {
                     "actionType": "SHOW_TOAST",
                     "properties": {
-                      "message": "Failed to update missed children."
+                      "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
                     }
                   }
                 ]
@@ -4520,7 +4599,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -4541,7 +4620,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
                 "configName": "beneficiaryRegistration"
@@ -4554,7 +4633,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to update household."}
+                    "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
                   }
                 ]
               }
@@ -4574,7 +4653,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -4592,7 +4671,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
                 "configName": "beneficiaryRegistration"
@@ -4605,7 +4684,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create household."}
+                    "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
                   }
                 ]
               }
@@ -4625,7 +4704,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
                   }
                 ],
                 "navigationMode": "popUntilAndPush",

@@ -43,14 +43,13 @@ import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../sampleJsonConfigs/closed_household.dart';
-import '../sampleJsonConfigs/polio_stock_details.dart';
-import '../sampleJsonConfigs/polio_afp_case.dart';
-import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
-
 import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
 import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
+import '../sampleJsonConfigs/polio_afp_case.dart';
+import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
+import '../sampleJsonConfigs/polio_stock_details.dart';
 import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/debound.dart';
@@ -72,7 +71,6 @@ import '../widgets/polio_stats_card.dart';
 import '../widgets/progress_bar/hf_referral_progress.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
-import '../widgets/showcase/showcase_button.dart';
 // import '../widgets/stock_balance/stock_balance_card.dart';
 import '../widgets/stock_reconciliation/stock_reconciliation_card.dart';
 import '../widgets/task_functions.dart';
@@ -934,26 +932,23 @@ class _HomePageState extends LocalizedState<HomePage> {
             ],
             header: Column(
               children: [
-                BackNavigationHelpHeaderWidget(
+                const BackNavigationHelpHeaderWidget(
                   showBackNavigation: false,
                   showHelp: false,
-                  showcaseButton: ShowcaseButton(
-                    showcaseFor: showcaseKeys.toSet().toList(),
-                  ),
                 ),
                 const PolioStatsCard(),
-              /////   hfreferral progress matrics
-              if (state.actionsWrapper.actions
-                  .map((e) => e.displayName)
-                  .contains(i18.home.beneficiaryReferralLabel))
-                HFReferralProgressBar(
-                  label: localizations.translate(
-                    i18.home.progressIndicatorTitle,
+                /////   hfreferral progress matrics
+                if (state.actionsWrapper.actions
+                    .map((e) => e.displayName)
+                    .contains(i18.home.beneficiaryReferralLabel))
+                  HFReferralProgressBar(
+                    label: localizations.translate(
+                      i18.home.progressIndicatorTitle,
+                    ),
+                    prefixLabel: localizations.translate(
+                      i18.common.progressIndicatorPrefixLabelHFReferral,
+                    ),
                   ),
-                  prefixLabel: localizations.translate(
-                    i18.common.progressIndicatorPrefixLabelHFReferral,
-                  ),
-                ),
               ],
             ),
             footer: Padding(
@@ -1408,7 +1403,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.vaccines,
           label: i18.home.polioRegistrationLabel,
-          onPressed: () async  {
+          onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) async {
                 final moduleName =
@@ -1421,7 +1416,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
                 FlowBuilderSingleton().setPersistenceConfiguration(
                     persistenceConfiguration:
-                    PersistenceConfiguration.offlineFirst);
+                        PersistenceConfiguration.offlineFirst);
                 WidgetRegistry.initialize();
                 CrudBlocSingleton().setData(
                   crudService: DigitCrudService(
@@ -1550,13 +1545,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                   //         pageName: registrationDeliveryData["initialPage"]),
                   //   );
                   // } else {
-                    FlowRegistry.setConfig(
-                        sampleFlows["flows"] as List<Map<String, dynamic>>);
-                    NavigationRegistry.setupNavigation(ctx);
-                    ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName: sampleFlows["initialPage"]),
-                    );
+                  FlowRegistry.setConfig(
+                      sampleFlows["flows"] as List<Map<String, dynamic>>);
+                  NavigationRegistry.setupNavigation(ctx);
+                  ctx.router.push(
+                    FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+                  );
                   // }
                 } catch (e) {
                   debugPrint('error $e');
@@ -1597,7 +1591,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.inventory_2,
           label: i18.home.polioStockDetailsLabel,
           onPressed: () async {
-            context.router.push(CurrentBoundaryRoute(
+            await context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) async {
                 final moduleName =
                     'hcm-poliostockdetails-${context.selectedProject.referenceID}';
@@ -1613,11 +1607,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 );
               },
             ));
+            PolioStatsCard.refresh();
           },
         ),
       ),
-      i18.home.polioAfpCaseLabel:
-          homeShowcaseData.polioAfpCase.buildWith(
+      i18.home.polioAfpCaseLabel: homeShowcaseData.polioAfpCase.buildWith(
         child: HomeItemCard(
           icon: Icons.medical_services,
           label: i18.home.polioAfpCaseLabel,
@@ -2026,7 +2020,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
           child: HomeItemCard(
-        icon: Icons.vaccines_outlined,
+        icon: Icons.local_post_office,
         label: i18.home.transitPostLabel,
         onPressed: () {
           const module = "hcm-transit-post";
@@ -2055,7 +2049,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
-      i18.home.db: homeShowcaseData.db.showcaseKey,
       // i18.home.closedHouseHoldLabel:
       //     homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.polioRegistrationLabel:
@@ -2064,8 +2057,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.polioMissedChildren.showcaseKey,
       i18.home.polioStockDetailsLabel:
           homeShowcaseData.polioStockDetails.showcaseKey,
-      i18.home.polioAfpCaseLabel:
-          homeShowcaseData.polioAfpCase.showcaseKey,
+      i18.home.polioAfpCaseLabel: homeShowcaseData.polioAfpCase.showcaseKey,
       i18.home.polioLqaDataCollectionLabel:
           homeShowcaseData.polioLqaDataCollection.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
@@ -2081,10 +2073,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       // INFO: Need to add items label of package Here
       // i18.home.beneficiaryLabel,
       // i18.home.clfLabel, // TODO: Uncomment when CLF is implemented
-      i18.home.transitPostLabel,
       // i18.home.closedHouseHoldLabel,
       i18.home.polioRegistrationLabel,
       i18.home.polioMissedChildrenLabel,
+      i18.home.transitPostLabel,
       i18.home.polioStockDetailsLabel,
       i18.home.polioLqaDataCollectionLabel,
       // i18.home.manageStockLabel,
@@ -2115,14 +2107,8 @@ class _HomePageState extends LocalizedState<HomePage> {
             element == i18.home.transitPostLabel)
         .toList();
 
-    final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db)
-        .map((label) => homeItemsShowcaseMap[label]!)
-        .toList();
-
-    if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
-      filteredLabels.remove(i18.home.db);
-    }
+    final showcaseKeys =
+        filteredLabels.map((label) => homeItemsShowcaseMap[label]!).toList();
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 

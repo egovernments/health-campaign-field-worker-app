@@ -665,32 +665,32 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }
 
       try {
-        final formConfigResult = await mdmsRepository.searchMDMS(
-          envConfig.variables.mdmsApiPath,
-          MdmsRequestModel(
-            mdmsCriteria: MdmsCriteriaModel(
-              tenantId: envConfig.variables.tenantId,
-              moduleDetails: [
-                MdmsModuleDetailModel(
-                  moduleName: 'HCM-ADMIN-CONSOLE',
-                  masterDetails: [
-                    MdmsMasterDetailModel(
-                      'FormConfig',
-                      filter:
-                          "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ).toJson(),
-        );
-
-        final formConfigs = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
-
-        for (final config in formConfigs) {
-          await enrichFormSchemasWithEnumsForForms(config);
-        }
+        // final formConfigResult = await mdmsRepository.searchMDMS(
+        //   envConfig.variables.mdmsApiPath,
+        //   MdmsRequestModel(
+        //     mdmsCriteria: MdmsCriteriaModel(
+        //       tenantId: envConfig.variables.tenantId,
+        //       moduleDetails: [
+        //         MdmsModuleDetailModel(
+        //           moduleName: 'HCM-ADMIN-CONSOLE',
+        //           masterDetails: [
+        //             MdmsMasterDetailModel(
+        //               'FormConfig',
+        //               filter:
+        //                   "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
+        //             ),
+        //           ],
+        //         ),
+        //       ],
+        //     ),
+        //   ).toJson(),
+        // );
+        //
+        // final formConfigs = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
+        //
+        // for (final config in formConfigs) {
+        //   await enrichFormSchemasWithEnumsForForms(config);
+        // }
       } catch (e) {
         emit(
           state.copyWith(

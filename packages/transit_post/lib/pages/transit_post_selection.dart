@@ -128,7 +128,6 @@ class TransitPostSelectionPageState
                             size: DigitButtonSize.large,
                             mainAxisSize: MainAxisSize.max,
                           ),
-                          const SizedBox(height: spacer2),
                           DigitButton(
                             label: localizations.translate(
                               i18.transitPost.scanResourceLabel,

@@ -197,6 +197,20 @@ String interpolateWithCrudStates({
     for (final part in path.split('.')) {
       if (value is Map && value.containsKey(part)) {
         value = value[part];
+      } else if (value is List) {
+        final idx = int.tryParse(part);
+        if (idx != null && idx >= 0 && idx < value.length) {
+          value = value[idx];
+        } else {
+          return null;
+        }
+      } else if (value is EntityModel) {
+        final map = value.toMap();
+        if (map.containsKey(part)) {
+          value = map[part];
+        } else {
+          return null;
+        }
       } else {
         return null;
       }

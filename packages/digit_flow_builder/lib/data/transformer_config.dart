@@ -395,7 +395,10 @@ final jsonConfig = {
           "additionalFields": {
             "doseIndex": "__listItem:id",
             "cycleIndex": "__context:cycleIndex",
-            "deliveryStrategy": "__listItem:deliveryStrategy"
+            "deliveryStrategy": "__listItem:deliveryStrategy",
+            "latitude": "DeliveryDetails.latLng[0]",
+            "longitude": "DeliveryDetails.latLng[1]",
+            "locationAccuracy": "DeliveryDetails.latLng[2]"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -478,7 +481,10 @@ final jsonConfig = {
           "additionalFields": {
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
-            "deliveryStrategy": "__context:deliveryStrategy"
+            "deliveryStrategy": "__context:deliveryStrategy",
+            "latitude": "DeliveryDetails.latLng[0]",
+            "longitude": "DeliveryDetails.latLng[1]",
+            "locationAccuracy": "DeliveryDetails.latLng[2]"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -560,7 +566,10 @@ final jsonConfig = {
           },
           "additionalFields": {
             "doseIndex": "__context:doseIndex",
-            "cycleIndex": "__context:cycleIndex"
+            "cycleIndex": "__context:cycleIndex",
+            "latitude": "DeliveryDetails.latLng[0]",
+            "longitude": "DeliveryDetails.latLng[1]",
+            "locationAccuracy": "DeliveryDetails.latLng[2]"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -622,7 +631,10 @@ final jsonConfig = {
           "additionalFields": {
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
-            "comment": "unableToDeliver.comment"
+            "comment": "unableToDeliver.comment",
+            "latitude": "DeliveryDetails.latLng[0]",
+            "longitude": "DeliveryDetails.latLng[1]",
+            "locationAccuracy": "DeliveryDetails.latLng[2]"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -1111,7 +1123,11 @@ final jsonConfig = {
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit"
           },
-          "additionalFields": "additionalInfo.fields",
+          "additionalFields": {
+            "latitude": "closeHouseholdDetails.latLng[0]",
+            "longitude": "closeHouseholdDetails.latLng[1]",
+            "locationAccuracy": "closeHouseholdDetails.latLng[2]"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
         }
@@ -1538,9 +1554,9 @@ final jsonConfig = {
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
           "action": "__value:STOCK_DETAILS",
-          "latitude": "__value:0",
-          "longitude": "__value:0",
-          "locationAccuracy": "__value:0",
+          "latitude": "vialDetails.latLng[0]",
+          "longitude": "vialDetails.latLng[1]",
+          "locationAccuracy": "vialDetails.latLng[2]",
           "timestamp": "__value:DATETIME.NOW",
           "isSync": "__value:false",
           "clientAuditDetails": "__generate:clientAudit",

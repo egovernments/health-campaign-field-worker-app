@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/digit_scanner.dart';
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -33,6 +34,29 @@ class TransitPostRecordVaccinationPage extends LocalizedStatefulWidget {
 
 class TransitPostRecordVaccinationPageState
     extends LocalizedState<TransitPostRecordVaccinationPage> {
+  Map<String, ProductVariantModel> _productVariantMap = {};
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadProductVariants();
+  }
+
+  Future<void> _loadProductVariants() async {
+    final pvRepo = context.read<
+        LocalRepository<ProductVariantModel, ProductVariantSearchModel>>();
+    final pvIds = TransitPostSingleton()
+            .resources
+            ?.map((r) => r.productVariantId)
+            .toList() ??
+        [];
+    if (pvIds.isEmpty) return;
+    final pvList = await pvRepo.search(ProductVariantSearchModel(id: pvIds));
+    setState(() {
+      _productVariantMap = {for (var pv in pvList) pv.id: pv};
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -285,8 +309,11 @@ class TransitPostRecordVaccinationPageState
             "${localizations.translate(i18.transitPost.doseLabel)} $count",
             cellKey: "Dose$count"),
       );
-      tableData.add(DigitTableData(resource.productVariantId,
-          cellKey: resource.name ?? resource.productVariantId));
+      final pv = _productVariantMap[resource.productVariantId];
+      final displayName = localizations
+          .translate(pv?.sku ?? resource.name ?? resource.productVariantId);
+      tableData
+          .add(DigitTableData(displayName, cellKey: resource.productVariantId));
 
       finalTableRow.add(DigitTableRow(tableRow: tableData));
       count++;

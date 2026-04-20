@@ -175,6 +175,32 @@ class RefreshSearchExecutor extends ActionExecutor {
       ));
     }
 
+    // Inject base filters from searchConfig (always applied, resolved at search time)
+    final baseFiltersList = config?['wrapperConfig']?['searchConfig']?['baseFilters'] as List<dynamic>? ?? [];
+    for (var baseFilter in baseFiltersList) {
+      final baseKey = baseFilter['key']?.toString() ?? '';
+      final alreadyHasKey = filters.any((f) => f.field == baseKey);
+      if (alreadyHasKey) continue;
+
+      final baseRawValue = baseFilter['value'];
+      var baseResolvedValue = resolveValueRaw(baseRawValue, singletonToMap(),
+          screenKey: screenName);
+      if (baseResolvedValue == null ||
+          (baseResolvedValue is String && baseResolvedValue.startsWith('{{'))) {
+        debugPrint('REFRESH_SEARCH: Skipping baseFilter key=$baseKey - unresolved');
+        continue;
+      }
+
+      final baseRoot = baseFilter['root']?.toString() ?? '';
+      filters.add(SearchFilter(
+        root: baseRoot,
+        field: baseKey,
+        operator: baseFilter['operation']?.toString() ?? 'equals',
+        value: baseResolvedValue,
+      ));
+      debugPrint('REFRESH_SEARCH: Injected baseFilter key=$baseKey, value=$baseResolvedValue');
+    }
+
     if (filters.isEmpty) {
       debugPrint('REFRESH_SEARCH: No filters to apply');
       return contextData;

@@ -202,6 +202,9 @@ class SearchExecutor extends ActionExecutor {
       // Skip filters with null or unresolved values (still in template form)
       if (resolvedValue == null ||
           (resolvedValue is String && resolvedValue.startsWith('{{'))) {
+        debugPrint('DEBUG_SEARCH: SKIPPING filter key=$rawKey - resolvedValue is '
+            '${resolvedValue == null ? "null" : "unresolved template: $resolvedValue"} '
+            '(rawValue=$rawValue)');
         continue;
       }
 
@@ -251,6 +254,9 @@ class SearchExecutor extends ActionExecutor {
             ? SearchStateManager().getAllFilters(compositeKey)
             : resolvedFilters);
 
+    // Get the flow config for this screen (needed for base filters, orderBy, etc.)
+    final config = FlowRegistry.getByName(screenKey ?? '');
+
     // Convert accumulated filters to SearchFilter objects
     // Default root: use search name (e.g., "stock") which matches the primary table
     final defaultRoot = searchName;
@@ -278,6 +284,34 @@ class SearchExecutor extends ActionExecutor {
       ));
     }
 
+    // Inject base filters from searchConfig (always applied, resolved at search time)
+    // These are boundary/project-level filters that apply to ALL search events for this screen
+    final baseFiltersList = config?['wrapperConfig']?['searchConfig']?['baseFilters'] as List<dynamic>? ?? [];
+    for (var baseFilter in baseFiltersList) {
+      final baseKey = baseFilter['key']?.toString() ?? '';
+      // Skip if a user-initiated filter already has this key (user overrides base)
+      final alreadyHasKey = filters.any((f) => f.field == baseKey);
+      if (alreadyHasKey) continue;
+
+      final baseRawValue = baseFilter['value'];
+      var baseResolvedValue = resolveValueRaw(baseRawValue, resolveContext,
+          widgetData: widgetData, screenKey: screenKey);
+      if (baseResolvedValue == null ||
+          (baseResolvedValue is String && baseResolvedValue.startsWith('{{'))) {
+        debugPrint('SEARCH_EVENT: Skipping baseFilter key=$baseKey - unresolved value');
+        continue;
+      }
+
+      final baseRoot = baseFilter['root']?.toString() ?? defaultRoot;
+      filters.add(SearchFilter(
+        root: baseRoot,
+        field: baseKey,
+        operator: baseFilter['operation']?.toString() ?? 'equals',
+        value: baseResolvedValue,
+      ));
+      debugPrint('SEARCH_EVENT: Injected baseFilter key=$baseKey, value=$baseResolvedValue, root=$baseRoot');
+    }
+
     // Early return if no filters are applicable
     if (filters.isEmpty) {
       debugPrint(
@@ -287,8 +321,6 @@ class SearchExecutor extends ActionExecutor {
 
     debugPrint(
         'SEARCH_EVENT: Executing with ${filters.length} accumulated filters for $searchName');
-
-    final config = FlowRegistry.getByName(screenKey ?? '');
 
     // Get orderBy from action properties or fall back to config or accumulated state
     SearchOrderBy? orderBy;
@@ -607,6 +639,31 @@ class SearchExecutor extends ActionExecutor {
         value: filterMap['value'],
         coordinates: latLng,
       ));
+    }
+
+    // Inject base filters from searchConfig (always applied)
+    final baseFiltersList = config?['wrapperConfig']?['searchConfig']?['baseFilters'] as List<dynamic>? ?? [];
+    for (var baseFilter in baseFiltersList) {
+      final baseKey = baseFilter['key']?.toString() ?? '';
+      final alreadyHasKey = filters.any((f) => f.field == baseKey);
+      if (alreadyHasKey) continue;
+
+      final baseRawValue = baseFilter['value'];
+      var baseResolvedValue = resolveValueRaw(baseRawValue, singletonToMap(),
+          screenKey: compositeKey.split('::').last);
+      if (baseResolvedValue == null ||
+          (baseResolvedValue is String && baseResolvedValue.startsWith('{{'))) {
+        continue;
+      }
+
+      final baseRoot = baseFilter['root']?.toString() ?? '';
+      filters.add(SearchFilter(
+        root: baseRoot,
+        field: baseKey,
+        operator: baseFilter['operation']?.toString() ?? 'equals',
+        value: baseResolvedValue,
+      ));
+      debugPrint('SearchCallback: Injected baseFilter key=$baseKey, value=$baseResolvedValue');
     }
 
     // Build orderBy

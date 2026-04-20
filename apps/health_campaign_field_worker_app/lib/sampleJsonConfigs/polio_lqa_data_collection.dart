@@ -667,7 +667,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             // 13. gpsStart
             _prop(
               type: "string",
-              label: "GPS Start Location",
+              label: "Detected Start Location",
               order: 13,
               format: "latLng",
               fieldName: "gpsStart",
@@ -697,14 +697,14 @@ final dynamic samplePolioLqaDataCollectionFlows = {
           "order":
               lqaChildCount + 2, // clusterInfo=1, children=2..N+1, closeout=N+2
           "type": "object",
-          "description": "Final GPS and comments",
+          "description": "Final Detected Location and comments",
           "actionLabel": "Submit",
           ..._pageNulls(),
           "properties": [
             // 1. gpsFinal
             _prop(
               type: "string",
-              label: "GPS Final Location",
+              label: "Detected Final Location",
               order: 1,
               format: "latLng",
               fieldName: "gpsFinal",
