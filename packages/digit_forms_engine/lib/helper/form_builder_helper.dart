@@ -80,9 +80,15 @@ FormControl buildFormControl(
         /// TODO: need to create constant beneficiary id type
         final availableIDs = defaultValues?['availableIDs'];
 
+        final uniqueBeneficiaryId =
+            navigationParams?['UNIQUE_BENEFICIARY_ID'] as String?;
+
         // Check for existing value first (edit mode)
         final existingValue = getDefaultValue(name);
-        if (existingValue != null && existingValue.toString().isNotEmpty) {
+        if (existingValue != null &&
+            existingValue.toString().isNotEmpty &&
+            (existingValue.contains('UNIQUE_BENEFICIARY_ID') ||
+                uniqueBeneficiaryId == null)) {
           // In edit mode, use the existing identifier value
           return FormControl<String>(
             value: existingValue.toString(),
@@ -96,8 +102,6 @@ FormControl buildFormControl(
             : 'DEFAULT';
         var selectedId = availableIDs?[selectedLabel]?.toString();
 
-        final uniqueBeneficiaryId =
-            navigationParams?['UNIQUE_BENEFICIARY_ID'] as String?;
         if (uniqueBeneficiaryId != null && uniqueBeneficiaryId.isNotEmpty) {
           selectedLabel = 'UNIQUE_BENEFICIARY_ID';
           selectedId = uniqueBeneficiaryId;
