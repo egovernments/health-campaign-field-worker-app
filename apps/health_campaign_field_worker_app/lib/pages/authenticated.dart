@@ -680,7 +680,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                     .read<AuthBloc>()
                                     .add(const AuthLogoutEvent());
                               },
-                              type: DigitButtonType.primary,
+                              type: DigitButtonType.secondary,
                               size: DigitButtonSize.large),
                           DigitButton(
                               label: AppLocalizations.of(context).translate(
