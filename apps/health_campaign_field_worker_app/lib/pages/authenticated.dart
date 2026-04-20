@@ -464,7 +464,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                   ),
                                   primaryAction: DigitDialogActions(
                                     label: localizations.translate(
-                                      i18.common.coreCommonGoback,
+                                      i18.acknowledgementSuccess.goToHome,
                                     ),
                                     action: (ctx) {
                                       Navigator.of(context, rootNavigator: true)
