@@ -21,7 +21,8 @@ mixin _$PushNotificationEvent {
     required TResult Function() initialize,
     required TResult Function(String userId) login,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) =>
@@ -31,7 +32,8 @@ mixin _$PushNotificationEvent {
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) =>
@@ -41,7 +43,8 @@ mixin _$PushNotificationEvent {
     TResult Function()? initialize,
     TResult Function(String userId)? login,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),
@@ -156,7 +159,8 @@ class _$PushNotificationInitializeEventImpl
     required TResult Function() initialize,
     required TResult Function(String userId) login,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) {
@@ -169,7 +173,8 @@ class _$PushNotificationInitializeEventImpl
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) {
@@ -182,7 +187,8 @@ class _$PushNotificationInitializeEventImpl
     TResult Function()? initialize,
     TResult Function(String userId)? login,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),
@@ -327,7 +333,8 @@ class _$PushNotificationLoginEventImpl
     required TResult Function() initialize,
     required TResult Function(String userId) login,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) {
@@ -340,7 +347,8 @@ class _$PushNotificationLoginEventImpl
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) {
@@ -353,7 +361,8 @@ class _$PushNotificationLoginEventImpl
     TResult Function()? initialize,
     TResult Function(String userId)? login,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),
@@ -503,7 +512,8 @@ class _$PushNotificationTokenRefreshedEventImpl
     required TResult Function() initialize,
     required TResult Function(String userId) login,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) {
@@ -516,7 +526,8 @@ class _$PushNotificationTokenRefreshedEventImpl
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) {
@@ -529,7 +540,8 @@ class _$PushNotificationTokenRefreshedEventImpl
     TResult Function()? initialize,
     TResult Function(String userId)? login,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),
@@ -607,7 +619,12 @@ abstract class _$$PushNotificationRegisterTokenEventImplCopyWith<$Res> {
           $Res Function(_$PushNotificationRegisterTokenEventImpl) then) =
       __$$PushNotificationRegisterTokenEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String apiEndPoint, List<String> facilityIds});
+  $Res call(
+      {String apiEndPoint,
+      List<String> facilityIds,
+      UserRequestModel? userObject});
+
+  $UserRequestModelCopyWith<$Res>? get userObject;
 }
 
 /// @nodoc
@@ -625,6 +642,7 @@ class __$$PushNotificationRegisterTokenEventImplCopyWithImpl<$Res>
   $Res call({
     Object? apiEndPoint = null,
     Object? facilityIds = null,
+    Object? userObject = freezed,
   }) {
     return _then(_$PushNotificationRegisterTokenEventImpl(
       apiEndPoint: null == apiEndPoint
@@ -635,7 +653,23 @@ class __$$PushNotificationRegisterTokenEventImplCopyWithImpl<$Res>
           ? _value._facilityIds
           : facilityIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      userObject: freezed == userObject
+          ? _value.userObject
+          : userObject // ignore: cast_nullable_to_non_nullable
+              as UserRequestModel?,
     ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserRequestModelCopyWith<$Res>? get userObject {
+    if (_value.userObject == null) {
+      return null;
+    }
+
+    return $UserRequestModelCopyWith<$Res>(_value.userObject!, (value) {
+      return _then(_value.copyWith(userObject: value));
+    });
   }
 }
 
@@ -645,7 +679,9 @@ class _$PushNotificationRegisterTokenEventImpl
     with DiagnosticableTreeMixin
     implements PushNotificationRegisterTokenEvent {
   const _$PushNotificationRegisterTokenEventImpl(
-      {required this.apiEndPoint, required final List<String> facilityIds})
+      {required this.apiEndPoint,
+      required final List<String> facilityIds,
+      required this.userObject})
       : _facilityIds = facilityIds;
 
   @override
@@ -659,8 +695,11 @@ class _$PushNotificationRegisterTokenEventImpl
   }
 
   @override
+  final UserRequestModel? userObject;
+
+  @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationEvent.registerToken(apiEndPoint: $apiEndPoint, facilityIds: $facilityIds)';
+    return 'PushNotificationEvent.registerToken(apiEndPoint: $apiEndPoint, facilityIds: $facilityIds, userObject: $userObject)';
   }
 
   @override
@@ -669,7 +708,8 @@ class _$PushNotificationRegisterTokenEventImpl
     properties
       ..add(DiagnosticsProperty('type', 'PushNotificationEvent.registerToken'))
       ..add(DiagnosticsProperty('apiEndPoint', apiEndPoint))
-      ..add(DiagnosticsProperty('facilityIds', facilityIds));
+      ..add(DiagnosticsProperty('facilityIds', facilityIds))
+      ..add(DiagnosticsProperty('userObject', userObject));
   }
 
   @override
@@ -680,12 +720,14 @@ class _$PushNotificationRegisterTokenEventImpl
             (identical(other.apiEndPoint, apiEndPoint) ||
                 other.apiEndPoint == apiEndPoint) &&
             const DeepCollectionEquality()
-                .equals(other._facilityIds, _facilityIds));
+                .equals(other._facilityIds, _facilityIds) &&
+            (identical(other.userObject, userObject) ||
+                other.userObject == userObject));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, apiEndPoint,
-      const DeepCollectionEquality().hash(_facilityIds));
+      const DeepCollectionEquality().hash(_facilityIds), userObject);
 
   @JsonKey(ignore: true)
   @override
@@ -701,11 +743,12 @@ class _$PushNotificationRegisterTokenEventImpl
     required TResult Function() initialize,
     required TResult Function(String userId) login,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) {
-    return registerToken(apiEndPoint, facilityIds);
+    return registerToken(apiEndPoint, facilityIds, userObject);
   }
 
   @override
@@ -714,11 +757,12 @@ class _$PushNotificationRegisterTokenEventImpl
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) {
-    return registerToken?.call(apiEndPoint, facilityIds);
+    return registerToken?.call(apiEndPoint, facilityIds, userObject);
   }
 
   @override
@@ -727,13 +771,14 @@ class _$PushNotificationRegisterTokenEventImpl
     TResult Function()? initialize,
     TResult Function(String userId)? login,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),
   }) {
     if (registerToken != null) {
-      return registerToken(apiEndPoint, facilityIds);
+      return registerToken(apiEndPoint, facilityIds, userObject);
     }
     return orElse();
   }
@@ -789,11 +834,13 @@ abstract class PushNotificationRegisterTokenEvent
     implements PushNotificationEvent {
   const factory PushNotificationRegisterTokenEvent(
           {required final String apiEndPoint,
-          required final List<String> facilityIds}) =
+          required final List<String> facilityIds,
+          required final UserRequestModel? userObject}) =
       _$PushNotificationRegisterTokenEventImpl;
 
   String get apiEndPoint;
   List<String> get facilityIds;
+  UserRequestModel? get userObject;
   @JsonKey(ignore: true)
   _$$PushNotificationRegisterTokenEventImplCopyWith<
           _$PushNotificationRegisterTokenEventImpl>
@@ -893,7 +940,8 @@ class _$PushNotificationNotificationReceivedEventImpl
     required TResult Function() initialize,
     required TResult Function(String userId) login,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) {
@@ -906,7 +954,8 @@ class _$PushNotificationNotificationReceivedEventImpl
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) {
@@ -919,7 +968,8 @@ class _$PushNotificationNotificationReceivedEventImpl
     TResult Function()? initialize,
     TResult Function(String userId)? login,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),

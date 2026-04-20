@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/repositories/remote/notification_token.dart';
+import '../../models/auth/auth_model.dart';
+import '../../models/entities/roles_type.dart';
 import '../../notification_service.dart';
 
 part 'push_notification.freezed.dart';
@@ -20,6 +22,7 @@ class PushNotificationBloc
   String? _currentUserId;
   String? _lastApiEndPoint;
   List<String>? _lastFacilityIds;
+  UserRequestModel? _lastUserObject;
 
   PushNotificationBloc({
     required this.notificationTokenRepository,
@@ -97,6 +100,7 @@ class PushNotificationBloc
       add(PushNotificationEvent.registerToken(
         apiEndPoint: _lastApiEndPoint!,
         facilityIds: _lastFacilityIds!,
+        userObject: _lastUserObject,
       ));
     }
   }
@@ -105,8 +109,15 @@ class PushNotificationBloc
     PushNotificationRegisterTokenEvent event,
     PushNotificationEmitter emit,
   ) async {
+
+
+    final userRoles = event.userObject?.roles.map((e) => e.code) ?? [];
+    final isDistributor =
+        userRoles.contains(RolesType.distributor.toValue()) ||
+            userRoles.contains(RolesType.communityDistributor.toValue());
     _lastApiEndPoint = event.apiEndPoint;
     _lastFacilityIds = event.facilityIds;
+    _lastUserObject = event.userObject;
 
     final currentState = state;
     final token = currentState is PushNotificationInitializedState
@@ -118,7 +129,7 @@ class PushNotificationBloc
     await notificationTokenRepository.registerToken(
       apiEndPoint: event.apiEndPoint,
       token: token,
-      facilityIds: event.facilityIds,
+      facilityIds: isDistributor ? [event.userObject?.uuid ?? event.facilityIds.first] : event.facilityIds,
     );
   }
 
@@ -156,6 +167,7 @@ class PushNotificationEvent with _$PushNotificationEvent {
   const factory PushNotificationEvent.registerToken({
     required String apiEndPoint,
     required List<String> facilityIds,
+    required UserRequestModel? userObject,
   }) = PushNotificationRegisterTokenEvent;
 
   const factory PushNotificationEvent.notificationReceived({
