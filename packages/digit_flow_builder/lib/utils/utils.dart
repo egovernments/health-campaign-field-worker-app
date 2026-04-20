@@ -198,6 +198,53 @@ dynamic resolveValue(dynamic value, dynamic contextData,
   return resolved;
 }
 
+/// New method to resolve values with enhanced logic, including fallback and support for multiple data sources
+dynamic resolveNavigationDataValue({
+  required dynamic rawValue,
+  Map<String, dynamic>? stateFormData,
+  dynamic stateWrapperFirst,
+  required Map<String, dynamic> contextData,
+}) {
+  dynamic resolvedValue =
+      resolveValue(rawValue, stateFormData ?? stateWrapperFirst);
+
+  if (resolvedValue == null || resolvedValue == rawValue) {
+    resolvedValue = resolveValue(rawValue, contextData);
+  }
+
+  // Fallback for unresolved template values like {{ec1}} when form data is
+  // stored under nested keys such as eligibilityChecklist.ec1.
+  if ((resolvedValue == null || resolvedValue == rawValue) &&
+      rawValue is String &&
+      rawValue.startsWith('{{') &&
+      rawValue.endsWith('}}')) {
+    final key = rawValue.substring(2, rawValue.length - 2).trim();
+
+    final candidateKeys = <String>{
+      key,
+      'formData.$key',
+      'contextData.$key',
+    };
+
+    for (final candidate in candidateKeys) {
+      final candidateTemplate = '{{$candidate}}';
+
+      final fromState =
+          resolveValue(candidateTemplate, stateFormData ?? stateWrapperFirst);
+      if (fromState != null && fromState != candidateTemplate) {
+        return fromState;
+      }
+
+      final fromContext = resolveValue(candidateTemplate, contextData);
+      if (fromContext != null && fromContext != candidateTemplate) {
+        return fromContext;
+      }
+    }
+  }
+
+  return resolvedValue;
+}
+
 /// New method: resolves strings with multiple placeholders
 /// Also supports localization keys mixed with templates, e.g.:
 /// "HF_REFERRAL_INBOX_DATE {{ fn:formatDate(Model.date) }}"

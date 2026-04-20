@@ -215,7 +215,8 @@ final dynamic sampleFlows = {
                 {
                   "key": "MOBILE_NUMBER",
                   "value":
-                      "{{contextData.0.individuals.IndividualModel.mobileNumber}}"
+                      "{{contextData.0.individuals.IndividualModel.mobileNumber}}",
+                  "hideIfNull": true
                 },
                 {
                   "key": "DATE_OF_REGISTRATION",
@@ -944,9 +945,26 @@ final dynamic sampleFlows = {
                     "children": [
                       {
                         "type": "template",
-                        "value": "{{ item.individual.0.name.givenName }}",
-                        "format": "textTemplate",
-                        "fieldName": "individualName"
+                        "format": "column",
+                        "children": [
+                          {
+                            "type": "template",
+                            "visible":
+                                "{{fn:hasBeneficiaryId(item.individual.0.identifiers.0)}}==true",
+                            "label":
+                                "{{ item.individual.0.identifiers.0.identifierId }}",
+                            "format": "tag",
+                            "fieldName": "isHead",
+                          },
+                          {
+                            "type": "template",
+                            "visible":
+                                "{{fn:hasBeneficiaryId(item.individual.0.identifiers.0)}}==false",
+                            "label": "NO_BENEFICIARY_ID",
+                            "format": "tag",
+                            "fieldName": "isHead",
+                          },
+                        ]
                       },
                       {
                         "type": "template",
@@ -956,44 +974,105 @@ final dynamic sampleFlows = {
                             "{{fn:disableEdit(item.task, item.hFReferral)}}==true",
                         "onAction": [
                           {
-                            "actionType": "REVERSE_TRANSFORM",
-                            "properties": {
-                              "data": [
-                                {
-                                  "key": "entities",
-                                  "value": "{{item.individual}}"
-                                },
-                                {
-                                  "key": "entities",
-                                  "value": "{{item.projectBeneficiary}}"
+                            "actions": [
+                              {
+                                "actionType": "REVERSE_TRANSFORM",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "entities",
+                                      "value": "{{item.individual}}"
+                                    },
+                                    {
+                                      "key": "entities",
+                                      "value": "{{item.projectBeneficiary}}"
+                                    }
+                                  ],
+                                  "configName": "individualRegistration",
+                                  "entityTypes": [
+                                    "IndividualModel",
+                                    "ProjectBeneficiaryModel"
+                                  ]
                                 }
-                              ],
-                              "configName": "individualRegistration",
-                              "entityTypes": [
-                                "IndividualModel",
-                                "ProjectBeneficiaryModel"
-                              ]
+                              },
+                              {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value":
+                                          "{{item.member.0.householdClientReferenceId}}"
+                                    },
+                                    {"key": "isEdit", "value": "true"},
+                                    {
+                                      "key": "isHead",
+                                      "value": "{{fn:isHead(item.member)}}"
+                                    },
+                                    {
+                                      "key": "UNIQUE_BENEFICIARY_ID",
+                                      "value": "{{latestBeneficiaryId}}"
+                                    }
+                                  ],
+                                  "name": "ADD_MEMBER",
+                                  "type": "FORM"
+                                }
+                              }
+                            ],
+                            "condition": {
+                              "type": "custom",
+                              "expression":
+                                  "{{fn:hasBeneficiaryId(item.individual.0.identifiers.0)}}==false",
                             }
                           },
                           {
-                            "actionType": "NAVIGATION",
-                            "properties": {
-                              "data": [
-                                {
-                                  "key": "HouseholdClientReferenceId",
-                                  "value":
-                                      "{{item.member.0.householdClientReferenceId}}"
-                                },
-                                {"key": "isEdit", "value": "true"},
-                                {
-                                  "key": "isHead",
-                                  "value": "{{fn:isHead(item.member)}}"
-                                },
-                              ],
-                              "name": "ADD_MEMBER",
-                              "type": "FORM"
+                            "actions": [
+                              {
+                                "actionType": "REVERSE_TRANSFORM",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "entities",
+                                      "value": "{{item.individual}}"
+                                    },
+                                    {
+                                      "key": "entities",
+                                      "value": "{{item.projectBeneficiary}}"
+                                    }
+                                  ],
+                                  "configName": "individualRegistration",
+                                  "entityTypes": [
+                                    "IndividualModel",
+                                    "ProjectBeneficiaryModel"
+                                  ]
+                                }
+                              },
+                              {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value":
+                                          "{{item.member.0.householdClientReferenceId}}"
+                                    },
+                                    {"key": "isEdit", "value": "true"},
+                                    {
+                                      "key": "isHead",
+                                      "value": "{{fn:isHead(item.member)}}"
+                                    },
+                                  ],
+                                  "name": "ADD_MEMBER",
+                                  "type": "FORM"
+                                }
+                              }
+                            ],
+                            "condition": {
+                              "type": "custom",
+                              "expression":
+                                  "{{fn:hasBeneficiaryId(item.individual.0.identifiers.0)}}==true",
                             }
-                          }
+                          },
                         ],
                         "fieldName": "editIndividualButton",
                         "properties": {
@@ -1011,6 +1090,13 @@ final dynamic sampleFlows = {
                       "mainAxisSize": "max",
                       "mainAxisAlignment": "spaceBetween"
                     }
+                  },
+                  {
+                    "type": "template",
+                    "value": "{{ item.individual.0.name.givenName }}",
+                    "format": "textTemplate",
+                    "fieldName": "individualName",
+                    "properties": {"bottomGap": 16}
                   },
                   {
                     "type": "template",
@@ -2307,6 +2393,7 @@ final dynamic sampleFlows = {
         {
           "icon": "FilterAlt",
           "type": "template",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "visible":
               "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
           "label": "REGISTER_BENEFICIARY",
@@ -2394,6 +2481,7 @@ final dynamic sampleFlows = {
           "type": "template",
           "label": "REGISTER_BENEFICIARY",
           "format": "button",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "visible":
               "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
           "onAction": [
@@ -3426,6 +3514,20 @@ final dynamic sampleFlows = {
               }
             },
             {
+              "actionType": "UPDATE_STOCK_BALANCE",
+              "properties": {
+                "entity": "TaskModel",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "Failed to update stock balance."
+                    }
+                  }
+                ]
+              }
+            },
+            {
               "actionType": "NAVIGATION",
               "properties": {
                 "data": [
@@ -3629,6 +3731,20 @@ final dynamic sampleFlows = {
           }
         },
         {
+          "actionType": "UPDATE_STOCK_BALANCE",
+          "properties": {
+            "entity": "TaskModel",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {
+                  "message": "Failed to update stock balance."
+                }
+              }
+            ]
+          }
+        },
+        {
           "actionType": "NAVIGATION",
           "properties": {
             "data": [
@@ -3747,6 +3863,11 @@ final dynamic sampleFlows = {
                   "actionType": "NAVIGATION",
                   "properties": {
                     "data": [
+                      {"key": "ec1", "value": "{{eligibilityChecklist.ec1}}"},
+                      {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
+                      {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
+                      {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
+                      {"key": "sourceFlow", "value": "CHECKLIST"},
                       {
                         "key": "selectedIndividualClientReferenceId",
                         "value":
@@ -3781,11 +3902,6 @@ final dynamic sampleFlows = {
                         "key": "cycleIndex",
                         "value": "{{navigation.cycleIndex}}"
                       },
-                      {"key": "ec1", "value": "{{eligibilityChecklist.ec1}}"},
-                      {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
-                      {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
-                      {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
-                      {"key": "sourceFlow", "value": "CHECKLIST"}
                     ],
                     "name": "REFER_BENEFICIARY",
                     "type": "FORM",
@@ -3940,7 +4056,7 @@ final dynamic sampleFlows = {
                       {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
                       {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
                       {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
-                      {"key": "sourceFlow", "value": "CHECKLIST"}
+                      {"key": "sourceFlow", "value": "CHECKLIST"},
                     ],
                     "name": "REFER_BENEFICIARY",
                     "type": "FORM",
@@ -4218,6 +4334,11 @@ final dynamic sampleFlows = {
               "actionType": "NAVIGATION",
               "properties": {
                 "data": [
+                  {"key": "ec1", "value": "{{eligibilityChecklist.ec1}}"},
+                  {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
+                  {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
+                  {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
+                  {"key": "sourceFlow", "value": "CHECKLIST"},
                   {
                     "key": "selectedIndividualClientReferenceId",
                     "value":
@@ -4363,6 +4484,11 @@ final dynamic sampleFlows = {
               "actionType": "NAVIGATION",
               "properties": {
                 "data": [
+                  {"key": "ec1", "value": "{{eligibilityChecklist.ec1}}"},
+                  {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
+                  {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
+                  {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
+                  {"key": "sourceFlow", "value": "CHECKLIST"},
                   {
                     "key": "selectedIndividualClientReferenceId",
                     "value":
@@ -4646,7 +4772,7 @@ final dynamic sampleFlows = {
               "order": 3,
               "value": "",
               "format": "idPopulator",
-              "hidden": false,
+              "hidden": true,
               "isMdms": true,
               "tooltip": "",
               "helpText": "",
@@ -4693,9 +4819,10 @@ final dynamic sampleFlows = {
               "tooltip":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip_addmember",
               "ageRange": {
-                "maxAge": 60,
-                "minAge": 3,
-                "errorMessage": "AGE_VALIDATION_ADDMEMBER"
+                "maxAge": "{{ isHead ? 1800 : 59}}",
+                "minAge": "{{isHead ? 216 : 3}}",
+                "errorMessage":
+                    "{{isHead ? AGE_VALIDATION : AGE_VALIDATION_ADDMEMBER}}"
               },
               "helpText":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText_addmember",
@@ -4717,13 +4844,15 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "minAge",
-                  "value": 3,
-                  "message": "AGE_VALIDATION_ADDMEMBER"
+                  "value": "{{isHead ? 216 : 3}}",
+                  "message":
+                      "{{isHead ? AGE_VALIDATION : AGE_VALIDATION_ADDMEMBER}}"
                 },
                 {
                   "type": "maxAge",
-                  "value": 60,
-                  "message": "AGE_VALIDATION_ADDMEMBER"
+                  "value": "{{isHead ? 1800 : 59}}",
+                  "message":
+                      "{{isHead ? AGE_VALIDATION : AGE_VALIDATION_ADDMEMBER}}"
                 }
               ],
               "errorMessage": "",
@@ -4865,7 +4994,7 @@ final dynamic sampleFlows = {
             "title": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
             "conditions": [],
             "description":
-                "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
+                "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
             "primaryActionLabel": "ACTION_SUBMIT",
             "secondaryActionLabel": "ACTION_CANCEL"
           },
@@ -5069,26 +5198,21 @@ final dynamic sampleFlows = {
           "label": "DATA_RECORDED_SUCCESSFULLY",
           "heading": "DATA_RECORDED_SUCCESSFULLY",
           "description": "DATA_RECORDED_SUCCESSFULLY_DESC",
-          "properties": {"type": "success"},
-          "children": [
+          "additionalWidgets": [
             {
               "type": "template",
-              "format": "text",
-              "label": "BENEFICIARY_ID_LABEL",
-              "value": "Beneficiary ID",
-              "fieldName": "beneficiaryIdLabel",
-              "mandatory": true
-            },
-            {
-              "type": "template",
-              "format": "text",
-              "label": "BENEFICIARY_ID_VALUE",
-              "value": "{{beneficiary.id}}",
-              "fieldName": "beneficiaryIdValue",
-              "mandatory": true,
-              "properties": {"style": "bold"}
+              "format": "textTemplate",
+              "value": "{{formData.beneficiaryDetails.identifiers}}",
+              "properties": {
+                "style": "bodyS",
+                "separatedBy": ", ",
+                "replaceAll": [
+                  {"searchValue": ",", "replaceValue": ":"},
+                ]
+              }
             }
           ],
+          "properties": {"type": "success"},
           "primaryAction": {
             "type": "template",
             "label": "VIEW_HOUSEHOLD_DETAILS",
@@ -5495,7 +5619,16 @@ final dynamic sampleFlows = {
               {"key": "ec1", "value": "{{navigation.ec1}}"},
               {"key": "ec2", "value": "{{navigation.ec2}}"},
               {"key": "ec3", "value": "{{navigation.ec3}}"},
-              {"key": "ec4", "value": "{{navigation.ec4}}"}
+              {"key": "ec4", "value": "{{navigation.ec4}}"},
+              {
+                "key": "referralReasons",
+                "value": "{{fn:getSymptomsReferral(navigation)}}"
+              },
+              {"key": "sourceFlow", "value": "{{navigation.sourceFlow}}"},
+              {
+                "key": "referralReasons",
+                "value": "{{navigation.referralReasons}}"
+              }
             ],
             "onError": [
               {
@@ -5964,7 +6097,8 @@ final dynamic sampleFlows = {
               "order": 4,
               "value": "",
               "format": "idPopulator",
-              "hidden": false,
+              "hidden": true,
+              "includeInForm": true,
               "isMdms": true,
               "tooltip": "",
               "helpText": "",
