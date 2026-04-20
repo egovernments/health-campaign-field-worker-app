@@ -36,6 +36,7 @@ import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
+import '../pages/reports/summary/summary_report.dart';
 import '../pages/beneficiary_id_downsync/beneficiary_id_downsync.dart';
 import '../pages/unauthenticated.dart';
 import '../pages/device_switch_selection.dart';
@@ -84,6 +85,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
+        ),
+        AutoRoute(
+          page: SummaryReportRoute.page,
+          path: 'summary-report',
         ),
 
         // NonMobile User

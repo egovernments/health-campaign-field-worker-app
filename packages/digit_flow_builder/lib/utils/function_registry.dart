@@ -1392,6 +1392,42 @@ void initializeFunctionRegistry() {
     return false;
   });
 
+  // GET symptoms for referral - this is a placeholder function to demonstrate how to register a function that processes data and returns a result based on certain conditions. In a real implementation, the symptom values would likely come from the stateData or arguments rather than being hardcoded.
+
+  FunctionRegistry.register("getSymptomsReferral", (args, stateData) {
+    Map? navigationData = args.isNotEmpty ? args.first : null;
+
+    if (navigationData == null) return null;
+
+    String? ec1 = navigationData['ec1'];
+    String? ec2 = navigationData['ec2'];
+
+    if (ec1 == null && ec2 == null) return null;
+
+    final List<String> symptoms = [];
+
+    if (ec1 == 'YES') symptoms.add('SICK');
+    if (ec2 == 'YES') {
+      symptoms.add('FEVER');
+    } else {
+      symptoms.add('DRUG_SE_PC');
+    }
+
+    return symptoms.join(',');
+  });
+
+  FunctionRegistry.register("hasBeneficiaryId", (args, stateData) {
+    final identifier = args.isNotEmpty ? args.first : null;
+
+    if (identifier == null) return false;
+
+    if (identifier["identifierType"] == 'UNIQUE_BENEFICIARY_ID') {
+      return true;
+    }
+
+    return false;
+  });
+
   FunctionRegistry.register("canRecordDelivery", (args, stateData) {
     final projectType = FlowBuilderSingleton().projectType;
     if (projectType == null || projectType.cycles == null) {

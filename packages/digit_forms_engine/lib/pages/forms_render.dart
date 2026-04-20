@@ -142,6 +142,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                         schema,
                         defaultValues: widget.defaultValues ?? {},
                         schemaKey: widget.currentSchemaKey,
+                        navigationParams: widget.navigationParams,
                       ),
                     ),
                 builder: (context, formGroup, child) {
@@ -1247,6 +1248,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               schema,
               defaultValues: widget.defaultValues,
               schemaKey: widget.currentSchemaKey,
+              navigationParams: widget.navigationParams,
             );
             debugPrint(
                 'FormsRender: Created control for pre-created field: $fieldName');
@@ -1273,6 +1275,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
             schema,
             defaultValues: widget.defaultValues,
             schemaKey: widget.currentSchemaKey,
+            navigationParams: widget.navigationParams,
           );
         } else {
           // Only add once (not per entity)
@@ -1283,6 +1286,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               schema,
               defaultValues: widget.defaultValues,
               schemaKey: widget.currentSchemaKey,
+              navigationParams: widget.navigationParams,
             );
           }
         }

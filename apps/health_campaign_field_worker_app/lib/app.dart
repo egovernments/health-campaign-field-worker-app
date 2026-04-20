@@ -326,7 +326,7 @@ class MainApplicationState extends State<MainApplication>
                               userActionLocalRepository:
                                   ctx.read<UserActionLocalRepository>(),
                               userActionRemoteRepository:
-                              ctx.read<UserActionRemoteRepository>(),
+                                  ctx.read<UserActionRemoteRepository>(),
                               context: context,
                             ),
                           ),

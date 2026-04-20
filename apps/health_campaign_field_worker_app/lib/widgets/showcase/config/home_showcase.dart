@@ -127,4 +127,8 @@ class _HomePageShowcaseData {
   );
 
   final clf = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.clf);
+
+  final summaryReport = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.summaryReportLabel,
+  );
 }

@@ -219,6 +219,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SummaryReportRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SummaryReportPage(),
+      );
+    },
     UnauthenticatedRouteWrapper.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -951,6 +957,20 @@ class ProjectSelectionRouteArgs {
   String toString() {
     return 'ProjectSelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [SummaryReportPage]
+class SummaryReportRoute extends PageRouteInfo<void> {
+  const SummaryReportRoute({List<PageRouteInfo>? children})
+      : super(
+          SummaryReportRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SummaryReportRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
