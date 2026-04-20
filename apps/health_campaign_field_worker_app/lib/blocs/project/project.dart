@@ -914,7 +914,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     try {
       // Trigger silent stock downsync after project facilities are loaded
-      _silentStockDownSync(event.model);
+      await _silentStockDownSync(event.model);
     } catch (_) {
       emit(state.copyWith(
         selectedProject: event.model,

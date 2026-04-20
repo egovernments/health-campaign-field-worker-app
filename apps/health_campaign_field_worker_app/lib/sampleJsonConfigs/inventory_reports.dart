@@ -163,6 +163,7 @@ final dynamic inventoryReportFlows = {
           "type": "template",
           "format": "menu_card",
           "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_HEADING",
+          "visible": "{{fn:hasRole('DISTRIBUTOR')}} == true",
           "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_DESCRIPTION",
           "icon": "Assessment",
           "onAction": [
