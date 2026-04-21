@@ -1,4 +1,4 @@
-final dynamic sampleFlows = {
+final dynamic sampleSmcFlows = {
   "id": "9d3a901b-d831-427b-8aeb-4bbda9ec2018",
   "tenantId": "mz",
   "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
@@ -306,9 +306,33 @@ final dynamic sampleFlows = {
                   {
                     "key": "eligibleProductVariants",
                     "value": "{{contextData.0.eligibleProductVariants}}"
+                  },
+                  {
+                    "key": "selectedIndividualClientReferenceId",
+                    "value": "{{navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualIdentifierId",
+                    "value":
+                        "{{contextData.0.individuals.IndividualModel.identifiers.0.identifierId}}"
+                  },
+                  {
+                    "key": "selectedIndividualName",
+                    "value":
+                        "{{contextData.0.individuals.IndividualModel.name.givenName}}"
+                  },
+                  {
+                    "key": "selectedIndividualGender",
+                    "value":
+                        "{{contextData.0.individuals.IndividualModel.gender}}"
+                  },
+                  {
+                    "key": "selectedIndividualAgeInMonths",
+                    "value":
+                        "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, 'ageInMonths')}}"
                   }
                 ],
-                "name": "DELIVERY",
+                "name": "CHECKLIST",
                 "type": "FORM"
               }
             }
@@ -1814,7 +1838,7 @@ final dynamic sampleFlows = {
                 {
                   "actionType": "NAVIGATION",
                   "properties": {
-                    "name": "household-acknowledgement",
+                    "name": "DeliveryChecklist",
                     "type": "template"
                   }
                 }
@@ -1860,7 +1884,7 @@ final dynamic sampleFlows = {
             {
               "actionType": "CREATE_EVENT",
               "properties": {
-                "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                "entity": "TaskModel",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -1947,7 +1971,7 @@ final dynamic sampleFlows = {
             }
           ],
           "navigateTo": {
-            "name": "household-acknowledgement",
+            "name": "DeliveryChecklist",
             "type": "template"
           },
           "properties": [
@@ -2123,6 +2147,243 @@ final dynamic sampleFlows = {
           "showTabView": false,
           "submitCondition": null,
           "preventScreenCapture": false
+        },
+        {
+          "body": null,
+          "flow": "DELIVERY",
+          "page": "DeliveryChecklist",
+          "type": "object",
+          "label": "HCM_DELIVERY_CHECKLIST_HEADING",
+          "order": 2,
+          "footer": [
+            {
+              "label": "HCM_DELIVERY_CHECKLIST_SUBMIT_BUTTON",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "name": "household-acknowledgement",
+                    "type": "template"
+                  }
+                }
+              ],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "HCM_DELIVERY_CHECKLIST_HEADING",
+          "summary": false,
+          "version": 1,
+          "onAction": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+                  {"key": "doseIndex", "value": "{{navigation.doseIndex}}"},
+                  {
+                    "key": "deliveryStrategy",
+                    "value": "{{navigation.deliveryStrategy}}"
+                  }
+                ],
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                  }
+                ],
+                "configName": "delivery"
+              }
+            },
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "TaskModel",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
+                  }
+                ]
+              }
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "FETCH_TRANSFORMER_CONFIG",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "ProjectBeneficiaryClientReferenceId",
+                        "value":
+                            "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                      },
+                      {
+                        "key": "cycleIndex",
+                        "value": "{{navigation.cycleIndex}}"
+                      },
+                      {
+                        "key": "deliveryStrategy",
+                        "value": "{{navigation.deliveryStrategy}}"
+                      },
+                      {
+                        "key": "futureDoses",
+                        "value": "{{navigation.futureDoses}}"
+                      }
+                    ],
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "HCM_ERROR_FETCH_BULK_DELIVERY_CONFIG"
+                        }
+                      }
+                    ],
+                    "configName": "indirectBulkDelivery"
+                  }
+                },
+                {
+                  "actionType": "CREATE_EVENT",
+                  "properties": {
+                    "entity": "TaskModel",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_CREATE_BULK_TASKS"}
+                      }
+                    ]
+                  }
+                }
+              ],
+              "condition": {"expression": "doseIndex == 1"}
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  }
+                ],
+                "name": "deliverySuccess",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "householdOverview"
+              }
+            }
+          ],
+          "navigateTo": {
+            "name": "household-acknowledgement",
+            "type": "template"
+          },
+          "properties": [
+            {
+              "type": "boolean",
+              "label": "HCM_DELIVERY_CHECKLIST_ACTION_GIVE_TABLET",
+              "order": 1,
+              "value": "",
+              "format": "checkbox",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "ACTION1",
+              "required": true,
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_DELIVERY_CHECKLIST_ACTION_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": ""
+            },
+            {
+              "type": "boolean",
+              "label": "HCM_DELIVERY_CHECKLIST_ACTION_WRITE_CODE",
+              "order": 2,
+              "value": "",
+              "format": "checkbox",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "ACTION2",
+              "required": true,
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_DELIVERY_CHECKLIST_ACTION_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": ""
+            },
+            {
+              "type": "boolean",
+              "label": "HCM_DELIVERY_CHECKLIST_ACTION_SPAQ",
+              "order": 3,
+              "value": "",
+              "format": "checkbox",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "ACTION3",
+              "required": true,
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_DELIVERY_CHECKLIST_ACTION_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": ""
+            }
+          ],
+          "actionLabel": "HCM_DELIVERY_CHECKLIST_SUBMIT_BUTTON",
+          "description": "HCM_DELIVERY_CHECKLIST_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false
         }
       ],
       "summary": false,
@@ -2157,7 +2418,7 @@ final dynamic sampleFlows = {
         {
           "actionType": "CREATE_EVENT",
           "properties": {
-            "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+            "entity": "TaskModel",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -2234,6 +2495,809 @@ final dynamic sampleFlows = {
             "navigationMode": "popUntilAndPush",
             "popUntilPageName": "householdOverview"
           }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {},
+      "scrollListener": {}
+    },
+    {
+      "name": "CHECKLIST",
+      "order": 6,
+      "pages": [
+        {
+          "body": null,
+          "flow": "CHECKLIST",
+          "page": "eligibilityChecklist",
+          "type": "object",
+          "label": "HCM_ELIGIBILITY_CHECKLIST_HEADING",
+          "order": 1,
+          "footer": [
+            {
+              "label": "HCM_ELIGIBILITY_CHECKLIST_SUBMIT_BUTTON",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "name": "household-acknowledgement",
+                    "type": "template"
+                  }
+                }
+              ],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "HCM_ELIGIBILITY_CHECKLIST_HEADING",
+          "summary": false,
+          "version": 1,
+          "onAction": [
+            {
+              "actions": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "ProjectBeneficiaryClientReferenceId",
+                        "value":
+                            "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                      },
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value": "{{navigation.HouseholdClientReferenceId}}"
+                      },
+                      {
+                        "key": "cycleIndex",
+                        "value": "{{navigation.cycleIndex}}"
+                      },
+                      {
+                        "key": "doseIndex",
+                        "value": "{{navigation.doseIndex}}"
+                      },
+                      {
+                        "key": "deliveryStrategy",
+                        "value": "{{navigation.deliveryStrategy}}"
+                      },
+                      {
+                        "key": "totalDosesInCycle",
+                        "value": "{{navigation.totalDosesInCycle}}"
+                      },
+                      {
+                        "key": "futureDoses",
+                        "value": "{{navigation.futureDoses}}"
+                      },
+                      {
+                        "key": "eligibleProductVariants",
+                        "value": "{{navigation.eligibleProductVariants}}"
+                      }
+                    ],
+                    "name": "DELIVERY",
+                    "type": "FORM",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "householdOverview"
+                  }
+                }
+              ],
+              "condition": {
+                "expression":
+                    "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==NO"
+              }
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {"key": "ec1", "value": "{{eligibilityChecklist.ec1}}"},
+                      {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
+                      {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
+                      {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
+                      {"key": "sourceFlow", "value": "CHECKLIST"},
+                      {
+                        "key": "selectedIndividualClientReferenceId",
+                        "value":
+                            "{{navigation.selectedIndividualClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualIdentifierId",
+                        "value":
+                            "{{navigation.selectedIndividualIdentifierId}}"
+                      },
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value": "{{navigation.HouseholdClientReferenceId}}"
+                      },
+                      {
+                        "key": "ProjectBeneficiaryClientReferenceId",
+                        "value":
+                            "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualName",
+                        "value": "{{navigation.selectedIndividualName}}"
+                      },
+                      {
+                        "key": "selectedIndividualGender",
+                        "value": "{{navigation.selectedIndividualGender}}"
+                      },
+                      {
+                        "key": "selectedIndividualAgeInMonths",
+                        "value":
+                            "{{navigation.selectedIndividualAgeInMonths}}"
+                      },
+                      {
+                        "key": "cycleIndex",
+                        "value": "{{navigation.cycleIndex}}"
+                      }
+                    ],
+                    "name": "REFER_BENEFICIARY",
+                    "type": "FORM",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "householdOverview"
+                  }
+                }
+              ],
+              "condition": {
+                "expression":
+                    "eligibilityChecklist.ec1==YES && eligibilityChecklist.ec3==YES && eligibilityChecklist.ec4==YES"
+              }
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "FETCH_TRANSFORMER_CONFIG",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "selectedIndividualClientReferenceId",
+                        "value":
+                            "{{navigation.selectedIndividualClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualIdentifierId",
+                        "value":
+                            "{{navigation.selectedIndividualIdentifierId}}"
+                      },
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value": "{{navigation.HouseholdClientReferenceId}}"
+                      },
+                      {
+                        "key": "ProjectBeneficiaryClientReferenceId",
+                        "value":
+                            "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                      }
+                    ],
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "HCM_ERROR_FETCH_CONFIG"
+                        }
+                      }
+                    ],
+                    "configName": "ineligibleConfig"
+                  }
+                },
+                {
+                  "actionType": "CREATE_EVENT",
+                  "properties": {
+                    "entity": "TASK",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "HCM_ERROR_CREATE_STOCK"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "selectedIndividualClientReferenceId",
+                        "value":
+                            "{{navigation.selectedIndividualClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualIdentifierId",
+                        "value":
+                            "{{navigation.selectedIndividualIdentifierId}}"
+                      },
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value": "{{navigation.HouseholdClientReferenceId}}"
+                      },
+                      {
+                        "key": "ProjectBeneficiaryClientReferenceId",
+                        "value":
+                            "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                      }
+                    ],
+                    "name": "householdOverview",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "HCM_ERROR_NAVIGATION"
+                        }
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "householdOverview"
+                  }
+                }
+              ],
+              "condition": {
+                "expression":
+                    "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==YES"
+              }
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {"key": "ec1", "value": "{{eligibilityChecklist.ec1}}"},
+                      {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
+                      {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
+                      {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
+                      {"key": "sourceFlow", "value": "CHECKLIST"},
+                      {
+                        "key": "selectedIndividualClientReferenceId",
+                        "value":
+                            "{{navigation.selectedIndividualClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualIdentifierId",
+                        "value":
+                            "{{navigation.selectedIndividualIdentifierId}}"
+                      },
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value": "{{navigation.HouseholdClientReferenceId}}"
+                      },
+                      {
+                        "key": "ProjectBeneficiaryClientReferenceId",
+                        "value":
+                            "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualName",
+                        "value": "{{navigation.selectedIndividualName}}"
+                      },
+                      {
+                        "key": "selectedIndividualGender",
+                        "value": "{{navigation.selectedIndividualGender}}"
+                      },
+                      {
+                        "key": "selectedIndividualAgeInMonths",
+                        "value":
+                            "{{navigation.selectedIndividualAgeInMonths}}"
+                      },
+                      {
+                        "key": "cycleIndex",
+                        "value": "{{navigation.cycleIndex}}"
+                      }
+                    ],
+                    "name": "REFER_BENEFICIARY",
+                    "type": "FORM",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "householdOverview"
+                  }
+                }
+              ],
+              "condition": {"expression": "DEFAULT"}
+            }
+          ],
+          "navigateTo": {
+            "name": "household-acknowledgement",
+            "type": "template"
+          },
+          "properties": [
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "HCM_ELIGIBILITY_QUESTION_YES"},
+                {"code": "NO", "name": "HCM_ELIGIBILITY_QUESTION_NO"}
+              ],
+              "label": "HCM_ELIGIBILITY_CHECKLIST_QUESTION_1_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "ec1",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "HCM_ELIGIBILITY_CHECKLIST_QUESTION_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "YES", "name": "HCM_ELIGIBILITY_QUESTION_YES"},
+                {"code": "NO", "name": "HCM_ELIGIBILITY_QUESTION_NO"}
+              ],
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "HCM_ELIGIBILITY_QUESTION_YES"},
+                {"code": "NO", "name": "HCM_ELIGIBILITY_QUESTION_NO"}
+              ],
+              "label": "HCM_ELIGIBILITY_CHECKLIST_QUESTION_2_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "ec2",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "HCM_ELIGIBILITY_CHECKLIST_QUESTION_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "YES", "name": "HCM_ELIGIBILITY_QUESTION_YES"},
+                {"code": "NO", "name": "HCM_ELIGIBILITY_QUESTION_NO"}
+              ],
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "eligibilityChecklist.ec1=='YES'"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "HCM_ELIGIBILITY_QUESTION_YES"},
+                {"code": "NO", "name": "HCM_ELIGIBILITY_QUESTION_NO"}
+              ],
+              "label": "HCM_ELIGIBILITY_CHECKLIST_QUESTION_3_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "ec3",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "HCM_ELIGIBILITY_CHECKLIST_QUESTION_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "YES", "name": "HCM_ELIGIBILITY_QUESTION_YES"},
+                {"code": "NO", "name": "HCM_ELIGIBILITY_QUESTION_NO"}
+              ],
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "HCM_ELIGIBILITY_QUESTION_YES"},
+                {"code": "NO", "name": "HCM_ELIGIBILITY_QUESTION_NO"}
+              ],
+              "label": "HCM_ELIGIBILITY_CHECKLIST_QUESTION_4_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "ec4",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "HCM_ELIGIBILITY_CHECKLIST_QUESTION_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "YES", "name": "HCM_ELIGIBILITY_QUESTION_YES"},
+                {"code": "NO", "name": "HCM_ELIGIBILITY_QUESTION_NO"}
+              ],
+              "includeInSummary": true
+            }
+          ],
+          "actionLabel": "HCM_ELIGIBILITY_CHECKLIST_SUBMIT_BUTTON",
+          "description": "HCM_ELIGIBILITY_CHECKLIST_DESCRIPTION",
+          "showTabView": false,
+          "showAlertPopUp": {
+            "title": "HCM_ELIGIBILITY_CHECKLIST_ALERT_TITLE",
+            "conditions": [
+              {
+                "value": "To Administer",
+                "expression":
+                    "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==NO"
+              },
+              {
+                "value": "Ineligible flow",
+                "expression":
+                    "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==YES"
+              },
+              {"value": "referral flow", "expression": "DEFAULT"}
+            ],
+            "description": "HCM_ELIGIBILITY_CHECKLIST_ALERT_DESCRIPTION",
+            "primaryActionLabel": "HCM_ACTION_SUBMIT",
+            "secondaryActionLabel": "HCM_ACTION_CANCEL"
+          },
+          "submitCondition": null,
+          "preventScreenCapture": false
+        }
+      ],
+      "summary": false,
+      "version": 3,
+      "category": "DELIVERY",
+      "disabled": false,
+      "onAction": [
+        {
+          "actions": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  },
+                  {
+                    "key": "cycleIndex",
+                    "value": "{{navigation.cycleIndex}}"
+                  },
+                  {
+                    "key": "doseIndex",
+                    "value": "{{navigation.doseIndex}}"
+                  },
+                  {
+                    "key": "deliveryStrategy",
+                    "value": "{{navigation.deliveryStrategy}}"
+                  },
+                  {
+                    "key": "totalDosesInCycle",
+                    "value": "{{navigation.totalDosesInCycle}}"
+                  },
+                  {
+                    "key": "futureDoses",
+                    "value": "{{navigation.futureDoses}}"
+                  },
+                  {
+                    "key": "eligibleProductVariants",
+                    "value": "{{navigation.eligibleProductVariants}}"
+                  }
+                ],
+                "name": "DELIVERY",
+                "type": "FORM",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "householdOverview"
+              }
+            }
+          ],
+          "condition": {
+            "expression":
+                "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==NO"
+          }
+        },
+        {
+          "actions": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {"key": "ec1", "value": "{{eligibilityChecklist.ec1}}"},
+                  {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
+                  {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
+                  {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
+                  {"key": "sourceFlow", "value": "CHECKLIST"},
+                  {
+                    "key": "selectedIndividualClientReferenceId",
+                    "value":
+                        "{{navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualIdentifierId",
+                    "value":
+                        "{{navigation.selectedIndividualIdentifierId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  },
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualName",
+                    "value": "{{navigation.selectedIndividualName}}"
+                  },
+                  {
+                    "key": "selectedIndividualGender",
+                    "value": "{{navigation.selectedIndividualGender}}"
+                  },
+                  {
+                    "key": "selectedIndividualAgeInMonths",
+                    "value":
+                        "{{navigation.selectedIndividualAgeInMonths}}"
+                  },
+                  {
+                    "key": "cycleIndex",
+                    "value": "{{navigation.cycleIndex}}"
+                  }
+                ],
+                "name": "REFER_BENEFICIARY",
+                "type": "FORM",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "householdOverview"
+              }
+            }
+          ],
+          "condition": {
+            "expression":
+                "eligibilityChecklist.ec1==YES && eligibilityChecklist.ec3==YES && eligibilityChecklist.ec4==YES"
+          }
+        },
+        {
+          "actions": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "data": [
+                  {
+                    "key": "selectedIndividualClientReferenceId",
+                    "value":
+                        "{{navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualIdentifierId",
+                    "value":
+                        "{{navigation.selectedIndividualIdentifierId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  },
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  }
+                ],
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "HCM_ERROR_FETCH_CONFIG"
+                    }
+                  }
+                ],
+                "configName": "ineligibleConfig"
+              }
+            },
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "TASK",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "HCM_ERROR_CREATE_STOCK"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "selectedIndividualClientReferenceId",
+                    "value":
+                        "{{navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualIdentifierId",
+                    "value":
+                        "{{navigation.selectedIndividualIdentifierId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  },
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  }
+                ],
+                "name": "householdOverview",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "HCM_ERROR_NAVIGATION"
+                    }
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "householdOverview"
+              }
+            }
+          ],
+          "condition": {
+            "expression":
+                "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==YES"
+          }
+        },
+        {
+          "actions": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {"key": "ec1", "value": "{{eligibilityChecklist.ec1}}"},
+                  {"key": "ec2", "value": "{{eligibilityChecklist.ec2}}"},
+                  {"key": "ec3", "value": "{{eligibilityChecklist.ec3}}"},
+                  {"key": "ec4", "value": "{{eligibilityChecklist.ec4}}"},
+                  {"key": "sourceFlow", "value": "CHECKLIST"},
+                  {
+                    "key": "selectedIndividualClientReferenceId",
+                    "value":
+                        "{{navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualIdentifierId",
+                    "value":
+                        "{{navigation.selectedIndividualIdentifierId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  },
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualName",
+                    "value": "{{navigation.selectedIndividualName}}"
+                  },
+                  {
+                    "key": "selectedIndividualGender",
+                    "value": "{{navigation.selectedIndividualGender}}"
+                  },
+                  {
+                    "key": "selectedIndividualAgeInMonths",
+                    "value":
+                        "{{navigation.selectedIndividualAgeInMonths}}"
+                  },
+                  {
+                    "key": "cycleIndex",
+                    "value": "{{navigation.cycleIndex}}"
+                  }
+                ],
+                "name": "REFER_BENEFICIARY",
+                "type": "FORM",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "householdOverview"
+              }
+            }
+          ],
+          "condition": {"expression": "DEFAULT"}
         }
       ],
       "isSelected": true,

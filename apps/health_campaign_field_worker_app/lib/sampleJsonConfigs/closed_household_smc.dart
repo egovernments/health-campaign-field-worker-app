@@ -1,4 +1,4 @@
-final dynamic sampleCloseHouseholdFlows = {
+final dynamic sampleCloseHouseholdSmcFlows = {
   "name": "CLOSEHOUSEHOLD",
   "initialPage": "closeHouseholdRegistration",
   "order": 2,
@@ -20,7 +20,7 @@ final dynamic sampleCloseHouseholdFlows = {
         {
           "page": "closeHouseholdDetails",
           "type": "object",
-          "label": "HCM_CLOSE_HOUSEHOLD_MISSED_CHILDREN_LABEL",
+          "label": "HCM_CLOSE_HOUSEHOLD_LABEL",
           "order": 1,
           "value": null,
           "hidden": null,
@@ -108,12 +108,14 @@ final dynamic sampleCloseHouseholdFlows = {
                 {
                   "type": "minLength",
                   "value": "2",
-                  "message": "HCM_VALIDATION_LENGTH_2_TO_200"
+                  "message":
+                      "HCM_VALIDATION_LENGTH_2_TO_200"
                 },
                 {
                   "type": "maxLength",
                   "value": "200",
-                  "message": "HCM_VALIDATION_LENGTH_2_TO_200"
+                  "message":
+                      "HCM_VALIDATION_LENGTH_2_TO_200"
                 },
                 {
                   "type": "required",
@@ -264,7 +266,8 @@ final dynamic sampleCloseHouseholdFlows = {
           ],
           "systemDate": null,
           "actionLabel": "HCM_COMMON_NEXT_BUTTON",
-          "description": "HCM_CLOSE_HOUSEHOLD_DETAILS_DESCRIPTION",
+          "description":
+              "HCM_CLOSE_HOUSEHOLD_DETAILS_DESCRIPTION",
           "validations": null,
           "includeInForm": null,
           "isMultiSelect": null,
@@ -279,7 +282,9 @@ final dynamic sampleCloseHouseholdFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                "properties": {
+                  "message": "HCM_ERROR_FETCH_CONFIG"
+                }
               }
             ],
             "configName": "closeHouseholdRegistration"
@@ -292,7 +297,9 @@ final dynamic sampleCloseHouseholdFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "HCM_ERROR_CREATE_STOCK"}
+                "properties": {
+                  "message": "HCM_ERROR_CREATE_STOCK"
+                }
               }
             ]
           }
@@ -306,7 +313,9 @@ final dynamic sampleCloseHouseholdFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                "properties": {
+                  "message": "HCM_ERROR_NAVIGATION"
+                }
               }
             ]
           }
@@ -322,8 +331,11 @@ final dynamic sampleCloseHouseholdFlows = {
           "heading": "HCM_CLOSE_HOUSEHOLD_SUCCESS_HEADING",
           "fieldName": "closeHouseholdSuccess",
           "mandatory": true,
-          "properties": {"type": "success"},
-          "description": "HCM_CLOSE_HOUSEHOLD_SUCCESS_DESCRIPTION",
+          "properties": {
+            "type": "success"
+          },
+          "description":
+              "HCM_CLOSE_HOUSEHOLD_SUCCESS_DESCRIPTION",
           "primaryAction": {
             "type": "template",
             "label": "HCM_CLOSE_HOUSEHOLD_SUCCESS_GO_BACK_BUTTON",
@@ -332,12 +344,17 @@ final dynamic sampleCloseHouseholdFlows = {
             "onAction": [
               {
                 "actionType": "NAVIGATION",
-                "properties": {"name": "Home", "type": "HOME"}
+                "properties": {
+                  "name": "Home",
+                  "type": "HOME"
+                }
               }
             ],
             "fieldName": "GoHome",
             "mandatory": true,
-            "properties": {"type": "primary"}
+            "properties": {
+              "type": "primary"
+            }
           }
         }
       ],

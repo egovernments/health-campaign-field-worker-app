@@ -43,6 +43,7 @@ import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../sampleJsonConfigs/closed_household.dart';
+import '../sampleJsonConfigs/closed_household_smc.dart';
 import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
 import '../sampleJsonConfigs/inventory_reports.dart';
@@ -51,6 +52,8 @@ import '../sampleJsonConfigs/polio_afp_case.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
 import '../sampleJsonConfigs/registration_flows.dart';
+import '../sampleJsonConfigs/registration_flows_household.dart';
+import '../sampleJsonConfigs/registration_flows_smc.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
@@ -936,7 +939,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   showBackNavigation: false,
                   showHelp: false,
                 ),
-                const PolioStatsCard(),
+                // const PolioStatsCard(),
                 /////   hfreferral progress matrics
                 if (state.actionsWrapper.actions
                     .map((e) => e.displayName)
@@ -1545,11 +1548,24 @@ class _HomePageState extends LocalizedState<HomePage> {
                   //         pageName: registrationDeliveryData["initialPage"]),
                   //   );
                   // } else {
-                  FlowRegistry.setConfig(
-                      sampleFlows["flows"] as List<Map<String, dynamic>>);
+                  final isHousehold =
+                      FlowBuilderSingleton().beneficiaryType ==
+                          BeneficiaryType.household;
+                  final isPolio = context.selectedProject.projectType
+                          ?.toUpperCase()
+                          .contains('POLIO') ==
+                      true;
+                  final registrationConfig = isHousehold
+                      ? sampleHouseholdFlows
+                      : isPolio
+                          ? sampleFlows
+                          : sampleSmcFlows;
+                  FlowRegistry.setConfig(registrationConfig["flows"]
+                      as List<Map<String, dynamic>>);
                   NavigationRegistry.setupNavigation(ctx);
                   ctx.router.push(
-                    FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+                    FlowBuilderHomeRoute(
+                        pageName: registrationConfig["initialPage"]),
                   );
                   // }
                 } catch (e) {
@@ -1563,7 +1579,12 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.polioMissedChildrenLabel:
           homeShowcaseData.polioMissedChildren.buildWith(
         child: HomeItemCard(
-          icon: Icons.child_care,
+          icon: context.selectedProject.projectType
+                      ?.toUpperCase()
+                      .contains('POLIO') ==
+                  true
+              ? Icons.child_care
+              : Icons.home,
           label: i18.home.polioMissedChildrenLabel,
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
@@ -1573,11 +1594,17 @@ class _HomePageState extends LocalizedState<HomePage> {
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
+                final isPolio = context.selectedProject.projectType
+                        ?.toUpperCase()
+                        .contains('POLIO') ==
+                    true;
                 await FlowNavigationUtils.navigateToFlowModule(
                   context: ctx,
                   config: FlowModuleConfig(
                     schemaKey: 'CLOSEHOUSEHOLD',
-                    sampleFlows: sampleCloseHouseholdFlows,
+                    sampleFlows: isPolio
+                        ? sampleCloseHouseholdFlows
+                        : sampleCloseHouseholdSmcFlows,
                   ),
                 );
               },
@@ -1585,81 +1612,81 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.polioStockDetailsLabel:
-          homeShowcaseData.polioStockDetails.buildWith(
-        child: HomeItemCard(
-          icon: Icons.inventory_2,
-          label: i18.home.polioStockDetailsLabel,
-          onPressed: () async {
-            await context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) async {
-                final moduleName =
-                    'hcm-poliostockdetails-${context.selectedProject.referenceID}';
-                triggerLocalization(module: moduleName);
-                isTriggerLocalisation = false;
-
-                await FlowNavigationUtils.navigateToFlowModule(
-                  context: ctx,
-                  config: FlowModuleConfig(
-                    schemaKey: 'POLIO_STOCK_DETAILS',
-                    sampleFlows: samplePolioStockDetailsFlows,
-                  ),
-                );
-              },
-            ));
-            PolioStatsCard.refresh();
-          },
-        ),
-      ),
-      i18.home.polioAfpCaseLabel: homeShowcaseData.polioAfpCase.buildWith(
-        child: HomeItemCard(
-          icon: Icons.medical_services,
-          label: i18.home.polioAfpCaseLabel,
-          onPressed: () async {
-            context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) async {
-                final moduleName =
-                    'hcm-polioafpcase-${context.selectedProject.referenceID}';
-                triggerLocalization(module: moduleName);
-                isTriggerLocalisation = false;
-
-                await FlowNavigationUtils.navigateToFlowModule(
-                  context: ctx,
-                  config: FlowModuleConfig(
-                    schemaKey: 'POLIO_AFP_CASE',
-                    sampleFlows: samplePolioAfpCaseFlows,
-                  ),
-                );
-              },
-            ));
-          },
-        ),
-      ),
-      i18.home.polioLqaDataCollectionLabel:
-          homeShowcaseData.polioLqaDataCollection.buildWith(
-        child: HomeItemCard(
-          icon: Icons.checklist,
-          label: i18.home.polioLqaDataCollectionLabel,
-          onPressed: () async {
-            context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) async {
-                final moduleName =
-                    'hcm-poliolqa-${context.selectedProject.referenceID}';
-                triggerLocalization(module: moduleName);
-                isTriggerLocalisation = false;
-
-                await FlowNavigationUtils.navigateToFlowModule(
-                  context: ctx,
-                  config: FlowModuleConfig(
-                    schemaKey: 'POLIO_LQA_DATA_COLLECTION',
-                    sampleFlows: samplePolioLqaDataCollectionFlows,
-                  ),
-                );
-              },
-            ));
-          },
-        ),
-      ),
+      // i18.home.polioStockDetailsLabel:
+      //     homeShowcaseData.polioStockDetails.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.inventory_2,
+      //     label: i18.home.polioStockDetailsLabel,
+      //     onPressed: () async {
+      //       await context.router.push(CurrentBoundaryRoute(
+      //         onBoundarySelected: (ctx) async {
+      //           final moduleName =
+      //               'hcm-poliostockdetails-${context.selectedProject.referenceID}';
+      //           triggerLocalization(module: moduleName);
+      //           isTriggerLocalisation = false;
+      //
+      //           await FlowNavigationUtils.navigateToFlowModule(
+      //             context: ctx,
+      //             config: FlowModuleConfig(
+      //               schemaKey: 'POLIO_STOCK_DETAILS',
+      //               sampleFlows: samplePolioStockDetailsFlows,
+      //             ),
+      //           );
+      //         },
+      //       ));
+      //       PolioStatsCard.refresh();
+      //     },
+      //   ),
+      // ),
+      // i18.home.polioAfpCaseLabel: homeShowcaseData.polioAfpCase.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.medical_services,
+      //     label: i18.home.polioAfpCaseLabel,
+      //     onPressed: () async {
+      //       context.router.push(CurrentBoundaryRoute(
+      //         onBoundarySelected: (ctx) async {
+      //           final moduleName =
+      //               'hcm-polioafpcase-${context.selectedProject.referenceID}';
+      //           triggerLocalization(module: moduleName);
+      //           isTriggerLocalisation = false;
+      //
+      //           await FlowNavigationUtils.navigateToFlowModule(
+      //             context: ctx,
+      //             config: FlowModuleConfig(
+      //               schemaKey: 'POLIO_AFP_CASE',
+      //               sampleFlows: samplePolioAfpCaseFlows,
+      //             ),
+      //           );
+      //         },
+      //       ));
+      //     },
+      //   ),
+      // ),
+      // i18.home.polioLqaDataCollectionLabel:
+      //     homeShowcaseData.polioLqaDataCollection.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.checklist,
+      //     label: i18.home.polioLqaDataCollectionLabel,
+      //     onPressed: () async {
+      //       context.router.push(CurrentBoundaryRoute(
+      //         onBoundarySelected: (ctx) async {
+      //           final moduleName =
+      //               'hcm-poliolqa-${context.selectedProject.referenceID}';
+      //           triggerLocalization(module: moduleName);
+      //           isTriggerLocalisation = false;
+      //
+      //           await FlowNavigationUtils.navigateToFlowModule(
+      //             context: ctx,
+      //             config: FlowModuleConfig(
+      //               schemaKey: 'POLIO_LQA_DATA_COLLECTION',
+      //               sampleFlows: samplePolioLqaDataCollectionFlows,
+      //             ),
+      //           );
+      //         },
+      //       ));
+      //     },
+      //   ),
+      // ),
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.buildWith(
         child: HomeItemCard(
@@ -2035,8 +2062,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       // INFO : Need to add showcase keys of package Here
       // i18.home.beneficiaryLabel:
       //     homeShowcaseData.distributorBeneficiaries.showcaseKey,
-      // i18.home.manageStockLabel:
-      //     homeShowcaseData.warehouseManagerManageStock.showcaseKey,
+      i18.home.manageStockLabel:
+          homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
       i18.home.mySurveyForm:
@@ -2055,11 +2082,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.polioRegistration.showcaseKey,
       i18.home.polioMissedChildrenLabel:
           homeShowcaseData.polioMissedChildren.showcaseKey,
-      i18.home.polioStockDetailsLabel:
-          homeShowcaseData.polioStockDetails.showcaseKey,
-      i18.home.polioAfpCaseLabel: homeShowcaseData.polioAfpCase.showcaseKey,
-      i18.home.polioLqaDataCollectionLabel:
-          homeShowcaseData.polioLqaDataCollection.showcaseKey,
+      // i18.home.polioStockDetailsLabel:
+      //     homeShowcaseData.polioStockDetails.showcaseKey,
+      // i18.home.polioAfpCaseLabel: homeShowcaseData.polioAfpCase.showcaseKey,
+      // i18.home.polioLqaDataCollectionLabel:
+      //     homeShowcaseData.polioLqaDataCollection.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
@@ -2077,9 +2104,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.polioRegistrationLabel,
       i18.home.polioMissedChildrenLabel,
       i18.home.transitPostLabel,
-      i18.home.polioStockDetailsLabel,
-      i18.home.polioLqaDataCollectionLabel,
-      // i18.home.manageStockLabel,
+      // i18.home.polioStockDetailsLabel,
+      // i18.home.polioLqaDataCollectionLabel,
+      i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.mySurveyForm,
       i18.home.fileComplaint,
@@ -2095,6 +2122,11 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.db,
     ];
 
+    final isDistributor = context.loggedInUserRoles
+        .where((role) => role.code == RolesType.distributor.toValue())
+        .toList()
+        .isNotEmpty;
+
     final List<String> filteredLabels = homeItemsLabel
         .where((element) =>
             state.actionsWrapper.actions
@@ -2102,9 +2134,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db ||
-            element == i18.home.polioStockDetailsLabel ||
-            element == i18.home.polioLqaDataCollectionLabel ||
-            element == i18.home.transitPostLabel)
+            element == i18.home.transitPostLabel ||
+            (isDistributor &&
+                (element == i18.home.polioRegistrationLabel ||
+                    (element == i18.home.polioMissedChildrenLabel &&
+                        FlowBuilderSingleton().beneficiaryType ==
+                            BeneficiaryType.individual))))
         .toList();
 
     final showcaseKeys =

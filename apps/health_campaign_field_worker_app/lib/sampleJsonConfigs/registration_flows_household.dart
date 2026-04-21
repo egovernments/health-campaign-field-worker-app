@@ -1,0 +1,3867 @@
+final dynamic sampleHouseholdFlows = {
+  "id": "9d3a901b-d831-427b-8aeb-4bbda9ec2019",
+  "tenantId": "mz",
+  "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
+  "uniqueIdentifier": "REGISTRATION.MR-DN-HOUSEHOLD",
+  "name": "REGISTRATION",
+  "flows": [
+    {
+      "body": [
+        {
+          "type": "template",
+          "label": "HCM_DELIVERY_SUCCESS_HEADING",
+          "format": "panelCard",
+          "heading": "HCM_DELIVERY_SUCCESS_HEADING",
+          "fieldName": "successCard",
+          "mandatory": true,
+          "properties": {"type": "success"},
+          "description": "HCM_DELIVERY_SUCCESS_DESCRIPTION",
+          "primaryAction": {
+            "type": "template",
+            "label": "HCM_DELIVERY_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
+            "format": "button",
+            "hidden": false,
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "HouseholdClientReferenceId",
+                      "value": "{{navigation.HouseholdClientReferenceId}}"
+                    }
+                  ],
+                  "name": "householdOverview",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "viewHouseholdButton",
+            "mandatory": true,
+            "properties": {"type": "primary"}
+          },
+          "secondaryAction": {
+            "type": "template",
+            "label": "HCM_DELIVERY_SUCCESS_GO_BACK_BUTTON",
+            "format": "button",
+            "hidden": false,
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
+              }
+            ],
+            "fieldName": "goBack",
+            "mandatory": true,
+            "properties": {"type": "secondary"}
+          },
+          "primaryActionLabel": "HCM_DELIVERY_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
+          "secondaryActionLabel": "HCM_DELIVERY_SUCCESS_GO_BACK_BUTTON"
+        }
+      ],
+      "name": "deliverySuccess",
+      "order": 10,
+      "footer": [],
+      "header": [
+        {
+          "type": "template",
+          "label": "HCM_COMMON_BACK_LABEL",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  }
+                ],
+                "name": "searchBeneficiary",
+                "type": "TEMPLATE"
+              }
+            }
+          ],
+          "fieldName": "deliveryBack",
+          "mandatory": true
+        }
+      ],
+      "category": "DELIVERY",
+      "navigateTo": null,
+      "screenType": "TEMPLATE",
+      "submitCondition": null,
+      "preventScreenCapture": false
+    },
+    {
+      "body": [
+        {
+          "type": "template",
+          "label": "HCM_REFERRAL_SUCCESS_HEADING",
+          "format": "panelCard",
+          "heading": "HCM_REFERRAL_SUCCESS_HEADING",
+          "fieldName": "successCard",
+          "mandatory": true,
+          "properties": {"type": "success"},
+          "description": "ID-{{navigation.selectedIndividualIdentifierId}}",
+          "primaryAction": {
+            "type": "template",
+            "label": "HCM_REFERRAL_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
+            "format": "button",
+            "hidden": false,
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "selectedIndividualClientReferenceId",
+                      "value":
+                          "{{navigation.selectedIndividualClientReferenceId}}"
+                    },
+                    {
+                      "key": "selectedIndividualIdentifierId",
+                      "value": "{{navigation.selectedIndividualIdentifierId}}"
+                    },
+                    {
+                      "key": "HouseholdClientReferenceId",
+                      "value": "{{ navigation.HouseholdClientReferenceId }}"
+                    }
+                  ],
+                  "name": "householdOverview",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "viewHouseholdButton",
+            "mandatory": true,
+            "properties": {"type": "primary"}
+          },
+          "secondaryAction": {
+            "type": "template",
+            "label": "HCM_REFERRAL_SUCCESS_GO_BACK_BUTTON",
+            "format": "button",
+            "hidden": false,
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
+              }
+            ],
+            "fieldName": "goBack",
+            "mandatory": true,
+            "properties": {"type": "secondary"}
+          },
+          "primaryActionLabel": "HCM_REFERRAL_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
+          "secondaryActionLabel": "HCM_REFERRAL_SUCCESS_GO_BACK_BUTTON"
+        }
+      ],
+      "name": "referralSuccess",
+      "order": 7,
+      "footer": [],
+      "header": [
+        {
+          "type": "template",
+          "label": "HCM_COMMON_BACK_LABEL",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.clientReferenceId}}"
+                  }
+                ],
+                "name": "searchBeneficiary",
+                "type": "TEMPLATE"
+              }
+            }
+          ],
+          "fieldName": "referralBack",
+          "mandatory": true
+        }
+      ],
+      "category": "HFREFERRAL",
+      "navigateTo": null,
+      "screenType": "TEMPLATE",
+      "submitCondition": null,
+      "preventScreenCapture": false
+    },
+    {
+      "body": [
+        {
+          "type": "template",
+          "format": "card",
+          "children": [
+            {
+              "format": "row",
+              "children": [
+                {
+                  "type": "template",
+                  "label": "HCM_HOUSEHOLD_OVERVIEW_EDIT_HOUSEHOLD_BUTTON",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "REVERSE_TRANSFORM",
+                      "properties": {
+                        "configName": "beneficiaryRegistration",
+                        "entityTypes": ["HouseholdModel"]
+                      }
+                    },
+                    {
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "data": [
+                          {
+                            "key": "HouseholdClientReferenceId",
+                            "value": "{{ context.household.clientReferenceId }}"
+                          },
+                          {"key": "isEdit", "value": "true"}
+                        ],
+                        "name": "HOUSEHOLD",
+                        "type": "FORM"
+                      }
+                    }
+                  ],
+                  "fieldName": "householdEditButton",
+                  "properties": {
+                    "icon": "Edit",
+                    "size": "large",
+                    "type": "tertiary",
+                    "mainAxisSize": "min",
+                    "mainAxisAlignment": "center"
+                  }
+                }
+              ],
+              "properties": {"mainAxisAlignment": "end"}
+            },
+            {
+              "data": [
+                {
+                  "key": "HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+                  "value":
+                      "{{contextData.0.headIndividual.IndividualModel.name.givenName}}",
+                  "isActive": true
+                },
+                {
+                  "key": "HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+                  "value":
+                      "{{contextData.0.household.HouseholdModel.address.locality.code}}",
+                  "isActive": true
+                },
+                {
+                  "key": "HCM_HOUSEHOLD_OVERVIEW_CHILDREN_COUNT_LABEL",
+                  "value":
+                      "{{contextData.0.household.HouseholdModel.additionalFields.fields.childrenCount}}",
+                  "isActive": true
+                }
+              ],
+              "type": "template",
+              "format": "labelPairList",
+              "fieldName": "householdDetails"
+            },
+            {
+              "type": "template",
+              "child": {
+                "type": "template",
+                "format": "card",
+                "children": [
+                  {
+                    "type": "template",
+                    "format": "row",
+                    "children": [
+                      {
+                        "type": "template",
+                        "value": "{{ item.individual.0.name.givenName }}",
+                        "format": "textTemplate",
+                        "fieldName": "individualName"
+                      },
+                      {
+                        "type": "template",
+                        "label":
+                            "HCM_HOUSEHOLD_OVERVIEW_EDIT_INDIVIDUAL_BUTTON",
+                        "format": "button",
+                        "disabled":
+                            "{{fn:disableEdit(item.task, item.hFReferral)}}==true",
+                        "onAction": [
+                          {
+                            "actionType": "REVERSE_TRANSFORM",
+                            "properties": {
+                              "data": [
+                                {
+                                  "key": "entities",
+                                  "value": "{{item.individual}}"
+                                }
+                              ],
+                              "configName": "individualRegistration",
+                              "entityTypes": [
+                                "IndividualModel"
+                              ]
+                            }
+                          },
+                          {
+                            "actionType": "NAVIGATION",
+                            "properties": {
+                              "data": [
+                                {
+                                  "key": "HouseholdClientReferenceId",
+                                  "value":
+                                      "{{item.member.0.householdClientReferenceId}}"
+                                },
+                                {"key": "isEdit", "value": "true"},
+                                {
+                                  "key": "headMobileNumber",
+                                  "value":
+                                      "{{contextData.0.headIndividual.IndividualModel.mobileNumber}}"
+                                }
+                              ],
+                              "name": "ADD_MEMBER",
+                              "type": "FORM"
+                            }
+                          }
+                        ],
+                        "fieldName": "editIndividualButton",
+                        "properties": {
+                          "icon": "Edit",
+                          "size": "large",
+                          "type": "tertiary",
+                          "mainAxisSize": "min",
+                          "mainAxisAlignment": "center"
+                        }
+                      }
+                    ],
+                    "fieldName": "individualRow",
+                    "properties": {
+                      "bottomGap": 16,
+                      "mainAxisSize": "max",
+                      "mainAxisAlignment": "spaceBetween"
+                    }
+                  },
+                  {
+                    "type": "template",
+                    "value":
+                        "{{item.individual.0.gender }} | {{fn:formatDate(item.individual.0.dateOfBirth, 'age')}}",
+                    "format": "textTemplate",
+                    "fieldName": "genderAge",
+                    "properties": {"bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_HEAD_TAG",
+                    "format": "tag",
+                    "visible": "{{item.member.0.isHeadOfHousehold}}==true",
+                    "fieldName": "headOfHouseholdTag",
+                    "properties": {"tagType": "info", "bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTERED_SUCCESS_TAG",
+                    "format": "tag",
+                    "visible":
+                        "{{item.member.0.isHeadOfHousehold}}==true && {{fn:isDelivered(contextData.0.householdTasks.last.status)}}==true",
+                    "fieldName": "administrationSuccess",
+                    "properties": {"tagType": "success", "bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_NOT_VISITED_TAG",
+                    "format": "tag",
+                    "visible":
+                        "{{item.member.0.isHeadOfHousehold}}==true && {{fn:isDelivered(contextData.0.householdTasks.last.status)}}==false",
+                    "fieldName": "notVisited",
+                    "properties": {"tagType": "info", "bottomGap": 16}
+                  }
+                ],
+                "fieldName": "memberCard",
+                "properties": {
+                  "type": "secondary",
+                  "spacing": 0,
+                  "cardType": "secondary"
+                }
+              },
+              "format": "listView",
+              "hidden": false,
+              "fieldName": "listViewMembers",
+              "dataSource": "members",
+              "properties": {"spacing": "spacer4"}
+            },
+            {
+              "type": "template",
+              "label": "HCM_HOUSEHOLD_OVERVIEW_ADD_MEMBERS_BUTTON",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value":
+                            "{{contextData.0.household.HouseholdModel.clientReferenceId}}"
+                      },
+                      {
+                        "key": "headMobileNumber",
+                        "value":
+                            "{{contextData.0.headIndividual.IndividualModel.mobileNumber}}"
+                      }
+                    ],
+                    "name": "ADD_MEMBER",
+                    "type": "FORM"
+                  }
+                }
+              ],
+              "fieldName": "addMember",
+              "properties": {
+                "icon": "AddIcon",
+                "size": "medium",
+                "type": "tertiary",
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "properties": {"type": "primary", "cardType": "primary"},
+          "schemaCode": null
+        }
+      ],
+      "name": "householdOverview",
+      "order": 3,
+      "footer": [
+        {
+          "type": "template",
+          "label": "HCM_HOUSEHOLD_OVERVIEW_DELIVER_INTERVENTION_BUTTON",
+          "format": "button",
+          "visible":
+              "{{fn:checkAllDoseDelivered(contextData.0.householdTasks)}} == false",
+          "disabled": "{{eligibleProductVariants}} == null",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{contextData.0.householdProjectBeneficiary.ProjectBeneficiaryModel.clientReferenceId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value":
+                        "{{contextData.0.household.HouseholdModel.clientReferenceId}}"
+                  },
+                  {
+                    "key": "cycleIndex",
+                    "value": "{{contextData.0.nextCycleId}}"
+                  },
+                  {
+                    "key": "doseIndex",
+                    "value": "{{contextData.0.nextDoseId}}"
+                  },
+                  {
+                    "key": "deliveryStrategy",
+                    "value":
+                        "{{contextData.0.currentDelivery.0.deliveryStrategy}}"
+                  },
+                  {
+                    "key": "totalDosesInCycle",
+                    "value": "{{contextData.0.deliveryLength}}"
+                  },
+                  {
+                    "key": "futureDoses",
+                    "value": "{{contextData.0.futureDeliveries}}"
+                  },
+                  {
+                    "key": "eligibleProductVariants",
+                    "value": "{{contextData.0.eligibleProductVariants}}"
+                  }
+                ],
+                "name": "DELIVERY",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "deliverIntervention",
+          "properties": {
+            "size": "large",
+            "type": "primary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          }
+        }
+      ],
+      "header": [
+        {
+          "label": "HCM_COMMON_BACK_LABEL",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
+            }
+          ]
+        }
+      ],
+      "heading": "HCM_HOUSEHOLD_OVERVIEW_HEADING",
+      "category": "REGISTRATION",
+      "navigateTo": null,
+      "screenType": "TEMPLATE",
+      "description": "HCM_HOUSEHOLD_OVERVIEW_DESCRIPTION",
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.HouseholdClientReferenceId}}",
+                "operation": "equals"
+              }
+            ],
+            "name": "household",
+            "type": "SEARCH_EVENT"
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "filters": [],
+        "fields": {
+          "dose": {
+            "from": "{{householdTasks.additionalFields.fields}}",
+            "where": {
+              "left": "{{key}}",
+              "right": "doseIndex",
+              "operator": "eq"
+            },
+            "select": "{{value}}",
+            "default": 0,
+            "takeLast": true
+          },
+          "cycle": {
+            "from": "{{householdTasks.additionalFields.fields}}",
+            "where": {
+              "left": "{{key}}",
+              "right": "cycleIndex",
+              "operator": "eq"
+            },
+            "select": "{{value}}",
+            "default": 1,
+            "takeLast": true
+          }
+        },
+        "computed": {
+          "nextDoseId": {
+            "order": 4,
+            "fallback": 1,
+            "condition": {
+              "if": {
+                "left": "{{cycle}}",
+                "right": "{{currentRunningCycle}}",
+                "operator": "equals"
+              },
+              "else": 1,
+              "then": {
+                "if": {
+                  "left": {"value": "{{dose}}", "operation": "increment"},
+                  "right": "{{deliveryLength}}",
+                  "operator": "lte"
+                },
+                "else": 1,
+                "then": {"value": "{{dose}}", "operation": "increment"}
+              }
+            }
+          },
+          "nextCycleId": {
+            "order": 5,
+            "fallback": "{{currentRunningCycle}}",
+            "condition": {
+              "if": {
+                "left": "{{cycle}}",
+                "right": "{{currentRunningCycle}}",
+                "operator": "equals"
+              },
+              "else": "{{currentRunningCycle}}",
+              "then": {
+                "if": {
+                  "left": {"value": "{{dose}}", "operation": "increment"},
+                  "right": "{{deliveryLength}}",
+                  "operator": "lte"
+                },
+                "else": {"value": "{{cycle}}", "operation": "increment"},
+                "then": "{{cycle}}"
+              }
+            }
+          },
+          "effectiveDose": {
+            "order": 6,
+            "fallback": 0,
+            "condition": {
+              "if": {
+                "left": "{{nextCycleId}}",
+                "right": "{{cycle}}",
+                "operator": "equals"
+              },
+              "else": 0,
+              "then": "{{dose}}"
+            }
+          },
+          "deliveryLength": {
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 3,
+            "where": {
+              "left": "{{id}}",
+              "right": "{{currentRunningCycle}}",
+              "operator": "equals"
+            },
+            "select": "{{deliveries.length}}",
+            "default": 0,
+            "takeFirst": true
+          },
+          "hasCycleArrived": {
+            "order": 2,
+            "fallback": false,
+            "condition": {
+              "left": "{{cycle}}",
+              "right": "{{currentRunningCycle}}",
+              "operator": "equals"
+            }
+          },
+          "currentRunningCycle": {
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 1,
+            "where": [
+              {"left": "{{startDate}}", "right": "{{now}}", "operator": "lt"},
+              {"left": "{{endDate}}", "right": "{{now}}", "operator": "gt"}
+            ],
+            "select": "{{id}}",
+            "default": -1,
+            "takeFirst": true
+          }
+        },
+        "computedList": {
+          "pastCycles": {
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 6,
+            "where": {
+              "left": "{{item.id}}",
+              "right": "{{currentRunningCycle}}",
+              "operator": "lt"
+            }
+          },
+          "futureTasks": {
+            "from": "{{householdTasks}}",
+            "order": 2,
+            "where": {
+              "left": "{{item.additionalFields.deliveryStrategy}}",
+              "right": "INDIRECT",
+              "operator": "equals"
+            }
+          },
+          "targetCycle": {
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 1,
+            "where": {
+              "left": "{{id}}",
+              "right": "{{currentRunningCycle}}",
+              "operator": "equals"
+            },
+            "fallback": null,
+            "takeLast": true
+          },
+          "currentDelivery": {
+            "from": "{{targetCycle.0.deliveries}}",
+            "order": 4,
+            "where": {
+              "left": "{{id}}",
+              "right": "{{nextDoseId}}",
+              "operator": "equals"
+            },
+            "fallback": null,
+            "takeLast": true
+          },
+          "futureDeliveries": {
+            "from": "{{targetCycle.0.deliveries}}",
+            "skip": {"from": "{{effectiveDose}}"},
+            "order": 3,
+            "where": {
+              "left": "{{item.deliveryStrategy}}",
+              "right": "INDIRECT",
+              "operator": "equals"
+            }
+          },
+          "eligibleProductVariants": {
+            "from": "{{currentDelivery.0.doseCriteria}}",
+            "order": 5,
+            "fallback": [],
+            "takeLast": false,
+            "evaluateCondition": {
+              "context": ["{{headIndividual.0}}", "{{household.0}}"],
+              "condition": "{{item.condition}}",
+              "transformations": {
+                "age": {"type": "ageInMonths", "source": "dateOfBirth"}
+              }
+            }
+          }
+        },
+        "relations": [
+          {
+            "name": "household",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "HouseholdModel"
+          },
+          {
+            "name": "headOfHousehold",
+            "match": {
+              "field": "householdClientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "HouseholdMemberModel",
+            "filters": [
+              {"field": "isHeadOfHousehold", "equals": true}
+            ]
+          },
+          {
+            "name": "headIndividual",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "headOfHousehold.individualClientReferenceId"
+            },
+            "entity": "IndividualModel"
+          },
+          {
+            "name": "householdProjectBeneficiary",
+            "match": {
+              "field": "beneficiaryClientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "ProjectBeneficiaryModel"
+          },
+          {
+            "name": "householdTasks",
+            "match": {
+              "field": "projectBeneficiaryClientReferenceId",
+              "equalsFrom": "householdProjectBeneficiary.clientReferenceId"
+            },
+            "entity": "TaskModel"
+          },
+          {
+            "name": "members",
+            "match": {
+              "field": "householdClientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "HouseholdMemberModel",
+            "relations": [
+              {
+                "name": "member",
+                "match": {
+                  "field": "clientReferenceId",
+                  "equalsFrom": "clientReferenceId"
+                },
+                "entity": "HouseholdMemberModel"
+              },
+              {
+                "name": "individual",
+                "match": {
+                  "field": "clientReferenceId",
+                  "equalsFrom": "individualClientReferenceId"
+                },
+                "entity": "IndividualModel"
+              },
+              {
+                "name": "projectBeneficiary",
+                "match": {
+                  "field": "beneficiaryClientReferenceId",
+                  "equalsFrom": "individual.clientReferenceId"
+                },
+                "entity": "ProjectBeneficiaryModel"
+              },
+              {
+                "name": "task",
+                "match": {
+                  "field": "projectBeneficiaryClientReferenceId",
+                  "equalsFrom": "projectBeneficiary.clientReferenceId"
+                },
+                "entity": "TaskModel"
+              },
+              {
+                "name": "hFReferral",
+                "match": {
+                  "field": "beneficiaryId",
+                  "equalsFrom": "individual.identifiers.0.identifierId"
+                },
+                "entity": "HFReferralModel"
+              }
+            ]
+          }
+        ],
+        "rootEntity": "HouseholdModel",
+        "wrapperName": "HouseholdWrapper",
+        "searchConfig": {
+          "select": [
+            "household",
+            "individual",
+            "householdMember",
+            "projectBeneficiary",
+            "task",
+            "hFReferral"
+          ],
+          "primary": "household"
+        }
+      },
+      "submitCondition": null,
+      "preventScreenCapture": false
+    },
+    {
+      "body": [
+        {
+          "type": "template",
+          "label": "HCM_SEARCH_NEARBY_HOUSEHOLDS_LABEL",
+          "format": "proximitySearch",
+          "onAction": [
+            {
+              "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
+              "properties": {
+                "data": [
+                  {"key": "", "value": 5, "operation": "within"}
+                ],
+                "name": "address",
+                "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
+              }
+            }
+          ],
+          "fieldName": "proximitySearch",
+          "mandatory": true,
+          "schemaCode": null,
+          "validations": [
+            {
+              "key": "proximityRadius",
+              "value": 5,
+              "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
+            }
+          ]
+        },
+        {
+          "type": "template",
+          "label": "HCM_SEARCH_NAME_LABEL",
+          "format": "searchBar",
+          "onAction": [
+            {
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "data": [
+                  {
+                    "key": "givenName",
+                    "value": "field.value",
+                    "operation": "contains"
+                  }
+                ],
+                "name": "name",
+                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+              }
+            }
+          ],
+          "fieldName": "searchBar",
+          "mandatory": true,
+          "validations": [
+            {"type": "minSearchChars", "value": 2}
+          ],
+          "minSearchChars": 2
+        },
+        {
+          "icon": "FilterAlt",
+          "type": "template",
+          "label": "HCM_SEARCH_FILTER_LABEL",
+          "format": "actionPopup",
+          "fieldName": "filterPopUp",
+          "properties": {
+            "icon": "FilterAlt",
+            "size": "medium",
+            "type": "tertiary",
+            "suffixIcon": "FilterAlt",
+            "popupConfig": {
+              "body": [
+                {
+                  "type": "template",
+                  "enums": [
+                    {
+                      "code": "ADMINISTRATION_SUCCESS",
+                      "name": "HCM_SEARCH_FILTER_ADMINISTRATION_SUCCESS"
+                    },
+                    {
+                      "code": "CLOSED_HOUSEHOLD",
+                      "name": "HCM_SEARCH_FILTER_MISSED_CHILDREN"
+                    }
+                  ],
+                  "format": "selectionCard",
+                  "fieldName": "selectedStatus"
+                }
+              ],
+              "type": "default",
+              "title": "HCM_SEARCH_FILTER_LABEL",
+              "titleIcon": "FilterAlt",
+              "footerActions": [
+                {
+                  "type": "template",
+                  "label": "HCM_SEARCH_FILTER_CLEAR_ALL_BUTTON",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "CLEAR_STATE",
+                      "properties": {
+                        "name": "task",
+                        "filterKeys": [
+                          "status",
+                          "projectBeneficiary",
+                          "projectId",
+                          "clientReferenceId"
+                        ],
+                        "widgetKeys": ["selectedStatus"],
+                        "triggerSearch": true
+                      }
+                    }
+                  ],
+                  "fieldName": "clearFilter",
+                  "properties": {
+                    "size": "large",
+                    "type": "secondary",
+                    "mainAxisSize": "max"
+                  }
+                },
+                {
+                  "type": "template",
+                  "label": "HCM_SEARCH_FILTER_APPLY_BUTTON",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {"parentScreenKey": "searchBeneficiary"}
+                    },
+                    {
+                      "actionType": "CLEAR_STATE",
+                      "properties": {
+                        "name": "task",
+                        "filterKeys": [
+                          "status",
+                          "projectBeneficiary",
+                          "projectId",
+                          "clientReferenceId"
+                        ]
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "data": [
+                              {
+                                "key": "status",
+                                "value": "{{selectedStatus}}",
+                                "operation": "in"
+                              }
+                            ],
+                            "name": "task"
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression":
+                            "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "data": [
+                              {
+                                "key": "projectId",
+                                "value": "{{singleton.selectedProject.id}}",
+                                "operation": "notEqual"
+                              }
+                            ],
+                            "name": "projectBeneficiary"
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == NOT_REGISTERED"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "data": [
+                              {
+                                "key": "projectId",
+                                "root": "hFReferral",
+                                "value": "{{singleton.selectedProject.id}}",
+                                "operation": "equals"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == BENEFICIARY_REFERRED"
+                      }
+                    }
+                  ],
+                  "fieldName": "saveFilter",
+                  "properties": {
+                    "size": "large",
+                    "type": "primary",
+                    "mainAxisSize": "max"
+                  }
+                }
+              ],
+              "showCloseButton": true,
+              "barrierDismissible": true
+            },
+            "mainAxisSize": "min",
+            "mainAxisAlignment": "start"
+          },
+          "schemaCode": null,
+          "suffixIcon": "FilterAlt"
+        },
+        {
+          "data": "members",
+          "type": "template",
+          "child": {
+            "type": "template",
+            "format": "card",
+            "children": [
+              {
+                "type": "template",
+                "format": "row",
+                "children": [
+                  {
+                    "type": "template",
+                    "value": "{{ item.headIndividual.0.name.givenName }}",
+                    "format": "textTemplate",
+                    "fieldName": "headOfHousehold"
+                  },
+                  {
+                    "type": "template",
+                    "label": "HCM_SEARCH_OPEN_BUTTON",
+                    "format": "button",
+                    "onAction": [
+                      {
+                        "actions": [
+                          {
+                            "actionType": "NAVIGATION",
+                            "properties": {
+                              "data": [
+                                {
+                                  "key": "HouseholdClientReferenceId",
+                                  "value":
+                                      "{{ item.HouseholdModel.clientReferenceId }}"
+                                }
+                              ],
+                              "name": "householdOverview",
+                              "type": "TEMPLATE"
+                            }
+                          }
+                        ],
+                        "condition": {
+                          "expression":
+                              "{{item.tasks.0.status}} != CLOSED_HOUSEHOLD"
+                        }
+                      },
+                      {
+                        "actions": [
+                          {
+                            "actionType": "REVERSE_TRANSFORM",
+                            "properties": {
+                              "data": [
+                                {"key": "entities", "value": "{{item}}"}
+                              ],
+                              "configName": "beneficiaryRegistration",
+                              "entityTypes": ["HouseholdModel", "TaskModel"]
+                            }
+                          },
+                          {
+                            "actionType": "NAVIGATION",
+                            "properties": {
+                              "data": [
+                                {
+                                  "key": "HouseholdClientReferenceId",
+                                  "value":
+                                      "{{ item.HouseholdModel.clientReferenceId }}"
+                                },
+                                {"key": "isEdit", "value": "true"},
+                                {"key": "isClosedHousehold", "value": "true"}
+                              ],
+                              "name": "HOUSEHOLD",
+                              "type": "FORM"
+                            }
+                          }
+                        ],
+                        "condition": {
+                          "expression":
+                              "{{item.tasks.0.status}} == CLOSED_HOUSEHOLD"
+                        }
+                      }
+                    ],
+                    "fieldName": "openMemberCard",
+                    "properties": {"size": "medium", "type": "secondary"}
+                  }
+                ],
+                "fieldName": "detailsRow",
+                "properties": {
+                  "mainAxisSize": "max",
+                  "mainAxisAlignment": "spaceBetween"
+                }
+              },
+              {
+                "type": "template",
+                "label": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTERED_SUCCESS_TAG",
+                "format": "tag",
+                "visible": "{{fn:isDelivered(item.tasks.last.status)}}==true",
+                "fieldName": "deliveredTag",
+                "properties": {"tagType": "success"}
+              },
+              {
+                "data": {
+                  "rows": "{{currentItem.individuals}}",
+                  "source": "individuals",
+                  "columns": [
+                    {
+                      "header": "HCM_SEARCH_TABLE_BENEFICIARY_HEADER",
+                      "hidden": false,
+                      "isActive": true,
+                      "cellValue": "{{item.name.givenName}}"
+                    },
+                    {
+                      "header": "HCM_SEARCH_TABLE_AGE_HEADER",
+                      "hidden": false,
+                      "isActive": true,
+                      "cellValue": "{{fn:formatDate(item.dateOfBirth, 'age')}}"
+                    },
+                    {
+                      "header": "HCM_SEARCH_TABLE_GENDER_HEADER",
+                      "hidden": false,
+                      "isActive": true,
+                      "cellValue": "{{item.gender}}"
+                    }
+                  ]
+                },
+                "type": "template",
+                "format": "table",
+                "fieldName": "memberTable"
+              }
+            ],
+            "fieldName": "memberCard"
+          },
+          "format": "listView",
+          "hidden": false,
+          "fieldName": "listView",
+          "properties": {"spacing": "spacer4"},
+          "schemaCode": null
+        }
+      ],
+      "name": "searchBeneficiary",
+      "order": 1,
+      "footer": [
+        {
+          "type": "template",
+          "label": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
+          "format": "button",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {"key": "nameOfIndividual", "value": "{{searchBar}}"}
+                ],
+                "name": "HOUSEHOLD",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "registerBeneficiary",
+          "mandatory": true,
+          "properties": {
+            "size": "large",
+            "type": "primary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          }
+        },
+        {
+          "type": "template",
+          "isGS1": false,
+          "label": "HCM_SEARCH_SCAN_BENEFICIARY_BUTTON",
+          "format": "qrScanner",
+          "onAction": [
+            {
+              "actionType": "OPEN_SCANNER",
+              "properties": {
+                "isGS1": false,
+                "scanType": "qr",
+                "fieldName": "beneficiaryTag",
+                "onSuccess": [
+                  {
+                    "actionType": "SEARCH_EVENT",
+                    "properties": {
+                      "data": [
+                        {
+                          "key": "tag",
+                          "value": "{{beneficiaryTag}}",
+                          "operation": "equals"
+                        }
+                      ],
+                      "name": "projectBeneficiary",
+                      "type": "SEARCH_EVENT",
+                      "awaitResults": true
+                    }
+                  }
+                ],
+                "scanLimit": 1,
+                "singleValue": true
+              }
+            }
+          ],
+          "fieldName": "qrScanner",
+          "scanLimit": 1,
+          "showLabel": false,
+          "properties": {
+            "icon": "QrCodeScanner",
+            "size": "large",
+            "type": "secondary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "validations": [
+            {
+              "type": "scanLimit",
+              "value": 1,
+              "message": "Scan limit shouldn't be greater than 1"
+            },
+            {"type": "isGS1", "value": false}
+          ],
+          "scanLimit.message": "SCANLIMIT_ERROR_MESSAGE"
+        }
+      ],
+      "header": [
+        {
+          "label": "HCM_COMMON_BACK_LABEL",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"name": "HOME", "type": "HOME"}
+            }
+          ]
+        }
+      ],
+      "heading": "HCM_SEARCH_BENEFICIARY_HEADING",
+      "category": "REGISTRATION",
+      "navigateTo": null,
+      "screenType": "TEMPLATE",
+      "description": "HCM_SEARCH_BENEFICIARY_DESCRIPTION",
+      "wrapperConfig": {
+        "filters": [],
+        "relations": [
+          {
+            "name": "members",
+            "match": {
+              "field": "householdClientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "HouseholdMemberModel"
+          },
+          {
+            "name": "headOfHousehold",
+            "match": {
+              "field": "householdClientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "HouseholdMemberModel",
+            "filters": [
+              {"field": "isHeadOfHousehold", "equals": true}
+            ]
+          },
+          {
+            "name": "headIndividual",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "headOfHousehold.individualClientReferenceId"
+            },
+            "entity": "IndividualModel"
+          },
+          {
+            "name": "individuals",
+            "match": {
+              "field": "clientReferenceId",
+              "inFrom": "members.individualClientReferenceId"
+            },
+            "entity": "IndividualModel"
+          },
+          {
+            "name": "projectBeneficiaries",
+            "match": {
+              "field": "beneficiaryClientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "ProjectBeneficiaryModel"
+          },
+          {
+            "name": "tasks",
+            "match": {
+              "field": "projectBeneficiaryClientReferenceId",
+              "inFrom": "projectBeneficiaries.clientReferenceId"
+            },
+            "entity": "TaskModel"
+          },
+          {
+            "name": "sideEffects",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "SideEffectModel"
+          },
+          {
+            "name": "hFReferral",
+            "match": {
+              "field": "beneficiaryId",
+              "equalsFrom": "individual.identifiers.0.identifierId"
+            },
+            "entity": "HFReferralModel"
+          }
+        ],
+        "rootEntity": "HouseholdModel",
+        "wrapperName": "HouseholdWrapper",
+        "searchConfig": {
+          "select": [
+            "household",
+            "individual",
+            "householdMember",
+            "projectBeneficiary",
+            "task"
+          ],
+          "primary": "household",
+          "pagination": {"limit": 5, "maxItems": 15},
+          "baseFilters": [
+            {
+              "key": "localityBoundaryCode",
+              "root": "address",
+              "value": "{{singleton.boundary.code}}",
+              "operation": "equals"
+            }
+          ]
+        }
+      },
+      "scrollListener": {
+        "debounceMs": 0,
+        "onScrollUp": [
+          {
+            "actionType": "REFRESH_SEARCH",
+            "properties": {
+              "pagination": {"limit": 5, "maxItems": 15}
+            }
+          }
+        ],
+        "triggerMode": "bidirectional",
+        "onScrollDown": [
+          {
+            "actionType": "REFRESH_SEARCH",
+            "properties": {
+              "pagination": {"limit": 5, "maxItems": 15}
+            }
+          }
+        ],
+        "showLoadingIndicator": true
+      },
+      "submitCondition": null,
+      "preventScreenCapture": false
+    },
+    {
+      "name": "DELIVERY",
+      "order": 9,
+      "pages": [
+        {
+          "body": null,
+          "flow": "DELIVERY",
+          "page": "DeliveryDetails",
+          "type": "object",
+          "label": "HCM_DELIVERY_DETAILS_HEADING",
+          "order": 1,
+          "footer": [
+            {
+              "label": "HCM_DELIVERY_SAVE_BUTTON",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "name": "household-acknowledgement",
+                    "type": "template"
+                  }
+                }
+              ],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "HCM_DELIVERY_DETAILS_HEADING",
+          "summary": false,
+          "version": 1,
+          "onAction": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+                  {"key": "doseIndex", "value": "{{navigation.doseIndex}}"},
+                  {
+                    "key": "deliveryStrategy",
+                    "value": "{{navigation.deliveryStrategy}}"
+                  }
+                ],
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                  }
+                ],
+                "configName": "delivery"
+              }
+            },
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "TaskModel",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_CREATE_TASK"}
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  }
+                ],
+                "name": "deliverySuccess",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "householdOverview"
+              }
+            }
+          ],
+          "navigateTo": {
+            "name": "household-acknowledgement",
+            "type": "template"
+          },
+          "properties": [
+            {
+              "type": "string",
+              "label": "HCM_DELIVERY_DATE_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "dateOfRegistration",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": true,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            {
+              "type": "dynamic",
+              "enums": [
+                {"code": "SP1", "name": "SP1"},
+                {"code": "SP2", "name": "SP2"},
+                {"code": "AQ1", "name": "AQ1"},
+                {"code": "AQ2", "name": "AQ2"}
+              ],
+              "label": "HCM_DELIVERY_RESOURCE_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "resourceCard",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "SP1", "name": "SP1"},
+                {"code": "SP2", "name": "SP2"},
+                {"code": "AQ1", "name": "AQ1"},
+                {"code": "AQ2", "name": "AQ2"}
+              ],
+              "includeInSummary": true,
+              "required.message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
+            },
+            {
+              "type": "string",
+              "label": "HCM_DELIVERY_COMMENTS_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "isMdms": true,
+              "tooltip": "",
+              "helpText": "",
+              "enums": [
+                {
+                  "code": "SUCCESSFUL_DELIVERY",
+                  "name": "HCM_DELIVERY_COMMENT_SUCCESSFUL"
+                },
+                {
+                  "code": "INSUFFICIENT_RESOURCES",
+                  "name": "HCM_DELIVERY_COMMENT_INSUFFICIENT"
+                },
+                {
+                  "code": "BENEFICIARY_REFUSED",
+                  "name": "HCM_DELIVERY_COMMENT_REFUSED"
+                },
+                {
+                  "code": "BENEFICIARY_ABSENT",
+                  "name": "HCM_DELIVERY_COMMENT_ABSENT"
+                }
+              ],
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "deliveryComment",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "label": "HCM_DELIVERY_SCAN_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "scanner",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "scanner",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "label": "HCM_DELIVERY_LAT_LONG_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "latLng",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            }
+          ],
+          "actionLabel": "HCM_DELIVERY_SAVE_BUTTON",
+          "description": "HCM_DELIVERY_DETAILS_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false
+        }
+      ],
+      "summary": false,
+      "version": 3,
+      "category": "DELIVERY",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"},
+              {
+                "key": "deliveryStrategy",
+                "value": "{{navigation.deliveryStrategy}}"
+              }
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+              }
+            ],
+            "configName": "delivery"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "TaskModel",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "HCM_ERROR_CREATE_TASK"}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {
+                "key": "HouseholdClientReferenceId",
+                "value": "{{navigation.HouseholdClientReferenceId}}"
+              }
+            ],
+            "name": "deliverySuccess",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "HCM_ERROR_NAVIGATION"}
+              }
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "householdOverview"
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {},
+      "scrollListener": {}
+    },
+    {
+      "name": "ADD_MEMBER",
+      "order": 4,
+      "pages": [
+        {
+          "body": null,
+          "flow": "ADD_MEMBER",
+          "page": "beneficiaryDetails",
+          "type": "object",
+          "label": "HCM_ADD_MEMBER_HEADING",
+          "order": 4,
+          "footer": [
+            {
+              "label": "HCM_ADD_MEMBER_SAVE_BUTTON",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "householdId",
+                        "value": "{{formData.household.clientReferenceId}}"
+                      }
+                    ],
+                    "name": "beneficiary-details",
+                    "type": "template"
+                  }
+                }
+              ],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "HCM_ADD_MEMBER_HEADING",
+          "summary": false,
+          "version": 1,
+          "onAction": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "data": [
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  },
+                  {
+                    "key": "headMobileNumber",
+                    "value": "{{navigation.headMobileNumber}}"
+                  }
+                ],
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                  }
+                ],
+                "configName": "individualRegistration"
+              }
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "UPDATE_EVENT",
+                  "properties": {
+                    "entity": "IndividualModel"
+                  }
+                }
+              ],
+              "condition": {"type": "custom", "expression": "isEdit == true"}
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "CREATE_EVENT",
+                  "properties": {
+                    "entity": "INDIVIDUAL, MEMBER"
+                  }
+                }
+              ],
+              "condition": {"expression": "DEFAULT"}
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.HouseholdClientReferenceId}}"
+                  }
+                ],
+                "name": "householdOverview",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "searchBeneficiary"
+              }
+            }
+          ],
+          "navigateTo": {
+            "data": [
+              {
+                "key": "householdId",
+                "value": "{{formData.household.clientReferenceId}}"
+              }
+            ],
+            "name": "beneficiary-details",
+            "type": "template"
+          },
+          "properties": [
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_FIRST_NAME_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "nameOfIndividual",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "lengthRange": {
+                "maxLength": "200",
+                "minLength": "2",
+                "errorMessage": "HCM_VALIDATION_SIZE_2_TO_200"
+              },
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                },
+                {
+                  "type": "minLength",
+                  "value": "2",
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
+                },
+                {
+                  "type": "maxLength",
+                  "value": "200",
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_FAMILY_NAME_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": false,
+              "fieldName": "familyname",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "lengthRange": {
+                "minLength": "2",
+                "errorMessage": "HCM_VALIDATION_MIN_2_CHARS"
+              },
+              "validations": [
+                {
+                  "type": "minLength",
+                  "value": "2",
+                  "message": "HCM_VALIDATION_MIN_2_CHARS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "DEFAULT", "name": "Default"}
+              ],
+              "label": "HCM_REGISTRATION_ID_POPULATOR_LABEL",
+              "order": 3,
+              "value": "DEFAULT",
+              "format": "idPopulator",
+              "hidden": false,
+              "isMdms": true,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "identifiers",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [
+                {"type": "required", "value": true, "message": "ID is required"}
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "DEFAULT", "name": "Default"},
+                {
+                  "code": "UNIQUE_BENEFICIARY_ID",
+                  "name": "Unique Beneficiary ID"
+                },
+                {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
+              ],
+              "required.message": "ID is required"
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_DOB_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dob",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "HCM_REGISTRATION_DOB_TOOLTIP",
+              "ageRange": {
+                "maxAge": 1800,
+                "minAge": 3,
+                "errorMessage": "HCM_VALIDATION_INVALID_AGE"
+              },
+              "helpText": "HCM_REGISTRATION_DOB_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "dobPicker",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "minAge",
+                  "value": 3,
+                  "message": "HCM_VALIDATION_INVALID_AGE"
+                },
+                {
+                  "type": "maxAge",
+                  "value": 1800,
+                  "message": "HCM_VALIDATION_INVALID_AGE"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED"
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "MALE", "name": "HCM_COMMON_MALE"},
+                {"code": "FEMALE", "name": "HCM_COMMON_FEMALE"}
+              ],
+              "label": "HCM_REGISTRATION_GENDER_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "select",
+              "hidden": false,
+              "isMdms": true,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "gender",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "common-masters.GenderType",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_GENDER_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "MALE", "name": "HCM_COMMON_MALE"},
+                {"code": "FEMALE", "name": "HCM_COMMON_FEMALE"}
+              ],
+              "required.message": "HCM_VALIDATION_GENDER_REQUIRED"
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_MOBILE_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "mobileNumber",
+              "hidden": false,
+              "isMdms": false,
+              "pattern": "^\\d+\$",
+              "tooltip": "HCM_REGISTRATION_MOBILE_TOOLTIP",
+              "helpText": "HCM_REGISTRATION_MOBILE_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "phone",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "lengthRange": {
+                "maxLength": 10,
+                "minLength": 10,
+                "errorMessage": "HCM_VALIDATION_MOBILE_10_DIGITS"
+              },
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^\\d+\$",
+                  "message": "HCM_VALIDATION_ONLY_NUMBERS"
+                },
+                {
+                  "type": "minLength",
+                  "value": 10,
+                  "message": "HCM_VALIDATION_MOBILE_10_DIGITS"
+                },
+                {
+                  "type": "maxLength",
+                  "value": 10,
+                  "message": "HCM_VALIDATION_MOBILE_10_DIGITS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "pattern.message": "HCM_VALIDATION_ONLY_NUMBERS",
+              "autoFillCondition": [
+                {
+                  "value": "{{navigation.headMobileNumber}}",
+                  "expression": "true==true"
+                }
+              ]
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "scanner",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "scanner",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "includeInSummary": true
+            }
+          ],
+          "actionLabel": "HCM_ADD_MEMBER_SAVE_BUTTON",
+          "description": "HCM_ADD_MEMBER_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false,
+          "conditionalNavigateTo": null
+        }
+      ],
+      "summary": false,
+      "version": 3,
+      "category": "REGISTRATION",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [
+              {
+                "key": "HouseholdClientReferenceId",
+                "value": "{{navigation.HouseholdClientReferenceId}}"
+              },
+              {
+                "key": "headMobileNumber",
+                "value": "{{navigation.headMobileNumber}}"
+              }
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+              }
+            ],
+            "configName": "individualRegistration"
+          }
+        },
+        {
+          "actions": [
+            {
+              "actionType": "UPDATE_EVENT",
+              "properties": {
+                "entity": "IndividualModel"
+              }
+            }
+          ],
+          "condition": {"type": "custom", "expression": "isEdit == true"}
+        },
+        {
+          "actions": [
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {"entity": "INDIVIDUAL, MEMBER"}
+            }
+          ],
+          "condition": {"expression": "DEFAULT"}
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "data": [
+              {
+                "key": "HouseholdClientReferenceId",
+                "value": "{{navigation.HouseholdClientReferenceId}}"
+              }
+            ],
+            "name": "householdOverview",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "HCM_ERROR_NAVIGATION"}
+              }
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "searchBeneficiary"
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {
+        "filters": [
+          {"field": "isHeadOfHousehold", "equals": true}
+        ],
+        "relations": [
+          {
+            "name": "household",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "householdClientReferenceId"
+            },
+            "entity": "HouseholdModel"
+          },
+          {
+            "name": "members",
+            "match": {
+              "field": "householdClientReferenceId",
+              "equalsFrom": "household.clientReferenceId"
+            },
+            "entity": "HouseholdMemberModel"
+          },
+          {
+            "name": "headOfHousehold",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "HouseholdMemberModel.individualClientReferenceId"
+            },
+            "entity": "IndividualModel"
+          },
+          {
+            "name": "individuals",
+            "match": {
+              "field": "clientReferenceId",
+              "inFrom": "members.individualClientReferenceId"
+            },
+            "entity": "IndividualModel"
+          },
+          {
+            "name": "projectBeneficiaries",
+            "match": {
+              "field": "beneficiaryClientReferenceId",
+              "equalsFrom": "household.clientReferenceId"
+            },
+            "entity": "ProjectBeneficiaryModel"
+          },
+          {
+            "name": "tasks",
+            "match": {
+              "field": "projectBeneficiaryClientReferenceId",
+              "inFrom": "projectBeneficiaries.clientReferenceId"
+            },
+            "entity": "TaskModel"
+          },
+          {
+            "name": "sideEffects",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "household.clientReferenceId"
+            },
+            "entity": "SideEffectModel"
+          },
+          {
+            "name": "hFReferral",
+            "match": {
+              "field": "beneficiaryId",
+              "equalsFrom": "individual.identifiers.0.identifierId"
+            },
+            "entity": "HFReferralModel"
+          }
+        ],
+        "rootEntity": "HouseholdMemberModel",
+        "wrapperName": "HouseholdWrapper",
+        "searchConfig": {
+          "select": [
+            "individual",
+            "household",
+            "householdMember",
+            "projectBeneficiary",
+            "task"
+          ],
+          "primary": "household"
+        }
+      },
+      "scrollListener": {}
+    },
+    {
+      "name": "HOUSEHOLD",
+      "order": 2,
+      "pages": [
+        {
+          "body": null,
+          "flow": "HOUSEHOLD",
+          "page": "beneficiaryDetails",
+          "type": "object",
+          "label": "HCM_REGISTRATION_BENEFICIARY_DETAILS_HEADING",
+          "order": 4,
+          "footer": [
+            {
+              "label": "HCM_REGISTRATION_SAVE_BENEFICIARY_BUTTON",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "householdId",
+                        "value": "{{formData.household.clientReferenceId}}"
+                      }
+                    ],
+                    "name": "beneficiary-details",
+                    "type": "template"
+                  }
+                }
+              ],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "HCM_REGISTRATION_BENEFICIARY_DETAILS_HEADING",
+          "summary": false,
+          "version": 1,
+          "onAction": [
+            {
+              "actions": [
+                {
+                  "actionType": "FETCH_TRANSFORMER_CONFIG",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                      }
+                    ],
+                    "configName": "beneficiaryRegistration"
+                  }
+                },
+                {
+                  "actionType": "UPDATE_EVENT",
+                  "properties": {
+                    "entity": "HouseholdModel, TaskModel",
+                    "modify": [
+                      {"key": "TaskModel.status", "value": "NOT_ADMINISTERED"}
+                    ],
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value":
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                      }
+                    ],
+                    "name": "householdOverview",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "searchBeneficiary"
+                  }
+                }
+              ],
+              "condition": {
+                "type": "custom",
+                "expression": "isEdit==true && isClosedHousehold==true"
+              }
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "FETCH_TRANSFORMER_CONFIG",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                      }
+                    ],
+                    "configName": "beneficiaryRegistration"
+                  }
+                },
+                {
+                  "actionType": "UPDATE_EVENT",
+                  "properties": {
+                    "entity": "HouseholdModel",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value":
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                      }
+                    ],
+                    "name": "householdOverview",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "searchBeneficiary"
+                  }
+                }
+              ],
+              "condition": {"type": "custom", "expression": "isEdit==true"}
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "FETCH_TRANSFORMER_CONFIG",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                      }
+                    ],
+                    "configName": "beneficiaryRegistration"
+                  }
+                },
+                {
+                  "actionType": "CREATE_EVENT",
+                  "properties": {
+                    "entity":
+                        "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value":
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                      }
+                    ],
+                    "name": "householdOverview",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "searchBeneficiary"
+                  }
+                }
+              ],
+              "condition": {"expression": "DEFAULT"}
+            }
+          ],
+          "navigateTo": {
+            "data": [
+              {
+                "key": "householdId",
+                "value": "{{formData.household.clientReferenceId}}"
+              }
+            ],
+            "name": "beneficiary-details",
+            "type": "template"
+          },
+          "properties": [
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_FIRST_NAME_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "nameOfIndividual",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "lengthRange": {
+                "maxLength": "200",
+                "minLength": "2",
+                "errorMessage": "HCM_VALIDATION_SIZE_2_TO_200"
+              },
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                },
+                {
+                  "type": "minLength",
+                  "value": "2",
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
+                },
+                {
+                  "type": "maxLength",
+                  "value": "200",
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_FAMILY_NAME_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": false,
+              "fieldName": "familyname",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "lengthRange": {
+                "minLength": "2",
+                "errorMessage": "HCM_VALIDATION_MIN_2_CHARS_NEEDED"
+              },
+              "validations": [
+                {
+                  "type": "minLength",
+                  "value": "2",
+                  "message": "HCM_VALIDATION_MIN_2_CHARS_NEEDED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "boolean",
+              "label": "HCM_REGISTRATION_IS_HEAD_LABEL",
+              "order": 3,
+              "value": true,
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "isHeadOfFamily",
+              "mandatory": true,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "DEFAULT", "name": "Default"}
+              ],
+              "label": "HCM_REGISTRATION_ID_POPULATOR_LABEL",
+              "order": 4,
+              "value": "DEFAULT",
+              "format": "idPopulator",
+              "hidden": false,
+              "isMdms": true,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "identifiers",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "required.message":
+                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message"
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_DOB_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dob",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "HCM_REGISTRATION_DOB_TOOLTIP",
+              "ageRange": {
+                "maxAge": 1800,
+                "minAge": 216,
+                "errorMessage": "HCM_VALIDATION_AGE_18_PLUS"
+              },
+              "helpText": "HCM_REGISTRATION_DOB_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "dobPicker",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "minAge",
+                  "value": 216,
+                  "message": "HCM_VALIDATION_AGE_18_PLUS"
+                },
+                {
+                  "type": "maxAge",
+                  "value": 1800,
+                  "message": "HCM_VALIDATION_INVALID_AGE"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED"
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "MALE", "name": "HCM_COMMON_MALE"},
+                {"code": "FEMALE", "name": "HCM_COMMON_FEMALE"}
+              ],
+              "label": "HCM_REGISTRATION_GENDER_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "select",
+              "hidden": false,
+              "isMdms": true,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "gender",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "common-masters.GenderType",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_GENDER_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_GENDER_REQUIRED"
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_MOBILE_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "mobileNumber",
+              "hidden": false,
+              "isMdms": false,
+              "pattern": "^\\d+\$",
+              "tooltip": "HCM_REGISTRATION_MOBILE_TOOLTIP",
+              "helpText": "HCM_REGISTRATION_MOBILE_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "phone",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "lengthRange": {
+                "maxLength": 10,
+                "minLength": 10,
+                "errorMessage": "HCM_VALIDATION_MOBILE_10_DIGITS"
+              },
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^\\d+\$",
+                  "message": "HCM_VALIDATION_ONLY_NUMBERS"
+                },
+                {
+                  "type": "minLength",
+                  "value": 10,
+                  "message": "HCM_VALIDATION_MOBILE_10_DIGITS"
+                },
+                {
+                  "type": "maxLength",
+                  "value": 10,
+                  "message": "HCM_VALIDATION_MOBILE_10_DIGITS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "pattern.message": "HCM_VALIDATION_ONLY_NUMBERS"
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "scanner",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "scanner",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "includeInSummary": true
+            }
+          ],
+          "actionLabel": "HCM_REGISTRATION_SAVE_BENEFICIARY_BUTTON",
+          "description": "HCM_REGISTRATION_BENEFICIARY_DETAILS_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false,
+          "conditionalNavigateTo": null
+        },
+        {
+          "body": null,
+          "flow": "HOUSEHOLD",
+          "page": "householdDetails",
+          "type": "object",
+          "label": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_HEADING",
+          "order": 3,
+          "footer": [
+            {
+              "label": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {"name": "beneficiaryDetails", "type": "form"}
+                }
+              ],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_HEADING",
+          "summary": false,
+          "version": 1,
+          "onAction": [
+            {
+              "actions": [
+                {
+                  "actionType": "FETCH_TRANSFORMER_CONFIG",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                      }
+                    ],
+                    "configName": "beneficiaryRegistration"
+                  }
+                },
+                {
+                  "actionType": "UPDATE_EVENT",
+                  "properties": {
+                    "entity": "HouseholdModel, TaskModel",
+                    "modify": [
+                      {"key": "TaskModel.status", "value": "NOT_ADMINISTERED"}
+                    ],
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value":
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                      }
+                    ],
+                    "name": "householdOverview",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "searchBeneficiary"
+                  }
+                }
+              ],
+              "condition": {
+                "type": "custom",
+                "expression": "isEdit==true && isClosedHousehold==true"
+              }
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "FETCH_TRANSFORMER_CONFIG",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                      }
+                    ],
+                    "configName": "beneficiaryRegistration"
+                  }
+                },
+                {
+                  "actionType": "UPDATE_EVENT",
+                  "properties": {
+                    "entity": "HouseholdModel",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value":
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                      }
+                    ],
+                    "name": "householdOverview",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "searchBeneficiary"
+                  }
+                }
+              ],
+              "condition": {"type": "custom", "expression": "isEdit==true"}
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "FETCH_TRANSFORMER_CONFIG",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                      }
+                    ],
+                    "configName": "beneficiaryRegistration"
+                  }
+                },
+                {
+                  "actionType": "CREATE_EVENT",
+                  "properties": {
+                    "entity":
+                        "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value":
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                      }
+                    ],
+                    "name": "householdOverview",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "searchBeneficiary"
+                  }
+                }
+              ],
+              "condition": {"expression": "DEFAULT"}
+            }
+          ],
+          "navigateTo": {"name": "beneficiaryDetails", "type": "form"},
+          "properties": [
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_DATE_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "required": true,
+              "fieldName": "dateOfRegistration",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            },
+            {
+              "type": "integer",
+              "label": "HCM_REGISTRATION_CHILDREN_COUNT_LABEL",
+              "order": 2,
+              "value": "1",
+              "format": "numeric",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenCount",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "range": {
+                "min": "1",
+                "errorMessage": "HCM_VALIDATION_MIN_CHILDREN_1"
+              },
+              "validations": [
+                {
+                  "type": "min",
+                  "value": "1",
+                  "message": "HCM_VALIDATION_MIN_CHILDREN_1"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "HCM_REGISTRATION_PREGNANT_WOMEN_LABEL",
+              "order": 3,
+              "value": "0",
+              "format": "numeric",
+              "hidden": true,
+              "includeInForm": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "pregnantWomenCount",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "HCM_REGISTRATION_TOTAL_MEMBERS_LABEL",
+              "order": 4,
+              "range": {
+                "max": "10",
+                "min": "1",
+                "errorMessage": "HCM_VALIDATION_MAX_MEMBERS"
+              },
+              "value": "1",
+              "format": "numeric",
+              "hidden": true,
+              "includeInForm": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "memberCount",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": "1",
+                  "message": "HCM_VALIDATION_MAX_MEMBERS"
+                },
+                {
+                  "type": "max",
+                  "value": "10",
+                  "message": "HCM_VALIDATION_MAX_MEMBERS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED"
+            }
+          ],
+          "actionLabel": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
+          "description": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": {
+            "expression": [
+              {"condition": "isEdit == true"}
+            ]
+          },
+          "preventScreenCapture": false
+        },
+        {
+          "body": null,
+          "flow": "HOUSEHOLD",
+          "page": "beneficiaryLocation",
+          "type": "object",
+          "label": "HCM_REGISTRATION_BENEFICIARY_LOCATION_HEADING",
+          "order": 1,
+          "footer": [
+            {
+              "label": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {"name": "householdDetails", "type": "form"}
+                }
+              ],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "HCM_REGISTRATION_BENEFICIARY_LOCATION_HEADING",
+          "summary": false,
+          "version": 1,
+          "onAction": [
+            {
+              "actions": [
+                {
+                  "actionType": "FETCH_TRANSFORMER_CONFIG",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                      }
+                    ],
+                    "configName": "beneficiaryRegistration"
+                  }
+                },
+                {
+                  "actionType": "UPDATE_EVENT",
+                  "properties": {
+                    "entity": "HouseholdModel, TaskModel",
+                    "modify": [
+                      {"key": "TaskModel.status", "value": "NOT_ADMINISTERED"}
+                    ],
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value":
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                      }
+                    ],
+                    "name": "householdOverview",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "searchBeneficiary"
+                  }
+                }
+              ],
+              "condition": {
+                "type": "custom",
+                "expression": "isEdit==true && isClosedHousehold==true"
+              }
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "FETCH_TRANSFORMER_CONFIG",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                      }
+                    ],
+                    "configName": "beneficiaryRegistration"
+                  }
+                },
+                {
+                  "actionType": "UPDATE_EVENT",
+                  "properties": {
+                    "entity": "HouseholdModel",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value":
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                      }
+                    ],
+                    "name": "householdOverview",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "searchBeneficiary"
+                  }
+                }
+              ],
+              "condition": {"type": "custom", "expression": "isEdit==true"}
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "FETCH_TRANSFORMER_CONFIG",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                      }
+                    ],
+                    "configName": "beneficiaryRegistration"
+                  }
+                },
+                {
+                  "actionType": "CREATE_EVENT",
+                  "properties": {
+                    "entity":
+                        "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value":
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                      }
+                    ],
+                    "name": "householdOverview",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "searchBeneficiary"
+                  }
+                }
+              ],
+              "condition": {"expression": "DEFAULT"}
+            }
+          ],
+          "navigateTo": {"name": "householdDetails", "type": "form"},
+          "properties": [
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_ADMIN_AREA_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "locality",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "administrativeArea",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_LAT_LONG_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "latLng",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_ADDRESS_LINE1_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "HCM_REGISTRATION_ADDRESS_LINE1_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "addressLine1",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "lengthRange": {
+                "minLength": "2",
+                "errorMessage":
+                    "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message"
+              },
+              "validations": [
+                {
+                  "type": "minLength",
+                  "value": "2",
+                  "message":
+                      "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_ADDRESS_LINE2_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "HCM_REGISTRATION_ADDRESS_LINE2_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "addressLine2",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "lengthRange": {
+                "minLength": "2",
+                "errorMessage":
+                    "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message"
+              },
+              "validations": [
+                {
+                  "type": "minLength",
+                  "value": "2",
+                  "message":
+                      "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_LANDMARK_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "HCM_REGISTRATION_LANDMARK_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "landmark",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "lengthRange": {
+                "minLength": "2",
+                "errorMessage":
+                    "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message"
+              },
+              "validations": [
+                {
+                  "type": "minLength",
+                  "value": "2",
+                  "message":
+                      "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_PINCODE_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "pattern": "^\\d+\$",
+              "tooltip": "",
+              "helpText": "HCM_REGISTRATION_PINCODE_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "pincode",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^\\d+\$",
+                  "message": "HCM_VALIDATION_ONLY_NUMBERS"
+                }
+              ],
+              "errorMessage": "",
+              "pattern.message": "HCM_VALIDATION_ONLY_NUMBERS"
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "PERMANENT",
+                  "name": "HCM_REGISTRATION_ADDRESS_PERMANENT"
+                },
+                {
+                  "code": "CORRESPONDENCE",
+                  "name": "HCM_REGISTRATION_ADDRESS_CORRESPONDENCE"
+                },
+                {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
+              ],
+              "label": "HCM_REGISTRATION_ADDRESS_TYPE_LABEL",
+              "order": 7,
+              "value": "PERMANENT",
+              "format": "dropdown",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "typeOfAddress",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {
+                  "code": "PERMANENT",
+                  "name": "HCM_REGISTRATION_ADDRESS_PERMANENT"
+                },
+                {
+                  "code": "CORRESPONDENCE",
+                  "name": "HCM_REGISTRATION_ADDRESS_CORRESPONDENCE"
+                },
+                {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
+              ],
+              "includeInSummary": false
+            }
+          ],
+          "actionLabel": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
+          "description": "HCM_REGISTRATION_LOCATION_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false
+        }
+      ],
+      "summary": false,
+      "version": 3,
+      "category": "REGISTRATION",
+      "disabled": false,
+      "onAction": [
+        {
+          "actions": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                  }
+                ],
+                "configName": "beneficiaryRegistration"
+              }
+            },
+            {
+              "actionType": "UPDATE_EVENT",
+              "properties": {
+                "entity": "HouseholdModel, TaskModel",
+                "modify": [
+                  {"key": "TaskModel.status", "value": "NOT_ADMINISTERED"}
+                ],
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value":
+                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                  }
+                ],
+                "name": "householdOverview",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "searchBeneficiary"
+              }
+            }
+          ],
+          "condition": {
+            "type": "custom",
+            "expression": "isEdit==true && isClosedHousehold==true"
+          }
+        },
+        {
+          "actions": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                  }
+                ],
+                "configName": "beneficiaryRegistration"
+              }
+            },
+            {
+              "actionType": "UPDATE_EVENT",
+              "properties": {
+                "entity": "HouseholdModel",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value":
+                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                  }
+                ],
+                "name": "householdOverview",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "searchBeneficiary"
+              }
+            }
+          ],
+          "condition": {"type": "custom", "expression": "isEdit==true"}
+        },
+        {
+          "actions": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+                  }
+                ],
+                "configName": "beneficiaryRegistration"
+              }
+            },
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value":
+                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                  }
+                ],
+                "name": "householdOverview",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "searchBeneficiary"
+              }
+            }
+          ],
+          "condition": {"expression": "DEFAULT"}
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {
+        "filters": [
+          {"field": "isHeadOfHousehold", "equals": true}
+        ],
+        "relations": [
+          {
+            "name": "household",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "householdClientReferenceId"
+            },
+            "entity": "HouseholdModel"
+          },
+          {
+            "name": "members",
+            "match": {
+              "field": "householdClientReferenceId",
+              "equalsFrom": "household.clientReferenceId"
+            },
+            "entity": "HouseholdMemberModel"
+          },
+          {
+            "name": "headOfHousehold",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "HouseholdMemberModel.individualClientReferenceId"
+            },
+            "entity": "IndividualModel"
+          },
+          {
+            "name": "individuals",
+            "match": {
+              "field": "clientReferenceId",
+              "inFrom": "members.individualClientReferenceId"
+            },
+            "entity": "IndividualModel"
+          },
+          {
+            "name": "projectBeneficiaries",
+            "match": {
+              "field": "beneficiaryClientReferenceId",
+              "equalsFrom": "household.clientReferenceId"
+            },
+            "entity": "ProjectBeneficiaryModel"
+          },
+          {
+            "name": "tasks",
+            "match": {
+              "field": "projectBeneficiaryClientReferenceId",
+              "inFrom": "projectBeneficiaries.clientReferenceId"
+            },
+            "entity": "TaskModel"
+          },
+          {
+            "name": "sideEffects",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "household.clientReferenceId"
+            },
+            "entity": "SideEffectModel"
+          },
+          {
+            "name": "hFReferral",
+            "match": {
+              "field": "beneficiaryId",
+              "equalsFrom": "individual.identifiers.0.identifierId"
+            },
+            "entity": "HFReferralModel"
+          }
+        ],
+        "rootEntity": "HouseholdMemberModel",
+        "wrapperName": "HouseholdWrapper",
+        "searchConfig": {
+          "select": [
+            "individual",
+            "household",
+            "householdMember",
+            "projectBeneficiary",
+            "task"
+          ],
+          "primary": "household"
+        }
+      },
+      "scrollListener": {}
+    }
+  ],
+  "order": 1,
+  "active": true,
+  "project": "MR-DN",
+  "version": 1,
+  "disabled": false,
+  "isSelected": true,
+  "initialPage": "searchBeneficiary",
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+    "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+    "createdTime": 1766988969631,
+    "lastModifiedTime": 1773055228737
+  }
+};

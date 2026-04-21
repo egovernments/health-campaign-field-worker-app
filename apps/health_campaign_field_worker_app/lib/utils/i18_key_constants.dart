@@ -228,7 +228,8 @@ class Common {
 
   String get qrAttendance => 'QR_ATTENDANCE';
 
-  String get progressIndicatorPrefixLabelHFReferral => 'PROGRESS_INDICATOR_PREFIX_LABEL_HFREFERRAL';
+  String get progressIndicatorPrefixLabelHFReferral =>
+      'PROGRESS_INDICATOR_PREFIX_LABEL_HFREFERRAL';
 
   String get stockDataFound => 'STOCK_DATA_FOUND';
 
@@ -698,9 +699,9 @@ class Home {
 
   String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
 
-  String get polioRegistrationLabel => 'HOME_BENEFICIARY_LABEL';
+  String get polioRegistrationLabel => 'HOME_REGISTRATION_DELIVERY_LABEL';
 
-  String get polioMissedChildrenLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
+  String get polioMissedChildrenLabel => 'HOME_MARK_CLOSE_HOUSEHOLD_LABEL';
 
   String get polioStockDetailsLabel => 'Stock Details';
 
@@ -709,7 +710,6 @@ class Home {
   String get polioTallySheetLabel => 'Tally Sheet';
 
   String get polioLqaDataCollectionLabel => 'LQA Data Collection';
-
 }
 
 class DataShare {
