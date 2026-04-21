@@ -61,7 +61,8 @@ class StockCalculationUtils {
       final isSender = stock.senderId == facilityId;
 
       // Auto-detect distributor: if user is sender in a return, treat as distributor
-      final isDistributorReturn = isSender && stockEntryType == 'RETURNED' && isDistributor;
+      final isDistributorReturn =
+          isSender && stockEntryType == 'RETURNED' && isDistributor;
       if (isDistributorReturn) hasDistributorReturns = true;
 
       if (isDistributor || isDistributorReturn) {
