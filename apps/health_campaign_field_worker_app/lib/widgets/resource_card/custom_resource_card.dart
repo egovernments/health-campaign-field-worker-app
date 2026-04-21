@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/blocs/product_variant/product_variant.dart';
 import 'package:digit_data_model/models/entities/product_variant.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
+import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_forms_engine/helper/validation_message_helper.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -543,7 +544,72 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
     final projectType = context.selectedProjectType;
     final cycles = projectType?.cycles;
 
-    // Get ALL product variants from project config without eligibility filtering
+    // Get navigation params for cycle/dose filtering and eligible variants
+    final navParams =
+        FlowCrudStateRegistry().getNavigationParams(widget.pageSchema);
+    final cycleIndex = navParams?['cycleIndex'];
+    final doseIndex = navParams?['doseIndex'];
+    final eligibleProductVariants = navParams?['eligibleProductVariants'];
+
+    final parsedCycleIndex =
+        cycleIndex is int ? cycleIndex : int.tryParse('$cycleIndex');
+    final parsedDoseIndex =
+        doseIndex is int ? doseIndex : int.tryParse('$doseIndex');
+
+    // Extract eligible product variant IDs from age-condition-evaluated data
+    // passed from the beneficiary details template page
+    Set<String>? eligibleVariantIds;
+    if (eligibleProductVariants is List && eligibleProductVariants.isNotEmpty) {
+      eligibleVariantIds = <String>{};
+      for (final criteria in eligibleProductVariants) {
+        if (criteria is Map) {
+          final variants = criteria['ProductVariants'] ??
+              criteria['productVariants'];
+          if (variants is List) {
+            for (final v in variants) {
+              if (v is Map && v['productVariantId'] != null) {
+                eligibleVariantIds.add(v['productVariantId'].toString());
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (parsedCycleIndex != null && parsedDoseIndex != null && cycles != null) {
+      // Find the matching cycle and delivery
+      final cycle =
+          cycles.firstWhereOrNull((c) => c.id == parsedCycleIndex);
+      final delivery = cycle?.deliveries
+          ?.firstWhereOrNull((d) => d.id == parsedDoseIndex);
+
+      if (delivery != null) {
+        // Get product variants for this specific delivery
+        final variants = delivery.doseCriteria
+                ?.expand(
+                    (dose) => dose.productVariants ?? <DeliveryProductVariant>[])
+                .toList() ??
+            [];
+
+        // Deduplicate by productVariantId
+        final seen = <String>{};
+        var filtered = variants
+            .where((v) => seen.add(v.productVariantId))
+            .toList();
+
+        // If eligible variant IDs are available (age condition evaluated),
+        // further filter to only show variants matching the beneficiary's age
+        if (eligibleVariantIds != null && eligibleVariantIds.isNotEmpty) {
+          filtered = filtered
+              .where((v) => eligibleVariantIds!.contains(v.productVariantId))
+              .toList();
+        }
+
+        return filtered;
+      }
+    }
+
+    // Fallback: return all variants (should not happen in normal flow)
     final productVariants = cycles
             ?.expand((cycle) => cycle.deliveries ?? <ProjectCycleDelivery>[])
             .expand((delivery) =>
