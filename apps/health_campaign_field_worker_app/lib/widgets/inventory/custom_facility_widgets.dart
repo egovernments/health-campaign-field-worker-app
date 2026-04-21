@@ -224,6 +224,7 @@ class _FacilityCardContent extends StatelessWidget {
       if (facilityLevel == null) return true;
 
       if (isLessExcessFlow) {
+        if(isToField && !isWareHouseMgr) return facilityLevel == 'current';
         if (isToField) return facilityLevel == 'parent';
         if (isFromField) return facilityLevel == 'current';
       } else if (isReturnFlow) {
@@ -240,6 +241,7 @@ class _FacilityCardContent extends StatelessWidget {
         if (isFromField) return facilityLevel == 'parent';
       } else if (stockEntryType == 'LOSS' || stockEntryType == 'DAMAGED') {
         // For loss and damaged, to field should show parent facility
+        if(isToField && !isWareHouseMgr) return facilityLevel == 'current';
         if (isToField) return facilityLevel == 'parent';
         if (isFromField) return facilityLevel == 'current';
       }

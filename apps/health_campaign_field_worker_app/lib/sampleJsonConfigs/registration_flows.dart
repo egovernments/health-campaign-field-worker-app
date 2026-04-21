@@ -1518,7 +1518,7 @@ final dynamic sampleFlows = {
                     {
                       "type": "template",
                       "label":
-                          "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
+                          "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
                       "format": "button",
                       "onAction": [
                         {
@@ -3597,7 +3597,7 @@ final dynamic sampleFlows = {
               "tooltip": "",
               "helpText": "",
               "infoText": "",
-              "readOnly": false,
+              "readOnly": true,
               "required": true,
               "fieldName": "resourceCard",
               "mandatory": true,
