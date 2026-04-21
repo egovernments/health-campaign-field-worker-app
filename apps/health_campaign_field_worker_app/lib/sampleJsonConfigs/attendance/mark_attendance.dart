@@ -114,8 +114,7 @@ final dynamic markAttendanceFlow = {
       ]
     },
     {
-      "disabled":
-          "{{fn:allAttendanceSelected(widgetData, contextData.0.AttendanceRegisterModel)}}",
+      "disabled": "{{fn:anyAttendanceSelected(widgetData)}}",
       "format": "button",
       "type": "template",
       "fieldName": "createReferral",
@@ -521,8 +520,9 @@ final dynamic markAttendanceFlow = {
           },
           {
             "type": "template",
-            "format": "textTemplate",
-            "value": "{{fn:attendanceStatus(widgetData, item)}}",
+            "format": "tag",
+            "fieldName": "attendanceStatus",
+            "label": "{{fn:attendanceStatus(widgetData, item)}}",
           },
           // Manual Buttons
           // {
