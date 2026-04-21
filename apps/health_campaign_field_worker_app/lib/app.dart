@@ -19,6 +19,7 @@ import 'blocs/error/error.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'blocs/push_notification/push_notification.dart';
+import 'blocs/root_detection/root_detection.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/remote_client.dart';
@@ -84,12 +85,22 @@ class MainApplicationState extends State<MainApplication>
           ),
         ),
       ],
-      child: BlocProvider(
-        create: (context) => AppInitializationBloc(
-          isar: widget.isar,
-          mdmsRepository: MdmsRepository(widget.client),
-          dashboardRemoteRepository: DashboardRemoteRepository(widget.client),
-        )..add(const AppInitializationSetupEvent()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AppInitializationBloc(
+              isar: widget.isar,
+              mdmsRepository: MdmsRepository(widget.client),
+              dashboardRemoteRepository:
+                  DashboardRemoteRepository(widget.client),
+            )..add(const AppInitializationSetupEvent()),
+          ),
+          BlocProvider(
+            create: (_) {
+              return RootDetectionBloc()..add(const RootDetectionLoadedEvent());
+            },
+          ),
+        ],
         child: NetworkManagerProviderWrapper(
           isar: widget.isar,
           configuration: const NetworkManagerConfiguration(

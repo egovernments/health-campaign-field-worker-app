@@ -124,6 +124,7 @@ flutter:
     - assets/images/
     - assets/audio/add.wav
     - assets/audio/buzzer.wav
+    - assets/certificates/
 
   fonts:
     - family: Roboto

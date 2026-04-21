@@ -238,6 +238,12 @@ class Common {
   String get stockDataFoundContent => 'STOCK_DATA_FOUND_CONTENT';
 
   String get stockNoDataFoundContent => 'STOCK_NO_DATA_FOUND_CONTENT';
+
+  String get exitApp => 'EXIT_APP';
+
+  String get rootedDeviceDetectedTitle => 'ROOTED_DEVICE_DETECTED_TITLE';
+
+  String get rootedDeviceDetectedMessage => 'ROOTED_DEVICE_DETECTED_MESSAGE';
 }
 
 class HomeShowcase {
