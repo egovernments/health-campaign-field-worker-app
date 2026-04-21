@@ -806,6 +806,12 @@ final dynamic sampleSmcFlows = {
                   "value":
                       "{{contextData.0.household.HouseholdModel.additionalFields.fields.childrenCount}}",
                   "isActive": true
+                },
+                {
+                  "key": "HCM_HOUSEHOLD_OVERVIEW_PREGNANT_WOMEN_LABEL",
+                  "value":
+                      "{{contextData.0.household.HouseholdModel.additionalFields.fields.pregnantWomenCount}}",
+                  "isActive": true
                 }
               ],
               "type": "template",

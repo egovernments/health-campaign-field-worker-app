@@ -69,6 +69,7 @@ import '../widgets/inventory/custom_facility_widgets.dart';
 import '../widgets/inventory/custom_product_selection_card.dart';
 import '../widgets/localized.dart';
 // import '../widgets/progress_bar/beneficiary_progress.dart';
+import '../widgets/polio_stats_card.dart';
 import '../widgets/progress_bar/hf_referral_progress.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
@@ -727,6 +728,9 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
 
     final mappedItems = _getItems(context);
+    final isPolio =
+        context.selectedProject.projectType?.toUpperCase().contains('POLIO') ==
+            true;
 
     final homeItems = mappedItems?.homeItems ?? [];
     final showcaseKeys = <GlobalKey>[
@@ -937,7 +941,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   showBackNavigation: false,
                   showHelp: false,
                 ),
-                // const PolioStatsCard(),
+                if (isPolio) const PolioStatsCard(),
                 /////   hfreferral progress matrics
                 if (state.actionsWrapper.actions
                     .map((e) => e.displayName)
@@ -2127,7 +2131,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db ||
-            element == i18.home.transitPostLabel ||
+            (isPolio && isDistributor && element == i18.home.transitPostLabel) ||
             (isDistributor &&
                 (element == i18.home.polioRegistrationLabel ||
                     (element == i18.home.polioMissedChildrenLabel &&

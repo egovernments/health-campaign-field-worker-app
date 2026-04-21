@@ -251,9 +251,9 @@ final dynamic sampleHouseholdFlows = {
                   "isActive": true
                 },
                 {
-                  "key": "HCM_HOUSEHOLD_OVERVIEW_CHILDREN_COUNT_LABEL",
+                  "key": "HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
                   "value":
-                      "{{contextData.0.household.HouseholdModel.additionalFields.fields.childrenCount}}",
+                      "{{contextData.0.household.HouseholdModel.additionalFields.fields.memberCount}}",
                   "isActive": true
                 }
               ],
@@ -894,10 +894,6 @@ final dynamic sampleHouseholdFlows = {
                     {
                       "code": "ADMINISTRATION_SUCCESS",
                       "name": "HCM_SEARCH_FILTER_ADMINISTRATION_SUCCESS"
-                    },
-                    {
-                      "code": "CLOSED_HOUSEHOLD",
-                      "name": "HCM_SEARCH_FILTER_MISSED_CHILDREN"
                     }
                   ],
                   "format": "selectionCard",
@@ -1803,7 +1799,7 @@ final dynamic sampleHouseholdFlows = {
                     "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
-                "configName": "individualRegistration"
+                "configName": "memberRegistration"
               }
             },
             {
@@ -2167,7 +2163,7 @@ final dynamic sampleHouseholdFlows = {
                 "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
               }
             ],
-            "configName": "individualRegistration"
+            "configName": "memberRegistration"
           }
         },
         {
