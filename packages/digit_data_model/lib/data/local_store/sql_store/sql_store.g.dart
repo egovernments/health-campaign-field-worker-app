@@ -41711,6 +41711,1558 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
   }
 }
 
+class $FaceAuthEventTable extends FaceAuthEvent
+    with TableInfo<$FaceAuthEventTable, FaceAuthEventData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FaceAuthEventTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _individualIdMeta =
+      const VerificationMeta('individualId');
+  @override
+  late final GeneratedColumn<String> individualId = GeneratedColumn<String>(
+      'individual_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _deviceIdMeta =
+      const VerificationMeta('deviceId');
+  @override
+  late final GeneratedColumn<String> deviceId = GeneratedColumn<String>(
+      'device_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _eventTypeMeta =
+      const VerificationMeta('eventType');
+  @override
+  late final GeneratedColumn<String> eventType = GeneratedColumn<String>(
+      'event_type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _outcomeMeta =
+      const VerificationMeta('outcome');
+  @override
+  late final GeneratedColumn<String> outcome = GeneratedColumn<String>(
+      'outcome', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _confidenceMeta =
+      const VerificationMeta('confidence');
+  @override
+  late final GeneratedColumn<String> confidence = GeneratedColumn<String>(
+      'confidence', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _latitudeMeta =
+      const VerificationMeta('latitude');
+  @override
+  late final GeneratedColumn<String> latitude = GeneratedColumn<String>(
+      'latitude', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _longitudeMeta =
+      const VerificationMeta('longitude');
+  @override
+  late final GeneratedColumn<String> longitude = GeneratedColumn<String>(
+      'longitude', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _locationAccuracyMeta =
+      const VerificationMeta('locationAccuracy');
+  @override
+  late final GeneratedColumn<String> locationAccuracy = GeneratedColumn<String>(
+      'location_accuracy', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _timestampMeta =
+      const VerificationMeta('timestamp');
+  @override
+  late final GeneratedColumn<int> timestamp = GeneratedColumn<int>(
+      'timestamp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _syncTimestampMeta =
+      const VerificationMeta('syncTimestamp');
+  @override
+  late final GeneratedColumn<int> syncTimestamp = GeneratedColumn<int>(
+      'sync_timestamp', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _fallbackReasonMeta =
+      const VerificationMeta('fallbackReason');
+  @override
+  late final GeneratedColumn<String> fallbackReason = GeneratedColumn<String>(
+      'fallback_reason', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _failedAttemptCountMeta =
+      const VerificationMeta('failedAttemptCount');
+  @override
+  late final GeneratedColumn<int> failedAttemptCount = GeneratedColumn<int>(
+      'failed_attempt_count', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _popupTimeMeta =
+      const VerificationMeta('popupTime');
+  @override
+  late final GeneratedColumn<int> popupTime = GeneratedColumn<int>(
+      'popup_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _responseTimeMeta =
+      const VerificationMeta('responseTime');
+  @override
+  late final GeneratedColumn<int> responseTime = GeneratedColumn<int>(
+      'response_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _responseTypeMeta =
+      const VerificationMeta('responseType');
+  @override
+  late final GeneratedColumn<String> responseType = GeneratedColumn<String>(
+      'response_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _projectIdMeta =
+      const VerificationMeta('projectId');
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+      'project_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _anomalyFlagsMeta =
+      const VerificationMeta('anomalyFlags');
+  @override
+  late final GeneratedColumn<String> anomalyFlags = GeneratedColumn<String>(
+      'anomaly_flags', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _faceImageMeta =
+      const VerificationMeta('faceImage');
+  @override
+  late final GeneratedColumn<String> faceImage = GeneratedColumn<String>(
+      'face_image', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isSyncMeta = const VerificationMeta('isSync');
+  @override
+  late final GeneratedColumn<bool> isSync = GeneratedColumn<bool>(
+      'is_sync', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_sync" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _boundaryCodeMeta =
+      const VerificationMeta('boundaryCode');
+  @override
+  late final GeneratedColumn<String> boundaryCode = GeneratedColumn<String>(
+      'boundary_code', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [
+        clientReferenceId,
+        individualId,
+        deviceId,
+        eventType,
+        outcome,
+        confidence,
+        latitude,
+        longitude,
+        locationAccuracy,
+        timestamp,
+        syncTimestamp,
+        fallbackReason,
+        failedAttemptCount,
+        popupTime,
+        responseTime,
+        responseType,
+        projectId,
+        anomalyFlags,
+        faceImage,
+        isSync,
+        boundaryCode,
+        nonRecoverableError,
+        tenantId,
+        rowVersion,
+        id,
+        additionalFields,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        auditCreatedBy,
+        isDeleted
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'face_auth_event';
+  @override
+  VerificationContext validateIntegrity(Insertable<FaceAuthEventData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('individual_id')) {
+      context.handle(
+          _individualIdMeta,
+          individualId.isAcceptableOrUnknown(
+              data['individual_id']!, _individualIdMeta));
+    } else if (isInserting) {
+      context.missing(_individualIdMeta);
+    }
+    if (data.containsKey('device_id')) {
+      context.handle(_deviceIdMeta,
+          deviceId.isAcceptableOrUnknown(data['device_id']!, _deviceIdMeta));
+    } else if (isInserting) {
+      context.missing(_deviceIdMeta);
+    }
+    if (data.containsKey('event_type')) {
+      context.handle(_eventTypeMeta,
+          eventType.isAcceptableOrUnknown(data['event_type']!, _eventTypeMeta));
+    } else if (isInserting) {
+      context.missing(_eventTypeMeta);
+    }
+    if (data.containsKey('outcome')) {
+      context.handle(_outcomeMeta,
+          outcome.isAcceptableOrUnknown(data['outcome']!, _outcomeMeta));
+    } else if (isInserting) {
+      context.missing(_outcomeMeta);
+    }
+    if (data.containsKey('confidence')) {
+      context.handle(
+          _confidenceMeta,
+          confidence.isAcceptableOrUnknown(
+              data['confidence']!, _confidenceMeta));
+    } else if (isInserting) {
+      context.missing(_confidenceMeta);
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
+    } else if (isInserting) {
+      context.missing(_latitudeMeta);
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    } else if (isInserting) {
+      context.missing(_longitudeMeta);
+    }
+    if (data.containsKey('location_accuracy')) {
+      context.handle(
+          _locationAccuracyMeta,
+          locationAccuracy.isAcceptableOrUnknown(
+              data['location_accuracy']!, _locationAccuracyMeta));
+    } else if (isInserting) {
+      context.missing(_locationAccuracyMeta);
+    }
+    if (data.containsKey('timestamp')) {
+      context.handle(_timestampMeta,
+          timestamp.isAcceptableOrUnknown(data['timestamp']!, _timestampMeta));
+    } else if (isInserting) {
+      context.missing(_timestampMeta);
+    }
+    if (data.containsKey('sync_timestamp')) {
+      context.handle(
+          _syncTimestampMeta,
+          syncTimestamp.isAcceptableOrUnknown(
+              data['sync_timestamp']!, _syncTimestampMeta));
+    }
+    if (data.containsKey('fallback_reason')) {
+      context.handle(
+          _fallbackReasonMeta,
+          fallbackReason.isAcceptableOrUnknown(
+              data['fallback_reason']!, _fallbackReasonMeta));
+    }
+    if (data.containsKey('failed_attempt_count')) {
+      context.handle(
+          _failedAttemptCountMeta,
+          failedAttemptCount.isAcceptableOrUnknown(
+              data['failed_attempt_count']!, _failedAttemptCountMeta));
+    } else if (isInserting) {
+      context.missing(_failedAttemptCountMeta);
+    }
+    if (data.containsKey('popup_time')) {
+      context.handle(_popupTimeMeta,
+          popupTime.isAcceptableOrUnknown(data['popup_time']!, _popupTimeMeta));
+    }
+    if (data.containsKey('response_time')) {
+      context.handle(
+          _responseTimeMeta,
+          responseTime.isAcceptableOrUnknown(
+              data['response_time']!, _responseTimeMeta));
+    }
+    if (data.containsKey('response_type')) {
+      context.handle(
+          _responseTypeMeta,
+          responseType.isAcceptableOrUnknown(
+              data['response_type']!, _responseTypeMeta));
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(_projectIdMeta,
+          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
+    } else if (isInserting) {
+      context.missing(_projectIdMeta);
+    }
+    if (data.containsKey('anomaly_flags')) {
+      context.handle(
+          _anomalyFlagsMeta,
+          anomalyFlags.isAcceptableOrUnknown(
+              data['anomaly_flags']!, _anomalyFlagsMeta));
+    }
+    if (data.containsKey('face_image')) {
+      context.handle(_faceImageMeta,
+          faceImage.isAcceptableOrUnknown(data['face_image']!, _faceImageMeta));
+    }
+    if (data.containsKey('is_sync')) {
+      context.handle(_isSyncMeta,
+          isSync.isAcceptableOrUnknown(data['is_sync']!, _isSyncMeta));
+    }
+    if (data.containsKey('boundary_code')) {
+      context.handle(
+          _boundaryCodeMeta,
+          boundaryCode.isAcceptableOrUnknown(
+              data['boundary_code']!, _boundaryCodeMeta));
+    } else if (isInserting) {
+      context.missing(_boundaryCodeMeta);
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {clientReferenceId};
+  @override
+  FaceAuthEventData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FaceAuthEventData(
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      individualId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}individual_id'])!,
+      deviceId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}device_id'])!,
+      eventType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}event_type'])!,
+      outcome: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}outcome'])!,
+      confidence: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}confidence'])!,
+      latitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}latitude'])!,
+      longitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}longitude'])!,
+      locationAccuracy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}location_accuracy'])!,
+      timestamp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}timestamp'])!,
+      syncTimestamp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}sync_timestamp']),
+      fallbackReason: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}fallback_reason']),
+      failedAttemptCount: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}failed_attempt_count'])!,
+      popupTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}popup_time']),
+      responseTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}response_time']),
+      responseType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}response_type']),
+      projectId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}project_id'])!,
+      anomalyFlags: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}anomaly_flags']),
+      faceImage: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}face_image']),
+      isSync: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_sync'])!,
+      boundaryCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}boundary_code'])!,
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+    );
+  }
+
+  @override
+  $FaceAuthEventTable createAlias(String alias) {
+    return $FaceAuthEventTable(attachedDatabase, alias);
+  }
+}
+
+class FaceAuthEventData extends DataClass
+    implements Insertable<FaceAuthEventData> {
+  final String clientReferenceId;
+  final String individualId;
+  final String deviceId;
+  final String eventType;
+  final String outcome;
+  final String confidence;
+  final String latitude;
+  final String longitude;
+  final String locationAccuracy;
+  final int timestamp;
+  final int? syncTimestamp;
+  final String? fallbackReason;
+  final int failedAttemptCount;
+  final int? popupTime;
+  final int? responseTime;
+  final String? responseType;
+  final String projectId;
+  final String? anomalyFlags;
+
+  /// Base64-encoded JPEG of the cropped face image captured during verification.
+  final String? faceImage;
+  final bool isSync;
+  final String boundaryCode;
+  final bool? nonRecoverableError;
+  final String? tenantId;
+  final int? rowVersion;
+  final String? id;
+  final String? additionalFields;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String? auditCreatedBy;
+  final bool? isDeleted;
+  const FaceAuthEventData(
+      {required this.clientReferenceId,
+      required this.individualId,
+      required this.deviceId,
+      required this.eventType,
+      required this.outcome,
+      required this.confidence,
+      required this.latitude,
+      required this.longitude,
+      required this.locationAccuracy,
+      required this.timestamp,
+      this.syncTimestamp,
+      this.fallbackReason,
+      required this.failedAttemptCount,
+      this.popupTime,
+      this.responseTime,
+      this.responseType,
+      required this.projectId,
+      this.anomalyFlags,
+      this.faceImage,
+      required this.isSync,
+      required this.boundaryCode,
+      this.nonRecoverableError,
+      this.tenantId,
+      this.rowVersion,
+      this.id,
+      this.additionalFields,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      this.auditCreatedBy,
+      this.isDeleted});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    map['individual_id'] = Variable<String>(individualId);
+    map['device_id'] = Variable<String>(deviceId);
+    map['event_type'] = Variable<String>(eventType);
+    map['outcome'] = Variable<String>(outcome);
+    map['confidence'] = Variable<String>(confidence);
+    map['latitude'] = Variable<String>(latitude);
+    map['longitude'] = Variable<String>(longitude);
+    map['location_accuracy'] = Variable<String>(locationAccuracy);
+    map['timestamp'] = Variable<int>(timestamp);
+    if (!nullToAbsent || syncTimestamp != null) {
+      map['sync_timestamp'] = Variable<int>(syncTimestamp);
+    }
+    if (!nullToAbsent || fallbackReason != null) {
+      map['fallback_reason'] = Variable<String>(fallbackReason);
+    }
+    map['failed_attempt_count'] = Variable<int>(failedAttemptCount);
+    if (!nullToAbsent || popupTime != null) {
+      map['popup_time'] = Variable<int>(popupTime);
+    }
+    if (!nullToAbsent || responseTime != null) {
+      map['response_time'] = Variable<int>(responseTime);
+    }
+    if (!nullToAbsent || responseType != null) {
+      map['response_type'] = Variable<String>(responseType);
+    }
+    map['project_id'] = Variable<String>(projectId);
+    if (!nullToAbsent || anomalyFlags != null) {
+      map['anomaly_flags'] = Variable<String>(anomalyFlags);
+    }
+    if (!nullToAbsent || faceImage != null) {
+      map['face_image'] = Variable<String>(faceImage);
+    }
+    map['is_sync'] = Variable<bool>(isSync);
+    map['boundary_code'] = Variable<String>(boundaryCode);
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    return map;
+  }
+
+  FaceAuthEventCompanion toCompanion(bool nullToAbsent) {
+    return FaceAuthEventCompanion(
+      clientReferenceId: Value(clientReferenceId),
+      individualId: Value(individualId),
+      deviceId: Value(deviceId),
+      eventType: Value(eventType),
+      outcome: Value(outcome),
+      confidence: Value(confidence),
+      latitude: Value(latitude),
+      longitude: Value(longitude),
+      locationAccuracy: Value(locationAccuracy),
+      timestamp: Value(timestamp),
+      syncTimestamp: syncTimestamp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(syncTimestamp),
+      fallbackReason: fallbackReason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fallbackReason),
+      failedAttemptCount: Value(failedAttemptCount),
+      popupTime: popupTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(popupTime),
+      responseTime: responseTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(responseTime),
+      responseType: responseType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(responseType),
+      projectId: Value(projectId),
+      anomalyFlags: anomalyFlags == null && nullToAbsent
+          ? const Value.absent()
+          : Value(anomalyFlags),
+      faceImage: faceImage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(faceImage),
+      isSync: Value(isSync),
+      boundaryCode: Value(boundaryCode),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+    );
+  }
+
+  factory FaceAuthEventData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FaceAuthEventData(
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      individualId: serializer.fromJson<String>(json['individualId']),
+      deviceId: serializer.fromJson<String>(json['deviceId']),
+      eventType: serializer.fromJson<String>(json['eventType']),
+      outcome: serializer.fromJson<String>(json['outcome']),
+      confidence: serializer.fromJson<String>(json['confidence']),
+      latitude: serializer.fromJson<String>(json['latitude']),
+      longitude: serializer.fromJson<String>(json['longitude']),
+      locationAccuracy: serializer.fromJson<String>(json['locationAccuracy']),
+      timestamp: serializer.fromJson<int>(json['timestamp']),
+      syncTimestamp: serializer.fromJson<int?>(json['syncTimestamp']),
+      fallbackReason: serializer.fromJson<String?>(json['fallbackReason']),
+      failedAttemptCount: serializer.fromJson<int>(json['failedAttemptCount']),
+      popupTime: serializer.fromJson<int?>(json['popupTime']),
+      responseTime: serializer.fromJson<int?>(json['responseTime']),
+      responseType: serializer.fromJson<String?>(json['responseType']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      anomalyFlags: serializer.fromJson<String?>(json['anomalyFlags']),
+      faceImage: serializer.fromJson<String?>(json['faceImage']),
+      isSync: serializer.fromJson<bool>(json['isSync']),
+      boundaryCode: serializer.fromJson<String>(json['boundaryCode']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      id: serializer.fromJson<String?>(json['id']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'individualId': serializer.toJson<String>(individualId),
+      'deviceId': serializer.toJson<String>(deviceId),
+      'eventType': serializer.toJson<String>(eventType),
+      'outcome': serializer.toJson<String>(outcome),
+      'confidence': serializer.toJson<String>(confidence),
+      'latitude': serializer.toJson<String>(latitude),
+      'longitude': serializer.toJson<String>(longitude),
+      'locationAccuracy': serializer.toJson<String>(locationAccuracy),
+      'timestamp': serializer.toJson<int>(timestamp),
+      'syncTimestamp': serializer.toJson<int?>(syncTimestamp),
+      'fallbackReason': serializer.toJson<String?>(fallbackReason),
+      'failedAttemptCount': serializer.toJson<int>(failedAttemptCount),
+      'popupTime': serializer.toJson<int?>(popupTime),
+      'responseTime': serializer.toJson<int?>(responseTime),
+      'responseType': serializer.toJson<String?>(responseType),
+      'projectId': serializer.toJson<String>(projectId),
+      'anomalyFlags': serializer.toJson<String?>(anomalyFlags),
+      'faceImage': serializer.toJson<String?>(faceImage),
+      'isSync': serializer.toJson<bool>(isSync),
+      'boundaryCode': serializer.toJson<String>(boundaryCode),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'id': serializer.toJson<String?>(id),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+    };
+  }
+
+  FaceAuthEventData copyWith(
+          {String? clientReferenceId,
+          String? individualId,
+          String? deviceId,
+          String? eventType,
+          String? outcome,
+          String? confidence,
+          String? latitude,
+          String? longitude,
+          String? locationAccuracy,
+          int? timestamp,
+          Value<int?> syncTimestamp = const Value.absent(),
+          Value<String?> fallbackReason = const Value.absent(),
+          int? failedAttemptCount,
+          Value<int?> popupTime = const Value.absent(),
+          Value<int?> responseTime = const Value.absent(),
+          Value<String?> responseType = const Value.absent(),
+          String? projectId,
+          Value<String?> anomalyFlags = const Value.absent(),
+          Value<String?> faceImage = const Value.absent(),
+          bool? isSync,
+          String? boundaryCode,
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<String?> tenantId = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<String?> id = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent()}) =>
+      FaceAuthEventData(
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        individualId: individualId ?? this.individualId,
+        deviceId: deviceId ?? this.deviceId,
+        eventType: eventType ?? this.eventType,
+        outcome: outcome ?? this.outcome,
+        confidence: confidence ?? this.confidence,
+        latitude: latitude ?? this.latitude,
+        longitude: longitude ?? this.longitude,
+        locationAccuracy: locationAccuracy ?? this.locationAccuracy,
+        timestamp: timestamp ?? this.timestamp,
+        syncTimestamp:
+            syncTimestamp.present ? syncTimestamp.value : this.syncTimestamp,
+        fallbackReason:
+            fallbackReason.present ? fallbackReason.value : this.fallbackReason,
+        failedAttemptCount: failedAttemptCount ?? this.failedAttemptCount,
+        popupTime: popupTime.present ? popupTime.value : this.popupTime,
+        responseTime:
+            responseTime.present ? responseTime.value : this.responseTime,
+        responseType:
+            responseType.present ? responseType.value : this.responseType,
+        projectId: projectId ?? this.projectId,
+        anomalyFlags:
+            anomalyFlags.present ? anomalyFlags.value : this.anomalyFlags,
+        faceImage: faceImage.present ? faceImage.value : this.faceImage,
+        isSync: isSync ?? this.isSync,
+        boundaryCode: boundaryCode ?? this.boundaryCode,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        id: id.present ? id.value : this.id,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('FaceAuthEventData(')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('individualId: $individualId, ')
+          ..write('deviceId: $deviceId, ')
+          ..write('eventType: $eventType, ')
+          ..write('outcome: $outcome, ')
+          ..write('confidence: $confidence, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('syncTimestamp: $syncTimestamp, ')
+          ..write('fallbackReason: $fallbackReason, ')
+          ..write('failedAttemptCount: $failedAttemptCount, ')
+          ..write('popupTime: $popupTime, ')
+          ..write('responseTime: $responseTime, ')
+          ..write('responseType: $responseType, ')
+          ..write('projectId: $projectId, ')
+          ..write('anomalyFlags: $anomalyFlags, ')
+          ..write('faceImage: $faceImage, ')
+          ..write('isSync: $isSync, ')
+          ..write('boundaryCode: $boundaryCode, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('id: $id, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('isDeleted: $isDeleted')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        clientReferenceId,
+        individualId,
+        deviceId,
+        eventType,
+        outcome,
+        confidence,
+        latitude,
+        longitude,
+        locationAccuracy,
+        timestamp,
+        syncTimestamp,
+        fallbackReason,
+        failedAttemptCount,
+        popupTime,
+        responseTime,
+        responseType,
+        projectId,
+        anomalyFlags,
+        faceImage,
+        isSync,
+        boundaryCode,
+        nonRecoverableError,
+        tenantId,
+        rowVersion,
+        id,
+        additionalFields,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        auditCreatedBy,
+        isDeleted
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FaceAuthEventData &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.individualId == this.individualId &&
+          other.deviceId == this.deviceId &&
+          other.eventType == this.eventType &&
+          other.outcome == this.outcome &&
+          other.confidence == this.confidence &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.locationAccuracy == this.locationAccuracy &&
+          other.timestamp == this.timestamp &&
+          other.syncTimestamp == this.syncTimestamp &&
+          other.fallbackReason == this.fallbackReason &&
+          other.failedAttemptCount == this.failedAttemptCount &&
+          other.popupTime == this.popupTime &&
+          other.responseTime == this.responseTime &&
+          other.responseType == this.responseType &&
+          other.projectId == this.projectId &&
+          other.anomalyFlags == this.anomalyFlags &&
+          other.faceImage == this.faceImage &&
+          other.isSync == this.isSync &&
+          other.boundaryCode == this.boundaryCode &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.tenantId == this.tenantId &&
+          other.rowVersion == this.rowVersion &&
+          other.id == this.id &&
+          other.additionalFields == this.additionalFields &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.isDeleted == this.isDeleted);
+}
+
+class FaceAuthEventCompanion extends UpdateCompanion<FaceAuthEventData> {
+  final Value<String> clientReferenceId;
+  final Value<String> individualId;
+  final Value<String> deviceId;
+  final Value<String> eventType;
+  final Value<String> outcome;
+  final Value<String> confidence;
+  final Value<String> latitude;
+  final Value<String> longitude;
+  final Value<String> locationAccuracy;
+  final Value<int> timestamp;
+  final Value<int?> syncTimestamp;
+  final Value<String?> fallbackReason;
+  final Value<int> failedAttemptCount;
+  final Value<int?> popupTime;
+  final Value<int?> responseTime;
+  final Value<String?> responseType;
+  final Value<String> projectId;
+  final Value<String?> anomalyFlags;
+  final Value<String?> faceImage;
+  final Value<bool> isSync;
+  final Value<String> boundaryCode;
+  final Value<bool?> nonRecoverableError;
+  final Value<String?> tenantId;
+  final Value<int?> rowVersion;
+  final Value<String?> id;
+  final Value<String?> additionalFields;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> isDeleted;
+  final Value<int> rowid;
+  const FaceAuthEventCompanion({
+    this.clientReferenceId = const Value.absent(),
+    this.individualId = const Value.absent(),
+    this.deviceId = const Value.absent(),
+    this.eventType = const Value.absent(),
+    this.outcome = const Value.absent(),
+    this.confidence = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.locationAccuracy = const Value.absent(),
+    this.timestamp = const Value.absent(),
+    this.syncTimestamp = const Value.absent(),
+    this.fallbackReason = const Value.absent(),
+    this.failedAttemptCount = const Value.absent(),
+    this.popupTime = const Value.absent(),
+    this.responseTime = const Value.absent(),
+    this.responseType = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.anomalyFlags = const Value.absent(),
+    this.faceImage = const Value.absent(),
+    this.isSync = const Value.absent(),
+    this.boundaryCode = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.id = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  FaceAuthEventCompanion.insert({
+    required String clientReferenceId,
+    required String individualId,
+    required String deviceId,
+    required String eventType,
+    required String outcome,
+    required String confidence,
+    required String latitude,
+    required String longitude,
+    required String locationAccuracy,
+    required int timestamp,
+    this.syncTimestamp = const Value.absent(),
+    this.fallbackReason = const Value.absent(),
+    required int failedAttemptCount,
+    this.popupTime = const Value.absent(),
+    this.responseTime = const Value.absent(),
+    this.responseType = const Value.absent(),
+    required String projectId,
+    this.anomalyFlags = const Value.absent(),
+    this.faceImage = const Value.absent(),
+    this.isSync = const Value.absent(),
+    required String boundaryCode,
+    this.nonRecoverableError = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.id = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : clientReferenceId = Value(clientReferenceId),
+        individualId = Value(individualId),
+        deviceId = Value(deviceId),
+        eventType = Value(eventType),
+        outcome = Value(outcome),
+        confidence = Value(confidence),
+        latitude = Value(latitude),
+        longitude = Value(longitude),
+        locationAccuracy = Value(locationAccuracy),
+        timestamp = Value(timestamp),
+        failedAttemptCount = Value(failedAttemptCount),
+        projectId = Value(projectId),
+        boundaryCode = Value(boundaryCode);
+  static Insertable<FaceAuthEventData> custom({
+    Expression<String>? clientReferenceId,
+    Expression<String>? individualId,
+    Expression<String>? deviceId,
+    Expression<String>? eventType,
+    Expression<String>? outcome,
+    Expression<String>? confidence,
+    Expression<String>? latitude,
+    Expression<String>? longitude,
+    Expression<String>? locationAccuracy,
+    Expression<int>? timestamp,
+    Expression<int>? syncTimestamp,
+    Expression<String>? fallbackReason,
+    Expression<int>? failedAttemptCount,
+    Expression<int>? popupTime,
+    Expression<int>? responseTime,
+    Expression<String>? responseType,
+    Expression<String>? projectId,
+    Expression<String>? anomalyFlags,
+    Expression<String>? faceImage,
+    Expression<bool>? isSync,
+    Expression<String>? boundaryCode,
+    Expression<bool>? nonRecoverableError,
+    Expression<String>? tenantId,
+    Expression<int>? rowVersion,
+    Expression<String>? id,
+    Expression<String>? additionalFields,
+    Expression<int>? auditCreatedTime,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientModifiedBy,
+    Expression<String>? clientCreatedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<String>? auditCreatedBy,
+    Expression<bool>? isDeleted,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (individualId != null) 'individual_id': individualId,
+      if (deviceId != null) 'device_id': deviceId,
+      if (eventType != null) 'event_type': eventType,
+      if (outcome != null) 'outcome': outcome,
+      if (confidence != null) 'confidence': confidence,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (locationAccuracy != null) 'location_accuracy': locationAccuracy,
+      if (timestamp != null) 'timestamp': timestamp,
+      if (syncTimestamp != null) 'sync_timestamp': syncTimestamp,
+      if (fallbackReason != null) 'fallback_reason': fallbackReason,
+      if (failedAttemptCount != null)
+        'failed_attempt_count': failedAttemptCount,
+      if (popupTime != null) 'popup_time': popupTime,
+      if (responseTime != null) 'response_time': responseTime,
+      if (responseType != null) 'response_type': responseType,
+      if (projectId != null) 'project_id': projectId,
+      if (anomalyFlags != null) 'anomaly_flags': anomalyFlags,
+      if (faceImage != null) 'face_image': faceImage,
+      if (isSync != null) 'is_sync': isSync,
+      if (boundaryCode != null) 'boundary_code': boundaryCode,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (id != null) 'id': id,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  FaceAuthEventCompanion copyWith(
+      {Value<String>? clientReferenceId,
+      Value<String>? individualId,
+      Value<String>? deviceId,
+      Value<String>? eventType,
+      Value<String>? outcome,
+      Value<String>? confidence,
+      Value<String>? latitude,
+      Value<String>? longitude,
+      Value<String>? locationAccuracy,
+      Value<int>? timestamp,
+      Value<int?>? syncTimestamp,
+      Value<String?>? fallbackReason,
+      Value<int>? failedAttemptCount,
+      Value<int?>? popupTime,
+      Value<int?>? responseTime,
+      Value<String?>? responseType,
+      Value<String>? projectId,
+      Value<String?>? anomalyFlags,
+      Value<String?>? faceImage,
+      Value<bool>? isSync,
+      Value<String>? boundaryCode,
+      Value<bool?>? nonRecoverableError,
+      Value<String?>? tenantId,
+      Value<int?>? rowVersion,
+      Value<String?>? id,
+      Value<String?>? additionalFields,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? isDeleted,
+      Value<int>? rowid}) {
+    return FaceAuthEventCompanion(
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      individualId: individualId ?? this.individualId,
+      deviceId: deviceId ?? this.deviceId,
+      eventType: eventType ?? this.eventType,
+      outcome: outcome ?? this.outcome,
+      confidence: confidence ?? this.confidence,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      locationAccuracy: locationAccuracy ?? this.locationAccuracy,
+      timestamp: timestamp ?? this.timestamp,
+      syncTimestamp: syncTimestamp ?? this.syncTimestamp,
+      fallbackReason: fallbackReason ?? this.fallbackReason,
+      failedAttemptCount: failedAttemptCount ?? this.failedAttemptCount,
+      popupTime: popupTime ?? this.popupTime,
+      responseTime: responseTime ?? this.responseTime,
+      responseType: responseType ?? this.responseType,
+      projectId: projectId ?? this.projectId,
+      anomalyFlags: anomalyFlags ?? this.anomalyFlags,
+      faceImage: faceImage ?? this.faceImage,
+      isSync: isSync ?? this.isSync,
+      boundaryCode: boundaryCode ?? this.boundaryCode,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      tenantId: tenantId ?? this.tenantId,
+      rowVersion: rowVersion ?? this.rowVersion,
+      id: id ?? this.id,
+      additionalFields: additionalFields ?? this.additionalFields,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (individualId.present) {
+      map['individual_id'] = Variable<String>(individualId.value);
+    }
+    if (deviceId.present) {
+      map['device_id'] = Variable<String>(deviceId.value);
+    }
+    if (eventType.present) {
+      map['event_type'] = Variable<String>(eventType.value);
+    }
+    if (outcome.present) {
+      map['outcome'] = Variable<String>(outcome.value);
+    }
+    if (confidence.present) {
+      map['confidence'] = Variable<String>(confidence.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<String>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<String>(longitude.value);
+    }
+    if (locationAccuracy.present) {
+      map['location_accuracy'] = Variable<String>(locationAccuracy.value);
+    }
+    if (timestamp.present) {
+      map['timestamp'] = Variable<int>(timestamp.value);
+    }
+    if (syncTimestamp.present) {
+      map['sync_timestamp'] = Variable<int>(syncTimestamp.value);
+    }
+    if (fallbackReason.present) {
+      map['fallback_reason'] = Variable<String>(fallbackReason.value);
+    }
+    if (failedAttemptCount.present) {
+      map['failed_attempt_count'] = Variable<int>(failedAttemptCount.value);
+    }
+    if (popupTime.present) {
+      map['popup_time'] = Variable<int>(popupTime.value);
+    }
+    if (responseTime.present) {
+      map['response_time'] = Variable<int>(responseTime.value);
+    }
+    if (responseType.present) {
+      map['response_type'] = Variable<String>(responseType.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (anomalyFlags.present) {
+      map['anomaly_flags'] = Variable<String>(anomalyFlags.value);
+    }
+    if (faceImage.present) {
+      map['face_image'] = Variable<String>(faceImage.value);
+    }
+    if (isSync.present) {
+      map['is_sync'] = Variable<bool>(isSync.value);
+    }
+    if (boundaryCode.present) {
+      map['boundary_code'] = Variable<String>(boundaryCode.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FaceAuthEventCompanion(')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('individualId: $individualId, ')
+          ..write('deviceId: $deviceId, ')
+          ..write('eventType: $eventType, ')
+          ..write('outcome: $outcome, ')
+          ..write('confidence: $confidence, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('syncTimestamp: $syncTimestamp, ')
+          ..write('fallbackReason: $fallbackReason, ')
+          ..write('failedAttemptCount: $failedAttemptCount, ')
+          ..write('popupTime: $popupTime, ')
+          ..write('responseTime: $responseTime, ')
+          ..write('responseType: $responseType, ')
+          ..write('projectId: $projectId, ')
+          ..write('anomalyFlags: $anomalyFlags, ')
+          ..write('faceImage: $faceImage, ')
+          ..write('isSync: $isSync, ')
+          ..write('boundaryCode: $boundaryCode, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('id: $id, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $UniqueIdPoolTable extends UniqueIdPool
     with TableInfo<$UniqueIdPoolTable, UniqueIdPoolData> {
   @override
@@ -42337,6 +43889,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $ReferralTable referral = $ReferralTable(this);
   late final $LocalizationTable localization = $LocalizationTable(this);
   late final $UserActionTable userAction = $UserActionTable(this);
+  late final $FaceAuthEventTable faceAuthEvent = $FaceAuthEventTable(this);
   late final $UniqueIdPoolTable uniqueIdPool = $UniqueIdPoolTable(this);
   late final Index attendanceClientref = Index('attendance_clientref',
       'CREATE INDEX attendance_clientref ON attendance (client_reference_id)');
@@ -42453,6 +44006,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         referral,
         localization,
         userAction,
+        faceAuthEvent,
         uniqueIdPool,
         attendanceClientref,
         attendanceIndividualid,
@@ -59168,6 +60722,630 @@ class $$UserActionTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$FaceAuthEventTableInsertCompanionBuilder = FaceAuthEventCompanion
+    Function({
+  required String clientReferenceId,
+  required String individualId,
+  required String deviceId,
+  required String eventType,
+  required String outcome,
+  required String confidence,
+  required String latitude,
+  required String longitude,
+  required String locationAccuracy,
+  required int timestamp,
+  Value<int?> syncTimestamp,
+  Value<String?> fallbackReason,
+  required int failedAttemptCount,
+  Value<int?> popupTime,
+  Value<int?> responseTime,
+  Value<String?> responseType,
+  required String projectId,
+  Value<String?> anomalyFlags,
+  Value<String?> faceImage,
+  Value<bool> isSync,
+  required String boundaryCode,
+  Value<bool?> nonRecoverableError,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String?> id,
+  Value<String?> additionalFields,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<bool?> isDeleted,
+  Value<int> rowid,
+});
+typedef $$FaceAuthEventTableUpdateCompanionBuilder = FaceAuthEventCompanion
+    Function({
+  Value<String> clientReferenceId,
+  Value<String> individualId,
+  Value<String> deviceId,
+  Value<String> eventType,
+  Value<String> outcome,
+  Value<String> confidence,
+  Value<String> latitude,
+  Value<String> longitude,
+  Value<String> locationAccuracy,
+  Value<int> timestamp,
+  Value<int?> syncTimestamp,
+  Value<String?> fallbackReason,
+  Value<int> failedAttemptCount,
+  Value<int?> popupTime,
+  Value<int?> responseTime,
+  Value<String?> responseType,
+  Value<String> projectId,
+  Value<String?> anomalyFlags,
+  Value<String?> faceImage,
+  Value<bool> isSync,
+  Value<String> boundaryCode,
+  Value<bool?> nonRecoverableError,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String?> id,
+  Value<String?> additionalFields,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<bool?> isDeleted,
+  Value<int> rowid,
+});
+
+class $$FaceAuthEventTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $FaceAuthEventTable,
+    FaceAuthEventData,
+    $$FaceAuthEventTableFilterComposer,
+    $$FaceAuthEventTableOrderingComposer,
+    $$FaceAuthEventTableProcessedTableManager,
+    $$FaceAuthEventTableInsertCompanionBuilder,
+    $$FaceAuthEventTableUpdateCompanionBuilder> {
+  $$FaceAuthEventTableTableManager(
+      _$LocalSqlDataStore db, $FaceAuthEventTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$FaceAuthEventTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$FaceAuthEventTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$FaceAuthEventTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String> individualId = const Value.absent(),
+            Value<String> deviceId = const Value.absent(),
+            Value<String> eventType = const Value.absent(),
+            Value<String> outcome = const Value.absent(),
+            Value<String> confidence = const Value.absent(),
+            Value<String> latitude = const Value.absent(),
+            Value<String> longitude = const Value.absent(),
+            Value<String> locationAccuracy = const Value.absent(),
+            Value<int> timestamp = const Value.absent(),
+            Value<int?> syncTimestamp = const Value.absent(),
+            Value<String?> fallbackReason = const Value.absent(),
+            Value<int> failedAttemptCount = const Value.absent(),
+            Value<int?> popupTime = const Value.absent(),
+            Value<int?> responseTime = const Value.absent(),
+            Value<String?> responseType = const Value.absent(),
+            Value<String> projectId = const Value.absent(),
+            Value<String?> anomalyFlags = const Value.absent(),
+            Value<String?> faceImage = const Value.absent(),
+            Value<bool> isSync = const Value.absent(),
+            Value<String> boundaryCode = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> id = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FaceAuthEventCompanion(
+            clientReferenceId: clientReferenceId,
+            individualId: individualId,
+            deviceId: deviceId,
+            eventType: eventType,
+            outcome: outcome,
+            confidence: confidence,
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
+            timestamp: timestamp,
+            syncTimestamp: syncTimestamp,
+            fallbackReason: fallbackReason,
+            failedAttemptCount: failedAttemptCount,
+            popupTime: popupTime,
+            responseTime: responseTime,
+            responseType: responseType,
+            projectId: projectId,
+            anomalyFlags: anomalyFlags,
+            faceImage: faceImage,
+            isSync: isSync,
+            boundaryCode: boundaryCode,
+            nonRecoverableError: nonRecoverableError,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            id: id,
+            additionalFields: additionalFields,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            isDeleted: isDeleted,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String clientReferenceId,
+            required String individualId,
+            required String deviceId,
+            required String eventType,
+            required String outcome,
+            required String confidence,
+            required String latitude,
+            required String longitude,
+            required String locationAccuracy,
+            required int timestamp,
+            Value<int?> syncTimestamp = const Value.absent(),
+            Value<String?> fallbackReason = const Value.absent(),
+            required int failedAttemptCount,
+            Value<int?> popupTime = const Value.absent(),
+            Value<int?> responseTime = const Value.absent(),
+            Value<String?> responseType = const Value.absent(),
+            required String projectId,
+            Value<String?> anomalyFlags = const Value.absent(),
+            Value<String?> faceImage = const Value.absent(),
+            Value<bool> isSync = const Value.absent(),
+            required String boundaryCode,
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> id = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FaceAuthEventCompanion.insert(
+            clientReferenceId: clientReferenceId,
+            individualId: individualId,
+            deviceId: deviceId,
+            eventType: eventType,
+            outcome: outcome,
+            confidence: confidence,
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
+            timestamp: timestamp,
+            syncTimestamp: syncTimestamp,
+            fallbackReason: fallbackReason,
+            failedAttemptCount: failedAttemptCount,
+            popupTime: popupTime,
+            responseTime: responseTime,
+            responseType: responseType,
+            projectId: projectId,
+            anomalyFlags: anomalyFlags,
+            faceImage: faceImage,
+            isSync: isSync,
+            boundaryCode: boundaryCode,
+            nonRecoverableError: nonRecoverableError,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            id: id,
+            additionalFields: additionalFields,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            isDeleted: isDeleted,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$FaceAuthEventTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $FaceAuthEventTable,
+    FaceAuthEventData,
+    $$FaceAuthEventTableFilterComposer,
+    $$FaceAuthEventTableOrderingComposer,
+    $$FaceAuthEventTableProcessedTableManager,
+    $$FaceAuthEventTableInsertCompanionBuilder,
+    $$FaceAuthEventTableUpdateCompanionBuilder> {
+  $$FaceAuthEventTableProcessedTableManager(super.$state);
+}
+
+class $$FaceAuthEventTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $FaceAuthEventTable> {
+  $$FaceAuthEventTableFilterComposer(super.$state);
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get deviceId => $state.composableBuilder(
+      column: $state.table.deviceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get eventType => $state.composableBuilder(
+      column: $state.table.eventType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get outcome => $state.composableBuilder(
+      column: $state.table.outcome,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get confidence => $state.composableBuilder(
+      column: $state.table.confidence,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get timestamp => $state.composableBuilder(
+      column: $state.table.timestamp,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get syncTimestamp => $state.composableBuilder(
+      column: $state.table.syncTimestamp,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get fallbackReason => $state.composableBuilder(
+      column: $state.table.fallbackReason,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get failedAttemptCount => $state.composableBuilder(
+      column: $state.table.failedAttemptCount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get popupTime => $state.composableBuilder(
+      column: $state.table.popupTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get responseTime => $state.composableBuilder(
+      column: $state.table.responseTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get responseType => $state.composableBuilder(
+      column: $state.table.responseType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get anomalyFlags => $state.composableBuilder(
+      column: $state.table.anomalyFlags,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get faceImage => $state.composableBuilder(
+      column: $state.table.faceImage,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isSync => $state.composableBuilder(
+      column: $state.table.isSync,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get boundaryCode => $state.composableBuilder(
+      column: $state.table.boundaryCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$FaceAuthEventTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $FaceAuthEventTable> {
+  $$FaceAuthEventTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get deviceId => $state.composableBuilder(
+      column: $state.table.deviceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get eventType => $state.composableBuilder(
+      column: $state.table.eventType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get outcome => $state.composableBuilder(
+      column: $state.table.outcome,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get confidence => $state.composableBuilder(
+      column: $state.table.confidence,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get timestamp => $state.composableBuilder(
+      column: $state.table.timestamp,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get syncTimestamp => $state.composableBuilder(
+      column: $state.table.syncTimestamp,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get fallbackReason => $state.composableBuilder(
+      column: $state.table.fallbackReason,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get failedAttemptCount => $state.composableBuilder(
+      column: $state.table.failedAttemptCount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get popupTime => $state.composableBuilder(
+      column: $state.table.popupTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get responseTime => $state.composableBuilder(
+      column: $state.table.responseTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get responseType => $state.composableBuilder(
+      column: $state.table.responseType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get anomalyFlags => $state.composableBuilder(
+      column: $state.table.anomalyFlags,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get faceImage => $state.composableBuilder(
+      column: $state.table.faceImage,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isSync => $state.composableBuilder(
+      column: $state.table.isSync,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get boundaryCode => $state.composableBuilder(
+      column: $state.table.boundaryCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 typedef $$UniqueIdPoolTableInsertCompanionBuilder = UniqueIdPoolCompanion
     Function({
   required String id,
@@ -59496,6 +61674,8 @@ class _$LocalSqlDataStoreManager {
       $$LocalizationTableTableManager(_db, _db.localization);
   $$UserActionTableTableManager get userAction =>
       $$UserActionTableTableManager(_db, _db.userAction);
+  $$FaceAuthEventTableTableManager get faceAuthEvent =>
+      $$FaceAuthEventTableTableManager(_db, _db.faceAuthEvent);
   $$UniqueIdPoolTableTableManager get uniqueIdPool =>
       $$UniqueIdPoolTableTableManager(_db, _db.uniqueIdPool);
 }

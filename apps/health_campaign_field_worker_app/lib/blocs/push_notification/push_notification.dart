@@ -28,8 +28,9 @@ class PushNotificationBloc
     try {
       final notificationService = NotificationService();
 
-      // FCM is already initialized in main.dart — just get the stored token
-      final fcmToken = await NotificationService.getStoredFcmToken();
+      // Initialize local notifications plugin and FCM listeners
+      await notificationService.init();
+      final fcmToken = await notificationService.initializeFCM();
 
       // Set up the notification tap callback to emit bloc events
       notificationService.onNotificationTap = (data) {

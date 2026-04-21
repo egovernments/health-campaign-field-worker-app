@@ -103,12 +103,6 @@ void main() async {
   // Register FCM background message handler
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  // Initialize FCM and retrieve token early
-  final notificationService = NotificationService();
-  await notificationService.init();
-  final fcmToken = await notificationService.initializeFCM();
-  debugPrint('FCM Token at startup: $fcmToken');
-
   runApp(MainApplication(
     appRouter: AppRouter(),
     isar: _isar,
@@ -126,7 +120,6 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
       setBgRunning(true);
       // Stop the background service when the app is terminated
     } else if (state == AppLifecycleState.resumed) {
-      // Stop the background service when the app is terminated
       setBgRunning(false);
       final isRunning = await FlutterBackgroundService().isRunning();
       final localSecureStore = LocalSecureStore.instance,

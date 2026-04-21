@@ -39,8 +39,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
+import 'package:transit_post/data/repositories/local/face_auth_event.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/oplog/face_auth_event_oplog.dart';
 import 'package:transit_post/data/repositories/oplog/oplog.dart';
+import 'package:transit_post/data/repositories/remote/face_auth_event.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -313,6 +317,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           PgrServiceOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>>(
+        create: (_) => FaceAuthEventLocalRepository(
+          sql,
+          FaceAuthEventOpLogManager(isar),
+        ),
+      ),
     ];
   }
 
@@ -538,6 +549,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                 LocationTrackerRemoteRepository(dio, actionMap: actions),
           ),
         // INFO Need to add packages here
+        if (value == DataModelType.faceAuthEvent)
+          RepositoryProvider<
+              RemoteRepository<FaceAuthEventModel, FaceAuthEventSearchModel>>(
+            create: (_) =>
+                FaceAuthEventRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.userAction)
           RepositoryProvider<UserActionRemoteRepository>(
             create: (_) => UserActionRemoteRepository(dio, actionMap: actions),

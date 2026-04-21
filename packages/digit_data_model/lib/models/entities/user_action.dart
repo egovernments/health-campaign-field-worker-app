@@ -13,12 +13,18 @@ class UserActionSearchModel extends EntitySearchModel
   final double? longitude;
   final bool? isSync;
   final int? timestamp;
+  final String? action;
+  final String? projectId;
+  final List<String>? clientReferenceId;
 
   UserActionSearchModel({
     this.latitude,
     this.longitude,
     this.isSync,
     this.timestamp,
+    this.action,
+    this.projectId,
+    this.clientReferenceId,
     super.isDeleted,
     super.boundaryCode,
     super.auditDetails,
@@ -30,6 +36,9 @@ class UserActionSearchModel extends EntitySearchModel
     required this.longitude,
     required this.isSync,
     required this.timestamp,
+    this.action,
+    this.projectId,
+    this.clientReferenceId,
     super.boundaryCode,
     super.auditDetails,
   }) : super(isDeleted: false);

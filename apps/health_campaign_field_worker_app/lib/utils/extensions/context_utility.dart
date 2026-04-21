@@ -143,20 +143,20 @@ extension ContextUtilityExtensions on BuildContext {
     return userRequestObject;
   }
 
-  String? get loggedInIndividualId {
+  String get loggedInIndividualId {
     final authBloc = _get<AuthBloc>();
-    final individualUUID = authBloc.state.whenOrNull(
+    final individualId = authBloc.state.whenOrNull(
       authenticated:
           (accessToken, refreshToken, userModel, actionsWrapper, individualId) {
         return individualId;
       },
     );
 
-    if (individualUUID == null) {
-      return null;
+    if (individualId == null) {
+      throw AppException('Individual ID not available for authenticated user');
     }
 
-    return individualUUID;
+    return individualId;
   }
 
   UserModel? get loggedInUserModel {

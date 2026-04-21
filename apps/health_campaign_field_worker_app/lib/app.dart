@@ -16,6 +16,7 @@ import 'package:survey_form/survey_form.dart';
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/error/error.dart';
+import 'data/local_store/secure_store/secure_store.dart';
 import 'blocs/push_notification/push_notification.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
@@ -59,6 +60,7 @@ class MainApplicationState extends State<MainApplication>
   void initState() {
     LocalizationParams().setModule('boundary', true);
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     requestDisableBatteryOptimization();
 
     // Register custom action executors
@@ -66,6 +68,17 @@ class MainApplicationState extends State<MainApplication>
       'UPDATE_STOCK_BALANCE',
       StockBalanceExecutor(),
     );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Face gate check on resume is handled by HomePage._checkFaceGate()
   }
 
   @override

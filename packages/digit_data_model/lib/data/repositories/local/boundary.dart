@@ -62,10 +62,10 @@ class BoundaryLocalRepository
       final result = await sQuery.getSingle();
       final r = result.read(sql.boundary.boundaryNum);
 
-      if (query.isSingle == true) {
+      if (query.isSingle == true && r != null && r > 0) {
         (selectQuery
               ..where(buildAnd([
-                sql.boundary.boundaryNum.isSmallerOrEqualValue(r!),
+                sql.boundary.boundaryNum.isSmallerOrEqualValue(r),
               ])))
             .limit(r);
       } else {

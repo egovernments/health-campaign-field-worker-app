@@ -77,6 +77,11 @@ android {
     }
 }
 
+dependencies {
+    // Fix: Gradle 7.4 + AGP 7.3.0 cannot resolve lifecycle-process as a transitive constraint
+    implementation 'androidx.lifecycle:lifecycle-process:2.6.2'
+}
+
 flutter {
     source '../..'
 }

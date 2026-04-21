@@ -38,7 +38,7 @@ class UserActionOpLogManager extends OpLogManager<UserActionModel> {
     DataModelType type, {
     required String createdBy,
   }) async {
-    final pendingEntries = await isar.opLogs
+    final createEntries = await isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
         .operationEqualTo(DataOperation.create)
@@ -49,7 +49,19 @@ class UserActionOpLogManager extends OpLogManager<UserActionModel> {
         .sortByCreatedAt()
         .findAll();
 
-    final entriesList = pendingEntries.map((e) {
+    final updateEntries = await isar.opLogs
+        .filter()
+        .entityTypeEqualTo(type)
+        .operationEqualTo(DataOperation.update)
+        .syncedUpEqualTo(false)
+        .syncedDownEqualTo(false)
+        .createdByEqualTo(createdBy)
+        .sortByCreatedAt()
+        .findAll();
+
+    final allEntries = [...createEntries, ...updateEntries];
+
+    final entriesList = allEntries.map((e) {
       return OpLogEntry.fromOpLog<UserActionModel>(e);
     }).toList();
 

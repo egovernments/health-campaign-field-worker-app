@@ -1,0 +1,28 @@
+name: face_verification_test_app
+description: Standalone test app for face verification with MobileFaceNet.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.5
+  digit_face_verification:
+    path: ../../packages/digit_face_verification
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  path_provider: ^2.1.2
+
+dependency_overrides:
+  camera_android_camerax: 0.6.7+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true

@@ -16,8 +16,7 @@ command:
 scripts:
   generate:
     description: Generate code for all packages (Flutter and Dart).
-    run: |
-      melos run generate-flutter --no-select &
+    run: melos run generate-flutter --no-select
     exec:
       concurrency: 2
 

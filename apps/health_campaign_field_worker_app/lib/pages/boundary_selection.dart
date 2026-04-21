@@ -42,9 +42,9 @@ class _BoundarySelectionPageState
   int i = 0;
   int pendingSyncCount = 0;
   final clickedStatus = ValueNotifier<bool>(false);
-  StreamController<double> downloadProgress =
-      StreamController<double>.broadcast();
 
+  StreamController<DownloadProgressData> downloadProgress =
+      StreamController<DownloadProgressData>.broadcast();
   Map<String, TextEditingController> dropdownControllers = {};
   late StreamSubscription syncSubscription;
   var leastLevelBoundaries;
@@ -181,11 +181,10 @@ class _BoundarySelectionPageState
                                       ),
                                     },
                                     getBatchSize: (
-                                      batchSize,
+                                    batchSize,
                                       projectId,
-                                      boundaryCode,
+                                      boundaries,
                                       pendingSyncCount,
-                                      boundaryName,
                                     ) =>
                                         context
                                             .read<BeneficiaryDownSyncBloc>()
@@ -211,8 +210,8 @@ class _BoundarySelectionPageState
                                         ),
                                         projectId: context.projectId,
                                         appConfiguartion: appConfiguration,
-                                        boundary: selectedBoundary!.value!.code
-                                            .toString(),
+                                        boundaries:
+                                            state.selectedLastLevelBoundaries,
                                         content: localizations.translate(
                                           i18.syncDialog.pendingSyncContent,
                                         ),
@@ -220,17 +219,15 @@ class _BoundarySelectionPageState
                                             localizations.translate(
                                           i18.acknowledgementSuccess.goToHome,
                                         ),
-                                        boundaryName: selectedBoundary
-                                            .value!.name
-                                            .toString(),
                                       ),
                                       dialogType:
                                           DigitProgressDialogType.pendingSync,
                                       isPop: true,
                                     ),
-                                    dataFound: (initialServerCount, batchSize) {
+                                    dataFound: (initialServerCount, batchSize,
+                                        boundaryCounts) {
                                       clickedStatus.value = false;
-                                      showDownloadDialog(
+                                 showDownloadDialog(
                                         context,
                                         model: DownloadBeneficiary(
                                           title: localizations.translate(
@@ -242,11 +239,11 @@ class _BoundarySelectionPageState
                                           ),
                                           appConfiguartion: appConfiguration,
                                           projectId: context.projectId,
-                                          boundary: selectedBoundary!
-                                              .value!.code
-                                              .toString(),
+                                          boundaries: state
+                                              .selectedLastLevelBoundaries,
                                           batchSize: batchSize,
                                           totalCount: initialServerCount,
+                                          boundaryCounts: boundaryCounts,
                                           content: localizations.translate(
                                             initialServerCount > 0
                                                 ? i18.beneficiaryDetails
@@ -268,9 +265,6 @@ class _BoundarySelectionPageState
                                                 : i18.acknowledgementSuccess
                                                     .goToHome,
                                           ),
-                                          boundaryName: selectedBoundary
-                                              .value!.name
-                                              .toString(),
                                         ),
                                         dialogType:
                                             DigitProgressDialogType.dataFound,
@@ -278,14 +272,26 @@ class _BoundarySelectionPageState
                                       );
                                     },
                                     inProgress: (syncCount, totalCount) {
-                                      downloadProgress.add(
-                                        min(
+                                 final progressData =
+                                          DownloadProgressData(
+                                        progress: min(
                                           (syncCount) / (totalCount),
                                           1,
                                         ),
+                                        boundaryName:
+                                            localizations.translate(
+                                          state.selectedLastLevelBoundaries
+                                                  .firstOrNull
+                                                  ?.code ??
+                                              '',
+                                        ),
+                                        syncedCount: syncCount,
+                                        totalCount: totalCount,
+                                        currentIndex: 0,
+                                        totalBoundaries: 1,
                                       );
                                       if (syncCount < 1) {
-                                        showDownloadDialog(
+                                         showDownloadDialog(
                                           context,
                                           model: DownloadBeneficiary(
                                             title: localizations.translate(
@@ -293,23 +299,18 @@ class _BoundarySelectionPageState
                                                   .dataDownloadInProgress,
                                             ),
                                             projectId: context.projectId,
-                                            boundary: selectedBoundary!
-                                                .value!.code
-                                                .toString(),
+                                            boundaries: state
+                                                .selectedLastLevelBoundaries,
                                             appConfiguartion: appConfiguration,
                                             syncCount: syncCount,
                                             totalCount: totalCount,
-                                            prefixLabel: syncCount.toString(),
-                                            suffixLabel: totalCount.toString(),
-                                            boundaryName: selectedBoundary
-                                                .value!.name
-                                                .toString(),
                                           ),
                                           dialogType: DigitProgressDialogType
                                               .inProgress,
                                           isPop: true,
                                           downloadProgressController:
                                               downloadProgress,
+                                          initialProgressData: progressData,
                                         );
                                       }
                                     },
@@ -367,7 +368,7 @@ class _BoundarySelectionPageState
                                         },
                                       )));
                                     },
-                                    failed: () => showDownloadDialog(
+                                    failed:() => showDownloadDialog(
                                       context,
                                       model: DownloadBeneficiary(
                                         title: localizations.translate(
@@ -376,8 +377,8 @@ class _BoundarySelectionPageState
                                         appConfiguartion: appConfiguration,
                                         projectId: context.projectId,
                                         pendingSyncCount: pendingSyncCount,
-                                        boundary: selectedBoundary!.value!.code
-                                            .toString(),
+                                        boundaries: state
+                                            .selectedLastLevelBoundaries,
                                         content: localizations.translate(
                                           i18.beneficiaryDetails
                                               .dataFoundContent,
@@ -391,16 +392,13 @@ class _BoundarySelectionPageState
                                           i18.beneficiaryDetails
                                               .proceedWithoutDownloading,
                                         ),
-                                        boundaryName: selectedBoundary
-                                            .value!.name
-                                            .toString(),
                                       ),
                                       dialogType:
                                           DigitProgressDialogType.failed,
                                       isPop: true,
                                     ),
                                     totalCountCheckFailed: () =>
-                                        showDownloadDialog(
+                                      showDownloadDialog(
                                       context,
                                       model: DownloadBeneficiary(
                                         title: localizations.translate(
@@ -410,8 +408,8 @@ class _BoundarySelectionPageState
                                         appConfiguartion: appConfiguration,
                                         projectId: context.projectId,
                                         pendingSyncCount: pendingSyncCount,
-                                        boundary: selectedBoundary!.value!.code
-                                            .toString(),
+                                        boundaries: state
+                                            .selectedLastLevelBoundaries,
                                         primaryButtonLabel:
                                             localizations.translate(
                                           i18.syncDialog.retryButtonLabel,
@@ -421,9 +419,6 @@ class _BoundarySelectionPageState
                                           i18.beneficiaryDetails
                                               .proceedWithoutDownloading,
                                         ),
-                                        boundaryName: selectedBoundary
-                                            .value!.name
-                                            .toString(),
                                       ),
                                       dialogType:
                                           DigitProgressDialogType.checkFailed,
@@ -443,16 +438,12 @@ class _BoundarySelectionPageState
                                               .insufficientStorageContent),
                                           projectId: context.projectId,
                                           appConfiguartion: appConfiguration,
-                                          boundary: selectedBoundary!
-                                              .value!.code
-                                              .toString(),
+                                          boundaries: state
+                                              .selectedLastLevelBoundaries,
                                           primaryButtonLabel:
                                               localizations.translate(
                                             i18.common.coreCommonOk,
                                           ),
-                                          boundaryName: selectedBoundary
-                                              .value!.name
-                                              .toString(),
                                         ),
                                         dialogType: DigitProgressDialogType
                                             .insufficientStorage,
@@ -512,22 +503,18 @@ class _BoundarySelectionPageState
                                                         .read<
                                                             BeneficiaryDownSyncBloc>()
                                                         .add(
-                                                          DownSyncGetBatchSizeEvent(
+                                                         DownSyncGetBatchSizeEvent(
                                                             appConfiguration: [
                                                               appConfiguration,
                                                             ],
                                                             projectId: context
                                                                 .projectId,
-                                                            boundaryCode:
-                                                                selectedBoundary!
-                                                                    .value!.code
-                                                                    .toString(),
+                                                            boundaries: context
+                                                                .read<BoundaryBloc>()
+                                                                .state
+                                                                .selectedLastLevelBoundaries,
                                                             pendingSyncCount:
                                                                 pendingSyncCount,
-                                                            boundaryName:
-                                                                selectedBoundary
-                                                                    .value!.name
-                                                                    .toString(),
                                                           ),
                                                         );
                                                   } else {

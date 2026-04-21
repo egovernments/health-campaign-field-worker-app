@@ -609,7 +609,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   );
                   await attendanceLogLocalRepository.bulkCreate(logs);
                 }
-              } catch (_) {
+              } catch (e, st) {
+                debugPrint('ProjectBloc: attendance inner error: $e\n$st');
                 emit(state.copyWith(
                   projects: [],
                   loading: false,
@@ -620,7 +621,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             }
           }
         }
-      } catch (_) {
+      } catch (e, st) {
+        debugPrint('ProjectBloc: attendance outer error: $e\n$st');
         emit(state.copyWith(
           loading: false,
           syncError: ProjectSyncErrorType.attendance,
@@ -675,33 +677,33 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           await individualLocalRepository.search(IndividualSearchModel(
             id: attendeesIndividualIds,
           ));
-          final userUUIDList = individuals
-              .where((ind) => ind.userUuid != null)
-              .map((i) => i.userUuid.toString())
-              .toList();
-          await processDashboardConfig(
-            dashboardConfig.first.dashboardConfigs
-                ?.where((config) =>
-            config.projectTypeId == event.model.projectTypeId ||
-                config.projectTypeCode == event.model.projectType)
-                .first
-                .charts ??
-                [],
-            startDate,
-            endDate,
-            isar,
-            DateTime.now(),
-            dashboardRemoteRepository,
-            dashboardActionPath.trim().isNotEmpty
-                ? dashboardActionPath
-                : Constants.dashboardAnalyticsPath,
-            envConfig.variables.tenantId,
-            event.model.id,
-            userUUIDList,
-          );
+          // final userUUIDList = individuals
+          //     .where((ind) => ind.userUuid != null)
+          //     .map((i) => i.userUuid.toString())
+          //     .toList();
+          // await processDashboardConfig(
+          //   dashboardConfig.first.dashboardConfigs
+          //       ?.where((config) =>
+          //   config.projectTypeId == event.model.projectTypeId ||
+          //       config.projectTypeCode == event.model.projectType)
+          //       .first
+          //       .charts ??
+          //       [],
+          //   startDate,
+          //   endDate,
+          //   isar,
+          //   DateTime.now(),
+          //   dashboardRemoteRepository,
+          //   dashboardActionPath.trim().isNotEmpty
+          //       ? dashboardActionPath
+          //       : Constants.dashboardAnalyticsPath,
+          //   envConfig.variables.tenantId,
+          //   event.model.id,
+          //   userUUIDList,
+          // );
         }
-      } catch (e) {
-        debugPrint(e.toString());
+      } catch (e, st) {
+        debugPrint('ProjectBloc: dashboard error: $e\n$st');
       }
 
       try {
@@ -823,8 +825,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ?.version;
       final boundaryRefetched = await localSecureStore.boundaryRefetched;
 
+      debugPrint('ProjectBloc: boundaryType=${event.model.address?.boundaryType}, codes=${event.model.address?.boundary}, localVersion=${rowversionList.firstOrNull?.version}, serverVersion=$serverVersion, boundaryRefetched=$boundaryRefetched');
       if (rowversionList.firstOrNull?.version != serverVersion ||
           boundaryRefetched) {
+        debugPrint('ProjectBloc: fetching boundaries from remote...');
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
             boundaryType: event.model.address?.boundaryType,
@@ -882,7 +886,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         await localSecureStore.setSelectedProjectType(reqProjectType);
       }
       await localSecureStore.setProjectSetUpComplete(event.model.id, true);
-    } catch (_) {
+    } catch (e, stackTrace) {
+      debugPrint('ProjectBloc: boundary sync error: $e');
+      debugPrint('ProjectBloc: stackTrace: $stackTrace');
       emit(state.copyWith(
         selectedProject: event.model,
         projects: [],

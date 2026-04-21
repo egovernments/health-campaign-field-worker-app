@@ -29,6 +29,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:sync_service/utils/utils.dart' as sync_utils;
 import 'package:transit_post/router/transit_post_router.gm.dart';
 import 'package:transit_post/utils/utils.dart';
 
@@ -67,6 +68,8 @@ import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
 import '../widgets/stock_balance/stock_balance_card.dart';
 import '../widgets/stock_reconciliation/stock_reconciliation_card.dart';
+import '../data/local_store/secure_store/secure_store.dart';
+import '../widgets/face_auth/face_auth_session_card.dart';
 import '../widgets/task_functions.dart';
 
 @RoutePage()
@@ -85,10 +88,44 @@ class _HomePageState extends LocalizedState<HomePage> {
   final storage = const FlutterSecureStorage();
   late StreamSubscription<List<ConnectivityResult>> subscription;
   bool isTriggerLocalisation = true;
+  bool _isSyncDialogOpen = false;
+  bool _faceGateActive = false;
+
+  /// Check if the logged-in user needs face enrollment (first time only).
+  void _checkFaceEnrollment() async {
+    try {
+      final isEnrollmentComplete =
+          await LocalSecureStore.instance.isFaceEnrollmentComplete;
+      if (isEnrollmentComplete || !mounted) return;
+
+      _faceGateActive = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          context.router.push(
+            FaceGateRoute(
+              onVerified: () {
+                _faceGateActive = false;
+                if (mounted) {
+                  context.router.popUntilRouteWithName(HomeRoute.name);
+                }
+              },
+            ),
+          ).then((_) {
+            _faceGateActive = false;
+          });
+        }
+      });
+    } catch (e) {
+      debugPrint('HomePage: _checkFaceEnrollment error: $e');
+    }
+  }
 
   @override
   initState() {
     super.initState();
+
+    // Check if user needs face enrollment (first time after login)
+    _checkFaceEnrollment();
 
     subscription = Connectivity()
         .onConnectivityChanged
@@ -606,6 +643,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   showcaseFor: showcaseKeys.toSet().toList(),
                 ),
               ),
+              const FaceAuthSessionCard(),
               // Show stock balance card for users with stock management access
               if (state.actionsWrapper.actions
                   .map((e) => e.displayName)
@@ -653,19 +691,59 @@ class _HomePageState extends LocalizedState<HomePage> {
                     });
                   },
                   syncInProgress: () async {
+                    if (_faceGateActive) return;
                     if (context.mounted) {
-                      DigitSyncDialog.show(
-                        context,
-                        type: DialogType.inProgress,
-                        label: localizations.translate(
-                          i18.syncDialog.syncInProgressTitle,
-                        ),
+                      _isSyncDialogOpen = true;
+                      showDialog(
+                        context: context,
                         barrierDismissible: false,
+                        builder: (_) => PopScope(
+                          canPop: false,
+                          child: AlertDialog(
+                            content: StreamBuilder<sync_utils.SyncProgress>(
+                              stream: sync_utils.SyncServiceSingleton()
+                                  .progressStream,
+                              builder: (context, snapshot) {
+                                final progress = snapshot.data;
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const CircularProgressIndicator(),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      localizations.translate(
+                                        i18.syncDialog
+                                            .syncInProgressTitle,
+                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
+                                    ),
+                                    if (progress != null) ...[
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        '${progress.operation == 'syncUp' ? '↑ Uploading' : '↓ Downloading'}: ${progress.entityType}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ),
                       );
                     }
                   },
                   completedSync: () async {
-                    Navigator.of(context, rootNavigator: true).pop();
+                    if (_isSyncDialogOpen) {
+                      _isSyncDialogOpen = false;
+                      Navigator.of(context, rootNavigator: true).pop();
+                    }
+                    if (_faceGateActive) return;
                     if (context.mounted) {
                       DigitSyncDialog.show(context,
                           type: DialogType.complete,
@@ -759,7 +837,11 @@ class _HomePageState extends LocalizedState<HomePage> {
     required String message,
     String? errorMessage,
   }) {
-    Navigator.of(context, rootNavigator: true).pop();
+    // Dismiss the in-progress dialog if it's showing
+    if (_isSyncDialogOpen) {
+      _isSyncDialogOpen = false;
+      Navigator.of(context, rootNavigator: true).pop();
+    }
 
     DigitSyncDialog.show(
       context,
@@ -841,9 +923,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ],
               ),
             );
-          },
+          }),
         ),
-      ),
+      
 
       i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
@@ -856,9 +938,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               isTriggerLocalisation = false;
             }
             context.router.push(const UserDashboardRoute());
-          },
+          }),
         ),
-      ),
+      
 
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.buildWith(
@@ -1017,9 +1099,9 @@ class _HomePageState extends LocalizedState<HomePage> {
             } catch (e) {
               debugPrint('error $e');
             }
-          },
+          }),
         ),
-      ),
+   
 
       /// TODO: NEED TO UPDATE CLF
 
@@ -1059,9 +1141,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 sampleFlows: sampleCloseHouseholdFlows,
               ),
             );
-          },
+          }),
         ),
-      ),
+  
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.buildWith(
         child: HomeItemCard(
@@ -1116,9 +1198,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ],
               ),
             );
-          },
+          }),
         ),
-      ),
+
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
         child: HomeItemCard(
@@ -1178,9 +1260,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ],
               ),
             );
-          },
+          }),
         ),
-      ),
+
       i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
@@ -1190,16 +1272,14 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIconSize: spacer8,
           label: i18.home.mySurveyForm,
           onPressed: () {
-            // if (isTriggerLocalisation) {
             final moduleName =
                 'hcm-checklist-${context.selectedProject.referenceID}';
             triggerLocalization(module: moduleName);
             isTriggerLocalisation = false;
-            // }
             context.router.push(SurveyFormWrapperRoute());
-          },
+          }),
         ),
-      ),
+
 
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
         child: StreamBuilder<Map<String, dynamic>?>(
@@ -1250,9 +1330,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 sampleFlows: sampleReferralFlows,
               ),
             );
-          },
+          }),
         ),
-      ),
+
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
         child: HomeItemCard(
           icon: Icons.announcement,
@@ -1316,24 +1396,22 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ],
               ),
             );
-          },
+          }),
         ),
-      ),
+
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
         child: HomeItemCard(
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            // if (isTriggerLocalisation) {
             const module = "hcm-attendance";
             triggerLocalization(module: module);
             isTriggerLocalisation = false;
-            // };
             context.router.push(const ManageAttendanceRoute());
-          },
+          }),
         ),
-      ),
+      
       i18.home.db: homeShowcaseData.db.buildWith(
         child: HomeItemCard(
           icon: Icons.table_chart,
@@ -1355,28 +1433,24 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.dataShare,
           onPressed: () async {
             const module = "hcm-peer-to-peer";
-            // if (isTriggerLocalisation) {
             triggerLocalization(module: module);
             isTriggerLocalisation = false;
-            // }
             context.router.push(const DataShareHomeRoute());
-          },
+          }),
         ),
-      ),
+
       i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
             const module = "hcm-dashboard";
-            // if (isTriggerLocalisation) {
             triggerLocalization(module: module);
             isTriggerLocalisation = false;
-            // };
             context.router.push(const UserDashboardRoute());
-          },
+          }),
         ),
-      ),
+
 
       /// TODO: NEED TO PICK CHANGES RELATED TO BENEFICIARY DOWNSYNC
       // i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
@@ -1403,11 +1477,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         label: i18.home.transitPostLabel,
         onPressed: () {
           const module = "hcm-transit-post";
-          // if (isTriggerLocalisation) {
           triggerLocalization(module: module);
           context.router.push(const TransitPostWrapperRoute());
-        },
-      )),
+        }),
+      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -1572,7 +1645,7 @@ void setPackagesSingleton(BuildContext context) {
 
         AttendanceSingleton().setInitialData(
           project: context.selectedProject,
-          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInIndividualId: context.loggedInIndividualId,
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
           manualAttendanceReasons: appConfiguration.manualAttendanceReasons
@@ -1585,7 +1658,7 @@ void setPackagesSingleton(BuildContext context) {
         SurveyFormSingleton().setInitialData(
           projectId: context.projectId,
           projectName: context.selectedProject.name,
-          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInIndividualId: context.loggedInIndividualId,
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
           roles: context.read<AuthBloc>().state.maybeMap(

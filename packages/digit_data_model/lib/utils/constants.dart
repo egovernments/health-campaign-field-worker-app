@@ -33,6 +33,8 @@ class EntityPlurals {
         return 'attendanceRegister';
       case 'Attendance':
         return 'attendance';
+      case 'FaceAuthEvent':
+        return 'faceAuthEvents';
       default:
         return '${entity}s';
     }

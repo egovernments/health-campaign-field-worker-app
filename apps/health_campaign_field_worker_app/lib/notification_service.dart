@@ -22,9 +22,16 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  /// Callback invoked when user taps a notification.
+  /// Callback invoked when user taps an FCM push notification.
   /// The map contains the FCM data payload.
   void Function(Map<String, dynamic>)? onNotificationTap;
+
+  /// Callback invoked when user taps a re-verification local notification.
+  /// The int is the trigger index from the payload.
+  void Function(int triggerIndex)? onReVerificationTap;
+
+  /// Prefix used by re-verification notification payloads.
+  static const String reVerifyPayloadPrefix = 'reverify:';
 
   static const String _fcmTokenKey = 'fcm_device_token';
   static const String _channelId = 'fcm_default_channel';
@@ -154,12 +161,25 @@ class NotificationService {
   }
 
   /// Called when user taps on a local notification.
+  /// Routes to the correct handler based on payload content.
   void _onNotificationTapped(NotificationResponse response) {
     final payload = response.payload;
-    if (payload != null && payload.isNotEmpty) {
-      final data = _decodePayload(payload);
-      onNotificationTap?.call(data);
+    if (payload == null || payload.isEmpty) return;
+
+    // Re-verification notification (payload = "reverify:0", "reverify:1", etc.)
+    if (payload.startsWith(reVerifyPayloadPrefix)) {
+      final indexStr = payload.substring(reVerifyPayloadPrefix.length);
+      final index = int.tryParse(indexStr);
+      if (index != null) {
+        debugPrint('NotificationService: re-verification tap, index=$index');
+        onReVerificationTap?.call(index);
+      }
+      return;
     }
+
+    // FCM notification (payload = "key=value&key=value")
+    final data = _decodePayload(payload);
+    onNotificationTap?.call(data);
   }
 
   /// Called when user taps on an FCM notification (background/terminated).

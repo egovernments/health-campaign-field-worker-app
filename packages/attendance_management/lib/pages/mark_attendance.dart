@@ -22,6 +22,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
+
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
@@ -60,6 +62,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   String? manualAttendanceReason;
   String? manualAttendanceComment;
 
+  /// Face auth event dots per individualId for the currently selected date.
+  /// green = FACE_SUCCESS, orange = PIN_FALLBACK/HCM_FALLBACK, red = MISSED/FACE_REJECTED
+  Map<String, List<Color>> _faceEventDots = {};
+
   @override
   void initState() {
     controller = TextEditingController();
@@ -78,6 +84,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
       setRegisterData();
       showMissedAttendanceDialog(
           currentSelectedDate, AttendanceLocalization.of(context));
+      _loadFaceEvents(AttendanceDateTimeManagement.getFormattedDateToDateTime(
+            currentSelectedDate) ?? DateTime.now());
     });
   }
 
@@ -91,6 +99,55 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         individualLogBloc!.add(const SearchAttendeesEvent(name: ''));
       }
     });
+  }
+
+  /// Loads face auth events for all attendees on the given date and caches
+  /// them as colored dots: green=verified, orange=PIN, red=missed/rejected.
+  Future<void> _loadFaceEvents(DateTime date) async {
+    try {
+      final repo = context.repository<FaceAuthEventModel, FaceAuthEventSearchModel>(context);
+      final attendees = widget.registerModel.attendees ?? [];
+      final startOfDay = DateTime(date.year, date.month, date.day).millisecondsSinceEpoch;
+      final endOfDay = startOfDay + const Duration(days: 1).inMilliseconds;
+
+      final Map<String, List<Color>> dots = {};
+
+      for (final attendee in attendees) {
+        final individualId = attendee.individualId;
+        if (individualId == null) continue;
+
+        final events = await repo.search(
+          FaceAuthEventSearchModel(individualId: individualId),
+        );
+
+        final dayEvents = events.where((e) =>
+          e.timestamp >= startOfDay && e.timestamp < endOfDay,
+        ).toList();
+
+        if (dayEvents.isEmpty) continue;
+
+        final colors = dayEvents.map((e) {
+          switch (e.outcome) {
+            case 'FACE_SUCCESS':
+              return Colors.green;
+            case 'PIN_FALLBACK':
+            case 'HCM_FALLBACK':
+              return Colors.orange;
+            case 'MISSED':
+            case 'FACE_REJECTED':
+              return Colors.red;
+            default:
+              return Colors.grey;
+          }
+        }).toList();
+
+        dots[individualId] = colors;
+      }
+
+      if (mounted) setState(() => _faceEventDots = dots);
+    } catch (e) {
+      debugPrint('MarkAttendancePage: failed to load face events: $e');
+    }
   }
 
   @override
@@ -437,6 +494,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     });
                                   }
                                   setRegisterData();
+                                  _loadFaceEvents(
+                                    AttendanceDateTimeManagement
+                                            .getFormattedDateToDateTime(
+                                                currentSelectedDate) ??
+                                        DateTime.now(),
+                                  );
                                 },
                               ),
                               DigitCard(
@@ -638,6 +701,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                       i18.attendance.userId,
                                                     ),
                                             status: individual.status,
+                                            faceEventDots: individual.individualId != null
+                                                ? _faceEventDots[individual.individualId]
+                                                : null,
                                             markManualAttendance:
                                                 AttendanceDateTimeManagement.isToday(
                                                             AttendanceDateTimeManagement

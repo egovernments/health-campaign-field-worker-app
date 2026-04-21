@@ -37,6 +37,7 @@ class FaceEnrollmentView extends StatefulWidget {
 
 class _FaceEnrollmentViewState extends State<FaceEnrollmentView> {
   bool _showIntro = true;
+  int _captureResetTrigger = 0;
 
   void _startEnrollment() {
     setState(() => _showIntro = false);
@@ -56,8 +57,19 @@ class _FaceEnrollmentViewState extends State<FaceEnrollmentView> {
     }
 
     return BlocConsumer<FaceEnrollmentBloc, FaceEnrollmentState>(
+      buildWhen: (_, next) => next is! FaceEnrollmentQualityInsufficientState,
       listener: (context, state) {
         state.maybeWhen(
+          qualityInsufficient: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Image quality too low. Please try again.'),
+                backgroundColor: Colors.orange,
+                duration: Duration(seconds: 2),
+              ),
+            );
+            setState(() => _captureResetTrigger++);
+          },
           error: (message) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -75,6 +87,9 @@ class _FaceEnrollmentViewState extends State<FaceEnrollmentView> {
             );
             widget.onCancel();
           },
+          // For non-system users, enrollment completes without a PIN screen.
+          // Call onResult directly from here so the parent is always notified.
+          completed: () => widget.onResult(true, null),
           orElse: () {},
         );
       },
@@ -89,6 +104,7 @@ class _FaceEnrollmentViewState extends State<FaceEnrollmentView> {
               current: current,
               total: total,
               instruction: instruction,
+              resetTrigger: _captureResetTrigger,
               onCaptured: (embedding, quality, {faceImageBytes}) {
                 context.read<FaceEnrollmentBloc>().add(
                       FaceEnrollmentEvent.captureAngle(
@@ -149,9 +165,6 @@ class _FaceEnrollmentViewState extends State<FaceEnrollmentView> {
             matchedId: matchedId,
             similarity: similarity,
             onCancel: widget.onCancel,
-          ),
-          qualityInsufficient: () => const Center(
-            child: Text('Image quality too low. Please try again.'),
           ),
           orElse: () => Scaffold(
             backgroundColor: cs.surface,
@@ -306,6 +319,7 @@ class _AngleCaptureScreen extends StatelessWidget {
   final int total;
   final String instruction;
   final void Function(List<double> embedding, double quality, {Uint8List? faceImageBytes}) onCaptured;
+  final int resetTrigger;
 
   const _AngleCaptureScreen({
     required this.faceModelService,
@@ -313,6 +327,7 @@ class _AngleCaptureScreen extends StatelessWidget {
     required this.total,
     required this.instruction,
     required this.onCaptured,
+    this.resetTrigger = 0,
   });
 
   /// Maps display step number to expected head pose.
@@ -365,6 +380,8 @@ class _AngleCaptureScreen extends StatelessWidget {
           guidanceText: instruction,
           minQuality: 0.6,
           expectedAngle: _expectedAngleForStep(current),
+          autoCapture: true,
+          resetTrigger: resetTrigger,
         ),
         // Step indicator at top
         Positioned(

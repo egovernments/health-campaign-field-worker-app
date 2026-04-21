@@ -39,24 +39,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
   }
 
   void _loadThresholds() {
-    try {
-      context.read<AppInitializationBloc>().state.maybeWhen(
-            initialized: (appConfiguration, _, __) {
-              try {
-                final config = appConfiguration.stockThresholdConfig;
-                if (config != null &&
-                    config.minThreshold > 0 &&
-                    config.maxThreshold > 0) {
-                  _minThreshold = config.minThreshold;
-                  _maxThreshold = config.maxThreshold;
-                }
-              } catch (_) {
-                // stockThresholdConfig not initialized — use defaults
-              }
-            },
-            orElse: () {},
-          );
-    } catch (_) {}
+    // Uses default thresholds: _minThreshold = 100, _maxThreshold = 500
   }
 
   Future<void> _loadData() async {

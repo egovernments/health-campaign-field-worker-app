@@ -156,13 +156,13 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   // triggerLocationTracking(state.selectedProject!); // TODO: Enable location tracking
                   navigateToBoundary(boundary);
                 } else {
-                  Toast.showToast(
-                    context,
-                    message: localizations.translate(
-                      i18.projectSelection.fetchBoundaryFailed,
-                    ),
-                    type: ToastType.error,
-                  );
+                  // Toast.showToast(
+                  //   context,
+                  //   message: localizations.translate(
+                  //     i18.projectSelection.fetchBoundaryFailed,
+                  //   ),
+                  //   type: ToastType.error,
+                  // );
                 }
               }
             },

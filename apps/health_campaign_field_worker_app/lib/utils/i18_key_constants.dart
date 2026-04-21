@@ -57,6 +57,7 @@ const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
 const nonMobileUser = NonMobileUser();
+const faceAuth = FaceAuth();
 const databaseError = DatabaseError();
 
 class Common {
@@ -909,6 +910,8 @@ class SyncDialog {
   String get serverError => 'SYNC_DIALOG_SERVER_ERROR';
 
   String get networkError => 'SYNC_DIALOG_NETWORK_ERROR';
+
+  String get sessionExpired => 'SYNC_DIALOG_SESSION_EXPIRED';
 }
 
 class StockReconciliationShowcase {
@@ -1253,9 +1256,55 @@ class NonMobileUser {
 
   String get nonMobileUserLabel => 'NON_MOBILE_USER_LABEL';
 
-  String get showQrCodeBtnLabel => 'NON_MOBILE_USER_QR_BTN_LABEL';
+  String get showQrCodeBtnLabel => 'Non Mobile User Show QR Code';
 
   String get showQrCodeLabel => 'NON_MOBILE_USER_QR_LABEL';
+}
+
+class FaceAuth {
+  const FaceAuth();
+
+  String get enrollmentTitle => 'FACE_AUTH_ENROLLMENT_TITLE';
+  String get enrollmentDescription => 'FACE_AUTH_ENROLLMENT_DESCRIPTION';
+  String get enrollmentStart => 'FACE_AUTH_ENROLLMENT_START';
+  String get enrollmentComplete => 'FACE_AUTH_ENROLLMENT_COMPLETE';
+  String get enrollmentAngleInstruction => 'FACE_AUTH_ENROLLMENT_ANGLE_INSTRUCTION';
+  String get enrollmentLivenessCheck => 'FACE_AUTH_ENROLLMENT_LIVENESS_CHECK';
+  String get enrollmentPinAssigned => 'FACE_AUTH_ENROLLMENT_PIN_ASSIGNED';
+  String get enrollmentPinNote => 'FACE_AUTH_ENROLLMENT_PIN_NOTE';
+  String get enrollmentDuplicateDetected => 'FACE_AUTH_ENROLLMENT_DUPLICATE_DETECTED';
+  String get enrollmentMaxUsers => 'FACE_AUTH_ENROLLMENT_MAX_USERS';
+  String get enrollmentQualityLow => 'FACE_AUTH_ENROLLMENT_QUALITY_LOW';
+
+  String get gateTitle => 'FACE_AUTH_GATE_TITLE';
+  String get gateScanning => 'FACE_AUTH_GATE_SCANNING';
+  String get gateVerified => 'FACE_AUTH_GATE_VERIFIED';
+  String get gateRejected => 'FACE_AUTH_GATE_REJECTED';
+  String get gateFallbackRequired => 'FACE_AUTH_GATE_FALLBACK_REQUIRED';
+  String get gateAttemptCounter => 'FACE_AUTH_GATE_ATTEMPT_COUNTER';
+
+  String get pinTitle => 'FACE_AUTH_PIN_TITLE';
+  String get pinEnter => 'FACE_AUTH_PIN_ENTER';
+  String get pinVerify => 'FACE_AUTH_PIN_VERIFY';
+  String get pinInvalid => 'FACE_AUTH_PIN_INVALID';
+  String get pinSelectProfile => 'FACE_AUTH_PIN_SELECT_PROFILE';
+
+  String get livenessBlinkInstruction => 'FACE_AUTH_LIVENESS_BLINK';
+  String get livenessTurnLeftInstruction => 'FACE_AUTH_LIVENESS_TURN_LEFT';
+  String get livenessTurnRightInstruction => 'FACE_AUTH_LIVENESS_TURN_RIGHT';
+  String get livenessPassed => 'FACE_AUTH_LIVENESS_PASSED';
+  String get livenessFailed => 'FACE_AUTH_LIVENESS_FAILED';
+  String get livenessTimeout => 'FACE_AUTH_LIVENESS_TIMEOUT';
+
+  String get reVerificationTitle => 'FACE_AUTH_REVERIFICATION_TITLE';
+  String get reVerificationPrompt => 'FACE_AUTH_REVERIFICATION_PROMPT';
+  String get reVerificationVerified => 'FACE_AUTH_REVERIFICATION_VERIFIED';
+  String get reVerificationMissed => 'FACE_AUTH_REVERIFICATION_MISSED';
+  String get reVerificationUsePinInstead => 'FACE_AUTH_REVERIFICATION_USE_PIN';
+
+  String get lightingTooLow => 'FACE_AUTH_LIGHTING_TOO_LOW';
+  String get lightingGood => 'FACE_AUTH_LIGHTING_GOOD';
+  String get noGpsAvailable => 'FACE_AUTH_NO_GPS_AVAILABLE';
 }
 
 class DatabaseError {

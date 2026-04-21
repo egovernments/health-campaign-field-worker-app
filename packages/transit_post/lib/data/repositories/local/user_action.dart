@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
@@ -28,6 +29,42 @@ class UserActionLocalRepository
         entity,
         createOpLog: createOpLog,
       );
+    });
+  }
+
+  @override
+  FutureOr<void> update(
+    UserActionModel entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.update,
+  }) async {
+    return retryLocalCallOperation(() async {
+      await sql.batch((batch) {
+        batch.insert(
+          sql.userAction,
+          entity.companion,
+          mode: InsertMode.insertOrReplace,
+        );
+      });
+
+      return super.update(entity, createOpLog: createOpLog);
+    });
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<UserActionModel> entities,
+  ) async {
+    return retryLocalCallOperation(() async {
+      final companions = entities.map((e) => e.companion).toList();
+
+      await sql.batch((batch) {
+        batch.insertAll(
+          sql.userAction,
+          companions,
+          mode: InsertMode.insertOrReplace,
+        );
+      });
     });
   }
 
@@ -84,7 +121,80 @@ class UserActionLocalRepository
 
   @override
   FutureOr<List<UserActionModel>> search(UserActionSearchModel query) {
-    // TODO: implement search
-    throw UnimplementedError();
+    return retryLocalCallOperation<List<UserActionModel>>(() async {
+      final selectQuery = sql.select(sql.userAction).join([]);
+      final results = await (selectQuery
+            ..where(
+              buildAnd(
+                [
+                  if (query.action != null)
+                    sql.userAction.action.equals(query.action!),
+                  if (query.projectId != null)
+                    sql.userAction.projectId.equals(query.projectId!),
+                  if (query.clientReferenceId != null)
+                    sql.userAction.clientReferenceId
+                        .isIn(query.clientReferenceId!),
+                  if (query.boundaryCode != null)
+                    sql.userAction.boundaryCode.equals(query.boundaryCode!),
+                ],
+              ),
+            ))
+          .get();
+
+      return results.map((e) {
+        final data = e.readTable(sql.userAction);
+
+        final createdBy = data.auditCreatedBy;
+        final createdTime = data.auditCreatedTime;
+
+        // Parse additionalFields JSON
+        UserActionAdditionalFields? additionalFields;
+        if (data.additionalFields != null) {
+          try {
+            final decoded = jsonDecode(data.additionalFields!);
+            if (decoded is Map<String, dynamic>) {
+              additionalFields =
+                  UserActionAdditionalFieldsMapper.fromMap(decoded);
+            }
+          } catch (_) {}
+        }
+
+        return UserActionModel(
+          id: data.id,
+          tenantId: data.tenantId,
+          latitude: double.tryParse(data.latitude) ?? 0.0,
+          longitude: double.tryParse(data.longitude) ?? 0.0,
+          locationAccuracy:
+              double.tryParse(data.locationAccuracy) ?? 0.0,
+          clientReferenceId: data.clientReferenceId,
+          isSync: data.isSync,
+          timestamp: data.timestamp,
+          projectId: data.projectId,
+          boundaryCode: data.boundaryCode,
+          action: data.action,
+          beneficiaryTag: data.beneficiaryTag,
+          resourceTag: data.resourceTag,
+          nonRecoverableError: data.nonRecoverableError,
+          rowVersion: data.rowVersion,
+          isDeleted: data.isDeleted,
+          additionalFields: additionalFields,
+          auditDetails: createdTime == null || createdBy == null
+              ? null
+              : AuditDetails(
+                  createdTime: createdTime,
+                  createdBy: createdBy,
+                ),
+          clientAuditDetails: data.clientCreatedTime == null ||
+                  data.clientCreatedBy == null
+              ? null
+              : ClientAuditDetails(
+                  createdTime: data.clientCreatedTime!,
+                  createdBy: data.clientCreatedBy!,
+                  lastModifiedBy: data.clientModifiedBy,
+                  lastModifiedTime: data.clientModifiedTime,
+                ),
+        );
+      }).toList();
+    });
   }
 }

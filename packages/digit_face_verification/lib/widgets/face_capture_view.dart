@@ -50,6 +50,14 @@ class FaceCaptureView extends StatefulWidget {
   /// and only fires [onFaceDetected]. Used for liveness detection.
   final bool captureEnabled;
 
+  /// When true, automatically captures when the face is ready (angle matched
+  /// + quality sufficient) without requiring a manual button press.
+  final bool autoCapture;
+
+  /// Increment this value to programmatically reset the capture state and
+  /// restart the image stream without recreating the widget.
+  final int resetTrigger;
+
   const FaceCaptureView({
     super.key,
     required this.faceModelService,
@@ -61,6 +69,8 @@ class FaceCaptureView extends StatefulWidget {
     this.multiFrameCount = 3,
     this.expectedAngle,
     this.captureEnabled = true,
+    this.autoCapture = false,
+    this.resetTrigger = 0,
   });
 
   @override
@@ -119,6 +129,14 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
     _stopImageStream();
     _cameraController?.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(FaceCaptureView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.resetTrigger != oldWidget.resetTrigger) {
+      resetCapture();
+    }
   }
 
   @override
@@ -260,15 +278,19 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
       return;
     }
 
-    if (widget.compact && _faceReady && !_isCaptured) {
+    if ((widget.compact || widget.autoCapture) && _faceReady && !_isCaptured) {
+      // Only start the timer once — don't restart it on every frame
+      if (_autoCaptureTimer == null || !_autoCaptureTimer!.isActive) {
+        _autoCaptureTimer = Timer(_autoCaptureDelay, () {
+          if (mounted && _faceReady && !_isCaptured) {
+            _manualCapture();
+          }
+        });
+      }
+    } else if ((widget.compact || widget.autoCapture) && !_faceReady) {
+      // Cancel if face moves away or angle no longer matches
       _autoCaptureTimer?.cancel();
-      _autoCaptureTimer = Timer(_autoCaptureDelay, () {
-        if (mounted && _faceReady && !_isCaptured) {
-          _manualCapture();
-        }
-      });
-    } else if (widget.compact && !_faceReady) {
-      _autoCaptureTimer?.cancel();
+      _autoCaptureTimer = null;
     }
   }
 
@@ -383,15 +405,15 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
 
     switch (expected) {
       case ExpectedAngle.front:
-        return yaw.abs() < 12 && pitch.abs() < 12;
+        return yaw.abs() < 15 && pitch.abs() < 15;
       case ExpectedAngle.left:
-        return yaw > 18;
+        return yaw > 12;
       case ExpectedAngle.right:
-        return yaw < -18;
+        return yaw < -12;
       case ExpectedAngle.up:
-        return pitch > 12;
+        return pitch > 10;
       case ExpectedAngle.down:
-        return pitch < -12;
+        return pitch < -10;
     }
   }
 
@@ -440,7 +462,9 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
               : (_angleGuidance != null)
                   ? _angleGuidance!
                   : _faceReady
-                      ? 'Face detected — tap capture'
+                      ? (widget.autoCapture
+                          ? 'Hold still, capturing...'
+                          : 'Face detected — tap capture')
                       : _detectedFace != null
                           ? 'Scanning — hold steady'
                           : widget.guidanceText;
@@ -586,66 +610,69 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
             ),
           ),
 
-          // Bottom capture button
-          Padding(
-            padding: EdgeInsets.only(
-              top: 12,
-              bottom: MediaQuery.of(context).padding.bottom + 16,
-              left: 32,
-              right: 32,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Camera switch
-                _LightControlButton(
-                  icon: Icons.cameraswitch_rounded,
-                  onPressed: _isCaptured ? null : _switchCamera,
-                ),
+          // Bottom controls — hidden in auto-capture mode
+          if (!widget.autoCapture)
+            Padding(
+              padding: EdgeInsets.only(
+                top: 12,
+                bottom: MediaQuery.of(context).padding.bottom + 16,
+                left: 32,
+                right: 32,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // Camera switch
+                  _LightControlButton(
+                    icon: Icons.cameraswitch_rounded,
+                    onPressed: _isCaptured ? null : _switchCamera,
+                  ),
 
-                // Capture button
-                GestureDetector(
-                  onTap: _faceReady ? _manualCapture : null,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _faceReady
-                          ? theme.colorScheme.primary
-                          : theme.dividerColor,
-                      boxShadow: _faceReady
-                          ? [
-                              BoxShadow(
-                                color: theme.colorScheme.primary
-                                    .withOpacity(0.3),
-                                blurRadius: 12,
-                                spreadRadius: 1,
-                              ),
-                            ]
-                          : null,
-                    ),
-                    child: Icon(
-                      Icons.camera_alt_rounded,
-                      color: _faceReady
-                          ? theme.colorScheme.onPrimary
-                          : theme.colorScheme.onSurface.withOpacity(0.4),
-                      size: 28,
+                  // Capture button
+                  GestureDetector(
+                    onTap: _faceReady ? _manualCapture : null,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _faceReady
+                            ? theme.colorScheme.primary
+                            : theme.dividerColor,
+                        boxShadow: _faceReady
+                            ? [
+                                BoxShadow(
+                                  color: theme.colorScheme.primary
+                                      .withOpacity(0.3),
+                                  blurRadius: 12,
+                                  spreadRadius: 1,
+                                ),
+                              ]
+                            : null,
+                      ),
+                      child: Icon(
+                        Icons.camera_alt_rounded,
+                        color: _faceReady
+                            ? theme.colorScheme.onPrimary
+                            : theme.colorScheme.onSurface.withOpacity(0.4),
+                        size: 28,
+                      ),
                     ),
                   ),
-                ),
 
-                // Flash
-                _LightControlButton(
-                  icon: _isFlashOn
-                      ? Icons.flash_on_rounded
-                      : Icons.flash_off_rounded,
-                  onPressed: _toggleFlash,
-                ),
-              ],
-            ),
-          ),
+                  // Flash
+                  _LightControlButton(
+                    icon: _isFlashOn
+                        ? Icons.flash_on_rounded
+                        : Icons.flash_off_rounded,
+                    onPressed: _toggleFlash,
+                  ),
+                ],
+              ),
+            )
+          else
+            SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
         ],
       ),
     );

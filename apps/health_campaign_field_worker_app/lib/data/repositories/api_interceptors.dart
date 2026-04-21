@@ -62,21 +62,11 @@ class ApiLoggerInterceptor extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     super.onResponse(response, handler);
 
-    if (response.requestOptions.path.contains('boundarys')) return;
-
-    try {
-      AppLogger.instance.info(
-        _getIndentedJson(json.encode(response.data)),
-        title:
-            '[RESPONSE - ${response.statusCode}] ${response.requestOptions.uri.toString()}',
-      );
-    } catch (error) {
-      AppLogger.instance.info(
-        // ignore: avoid_dynamic_calls
-        '${response.data.runtimeType} ${response.statusCode.toString()}',
-        title: '[RESPONSE (error)] ${response.requestOptions.path}',
-      );
-    }
+    // Only log status + URI, skip response body to avoid flooding the console
+    AppLogger.instance.info(
+      '${response.statusCode}',
+      title: '[RESPONSE] ${response.requestOptions.uri.toString()}',
+    );
   }
 
   String _getIndentedJson(String json) {

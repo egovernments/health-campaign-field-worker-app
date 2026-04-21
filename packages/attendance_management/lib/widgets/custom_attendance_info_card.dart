@@ -16,6 +16,10 @@ class CustomAttendanceInfoCard extends StatelessWidget {
   final bool viewOnly;
   final bool isCurrentDate;
 
+  /// Colored dots representing face auth events for this individual on the
+  /// selected day. Green = face verified, orange = PIN used, red = missed.
+  final List<Color>? faceEventDots;
+
   const CustomAttendanceInfoCard(
       {super.key,
       required this.name,
@@ -25,7 +29,8 @@ class CustomAttendanceInfoCard extends StatelessWidget {
       required this.onMarkAbsent,
       required this.markManualAttendance,
       required this.viewOnly,
-      required this.isCurrentDate});
+      required this.isCurrentDate,
+      this.faceEventDots});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +64,26 @@ class CustomAttendanceInfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(name, style: textTheme.captionS),
+          Row(
+            children: [
+              Expanded(child: Text(name, style: textTheme.captionS)),
+              if (faceEventDots != null && faceEventDots!.isNotEmpty)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: faceEventDots!
+                      .map((color) => Container(
+                            width: 10,
+                            height: 10,
+                            margin: const EdgeInsets.only(left: 4),
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                            ),
+                          ))
+                      .toList(),
+                ),
+            ],
+          ),
           const SizedBox(height: spacer1),
           if (viewOnly || markManualAttendance || status != null) ...[
             Text(

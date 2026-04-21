@@ -27,6 +27,7 @@ import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
     as firebase_services;
 import 'package:digit_location_tracker/location_tracker.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +35,11 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
+import 'package:transit_post/data/repositories/local/face_auth_event.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/oplog/face_auth_event_oplog.dart';
 import 'package:transit_post/data/repositories/oplog/oplog.dart';
+import 'package:transit_post/data/repositories/remote/face_auth_event.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 import 'package:transit_post/utils/utils.dart';
 
@@ -93,6 +97,8 @@ class Constants {
           RowVersionListSchema,
           DashboardConfigSchemaListSchema,
           DashboardResponseSchema,
+          FaceEmbeddingSchema,
+          FaceEnrollmentProfileSchema,
         ],
         name: 'HCM',
         inspector: true,
@@ -148,6 +154,7 @@ class Constants {
 
   static const String dashboardAnalyticsPath =
       '/dashboard-analytics/dashboard/getChartV2';
+  static const String logoutUserPath = '/user/_logout';
 
   static RegExp mobileNumberRegExp =
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
@@ -225,6 +232,7 @@ class Constants {
       LocationTrackerLocalBaseRepository(
           sql, LocationTrackerOpLogManager(isar)),
       UserActionLocalRepository(sql, UserActionOpLogManager(isar)),
+      FaceAuthEventLocalRepository(sql, FaceAuthEventOpLogManager(isar)),
     ];
   }
 
@@ -236,14 +244,15 @@ class Constants {
     final config = appConfigs.firstOrNull;
 
     // Always initialize Firebase Core (required for FCM, analytics, etc.)
-    await firebase_services.initializeFirebaseCore(
+    await firebase_services.initialize(
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
     final enableCrashlytics =
         config?.firebaseConfig?.enableCrashlytics ?? false;
     if (enableCrashlytics) {
-      await firebase_services.initializeCrashlytics(
+      await firebase_services.initialize(
+        options: DefaultFirebaseOptions.currentPlatform,
         onErrorMessage: (value) {
           AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
         },
@@ -322,6 +331,8 @@ class Constants {
           LocationTrackerRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.userAction)
           UserActionRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.faceAuthEvent)
+          FaceAuthEventRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -424,11 +435,28 @@ enum DigitProgressDialogType {
   pendingSync,
 }
 
+class DownloadProgressData {
+  final double progress;
+  final String boundaryName;
+  final int syncedCount;
+  final int totalCount;
+  final int currentIndex;
+  final int totalBoundaries;
+
+  const DownloadProgressData({
+    required this.progress,
+    required this.boundaryName,
+    required this.syncedCount,
+    required this.totalCount,
+    required this.currentIndex,
+    required this.totalBoundaries,
+  });
+}
+
 class DownloadBeneficiary {
   String title;
   String projectId;
-  String boundary;
-  String boundaryName;
+  List<BoundaryModel> boundaries;
   int? pendingSyncCount;
   int? syncCount;
   int? totalCount;
@@ -439,12 +467,12 @@ class DownloadBeneficiary {
   String? prefixLabel;
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
+  Map<String, int> boundaryCounts;
 
   DownloadBeneficiary({
     required this.title,
     required this.projectId,
-    required this.boundary,
-    required this.boundaryName,
+    required this.boundaries,
     this.appConfiguartion,
     this.pendingSyncCount,
     this.batchSize,
@@ -455,5 +483,6 @@ class DownloadBeneficiary {
     this.secondaryButtonLabel,
     this.prefixLabel,
     this.suffixLabel,
+    this.boundaryCounts = const {},
   });
 }

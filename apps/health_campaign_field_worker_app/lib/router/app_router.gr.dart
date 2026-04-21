@@ -91,6 +91,22 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    FaceAuthHistoryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const FaceAuthHistoryPage(),
+      );
+    },
+    FaceGateRoute.name: (routeData) {
+      final args = routeData.argsAs<FaceGateRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: FaceGatePage(
+          key: args.key,
+          onVerified: args.onVerified,
+        ),
+      );
+    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -119,6 +135,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    NonMobileFaceEnrollRoute.name: (routeData) {
+      final args = routeData.argsAs<NonMobileFaceEnrollRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: NonMobileFaceEnrollPage(
+          key: args.key,
+          individualId: args.individualId,
+          individualName: args.individualName,
+        ),
+      );
+    },
     NonMobileUserListRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -135,6 +162,16 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const PermissionsPage(),
+      );
+    },
+    PinFallbackRoute.name: (routeData) {
+      final args = routeData.argsAs<PinFallbackRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PinFallbackPage(
+          key: args.key,
+          onVerified: args.onVerified,
+        ),
       );
     },
     ProfileRoute.name: (routeData) {
@@ -459,6 +496,58 @@ class DevicesListRouteArgs {
 }
 
 /// generated route for
+/// [FaceAuthHistoryPage]
+class FaceAuthHistoryRoute extends PageRouteInfo<void> {
+  const FaceAuthHistoryRoute({List<PageRouteInfo>? children})
+      : super(
+          FaceAuthHistoryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'FaceAuthHistoryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [FaceGatePage]
+class FaceGateRoute extends PageRouteInfo<FaceGateRouteArgs> {
+  FaceGateRoute({
+    Key? key,
+    required void Function() onVerified,
+    List<PageRouteInfo>? children,
+  }) : super(
+          FaceGateRoute.name,
+          args: FaceGateRouteArgs(
+            key: key,
+            onVerified: onVerified,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'FaceGateRoute';
+
+  static const PageInfo<FaceGateRouteArgs> page =
+      PageInfo<FaceGateRouteArgs>(name);
+}
+
+class FaceGateRouteArgs {
+  const FaceGateRouteArgs({
+    this.key,
+    required this.onVerified,
+  });
+
+  final Key? key;
+
+  final void Function() onVerified;
+
+  @override
+  String toString() {
+    return 'FaceGateRouteArgs{key: $key, onVerified: $onVerified}';
+  }
+}
+
+/// generated route for
 /// [HomePage]
 class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
   HomeRoute({
@@ -547,6 +636,50 @@ class LoginRouteArgs {
 }
 
 /// generated route for
+/// [NonMobileFaceEnrollPage]
+class NonMobileFaceEnrollRoute
+    extends PageRouteInfo<NonMobileFaceEnrollRouteArgs> {
+  NonMobileFaceEnrollRoute({
+    Key? key,
+    required String individualId,
+    required String individualName,
+    List<PageRouteInfo>? children,
+  }) : super(
+          NonMobileFaceEnrollRoute.name,
+          args: NonMobileFaceEnrollRouteArgs(
+            key: key,
+            individualId: individualId,
+            individualName: individualName,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'NonMobileFaceEnrollRoute';
+
+  static const PageInfo<NonMobileFaceEnrollRouteArgs> page =
+      PageInfo<NonMobileFaceEnrollRouteArgs>(name);
+}
+
+class NonMobileFaceEnrollRouteArgs {
+  const NonMobileFaceEnrollRouteArgs({
+    this.key,
+    required this.individualId,
+    required this.individualName,
+  });
+
+  final Key? key;
+
+  final String individualId;
+
+  final String individualName;
+
+  @override
+  String toString() {
+    return 'NonMobileFaceEnrollRouteArgs{key: $key, individualId: $individualId, individualName: $individualName}';
+  }
+}
+
+/// generated route for
 /// [NonMobileUserListPage]
 class NonMobileUserListRoute extends PageRouteInfo<void> {
   const NonMobileUserListRoute({List<PageRouteInfo>? children})
@@ -586,6 +719,44 @@ class PermissionsRoute extends PageRouteInfo<void> {
   static const String name = 'PermissionsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PinFallbackPage]
+class PinFallbackRoute extends PageRouteInfo<PinFallbackRouteArgs> {
+  PinFallbackRoute({
+    Key? key,
+    required void Function() onVerified,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PinFallbackRoute.name,
+          args: PinFallbackRouteArgs(
+            key: key,
+            onVerified: onVerified,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PinFallbackRoute';
+
+  static const PageInfo<PinFallbackRouteArgs> page =
+      PageInfo<PinFallbackRouteArgs>(name);
+}
+
+class PinFallbackRouteArgs {
+  const PinFallbackRouteArgs({
+    this.key,
+    required this.onVerified,
+  });
+
+  final Key? key;
+
+  final void Function() onVerified;
+
+  @override
+  String toString() {
+    return 'PinFallbackRouteArgs{key: $key, onVerified: $onVerified}';
+  }
 }
 
 /// generated route for

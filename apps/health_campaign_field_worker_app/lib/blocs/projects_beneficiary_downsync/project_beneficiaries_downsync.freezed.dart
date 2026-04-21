@@ -27,10 +27,15 @@ mixin _$BeneficiaryDownSyncEvent {
     required TResult Function(
             List<AppConfiguration> appConfiguration,
             String projectId,
-            String boundaryCode,
-            int pendingSyncCount,
-            String boundaryName)
+            List<BoundaryModel> boundaries,
+            int pendingSyncCount)
         getBatchSize,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)
+        downSyncAll,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)
+        downloadAll,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
   }) =>
@@ -44,8 +49,14 @@ mixin _$BeneficiaryDownSyncEvent {
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
   }) =>
@@ -59,8 +70,14 @@ mixin _$BeneficiaryDownSyncEvent {
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
     required TResult orElse(),
@@ -71,6 +88,8 @@ mixin _$BeneficiaryDownSyncEvent {
     required TResult Function(DownSyncBeneficiaryEvent value) downSync,
     required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
+    required TResult Function(DownSyncAllBoundariesEvent value) downSyncAll,
+    required TResult Function(DownSyncDownloadAllEvent value) downloadAll,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
   }) =>
@@ -80,6 +99,8 @@ mixin _$BeneficiaryDownSyncEvent {
     TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult? Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult? Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
   }) =>
@@ -89,6 +110,8 @@ mixin _$BeneficiaryDownSyncEvent {
     TResult Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
     required TResult orElse(),
@@ -254,10 +277,15 @@ class _$DownSyncBeneficiaryEventImpl
     required TResult Function(
             List<AppConfiguration> appConfiguration,
             String projectId,
-            String boundaryCode,
-            int pendingSyncCount,
-            String boundaryName)
+            List<BoundaryModel> boundaries,
+            int pendingSyncCount)
         getBatchSize,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)
+        downSyncAll,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)
+        downloadAll,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
   }) {
@@ -275,8 +303,14 @@ class _$DownSyncBeneficiaryEventImpl
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
   }) {
@@ -294,8 +328,14 @@ class _$DownSyncBeneficiaryEventImpl
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
     required TResult orElse(),
@@ -313,6 +353,8 @@ class _$DownSyncBeneficiaryEventImpl
     required TResult Function(DownSyncBeneficiaryEvent value) downSync,
     required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
+    required TResult Function(DownSyncAllBoundariesEvent value) downSyncAll,
+    required TResult Function(DownSyncDownloadAllEvent value) downloadAll,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
   }) {
@@ -325,6 +367,8 @@ class _$DownSyncBeneficiaryEventImpl
     TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult? Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult? Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
   }) {
@@ -337,6 +381,8 @@ class _$DownSyncBeneficiaryEventImpl
     TResult Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
     required TResult orElse(),
@@ -507,10 +553,15 @@ class _$DownSyncCheckTotalCountEventImpl
     required TResult Function(
             List<AppConfiguration> appConfiguration,
             String projectId,
-            String boundaryCode,
-            int pendingSyncCount,
-            String boundaryName)
+            List<BoundaryModel> boundaries,
+            int pendingSyncCount)
         getBatchSize,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)
+        downSyncAll,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)
+        downloadAll,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
   }) {
@@ -528,8 +579,14 @@ class _$DownSyncCheckTotalCountEventImpl
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
   }) {
@@ -547,8 +604,14 @@ class _$DownSyncCheckTotalCountEventImpl
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
     required TResult orElse(),
@@ -566,6 +629,8 @@ class _$DownSyncCheckTotalCountEventImpl
     required TResult Function(DownSyncBeneficiaryEvent value) downSync,
     required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
+    required TResult Function(DownSyncAllBoundariesEvent value) downSyncAll,
+    required TResult Function(DownSyncDownloadAllEvent value) downloadAll,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
   }) {
@@ -578,6 +643,8 @@ class _$DownSyncCheckTotalCountEventImpl
     TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult? Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult? Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
   }) {
@@ -590,6 +657,8 @@ class _$DownSyncCheckTotalCountEventImpl
     TResult Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
     required TResult orElse(),
@@ -631,9 +700,8 @@ abstract class _$$DownSyncGetBatchSizeEventImplCopyWith<$Res> {
   $Res call(
       {List<AppConfiguration> appConfiguration,
       String projectId,
-      String boundaryCode,
-      int pendingSyncCount,
-      String boundaryName});
+      List<BoundaryModel> boundaries,
+      int pendingSyncCount});
 }
 
 /// @nodoc
@@ -651,9 +719,8 @@ class __$$DownSyncGetBatchSizeEventImplCopyWithImpl<$Res>
   $Res call({
     Object? appConfiguration = null,
     Object? projectId = null,
-    Object? boundaryCode = null,
+    Object? boundaries = null,
     Object? pendingSyncCount = null,
-    Object? boundaryName = null,
   }) {
     return _then(_$DownSyncGetBatchSizeEventImpl(
       appConfiguration: null == appConfiguration
@@ -664,18 +731,14 @@ class __$$DownSyncGetBatchSizeEventImplCopyWithImpl<$Res>
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
               as String,
-      boundaryCode: null == boundaryCode
-          ? _value.boundaryCode
-          : boundaryCode // ignore: cast_nullable_to_non_nullable
-              as String,
+      boundaries: null == boundaries
+          ? _value._boundaries
+          : boundaries // ignore: cast_nullable_to_non_nullable
+              as List<BoundaryModel>,
       pendingSyncCount: null == pendingSyncCount
           ? _value.pendingSyncCount
           : pendingSyncCount // ignore: cast_nullable_to_non_nullable
               as int,
-      boundaryName: null == boundaryName
-          ? _value.boundaryName
-          : boundaryName // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }
@@ -688,10 +751,10 @@ class _$DownSyncGetBatchSizeEventImpl
   const _$DownSyncGetBatchSizeEventImpl(
       {required final List<AppConfiguration> appConfiguration,
       required this.projectId,
-      required this.boundaryCode,
-      required this.pendingSyncCount,
-      required this.boundaryName})
-      : _appConfiguration = appConfiguration;
+      required final List<BoundaryModel> boundaries,
+      required this.pendingSyncCount})
+      : _appConfiguration = appConfiguration,
+        _boundaries = boundaries;
 
   final List<AppConfiguration> _appConfiguration;
   @override
@@ -704,16 +767,20 @@ class _$DownSyncGetBatchSizeEventImpl
 
   @override
   final String projectId;
+  final List<BoundaryModel> _boundaries;
   @override
-  final String boundaryCode;
+  List<BoundaryModel> get boundaries {
+    if (_boundaries is EqualUnmodifiableListView) return _boundaries;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_boundaries);
+  }
+
   @override
   final int pendingSyncCount;
-  @override
-  final String boundaryName;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'BeneficiaryDownSyncEvent.getBatchSize(appConfiguration: $appConfiguration, projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, boundaryName: $boundaryName)';
+    return 'BeneficiaryDownSyncEvent.getBatchSize(appConfiguration: $appConfiguration, projectId: $projectId, boundaries: $boundaries, pendingSyncCount: $pendingSyncCount)';
   }
 
   @override
@@ -724,9 +791,8 @@ class _$DownSyncGetBatchSizeEventImpl
           DiagnosticsProperty('type', 'BeneficiaryDownSyncEvent.getBatchSize'))
       ..add(DiagnosticsProperty('appConfiguration', appConfiguration))
       ..add(DiagnosticsProperty('projectId', projectId))
-      ..add(DiagnosticsProperty('boundaryCode', boundaryCode))
-      ..add(DiagnosticsProperty('pendingSyncCount', pendingSyncCount))
-      ..add(DiagnosticsProperty('boundaryName', boundaryName));
+      ..add(DiagnosticsProperty('boundaries', boundaries))
+      ..add(DiagnosticsProperty('pendingSyncCount', pendingSyncCount));
   }
 
   @override
@@ -738,12 +804,10 @@ class _$DownSyncGetBatchSizeEventImpl
                 .equals(other._appConfiguration, _appConfiguration) &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
-            (identical(other.boundaryCode, boundaryCode) ||
-                other.boundaryCode == boundaryCode) &&
+            const DeepCollectionEquality()
+                .equals(other._boundaries, _boundaries) &&
             (identical(other.pendingSyncCount, pendingSyncCount) ||
-                other.pendingSyncCount == pendingSyncCount) &&
-            (identical(other.boundaryName, boundaryName) ||
-                other.boundaryName == boundaryName));
+                other.pendingSyncCount == pendingSyncCount));
   }
 
   @override
@@ -751,9 +815,8 @@ class _$DownSyncGetBatchSizeEventImpl
       runtimeType,
       const DeepCollectionEquality().hash(_appConfiguration),
       projectId,
-      boundaryCode,
-      pendingSyncCount,
-      boundaryName);
+      const DeepCollectionEquality().hash(_boundaries),
+      pendingSyncCount);
 
   @JsonKey(ignore: true)
   @override
@@ -774,15 +837,20 @@ class _$DownSyncGetBatchSizeEventImpl
     required TResult Function(
             List<AppConfiguration> appConfiguration,
             String projectId,
-            String boundaryCode,
-            int pendingSyncCount,
-            String boundaryName)
+            List<BoundaryModel> boundaries,
+            int pendingSyncCount)
         getBatchSize,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)
+        downSyncAll,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)
+        downloadAll,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
   }) {
-    return getBatchSize(appConfiguration, projectId, boundaryCode,
-        pendingSyncCount, boundaryName);
+    return getBatchSize(
+        appConfiguration, projectId, boundaries, pendingSyncCount);
   }
 
   @override
@@ -795,13 +863,19 @@ class _$DownSyncGetBatchSizeEventImpl
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
   }) {
-    return getBatchSize?.call(appConfiguration, projectId, boundaryCode,
-        pendingSyncCount, boundaryName);
+    return getBatchSize?.call(
+        appConfiguration, projectId, boundaries, pendingSyncCount);
   }
 
   @override
@@ -814,15 +888,21 @@ class _$DownSyncGetBatchSizeEventImpl
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
     required TResult orElse(),
   }) {
     if (getBatchSize != null) {
-      return getBatchSize(appConfiguration, projectId, boundaryCode,
-          pendingSyncCount, boundaryName);
+      return getBatchSize(
+          appConfiguration, projectId, boundaries, pendingSyncCount);
     }
     return orElse();
   }
@@ -833,6 +913,8 @@ class _$DownSyncGetBatchSizeEventImpl
     required TResult Function(DownSyncBeneficiaryEvent value) downSync,
     required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
+    required TResult Function(DownSyncAllBoundariesEvent value) downSyncAll,
+    required TResult Function(DownSyncDownloadAllEvent value) downloadAll,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
   }) {
@@ -845,6 +927,8 @@ class _$DownSyncGetBatchSizeEventImpl
     TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult? Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult? Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
   }) {
@@ -857,6 +941,8 @@ class _$DownSyncGetBatchSizeEventImpl
     TResult Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
     required TResult orElse(),
@@ -872,17 +958,559 @@ abstract class DownSyncGetBatchSizeEvent implements BeneficiaryDownSyncEvent {
   const factory DownSyncGetBatchSizeEvent(
       {required final List<AppConfiguration> appConfiguration,
       required final String projectId,
-      required final String boundaryCode,
-      required final int pendingSyncCount,
-      required final String boundaryName}) = _$DownSyncGetBatchSizeEventImpl;
+      required final List<BoundaryModel> boundaries,
+      required final int pendingSyncCount}) = _$DownSyncGetBatchSizeEventImpl;
 
   List<AppConfiguration> get appConfiguration;
   String get projectId;
-  String get boundaryCode;
+  List<BoundaryModel> get boundaries;
   int get pendingSyncCount;
-  String get boundaryName;
   @JsonKey(ignore: true)
   _$$DownSyncGetBatchSizeEventImplCopyWith<_$DownSyncGetBatchSizeEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$DownSyncAllBoundariesEventImplCopyWith<$Res> {
+  factory _$$DownSyncAllBoundariesEventImplCopyWith(
+          _$DownSyncAllBoundariesEventImpl value,
+          $Res Function(_$DownSyncAllBoundariesEventImpl) then) =
+      __$$DownSyncAllBoundariesEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {String projectId,
+      List<BoundaryModel> boundaries,
+      int batchSize,
+      int pendingSyncCount});
+}
+
+/// @nodoc
+class __$$DownSyncAllBoundariesEventImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncEventCopyWithImpl<$Res,
+        _$DownSyncAllBoundariesEventImpl>
+    implements _$$DownSyncAllBoundariesEventImplCopyWith<$Res> {
+  __$$DownSyncAllBoundariesEventImplCopyWithImpl(
+      _$DownSyncAllBoundariesEventImpl _value,
+      $Res Function(_$DownSyncAllBoundariesEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? projectId = null,
+    Object? boundaries = null,
+    Object? batchSize = null,
+    Object? pendingSyncCount = null,
+  }) {
+    return _then(_$DownSyncAllBoundariesEventImpl(
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+      boundaries: null == boundaries
+          ? _value._boundaries
+          : boundaries // ignore: cast_nullable_to_non_nullable
+              as List<BoundaryModel>,
+      batchSize: null == batchSize
+          ? _value.batchSize
+          : batchSize // ignore: cast_nullable_to_non_nullable
+              as int,
+      pendingSyncCount: null == pendingSyncCount
+          ? _value.pendingSyncCount
+          : pendingSyncCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$DownSyncAllBoundariesEventImpl
+    with DiagnosticableTreeMixin
+    implements DownSyncAllBoundariesEvent {
+  const _$DownSyncAllBoundariesEventImpl(
+      {required this.projectId,
+      required final List<BoundaryModel> boundaries,
+      required this.batchSize,
+      required this.pendingSyncCount})
+      : _boundaries = boundaries;
+
+  @override
+  final String projectId;
+  final List<BoundaryModel> _boundaries;
+  @override
+  List<BoundaryModel> get boundaries {
+    if (_boundaries is EqualUnmodifiableListView) return _boundaries;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_boundaries);
+  }
+
+  @override
+  final int batchSize;
+  @override
+  final int pendingSyncCount;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncEvent.downSyncAll(projectId: $projectId, boundaries: $boundaries, batchSize: $batchSize, pendingSyncCount: $pendingSyncCount)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'BeneficiaryDownSyncEvent.downSyncAll'))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('boundaries', boundaries))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('pendingSyncCount', pendingSyncCount));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DownSyncAllBoundariesEventImpl &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
+            const DeepCollectionEquality()
+                .equals(other._boundaries, _boundaries) &&
+            (identical(other.batchSize, batchSize) ||
+                other.batchSize == batchSize) &&
+            (identical(other.pendingSyncCount, pendingSyncCount) ||
+                other.pendingSyncCount == pendingSyncCount));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      projectId,
+      const DeepCollectionEquality().hash(_boundaries),
+      batchSize,
+      pendingSyncCount);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DownSyncAllBoundariesEventImplCopyWith<_$DownSyncAllBoundariesEventImpl>
+      get copyWith => __$$DownSyncAllBoundariesEventImplCopyWithImpl<
+          _$DownSyncAllBoundariesEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        downSync,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        checkForData,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            List<BoundaryModel> boundaries,
+            int pendingSyncCount)
+        getBatchSize,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)
+        downSyncAll,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)
+        downloadAll,
+    required TResult Function() downSyncReport,
+    required TResult Function() resetState,
+  }) {
+    return downSyncAll(projectId, boundaries, batchSize, pendingSyncCount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        downSync,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        checkForData,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
+        getBatchSize,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
+    TResult? Function()? downSyncReport,
+    TResult? Function()? resetState,
+  }) {
+    return downSyncAll?.call(
+        projectId, boundaries, batchSize, pendingSyncCount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        downSync,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        checkForData,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
+        getBatchSize,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
+    TResult Function()? downSyncReport,
+    TResult Function()? resetState,
+    required TResult orElse(),
+  }) {
+    if (downSyncAll != null) {
+      return downSyncAll(projectId, boundaries, batchSize, pendingSyncCount);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(DownSyncBeneficiaryEvent value) downSync,
+    required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
+    required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
+    required TResult Function(DownSyncAllBoundariesEvent value) downSyncAll,
+    required TResult Function(DownSyncDownloadAllEvent value) downloadAll,
+    required TResult Function(DownSyncReportEvent value) downSyncReport,
+    required TResult Function(DownSyncResetStateEvent value) resetState,
+  }) {
+    return downSyncAll(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
+    TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult? Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult? Function(DownSyncDownloadAllEvent value)? downloadAll,
+    TResult? Function(DownSyncReportEvent value)? downSyncReport,
+    TResult? Function(DownSyncResetStateEvent value)? resetState,
+  }) {
+    return downSyncAll?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
+    TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult Function(DownSyncDownloadAllEvent value)? downloadAll,
+    TResult Function(DownSyncReportEvent value)? downSyncReport,
+    TResult Function(DownSyncResetStateEvent value)? resetState,
+    required TResult orElse(),
+  }) {
+    if (downSyncAll != null) {
+      return downSyncAll(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DownSyncAllBoundariesEvent implements BeneficiaryDownSyncEvent {
+  const factory DownSyncAllBoundariesEvent(
+      {required final String projectId,
+      required final List<BoundaryModel> boundaries,
+      required final int batchSize,
+      required final int pendingSyncCount}) = _$DownSyncAllBoundariesEventImpl;
+
+  String get projectId;
+  List<BoundaryModel> get boundaries;
+  int get batchSize;
+  int get pendingSyncCount;
+  @JsonKey(ignore: true)
+  _$$DownSyncAllBoundariesEventImplCopyWith<_$DownSyncAllBoundariesEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$DownSyncDownloadAllEventImplCopyWith<$Res> {
+  factory _$$DownSyncDownloadAllEventImplCopyWith(
+          _$DownSyncDownloadAllEventImpl value,
+          $Res Function(_$DownSyncDownloadAllEventImpl) then) =
+      __$$DownSyncDownloadAllEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {String projectId,
+      List<BoundaryModel> boundaries,
+      int batchSize,
+      Map<String, int> boundaryCounts});
+}
+
+/// @nodoc
+class __$$DownSyncDownloadAllEventImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncEventCopyWithImpl<$Res,
+        _$DownSyncDownloadAllEventImpl>
+    implements _$$DownSyncDownloadAllEventImplCopyWith<$Res> {
+  __$$DownSyncDownloadAllEventImplCopyWithImpl(
+      _$DownSyncDownloadAllEventImpl _value,
+      $Res Function(_$DownSyncDownloadAllEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? projectId = null,
+    Object? boundaries = null,
+    Object? batchSize = null,
+    Object? boundaryCounts = null,
+  }) {
+    return _then(_$DownSyncDownloadAllEventImpl(
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+      boundaries: null == boundaries
+          ? _value._boundaries
+          : boundaries // ignore: cast_nullable_to_non_nullable
+              as List<BoundaryModel>,
+      batchSize: null == batchSize
+          ? _value.batchSize
+          : batchSize // ignore: cast_nullable_to_non_nullable
+              as int,
+      boundaryCounts: null == boundaryCounts
+          ? _value._boundaryCounts
+          : boundaryCounts // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$DownSyncDownloadAllEventImpl
+    with DiagnosticableTreeMixin
+    implements DownSyncDownloadAllEvent {
+  const _$DownSyncDownloadAllEventImpl(
+      {required this.projectId,
+      required final List<BoundaryModel> boundaries,
+      required this.batchSize,
+      required final Map<String, int> boundaryCounts})
+      : _boundaries = boundaries,
+        _boundaryCounts = boundaryCounts;
+
+  @override
+  final String projectId;
+  final List<BoundaryModel> _boundaries;
+  @override
+  List<BoundaryModel> get boundaries {
+    if (_boundaries is EqualUnmodifiableListView) return _boundaries;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_boundaries);
+  }
+
+  @override
+  final int batchSize;
+  final Map<String, int> _boundaryCounts;
+  @override
+  Map<String, int> get boundaryCounts {
+    if (_boundaryCounts is EqualUnmodifiableMapView) return _boundaryCounts;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_boundaryCounts);
+  }
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncEvent.downloadAll(projectId: $projectId, boundaries: $boundaries, batchSize: $batchSize, boundaryCounts: $boundaryCounts)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'BeneficiaryDownSyncEvent.downloadAll'))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('boundaries', boundaries))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('boundaryCounts', boundaryCounts));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DownSyncDownloadAllEventImpl &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
+            const DeepCollectionEquality()
+                .equals(other._boundaries, _boundaries) &&
+            (identical(other.batchSize, batchSize) ||
+                other.batchSize == batchSize) &&
+            const DeepCollectionEquality()
+                .equals(other._boundaryCounts, _boundaryCounts));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      projectId,
+      const DeepCollectionEquality().hash(_boundaries),
+      batchSize,
+      const DeepCollectionEquality().hash(_boundaryCounts));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DownSyncDownloadAllEventImplCopyWith<_$DownSyncDownloadAllEventImpl>
+      get copyWith => __$$DownSyncDownloadAllEventImplCopyWithImpl<
+          _$DownSyncDownloadAllEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        downSync,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        checkForData,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            List<BoundaryModel> boundaries,
+            int pendingSyncCount)
+        getBatchSize,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)
+        downSyncAll,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)
+        downloadAll,
+    required TResult Function() downSyncReport,
+    required TResult Function() resetState,
+  }) {
+    return downloadAll(projectId, boundaries, batchSize, boundaryCounts);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        downSync,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        checkForData,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
+        getBatchSize,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
+    TResult? Function()? downSyncReport,
+    TResult? Function()? resetState,
+  }) {
+    return downloadAll?.call(projectId, boundaries, batchSize, boundaryCounts);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        downSync,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        checkForData,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
+        getBatchSize,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
+    TResult Function()? downSyncReport,
+    TResult Function()? resetState,
+    required TResult orElse(),
+  }) {
+    if (downloadAll != null) {
+      return downloadAll(projectId, boundaries, batchSize, boundaryCounts);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(DownSyncBeneficiaryEvent value) downSync,
+    required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
+    required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
+    required TResult Function(DownSyncAllBoundariesEvent value) downSyncAll,
+    required TResult Function(DownSyncDownloadAllEvent value) downloadAll,
+    required TResult Function(DownSyncReportEvent value) downSyncReport,
+    required TResult Function(DownSyncResetStateEvent value) resetState,
+  }) {
+    return downloadAll(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
+    TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult? Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult? Function(DownSyncDownloadAllEvent value)? downloadAll,
+    TResult? Function(DownSyncReportEvent value)? downSyncReport,
+    TResult? Function(DownSyncResetStateEvent value)? resetState,
+  }) {
+    return downloadAll?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
+    TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult Function(DownSyncDownloadAllEvent value)? downloadAll,
+    TResult Function(DownSyncReportEvent value)? downSyncReport,
+    TResult Function(DownSyncResetStateEvent value)? resetState,
+    required TResult orElse(),
+  }) {
+    if (downloadAll != null) {
+      return downloadAll(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DownSyncDownloadAllEvent implements BeneficiaryDownSyncEvent {
+  const factory DownSyncDownloadAllEvent(
+          {required final String projectId,
+          required final List<BoundaryModel> boundaries,
+          required final int batchSize,
+          required final Map<String, int> boundaryCounts}) =
+      _$DownSyncDownloadAllEventImpl;
+
+  String get projectId;
+  List<BoundaryModel> get boundaries;
+  int get batchSize;
+  Map<String, int> get boundaryCounts;
+  @JsonKey(ignore: true)
+  _$$DownSyncDownloadAllEventImplCopyWith<_$DownSyncDownloadAllEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -944,10 +1572,15 @@ class _$DownSyncReportEventImpl
     required TResult Function(
             List<AppConfiguration> appConfiguration,
             String projectId,
-            String boundaryCode,
-            int pendingSyncCount,
-            String boundaryName)
+            List<BoundaryModel> boundaries,
+            int pendingSyncCount)
         getBatchSize,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)
+        downSyncAll,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)
+        downloadAll,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
   }) {
@@ -964,8 +1597,14 @@ class _$DownSyncReportEventImpl
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
   }) {
@@ -982,8 +1621,14 @@ class _$DownSyncReportEventImpl
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
     required TResult orElse(),
@@ -1000,6 +1645,8 @@ class _$DownSyncReportEventImpl
     required TResult Function(DownSyncBeneficiaryEvent value) downSync,
     required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
+    required TResult Function(DownSyncAllBoundariesEvent value) downSyncAll,
+    required TResult Function(DownSyncDownloadAllEvent value) downloadAll,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
   }) {
@@ -1012,6 +1659,8 @@ class _$DownSyncReportEventImpl
     TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult? Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult? Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
   }) {
@@ -1024,6 +1673,8 @@ class _$DownSyncReportEventImpl
     TResult Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
     required TResult orElse(),
@@ -1099,10 +1750,15 @@ class _$DownSyncResetStateEventImpl
     required TResult Function(
             List<AppConfiguration> appConfiguration,
             String projectId,
-            String boundaryCode,
-            int pendingSyncCount,
-            String boundaryName)
+            List<BoundaryModel> boundaries,
+            int pendingSyncCount)
         getBatchSize,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)
+        downSyncAll,
+    required TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)
+        downloadAll,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
   }) {
@@ -1119,8 +1775,14 @@ class _$DownSyncResetStateEventImpl
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult? Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
   }) {
@@ -1137,8 +1799,14 @@ class _$DownSyncResetStateEventImpl
             int pendingSyncCount, int batchSize, String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)?
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, int pendingSyncCount)?
+        downSyncAll,
+    TResult Function(String projectId, List<BoundaryModel> boundaries,
+            int batchSize, Map<String, int> boundaryCounts)?
+        downloadAll,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
     required TResult orElse(),
@@ -1155,6 +1823,8 @@ class _$DownSyncResetStateEventImpl
     required TResult Function(DownSyncBeneficiaryEvent value) downSync,
     required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
+    required TResult Function(DownSyncAllBoundariesEvent value) downSyncAll,
+    required TResult Function(DownSyncDownloadAllEvent value) downloadAll,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
   }) {
@@ -1167,6 +1837,8 @@ class _$DownSyncResetStateEventImpl
     TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult? Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult? Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
   }) {
@@ -1179,6 +1851,8 @@ class _$DownSyncResetStateEventImpl
     TResult Function(DownSyncBeneficiaryEvent value)? downSync,
     TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult Function(DownSyncAllBoundariesEvent value)? downSyncAll,
+    TResult Function(DownSyncDownloadAllEvent value)? downloadAll,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
     required TResult orElse(),
@@ -1201,50 +1875,68 @@ mixin _$BeneficiaryDownSyncState {
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1263,6 +1955,10 @@ mixin _$BeneficiaryDownSyncState {
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1280,6 +1976,10 @@ mixin _$BeneficiaryDownSyncState {
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1297,6 +1997,10 @@ mixin _$BeneficiaryDownSyncState {
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1413,16 +2117,22 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) {
     return inProgress(syncedCount, totalCount);
   }
@@ -1432,17 +2142,23 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) {
     return inProgress?.call(syncedCount, totalCount);
   }
@@ -1452,17 +2168,23 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (inProgress != null) {
@@ -1487,6 +2209,10 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) {
     return inProgress(this);
   }
@@ -1507,6 +2233,10 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) {
     return inProgress?.call(this);
   }
@@ -1527,6 +2257,10 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (inProgress != null) {
@@ -1629,16 +2363,22 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) {
     return success(downSyncResult);
   }
@@ -1648,17 +2388,23 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) {
     return success?.call(downSyncResult);
   }
@@ -1668,17 +2414,23 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -1703,6 +2455,10 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) {
     return success(this);
   }
@@ -1723,6 +2479,10 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) {
     return success?.call(this);
   }
@@ -1743,6 +2503,10 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -1773,9 +2537,8 @@ abstract class _$$DownSyncGetBatchSizeStateImplCopyWith<$Res> {
   $Res call(
       {int batchSize,
       String projectId,
-      String boundaryCode,
-      int pendingSyncCount,
-      String boundaryName});
+      List<BoundaryModel> boundaries,
+      int pendingSyncCount});
 }
 
 /// @nodoc
@@ -1793,9 +2556,8 @@ class __$$DownSyncGetBatchSizeStateImplCopyWithImpl<$Res>
   $Res call({
     Object? batchSize = null,
     Object? projectId = null,
-    Object? boundaryCode = null,
+    Object? boundaries = null,
     Object? pendingSyncCount = null,
-    Object? boundaryName = null,
   }) {
     return _then(_$DownSyncGetBatchSizeStateImpl(
       null == batchSize
@@ -1806,18 +2568,14 @@ class __$$DownSyncGetBatchSizeStateImplCopyWithImpl<$Res>
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
               as String,
-      null == boundaryCode
-          ? _value.boundaryCode
-          : boundaryCode // ignore: cast_nullable_to_non_nullable
-              as String,
+      null == boundaries
+          ? _value._boundaries
+          : boundaries // ignore: cast_nullable_to_non_nullable
+              as List<BoundaryModel>,
       null == pendingSyncCount
           ? _value.pendingSyncCount
           : pendingSyncCount // ignore: cast_nullable_to_non_nullable
               as int,
-      null == boundaryName
-          ? _value.boundaryName
-          : boundaryName // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }
@@ -1827,23 +2585,28 @@ class __$$DownSyncGetBatchSizeStateImplCopyWithImpl<$Res>
 class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     with DiagnosticableTreeMixin {
   const _$DownSyncGetBatchSizeStateImpl(this.batchSize, this.projectId,
-      this.boundaryCode, this.pendingSyncCount, this.boundaryName)
-      : super._();
+      final List<BoundaryModel> boundaries, this.pendingSyncCount)
+      : _boundaries = boundaries,
+        super._();
 
   @override
   final int batchSize;
   @override
   final String projectId;
+  final List<BoundaryModel> _boundaries;
   @override
-  final String boundaryCode;
+  List<BoundaryModel> get boundaries {
+    if (_boundaries is EqualUnmodifiableListView) return _boundaries;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_boundaries);
+  }
+
   @override
   final int pendingSyncCount;
-  @override
-  final String boundaryName;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'BeneficiaryDownSyncState.getBatchSize(batchSize: $batchSize, projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, boundaryName: $boundaryName)';
+    return 'BeneficiaryDownSyncState.getBatchSize(batchSize: $batchSize, projectId: $projectId, boundaries: $boundaries, pendingSyncCount: $pendingSyncCount)';
   }
 
   @override
@@ -1854,9 +2617,8 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
           DiagnosticsProperty('type', 'BeneficiaryDownSyncState.getBatchSize'))
       ..add(DiagnosticsProperty('batchSize', batchSize))
       ..add(DiagnosticsProperty('projectId', projectId))
-      ..add(DiagnosticsProperty('boundaryCode', boundaryCode))
-      ..add(DiagnosticsProperty('pendingSyncCount', pendingSyncCount))
-      ..add(DiagnosticsProperty('boundaryName', boundaryName));
+      ..add(DiagnosticsProperty('boundaries', boundaries))
+      ..add(DiagnosticsProperty('pendingSyncCount', pendingSyncCount));
   }
 
   @override
@@ -1868,17 +2630,15 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
                 other.batchSize == batchSize) &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
-            (identical(other.boundaryCode, boundaryCode) ||
-                other.boundaryCode == boundaryCode) &&
+            const DeepCollectionEquality()
+                .equals(other._boundaries, _boundaries) &&
             (identical(other.pendingSyncCount, pendingSyncCount) ||
-                other.pendingSyncCount == pendingSyncCount) &&
-            (identical(other.boundaryName, boundaryName) ||
-                other.boundaryName == boundaryName));
+                other.pendingSyncCount == pendingSyncCount));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, batchSize, projectId,
-      boundaryCode, pendingSyncCount, boundaryName);
+      const DeepCollectionEquality().hash(_boundaries), pendingSyncCount);
 
   @JsonKey(ignore: true)
   @override
@@ -1893,19 +2653,24 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) {
-    return getBatchSize(
-        batchSize, projectId, boundaryCode, pendingSyncCount, boundaryName);
+    return getBatchSize(batchSize, projectId, boundaries, pendingSyncCount);
   }
 
   @override
@@ -1913,20 +2678,26 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) {
     return getBatchSize?.call(
-        batchSize, projectId, boundaryCode, pendingSyncCount, boundaryName);
+        batchSize, projectId, boundaries, pendingSyncCount);
   }
 
   @override
@@ -1934,22 +2705,27 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (getBatchSize != null) {
-      return getBatchSize(
-          batchSize, projectId, boundaryCode, pendingSyncCount, boundaryName);
+      return getBatchSize(batchSize, projectId, boundaries, pendingSyncCount);
     }
     return orElse();
   }
@@ -1970,6 +2746,10 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) {
     return getBatchSize(this);
   }
@@ -1990,6 +2770,10 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) {
     return getBatchSize?.call(this);
   }
@@ -2010,6 +2794,10 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (getBatchSize != null) {
@@ -2023,16 +2811,14 @@ abstract class _DownSyncGetBatchSizeState extends BeneficiaryDownSyncState {
   const factory _DownSyncGetBatchSizeState(
       final int batchSize,
       final String projectId,
-      final String boundaryCode,
-      final int pendingSyncCount,
-      final String boundaryName) = _$DownSyncGetBatchSizeStateImpl;
+      final List<BoundaryModel> boundaries,
+      final int pendingSyncCount) = _$DownSyncGetBatchSizeStateImpl;
   const _DownSyncGetBatchSizeState._() : super._();
 
   int get batchSize;
   String get projectId;
-  String get boundaryCode;
+  List<BoundaryModel> get boundaries;
   int get pendingSyncCount;
-  String get boundaryName;
   @JsonKey(ignore: true)
   _$$DownSyncGetBatchSizeStateImplCopyWith<_$DownSyncGetBatchSizeStateImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -2117,16 +2903,22 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) {
     return loading(isPop);
   }
@@ -2136,17 +2928,23 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) {
     return loading?.call(isPop);
   }
@@ -2156,17 +2954,23 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -2191,6 +2995,10 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) {
     return loading(this);
   }
@@ -2211,6 +3019,10 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) {
     return loading?.call(this);
   }
@@ -2231,6 +3043,10 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -2304,16 +3120,22 @@ class _$DownSyncInsufficientStorageStateImpl
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) {
     return insufficientStorage();
   }
@@ -2323,17 +3145,23 @@ class _$DownSyncInsufficientStorageStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) {
     return insufficientStorage?.call();
   }
@@ -2343,17 +3171,23 @@ class _$DownSyncInsufficientStorageStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (insufficientStorage != null) {
@@ -2378,6 +3212,10 @@ class _$DownSyncInsufficientStorageStateImpl
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) {
     return insufficientStorage(this);
   }
@@ -2398,6 +3236,10 @@ class _$DownSyncInsufficientStorageStateImpl
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) {
     return insufficientStorage?.call(this);
   }
@@ -2418,6 +3260,10 @@ class _$DownSyncInsufficientStorageStateImpl
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (insufficientStorage != null) {
@@ -2441,7 +3287,8 @@ abstract class _$$DownSyncDataFoundStateImplCopyWith<$Res> {
           $Res Function(_$DownSyncDataFoundStateImpl) then) =
       __$$DownSyncDataFoundStateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int initialServerCount, int batchSize});
+  $Res call(
+      {int initialServerCount, int batchSize, Map<String, int> boundaryCounts});
 }
 
 /// @nodoc
@@ -2459,6 +3306,7 @@ class __$$DownSyncDataFoundStateImplCopyWithImpl<$Res>
   $Res call({
     Object? initialServerCount = null,
     Object? batchSize = null,
+    Object? boundaryCounts = null,
   }) {
     return _then(_$DownSyncDataFoundStateImpl(
       null == initialServerCount
@@ -2469,6 +3317,10 @@ class __$$DownSyncDataFoundStateImplCopyWithImpl<$Res>
           ? _value.batchSize
           : batchSize // ignore: cast_nullable_to_non_nullable
               as int,
+      null == boundaryCounts
+          ? _value._boundaryCounts
+          : boundaryCounts // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
     ));
   }
 }
@@ -2477,17 +3329,26 @@ class __$$DownSyncDataFoundStateImplCopyWithImpl<$Res>
 
 class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     with DiagnosticableTreeMixin {
-  const _$DownSyncDataFoundStateImpl(this.initialServerCount, this.batchSize)
-      : super._();
+  const _$DownSyncDataFoundStateImpl(this.initialServerCount, this.batchSize,
+      final Map<String, int> boundaryCounts)
+      : _boundaryCounts = boundaryCounts,
+        super._();
 
   @override
   final int initialServerCount;
   @override
   final int batchSize;
+  final Map<String, int> _boundaryCounts;
+  @override
+  Map<String, int> get boundaryCounts {
+    if (_boundaryCounts is EqualUnmodifiableMapView) return _boundaryCounts;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_boundaryCounts);
+  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'BeneficiaryDownSyncState.dataFound(initialServerCount: $initialServerCount, batchSize: $batchSize)';
+    return 'BeneficiaryDownSyncState.dataFound(initialServerCount: $initialServerCount, batchSize: $batchSize, boundaryCounts: $boundaryCounts)';
   }
 
   @override
@@ -2496,7 +3357,8 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     properties
       ..add(DiagnosticsProperty('type', 'BeneficiaryDownSyncState.dataFound'))
       ..add(DiagnosticsProperty('initialServerCount', initialServerCount))
-      ..add(DiagnosticsProperty('batchSize', batchSize));
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('boundaryCounts', boundaryCounts));
   }
 
   @override
@@ -2507,11 +3369,14 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
             (identical(other.initialServerCount, initialServerCount) ||
                 other.initialServerCount == initialServerCount) &&
             (identical(other.batchSize, batchSize) ||
-                other.batchSize == batchSize));
+                other.batchSize == batchSize) &&
+            const DeepCollectionEquality()
+                .equals(other._boundaryCounts, _boundaryCounts));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, initialServerCount, batchSize);
+  int get hashCode => Object.hash(runtimeType, initialServerCount, batchSize,
+      const DeepCollectionEquality().hash(_boundaryCounts));
 
   @JsonKey(ignore: true)
   @override
@@ -2526,18 +3391,24 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) {
-    return dataFound(initialServerCount, batchSize);
+    return dataFound(initialServerCount, batchSize, boundaryCounts);
   }
 
   @override
@@ -2545,19 +3416,25 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) {
-    return dataFound?.call(initialServerCount, batchSize);
+    return dataFound?.call(initialServerCount, batchSize, boundaryCounts);
   }
 
   @override
@@ -2565,21 +3442,27 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (dataFound != null) {
-      return dataFound(initialServerCount, batchSize);
+      return dataFound(initialServerCount, batchSize, boundaryCounts);
     }
     return orElse();
   }
@@ -2600,6 +3483,10 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) {
     return dataFound(this);
   }
@@ -2620,6 +3507,10 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) {
     return dataFound?.call(this);
   }
@@ -2640,6 +3531,10 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (dataFound != null) {
@@ -2651,12 +3546,14 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
 
 abstract class _DownSyncDataFoundState extends BeneficiaryDownSyncState {
   const factory _DownSyncDataFoundState(
-          final int initialServerCount, final int batchSize) =
-      _$DownSyncDataFoundStateImpl;
+      final int initialServerCount,
+      final int batchSize,
+      final Map<String, int> boundaryCounts) = _$DownSyncDataFoundStateImpl;
   const _DownSyncDataFoundState._() : super._();
 
   int get initialServerCount;
   int get batchSize;
+  Map<String, int> get boundaryCounts;
   @JsonKey(ignore: true)
   _$$DownSyncDataFoundStateImplCopyWith<_$DownSyncDataFoundStateImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -2712,16 +3609,22 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) {
     return resetState();
   }
@@ -2731,17 +3634,23 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) {
     return resetState?.call();
   }
@@ -2751,17 +3660,23 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (resetState != null) {
@@ -2786,6 +3701,10 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) {
     return resetState(this);
   }
@@ -2806,6 +3725,10 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) {
     return resetState?.call(this);
   }
@@ -2826,6 +3749,10 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (resetState != null) {
@@ -2893,16 +3820,22 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) {
     return totalCountCheckFailed();
   }
@@ -2912,17 +3845,23 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) {
     return totalCountCheckFailed?.call();
   }
@@ -2932,17 +3871,23 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (totalCountCheckFailed != null) {
@@ -2967,6 +3912,10 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) {
     return totalCountCheckFailed(this);
   }
@@ -2987,6 +3936,10 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) {
     return totalCountCheckFailed?.call(this);
   }
@@ -3007,6 +3960,10 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (totalCountCheckFailed != null) {
@@ -3073,16 +4030,22 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) {
     return failed();
   }
@@ -3092,17 +4055,23 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) {
     return failed?.call();
   }
@@ -3112,17 +4081,23 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (failed != null) {
@@ -3147,6 +4122,10 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) {
     return failed(this);
   }
@@ -3167,6 +4146,10 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) {
     return failed?.call(this);
   }
@@ -3187,6 +4170,10 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (failed != null) {
@@ -3290,16 +4277,22 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) {
     return report(downsyncCriteriaList);
   }
@@ -3309,17 +4302,23 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) {
     return report?.call(downsyncCriteriaList);
   }
@@ -3329,17 +4328,23 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (report != null) {
@@ -3364,6 +4369,10 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) {
     return report(this);
   }
@@ -3384,6 +4393,10 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) {
     return report?.call(this);
   }
@@ -3404,6 +4417,10 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (report != null) {
@@ -3478,16 +4495,22 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+            List<BoundaryModel> boundaries, int pendingSyncCount)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
   }) {
     return pendingSync();
   }
@@ -3497,17 +4520,23 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
   }) {
     return pendingSync?.call();
   }
@@ -3517,17 +4546,23 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (pendingSync != null) {
@@ -3552,6 +4587,10 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
   }) {
     return pendingSync(this);
   }
@@ -3572,6 +4611,10 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
   }) {
     return pendingSync?.call(this);
   }
@@ -3592,6 +4635,10 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
     required TResult orElse(),
   }) {
     if (pendingSync != null) {
@@ -3604,4 +4651,574 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
 abstract class _DownSyncPendingSyncState extends BeneficiaryDownSyncState {
   const factory _DownSyncPendingSyncState() = _$DownSyncPendingSyncStateImpl;
   const _DownSyncPendingSyncState._() : super._();
+}
+
+/// @nodoc
+abstract class _$$DownSyncMultiBoundaryInProgressStateImplCopyWith<$Res> {
+  factory _$$DownSyncMultiBoundaryInProgressStateImplCopyWith(
+          _$DownSyncMultiBoundaryInProgressStateImpl value,
+          $Res Function(_$DownSyncMultiBoundaryInProgressStateImpl) then) =
+      __$$DownSyncMultiBoundaryInProgressStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {int currentBoundaryIndex,
+      int totalBoundaries,
+      String currentBoundaryName,
+      int syncedCount,
+      int totalCount});
+}
+
+/// @nodoc
+class __$$DownSyncMultiBoundaryInProgressStateImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncStateCopyWithImpl<$Res,
+        _$DownSyncMultiBoundaryInProgressStateImpl>
+    implements _$$DownSyncMultiBoundaryInProgressStateImplCopyWith<$Res> {
+  __$$DownSyncMultiBoundaryInProgressStateImplCopyWithImpl(
+      _$DownSyncMultiBoundaryInProgressStateImpl _value,
+      $Res Function(_$DownSyncMultiBoundaryInProgressStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? currentBoundaryIndex = null,
+    Object? totalBoundaries = null,
+    Object? currentBoundaryName = null,
+    Object? syncedCount = null,
+    Object? totalCount = null,
+  }) {
+    return _then(_$DownSyncMultiBoundaryInProgressStateImpl(
+      null == currentBoundaryIndex
+          ? _value.currentBoundaryIndex
+          : currentBoundaryIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == totalBoundaries
+          ? _value.totalBoundaries
+          : totalBoundaries // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == currentBoundaryName
+          ? _value.currentBoundaryName
+          : currentBoundaryName // ignore: cast_nullable_to_non_nullable
+              as String,
+      null == syncedCount
+          ? _value.syncedCount
+          : syncedCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$DownSyncMultiBoundaryInProgressStateImpl
+    extends _DownSyncMultiBoundaryInProgressState with DiagnosticableTreeMixin {
+  const _$DownSyncMultiBoundaryInProgressStateImpl(
+      this.currentBoundaryIndex,
+      this.totalBoundaries,
+      this.currentBoundaryName,
+      this.syncedCount,
+      this.totalCount)
+      : super._();
+
+  @override
+  final int currentBoundaryIndex;
+  @override
+  final int totalBoundaries;
+  @override
+  final String currentBoundaryName;
+  @override
+  final int syncedCount;
+  @override
+  final int totalCount;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncState.multiBoundaryInProgress(currentBoundaryIndex: $currentBoundaryIndex, totalBoundaries: $totalBoundaries, currentBoundaryName: $currentBoundaryName, syncedCount: $syncedCount, totalCount: $totalCount)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'BeneficiaryDownSyncState.multiBoundaryInProgress'))
+      ..add(DiagnosticsProperty('currentBoundaryIndex', currentBoundaryIndex))
+      ..add(DiagnosticsProperty('totalBoundaries', totalBoundaries))
+      ..add(DiagnosticsProperty('currentBoundaryName', currentBoundaryName))
+      ..add(DiagnosticsProperty('syncedCount', syncedCount))
+      ..add(DiagnosticsProperty('totalCount', totalCount));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DownSyncMultiBoundaryInProgressStateImpl &&
+            (identical(other.currentBoundaryIndex, currentBoundaryIndex) ||
+                other.currentBoundaryIndex == currentBoundaryIndex) &&
+            (identical(other.totalBoundaries, totalBoundaries) ||
+                other.totalBoundaries == totalBoundaries) &&
+            (identical(other.currentBoundaryName, currentBoundaryName) ||
+                other.currentBoundaryName == currentBoundaryName) &&
+            (identical(other.syncedCount, syncedCount) ||
+                other.syncedCount == syncedCount) &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, currentBoundaryIndex,
+      totalBoundaries, currentBoundaryName, syncedCount, totalCount);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DownSyncMultiBoundaryInProgressStateImplCopyWith<
+          _$DownSyncMultiBoundaryInProgressStateImpl>
+      get copyWith => __$$DownSyncMultiBoundaryInProgressStateImplCopyWithImpl<
+          _$DownSyncMultiBoundaryInProgressStateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int syncedCount, int totalCount) inProgress,
+    required TResult Function(DownsyncModel downSyncResult) success,
+    required TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)
+        getBatchSize,
+    required TResult Function(bool isPop) loading,
+    required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
+    required TResult Function() resetState,
+    required TResult Function() totalCountCheckFailed,
+    required TResult Function() failed,
+    required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
+    required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
+  }) {
+    return multiBoundaryInProgress(currentBoundaryIndex, totalBoundaries,
+        currentBoundaryName, syncedCount, totalCount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int syncedCount, int totalCount)? inProgress,
+    TResult? Function(DownsyncModel downSyncResult)? success,
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
+        getBatchSize,
+    TResult? Function(bool isPop)? loading,
+    TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
+    TResult? Function()? resetState,
+    TResult? Function()? totalCountCheckFailed,
+    TResult? Function()? failed,
+    TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
+  }) {
+    return multiBoundaryInProgress?.call(currentBoundaryIndex, totalBoundaries,
+        currentBoundaryName, syncedCount, totalCount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int syncedCount, int totalCount)? inProgress,
+    TResult Function(DownsyncModel downSyncResult)? success,
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
+        getBatchSize,
+    TResult Function(bool isPop)? loading,
+    TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
+    TResult Function()? resetState,
+    TResult Function()? totalCountCheckFailed,
+    TResult Function()? failed,
+    TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
+    required TResult orElse(),
+  }) {
+    if (multiBoundaryInProgress != null) {
+      return multiBoundaryInProgress(currentBoundaryIndex, totalBoundaries,
+          currentBoundaryName, syncedCount, totalCount);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_DownSyncInProgressState value) inProgress,
+    required TResult Function(_DownSyncSuccessState value) success,
+    required TResult Function(_DownSyncGetBatchSizeState value) getBatchSize,
+    required TResult Function(_DownSyncLoadingState value) loading,
+    required TResult Function(_DownSyncInsufficientStorageState value)
+        insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
+    required TResult Function(_DownSyncResetState value) resetState,
+    required TResult Function(_DownSynnCountCheckFailedState value)
+        totalCountCheckFailed,
+    required TResult Function(_DownSyncFailureState value) failed,
+    required TResult Function(_DownSyncReportState value) report,
+    required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
+  }) {
+    return multiBoundaryInProgress(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_DownSyncInProgressState value)? inProgress,
+    TResult? Function(_DownSyncSuccessState value)? success,
+    TResult? Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult? Function(_DownSyncLoadingState value)? loading,
+    TResult? Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
+    TResult? Function(_DownSyncResetState value)? resetState,
+    TResult? Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult? Function(_DownSyncFailureState value)? failed,
+    TResult? Function(_DownSyncReportState value)? report,
+    TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
+  }) {
+    return multiBoundaryInProgress?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_DownSyncInProgressState value)? inProgress,
+    TResult Function(_DownSyncSuccessState value)? success,
+    TResult Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult Function(_DownSyncLoadingState value)? loading,
+    TResult Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
+    TResult Function(_DownSyncResetState value)? resetState,
+    TResult Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult Function(_DownSyncFailureState value)? failed,
+    TResult Function(_DownSyncReportState value)? report,
+    TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
+    required TResult orElse(),
+  }) {
+    if (multiBoundaryInProgress != null) {
+      return multiBoundaryInProgress(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _DownSyncMultiBoundaryInProgressState
+    extends BeneficiaryDownSyncState {
+  const factory _DownSyncMultiBoundaryInProgressState(
+      final int currentBoundaryIndex,
+      final int totalBoundaries,
+      final String currentBoundaryName,
+      final int syncedCount,
+      final int totalCount) = _$DownSyncMultiBoundaryInProgressStateImpl;
+  const _DownSyncMultiBoundaryInProgressState._() : super._();
+
+  int get currentBoundaryIndex;
+  int get totalBoundaries;
+  String get currentBoundaryName;
+  int get syncedCount;
+  int get totalCount;
+  @JsonKey(ignore: true)
+  _$$DownSyncMultiBoundaryInProgressStateImplCopyWith<
+          _$DownSyncMultiBoundaryInProgressStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$DownSyncMultiBoundarySuccessStateImplCopyWith<$Res> {
+  factory _$$DownSyncMultiBoundarySuccessStateImplCopyWith(
+          _$DownSyncMultiBoundarySuccessStateImpl value,
+          $Res Function(_$DownSyncMultiBoundarySuccessStateImpl) then) =
+      __$$DownSyncMultiBoundarySuccessStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<DownsyncModel> results});
+}
+
+/// @nodoc
+class __$$DownSyncMultiBoundarySuccessStateImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncStateCopyWithImpl<$Res,
+        _$DownSyncMultiBoundarySuccessStateImpl>
+    implements _$$DownSyncMultiBoundarySuccessStateImplCopyWith<$Res> {
+  __$$DownSyncMultiBoundarySuccessStateImplCopyWithImpl(
+      _$DownSyncMultiBoundarySuccessStateImpl _value,
+      $Res Function(_$DownSyncMultiBoundarySuccessStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? results = null,
+  }) {
+    return _then(_$DownSyncMultiBoundarySuccessStateImpl(
+      null == results
+          ? _value._results
+          : results // ignore: cast_nullable_to_non_nullable
+              as List<DownsyncModel>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$DownSyncMultiBoundarySuccessStateImpl
+    extends _DownSyncMultiBoundarySuccessState with DiagnosticableTreeMixin {
+  const _$DownSyncMultiBoundarySuccessStateImpl(
+      final List<DownsyncModel> results)
+      : _results = results,
+        super._();
+
+  final List<DownsyncModel> _results;
+  @override
+  List<DownsyncModel> get results {
+    if (_results is EqualUnmodifiableListView) return _results;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_results);
+  }
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncState.multiBoundarySuccess(results: $results)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'BeneficiaryDownSyncState.multiBoundarySuccess'))
+      ..add(DiagnosticsProperty('results', results));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DownSyncMultiBoundarySuccessStateImpl &&
+            const DeepCollectionEquality().equals(other._results, _results));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_results));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DownSyncMultiBoundarySuccessStateImplCopyWith<
+          _$DownSyncMultiBoundarySuccessStateImpl>
+      get copyWith => __$$DownSyncMultiBoundarySuccessStateImplCopyWithImpl<
+          _$DownSyncMultiBoundarySuccessStateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int syncedCount, int totalCount) inProgress,
+    required TResult Function(DownsyncModel downSyncResult) success,
+    required TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)
+        getBatchSize,
+    required TResult Function(bool isPop) loading,
+    required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)
+        dataFound,
+    required TResult Function() resetState,
+    required TResult Function() totalCountCheckFailed,
+    required TResult Function() failed,
+    required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
+    required TResult Function() pendingSync,
+    required TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)
+        multiBoundaryInProgress,
+    required TResult Function(List<DownsyncModel> results) multiBoundarySuccess,
+  }) {
+    return multiBoundarySuccess(results);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int syncedCount, int totalCount)? inProgress,
+    TResult? Function(DownsyncModel downSyncResult)? success,
+    TResult? Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
+        getBatchSize,
+    TResult? Function(bool isPop)? loading,
+    TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
+    TResult? Function()? resetState,
+    TResult? Function()? totalCountCheckFailed,
+    TResult? Function()? failed,
+    TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult? Function()? pendingSync,
+    TResult? Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult? Function(List<DownsyncModel> results)? multiBoundarySuccess,
+  }) {
+    return multiBoundarySuccess?.call(results);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int syncedCount, int totalCount)? inProgress,
+    TResult Function(DownsyncModel downSyncResult)? success,
+    TResult Function(int batchSize, String projectId,
+            List<BoundaryModel> boundaries, int pendingSyncCount)?
+        getBatchSize,
+    TResult Function(bool isPop)? loading,
+    TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount, int batchSize,
+            Map<String, int> boundaryCounts)?
+        dataFound,
+    TResult Function()? resetState,
+    TResult Function()? totalCountCheckFailed,
+    TResult Function()? failed,
+    TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult Function()? pendingSync,
+    TResult Function(int currentBoundaryIndex, int totalBoundaries,
+            String currentBoundaryName, int syncedCount, int totalCount)?
+        multiBoundaryInProgress,
+    TResult Function(List<DownsyncModel> results)? multiBoundarySuccess,
+    required TResult orElse(),
+  }) {
+    if (multiBoundarySuccess != null) {
+      return multiBoundarySuccess(results);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_DownSyncInProgressState value) inProgress,
+    required TResult Function(_DownSyncSuccessState value) success,
+    required TResult Function(_DownSyncGetBatchSizeState value) getBatchSize,
+    required TResult Function(_DownSyncLoadingState value) loading,
+    required TResult Function(_DownSyncInsufficientStorageState value)
+        insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
+    required TResult Function(_DownSyncResetState value) resetState,
+    required TResult Function(_DownSynnCountCheckFailedState value)
+        totalCountCheckFailed,
+    required TResult Function(_DownSyncFailureState value) failed,
+    required TResult Function(_DownSyncReportState value) report,
+    required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_DownSyncMultiBoundaryInProgressState value)
+        multiBoundaryInProgress,
+    required TResult Function(_DownSyncMultiBoundarySuccessState value)
+        multiBoundarySuccess,
+  }) {
+    return multiBoundarySuccess(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_DownSyncInProgressState value)? inProgress,
+    TResult? Function(_DownSyncSuccessState value)? success,
+    TResult? Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult? Function(_DownSyncLoadingState value)? loading,
+    TResult? Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
+    TResult? Function(_DownSyncResetState value)? resetState,
+    TResult? Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult? Function(_DownSyncFailureState value)? failed,
+    TResult? Function(_DownSyncReportState value)? report,
+    TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult? Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
+  }) {
+    return multiBoundarySuccess?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_DownSyncInProgressState value)? inProgress,
+    TResult Function(_DownSyncSuccessState value)? success,
+    TResult Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult Function(_DownSyncLoadingState value)? loading,
+    TResult Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
+    TResult Function(_DownSyncResetState value)? resetState,
+    TResult Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult Function(_DownSyncFailureState value)? failed,
+    TResult Function(_DownSyncReportState value)? report,
+    TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_DownSyncMultiBoundaryInProgressState value)?
+        multiBoundaryInProgress,
+    TResult Function(_DownSyncMultiBoundarySuccessState value)?
+        multiBoundarySuccess,
+    required TResult orElse(),
+  }) {
+    if (multiBoundarySuccess != null) {
+      return multiBoundarySuccess(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _DownSyncMultiBoundarySuccessState
+    extends BeneficiaryDownSyncState {
+  const factory _DownSyncMultiBoundarySuccessState(
+          final List<DownsyncModel> results) =
+      _$DownSyncMultiBoundarySuccessStateImpl;
+  const _DownSyncMultiBoundarySuccessState._() : super._();
+
+  List<DownsyncModel> get results;
+  @JsonKey(ignore: true)
+  _$$DownSyncMultiBoundarySuccessStateImplCopyWith<
+          _$DownSyncMultiBoundarySuccessStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

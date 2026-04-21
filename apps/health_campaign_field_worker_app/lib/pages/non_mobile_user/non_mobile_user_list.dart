@@ -1,6 +1,7 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/models/entities/scanned_individual_data.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
@@ -28,6 +29,7 @@ class NonMobileUserListPage extends LocalizedStatefulWidget {
 class _NonMobileUserListPageState
     extends LocalizedState<NonMobileUserListPage> {
   AttendanceBloc? attendanceBloc;
+  final Set<String> _enrolledIds = {};
 
   @override
   void initState() {
@@ -41,6 +43,24 @@ class _NonMobileUserListPageState
           context.repository<IndividualModel, IndividualSearchModel>(),
     );
     super.initState();
+    _loadEnrollmentStatus();
+  }
+
+  Future<void> _loadEnrollmentStatus() async {
+    try {
+      final repository = context.read<FaceEmbeddingRepository>();
+      final allEmbeddings = await repository.getAllEmbeddings();
+      if (mounted) {
+        setState(() {
+          _enrolledIds.clear();
+          for (final e in allEmbeddings) {
+            _enrolledIds.add(e.individualId);
+          }
+        });
+      }
+    } catch (e) {
+      debugPrint('Failed to load face enrollment status: $e');
+    }
   }
 
   @override
@@ -100,27 +120,38 @@ class _NonMobileUserListPageState
                                   ),
                                   ...List.generate(
                                       registers.first.attendees!.length, (x) {
+                                    final individual =
+                                        registers.first.individualList![x];
+                                    final individualId =
+                                        individual.individualId!;
+
                                     return NonMobileUserCard(
-                                      mobileNumber: registers
-                                          .first.individualList![x].mobileNumber
-                                          .toString(),
-                                      userName: registers.first
-                                          .individualList![x].name!.givenName!,
-                                      age: getAge(registers.first
-                                          .individualList![x].dateOfBirth),
+                                      mobileNumber:
+                                          individual.mobileNumber.toString(),
+                                      userName: individual.name!.givenName!,
+                                      age: getAge(individual.dateOfBirth),
+                                      isFaceEnrolled:
+                                          _enrolledIds.contains(individualId),
+                                      onFaceEnroll: () async {
+                                        await context.router.push(
+                                          NonMobileFaceEnrollRoute(
+                                            individualId: individualId,
+                                            individualName:
+                                                individual.name!.givenName!,
+                                          ),
+                                        );
+                                        // Always reload enrollment status when
+                                        // returning from enrollment page
+                                        _loadEnrollmentStatus();
+                                      },
                                       onScanMe: () {
                                         showQRForNonMobileUser(
                                             context: context,
                                             individualScannerData:
                                                 ScannedIndividualDataModel(
-                                                    individualId: registers
-                                                        .first
-                                                        .individualList![x]
-                                                        .individualId!,
-                                                    age: getAge(registers
-                                                        .first
-                                                        .individualList![x]
-                                                        .dateOfBirth),
+                                                    individualId: individualId,
+                                                    age: getAge(
+                                                        individual.dateOfBirth),
                                                     locality: localizations
                                                         .translate(registers
                                                                 .first
@@ -131,22 +162,18 @@ class _NonMobileUserListPageState
                                                                 .locality
                                                                 ?.code ??
                                                             ''),
-                                                    name: registers
-                                                        .first
-                                                        .individualList![x]
-                                                        .name!
-                                                        .givenName!,
+                                                    name: individual
+                                                        .name!.givenName!,
                                                     qrCreatedTime: DateTime
                                                             .now()
                                                         .millisecondsSinceEpoch),
                                             localizations: localizations,
                                             textTheme: textTheme);
                                       },
-                                      gender: localizations.translate(registers
-                                          .first.individualList![x].gender!.name
+                                      gender: localizations.translate(individual
+                                          .gender!.name
                                           .toUpperCase()),
-                                      individualId: registers.first
-                                          .individualList![x].individualId!,
+                                      individualId: individualId,
                                     );
                                   })
                                 ],

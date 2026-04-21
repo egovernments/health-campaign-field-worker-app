@@ -140,71 +140,65 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'SearchHouseHoldFilters',
     ),
-    r'STOCK_THRESHOLD_CONFIG': PropertySchema(
-      id: 21,
-      name: r'STOCK_THRESHOLD_CONFIG',
-      type: IsarType.object,
-      target: r'StockThresholdConfig',
-    ),
     r'SYNC_METHOD': PropertySchema(
-      id: 22,
+      id: 21,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 23,
+      id: 22,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 24,
+      id: 23,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSIT_POST_TYPE': PropertySchema(
-      id: 25,
+      id: 24,
       name: r'TRANSIT_POST_TYPE',
       type: IsarType.objectList,
       target: r'TransitPostType',
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 26,
+      id: 25,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 27,
+      id: 26,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'manualAttendanceReasons': PropertySchema(
-      id: 28,
+      id: 27,
       name: r'manualAttendanceReasons',
       type: IsarType.objectList,
       target: r'ManualAttendanceReasons',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 29,
+      id: 28,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 30,
+      id: 29,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 31,
+      id: 30,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 32,
+      id: 31,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -248,8 +242,7 @@ const AppConfigurationSchema = CollectionSchema(
     r'PrivacyPolicy': PrivacyPolicySchema,
     r'Content': ContentSchema,
     r'Description': DescriptionSchema,
-    r'SubDescription': SubDescriptionSchema,
-    r'StockThresholdConfig': StockThresholdConfigSchema
+    r'SubDescription': SubDescriptionSchema
   },
   getId: _appConfigurationGetId,
   getLinks: _appConfigurationGetLinks,
@@ -510,14 +503,6 @@ int _appConfigurationEstimateSize(
     }
   }
   {
-    final value = object.stockThresholdConfig;
-    if (value != null) {
-      bytesCount += 3 +
-          StockThresholdConfigSchema.estimateSize(
-              value, allOffsets[StockThresholdConfig]!, allOffsets);
-    }
-  }
-  {
     final value = object.syncMethod;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -761,59 +746,53 @@ void _appConfigurationSerialize(
     SearchHouseHoldFiltersSchema.serialize,
     object.searchHouseHoldFilters,
   );
-  writer.writeObject<StockThresholdConfig>(
-    offsets[21],
-    allOffsets,
-    StockThresholdConfigSchema.serialize,
-    object.stockThresholdConfig,
-  );
-  writer.writeString(offsets[22], object.syncMethod);
-  writer.writeString(offsets[23], object.syncTrigger);
-  writer.writeString(offsets[24], object.tenantId);
+  writer.writeString(offsets[21], object.syncMethod);
+  writer.writeString(offsets[22], object.syncTrigger);
+  writer.writeString(offsets[23], object.tenantId);
   writer.writeObjectList<TransitPostType>(
-    offsets[25],
+    offsets[24],
     allOffsets,
     TransitPostTypeSchema.serialize,
     object.transitPostType,
   );
   writer.writeObjectList<TransportTypes>(
-    offsets[26],
+    offsets[25],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[27],
+    offsets[26],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObjectList<ManualAttendanceReasons>(
-    offsets[28],
+    offsets[27],
     allOffsets,
     ManualAttendanceReasonsSchema.serialize,
     object.manualAttendanceReasons,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[29],
+    offsets[28],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[30],
+    offsets[29],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[31],
+    offsets[30],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[32],
+    offsets[31],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -939,28 +918,23 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     SearchHouseHoldFilters(),
   );
-  object.stockThresholdConfig = reader.readObjectOrNull<StockThresholdConfig>(
-    offsets[21],
-    StockThresholdConfigSchema.deserialize,
-    allOffsets,
-  );
-  object.syncMethod = reader.readStringOrNull(offsets[22]);
-  object.syncTrigger = reader.readStringOrNull(offsets[23]);
-  object.tenantId = reader.readStringOrNull(offsets[24]);
+  object.syncMethod = reader.readStringOrNull(offsets[21]);
+  object.syncTrigger = reader.readStringOrNull(offsets[22]);
+  object.tenantId = reader.readStringOrNull(offsets[23]);
   object.transitPostType = reader.readObjectList<TransitPostType>(
-    offsets[25],
+    offsets[24],
     TransitPostTypeSchema.deserialize,
     allOffsets,
     TransitPostType(),
   );
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[26],
+    offsets[25],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[27],
+    offsets[26],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
@@ -968,30 +942,30 @@ AppConfiguration _appConfigurationDeserialize(
   object.id = id;
   object.manualAttendanceReasons =
       reader.readObjectList<ManualAttendanceReasons>(
-    offsets[28],
+    offsets[27],
     ManualAttendanceReasonsSchema.deserialize,
     allOffsets,
     ManualAttendanceReasons(),
   );
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[29],
+    offsets[28],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[30],
+    offsets[29],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[31],
+    offsets[30],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[32],
+    offsets[31],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -1136,66 +1110,60 @@ P _appConfigurationDeserializeProp<P>(
         SearchHouseHoldFilters(),
       )) as P;
     case 21:
-      return (reader.readObjectOrNull<StockThresholdConfig>(
-        offset,
-        StockThresholdConfigSchema.deserialize,
-        allOffsets,
-      )) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 22:
       return (reader.readStringOrNull(offset)) as P;
     case 23:
       return (reader.readStringOrNull(offset)) as P;
     case 24:
-      return (reader.readStringOrNull(offset)) as P;
-    case 25:
       return (reader.readObjectList<TransitPostType>(
         offset,
         TransitPostTypeSchema.deserialize,
         allOffsets,
         TransitPostType(),
       )) as P;
-    case 26:
+    case 25:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 27:
+    case 26:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 28:
+    case 27:
       return (reader.readObjectList<ManualAttendanceReasons>(
         offset,
         ManualAttendanceReasonsSchema.deserialize,
         allOffsets,
         ManualAttendanceReasons(),
       )) as P;
-    case 29:
+    case 28:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 30:
+    case 29:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 31:
+    case 30:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 32:
+    case 31:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -3353,24 +3321,6 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
-      stockThresholdConfigIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'STOCK_THRESHOLD_CONFIG',
-      ));
-    });
-  }
-
-  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
-      stockThresholdConfigIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'STOCK_THRESHOLD_CONFIG',
-      ));
-    });
-  }
-
-  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       syncMethodIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -4787,13 +4737,6 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
-      stockThresholdConfig(FilterQuery<StockThresholdConfig> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'STOCK_THRESHOLD_CONFIG');
-    });
-  }
-
-  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       transitPostTypeElement(FilterQuery<TransitPostType> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'TRANSIT_POST_TYPE');
@@ -5239,13 +5182,6 @@ extension AppConfigurationQueryProperty
       QQueryOperations> searchHouseHoldFiltersProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'SEARCH_HOUSEHOLD_FILTERS');
-    });
-  }
-
-  QueryBuilder<AppConfiguration, StockThresholdConfig?, QQueryOperations>
-      stockThresholdConfigProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'STOCK_THRESHOLD_CONFIG');
     });
   }
 
@@ -15752,212 +15688,3 @@ extension SubDescriptionQueryFilter
 
 extension SubDescriptionQueryObject
     on QueryBuilder<SubDescription, SubDescription, QFilterCondition> {}
-
-// coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
-
-const StockThresholdConfigSchema = Schema(
-  name: r'StockThresholdConfig',
-  id: -4550165797637857313,
-  properties: {
-    r'MAX_THRESHOLD': PropertySchema(
-      id: 0,
-      name: r'MAX_THRESHOLD',
-      type: IsarType.double,
-    ),
-    r'MIN_THRESHOLD': PropertySchema(
-      id: 1,
-      name: r'MIN_THRESHOLD',
-      type: IsarType.double,
-    )
-  },
-  estimateSize: _stockThresholdConfigEstimateSize,
-  serialize: _stockThresholdConfigSerialize,
-  deserialize: _stockThresholdConfigDeserialize,
-  deserializeProp: _stockThresholdConfigDeserializeProp,
-);
-
-int _stockThresholdConfigEstimateSize(
-  StockThresholdConfig object,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  var bytesCount = offsets.last;
-  return bytesCount;
-}
-
-void _stockThresholdConfigSerialize(
-  StockThresholdConfig object,
-  IsarWriter writer,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  writer.writeDouble(offsets[0], object.maxThreshold);
-  writer.writeDouble(offsets[1], object.minThreshold);
-}
-
-StockThresholdConfig _stockThresholdConfigDeserialize(
-  Id id,
-  IsarReader reader,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  final object = StockThresholdConfig();
-  object.maxThreshold = reader.readDouble(offsets[0]);
-  object.minThreshold = reader.readDouble(offsets[1]);
-  return object;
-}
-
-P _stockThresholdConfigDeserializeProp<P>(
-  IsarReader reader,
-  int propertyId,
-  int offset,
-  Map<Type, List<int>> allOffsets,
-) {
-  switch (propertyId) {
-    case 0:
-      return (reader.readDouble(offset)) as P;
-    case 1:
-      return (reader.readDouble(offset)) as P;
-    default:
-      throw IsarError('Unknown property with id $propertyId');
-  }
-}
-
-extension StockThresholdConfigQueryFilter on QueryBuilder<StockThresholdConfig,
-    StockThresholdConfig, QFilterCondition> {
-  QueryBuilder<StockThresholdConfig, StockThresholdConfig,
-      QAfterFilterCondition> maxThresholdEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'MAX_THRESHOLD',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<StockThresholdConfig, StockThresholdConfig,
-      QAfterFilterCondition> maxThresholdGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'MAX_THRESHOLD',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<StockThresholdConfig, StockThresholdConfig,
-      QAfterFilterCondition> maxThresholdLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'MAX_THRESHOLD',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<StockThresholdConfig, StockThresholdConfig,
-      QAfterFilterCondition> maxThresholdBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'MAX_THRESHOLD',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<StockThresholdConfig, StockThresholdConfig,
-      QAfterFilterCondition> minThresholdEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'MIN_THRESHOLD',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<StockThresholdConfig, StockThresholdConfig,
-      QAfterFilterCondition> minThresholdGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'MIN_THRESHOLD',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<StockThresholdConfig, StockThresholdConfig,
-      QAfterFilterCondition> minThresholdLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'MIN_THRESHOLD',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<StockThresholdConfig, StockThresholdConfig,
-      QAfterFilterCondition> minThresholdBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'MIN_THRESHOLD',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-}
-
-extension StockThresholdConfigQueryObject on QueryBuilder<StockThresholdConfig,
-    StockThresholdConfig, QFilterCondition> {}

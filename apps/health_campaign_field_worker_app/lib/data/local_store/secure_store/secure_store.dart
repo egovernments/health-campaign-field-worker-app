@@ -22,6 +22,10 @@ class LocalSecureStore {
   static const manualSyncKey = 'manualSyncKey';
   static const selectedProjectTypeKey = 'selectedProjectType';
   static const dbEncryptionKeyKey = 'dbEncryptionKey';
+  static const currentFaceUserIdKey = 'currentFaceUserId';
+  static const faceEnrollmentCompleteKey = 'faceEnrollmentComplete';
+  static const isFaceGatePassedKey = 'isFaceGatePassed';
+  static const lastReVerificationScheduleKey = 'lastReVerificationSchedule';
 
   final storage = const FlutterSecureStorage();
 
@@ -263,6 +267,49 @@ class LocalSecureStore {
     final random = Random.secure();
     final values = List<int>.generate(32, (i) => random.nextInt(256));
     return values.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
+  }
+
+  // ── Face Auth accessors ──
+
+  Future<String?> get currentFaceUserId {
+    return storage.read(key: currentFaceUserIdKey);
+  }
+
+  Future<void> setCurrentFaceUserId(String? userId) async {
+    if (userId == null) {
+      await storage.delete(key: currentFaceUserIdKey);
+    } else {
+      await storage.write(key: currentFaceUserIdKey, value: userId);
+    }
+  }
+
+  Future<bool> get isFaceEnrollmentComplete async {
+    final value = await storage.read(key: faceEnrollmentCompleteKey);
+    return value == 'true';
+  }
+
+  Future<void> setFaceEnrollmentComplete(bool complete) async {
+    await storage.write(
+      key: faceEnrollmentCompleteKey,
+      value: complete.toString(),
+    );
+  }
+
+  Future<bool> get isFaceGatePassed async {
+    final value = await storage.read(key: isFaceGatePassedKey);
+    return value == 'true';
+  }
+
+  Future<void> setFaceGatePassed(bool passed) async {
+    await storage.write(key: isFaceGatePassedKey, value: passed.toString());
+  }
+
+  Future<String?> get lastReVerificationSchedule {
+    return storage.read(key: lastReVerificationScheduleKey);
+  }
+
+  Future<void> setLastReVerificationSchedule(String schedule) async {
+    await storage.write(key: lastReVerificationScheduleKey, value: schedule);
   }
 
   /// Gets the database encryption key from secure storage.

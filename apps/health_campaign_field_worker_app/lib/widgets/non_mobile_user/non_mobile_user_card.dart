@@ -15,6 +15,8 @@ class NonMobileUserCard extends LocalizedStatefulWidget {
   final String age;
   final String mobileNumber;
   final void Function() onScanMe;
+  final void Function() onFaceEnroll;
+  final bool isFaceEnrolled;
 
   const NonMobileUserCard({
     super.key,
@@ -24,6 +26,8 @@ class NonMobileUserCard extends LocalizedStatefulWidget {
     required this.age,
     required this.mobileNumber,
     required this.onScanMe,
+    required this.onFaceEnroll,
+    this.isFaceEnrolled = false,
   });
 
   @override
@@ -41,6 +45,7 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
       children: [
         _buildCenteredTextBlock(widget.userName, "${widget.gender}, ${widget.age}", widget.mobileNumber, context),
         _buildIdContainer(context, textTheme),
+        _buildFaceEnrollButton(context),
         _buildQRButton(context),
       ],
     );
@@ -82,6 +87,37 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
             style: textTheme.headingXS
                 .copyWith(color: theme.colorTheme.primary.primary2)),
       ),
+    );
+  }
+
+  Widget _buildFaceEnrollButton(BuildContext context) {
+    final theme = Theme.of(context);
+
+    if (widget.isFaceEnrolled) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.check_circle, color: Colors.green, size: 18),
+          const SizedBox(width: 6),
+          Text(
+            'Face Enrolled',
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return DigitButton(
+      capitalizeLetters: false,
+      type: DigitButtonType.primary,
+      size: DigitButtonSize.medium,
+      mainAxisSize: MainAxisSize.max,
+      onPressed: () => widget.onFaceEnroll(),
+      prefixIcon: Icons.face,
+      label: 'Enroll Face',
     );
   }
 
