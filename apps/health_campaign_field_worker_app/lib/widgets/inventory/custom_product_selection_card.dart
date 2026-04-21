@@ -347,7 +347,7 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
             type: 'max',
             value: maxValue,
             message: maxValue > 0
-                 ?  'QUANTITY_CANNOT_EXCEED_STOCK_IN_HAND_VALUE'
+                 ?  localizations.translate('QUANTITY_CANNOT_EXCEED_STOCK_IN_HAND_VALUE')
                 .replaceAll('{maxValue}', maxValue.toString())
                 : localizations.translate("NO_STOCK_AVAILABLE_IN_HAND"),
           ),
