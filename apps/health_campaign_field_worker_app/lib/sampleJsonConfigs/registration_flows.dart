@@ -1517,8 +1517,7 @@ final dynamic sampleFlows = {
                     },
                     {
                       "type": "template",
-                      "label":
-                          "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
+                      "label": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
                       "format": "button",
                       "onAction": [
                         {
@@ -3520,9 +3519,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {
-                      "message": "Failed to update stock balance."
-                    }
+                    "properties": {"message": "Failed to update stock balance."}
                   }
                 ]
               }
@@ -3737,9 +3734,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {
-                  "message": "Failed to update stock balance."
-                }
+                "properties": {"message": "Failed to update stock balance."}
               }
             ]
           }
