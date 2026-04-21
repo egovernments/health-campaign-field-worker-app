@@ -37,7 +37,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   DartPluginRegistrant.ensureInitialized();
-  AppSecurity.instance.setSecurityLevel = AppSecurityLevel.high;
+  // TODO: Re-enable after fixing initialization order — setSecurityLevel
+  // accesses envConfig.variables before envConfig.initialize() is called,
+  // causing 'EnvironmentConfiguration has not been initialized' exception.
+  // AppSecurity.instance.setSecurityLevel = AppSecurityLevel.high;
 
   await initializeAllMappers();
   final info = await PackageInfo.fromPlatform();

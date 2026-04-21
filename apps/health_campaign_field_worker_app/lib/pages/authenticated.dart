@@ -50,6 +50,7 @@ import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/error_screen.dart';
+import '../widgets/polio_stats_card.dart';
 import 'error_boundary.dart';
 
 @RoutePage()
@@ -559,6 +560,12 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
 
                                     _drawerVisibilityController
                                         .add(shouldShowDrawer);
+
+                                      // Refresh PolioStatsCard when navigating back to home
+                                      if (context.router.topRoute.name ==
+                                          HomeRoute.name) {
+                                        PolioStatsCard.refresh();
+                                      }
                                   },
                                 ),
                               ],

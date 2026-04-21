@@ -547,6 +547,17 @@ final dynamic sampleHouseholdFlows = {
             "select": "{{value}}",
             "default": 1,
             "takeLast": true
+          },
+          "memberCount": {
+            "from": "{{household.0.additionalFields.fields}}",
+            "where": {
+              "left": "{{key}}",
+              "right": "memberCount",
+              "operator": "eq"
+            },
+            "select": "{{value}}",
+            "default": 1,
+            "takeFirst": true
           }
         },
         "computed": {

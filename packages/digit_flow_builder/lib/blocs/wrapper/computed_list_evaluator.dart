@@ -251,7 +251,19 @@ class ComputedListEvaluator {
       }
     }
 
-    // Handle missing required keys with default values
+    // Fallback: check wrapperData (ctx) for missing keys before using defaults.
+    // This allows wrapperConfig fields (e.g., memberCount extracted from
+    // additionalFields) to be used when the entity's toMap() excludes null
+    // fields due to @MappableClass(ignoreNull: true).
+    for (final key in requiredKeys) {
+      if (!contextMap.containsKey(key) && ctx.containsKey(key)) {
+        contextMap[key] = ctx[key];
+        debugPrint(
+            'Missing key "$key" in context items, found in wrapperData: ${ctx[key]}');
+      }
+    }
+
+    // Handle remaining missing required keys with default values
     for (final key in requiredKeys) {
       if (!contextMap.containsKey(key)) {
         final defaultValue =
@@ -295,7 +307,18 @@ class ComputedListEvaluator {
         final sanitizedCondition = resolvedCondition
             .replaceAll(' and ', ' && ')
             .replaceAll('and', '&&');
-        final parser = FormulaParser(sanitizedCondition, flatContext);
+
+        // Coerce string values to num where possible — additionalFields
+        // stores all values as strings, but FormulaParser requires num types
+        final numericContext = flatContext.map((key, value) {
+          if (value is String) {
+            final n = num.tryParse(value);
+            if (n != null) return MapEntry(key, n);
+          }
+          return MapEntry(key, value);
+        });
+
+        final parser = FormulaParser(sanitizedCondition, numericContext);
         final result = parser.parse;
 
         if (result['isSuccess'] && result['value'] == true) {
