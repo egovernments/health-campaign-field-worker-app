@@ -2476,6 +2476,11 @@ final dynamic sampleInventoryFlows = {
                               "{{item.items[0].additionalFields.fields.batchNumber}}"
                         },
                         {
+                          "key": "comment",
+                          "value":
+                              "{{item.items[0].additionalFields.fields.comments}}"
+                        },
+                        {
                           "key": "clientReferenceId",
                           "value": "{{item.items[0].clientReferenceId}}"
                         }
