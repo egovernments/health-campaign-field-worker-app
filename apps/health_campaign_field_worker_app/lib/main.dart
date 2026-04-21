@@ -15,6 +15,7 @@ import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'app.dart';
+import 'app_security.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/secure_store/secure_store.dart';
@@ -36,6 +37,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   DartPluginRegistrant.ensureInitialized();
+  AppSecurity.instance.setSecurityLevel = AppSecurityLevel.high;
 
   await initializeAllMappers();
   final info = await PackageInfo.fromPlatform();
