@@ -5066,9 +5066,9 @@ final dynamic sampleSmcFlows = {
             },
             {
               "type": "integer",
-              "label": "HCM_REGISTRATION_CHILDREN_COUNT_LABEL",
+              "label": "HCM_REGISTRATION_CHILDREN_UNDER_5_LABEL",
               "order": 2,
-              "value": "1",
+              "value": "0",
               "format": "numeric",
               "hidden": false,
               "isMdms": false,
@@ -5102,7 +5102,7 @@ final dynamic sampleSmcFlows = {
               "order": 3,
               "value": "0",
               "format": "numeric",
-              "hidden": true,
+              "hidden": false,
               "includeInForm": true,
               "isMdms": false,
               "tooltip": "",
@@ -5124,13 +5124,13 @@ final dynamic sampleSmcFlows = {
               "label": "HCM_REGISTRATION_TOTAL_MEMBERS_LABEL",
               "order": 4,
               "range": {
-                "max": "10",
+                "max": "100",
                 "min": "1",
                 "errorMessage": "HCM_VALIDATION_MAX_MEMBERS"
               },
               "value": "1",
               "format": "numeric",
-              "hidden": true,
+              "hidden": false,
               "includeInForm": true,
               "isMdms": false,
               "tooltip": "",
@@ -5157,7 +5157,7 @@ final dynamic sampleSmcFlows = {
                 },
                 {
                   "type": "max",
-                  "value": "10",
+                  "value": "100",
                   "message": "HCM_VALIDATION_MAX_MEMBERS"
                 }
               ],

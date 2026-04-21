@@ -3046,9 +3046,10 @@ final dynamic sampleHouseholdFlows = {
               "type": "integer",
               "label": "HCM_REGISTRATION_CHILDREN_COUNT_LABEL",
               "order": 2,
-              "value": "1",
+              "value": "0",
               "format": "numeric",
-              "hidden": false,
+              "hidden": true,
+              "includeInForm": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -3060,17 +3061,7 @@ final dynamic sampleHouseholdFlows = {
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "range": {
-                "min": "1",
-                "errorMessage": "HCM_VALIDATION_MIN_CHILDREN_1"
-              },
-              "validations": [
-                {
-                  "type": "min",
-                  "value": "1",
-                  "message": "HCM_VALIDATION_MIN_CHILDREN_1"
-                }
-              ],
+              "validations": [],
               "errorMessage": "",
               "isMultiSelect": false
             },
@@ -3102,13 +3093,13 @@ final dynamic sampleHouseholdFlows = {
               "label": "HCM_REGISTRATION_TOTAL_MEMBERS_LABEL",
               "order": 4,
               "range": {
-                "max": "10",
+                "max": "100",
                 "min": "1",
                 "errorMessage": "HCM_VALIDATION_MAX_MEMBERS"
               },
               "value": "1",
               "format": "numeric",
-              "hidden": true,
+              "hidden": false,
               "includeInForm": true,
               "isMdms": false,
               "tooltip": "",
@@ -3135,7 +3126,7 @@ final dynamic sampleHouseholdFlows = {
                 },
                 {
                   "type": "max",
-                  "value": "10",
+                  "value": "100",
                   "message": "HCM_VALIDATION_MAX_MEMBERS"
                 }
               ],
