@@ -102,7 +102,7 @@ class StockCalculationUtils {
           quantity: quantity,
           status: status,
           stockIssued: (v) => stockIssued += v,
-          stockReturned: (v) => stockReturned += v,
+          stockReturned: (v) => stockReturned -= v,
           stockLost: (v) => stockLost += v,
           stockDamaged: (v) => stockDamaged += v,
         );

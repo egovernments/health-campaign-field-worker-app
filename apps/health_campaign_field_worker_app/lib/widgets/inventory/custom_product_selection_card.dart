@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
@@ -345,9 +347,9 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
           // This prevents entering any quantity when there's no stock
           ValidationRule(
             type: 'max',
-            value: maxValue,
-            message: maxValue > 0
-                 ?  'QUANTITY_CANNOT_EXCEED_STOCK_IN_HAND_VALUE'
+            value: min(maxValue, 10000000),
+            message: maxValue >10000000 ? localizations.translate('QUANTITY_CANNOT_EXCEED_STOCK_MAX_LIMIT_VALUE') :maxValue > 0
+                 ?  localizations.translate('QUANTITY_CANNOT_EXCEED_STOCK_IN_HAND_VALUE')
                 .replaceAll('{maxValue}', maxValue.toString())
                 : localizations.translate("NO_STOCK_AVAILABLE_IN_HAND"),
           ),
