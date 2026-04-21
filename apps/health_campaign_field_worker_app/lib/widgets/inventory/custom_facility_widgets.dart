@@ -259,11 +259,14 @@ class _FacilityCardContent extends StatelessWidget {
 
     final showDeliveryTeam = hasDeliveryTeamInConfig &&
         ((isToField &&
-                !isReturnFlow &&
-                (transactionType == 'DISPATCHED' ||
-                    transactionType == 'ISSUED') &&
-                (!isWareHouseMgr || hasNoChildFacilities)) ||
-            (isFromField && isReturnFlow && !isWareHouseMgr));
+            !isReturnFlow &&
+            (transactionType == 'DISPATCHED' ||
+                transactionType == 'ISSUED') &&
+            (!isWareHouseMgr || hasNoChildFacilities)) ||
+            (isFromField &&
+                isReturnFlow &&
+                !isWareHouseMgr &&
+                isLessExcessFlow));
     if (showDeliveryTeam) {
       facilities.add(DropdownItem(
         code: deliveryTeamCode!,
