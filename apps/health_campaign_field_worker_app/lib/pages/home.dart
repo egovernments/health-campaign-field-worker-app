@@ -2683,6 +2683,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     } else {
       filteredLabels.remove(i18.home.summaryReportLabel);
     }
+
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 

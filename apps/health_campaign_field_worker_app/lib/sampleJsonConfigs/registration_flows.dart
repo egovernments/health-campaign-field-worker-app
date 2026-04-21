@@ -1517,8 +1517,7 @@ final dynamic sampleFlows = {
                     },
                     {
                       "type": "template",
-                      "label":
-                          "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
+                      "label": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
                       "format": "button",
                       "onAction": [
                         {
@@ -2449,7 +2448,7 @@ final dynamic sampleFlows = {
                 {
                   "type": "template",
                   "label":
-                      "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
+                      "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
                   "format": "button",
                   "onAction": [
                     {
@@ -3352,6 +3351,18 @@ final dynamic sampleFlows = {
           }
         },
         {
+          "actionType": "UPDATE_STOCK_BALANCE",
+          "properties": {
+            "entity": "TaskModel",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to update stock balance."}
+              }
+            ]
+          }
+        },
+        {
           "actions": [
             {
               "actionType": "FETCH_TRANSFORMER_CONFIG",
@@ -3520,9 +3531,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {
-                      "message": "Failed to update stock balance."
-                    }
+                    "properties": {"message": "Failed to update stock balance."}
                   }
                 ]
               }
@@ -3597,7 +3606,7 @@ final dynamic sampleFlows = {
               "tooltip": "",
               "helpText": "",
               "infoText": "",
-              "readOnly": false,
+              "readOnly": true,
               "required": true,
               "fieldName": "resourceCard",
               "mandatory": true,
@@ -3737,9 +3746,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {
-                  "message": "Failed to update stock balance."
-                }
+                "properties": {"message": "Failed to update stock balance."}
               }
             ]
           }

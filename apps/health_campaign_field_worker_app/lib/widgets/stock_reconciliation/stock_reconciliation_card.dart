@@ -14,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../models/entities/roles_type.dart';
 import '../../utils/stock_calculation_utils.dart';
 import '../../utils/utils.dart';
 import '../localized.dart';
@@ -153,6 +154,9 @@ class _StockReconciliationCardState
 
   @override
   Widget build(BuildContext context) {
+
+    final isDistributor = context.loggedInUserRoles
+        .any((role) => role.code == RolesType.distributor.toValue());
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
@@ -349,35 +353,38 @@ class _StockReconciliationCardState
                         labelFlex: 5,
                       ),
                       const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate(
-                            i18.stockReconciliationMetrics.stockLost),
-                        value: _stockMetrics['stockLost']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate(
-                            i18.stockReconciliationMetrics.stockDamaged),
-                        value:
+                      if(isDistributor)
+                        ...[
+                          LabelValueItem(
+                            label: localizations.translate(
+                                i18.stockReconciliationMetrics.stockLost),
+                            value: _stockMetrics['stockLost']!.toStringAsFixed(0),
+                            labelFlex: 5,
+                          ),
+                          const DigitDivider(),
+                          LabelValueItem(
+                            label: localizations.translate(
+                                i18.stockReconciliationMetrics.stockDamaged),
+                            value:
                             _stockMetrics['stockDamaged']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate(
-                            i18.stockReconciliationMetrics.stockExcess),
-                        value: _stockMetrics['stockExcess']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate(
-                            i18.stockReconciliationMetrics.stockLess),
-                        value: _stockMetrics['stockLess']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
+                            labelFlex: 5,
+                          ),
+                          const DigitDivider(),
+                          LabelValueItem(
+                            label: localizations.translate(
+                                i18.stockReconciliationMetrics.stockExcess),
+                            value: _stockMetrics['stockExcess']!.toStringAsFixed(0),
+                            labelFlex: 5,
+                          ),
+                          const DigitDivider(),
+                          LabelValueItem(
+                            label: localizations.translate(
+                                i18.stockReconciliationMetrics.stockLess),
+                            value: _stockMetrics['stockLess']!.toStringAsFixed(0),
+                            labelFlex: 5,
+                          ),
+                          const DigitDivider(),
+                        ],
                       LabelValueItem(
                         label: localizations.translate(
                             i18.stockReconciliationMetrics.stockOnHand),
@@ -386,15 +393,16 @@ class _StockReconciliationCardState
                       ),
                     ],
                   ),
-                  const SizedBox(height: spacer4),
-                  InfoCard(
-                    type: InfoType.info,
-                    description: localizations.translate(
-                      '${context.selectedProject.projectType}_STOCK_RECONCILIATION_INFO_CARD_CONTENT',
-                    ),
-                    title: localizations
-                        .translate('STOCK_RECONCILIATION_INFO_CARD_TITLE'),
-                  ),
+                  // TODO: COMMENTING THIS AS INFOCARD IS NOT REQUIRED FOR NOW
+                  // const SizedBox(height: spacer4),
+                  // InfoCard(
+                  //   type: InfoType.info,
+                  //   description: localizations.translate(
+                  //     '${context.selectedProject.projectType}_STOCK_RECONCILIATION_INFO_CARD_CONTENT',
+                  //   ),
+                  //   title: localizations
+                  //       .translate('STOCK_RECONCILIATION_INFO_CARD_TITLE'),
+                  // ),
                 ],
               ],
             );

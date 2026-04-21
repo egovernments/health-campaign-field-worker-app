@@ -378,6 +378,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _loadProjectFacilities(ProjectModel project) async {
+
+    final userObject = await localSecureStore.userRequestModel;
     final assignedBoundaryType = project.address?.boundaryType;
     List<String>? boundaryTypes;
 
@@ -438,6 +440,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               PushNotificationEvent.registerToken(
                 apiEndPoint: apiEndPoint,
                 facilityIds: currentFacilityIds,
+                userObject: userObject
               ),
             );
       }
@@ -909,8 +912,17 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
-    // Trigger silent stock downsync after project facilities are loaded
-    _silentStockDownSync(event.model);
+    try {
+      // Trigger silent stock downsync after project facilities are loaded
+      await _silentStockDownSync(event.model);
+    } catch (_) {
+      emit(state.copyWith(
+        selectedProject: event.model,
+        loading: false,
+        syncError: ProjectSyncErrorType.stockDownsync,
+      ));
+      return;
+    }
 
     final getSelectedProject = await localSecureStore.selectedProject;
 
@@ -1505,4 +1517,5 @@ enum ProjectSyncErrorType {
   appConfig,
   attendance,
   userAction,
+  stockDownsync
 }

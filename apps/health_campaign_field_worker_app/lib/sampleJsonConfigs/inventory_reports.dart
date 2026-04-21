@@ -163,6 +163,7 @@ final dynamic inventoryReportFlows = {
           "type": "template",
           "format": "menu_card",
           "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_HEADING",
+          "visible": "{{fn:hasRole('DISTRIBUTOR')}} == true",
           "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_DESCRIPTION",
           "icon": "Assessment",
           "onAction": [
@@ -512,8 +513,9 @@ final dynamic inventoryReportFlows = {
               "required": true,
               "key": "selectedReconFacility",
               "source": "{{navigation.facilities}}",
-              "displayKey": "id",
-              "valueKey": "id",
+              "displayKey": "facilityId",
+              "showWhenSingleOption": true,
+              "valueKey": "facilityId",
               "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}}",
               "onChange": [
                 {
@@ -587,7 +589,7 @@ final dynamic inventoryReportFlows = {
           "description": "STOCKRECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
           "properties": {"type": "info"},
           "visible":
-              "{{fn:isNotEmpty(selectedReconFacility)}} && {{fn:isNotEmpty(selectedReckonProduct)}}",
+              "{{fn:isEmpty(selectedReconFacility)}} && {{fn:isEmpty(selectedReckonProduct)}}",
         },
         {
           "type": "template",
@@ -597,7 +599,7 @@ final dynamic inventoryReportFlows = {
               "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
           "properties": {"type": "info"},
           "visible":
-              "{{fn:length(stockReconciliation)}} == 0 && {{fn:isNotEmpty(selectedReconFacility)}} && {{fn:isNotEmpty(selectedReckonProduct)}}"
+              "{{fn:isEmpty(stockReconciliation)}} && {{fn:isNotEmpty(selectedReconFacility)}}",
         },
         {
           "type": "template",

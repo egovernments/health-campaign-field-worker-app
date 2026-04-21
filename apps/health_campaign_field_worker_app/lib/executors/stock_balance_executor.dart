@@ -83,12 +83,8 @@ class StockBalanceExecutor extends ActionExecutor {
     return contextData;
   }
 
-  Future<void> _handleStockEntity(
-    BuildContext context,
-    List<dynamic> entities,
-    String projectId,
-    String boundaryCode,
-  ) async {
+  Future<void> _handleStockEntity(BuildContext context, List<dynamic> entities,
+      String projectId, String boundaryCode) async {
     final stockEntities = entities.whereType<StockModel>().toList();
     if (stockEntities.isEmpty) return;
 

@@ -224,9 +224,11 @@ class _FacilityCardContent extends StatelessWidget {
       if (facilityLevel == null) return true;
 
       if (isLessExcessFlow) {
+        if(isToField && !isWareHouseMgr) return facilityLevel == 'current';
         if (isToField) return facilityLevel == 'parent';
         if (isFromField) return facilityLevel == 'current';
       } else if (isReturnFlow) {
+        if(isToField && !isWareHouseMgr) return facilityLevel == 'current';
         if (isToField) return facilityLevel == 'parent';
         if (isFromField) return facilityLevel == 'current';
       } else if (transactionType == 'DISPATCHED' ||
@@ -239,6 +241,7 @@ class _FacilityCardContent extends StatelessWidget {
         if (isFromField) return facilityLevel == 'parent';
       } else if (stockEntryType == 'LOSS' || stockEntryType == 'DAMAGED') {
         // For loss and damaged, to field should show parent facility
+        if(isToField && !isWareHouseMgr) return facilityLevel == 'current';
         if (isToField) return facilityLevel == 'parent';
         if (isFromField) return facilityLevel == 'current';
       }
@@ -256,11 +259,14 @@ class _FacilityCardContent extends StatelessWidget {
 
     final showDeliveryTeam = hasDeliveryTeamInConfig &&
         ((isToField &&
-                !isReturnFlow &&
-                (transactionType == 'DISPATCHED' ||
-                    transactionType == 'ISSUED') &&
-                (!isWareHouseMgr || hasNoChildFacilities)) ||
-            (isFromField && isReturnFlow && !isWareHouseMgr));
+            !isReturnFlow &&
+            (transactionType == 'DISPATCHED' ||
+                transactionType == 'ISSUED') &&
+            (!isWareHouseMgr || hasNoChildFacilities)) ||
+            (isFromField &&
+                isReturnFlow &&
+                !isWareHouseMgr &&
+                isLessExcessFlow));
     if (showDeliveryTeam) {
       facilities.add(DropdownItem(
         code: deliveryTeamCode!,
