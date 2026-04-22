@@ -211,6 +211,8 @@ final dynamic sampleInventoryFlows = {
                 "data": [
                   {"key": "stockEntryType", "value": "LESS_EXCESS"},
                   {"key": "transactionType", "value": "RECEIVED"},
+                  {"key": "primaryRole", "value": "SENDER"},
+                  {"key": "secondaryRole", "value": "RECEIVER"},
                   {
                     "key": "mrnNumber",
                     "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
@@ -1791,9 +1793,44 @@ final dynamic sampleInventoryFlows = {
               "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
             },
             {
+              "type": "string",
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "lessExcessDetails.facilityFromWhich==DELIVERY_TEAM"
+                  }
+                ]
+              },
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
+              "order": 4,
+              "value": "",
+              "format": "scanner",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Scan Team Code",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "deliveryTeam",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [],
+            },
+            {
               "type": "integer",
               "label": "INVENTORY_QUANTITY_LABEL",
-              "order": 4,
+              "order": 5,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -1824,7 +1861,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "INVENTORY_REASON_FOR_LESS_EXCESS_LABEL",
-              "order": 5,
+              "order": 6,
               "value": "",
               "format": "text",
               "hidden": false,
