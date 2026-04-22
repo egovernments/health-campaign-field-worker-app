@@ -428,7 +428,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     if (currentFacilityIds.isNotEmpty) {
       final serviceRegistry = await isar.serviceRegistrys.where().findAll();
-      final apiEndPoint = Constants.getEndPoint(
+      final apiEndPoint = Constants.getNotificationEndPoint(
         serviceRegistry: serviceRegistry,
         service: 'NOTIFICATION',
         action: ApiOperation.register.toValue(),

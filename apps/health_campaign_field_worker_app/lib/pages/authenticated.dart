@@ -32,6 +32,7 @@ import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../blocs/stock_downsync/stock_downsync.dart';
+import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../blocs/push_notification/push_notification.dart';
 import '../data/local_store/app_shared_preferences.dart';
@@ -660,25 +661,45 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                               label: AppLocalizations.of(context).translate(
                                 i18.common.coreCommonOk,
                               ),
-                              onPressed: () {
-                                context
-                                    .read<BoundaryBloc>()
-                                    .add(const BoundaryResetEvent());
-                                context.read<LocalizationBloc>().add(
-                                      LocalizationEvent.onLoadLocalization(
-                                        module: Constants
-                                            .homeLocalizationModules
-                                            .join(','),
-                                        tenantId: envConfig.variables.tenantId,
-                                        locale: AppSharedPreferences()
-                                                .getSelectedLocale ??
-                                            '',
-                                        path: Constants.localizationApiPath,
-                                      ),
-                                    );
-                                context
-                                    .read<AuthBloc>()
-                                    .add(const AuthLogoutEvent());
+                              onPressed: () async {
+                                final isar = context.read<Isar>();
+                                final serviceRegistry = await isar
+                                    .serviceRegistrys
+                                    .where()
+                                    .findAll();
+                                final apiEndPoint = Constants.getNotificationEndPoint(
+                                  serviceRegistry: serviceRegistry,
+                                  service: 'NOTIFICATION',
+                                  action: ApiOperation.unRegister.toValue(),
+                                  entityName: 'NotificationToken',
+                                );
+
+                                if (context.mounted) {
+                                  context.read<PushNotificationBloc>().add(
+                                        PushNotificationEvent.logout(
+                                          apiEndPoint: apiEndPoint,
+                                        ),
+                                      );
+                                  context
+                                      .read<BoundaryBloc>()
+                                      .add(const BoundaryResetEvent());
+                                  context.read<LocalizationBloc>().add(
+                                        LocalizationEvent.onLoadLocalization(
+                                          module: Constants
+                                              .homeLocalizationModules
+                                              .join(','),
+                                          tenantId:
+                                              envConfig.variables.tenantId,
+                                          locale: AppSharedPreferences()
+                                                  .getSelectedLocale ??
+                                              '',
+                                          path: Constants.localizationApiPath,
+                                        ),
+                                      );
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(const AuthLogoutEvent());
+                                }
                               },
                               type: DigitButtonType.secondary,
                               size: DigitButtonSize.large),

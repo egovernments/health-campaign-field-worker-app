@@ -9,6 +9,7 @@ import '../../data/repositories/remote/notification_token.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../notification_service.dart';
+import '../../utils/environment_config.dart';
 
 part 'push_notification.freezed.dart';
 
@@ -29,6 +30,7 @@ class PushNotificationBloc
   }) : super(const PushNotificationState.initial()) {
     on(_onInitialize);
     on(_onLogin);
+    on(_onLogout);
     on(_onTokenRefreshed);
     on(_onRegisterToken);
     on(_onNotificationReceived);
@@ -83,6 +85,34 @@ class PushNotificationBloc
     }
   }
 
+  FutureOr<void> _onLogout(
+    PushNotificationLogoutEvent event,
+    PushNotificationEmitter emit,
+  ) async {
+    try {
+      final currentState = state;
+      final token = currentState is PushNotificationInitializedState
+          ? currentState.fcmToken
+          : null;
+
+      if (token != null && _lastUserObject != null) {
+        await notificationTokenRepository.unregisterToken(
+          apiEndPoint: event.apiEndPoint,
+          token: token,
+          userUuid: _lastUserObject!.uuid,
+          tenantId: _lastUserObject!.tenantId ?? envConfig.variables.tenantId,
+        );
+      }
+    } catch (e) {
+      debugPrint('PushNotificationBloc logout error: $e');
+    } finally {
+      _currentUserId = null;
+      _lastApiEndPoint = null;
+      _lastFacilityIds = null;
+      _lastUserObject = null;
+    }
+  }
+
   FutureOr<void> _onTokenRefreshed(
     PushNotificationTokenRefreshedEvent event,
     PushNotificationEmitter emit,
@@ -109,8 +139,6 @@ class PushNotificationBloc
     PushNotificationRegisterTokenEvent event,
     PushNotificationEmitter emit,
   ) async {
-
-
     final userRoles = event.userObject?.roles.map((e) => e.code) ?? [];
     final isDistributor =
         userRoles.contains(RolesType.distributor.toValue()) ||
@@ -129,7 +157,9 @@ class PushNotificationBloc
     await notificationTokenRepository.registerToken(
       apiEndPoint: event.apiEndPoint,
       token: token,
-      facilityIds: isDistributor ? [event.userObject?.uuid ?? event.facilityIds.first] : event.facilityIds,
+      facilityIds: isDistributor
+          ? [event.userObject?.uuid ?? event.facilityIds.first]
+          : event.facilityIds,
     );
   }
 
@@ -159,6 +189,10 @@ class PushNotificationEvent with _$PushNotificationEvent {
   const factory PushNotificationEvent.login({
     required String userId,
   }) = PushNotificationLoginEvent;
+
+  const factory PushNotificationEvent.logout({
+    required String apiEndPoint,
+  }) = PushNotificationLogoutEvent;
 
   const factory PushNotificationEvent.tokenRefreshed({
     required String token,
