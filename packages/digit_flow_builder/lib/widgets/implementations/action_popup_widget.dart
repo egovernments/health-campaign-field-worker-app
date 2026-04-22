@@ -1,4 +1,6 @@
+import 'package:digit_flow_builder/utils/widget_parsers.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
@@ -32,13 +34,17 @@ class ActionPopupWidget extends ResolvedFlowWidget {
     final screenKey = resolved.screenKey;
     final compositeKey = resolved.compositeKey;
 
-    String padding = props['padding'] ?? 'spacer2';
+    DigitButtonType type = WidgetParsers.parseButtonType(props['type']);
+    DigitButtonSize size = WidgetParsers.parseButtonSize(props['size']);
+    String? height = props['height'];
+    String? radius = props['radius'];
 
     return DigitButton(
       isDisabled: resolved.isDisabled,
       capitalizeLetters: false,
-      mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
-      mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
+      mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
+      mainAxisAlignment:
+          WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
       label: localization?.translate(json['label']) ?? json['label'] ?? '',
       onPressed: () async {
         // Trigger configured actions if any
@@ -68,18 +74,31 @@ class ActionPopupWidget extends ResolvedFlowWidget {
               stateData, item, listIndex, compositeKey);
         }
       },
-      type: _parseButtonType(props['type']),
-      size: _parseButtonSize(props['size']),
-      // digitButtonThemeData: DigitButtonThemeData(
-      //   DigitButtonColor: colorMap[props["color"]],
-      //   radius: BorderRadius.circular(spacer3),
-      //   largeRadius: BorderRadius.circular(spacer3),
-      //   smallMediumRadius: BorderRadius.circular(spacer3),
-      //   padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
-      //   disabledColor: DigitButtonThemeData.defaultTheme(context).disabledColor,
-      // ),
-      // iconColor: colorMap[props["color"]],
-      // textColor: colorMap[props["color"]],
+      type: type,
+      size: size,
+      digitButtonThemeData: DigitButtonThemeData.defaultTheme(context).copyWith(
+        smallDigitButtonHeight: (size == DigitButtonSize.small &&
+                height != null)
+            ? WidgetParsers.parseSize(height)
+            : DigitButtonThemeData.defaultTheme(context).smallDigitButtonHeight,
+        mediumDigitButtonHeight:
+            (size == DigitButtonSize.medium && height != null)
+                ? WidgetParsers.parseSize(height)
+                : DigitButtonThemeData.defaultTheme(context)
+                    .mediumDigitButtonHeight,
+        largeDigitButtonHeight: (size == DigitButtonSize.large &&
+                height != null)
+            ? WidgetParsers.parseSize(height)
+            : DigitButtonThemeData.defaultTheme(context).largeDigitButtonHeight,
+        smallMediumRadius: ((size == DigitButtonSize.small ||
+                    size == DigitButtonSize.medium) &&
+                radius != null)
+            ? BorderRadius.circular(WidgetParsers.parseSize(radius))
+            : DigitButtonThemeData.defaultTheme(context).smallMediumRadius,
+        largeRadius: (size == DigitButtonSize.large && radius != null)
+            ? BorderRadius.circular(WidgetParsers.parseSize(radius))
+            : DigitButtonThemeData.defaultTheme(context).largeRadius,
+      ),
       suffixIcon: props['suffixIcon'] != null
           ? DigitIconMapping.getIcon(props['suffixIcon'])
           : null,
@@ -120,7 +139,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
           title: localization?.translate(title) ?? title,
           description: description != null &&
                   localization!.translate(description).trim().isNotEmpty
-              ?  localization.translate(description)
+              ? localization.translate(description)
               : null,
           titleIcon: titleIconName != null
               ? Icon(
@@ -240,6 +259,4 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         return PopUpType.simple;
     }
   }
-
-  Map<String, Color> colorMap = {'green': Colors.green};
 }

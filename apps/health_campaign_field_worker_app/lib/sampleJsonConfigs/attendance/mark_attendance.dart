@@ -335,128 +335,129 @@ final dynamic markAttendanceFlow = {
         },
         {
           "type": "template",
-          "format": "sizedBox",
-          "width": 100.0,
-          "child": {
-            "type": "template",
-            "format": "actionPopup",
-            "label": "Filter",
+          "format": "actionPopup",
+          "label": "Filter",
+          "prefixIcon": "FilterAlt",
+          "fieldName": "filterButton",
+          "properties": {
             "prefixIcon": "FilterAlt",
-            "fieldName": "filterButton",
-            "properties": {
-              "type": "secondary",
-              "size": "small",
-              "mainAxisAlignment": "center",
-              "padding": "spacer4",
-              "popupConfig": {
-                "title": "MARK_ATTENDANCE_FILTER_TITLE",
-                "titleIcon": "FilterAlt",
-                "showCloseButton": true,
-                "barrierDismissible": true,
-                "body": [
-                  {
-                    "type": "template",
-                    "format": "card",
-                    "children": [
-                      {
+            "type": "secondary",
+            "size": "small",
+            "mainAxisAlignment": "center",
+            "height": "spacer12",
+            "radius": "spacer3",
+            "popupConfig": {
+              "title": "MARK_ATTENDANCE_FILTER_TITLE",
+              "titleIcon": "FilterAlt",
+              "showCloseButton": true,
+              "barrierDismissible": true,
+              "body": [
+                {
+                  "type": "template",
+                  "format": "card",
+                  "children": [
+                    {
+                      "type": "template",
+                      "format": "textTemplate",
+                      "value": "SORT_BY"
+                    },
+                    {
+                      "data": [
+                        {"code": "PRESENT", "name": "PRESENT"},
+                        {"code": "ABSENT", "name": "ABSENT"}
+                      ],
+                      "type": "template",
+                      "format": "radioList",
+                      "fieldName": "SORT_BY"
+                    },
+                  ]
+                },
+                {
+                  "type": "template",
+                  "format": "card",
+                  "children": [
+                    {
+                      "type": "template",
+                      "format": "row",
+                      "children": [
+                        {
+                          "type": "template",
+                          "format": "checkbox",
+                          "fieldKey": "checkboxValue",
+                          "value": false,
+                        },
+                        {
+                          "type": "template",
+                          "format": "textTemplate",
+                          "value": "UNMARKED_ATTENDANCE_ONLY",
+                        }
+                      ]
+                    },
+                  ]
+                },
+                {
+                  "type": "template",
+                  "format": "row",
+                  "children": [
+                    {
+                      "type": "template",
+                      "format": "expanded",
+                      "child": {
                         "type": "template",
-                        "format": "textTemplate",
-                        "value": "SORT_BY"
-                      },
-                      {
-                        "data": [
-                          {"code": "PRESENT", "name": "PRESENT"},
-                          {"code": "ABSENT", "name": "ABSENT"}
-                        ],
-                        "type": "template",
-                        "format": "radioList",
-                        "fieldName": "SORT_BY"
-                      },
-                    ]
-                  },
-                  {
-                    "type": "template",
-                    "format": "card",
-                    "children": [
-                      {
-                        "type": "template",
-                        "format": "row",
-                        "children": [
+                        "format": "button",
+                        "label": "CLEAR",
+                        "prefixIcon": "Close",
+                        "properties": {
+                          "type": "secondary",
+                          "size": "small",
+                          "mainAxisAlignment": "center",
+                          "height": "spacer8",
+                          "radius": "spacer3",
+                        },
+                        "onAction": [
                           {
-                            "type": "template",
-                            "format": "checkbox",
-                            "fieldKey": "checkboxValue",
-                            "value": false,
-                          },
-                          {
-                            "type": "template",
-                            "format": "textTemplate",
-                            "value": "UNMARKED_ATTENDANCE_ONLY",
+                            "actionType": "CLEAR_STATE",
+                            "properties": {
+                              "widgetKeys": [
+                                "checkboxValue",
+                                "searchBar",
+                                "SORT_BY"
+                              ],
+                            }
                           }
                         ]
-                      },
-                    ]
-                  },
-                  {
-                    "type": "template",
-                    "format": "row",
-                    "children": [
-                      {
-                        "type": "template",
-                        "format": "expanded",
-                        "child": {
-                          "type": "template",
-                          "format": "button",
-                          "label": "CLEAR",
-                          "prefixIcon": "Close",
-                          "properties": {
-                            "type": "secondary",
-                            "size": "small",
-                            "mainAxisAlignment": "center"
-                          },
-                          "onAction": [
-                            {
-                              "actionType": "CLEAR_STATE",
-                              "properties": {
-                                "widgetKeys": [
-                                  "checkboxValue",
-                                  "searchBar",
-                                  "SORT_BY"
-                                ],
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "type": "template",
-                        "format": "sizedBox",
-                        "width": 12.0,
-                      },
-                      {
-                        "type": "template",
-                        "format": "expanded",
-                        "child": {
-                          "type": "template",
-                          "format": "button",
-                          "label": "APPLY_FILTER",
-                          "prefixIcon": "Close",
-                          "properties": {
-                            "type": "primary",
-                            "size": "small",
-                            "mainAxisAlignment": "center"
-                          },
-                          "onAction": [
-                            {"actionType": "CLOSE_POPUP", "properties": {}},
-                          ]
-                        }
                       }
-                    ]
-                  }
-                ],
-                "onAction": []
-              }
-            },
+                    },
+                    {
+                      "type": "template",
+                      "format": "sizedBox",
+                      "width": 12.0,
+                    },
+                    {
+                      "type": "template",
+                      "format": "expanded",
+                      "child": {
+                        "type": "template",
+                        "format": "button",
+                        "label": "APPLY_FILTER",
+                        "prefixIcon": "Close",
+                        "properties": {
+                          "type": "primary",
+                          "size": "small",
+                          "mainAxisAlignment": "center",
+                          "height": "spacer8",
+                          "radius": "spacer3",
+                        },
+                        "onAction": [
+                          {"actionType": "CLOSE_POPUP", "properties": {}},
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ],
+              "onAction": []
+            }
           },
         },
       ]
@@ -515,7 +516,8 @@ final dynamic markAttendanceFlow = {
             "format": "textTemplate",
             "value": "{{item.name}}",
             "properties": {
-              "style": "bodyL",
+              "style": "headingS",
+              "color": "primary",
             }
           },
           {

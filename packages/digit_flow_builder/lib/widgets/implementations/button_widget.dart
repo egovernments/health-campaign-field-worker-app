@@ -19,7 +19,10 @@ class ButtonWidget extends ResolvedFlowWidget {
   ) {
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
 
-    String padding = props['padding'] ?? 'spacer2';
+    DigitButtonType type = WidgetParsers.parseButtonType(props['type']);
+    DigitButtonSize size = WidgetParsers.parseButtonSize(props['size']);
+    String? height = props['height'];
+    String? radius = props['radius'];
 
     return WidgetParsers.wrapWithBottomGap(
       DigitButton(
@@ -34,22 +37,34 @@ class ButtonWidget extends ResolvedFlowWidget {
             await resolved.executeActions(actionsList, context);
           }
         },
-        type: WidgetParsers.parseButtonType(props['type']),
-        size: WidgetParsers.parseButtonSize(props['size']),
-        // digitButtonThemeData: DigitButtonThemeData(
-        //   primaryDigitButtonColor: DigitButtonThemeData.defaultTheme(context)
-        //       .primaryDigitButtonColor,
-        //   DigitButtonColor: colorMap[props["color"]] ??
-        //       DigitButtonThemeData.defaultTheme(context).DigitButtonColor,
-        //   disabledColor:
-        //       DigitButtonThemeData.defaultTheme(context).disabledColor,
-        //   radius: BorderRadius.circular(spacer3),
-        //   largeRadius: BorderRadius.circular(spacer3),
-        //   smallMediumRadius: BorderRadius.circular(spacer3),
-        //   padding: EdgeInsets.all(WidgetParsers.parseSize(padding)),
-        // ),
-        // iconColor: colorMap[props["color"]],
-        // textColor: colorMap[props["color"]],
+        type: type,
+        size: size,
+        digitButtonThemeData:
+            DigitButtonThemeData.defaultTheme(context).copyWith(
+          smallDigitButtonHeight:
+              (size == DigitButtonSize.small && height != null)
+                  ? WidgetParsers.parseSize(height)
+                  : DigitButtonThemeData.defaultTheme(context)
+                      .smallDigitButtonHeight,
+          mediumDigitButtonHeight:
+              (size == DigitButtonSize.medium && height != null)
+                  ? WidgetParsers.parseSize(height)
+                  : DigitButtonThemeData.defaultTheme(context)
+                      .mediumDigitButtonHeight,
+          largeDigitButtonHeight:
+              (size == DigitButtonSize.large && height != null)
+                  ? WidgetParsers.parseSize(height)
+                  : DigitButtonThemeData.defaultTheme(context)
+                      .largeDigitButtonHeight,
+          smallMediumRadius: ((size == DigitButtonSize.small ||
+                      size == DigitButtonSize.medium) &&
+                  radius != null)
+              ? BorderRadius.circular(WidgetParsers.parseSize(radius))
+              : DigitButtonThemeData.defaultTheme(context).smallMediumRadius,
+          largeRadius: (size == DigitButtonSize.large && radius != null)
+              ? BorderRadius.circular(WidgetParsers.parseSize(radius))
+              : DigitButtonThemeData.defaultTheme(context).largeRadius,
+        ),
         mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment:
             WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
@@ -63,6 +78,4 @@ class ButtonWidget extends ResolvedFlowWidget {
       props,
     );
   }
-
-  Map<String, Color> colorMap = {'green': Colors.green};
 }

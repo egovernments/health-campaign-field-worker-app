@@ -48,12 +48,41 @@ class TextWidget extends ResolvedFlowWidget {
     return WidgetParsers.wrapWithBottomGap(
       Text(
         displayValue.isEmpty ? '--' : displayValue,
-        style: textStyle,
+        style: textStyle?.copyWith(
+          color:
+              _parseTextColor(context, properties['color']?.toString()) ?? null,
+        ),
         overflow: TextOverflow.ellipsis,
         maxLines: json["maxLines"] ?? 2,
       ),
       properties,
     );
+  }
+
+  Color? _parseTextColor(BuildContext context, String? colorKey) {
+    if (colorKey == null) return null;
+
+    final theme = Theme.of(context);
+    switch (colorKey) {
+      case 'primary':
+        return theme.colorScheme.primary;
+      case 'onPrimary':
+        return theme.colorScheme.onPrimary;
+      case 'secondary':
+        return theme.colorScheme.secondary;
+      case 'onSecondary':
+        return theme.colorScheme.onSecondary;
+      case 'error':
+        return theme.colorScheme.error;
+      case 'onError':
+        return theme.colorScheme.onError;
+      case 'surface':
+        return theme.colorScheme.surface;
+      case 'onSurface':
+        return theme.colorScheme.onSurface;
+      default:
+        return null; // Could add support for custom colors here
+    }
   }
 
   TextStyle? _parseTextStyle(BuildContext context, String? styleKey) {

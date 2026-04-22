@@ -226,6 +226,9 @@ class GroupListViewWidget extends ResolvedFlowWidget {
               groupName,
               style: groupTextStyle != null
                   ? WidgetParsers.parseTextStyle(context, groupTextStyle)
+                      ?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    )
                   : null,
             ),
             Column(children: widgets),

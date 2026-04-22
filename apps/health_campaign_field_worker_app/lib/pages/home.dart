@@ -593,16 +593,16 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
 
     FunctionRegistry.register('anyAttendanceSelected', (args, stateData) {
-      if (args.isEmpty || args.first == null) return false;
+      if (args.isEmpty || args.first == null) return true;
 
       final widgetData = args.first;
       final attendanceCollection = widgetData?['attendanceCollection'] as Map?;
 
-      return attendanceCollection?.isNotEmpty ?? false;
+      return (attendanceCollection == null || attendanceCollection.isEmpty);
     });
 
     FunctionRegistry.register('allAttendanceSelected', (args, stateData) {
-      if (args.isEmpty || args.first == null) return false;
+      if (args.isEmpty || args.first == null) return true;
 
       final widgetData = args.first;
       final attendanceRegisterModel = args.length > 1 ? args[1] : null;
