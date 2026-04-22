@@ -512,7 +512,9 @@ final jsonConfig = {
             "deliveryStrategy": "__listItem:deliveryStrategy",
             "latitude": "DeliveryDetails.latLng[0]",
             "longitude": "DeliveryDetails.latLng[1]",
-            "locationAccuracy": "DeliveryDetails.latLng[2]"
+            "locationAccuracy": "DeliveryDetails.latLng[2]",
+            "lat": "DeliveryDetails.latLng[0]",
+            "lng": "DeliveryDetails.latLng[1]"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -598,7 +600,9 @@ final jsonConfig = {
             "deliveryStrategy": "__context:deliveryStrategy",
             "latitude": "DeliveryDetails.latLng[0]",
             "longitude": "DeliveryDetails.latLng[1]",
-            "locationAccuracy": "DeliveryDetails.latLng[2]"
+            "locationAccuracy": "DeliveryDetails.latLng[2]",
+            "lat": "DeliveryDetails.latLng[0]",
+            "lng": "DeliveryDetails.latLng[1]"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -683,7 +687,9 @@ final jsonConfig = {
             "cycleIndex": "__context:cycleIndex",
             "latitude": "DeliveryDetails.latLng[0]",
             "longitude": "DeliveryDetails.latLng[1]",
-            "locationAccuracy": "DeliveryDetails.latLng[2]"
+            "locationAccuracy": "DeliveryDetails.latLng[2]",
+            "lat": "DeliveryDetails.latLng[0]",
+            "lng": "DeliveryDetails.latLng[1]"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -748,7 +754,9 @@ final jsonConfig = {
             "comment": "unableToDeliver.comment",
             "latitude": "DeliveryDetails.latLng[0]",
             "longitude": "DeliveryDetails.latLng[1]",
-            "locationAccuracy": "DeliveryDetails.latLng[2]"
+            "locationAccuracy": "DeliveryDetails.latLng[2]",
+            "lat": "DeliveryDetails.latLng[0]",
+            "lng": "DeliveryDetails.latLng[1]"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"

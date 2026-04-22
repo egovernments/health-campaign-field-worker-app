@@ -206,7 +206,7 @@ final dynamic sampleHouseholdFlows = {
                       "actionType": "REVERSE_TRANSFORM",
                       "properties": {
                         "configName": "beneficiaryRegistration",
-                        "entityTypes": ["HouseholdModel"]
+                        "entityTypes": ["HouseholdModel", "ProjectBeneficiaryModel"]
                       }
                     },
                     {
@@ -292,11 +292,16 @@ final dynamic sampleHouseholdFlows = {
                                 {
                                   "key": "entities",
                                   "value": "{{item.individual}}"
+                                },
+                                {
+                                  "key": "entities",
+                                  "value": "{{item.projectBeneficiary}}"
                                 }
                               ],
                               "configName": "individualRegistration",
                               "entityTypes": [
-                                "IndividualModel"
+                                "IndividualModel",
+                                "ProjectBeneficiaryModel"
                               ]
                             }
                           },
@@ -411,6 +416,7 @@ final dynamic sampleHouseholdFlows = {
                   }
                 }
               ],
+              "hidden": true,
               "fieldName": "addMember",
               "properties": {
                 "icon": "AddIcon",
@@ -454,10 +460,7 @@ final dynamic sampleHouseholdFlows = {
                     "key": "cycleIndex",
                     "value": "{{contextData.0.nextCycleId}}"
                   },
-                  {
-                    "key": "doseIndex",
-                    "value": "{{contextData.0.nextDoseId}}"
-                  },
+                  {"key": "doseIndex", "value": "{{contextData.0.nextDoseId}}"},
                   {
                     "key": "deliveryStrategy",
                     "value":
@@ -1817,9 +1820,7 @@ final dynamic sampleHouseholdFlows = {
               "actions": [
                 {
                   "actionType": "UPDATE_EVENT",
-                  "properties": {
-                    "entity": "IndividualModel"
-                  }
+                  "properties": {"entity": "IndividualModel"}
                 }
               ],
               "condition": {"type": "custom", "expression": "isEdit == true"}
@@ -1828,9 +1829,7 @@ final dynamic sampleHouseholdFlows = {
               "actions": [
                 {
                   "actionType": "CREATE_EVENT",
-                  "properties": {
-                    "entity": "INDIVIDUAL, MEMBER"
-                  }
+                  "properties": {"entity": "INDIVIDUAL, MEMBER"}
                 }
               ],
               "condition": {"expression": "DEFAULT"}
@@ -2181,9 +2180,7 @@ final dynamic sampleHouseholdFlows = {
           "actions": [
             {
               "actionType": "UPDATE_EVENT",
-              "properties": {
-                "entity": "IndividualModel"
-              }
+              "properties": {"entity": "IndividualModel"}
             }
           ],
           "condition": {"type": "custom", "expression": "isEdit == true"}
@@ -2367,7 +2364,7 @@ final dynamic sampleHouseholdFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel, TaskModel",
+                    "entity": "HouseholdModel, TaskModel, ProjectBeneficiaryModel",
                     "modify": [
                       {"key": "TaskModel.status", "value": "NOT_ADMINISTERED"}
                     ],
@@ -2426,7 +2423,7 @@ final dynamic sampleHouseholdFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel",
+                    "entity": "HouseholdModel, ProjectBeneficiaryModel",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -2930,7 +2927,7 @@ final dynamic sampleHouseholdFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel",
+                    "entity": "HouseholdModel, ProjectBeneficiaryModel",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -3258,7 +3255,7 @@ final dynamic sampleHouseholdFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel",
+                    "entity": "HouseholdModel, ProjectBeneficiaryModel",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",

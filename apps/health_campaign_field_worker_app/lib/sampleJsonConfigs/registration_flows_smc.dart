@@ -757,7 +757,7 @@ final dynamic sampleSmcFlows = {
                       "actionType": "REVERSE_TRANSFORM",
                       "properties": {
                         "configName": "beneficiaryRegistration",
-                        "entityTypes": ["HouseholdModel"]
+                        "entityTypes": ["HouseholdModel", "ProjectBeneficiaryModel"]
                       }
                     },
                     {
@@ -4388,7 +4388,7 @@ final dynamic sampleSmcFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel, TaskModel",
+                    "entity": "HouseholdModel, TaskModel, ProjectBeneficiaryModel",
                     "modify": [
                       {"key": "TaskModel.status", "value": "NOT_ADMINISTERED"}
                     ],
@@ -4447,7 +4447,7 @@ final dynamic sampleSmcFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel",
+                    "entity": "HouseholdModel, ProjectBeneficiaryModel",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -4951,7 +4951,7 @@ final dynamic sampleSmcFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel",
+                    "entity": "HouseholdModel, ProjectBeneficiaryModel",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -5288,7 +5288,7 @@ final dynamic sampleSmcFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel",
+                    "entity": "HouseholdModel, ProjectBeneficiaryModel",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
