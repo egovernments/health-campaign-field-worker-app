@@ -93,6 +93,8 @@ class ApiOperationMapper extends EnumMapper<ApiOperation> {
         return ApiOperation.create;
       case 'register':
         return ApiOperation.register;
+      case 'un_register':
+        return ApiOperation.unRegister;
       case 'search':
         return ApiOperation.search;
       case 'update':
@@ -127,6 +129,8 @@ class ApiOperationMapper extends EnumMapper<ApiOperation> {
         return 'create';
       case ApiOperation.register:
         return 'register';
+      case ApiOperation.unRegister:
+        return 'un_register';
       case ApiOperation.search:
         return 'search';
       case ApiOperation.update:

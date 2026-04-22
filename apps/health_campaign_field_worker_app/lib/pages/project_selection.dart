@@ -202,8 +202,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                                 context
                                     .read<AuthBloc>()
                                     .add(const AuthLogoutEvent());
-                              },
-                            ),
+                              },                            ),
                           ),
                         ),
                       ],
