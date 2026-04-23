@@ -19,10 +19,12 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   final String? receiverType;
   final String? senderId;
   final String? senderType;
+  final String? campaignNumber;
   final List<String>? clientReferenceId;
   final List<String>? transactionType;
   final List<String>? transactionReason;
   final DateTime? dateOfEntryTime;
+  final bool? includeOnlyUpdatedByOthers;
 
   StockSearchModel({
     this.id,
@@ -40,7 +42,9 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
+    this.campaignNumber,
     int? dateOfEntry,
+    this.includeOnlyUpdatedByOthers,
     super.boundaryCode,
     super.isDeleted,
   })  : dateOfEntryTime = dateOfEntry == null
@@ -65,7 +69,9 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
+    this.campaignNumber,
     int? dateOfEntry,
+    this.includeOnlyUpdatedByOthers,
     super.boundaryCode,
   })  : dateOfEntryTime = dateOfEntry == null
             ? null
@@ -93,6 +99,7 @@ class StockModel extends EntityModel with StockModelMappable {
   final String? receiverType;
   final String? senderId;
   final String? senderType;
+  final String? campaignNumber;
   final bool? nonRecoverableError;
   final String clientReferenceId;
   final int? rowVersion;
@@ -100,6 +107,7 @@ class StockModel extends EntityModel with StockModelMappable {
   final String? transactionReason;
   final StockAdditionalFields? additionalFields;
   final DateTime? dateOfEntryTime;
+
 
   StockModel({
     int? dateOfEntry,
@@ -116,6 +124,7 @@ class StockModel extends EntityModel with StockModelMappable {
     this.waybillNumber,
     this.receiverId,
     this.receiverType,
+    this.campaignNumber,
     this.senderId,
     this.senderType,
     this.nonRecoverableError = false,
@@ -165,6 +174,7 @@ class StockModel extends EntityModel with StockModelMappable {
       transactionType: Value(transactionType),
       transactionReason: Value(transactionReason),
       dateOfEntry: Value(dateOfEntry),
+      campaignNumber: Value(campaignNumber)
     );
   }
 }

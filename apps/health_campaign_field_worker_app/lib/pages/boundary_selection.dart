@@ -212,11 +212,11 @@ class _BoundarySelectionPageState
                                             .read<BeneficiaryDownSyncBloc>()
                                             .add(
                                               DownSyncAllBoundariesEvent(
-                                                projectId: context.projectId,
+                                                projectModel: context.selectedProject,
                                                 boundaries: boundaries,
                                                 batchSize: batchSize,
                                                 pendingSyncCount:
-                                                    pendingSyncCount,
+                                                    pendingSyncCount, projectId: '',
                                               ),
                                             ),
                                     pendingSync: () => showDownloadDialog(
@@ -225,7 +225,7 @@ class _BoundarySelectionPageState
                                         title: localizations.translate(
                                           i18.syncDialog.pendingSyncLabel,
                                         ),
-                                        projectId: context.projectId,
+                                        projectModel: context.selectedProject,
                                         appConfiguartion: appConfiguration,
                                         boundaries:
                                             state.selectedLastLevelBoundaries,
@@ -255,7 +255,7 @@ class _BoundarySelectionPageState
                                                     .noDataFound,
                                           ),
                                           appConfiguartion: appConfiguration,
-                                          projectId: context.projectId,
+                                          projectModel: context.selectedProject,
                                           boundaries:
                                               state.selectedLastLevelBoundaries,
                                           batchSize: batchSize,
@@ -312,7 +312,7 @@ class _BoundarySelectionPageState
                                               i18.beneficiaryDetails
                                                   .dataDownloadInProgress,
                                             ),
-                                            projectId: context.projectId,
+                                            projectModel: context.selectedProject,
                                             boundaries: state
                                                 .selectedLastLevelBoundaries,
                                             appConfiguartion: appConfiguration,
@@ -390,7 +390,7 @@ class _BoundarySelectionPageState
                                           i18.common.coreCommonDownloadFailed,
                                         ),
                                         appConfiguartion: appConfiguration,
-                                        projectId: context.projectId,
+                                        projectModel: context.selectedProject,
                                         pendingSyncCount: pendingSyncCount,
                                         boundaries:
                                             state.selectedLastLevelBoundaries,
@@ -421,7 +421,7 @@ class _BoundarySelectionPageState
                                               .unableToCheckDataInServer,
                                         ),
                                         appConfiguartion: appConfiguration,
-                                        projectId: context.projectId,
+                                        projectModel: context.selectedProject,
                                         pendingSyncCount: pendingSyncCount,
                                         boundaries:
                                             state.selectedLastLevelBoundaries,
@@ -451,7 +451,7 @@ class _BoundarySelectionPageState
                                           content: localizations.translate(i18
                                               .beneficiaryDetails
                                               .insufficientStorageContent),
-                                          projectId: context.projectId,
+                                          projectModel: context.selectedProject,
                                           appConfiguartion: appConfiguration,
                                           boundaries:
                                               state.selectedLastLevelBoundaries,
@@ -496,7 +496,7 @@ class _BoundarySelectionPageState
                                               i18.beneficiaryDetails
                                                   .dataDownloadInProgress,
                                             ),
-                                            projectId: context.projectId,
+                                            projectModel: context.selectedProject,
                                             boundaries: state
                                                 .selectedLastLevelBoundaries,
                                             appConfiguartion: appConfiguration,

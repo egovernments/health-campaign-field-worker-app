@@ -64,6 +64,12 @@ class HFReferralSearchModelMapper
       v.localityCode;
   static const Field<HFReferralSearchModel, List<String>> _f$localityCode =
       Field('localityCode', _$localityCode, opt: true);
+  static bool? _$includeOnlyUpdatedByOthers(HFReferralSearchModel v) =>
+      v.includeOnlyUpdatedByOthers;
+  static const Field<HFReferralSearchModel, bool>
+      _f$includeOnlyUpdatedByOthers = Field(
+          'includeOnlyUpdatedByOthers', _$includeOnlyUpdatedByOthers,
+          opt: true);
   static String? _$boundaryCode(HFReferralSearchModel v) => v.boundaryCode;
   static const Field<HFReferralSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -91,6 +97,7 @@ class HFReferralSearchModelMapper
     #symptom: _f$symptom,
     #clientReferenceId: _f$clientReferenceId,
     #localityCode: _f$localityCode,
+    #includeOnlyUpdatedByOthers: _f$includeOnlyUpdatedByOthers,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -120,6 +127,7 @@ class HFReferralSearchModelMapper
         symptom: data.dec(_f$symptom),
         clientReferenceId: data.dec(_f$clientReferenceId),
         localityCode: data.dec(_f$localityCode),
+        includeOnlyUpdatedByOthers: data.dec(_f$includeOnlyUpdatedByOthers),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -208,6 +216,7 @@ abstract class HFReferralSearchModelCopyWith<
       List<String>? symptom,
       List<String>? clientReferenceId,
       List<String>? localityCode,
+      bool? includeOnlyUpdatedByOthers,
       String? boundaryCode});
   HFReferralSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -297,6 +306,7 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
           Object? symptom = $none,
           Object? clientReferenceId = $none,
           Object? localityCode = $none,
+          Object? includeOnlyUpdatedByOthers = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
@@ -311,11 +321,12 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
         if (symptom != $none) #symptom: symptom,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (localityCode != $none) #localityCode: localityCode,
+        if (includeOnlyUpdatedByOthers != $none)
+          #includeOnlyUpdatedByOthers: includeOnlyUpdatedByOthers,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
-  HFReferralSearchModel $make(
-          CopyWithData data) =>
+  HFReferralSearchModel $make(CopyWithData data) =>
       HFReferralSearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
           tenantId: data.get(#tenantId, or: $value.tenantId),
@@ -333,6 +344,8 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           localityCode: data.get(#localityCode, or: $value.localityCode),
+          includeOnlyUpdatedByOthers: data.get(#includeOnlyUpdatedByOthers,
+              or: $value.includeOnlyUpdatedByOthers),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override

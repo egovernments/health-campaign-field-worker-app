@@ -980,6 +980,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       final stockSearchModel = StockSearchModel(
         receiverId: receiverIds.first,
         senderId: receiverIds.first,
+        includeOnlyUpdatedByOthers: true,
       );
 
       final existingDownSyncData =

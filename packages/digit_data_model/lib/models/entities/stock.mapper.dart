@@ -74,6 +74,11 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
   static int? _$dateOfEntry(StockSearchModel v) => v.dateOfEntry;
   static const Field<StockSearchModel, int> _f$dateOfEntry =
       Field('dateOfEntry', _$dateOfEntry, opt: true);
+  static bool? _$includeOnlyUpdatedByOthers(StockSearchModel v) =>
+      v.includeOnlyUpdatedByOthers;
+  static const Field<StockSearchModel, bool> _f$includeOnlyUpdatedByOthers =
+      Field('includeOnlyUpdatedByOthers', _$includeOnlyUpdatedByOthers,
+          opt: true);
   static String? _$boundaryCode(StockSearchModel v) => v.boundaryCode;
   static const Field<StockSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -106,6 +111,7 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
     #transactionType: _f$transactionType,
     #transactionReason: _f$transactionReason,
     #dateOfEntry: _f$dateOfEntry,
+    #includeOnlyUpdatedByOthers: _f$includeOnlyUpdatedByOthers,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -140,6 +146,7 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
         transactionType: data.dec(_f$transactionType),
         transactionReason: data.dec(_f$transactionReason),
         dateOfEntry: data.dec(_f$dateOfEntry),
+        includeOnlyUpdatedByOthers: data.dec(_f$includeOnlyUpdatedByOthers),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -223,6 +230,7 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
       List<String>? transactionType,
       List<String>? transactionReason,
       int? dateOfEntry,
+      bool? includeOnlyUpdatedByOthers,
       String? boundaryCode});
   StockSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -286,6 +294,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
           Object? transactionType = $none,
           Object? transactionReason = $none,
           Object? dateOfEntry = $none,
+          Object? includeOnlyUpdatedByOthers = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
@@ -306,6 +315,8 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
         if (transactionType != $none) #transactionType: transactionType,
         if (transactionReason != $none) #transactionReason: transactionReason,
         if (dateOfEntry != $none) #dateOfEntry: dateOfEntry,
+        if (includeOnlyUpdatedByOthers != $none)
+          #includeOnlyUpdatedByOthers: includeOnlyUpdatedByOthers,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -331,6 +342,8 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
       transactionReason:
           data.get(#transactionReason, or: $value.transactionReason),
       dateOfEntry: data.get(#dateOfEntry, or: $value.dateOfEntry),
+      includeOnlyUpdatedByOthers: data.get(#includeOnlyUpdatedByOthers,
+          or: $value.includeOnlyUpdatedByOthers),
       boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -395,6 +408,9 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   static String? _$receiverType(StockModel v) => v.receiverType;
   static const Field<StockModel, String> _f$receiverType =
       Field('receiverType', _$receiverType, opt: true);
+  static String? _$campaignNumber(StockModel v) => v.campaignNumber;
+  static const Field<StockModel, String> _f$campaignNumber =
+      Field('campaignNumber', _$campaignNumber, opt: true);
   static String? _$senderId(StockModel v) => v.senderId;
   static const Field<StockModel, String> _f$senderId =
       Field('senderId', _$senderId, opt: true);
@@ -447,6 +463,7 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
     #waybillNumber: _f$waybillNumber,
     #receiverId: _f$receiverId,
     #receiverType: _f$receiverType,
+    #campaignNumber: _f$campaignNumber,
     #senderId: _f$senderId,
     #senderType: _f$senderType,
     #nonRecoverableError: _f$nonRecoverableError,
@@ -486,6 +503,7 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
         waybillNumber: data.dec(_f$waybillNumber),
         receiverId: data.dec(_f$receiverId),
         receiverType: data.dec(_f$receiverType),
+        campaignNumber: data.dec(_f$campaignNumber),
         senderId: data.dec(_f$senderId),
         senderType: data.dec(_f$senderType),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
@@ -572,6 +590,7 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       String? waybillNumber,
       String? receiverId,
       String? receiverType,
+      String? campaignNumber,
       String? senderId,
       String? senderType,
       bool? nonRecoverableError,
@@ -621,6 +640,7 @@ class _StockModelCopyWithImpl<$R, $Out>
           Object? waybillNumber = $none,
           Object? receiverId = $none,
           Object? receiverType = $none,
+          Object? campaignNumber = $none,
           Object? senderId = $none,
           Object? senderType = $none,
           Object? nonRecoverableError = $none,
@@ -648,6 +668,7 @@ class _StockModelCopyWithImpl<$R, $Out>
         if (waybillNumber != $none) #waybillNumber: waybillNumber,
         if (receiverId != $none) #receiverId: receiverId,
         if (receiverType != $none) #receiverType: receiverType,
+        if (campaignNumber != $none) #campaignNumber: campaignNumber,
         if (senderId != $none) #senderId: senderId,
         if (senderType != $none) #senderType: senderType,
         if (nonRecoverableError != $none)
@@ -681,6 +702,7 @@ class _StockModelCopyWithImpl<$R, $Out>
       waybillNumber: data.get(#waybillNumber, or: $value.waybillNumber),
       receiverId: data.get(#receiverId, or: $value.receiverId),
       receiverType: data.get(#receiverType, or: $value.receiverType),
+      campaignNumber: data.get(#campaignNumber, or: $value.campaignNumber),
       senderId: data.get(#senderId, or: $value.senderId),
       senderType: data.get(#senderType, or: $value.senderType),
       nonRecoverableError:
