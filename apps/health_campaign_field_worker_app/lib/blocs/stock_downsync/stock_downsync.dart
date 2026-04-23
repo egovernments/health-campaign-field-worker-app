@@ -111,7 +111,6 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
     return StockSearchModel(
       receiverId: receiverIds.first,
       senderId: receiverIds.first,
-      includeOnlyUpdatedByOthers: true,
       campaignNumber: project.referenceID,
     );
   }
@@ -181,6 +180,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         stockSearchModel,
         offSet: 0,
         lastSyncedTime: lastSyncedTime,
+        includeOnlyUpdatedByOthers: true,
       );
 
       emit(StockDownSyncState.dataFound(
@@ -251,6 +251,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
             offSet: 0,
             limit: event.batchSize,
             lastSyncedTime: lastSyncedTime,
+            includeOnlyUpdatedByOthers:true,
           );
 
           if (stockEntries.isEmpty) break;

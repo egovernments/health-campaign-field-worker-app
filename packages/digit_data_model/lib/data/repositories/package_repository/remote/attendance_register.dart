@@ -23,6 +23,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
     int? offSet,
     int? limit,
     int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) async {
     Response response;
 

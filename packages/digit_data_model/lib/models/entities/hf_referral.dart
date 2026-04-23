@@ -20,7 +20,6 @@ class HFReferralSearchModel extends EntitySearchModel
   final List<String>? symptom;
   final List<String>? clientReferenceId;
   final List<String>? localityCode;
-  final bool? includeOnlyUpdatedByOthers;
 
   HFReferralSearchModel({
     this.id,
@@ -35,7 +34,6 @@ class HFReferralSearchModel extends EntitySearchModel
     this.symptom,
     this.clientReferenceId,
     this.localityCode,
-    this.includeOnlyUpdatedByOthers,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -54,7 +52,6 @@ class HFReferralSearchModel extends EntitySearchModel
     this.symptom,
     this.clientReferenceId,
     this.localityCode,
-    this.includeOnlyUpdatedByOthers,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }

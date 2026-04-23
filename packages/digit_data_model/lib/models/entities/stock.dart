@@ -24,7 +24,6 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   final List<String>? transactionType;
   final List<String>? transactionReason;
   final DateTime? dateOfEntryTime;
-  final bool? includeOnlyUpdatedByOthers;
 
   StockSearchModel({
     this.id,
@@ -44,7 +43,6 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.transactionReason,
     this.campaignNumber,
     int? dateOfEntry,
-    this.includeOnlyUpdatedByOthers,
     super.boundaryCode,
     super.isDeleted,
   })  : dateOfEntryTime = dateOfEntry == null
@@ -71,7 +69,6 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.transactionReason,
     this.campaignNumber,
     int? dateOfEntry,
-    this.includeOnlyUpdatedByOthers,
     super.boundaryCode,
   })  : dateOfEntryTime = dateOfEntry == null
             ? null

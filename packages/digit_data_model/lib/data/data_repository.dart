@@ -74,6 +74,7 @@ abstract class RemoteRepository<D extends EntityModel,
     int? offSet,
     int? limit,
     int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) async {
     Response response;
 
@@ -85,6 +86,7 @@ abstract class RemoteRepository<D extends EntityModel,
                 'offset': offSet ?? 0,
                 'limit': limit ?? 100,
                 'tenantId': DigitDataModelSingleton().tenantId,
+                if (includeOnlyUpdatedByOthers != null) 'includeOnlyUpdatedByOthers': includeOnlyUpdatedByOthers,
                 if (lastSyncedTime != null) 'lastSyncedTime': lastSyncedTime,
                 if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
               },

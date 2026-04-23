@@ -216,7 +216,7 @@ class _BoundarySelectionPageState
                                                 boundaries: boundaries,
                                                 batchSize: batchSize,
                                                 pendingSyncCount:
-                                                    pendingSyncCount, projectId: '',
+                                                    pendingSyncCount,
                                               ),
                                             ),
                                     pendingSync: () => showDownloadDialog(
@@ -619,8 +619,7 @@ class _BoundarySelectionPageState
                                                             appConfiguration: [
                                                               appConfiguration,
                                                             ],
-                                                            projectId: context
-                                                                .projectId,
+                                                            projectModel: context.selectedProject,
                                                             boundaries: context
                                                                 .read<
                                                                     BoundaryBloc>()

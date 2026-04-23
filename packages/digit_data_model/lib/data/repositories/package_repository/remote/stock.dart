@@ -23,6 +23,7 @@ class StockRemoteRepository
     int? offSet,
     int? limit,
     int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) async {
     Response response;
 
@@ -34,6 +35,7 @@ class StockRemoteRepository
             queryParameters: {
               'offset': offSet ?? 0,
               'limit': limit ?? 100,
+              if (includeOnlyUpdatedByOthers != null) 'includeOnlyUpdatedByOthers': includeOnlyUpdatedByOthers,
               if (lastSyncedTime != null) 'lastChangedSince': lastSyncedTime,
               'tenantId': DigitDataModelSingleton().tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
@@ -94,6 +96,7 @@ class StockRemoteRepository
     StockSearchModel query, {
     int? offSet,
     int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) async {
     Response response;
 
@@ -105,6 +108,7 @@ class StockRemoteRepository
             queryParameters: {
               'offset': offSet ?? 0,
               'limit': 0,
+              if (includeOnlyUpdatedByOthers != null) 'includeOnlyUpdatedByOthers': includeOnlyUpdatedByOthers,
               if (lastSyncedTime != null) 'lastChangedSince': lastSyncedTime,
               'tenantId': DigitDataModelSingleton().tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,

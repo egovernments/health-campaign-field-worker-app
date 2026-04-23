@@ -72,9 +72,8 @@ class HFReferralDownSyncBloc
           await (hfReferralRemoteRepository as HFReferralRemoteRepository)
               .fetchTotalCount(
         HFReferralSearchModel(
-          includeOnlyUpdatedByOthers: true,
           projectId: event.projectId,
-        ),
+        ), includeOnlyUpdatedByOthers: true,
         offSet: 0,
         lastSyncedTime: lastSyncedTime,
       );
@@ -143,9 +142,9 @@ class HFReferralDownSyncBloc
       while (syncedCount < totalCount) {
         final hfReferrals = await hfReferralRemoteRepository.search(
           HFReferralSearchModel(
-            projectId: event.projectId,
-            includeOnlyUpdatedByOthers: true,
+            projectId: event.projectId
           ),
+          includeOnlyUpdatedByOthers: true,
           offSet: 0,
           limit: batchSize,
           lastSyncedTime: lastSyncedTime,
