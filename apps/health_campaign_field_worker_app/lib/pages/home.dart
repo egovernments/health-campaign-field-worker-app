@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:attendance_management/utils/utils.dart';
 import 'package:collection/collection.dart';
@@ -2023,32 +2024,34 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  // if (false) {
-                  //   final allSchemas =
-                  //       json.decode(schemaJsonRaw!) as Map<String, dynamic>;
-                  //   final data = allSchemas['REGISTRATION'];
-                  //
-                  //   final registrationDeliveryData = data?['data'];
-                  //   final flowsData = (registrationDeliveryData['flows']
-                  //               as List<dynamic>?)
-                  //           ?.map((e) => Map<String, dynamic>.from(e as Map))
-                  //           .toList() ??
-                  //       [];
-                  //   FlowRegistry.setConfig(flowsData);
-                  //   NavigationRegistry.setupNavigation(ctx);
-                  //
-                  //   ctx.router.push(
-                  //     FlowBuilderHomeRoute(
-                  //         pageName: registrationDeliveryData["initialPage"]),
-                  //   );
-                  // } else {
-                  FlowRegistry.setConfig(
-                      sampleFlows["flows"] as List<Map<String, dynamic>>);
-                  NavigationRegistry.setupNavigation(ctx);
-                  ctx.router.push(
-                    FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
-                  );
-                  // }
+                  if (schemaJsonRaw != null) {
+                    final allSchemas =
+                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    final data = allSchemas['REGISTRATION'];
+
+                    final registrationDeliveryData = data?['data'];
+                    final flowsData = (registrationDeliveryData['flows']
+                                as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                    FlowRegistry.setConfig(flowsData);
+                    NavigationRegistry.setupNavigation(ctx);
+
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: registrationDeliveryData["initialPage"]),
+                    );
+                  } else {
+                    FlowRegistry.setConfig(
+                        sampleFlows["flows"] as List<Map<String, dynamic>>);
+                    NavigationRegistry.setupNavigation(ctx);
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: sampleFlows["initialPage"]),
+                    );
+                    // }
+                  }
                 } catch (e) {
                   debugPrint('error $e');
                 }
