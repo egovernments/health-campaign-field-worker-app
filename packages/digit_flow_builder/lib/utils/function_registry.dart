@@ -1789,6 +1789,69 @@ void initializeFunctionRegistry() {
     return false;
   });
 
+  /// Counts members whose age (in months) falls within [3, 59] inclusive.
+  ///
+  /// - **Function Name**: `'countMembersInAgeRange'`
+  /// - **Arguments**: First argument is the list of member wrapper objects.
+  ///   Each wrapper is a Map containing an `individual` key that holds a List
+  ///   with the IndividualModel (Map or EntityModel) at index 0.
+  /// - **Returns**: Integer count of eligible members.
+  FunctionRegistry.register('countMembersInAgeRange', (args, stateData) {
+    if (args.isEmpty || args.first == null) return 0;
+
+    final members = args.first;
+    if (members is! List) return 0;
+
+    int count = 0;
+    final now = DateTime.now();
+
+    for (final memberItem in members) {
+      if (memberItem is! Map) continue;
+
+      final individualList = memberItem['individual'];
+      if (individualList is! List || individualList.isEmpty) continue;
+
+      final individual = individualList.first;
+
+      dynamic dob;
+      if (individual is Map) {
+        dob = individual['dateOfBirth'];
+      } else if (individual is EntityModel) {
+        dob = individual.toMap()['dateOfBirth'];
+      } else {
+        try {
+          dob = (individual as dynamic).dateOfBirth;
+        } catch (_) {
+          continue;
+        }
+      }
+
+      if (dob == null) continue;
+
+      DateTime? birthDate;
+      if (dob is int) {
+        birthDate = DateTime.fromMillisecondsSinceEpoch(dob);
+      } else if (dob is String) {
+        final timestamp = int.tryParse(dob);
+        if (timestamp != null) {
+          birthDate = DateTime.fromMillisecondsSinceEpoch(timestamp);
+        } else {
+          birthDate = DigitDateUtils.getFormattedDateToDateTime(dob);
+        }
+      }
+
+      if (birthDate == null) continue;
+
+      int ageInMonths =
+          (now.year - birthDate.year) * 12 + (now.month - birthDate.month);
+      if (now.day < birthDate.day) ageInMonths--;
+
+      if (ageInMonths >= 3 && ageInMonths <= 59) count++;
+    }
+
+    return count;
+  });
+
   FunctionRegistry.register('hasMinimumBeneficiaryId', (args, stateData) {
     final minCountArg = args.isNotEmpty ? args.first : null;
     final minCount = minCountArg is int

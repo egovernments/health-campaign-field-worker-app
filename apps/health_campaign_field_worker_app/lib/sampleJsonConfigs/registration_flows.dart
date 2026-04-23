@@ -1431,22 +1431,43 @@ final dynamic sampleFlows = {
                   "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
               "onAction": [
                 {
-                  "actionType": "NAVIGATION",
-                  "properties": {
-                    "data": [
-                      {
-                        "key": "HouseholdClientReferenceId",
-                        "value":
-                            "{{contextData.0.household.HouseholdModel.clientReferenceId}}"
-                      },
-                      {
-                        "key": "UNIQUE_BENEFICIARY_ID",
-                        "value": "{{latestBeneficiaryId}}"
+                  "condition": {
+                    "expression":
+                        "{{fn:countMembersInAgeRange(contextData.0.members)}} >= {{fn:getAdditionalFieldValue(contextData.0.household.HouseholdModel.additionalFields.fields, 'childrenCount')}}"
+                  },
+                  "actions": [
+                    {
+                      "actionType": "SHOW_TOAST",
+                      "properties": {
+                        "message":
+                            "REGISTRATION_SEARCH_BENEFICIARY_CHILDREN_COUNT_EXCEEDED",
+                        "type": "error"
                       }
-                    ],
-                    "name": "ADD_MEMBER",
-                    "type": "FORM"
-                  }
+                    }
+                  ]
+                },
+                {
+                  "condition": {"expression": "DEFAULT"},
+                  "actions": [
+                    {
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "data": [
+                          {
+                            "key": "HouseholdClientReferenceId",
+                            "value":
+                                "{{contextData.0.household.HouseholdModel.clientReferenceId}}"
+                          },
+                          {
+                            "key": "UNIQUE_BENEFICIARY_ID",
+                            "value": "{{latestBeneficiaryId}}"
+                          }
+                        ],
+                        "name": "ADD_MEMBER",
+                        "type": "FORM"
+                      }
+                    }
+                  ]
                 }
               ],
               "fieldName": "addMember",
@@ -2447,8 +2468,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "template",
-                  "label":
-                      "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
+                  "label": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
                   "format": "button",
                   "onAction": [
                     {
@@ -6528,21 +6548,46 @@ final dynamic sampleFlows = {
               "label":
                   "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount",
               "order": 2,
+              "range": {
+                "max": "10",
+                "min": "0",
+                "errorMessage":
+                    "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount_max_message"
+              },
               "value": "0",
               "format": "numeric",
-              "hidden": true,
+              "hidden": false,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "childrenCount",
-              "mandatory": false,
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [],
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount_mandatory_message"
+                },
+                {
+                  "type": "min",
+                  "value": "0",
+                  "message":
+                      "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount_min_message"
+                },
+                {
+                  "type": "max",
+                  "value": "10",
+                  "message":
+                      "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount_max_message"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false
             },
@@ -6605,7 +6650,7 @@ final dynamic sampleFlows = {
                   "type": "min",
                   "value": "1",
                   "message":
-                      "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_max_message"
+                      "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_min_message"
                 },
                 {
                   "type": "max",
