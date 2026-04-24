@@ -323,6 +323,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           validators: [Validators.required],
           value: '',
         ),
+    _privacyCheck: FormControl<bool>(
+      value: false,
+    )
       });
 }
 
