@@ -1,15 +1,19 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/stock.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../models/entities/roles_type.dart';
+import '../../utils/function_registries.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/stock_calculation_utils.dart';
 import '../../utils/utils.dart';
@@ -30,7 +34,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
   double _minThreshold = 100;
   double _maxThreshold = 500;
   bool _isLoading = true;
-  bool _isDistributorWithoutFacilities = false;
+  bool _isDistributor = false;
 
   @override
   void didChangeDependencies() {
@@ -112,9 +116,6 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
 
       if (!mounted) return;
 
-      // For distributors without facilities, use user UUID
-      final distributorWithoutFacilities = isDistributor && facilities.isEmpty;
-
       final previousFacilityId = _selectedFacility?.id;
       final autoSelectedFacility = facilities.isNotEmpty
           ? (previousFacilityId != null
@@ -130,14 +131,17 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         _productVariants = productVariants;
         _selectedFacility = autoSelectedFacility;
         _isLoading = false;
-        _isDistributorWithoutFacilities = distributorWithoutFacilities;
+        _isDistributor = isDistributor;
       });
 
-      // Use user UUID for distributors without facilities
-      if (distributorWithoutFacilities) {
-        _setupStockListener(context.loggedInUserUuid);
-      } else if (autoSelectedFacility != null) {
-        _setupStockListener(autoSelectedFacility.id);
+      // Distributors always use their UUID; others use facility ID
+      final effectiveFacilityId =
+          isDistributor ? context.loggedInUserUuid : autoSelectedFacility?.id;
+
+      if (effectiveFacilityId != null) {
+        // Load UserAction balances first (from deliveries) so UI shows them immediately
+        _loadInitialBalances(effectiveFacilityId);
+        _setupStockListener(effectiveFacilityId);
       }
     } catch (e) {
       if (mounted) {
@@ -152,47 +156,139 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
     final stockRepo =
         context.read<LocalRepository<StockModel, StockSearchModel>>()
             as StockLocalRepository;
+    final userActionRepo = context.read<UserActionLocalRepository>();
 
-    final isDistributor = _isDistributorWithoutFacilities;
+    final isDistributor = _isDistributor;
+    final effectiveFacilityId =
+        isDistributor ? context.loggedInUserUuid : facilityId;
 
+    // Build balance keys for UserAction listener
+    final balanceKeys = _productVariants
+        .map((pv) => generateBalanceKey(effectiveFacilityId, pv.id))
+        .toList();
+
+    // Listen to StockModel changes
     stockRepo.listenToChanges(
       query: StockSearchModel(receiverId: facilityId),
       listener: (receivedStocks) async {
         if (!mounted) return;
-
-        // Also fetch sent stocks to calculate complete balance
-        final sentStocks = await stockRepo.search(
-          StockSearchModel(senderId: facilityId),
-        );
-
-        // Deduplicate by clientReferenceId
-        final allStocksMap = <String, StockModel>{};
-        for (final stock in receivedStocks) {
-          allStocksMap[stock.clientReferenceId] = stock;
-        }
-        for (final stock in sentStocks) {
-          allStocksMap[stock.clientReferenceId] = stock;
-        }
-        final allStocks = allStocksMap.values.toList();
-
-        final productIds = _productVariants.map((pv) => pv.id).toList();
-        // For distributors, use user UUID as facilityId for calculation
-        final effectiveFacilityId =
-            isDistributor ? context.loggedInUserUuid : facilityId;
-        final balances = StockCalculationUtils.calculateStockInHandForProducts(
-          stockList: allStocks,
-          facilityId: effectiveFacilityId,
-          productIds: productIds,
-          loggedInUserUuid: context.loggedInUserUuid,
-        );
-
-        if (mounted) {
-          setState(() {
-            _stockBalances = balances;
-          });
-        }
+        await _refreshBalances(stockRepo, userActionRepo, effectiveFacilityId);
       },
     );
+
+    // Listen to UserAction changes (triggers when delivery creates/updates balance)
+    if (balanceKeys.isNotEmpty) {
+      userActionRepo.listenToChanges(
+        clientReferenceIds: balanceKeys,
+        listener: (actions) async {
+          if (!mounted) return;
+          await _refreshBalances(
+              stockRepo, userActionRepo, effectiveFacilityId);
+        },
+      );
+    }
+  }
+
+  Future<void> _loadInitialBalances(String effectiveFacilityId) async {
+    final stockRepo =
+        context.read<LocalRepository<StockModel, StockSearchModel>>()
+            as StockLocalRepository;
+    final userActionRepo = context.read<UserActionLocalRepository>();
+    await _refreshBalances(stockRepo, userActionRepo, effectiveFacilityId);
+  }
+
+  Future<void> _refreshBalances(
+    StockLocalRepository stockRepo,
+    UserActionLocalRepository userActionRepo,
+    String effectiveFacilityId,
+  ) async {
+    if (!mounted) return;
+
+    // Fetch all stocks for this facility
+    final receivedStocks = await stockRepo.search(
+      StockSearchModel(receiverId: effectiveFacilityId),
+    );
+    final sentStocks = await stockRepo.search(
+      StockSearchModel(senderId: effectiveFacilityId),
+    );
+
+    // Deduplicate by clientReferenceId
+    final allStocksMap = <String, StockModel>{};
+    for (final stock in receivedStocks) {
+      allStocksMap[stock.clientReferenceId] = stock;
+    }
+    for (final stock in sentStocks) {
+      allStocksMap[stock.clientReferenceId] = stock;
+    }
+    final allStocks = allStocksMap.values.toList();
+
+    final productIds = _productVariants.map((pv) => pv.id).toList();
+    final balances = StockCalculationUtils.calculateStockInHandForProducts(
+      stockList: allStocks,
+      facilityId: effectiveFacilityId,
+      productIds: productIds,
+      loggedInUserUuid: context.loggedInUserUuid,
+      isDistributor: _isDistributor,
+    );
+
+    // Fetch UserAction records with saved stock balances (from delivery)
+    final userActionBalances =
+        await _loadUserActionBalances(userActionRepo, effectiveFacilityId);
+
+    // Merge: UserAction balances take precedence (they include delivery deductions)
+    final mergedBalances = <String, double>{
+      ...balances,
+      ...userActionBalances,
+    };
+
+    StockBalanceCache.instance.setCache(effectiveFacilityId, mergedBalances);
+    if (mounted) {
+      setState(() {
+        _stockBalances = mergedBalances;
+      });
+    }
+  }
+
+  Future<Map<String, double>> _loadUserActionBalances(
+    UserActionLocalRepository userActionRepo,
+    String facilityId,
+  ) async {
+    final balances = <String, double>{};
+
+    try {
+      // Build balance keys for this facility
+      final balanceKeys = _productVariants
+          .map((pv) => generateBalanceKey(facilityId, pv.id))
+          .toList();
+
+      if (balanceKeys.isEmpty) return balances;
+
+      // Search directly with clientReferenceIds
+      final actions = await userActionRepo.search(
+        UserActionSearchModel(clientReferenceId: balanceKeys),
+      );
+
+      for (final action in actions) {
+        final fields = action.additionalFields?.fields;
+        if (fields == null) continue;
+
+        final productVariantId =
+            fields.firstWhereOrNull((f) => f.key == 'productVariantId')?.value;
+        final balanceStr =
+            fields.firstWhereOrNull((f) => f.key == 'balance')?.value;
+
+        if (productVariantId != null && balanceStr != null) {
+          final balance = double.tryParse(balanceStr);
+          if (balance != null) {
+            balances[productVariantId] = balance;
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Error loading UserAction balances: $e');
+    }
+
+    return balances;
   }
 
   Color _getColorForBalance(double balance) {
@@ -212,8 +308,8 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
     return DigitCard(
       margin: const EdgeInsets.all(spacer2),
       children: [
-        // Facility selector (only show if multiple facilities and not distributor without facilities)
-        if (_facilities.length > 1 && !_isDistributorWithoutFacilities)
+        // Facility selector (only show if multiple facilities and not distributor)
+        if (_facilities.length > 1 && !_isDistributor)
           Padding(
             padding: const EdgeInsets.only(bottom: spacer2),
             child: DigitDropdown(

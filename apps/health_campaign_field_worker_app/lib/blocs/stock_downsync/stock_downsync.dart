@@ -13,6 +13,7 @@ import 'package:transit_post/data/repositories/remote/user_action.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
+import '../../utils/stock_calculation_utils.dart';
 import '../../models/downsync/downsync.dart';
 import '../../models/entities/roles_type.dart';
 import '../../utils/background_service.dart';
@@ -46,6 +47,9 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
 
   final UserActionLocalRepository userActionLocalRepository;
 
+  static const String _rejectedStatus = 'REJECTED';
+  static const String _dispatchedTransaction = 'DISPATCHED';
+
   StockDownSyncBloc({
     required this.localSecureStore,
     required this.projectFacilityLocalRepository,
@@ -65,12 +69,12 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
   }
 
   /// Build the StockSearchModel based on user role
-  Future<StockSearchModel?> _buildStockSearchModel(String projectId) async {
+  Future<StockSearchModel?> _buildStockSearchModel(ProjectModel project) async {
     final userObject = await localSecureStore.userRequestModel;
     final userRoles = userObject!.roles.map((e) => e.code);
 
     final projectFacilities = await projectFacilityLocalRepository.search(
-      ProjectFacilitySearchModel(projectId: [projectId]),
+      ProjectFacilitySearchModel(projectId: [project.id]),
     );
 
     // Filter to only include facilities where facilityLevel is 'current'
@@ -83,7 +87,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
     }).toList();
 
     final projectResources = await projectResourceLocalRepository.search(
-      ProjectResourceSearchModel(projectId: [projectId]),
+      ProjectResourceSearchModel(projectId: [project.id]),
     );
     final productVariantIds = projectResources
         .map((pr) => pr.resource.productVariantId)
@@ -107,8 +111,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
     return StockSearchModel(
       receiverId: receiverIds.first,
       senderId: receiverIds.first,
-      // transactionType: [TransactionType.dispatched.toValue()],
-      //productVariantId://     productVariantIds.isNotEmpty ? productVariantIds : null,
+      campaignNumber: project.referenceID,
     );
   }
 
@@ -137,7 +140,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       );
       emit(StockDownSyncState.getBatchSize(
         configuredBatchSize,
-        event.projectId,
+        event.projectModel,
       ));
     } catch (e) {
       emit(const StockDownSyncState.resetState());
@@ -153,7 +156,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
   ) async {
     emit(const StockDownSyncState.loading(true));
     try {
-      final stockSearchModel = await _buildStockSearchModel(event.projectId);
+      final stockSearchModel = await _buildStockSearchModel(event.projectModel);
 
       if (stockSearchModel == null) {
         emit(const StockDownSyncState.dataFound(0, 0, 0, null));
@@ -163,7 +166,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       // Check existing downsync data for stock
       final existingDownSyncData =
           await downSyncLocalRepository.search(DownsyncSearchModel(
-        locality: _getLocalityKey(event.projectId),
+        locality: _getLocalityKey(event.projectModel.id),
       ));
 
       int? lastSyncedTime = existingDownSyncData.isEmpty
@@ -177,6 +180,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         stockSearchModel,
         offSet: 0,
         lastSyncedTime: lastSyncedTime,
+        includeOnlyUpdatedByOthers: true,
       );
 
       emit(StockDownSyncState.dataFound(
@@ -203,14 +207,15 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       emit(const StockDownSyncState.insufficientStorage());
     } else {
       try {
-        final stockSearchModel = await _buildStockSearchModel(event.projectId);
+        final stockSearchModel =
+            await _buildStockSearchModel(event.projectModel);
 
         if (stockSearchModel == null) {
           emit(const StockDownSyncState.failed());
           return;
         }
 
-        final localityKey = _getLocalityKey(event.projectId);
+        final localityKey = _getLocalityKey(event.projectModel.id);
 
         // Check existing downsync data for stock
         final existingDownSyncData =
@@ -235,6 +240,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
 
         int totalCount = event.initialServerCount;
         int syncedCount = 0;
+        final downsyncedStocks = <String, StockModel>{};
 
         emit(StockDownSyncState.inProgress(syncedCount, totalCount));
 
@@ -245,11 +251,15 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
             offSet: 0,
             limit: event.batchSize,
             lastSyncedTime: lastSyncedTime,
+            includeOnlyUpdatedByOthers:true,
           );
 
           if (stockEntries.isEmpty) break;
 
           await stockLocalRepository.bulkCreate(stockEntries);
+          for (final stock in stockEntries) {
+            downsyncedStocks[stock.clientReferenceId] = stock;
+          }
 
           syncedCount += stockEntries.length;
 
@@ -266,7 +276,11 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         }
 
         // After stock download, downsync stock balance user actions
-        await _downSyncStockBalances(event.projectId);
+        await downSyncStockBalances(event.projectModel.id);
+        await _reconcileRejectedOutgoingStocks(
+          projectId: event.projectModel.id,
+          stockEntries: downsyncedStocks.values.toList(),
+        );
 
         emit(StockDownSyncState.success(syncedCount, totalCount));
       } catch (e) {
@@ -278,38 +292,62 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
   /// Fetches stock balance UserAction records from the server
   /// using balance keys (stock_balance_{facilityId}_{productVariantId})
   /// and creates or updates them locally.
-  Future<void> _downSyncStockBalances(String projectId) async {
+  Future<void> downSyncStockBalances(String projectId) async {
     try {
+      final userObject = await localSecureStore.userRequestModel;
+      final userRoles = userObject?.roles.map((e) => e.code) ?? [];
+      final isDistributor =
+          userRoles.contains(RolesType.distributor.toValue()) ||
+              userRoles.contains(RolesType.communityDistributor.toValue());
+
       final projectFacilities = await projectFacilityLocalRepository.search(
         ProjectFacilitySearchModel(projectId: [projectId]),
       );
+
       final projectResources = await projectResourceLocalRepository.search(
         ProjectResourceSearchModel(projectId: [projectId]),
       );
 
-      final facilityIds =
-          projectFacilities.map((e) => e.facilityId).toSet().toList();
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
+      List<String> facilityIds;
+      if (isDistributor) {
+        facilityIds = [userObject?.uuid ?? ''];
+      } else {
+        facilityIds = currentFacilities
+            .map((e) => e.facilityId)
+            .whereType<String>()
+            .toSet()
+            .toList();
+      }
+
       final productVariantIds = projectResources
           .map((pr) => pr.resource.productVariantId)
           .whereType<String>()
           .toSet()
           .toList();
 
-      if (facilityIds.isEmpty || productVariantIds.isEmpty) return;
+      if (facilityIds.isEmpty ||
+          productVariantIds.isEmpty ||
+          facilityIds.first.isEmpty) return;
 
       // Build balance keys for all facility × product variant combinations
       final balanceKeys = <String>[];
       for (final facilityId in facilityIds) {
         for (final productVariantId in productVariantIds) {
-          balanceKeys.add('stock_balance_${facilityId}_$productVariantId');
+          balanceKeys.add(generateBalanceKey(facilityId, productVariantId));
         }
       }
 
       // Fetch from server
       final remoteBalances = await userActionRemoteRepository.search(
-        UserActionSearchModel(
-          clientReferenceId: balanceKeys,
-        ),
+        UserActionSearchModel(clientReferenceId: balanceKeys),
       );
 
       if (remoteBalances.isEmpty) return;
@@ -338,22 +376,141 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       debugPrint('Stock balance downsync error: $e');
     }
   }
+
+  Future<void> _reconcileRejectedOutgoingStocks({
+    required String projectId,
+    required List<StockModel> stockEntries,
+  }) async {
+    if (stockEntries.isEmpty) return;
+
+    try {
+      final userObject = await localSecureStore.userRequestModel;
+      final userRoles = userObject?.roles.map((e) => e.code) ?? [];
+      final isDistributor =
+          userRoles.contains(RolesType.distributor.toValue()) ||
+              userRoles.contains(RolesType.communityDistributor.toValue());
+
+      final projectFacilities = await projectFacilityLocalRepository.search(
+        ProjectFacilitySearchModel(projectId: [projectId]),
+      );
+
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
+      final facilityIds = isDistributor
+          ? {userObject?.uuid ?? ''}
+          : currentFacilities
+              .map((e) => e.facilityId)
+              .whereType<String>()
+              .toSet();
+
+      facilityIds.removeWhere((element) => element.isEmpty);
+      if (facilityIds.isEmpty) return;
+
+      final rejectedDeltas = <String, double>{};
+
+      for (final stock in stockEntries) {
+        final senderId = stock.senderId;
+        final productVariantId = stock.productVariantId;
+        final status = _getAdditionalFieldValue(stock, 'status');
+        final transactionType = stock.transactionType?.toUpperCase() ?? '';
+
+        if (senderId == null ||
+            productVariantId == null ||
+            !facilityIds.contains(senderId) ||
+            transactionType != _dispatchedTransaction ||
+            status != _rejectedStatus) {
+          continue;
+        }
+
+        final quantity = double.tryParse(stock.quantity ?? '0') ?? 0;
+        if (quantity <= 0) continue;
+
+        final balanceKey = generateBalanceKey(senderId, productVariantId);
+        rejectedDeltas[balanceKey] =
+            (rejectedDeltas[balanceKey] ?? 0) + quantity;
+      }
+
+      for (final entry in rejectedDeltas.entries) {
+        await _increaseBalance(entry.key, entry.value);
+      }
+    } catch (e) {
+      debugPrint('Rejected stock balance reconciliation error: $e');
+    }
+  }
+
+  Future<void> _increaseBalance(String balanceKey, double quantity) async {
+    if (quantity <= 0) return;
+
+    final existing = await userActionLocalRepository.search(
+      UserActionSearchModel(clientReferenceId: [balanceKey]),
+    );
+
+    if (existing.isEmpty) return;
+
+    final balanceAction = existing.first;
+    final balanceFieldIndex = balanceAction.additionalFields?.fields
+            ?.indexWhere((field) => field.key == 'balance') ??
+        -1;
+
+    if (balanceFieldIndex < 0) return;
+
+    final currentBalance = double.tryParse(
+          balanceAction.additionalFields?.fields?[balanceFieldIndex].value ??
+              '0',
+        ) ??
+        0;
+
+    final updatedFields = List<AdditionalField>.from(
+        balanceAction.additionalFields?.fields ?? []);
+    updatedFields[balanceFieldIndex] = AdditionalField(
+      'balance',
+      (currentBalance + quantity).toString(),
+    );
+
+    await userActionLocalRepository.update(
+      balanceAction.copyWith(
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        additionalFields: UserActionAdditionalFields(
+          version: balanceAction.additionalFields?.version ?? 1,
+          fields: updatedFields,
+        ),
+      ),
+      createOpLog: false,
+    );
+  }
+
+  String _getAdditionalFieldValue(StockModel stock, String key) {
+    final fields = stock.additionalFields?.fields;
+    if (fields == null) return '';
+    for (final field in fields) {
+      if (field.key == key) {
+        return field.value?.toString().toUpperCase() ?? '';
+      }
+    }
+    return '';
+  }
 }
 
 @freezed
 class StockDownSyncEvent with _$StockDownSyncEvent {
   const factory StockDownSyncEvent.getBatchSize({
     required List<AppConfiguration> appConfiguration,
-    required String projectId,
+    required ProjectModel projectModel,
   }) = StockDownSyncGetBatchSizeEvent;
 
   const factory StockDownSyncEvent.checkTotalCount({
-    required String projectId,
+    required ProjectModel projectModel,
     required int batchSize,
   }) = StockDownSyncCheckTotalCountEvent;
 
   const factory StockDownSyncEvent.downloadStock({
-    required String projectId,
+    required ProjectModel projectModel,
     required int batchSize,
     required int initialServerCount,
   }) = StockDownSyncDownloadEvent;
@@ -370,7 +527,7 @@ class StockDownSyncState with _$StockDownSyncState {
 
   const factory StockDownSyncState.getBatchSize(
     int batchSize,
-    String projectId,
+    ProjectModel projectModel,
   ) = _StockDownSyncGetBatchSizeState;
 
   const factory StockDownSyncState.dataFound(

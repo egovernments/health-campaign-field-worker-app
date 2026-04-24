@@ -14,6 +14,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -32,6 +34,7 @@ import 'executors/stock_balance_executor.dart';
 import 'executors/update_identifier_status_executor.dart';
 import 'executors/navigate_to_downsync_executor.dart';
 import 'executors/load_unique_id_pool_executor.dart';
+import 'models/downsync/downsync.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
@@ -310,12 +313,19 @@ class MainApplicationState extends State<MainApplication>
                               attendanceLogRemoteRepository: ctx.read<
                                   RemoteRepository<AttendanceLogModel,
                                       AttendanceLogSearchModel>>(),
+                              downSyncLocalRepository: ctx.read<
+                                  LocalRepository<DownsyncModel,
+                                      DownsyncSearchModel>>(),
                               stockLocalRepository: ctx.read<
                                   LocalRepository<StockModel,
                                       StockSearchModel>>(),
                               stockRemoteRepository: ctx.read<
                                   RemoteRepository<StockModel,
                                       StockSearchModel>>(),
+                              userActionLocalRepository:
+                                  ctx.read<UserActionLocalRepository>(),
+                              userActionRemoteRepository:
+                                  ctx.read<UserActionRemoteRepository>(),
                               context: context,
                             ),
                           ),

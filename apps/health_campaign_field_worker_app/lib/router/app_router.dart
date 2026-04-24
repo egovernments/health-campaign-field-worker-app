@@ -89,7 +89,6 @@ class AppRouter extends _$AppRouter {
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
         ),
-
         // NonMobile User
         AutoRoute(
           page: NonMobileUserListRoute.page,

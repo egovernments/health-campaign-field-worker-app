@@ -39,7 +39,8 @@ class NavigationExecutor extends ActionExecutor {
 
     // Get composite key for current screen's FlowCrudStateRegistry operations
     final currentCompositeKey = getCompositeKey(context, screenKey: screenKey);
-    final currentState = FlowCrudStateRegistry().get(currentCompositeKey ?? screenKey);
+    final currentState =
+        FlowCrudStateRegistry().get(currentCompositeKey ?? screenKey);
     final stateFormData = currentState?.formData;
 
     // Get navigation mode and popUntilPageName from action properties
@@ -64,16 +65,16 @@ class NavigationExecutor extends ActionExecutor {
         final key = entry['key'];
         final rawValue = entry['value'];
 
-        // Try to resolve from state form data first, fallback to contextData
-        final stateWrapperFirst = (currentState?.stateWrapper?.isNotEmpty == true)
-            ? currentState?.stateWrapper?.first
-            : null;
-        dynamic resolvedValue = resolveValue(
-            rawValue, stateFormData ?? stateWrapperFirst) ?? rawValue;
-        if (resolvedValue == rawValue || resolvedValue == null) {
-          // If not resolved from state, try contextData
-          resolvedValue = resolveValue(rawValue, contextData);
-        }
+        final stateWrapperFirst =
+            (currentState?.stateWrapper?.isNotEmpty == true)
+                ? currentState?.stateWrapper?.first
+                : null;
+        final resolvedValue = resolveNavigationDataValue(
+          rawValue: rawValue,
+          stateFormData: stateFormData,
+          stateWrapperFirst: stateWrapperFirst,
+          contextData: contextData,
+        );
 
         return {
           "key": key,
@@ -94,7 +95,8 @@ class NavigationExecutor extends ActionExecutor {
     // Generate instanceId for target page BEFORE navigation
     // This ensures we can store state with the same key the target page will use
     final targetInstanceId = generateInstanceId(targetScreenKey);
-    final targetCompositeKey = createCompositeKey(targetScreenKey, targetInstanceId);
+    final targetCompositeKey =
+        createCompositeKey(targetScreenKey, targetInstanceId);
 
     // Add instanceId to navigation properties so target page receives it
     navigationProperties['_instanceId'] = targetInstanceId;
@@ -132,7 +134,9 @@ class NavigationExecutor extends ActionExecutor {
                 'NAVIGATION: No existing wrapper found, building new wrapper');
             // Fall back to building new wrapper
             final wrapper = WrapperBuilder(
-              (entities is List ? entities.whereType<EntityModel>().toList() : <EntityModel>[]),
+              (entities is List
+                  ? entities.whereType<EntityModel>().toList()
+                  : <EntityModel>[]),
               config!['wrapperConfig'],
               screenKey: targetCompositeKey,
             ).build();

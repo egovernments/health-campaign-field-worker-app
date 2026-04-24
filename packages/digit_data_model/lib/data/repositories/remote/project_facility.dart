@@ -21,6 +21,7 @@ class ProjectFacilityRemoteRepository
     int? offSet,
     int? limit,
     int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) async {
     int defaultBatchSize = limit ?? 100;
     int currentOffset = offSet ?? 0;

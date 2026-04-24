@@ -384,6 +384,22 @@ class Constants {
     return actionResult ?? '';
   }
 
+  static String getNotificationEndPoint({
+    required List<ServiceRegistry> serviceRegistry,
+    required String service,
+    required String action,
+    required String entityName,
+  }) {
+    final actionResult = serviceRegistry
+        .firstWhereOrNull((element) => element.service == service)
+        ?.actions
+        .firstWhereOrNull((element) =>
+    element.entityName == entityName && element.action == action)
+        ?.path;
+
+    return actionResult ?? '';
+  }
+
   static List<KeyValue> yesNo = [
     KeyValue('CORE_COMMON_YES', true),
     KeyValue('CORE_COMMON_NO', false),
@@ -485,7 +501,8 @@ class DownloadProgressData {
 
 class DownloadBeneficiary {
   String title;
-  String projectId;
+  ProjectModel projectModel;
+  String get projectId => projectModel.id;
   List<BoundaryModel> boundaries;
   int? pendingSyncCount;
   int? syncCount;
@@ -501,7 +518,7 @@ class DownloadBeneficiary {
 
   DownloadBeneficiary({
     required this.title,
-    required this.projectId,
+    required this.projectModel,
     required this.boundaries,
     this.appConfiguartion,
     this.pendingSyncCount,

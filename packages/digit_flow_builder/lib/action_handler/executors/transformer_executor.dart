@@ -184,12 +184,14 @@ class TransformerExecutor extends ActionExecutor {
         'TRANSFORMER: isEdit=$isEdit, forceCreate=$forceCreate, existingModels=${existingModels?.length ?? 0}');
 
     final contextMap = {
+      "selectedProject":FlowBuilderSingleton().selectedProject,
       "projectId": FlowBuilderSingleton().selectedProject?.id,
       "user": FlowBuilderSingleton().loggedInUser,
       "tenantId": FlowBuilderSingleton().selectedProject?.tenantId,
       "selectedBoundaryCode": FlowBuilderSingleton().boundary?.code,
       // converting in json format to match nested object value as passing model will cause issue
       'userUUID': FlowBuilderSingleton().loggedInUser?.uuid,
+      'loggedInUserUuid': FlowBuilderSingleton().loggedInUserUuid,
       'householdType': HouseholdType.family.toValue(),
       ...extraContext,
       "beneficiaryType": FlowBuilderSingleton().beneficiaryType?.toValue(),

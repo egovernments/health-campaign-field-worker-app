@@ -128,7 +128,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       ) =>
                           context.read<BeneficiaryDownSyncBloc>().add(
                                 DownSyncAllBoundariesEvent(
-                                  projectId: context.projectId,
+                                  projectModel: context.selectedProject,
                                   boundaries: boundaries,
                                   batchSize: batchSize,
                                   pendingSyncCount: pendingSyncCount,
@@ -145,7 +145,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           title: localizations.translate(
                             i18.syncDialog.pendingSyncLabel,
                           ),
-                          projectId: context.projectId,
+                          projectModel: context.selectedProject,
                           appConfiguartion: appConfiguration,
                           boundaries: [selectedBoundary!],
                           batchSize: 5,
@@ -170,7 +170,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                 ? i18.beneficiaryDetails.dataFound
                                 : i18.beneficiaryDetails.noDataFound,
                           ),
-                          projectId: context.projectId,
+                          projectModel: context.selectedProject,
                           appConfiguartion: appConfiguration,
                           boundaries: [selectedBoundary!],
                           batchSize: 5,
@@ -217,7 +217,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                               title: localizations.translate(
                                 i18.beneficiaryDetails.dataDownloadInProgress,
                               ),
-                              projectId: context.projectId,
+                              projectModel: context.selectedProject,
                               boundaries: [selectedBoundary!],
                               appConfiguartion: appConfiguration,
                               syncCount: syncCount,
@@ -280,7 +280,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           title: localizations.translate(
                             i18.common.coreCommonDownloadFailed,
                           ),
-                          projectId: context.projectId,
+                          projectModel: context.selectedProject,
                           pendingSyncCount: pendingSyncCount,
                           appConfiguartion: appConfiguration,
                           boundaries: [selectedBoundary!],
@@ -303,7 +303,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           title: localizations.translate(
                             i18.beneficiaryDetails.unableToCheckDataInServer,
                           ),
-                          projectId: context.projectId,
+                          projectModel: context.selectedProject,
                           pendingSyncCount: pendingSyncCount,
                           appConfiguartion: appConfiguration,
                           boundaries: [selectedBoundary!],
@@ -325,7 +325,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           ),
                           content: localizations.translate(i18
                               .beneficiaryDetails.insufficientStorageContent),
-                          projectId: context.projectId,
+                          projectModel: context.selectedProject,
                           appConfiguartion: appConfiguration,
                           boundaries: [selectedBoundary!],
                           primaryButtonLabel: localizations.translate(
@@ -418,7 +418,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                         appConfiguration: [
                                           appConfiguration,
                                         ],
-                                        projectId: context.projectId,
+                                        projectModel: context.selectedProject,
                                         boundaries: [selectedBoundary!],
                                         pendingSyncCount: pendingSyncCount,
                                       ),

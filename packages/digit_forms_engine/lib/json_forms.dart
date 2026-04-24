@@ -31,6 +31,7 @@ class JsonForms extends StatelessWidget {
     String? defaultLatlng,
     Map<String, dynamic>? defaultValues,
     String? schemaKey,
+    Map<String, dynamic>? navigationParams,
   }) {
     assert(schema.properties != null);
 
@@ -44,6 +45,7 @@ class JsonForms extends StatelessWidget {
             schema,
             defaultLatlng: defaultLatlng,
             defaultValues: defaultValues,
+            navigationParams: navigationParams,
             schemaKey: schemaKey,
           ),
     };

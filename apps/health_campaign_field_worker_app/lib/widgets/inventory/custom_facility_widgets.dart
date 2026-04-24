@@ -94,45 +94,6 @@ class _FacilityCardContent extends StatelessWidget {
     required this.localizations,
   });
 
-  /// Extract the delivery team code from the facilityHierarchy validation in config.
-  String? _getDeliveryTeamCodeFromConfig(String transactionType) {
-    final hierarchyValidation = fieldSchema.validations?.firstWhere(
-      (v) => v.type == 'facilityHierarchy',
-      orElse: () => const ValidationRule(type: ''),
-    );
-
-    if (hierarchyValidation == null || hierarchyValidation.type.isEmpty) {
-      return null;
-    }
-
-    final value = hierarchyValidation.value;
-    if (value is! Map) return null;
-
-    final hierarchyMapping = value['hierarchyMapping'];
-    if (hierarchyMapping is! Map) return null;
-
-    final isReceipt = transactionType == 'RECEIVED' ||
-        transactionType == 'RECEIPT' ||
-        transactionType == 'RETURNED';
-    final directionKey = isReceipt ? 'forReceipt' : 'forIssue';
-
-    for (final entry in hierarchyMapping.entries) {
-      final directions = entry.value;
-      if (directions is Map && directions.containsKey(directionKey)) {
-        final targets = directions[directionKey];
-        if (targets is List) {
-          for (final target in targets) {
-            if (target is String && target.startsWith('DELIVERY')) {
-              return target;
-            }
-          }
-        }
-      }
-    }
-
-    return null;
-  }
-
   /// Read current selected value from form data or form control
   String? _getCurrentValue(AbstractControl<dynamic>? control) {
     // First try form control (most up-to-date after user interaction)
@@ -177,8 +138,12 @@ class _FacilityCardContent extends StatelessWidget {
         stockEntryType == 'DAMAGED';
     final isLessExcessFlow = stockEntryType == 'LESS_EXCESS';
 
-    final deliveryTeamCode = _getDeliveryTeamCodeFromConfig(transactionType);
-    final hasDeliveryTeamInConfig = deliveryTeamCode != null;
+    const deliveryTeamCode = 'DELIVERY_TEAM';
+
+    final hasDeliveryTeamInConfig = context.loggedInUserRoles
+            .any((role) => role.code == RolesType.distributor.toValue()) ||
+        context.loggedInUserRoles.any(
+            (role) => role.code == RolesType.communityDistributor.toValue());
 
     final isWareHouseMgr = context.loggedInUserRoles
         .any((role) => role.code == RolesType.warehouseManager.toValue());
@@ -225,8 +190,10 @@ class _FacilityCardContent extends StatelessWidget {
 
       if (isLessExcessFlow) {
         if (isToField) return facilityLevel == 'parent';
+        if (isFromField && !isWareHouseMgr) return false;
         if (isFromField) return facilityLevel == 'current';
       } else if (isReturnFlow) {
+        if (isToField && !isWareHouseMgr) return facilityLevel == 'current';
         if (isToField) return facilityLevel == 'parent';
         if (isFromField) return facilityLevel == 'current';
       } else if (transactionType == 'DISPATCHED' ||
@@ -239,6 +206,7 @@ class _FacilityCardContent extends StatelessWidget {
         if (isFromField) return facilityLevel == 'parent';
       } else if (stockEntryType == 'LOSS' || stockEntryType == 'DAMAGED') {
         // For loss and damaged, to field should show parent facility
+        if (isToField && !isWareHouseMgr) return facilityLevel == 'current';
         if (isToField) return facilityLevel == 'parent';
         if (isFromField) return facilityLevel == 'current';
       }
@@ -260,7 +228,9 @@ class _FacilityCardContent extends StatelessWidget {
                 (transactionType == 'DISPATCHED' ||
                     transactionType == 'ISSUED') &&
                 (!isWareHouseMgr || hasNoChildFacilities)) ||
-            (isFromField && isReturnFlow && !isWareHouseMgr));
+            (isFromField &&
+                !isWareHouseMgr &&
+                (isReturnFlow || isLessExcessFlow)));
     if (showDeliveryTeam) {
       facilities.add(DropdownItem(
         code: deliveryTeamCode!,
@@ -317,11 +287,40 @@ class _FacilityCardContent extends StatelessWidget {
           });
         }
 
-        // For ISSUED/DISPATCHED/LESS_EXCESS, auto-prefill the from field with current facility
+        // For LESS_EXCESS, auto-prefill from field with delivery team for distributors
+        if (isLessExcessFlow &&
+            isFromField &&
+            hasDeliveryTeamInConfig &&
+            !isWareHouseMgr &&
+            (selectedValue == null || selectedValue.isEmpty)) {
+          selectedValue = deliveryTeamCode;
+          final loggedInUserId = context.loggedInUserUuid;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            field.control.value = deliveryTeamCode;
+            field.control.markAsTouched();
+            field.control.markAsDirty();
+            context.read<FormsBloc>().add(
+                  FormsEvent.updateField(
+                    schemaKey: pageSchema,
+                    context: context,
+                    key: formKey,
+                    value: deliveryTeamCode,
+                  ),
+                );
+            context.read<FormsBloc>().add(
+                  FormsEvent.updateField(
+                    schemaKey: pageSchema,
+                    context: context,
+                    key: dependantFormKey,
+                    value: loggedInUserId,
+                  ),
+                );
+          });
+        }
+
+        // For ISSUED/DISPATCHED, auto-prefill the from field with current facility
         if (isFromField &&
-            (transactionType == 'DISPATCHED' ||
-                transactionType == 'ISSUED' ||
-                isLessExcessFlow) &&
+            (transactionType == 'DISPATCHED' || transactionType == 'ISSUED') &&
             (selectedValue == null || selectedValue.isEmpty) &&
             facilities.isNotEmpty) {
           final currentFacility = facilities.first.code;

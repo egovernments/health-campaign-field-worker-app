@@ -122,8 +122,32 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
     if (value.length >= widget.minSearchChars) {
       _executeSearchActions(value);
     } else {
+      _clearSearchResultsState();
       _executeClearActions(value);
     }
+  }
+
+  void _clearSearchResultsState() {
+    final compositeKey = widget.compositeKey;
+    if (compositeKey == null) {
+      return;
+    }
+
+    final currentState = FlowCrudStateRegistry().get(compositeKey);
+    if (currentState == null) {
+      return;
+    }
+
+    FlowCrudStateRegistry().update(
+      compositeKey,
+      FlowCrudState(
+        base: null,
+        stateWrapper: const [],
+        formData: currentState.formData,
+        widgetData: currentState.widgetData,
+        isLoading: false,
+      ),
+    );
   }
 
   void _updateWidgetData(String value) {

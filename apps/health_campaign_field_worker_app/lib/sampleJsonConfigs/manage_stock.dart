@@ -200,6 +200,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading": "INVENTORY_RECORD_LESS_EXCESS_HEADING",
           "description": "INVENTORY_RECORD_LESS_EXCESS_DESCRIPTION",
+          "visible": "{{fn:hasRole('DISTRIBUTOR')}} == true",
           "icon": "Store",
           "onAction": [
             {
@@ -210,6 +211,8 @@ final dynamic sampleInventoryFlows = {
                 "data": [
                   {"key": "stockEntryType", "value": "LESS_EXCESS"},
                   {"key": "transactionType", "value": "RECEIVED"},
+                  {"key": "primaryRole", "value": "SENDER"},
+                  {"key": "secondaryRole", "value": "RECEIVER"},
                   {
                     "key": "mrnNumber",
                     "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
@@ -313,6 +316,10 @@ final dynamic sampleInventoryFlows = {
                       {
                         "key": "stockBalances",
                         "value": "{{fn:getAllStockBalances()}}"
+                      },
+                      {
+                        "key": "isDistributor",
+                        "value": "{{fn:hasRole('DISTRIBUTOR')}}"
                       }
                     ]
                   }
@@ -560,7 +567,7 @@ final dynamic sampleInventoryFlows = {
               "format": "date",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Enter the date on which the stock was received",
+              "helpText": "",
               "infoText": "",
               "readOnly": true,
               "fieldName": "dateOfEntry",
@@ -587,7 +594,7 @@ final dynamic sampleInventoryFlows = {
               "format": "locality",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Select the administrative area of the warehouse",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "administrativeArea",
@@ -615,7 +622,7 @@ final dynamic sampleInventoryFlows = {
               "hidden": false,
               "tooltip": "",
               "helpText":
-                  "Select the facility to which the stock is being sent",
+                  "MANAGESTOCK_WAREHOUSE_label_facilityToWhich_HELPTEXT_LABEL",
               "infoText": "",
               "readOnly": false,
               "fieldName": "facilityToWhich",
@@ -628,27 +635,6 @@ final dynamic sampleInventoryFlows = {
                   "value": true,
                   "message":
                       "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
-                },
-                {
-                  "type": "facilityHierarchy",
-                  "value": {
-                    "hierarchyMapping": {
-                      "State": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["LGA Facility"]
-                      },
-                      "LGA": {
-                        "forReceipt": ["State Facility"],
-                        "forIssue": ["Health Facility"]
-                      },
-                      "Health Facility": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["DELIVERY_TEAM"]
-                      }
-                    },
-                    "useTransactionType": true
-                  },
-                  "message": ""
                 }
               ],
               "errorMessage": "",
@@ -716,7 +702,7 @@ final dynamic sampleInventoryFlows = {
               "format": "custom",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Select multiple products which are being recorded",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "productdetail",
@@ -728,7 +714,7 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Product selection is required"
+                  "message": "INVENTORY_PRODUCTDETAILS_REQUIRED_ERROR_MESSAGE"
                 }
               ],
               "errorMessage": "",
@@ -762,27 +748,6 @@ final dynamic sampleInventoryFlows = {
                   "type": "notEqualTo",
                   "value": "warehouseDetails.facilityToWhich",
                   "message": "Facility from and to must be different"
-                },
-                {
-                  "type": "facilityHierarchy",
-                  "value": {
-                    "hierarchyMapping": {
-                      "State": {
-                        "forReceipt": ["Central Facility"],
-                        "forIssue": ["LGA Facility"]
-                      },
-                      "LGA": {
-                        "forReceipt": ["State Facility"],
-                        "forIssue": ["Health Facility"]
-                      },
-                      "Health Facility": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["DELIVERY_TEAM"]
-                      }
-                    },
-                    "useTransactionType": true
-                  },
-                  "message": ""
                 }
               ],
               "errorMessage": "",
@@ -918,7 +883,7 @@ final dynamic sampleInventoryFlows = {
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Enter the waybill number",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "wayBillNumber",
@@ -929,7 +894,7 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": false,
-                  "message": "Waybill number is required"
+                  "message": "INVENTORY_WAYBILL_NUMBER_REQUIRED_ERROR_MESSAGE"
                 }
               ],
               "errorMessage": "",
@@ -944,7 +909,7 @@ final dynamic sampleInventoryFlows = {
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Enter the batch number",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "batchNumber",
@@ -955,7 +920,7 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": false,
-                  "message": "Batch number is required"
+                  "message": "INVENTORY_BATCH_NUMBER_REQUIRED_ERROR_MESSAGE"
                 }
               ],
               "errorMessage": "",
@@ -997,7 +962,7 @@ final dynamic sampleInventoryFlows = {
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Enter the quantity sent by the warehouse",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "quantitySent",
@@ -1008,12 +973,17 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Quantity sent is required"
+                  "message": "QUANTITY_SENT_REQUIRED_ERROR_MESSAGE"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "QUANTITY_SENT_MIN_REQUIRED_ERROR_MESSAGE"
                 },
                 {
                   "type": "regex",
                   "value": r"^[0-9]+$",
-                  "message": "Please enter a valid number"
+                  "message": "QUANTITY_VALID_NUMBER_ERROR_MESSAGE"
                 }
               ],
               "errorMessage": "",
@@ -1036,7 +1006,7 @@ final dynamic sampleInventoryFlows = {
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Enter the quantity lost by the warehouse",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "quantityLost",
@@ -1047,12 +1017,17 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Quantity lost is required"
+                  "message": "QUANTITY_LOST_REQUIRED_ERROR_MESSAGE"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "QUANTITY_LOST_MIN_REQUIRED_ERROR_MESSAGE"
                 },
                 {
                   "type": "regex",
                   "value": r"^[0-9]+$",
-                  "message": "Please enter a valid number"
+                  "message": "QUANTITY_VALID_NUMBER_ERROR_MESSAGE"
                 }
               ],
               "errorMessage": "",
@@ -1075,7 +1050,7 @@ final dynamic sampleInventoryFlows = {
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Enter the quantity damaged by the warehouse",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "quantityDamaged",
@@ -1086,12 +1061,17 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Quantity Damaged is required"
+                  "message": "QUANTITY_DAMAGE_REQUIRED_ERROR_MESSAGE"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "QUANTITY_DAMAGE_MIN_REQUIRED_ERROR_MESSAGE"
                 },
                 {
                   "type": "regex",
                   "value": r"^[0-9]+$",
-                  "message": "Please enter a valid number"
+                  "message": "QUANTITY_VALID_NUMBER_ERROR_MESSAGE"
                 }
               ],
               "errorMessage": "",
@@ -1114,7 +1094,7 @@ final dynamic sampleInventoryFlows = {
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Enter the actual quantity returned",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "quantityReturned",
@@ -1133,12 +1113,17 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Quantity received is required"
+                  "message": "QUANTITY_RETURN_REQUIRED_ERROR_MESSAGE"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "QUANTITY_RETURN_MIN_REQUIRED_ERROR_MESSAGE"
                 },
                 {
                   "type": "regex",
                   "value": r"^[0-9]+$",
-                  "message": "Please enter a valid number"
+                  "message": "QUANTITY_VALID_NUMBER_ERROR_MESSAGE"
                 }
               ],
               "errorMessage": "",
@@ -1153,7 +1138,7 @@ final dynamic sampleInventoryFlows = {
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Enter the actual quantity received",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "quantityReceived",
@@ -1172,12 +1157,12 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Quantity received is required"
+                  "message": "QUANTITY_RECEIVED_REQUIRED_ERROR_MESSAGE"
                 },
                 {
                   "type": "regex",
                   "value": r"^[0-9]+$",
-                  "message": "Please enter a valid number"
+                  "message": "QUANTITY_VALID_NUMBER_ERROR_MESSAGE"
                 }
               ],
               "errorMessage": "",
@@ -1192,7 +1177,7 @@ final dynamic sampleInventoryFlows = {
               "format": "textArea",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Add comments if quantities differ",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "comment",
@@ -1211,7 +1196,7 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": false,
-                  "message": "Comment is required when quantities differ"
+                  "message": "QUANTITY_DIFFER_COMMENT_REQUIRED_ERROR_MASSAGE"
                 }
               ],
               "errorMessage": "",
@@ -1304,6 +1289,11 @@ final dynamic sampleInventoryFlows = {
               },
               {"key": "primaryRole", "value": "{{navigation.primaryRole}}"},
               {"key": "secondaryRole", "value": "{{navigation.secondaryRole}}"},
+              {
+                "key": "senderPartyType",
+                "value":
+                    "{{fn:getSecondaryType(formData.stockDetails.facilityFromWhich)}}"
+              },
               {
                 "key": "secondaryType",
                 "value":
@@ -1500,27 +1490,6 @@ final dynamic sampleInventoryFlows = {
                   "value": true,
                   "message":
                       "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
-                },
-                {
-                  "type": "facilityHierarchy",
-                  "value": {
-                    "hierarchyMapping": {
-                      "State": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["LGA Facility"]
-                      },
-                      "LGA": {
-                        "forReceipt": ["State Facility"],
-                        "forIssue": ["Health Facility"]
-                      },
-                      "Health Facility": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["DELIVERY_TEAM"]
-                      }
-                    },
-                    "useTransactionType": true
-                  },
-                  "message": ""
                 }
               ],
               "errorMessage": "",
@@ -1657,27 +1626,6 @@ final dynamic sampleInventoryFlows = {
                   "value": true,
                   "message":
                       "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
-                },
-                {
-                  "type": "facilityHierarchy",
-                  "value": {
-                    "hierarchyMapping": {
-                      "State": {
-                        "forReceipt": ["Central Facility"],
-                        "forIssue": ["LGA Facility"]
-                      },
-                      "LGA": {
-                        "forReceipt": ["State Facility"],
-                        "forIssue": ["Health Facility"]
-                      },
-                      "Health Facility": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["DELIVERY_TEAM"]
-                      }
-                    },
-                    "useTransactionType": true
-                  },
-                  "message": ""
                 }
               ],
               "errorMessage": "",
@@ -1686,9 +1634,44 @@ final dynamic sampleInventoryFlows = {
               "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
             },
             {
+              "type": "string",
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "lessExcessDetails.facilityFromWhich==DELIVERY_TEAM"
+                  }
+                ]
+              },
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
+              "order": 4,
+              "value": "",
+              "format": "scanner",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Scan Team Code",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "deliveryTeam",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [],
+            },
+            {
               "type": "integer",
               "label": "INVENTORY_QUANTITY_LABEL",
-              "order": 4,
+              "order": 5,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -1719,7 +1702,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "INVENTORY_REASON_FOR_LESS_EXCESS_LABEL",
-              "order": 5,
+              "order": 6,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -2241,46 +2224,6 @@ final dynamic sampleInventoryFlows = {
         }
       },
       "body": [
-        // {
-        //   "format": "dropdownTemplate",
-        //   "fieldName": "selectedFacility",
-        //   "label": "INVENTORY_SELECT_FACILITY_LABEL",
-        //   "valueKey": "code",
-        //   "displayKey": "name",
-        //   "source": "{{fn:getProjectFacilities()}}",
-        //   "onChange": [
-        //     {
-        //       "actionType": "SEARCH_EVENT",
-        //       "properties": {
-        //         "type": "SEARCH_EVENT",
-        //         "name": "stock",
-        //         "awaitResults": true,
-        //         "data": [
-        //           {
-        //             "key": "receiverId",
-        //             "value": "{{selectedFacility}}",
-        //             "operation": "equals"
-        //           },
-        //           {
-        //             "key": "auditCreatedBy",
-        //             "value": "{{singleton.loggedInUserUuid}}",
-        //             "operation": "notEquals"
-        //           },
-        //           {
-        //             "key": "additionalFields",
-        //             "value": "\"key\":\"status\"",
-        //             "operation": "notContains"
-        //           },
-        //           {
-        //             "key": "productVariantId",
-        //             "value": "{{fn:getProjectProductVariantIds()}}",
-        //             "operation": "in"
-        //           }
-        //         ]
-        //       }
-        //     }
-        //   ]
-        // },
         {
           "format": "infoCard",
           "hidden": "{{fn:hasResults('StockModel')}} == true",
@@ -2394,7 +2337,7 @@ final dynamic sampleInventoryFlows = {
                         },
                         {
                           "key": "wayBillNumber",
-                          "value": "{{item.items[0].waybillNumber}}"
+                          "value": "{{item.items[0].wayBillNumber}}"
                         },
                         {
                           "key": "productVariantId",
@@ -2404,6 +2347,16 @@ final dynamic sampleInventoryFlows = {
                           "key": "sku",
                           "value":
                               "{{item.items[0].additionalFields.fields.sku}}"
+                        },
+                        {
+                          "key": "batchNumber",
+                          "value":
+                              "{{item.items[0].additionalFields.fields.batchNumber}}"
+                        },
+                        {
+                          "key": "comment",
+                          "value":
+                              "{{item.items[0].additionalFields.fields.comments}}"
                         },
                         {
                           "key": "clientReferenceId",

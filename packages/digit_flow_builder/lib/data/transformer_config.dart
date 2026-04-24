@@ -508,7 +508,7 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
-          "status": "__context:status",
+          "status": "__value:INELIGIBLE",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "tenantId": "__context:tenantId",
@@ -725,14 +725,17 @@ final jsonConfig = {
           "transactionReason":
               "__switch:__context:stockEntryType:{RECEIPT:__value:RECEIVED,RETURNED:__value:RETURNED,ISSUED:__value:null,DAMAGED:stockDetails.transactionReason,LOSS:stockDetails.transactionReason}",
           "transactingPartyId": "stockDetails.transactingPartyId",
-          "senderId": "stockDetails.facilityFromWhich",
-          "senderType": "__value:WAREHOUSE",
+          "senderId":
+              "__switch:__context:senderPartyType:{STAFF:__context:loggedInUserUuid,default:stockDetails.facilityFromWhich}",
+          "senderType":
+              "__switch:__context:senderPartyType:{STAFF:__value:STAFF,default:__value:WAREHOUSE}",
           "receiverId":
               "__switch:__context:receiverPartyType:{STAFF:warehouseDetails.teamCode,default:warehouseDetails.facilityToWhich}",
           "receiverType":
               "__switch:__context:receiverPartyType:{STAFF:__value:STAFF,default:__value:WAREHOUSE}",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
+          "campaignNumber": "__context:selectedProject.referenceID",
           "rowVersion": "meta.rowVersion",
           "additionalFields": {
             "sku": "stockDetails.productdetail.sku",
@@ -748,7 +751,7 @@ final jsonConfig = {
             "secondaryRole": "__context:secondaryRole",
             "status":
                 "__switch:__context:stockEntryType:{ISSUED:__value:IN_TRANSIT,RETURNED:__value:IN_TRANSIT,LOSS:__value:LOST,DAMAGED:__value:DAMAGED}",
-            "scanResource": "stockProductDetails.scanResource"
+            "scanResource": "stockProductDetails.scanResource",
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -772,6 +775,7 @@ final jsonConfig = {
           "waybillNumber": "stockReceiptDetails.wayBillNumber",
           "transactionType": "__context:transactionType",
           "transactionReason": "__value:RECEIVED",
+          "campaignNumber": "__context:selectedProject.referenceID",
           "senderId": "__context:senderFacilityId",
           "senderType": "__value:WAREHOUSE",
           "receiverId": "__context:userFacilityId",
@@ -807,6 +811,7 @@ final jsonConfig = {
           "referenceId": "__context:projectId",
           "referenceIdType": "__value:PROJECT",
           "quantity": "__context:quantity",
+          "campaignNumber": "__context:selectedProject.referenceID",
           "waybillNumber": "stockReceiptDetails.wayBillNumber",
           "transactionType": "__value:DISPATCHED",
           "transactionReason": "__value:null",
@@ -845,6 +850,7 @@ final jsonConfig = {
           "referenceId": "__context:projectId",
           "referenceIdType": "__value:PROJECT",
           "quantity": "lessExcessDetails.quantity",
+          "campaignNumber": "__context:selectedProject.referenceID",
           "transactionType": "__value:RECEIVED",
           "transactionReason": "lessExcessDetails.reasonForLessExcess",
           "senderId": "lessExcessDetails.facilityFromWhich",
@@ -1252,7 +1258,8 @@ final jsonConfig = {
           "beneficiaryId": "__context:selectedIndividualIdentifierId",
           "referralCode": "__context:selectedIndividualClientReferenceId",
           "name": "__context:selectedIndividualName",
-          "symptom": "referBeneficiary.referralReason",
+          "symptom":
+              "__switch:__context:sourceFlow:{CHECKLIST:__context:referralReasons,default:referBeneficiary.referralReason}",
           "nonRecoverableError": "referral.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "rowVersion": "meta.rowVersion",
@@ -1268,7 +1275,7 @@ final jsonConfig = {
             "referralCycle": "__context:cycleIndex",
             "gender": "__context:selectedIndividualGender",
             "ageInMonths": "__context:selectedIndividualAgeInMonths",
-            "dateOfEvaluation": "__value:DATETIME.NOW"
+            "dateOfEvaluation": "__value:DATETIME.NOW",
           }
         }
       }

@@ -1,12 +1,11 @@
 import 'package:digit_data_model/data_model.dart';
 
-/// Utility class for calculating stock metrics.
-///
-/// This provides common stock calculation methods that can be reused across
-/// different widgets like StockReconciliationCard and ProductSelectionCard.
+/// Generates a balance key for UserAction STOCK_BALANCE records.
+/// Uses format: bal_{facilityId}{productVariantId}
+String generateBalanceKey(String facilityId, String productVariantId) =>
+    'bal_$facilityId$productVariantId';
+
 class StockCalculationUtils {
-  /// Extracts a value from a StockModel's additionalFields by key.
-  /// Returns uppercase string value or empty string if not found.
   static String _getAdditionalFieldValue(StockModel stock, String key) {
     final fields = stock.additionalFields?.fields;
     if (fields == null) return '';
@@ -18,56 +17,23 @@ class StockCalculationUtils {
     return '';
   }
 
-  /// Extracts the stockEntryType from a StockModel's additionalFields.
-  /// Returns uppercase value (e.g., 'RECEIPT', 'ISSUED', 'RETURNED', 'DAMAGED', 'LOSS')
-  /// or empty string if not found.
   static String _getStockEntryType(StockModel stock) {
     return _getAdditionalFieldValue(stock, 'stockEntryType');
   }
 
-  /// Calculates stock metrics for a given facility and product from a list of stocks.
-  ///
-  /// Parameters:
-  /// - [stockList]: List of StockModel entries to calculate from
-  /// - [facilityId]: The facility ID or user UUID to filter stocks by
-  /// - [productId]: The product variant ID to filter stocks by
-  /// - [loggedInUserUuid]: Optional user UUID to filter stocks created by this user
-  /// - [isDistributor]: Whether the current user is a distributor
-  ///
-  /// Returns a Map with the following keys:
-  /// - stockReceived: Total quantity received
-  /// - stockIssued: Total quantity issued/dispatched
-  /// - stockReturned: Total quantity returned
-  /// - stockLost: Total quantity lost
-  /// - stockDamaged: Total quantity damaged
-  /// - stockInHand: Calculated as (received) - (issued + returned + damaged + lost). Excess/less are tracked but do not affect balance.
   static Map<String, double> calculateStockMetrics({
     required List<StockModel> stockList,
     required String facilityId,
     required String productId,
     String? loggedInUserUuid,
     bool isDistributor = false,
+    bool calculatePartial = false,
   }) {
-    // Filter stocks matching the criteria
     final filteredStock = stockList.where((stock) {
-      // Must match product
       if (stock.productVariantId != productId) return false;
-
-      // For distributors: match by receiverId only (user UUID)
-      // For warehouse managers: match by facilityId (either as receiver or sender)
-      if (isDistributor) {
-        final matchesReceiver = stock.receiverId == facilityId;
-        if (!matchesReceiver) return false;
-      } else {
-        final matchesReceiver = stock.receiverId == facilityId;
-        final matchesSender = stock.senderId == facilityId;
-        if (!matchesReceiver && !matchesSender) return false;
-      }
-
-      return true;
+      return stock.receiverId == facilityId || stock.senderId == facilityId;
     }).toList();
 
-    // Calculate metrics following StockReconciliationBloc pattern
     double stockReceived = 0;
     double stockIssued = 0;
     double stockReturned = 0;
@@ -75,90 +41,78 @@ class StockCalculationUtils {
     double stockDamaged = 0;
     double stockExcess = 0;
     double stockLess = 0;
+    bool hasDistributorReturns = isDistributor;
 
     for (final stock in filteredStock) {
       final transactionType = stock.transactionType?.toUpperCase() ?? '';
       final transactionReason = stock.transactionReason?.toUpperCase() ?? '';
-      final quantity = num.tryParse(stock.quantity ?? '0') ?? 0.0;
+      final quantity = double.tryParse(stock.quantity ?? '0') ?? 0.0;
       final status = _getAdditionalFieldValue(stock, 'status');
       final stockEntryType = _getStockEntryType(stock);
-
-      // For distributors: only receiverId is used (user UUID)
-      // senderId = delivery team UUID, receiverId = distributor UUID
       final isReceiver = stock.receiverId == facilityId;
       final isSender = stock.senderId == facilityId;
 
-      // Distributor calculations
-      if (isDistributor) {
-        // Distributors: received stocks are counted, LOSS/DAMAGED are counted as lost/damaged
-        if (transactionType == 'RECEIVED') {
-          if (transactionReason == 'RETURNED' || stockEntryType == 'RETURNED') {
-            stockReturned += quantity;
-          } else if (stockEntryType == 'EXCESS') {
-            stockExcess += quantity;
-          } else if (stockEntryType == 'LESS') {
-            stockLess += quantity;
-          } else {
-            stockReceived += quantity;
-          }
-        } else if (transactionType == 'DISPATCHED') {
-          // For DISPATCHED: LOSS/DAMAGED are counted against distributor
-          if (status == 'ACCEPTED') {
-            stockReceived += quantity;
-          }
-          // Count LOSS/DAMAGED as lost/damaged
-          if (stockEntryType == 'LOSS') {
-            stockLost += quantity;
-          } else if (stockEntryType == 'DAMAGED') {
-            stockDamaged += quantity;
-          }
-        }
+      // Auto-detect distributor: if user is sender in a return, treat as distributor
+      final isDistributorReturn =
+          isSender && stockEntryType == 'RETURNED' && isDistributor;
+      if (isDistributorReturn) hasDistributorReturns = true;
+
+      if (isDistributor || isDistributorReturn) {
+        _processDistributorStock(
+          transactionType: transactionType,
+          stockEntryType: stockEntryType,
+          quantity: quantity,
+          status: status,
+          stockReceived: (v) => stockReceived += v,
+          stockReturned: (v) => stockReturned += v,
+          stockExcess: (v) => stockExcess += v,
+          stockLess: (v) => stockLess += v,
+          stockLost: (v) => stockLost += v,
+          stockDamaged: (v) => stockDamaged += v,
+        );
         continue;
       }
 
-      // Warehouse Manager calculations
       if (isReceiver && transactionType == 'RECEIVED') {
-        if (transactionReason == 'RETURNED' || stockEntryType == 'RETURNED') {
-          stockReturned += quantity;
-        } else if (stockEntryType == 'EXCESS') {
-          stockExcess += quantity;
-        } else if (stockEntryType == 'LESS') {
-          stockLess += quantity;
-        } else if (transactionReason.isEmpty ||
-            transactionReason == 'RECEIVED') {
-          stockReceived += quantity;
-        }
+        _categorizeReceivedStock(
+          transactionReason: transactionReason,
+          stockEntryType: stockEntryType,
+          quantity: quantity,
+          stockReceived: (v) => stockReceived += v,
+          stockReturned: (v) => stockReturned += v,
+          stockExcess: (v) => stockExcess += v,
+          stockLess: (v) => stockLess += v,
+        );
+      } else if (isSender && transactionType == 'DISPATCHED') {
+        _categorizeDispatchedStock(
+          transactionReason: transactionReason,
+          stockEntryType: stockEntryType,
+          quantity: quantity,
+          status: status,
+          stockIssued: (v) => stockIssued += v,
+          stockReturned: (v) => stockReturned -= v,
+          stockLost: (v) => stockLost += v,
+          stockDamaged: (v) => stockDamaged += v,
+        );
       } else if (isSender && stockEntryType == 'LOSS') {
         stockLost += quantity;
       } else if (isSender && stockEntryType == 'DAMAGED') {
         stockDamaged += quantity;
-      } else if (isSender && transactionType == 'DISPATCHED') {
-        if (status == 'REJECTED') {
-          // Skip - rejected stock is not subtracted from sender's balance
-        } else if (transactionReason == 'LOST_IN_TRANSIT' ||
-            transactionReason == 'LOST_IN_STORAGE' ||
-            stockEntryType == 'LOSS') {
-          stockLost += quantity;
-        } else if (transactionReason == 'DAMAGED_IN_TRANSIT' ||
-            transactionReason == 'DAMAGED_IN_STORAGE' ||
-            stockEntryType == 'DAMAGED') {
-          stockDamaged += quantity;
-        } else if (stockEntryType == 'RETURNED') {
-          stockReturned += quantity;
-        } else {
-          stockIssued += quantity;
-        }
-      } else if (isReceiver && transactionType == 'DISPATCHED') {
-        if (status == 'ACCEPTED') {
-          stockReceived += quantity;
-        }
+      } else if (isReceiver &&
+          transactionType == 'DISPATCHED' &&
+          status == 'ACCEPTED') {
+        stockReceived += quantity;
       }
     }
 
-    // Stock in hand = (received + returned) - (issued + damaged + lost)
-    // Note: excess and less are tracked for backend reporting only and do not affect balance
-    final stockInHand = stockReceived -
-        (stockIssued + stockReturned + stockDamaged + stockLost);
+    // Use distributor calculation if user has distributor role OR if any return was made as sender
+    // For distributor, partial used is also deducted from stock in hand
+    final double stockInHand = hasDistributorReturns
+        ? stockReceived -
+            (stockReturned + stockIssued + stockDamaged + stockLost)
+        : stockReceived +
+            stockReturned -
+            (stockIssued + stockDamaged + stockLost);
 
     return {
       'stockReceived': stockReceived,
@@ -172,37 +126,108 @@ class StockCalculationUtils {
     };
   }
 
-  /// Calculates stock in hand for multiple products at once.
-  ///
-  /// Parameters:
-  /// - [stockList]: List of StockModel entries to calculate from
-  /// - [facilityId]: The facility ID to filter stocks by
-  /// - [productIds]: List of product variant IDs to calculate for
-  /// - [loggedInUserUuid]: Optional user UUID to filter stocks
-  ///
-  /// Returns a Map where keys are productIds and values are stockInHand quantities.
+  static void _processDistributorStock({
+    required String transactionType,
+    required String stockEntryType,
+    required double quantity,
+    required String status,
+    required void Function(double) stockReceived,
+    required void Function(double) stockReturned,
+    required void Function(double) stockExcess,
+    required void Function(double) stockLess,
+    required void Function(double) stockLost,
+    required void Function(double) stockDamaged,
+  }) {
+    if (transactionType == 'RECEIVED') {
+      if (stockEntryType == 'RETURNED') {
+        stockReturned(quantity);
+      } else if (stockEntryType == 'EXCESS') {
+        stockExcess(quantity);
+      } else if (stockEntryType == 'LESS') {
+        stockLess(quantity);
+      } else {
+        stockReceived(quantity);
+      }
+    } else if (transactionType == 'DISPATCHED') {
+      if (stockEntryType == 'RETURNED') {
+        stockReturned(quantity);
+      } else if (status == 'ACCEPTED') {
+        stockReceived(quantity);
+      } else if (stockEntryType == 'LOSS') {
+        stockLost(quantity);
+      } else if (stockEntryType == 'DAMAGED') {
+        stockDamaged(quantity);
+      }
+    }
+  }
+
+  static void _categorizeReceivedStock({
+    required String transactionReason,
+    required String stockEntryType,
+    required double quantity,
+    required void Function(double) stockReceived,
+    required void Function(double) stockReturned,
+    required void Function(double) stockExcess,
+    required void Function(double) stockLess,
+  }) {
+    if (transactionReason == 'RETURNED' || stockEntryType == 'RETURNED') {
+      stockReturned(quantity);
+    } else if (stockEntryType == 'EXCESS') {
+      stockExcess(quantity);
+    } else if (stockEntryType == 'LESS') {
+      stockLess(quantity);
+    } else {
+      stockReceived(quantity);
+    }
+  }
+
+  static void _categorizeDispatchedStock({
+    required String transactionReason,
+    required String stockEntryType,
+    required double quantity,
+    required String status,
+    required void Function(double) stockIssued,
+    required void Function(double) stockReturned,
+    required void Function(double) stockLost,
+    required void Function(double) stockDamaged,
+  }) {
+    if (status == 'REJECTED') return;
+    if (transactionReason == 'LOST_IN_TRANSIT' ||
+        transactionReason == 'LOST_IN_STORAGE' ||
+        stockEntryType == 'LOSS') {
+      stockLost(quantity);
+    } else if (transactionReason == 'DAMAGED_IN_TRANSIT' ||
+        transactionReason == 'DAMAGED_IN_STORAGE' ||
+        stockEntryType == 'DAMAGED') {
+      stockDamaged(quantity);
+    } else if (stockEntryType == 'RETURNED') {
+      stockReturned(quantity);
+    } else {
+      stockIssued(quantity);
+    }
+  }
+
   static Map<String, double> calculateStockInHandForProducts({
     required List<StockModel> stockList,
     required String facilityId,
     required List<String> productIds,
     String? loggedInUserUuid,
+    bool isDistributor = false,
   }) {
     final result = <String, double>{};
-
     for (final productId in productIds) {
       final metrics = calculateStockMetrics(
         stockList: stockList,
         facilityId: facilityId,
         productId: productId,
         loggedInUserUuid: loggedInUserUuid,
+        isDistributor: isDistributor,
       );
       result[productId] = metrics['stockInHand'] ?? 0.0;
     }
-
     return result;
   }
 
-  /// Returns empty/zero stock metrics map.
   static Map<String, double> get emptyMetrics => {
         'stockReceived': 0,
         'stockIssued': 0,
@@ -214,10 +239,43 @@ class StockCalculationUtils {
         'stockInHand': 0,
       };
 
-  /// Extracts StockModel list from FlowCrudState's stateWrapper.
-  ///
-  /// This helper method parses the stateWrapper structure to extract
-  /// StockModel entries.
+  static double getStockBalance({
+    required List<StockModel> stockList,
+    required String facilityId,
+    required String productId,
+    String? loggedInUserUuid,
+    bool isDistributor = false,
+    bool calculatePartial = false,
+  }) {
+    final metrics = calculateStockMetrics(
+      stockList: stockList,
+      facilityId: facilityId,
+      productId: productId,
+      loggedInUserUuid: loggedInUserUuid,
+      isDistributor: isDistributor,
+      calculatePartial: calculatePartial,
+    );
+    return metrics['stockInHand'] ?? 0.0;
+  }
+
+  static Map<String, double> getStockMetrics({
+    required List<StockModel> stockList,
+    required String facilityId,
+    required String productId,
+    String? loggedInUserUuid,
+    bool isDistributor = false,
+    bool calculatePartial = false,
+  }) {
+    return calculateStockMetrics(
+      stockList: stockList,
+      facilityId: facilityId,
+      productId: productId,
+      loggedInUserUuid: loggedInUserUuid,
+      isDistributor: isDistributor,
+      calculatePartial: calculatePartial,
+    );
+  }
+
   static List<StockModel> extractStockListFromWrapper(
       List<dynamic>? stateWrapper) {
     if (stateWrapper == null || stateWrapper.isEmpty) return [];
@@ -225,7 +283,6 @@ class StockCalculationUtils {
     try {
       for (final wrapperMap in stateWrapper) {
         if (wrapperMap is Map) {
-          // Check for both 'StockModel' and 'stock' keys (CrudBloc uses 'stock')
           List? stockData;
           if (wrapperMap.containsKey('StockModel')) {
             stockData = wrapperMap['StockModel'] as List?;

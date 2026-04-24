@@ -72,7 +72,7 @@ class DigitLabeledToggle extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         color: theme.colorScheme.onPrimary,
-        border: Border.all(color: theme.colorScheme.onSurface, width: 1),
+        border: Border.all(color: const DigitColors().background, width: 1),
         borderRadius: BorderRadius.circular(spacer3),
       ),
       child: Row(
@@ -100,6 +100,7 @@ class DigitLabeledToggle extends StatelessWidget {
     required bool isSelected,
     required VoidCallback onTap,
   }) {
+    final theme = Theme.of(context);
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -115,9 +116,7 @@ class DigitLabeledToggle extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              color: isSelected
-                  ? Colors.white
-                  : const DigitColors().light.primary2,
+              color: isSelected ? Colors.white : const DigitColors().background,
               fontWeight: FontWeight.w600,
             ),
           ),

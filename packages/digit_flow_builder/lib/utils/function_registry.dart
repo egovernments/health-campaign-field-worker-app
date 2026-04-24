@@ -1,13 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
-import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_flow_builder/widget_registry.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import 'interpolation.dart';
@@ -359,6 +357,16 @@ void initializeFunctionRegistry() {
     }
     if (currentCycle == null) return false;
 
+// --- Check age eligibility ---
+    int validMinAge = projectType.validMinAge ?? 3;
+    int validMaxAge = projectType.validMaxAge ?? 59;
+
+    final isWithinAge =
+        totalAgeMonths >= validMinAge && totalAgeMonths <= validMaxAge;
+    totalAgeMonths <= validMaxAge;
+
+    if (!isWithinAge) return false;
+
 // --- Eligibility logic ---
     bool recordedSideEffect = false;
 
@@ -386,6 +394,9 @@ void initializeFunctionRegistry() {
 
         // BENEFICIARY_DIED returns false immediately regardless of cycle
         if (task['status'] == TaskStatus.beneficiaryDied) return false;
+
+        // INELIGIBLE status returns false immediately if no cycle filtering is needed
+        if (task['status'] == TaskStatus.ineligible) return false;
 
         // For other ineligible statuses, only check tasks matching the current cycle
         if (currentRunningCycle != null) {
@@ -425,10 +436,9 @@ void initializeFunctionRegistry() {
           (lastTaskTime >= (currentCycle['startDate'] ?? 0) &&
               lastTaskTime <= (currentCycle['endDate'] ?? 0));
 
-      final isWithinAge = projectType.validMinAge != null &&
-          projectType.validMaxAge != null &&
-          totalAgeMonths >= projectType.validMinAge! &&
-          totalAgeMonths <= projectType.validMaxAge!;
+      final isWithinAge =
+          totalAgeMonths >= validMinAge && totalAgeMonths <= validMaxAge;
+      totalAgeMonths <= validMaxAge;
 
       if (!isWithinAge) return false;
 
@@ -1301,6 +1311,34 @@ void initializeFunctionRegistry() {
         ?.id;
   });
 
+  /// Checks if the current member is the head of household.
+  ///
+  /// - **Function Name**: `'isHead'`
+  /// - **Arguments**: First argument is the member/household data.
+  /// - **Returns**: `true` if the member is the head of household, `false` otherwise.
+  ///
+  /// This function checks for an `isHeadOfHousehold` indicator which can be:
+  /// 1. A direct boolean field in the member data
+  /// 2. A field in additionalFields with key 'isHeadOfHousehold'
+  FunctionRegistry.register("isHead", (args, stateData) {
+    if (args.isEmpty || args.first == null) return false;
+
+    // Get member(s) list - try 'member' first, then 'members'
+    final membersList = args.first as List?;
+    if (membersList == null || membersList.isEmpty) return false;
+
+    // Check if any member is head of household
+    return membersList.any((member) {
+      if (member == null) return false;
+
+      final isHead = member.isHeadOfHousehold;
+      return isHead is bool
+          ? isHead
+          : isHead is String &&
+              (isHead.toLowerCase() == 'true' || isHead == '1');
+    });
+  });
+
   /// Checks if a referral exists for the current running cycle.
   ///
   /// - **Function Name**: `'hasReferralForCurrentCycle'`
@@ -1347,6 +1385,18 @@ void initializeFunctionRegistry() {
           }
         }
       }
+    }
+
+    return false;
+  });
+
+  FunctionRegistry.register("hasBeneficiaryId", (args, stateData) {
+    final identifier = args.isNotEmpty ? args.first : null;
+
+    if (identifier == null) return false;
+
+    if (identifier["identifierType"] == 'UNIQUE_BENEFICIARY_ID') {
+      return true;
     }
 
     return false;
@@ -1578,141 +1628,6 @@ void initializeFunctionRegistry() {
     return registrationTime < (currentCycle.startDate ?? 0);
   });
 
-  /// Registers a function to check if the 30-minute redose window has expired.
-  ///
-  /// - **Function Name**: `'isRedoseWindowExpired'`
-  /// - **Arguments**: A list where the first element is the tasks list.
-  /// - **Returns**: `true` if 30 minutes have passed since the last delivery
-  ///   task was completed (redose window closed), `false` otherwise (window still open).
-  ///
-  /// The redose window opens immediately after delivery completion and stays
-  /// open for 30 minutes. After that, the redose button becomes disabled.
-  FunctionRegistry.register("isRedoseWindowExpired", (args, stateData) {
-    if (args.isEmpty || args.first == null) return true;
-
-    List<Map<String, dynamic>>? tasks;
-    if (args.first is List) {
-      final rawList = args.first as List;
-      tasks = rawList.map((item) {
-        if (item is Map<String, dynamic>) return item;
-        if (item is Map) return Map<String, dynamic>.from(item);
-        try {
-          return (item as dynamic).toMap() as Map<String, dynamic>;
-        } catch (_) {
-          try {
-            return (item as dynamic).toJson() as Map<String, dynamic>;
-          } catch (_) {
-            return <String, dynamic>{};
-          }
-        }
-      }).toList();
-    }
-
-    if (tasks == null || tasks.isEmpty) return true;
-
-    // Find the last delivery task (status ADMINISTRATION_SUCCESS or DELIVERED)
-    // Iterate in reverse to find the most recent delivery task
-    Map<String, dynamic>? lastDeliveryTask;
-    for (int i = tasks.length - 1; i >= 0; i--) {
-      final status = tasks[i]['status']?.toString().toUpperCase() ?? '';
-      if (status == TaskStatus.administrationSuccess ||
-          status == TaskStatus.delivered) {
-        lastDeliveryTask = tasks[i];
-        break;
-      }
-    }
-
-    if (lastDeliveryTask == null) return true;
-
-    // Get the creation time of the last delivery task from clientAuditDetails
-    int? deliveryCompletionTime;
-
-    // Try clientAuditDetails.createdTime first
-    final clientAuditDetails = lastDeliveryTask['clientAuditDetails'];
-    if (clientAuditDetails is Map) {
-      deliveryCompletionTime =
-          int.tryParse(clientAuditDetails['createdTime']?.toString() ?? '');
-    }
-
-    // Fallback to auditDetails.createdTime
-    if (deliveryCompletionTime == null) {
-      final auditDetails = lastDeliveryTask['auditDetails'];
-      if (auditDetails is Map) {
-        deliveryCompletionTime =
-            int.tryParse(auditDetails['createdTime']?.toString() ?? '');
-      }
-    }
-
-    if (deliveryCompletionTime == null) return true;
-
-    // Check if 30 minutes (1800000 ms) have passed since delivery
-    final now = DateTime.now().millisecondsSinceEpoch;
-    const redoseWindowMs = 30 * 60 * 1000; // 30 minutes in milliseconds
-
-    return (now - deliveryCompletionTime) > redoseWindowMs;
-  });
-
-  /// Registers a function to check if a redose has already been completed.
-  ///
-  /// - **Function Name**: `'isRedoseCompleted'`
-  /// - **Arguments**: A list where the first element is the tasks list.
-  /// - **Returns**: `true` if a task with status `VISITED` exists for the
-  ///   current cycle, indicating redose was already administered.
-  FunctionRegistry.register("isRedoseCompleted", (args, stateData) {
-    if (args.isEmpty || args.first == null) return false;
-
-    List<Map<String, dynamic>>? tasks;
-    if (args.first is List) {
-      final rawList = args.first as List;
-      tasks = rawList.map((item) {
-        if (item is Map<String, dynamic>) return item;
-        if (item is Map) return Map<String, dynamic>.from(item);
-        try {
-          return (item as dynamic).toMap() as Map<String, dynamic>;
-        } catch (_) {
-          try {
-            return (item as dynamic).toJson() as Map<String, dynamic>;
-          } catch (_) {
-            return <String, dynamic>{};
-          }
-        }
-      }).toList();
-    }
-
-    if (tasks == null || tasks.isEmpty) return false;
-
-    // Get current running cycle
-    final projectType = FlowBuilderSingleton().projectType;
-    final now = DateTime.now().millisecondsSinceEpoch;
-    final selectedCycle = projectType?.cycles?.firstWhereOrNull(
-      (e) =>
-          (e.startDate ?? 0) < now && (e.endDate ?? 0) > now,
-    );
-
-    if (selectedCycle == null) return false;
-
-    // Check if any task has status VISITED for the current cycle
-    for (final task in tasks) {
-      final status = task['status']?.toString().toUpperCase() ?? '';
-      if (status == TaskStatus.visited) {
-        // Verify it belongs to the current cycle
-        final additionalFields = task['additionalFields'];
-        final fields = additionalFields?['fields'] as List?;
-        if (fields != null) {
-          for (final field in fields) {
-            if (field is Map && field['key'] == 'cycleIndex') {
-              final cycleIndex =
-                  int.tryParse(field['value']?.toString() ?? '');
-              if (cycleIndex == selectedCycle.id) {
-                return true;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    return false;
   FunctionRegistry.register('hasMinimumBeneficiaryId', (args, stateData) {
     final minCountArg = args.isNotEmpty ? args.first : null;
     final minCount = minCountArg is int
