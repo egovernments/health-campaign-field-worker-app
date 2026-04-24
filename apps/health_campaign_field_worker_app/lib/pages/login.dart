@@ -193,6 +193,34 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         ),
                       ),
                     ),
+                    BlocBuilder<AppInitializationBloc,
+                        AppInitializationState>(
+                        builder: (context, initState) {
+                          final privacyPolicyJson = initState.maybeWhen(
+                              initialized:
+                                  (AppConfiguration appConfiguration, _, __) =>
+                              appConfiguration.privacyPolicyConfig,
+                              orElse: () => null);
+                          if (privacyPolicyJson?.active == false) {
+                            return const SizedBox.shrink();
+                          }
+
+                          form
+                              .control(_privacyCheck)
+                              .setValidators([Validators.requiredTrue]);
+                          form.control(_privacyCheck).updateValueAndValidity();
+                          return PrivacyComponent(
+                            privacyPolicy:
+                            convertToPrivacyPolicyModel(privacyPolicyJson),
+                            formControlName: _privacyCheck,
+                            text: localizations
+                                .translate(i18.privacyPolicy.privacyNoticeText),
+                            linkText: localizations.translate(
+                                i18.privacyPolicy.privacyPolicyLinkText),
+                            validationMessage: localizations.translate(
+                                i18.privacyPolicy.privacyPolicyValidationText),
+                          );
+                        }),
                     BlocBuilder<AppInitializationBloc, AppInitializationState>(
                       builder: (context, state) {
                         return DigitButton(
@@ -295,6 +323,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           validators: [Validators.required],
           value: '',
         ),
+    _privacyCheck: FormControl<bool>(
+      value: false,
+    )
       });
 }
 
