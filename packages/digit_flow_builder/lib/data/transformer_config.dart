@@ -724,8 +724,6 @@ final jsonConfig = {
             "status":
                 "__switch:__context:stockEntryType:{ISSUED:__value:IN_TRANSIT,RETURNED:__value:IN_TRANSIT,LOSS:__value:LOST,DAMAGED:__value:DAMAGED}",
             "scanResource": "stockProductDetails.scanResource",
-            "quantityWastage": "stockProductDetails.quantityWastage",
-            "quantityPartialUsed": "stockProductDetails.quantityPartialUsed"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
