@@ -635,27 +635,6 @@ final dynamic sampleInventoryFlows = {
                   "value": true,
                   "message":
                       "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
-                },
-                {
-                  "type": "facilityHierarchy",
-                  "value": {
-                    "hierarchyMapping": {
-                      "State": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["LGA Facility"]
-                      },
-                      "LGA": {
-                        "forReceipt": ["State Facility"],
-                        "forIssue": ["Health Facility"]
-                      },
-                      "Health Facility": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["DELIVERY_TEAM"]
-                      }
-                    },
-                    "useTransactionType": true
-                  },
-                  "message": ""
                 }
               ],
               "errorMessage": "",
@@ -769,27 +748,6 @@ final dynamic sampleInventoryFlows = {
                   "type": "notEqualTo",
                   "value": "warehouseDetails.facilityToWhich",
                   "message": "Facility from and to must be different"
-                },
-                {
-                  "type": "facilityHierarchy",
-                  "value": {
-                    "hierarchyMapping": {
-                      "State": {
-                        "forReceipt": ["Central Facility"],
-                        "forIssue": ["LGA Facility"]
-                      },
-                      "LGA": {
-                        "forReceipt": ["State Facility"],
-                        "forIssue": ["Health Facility"]
-                      },
-                      "Health Facility": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["DELIVERY_TEAM"]
-                      }
-                    },
-                    "useTransactionType": true
-                  },
-                  "message": ""
                 }
               ],
               "errorMessage": "",
@@ -1174,81 +1132,6 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "integer",
-              "label": "APPONE_INVENTORY_QUANTITY_WASTAGE_LABEL",
-              "order": 5,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "quantityWastage",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "visibilityCondition": {
-                "expression": [
-                  {
-                    "condition":
-                        "navigation.stockEntryType == 'RETURNED' && navigation.isDistributor",
-                    "type": "custom"
-                  }
-                ]
-              },
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "QUANTITY_WASTAGE_REQUIRED_ERROR_MESSAGE"
-                },
-                {
-                  "type": "regex",
-                  "value": r"^[0-9]+$",
-                  "message": "QUANTITY_VALID_NUMBER_ERROR_MESSAGE"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": null
-            },
-            {
-              "type": "integer",
-              "label": "APPONE_INVENTORY_QUANTITY_PARTIAL_USED_LABEL",
-              "order": 6,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "quantityPartialUsed",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "visibilityCondition": {
-                "expression": [
-                  {
-                    "condition":
-                        "navigation.stockEntryType == 'RETURNED' && navigation.isDistributor",
-                    "type": "custom"
-                  }
-                ]
-              },
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "regex",
-                  "value": r"^[0-9]+$",
-                  "message": "QUANTITY_VALID_NUMBER_ERROR_MESSAGE"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": null
-            },
-            {
-              "type": "integer",
               "label": "APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL",
               "order": 4,
               "value": "",
@@ -1607,27 +1490,6 @@ final dynamic sampleInventoryFlows = {
                   "value": true,
                   "message":
                       "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
-                },
-                {
-                  "type": "facilityHierarchy",
-                  "value": {
-                    "hierarchyMapping": {
-                      "State": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["LGA Facility"]
-                      },
-                      "LGA": {
-                        "forReceipt": ["State Facility"],
-                        "forIssue": ["Health Facility"]
-                      },
-                      "Health Facility": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["DELIVERY_TEAM"]
-                      }
-                    },
-                    "useTransactionType": true
-                  },
-                  "message": ""
                 }
               ],
               "errorMessage": "",
@@ -1764,27 +1626,6 @@ final dynamic sampleInventoryFlows = {
                   "value": true,
                   "message":
                       "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
-                },
-                {
-                  "type": "facilityHierarchy",
-                  "value": {
-                    "hierarchyMapping": {
-                      "State": {
-                        "forReceipt": ["Central Facility"],
-                        "forIssue": ["LGA Facility"]
-                      },
-                      "LGA": {
-                        "forReceipt": ["State Facility"],
-                        "forIssue": ["Health Facility"]
-                      },
-                      "Health Facility": {
-                        "forReceipt": ["LGA Facility"],
-                        "forIssue": ["DELIVERY_TEAM"]
-                      }
-                    },
-                    "useTransactionType": true
-                  },
-                  "message": ""
                 }
               ],
               "errorMessage": "",

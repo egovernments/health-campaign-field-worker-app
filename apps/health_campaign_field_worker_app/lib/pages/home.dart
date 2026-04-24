@@ -17,7 +17,6 @@ import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:digit_flow_builder/widgets/flow_widget_interface.dart';
-import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -146,72 +145,18 @@ class _HomePageState extends LocalizedState<HomePage> {
     FlowWidgetFactory.register(CustomRowWidget());
     FlowWidgetFactory.register(SignatureCompareWidget());
 
-    // Register resource card for DELIVERY and REDOSE
+    // Register resource card for DELIVERY
     CustomComponentRegistry().registerBuilder(
       'resourceCard',
       (context, stateAccessor) {
+        // Access data from any page in the flow
         final beneficiaryDetails =
             stateAccessor.getPageData('beneficiaryDetails');
 
-        if (beneficiaryDetails != null) {
-          // DELIVERY flow
-          return ResourceCard(
-            stateData: beneficiaryDetails,
-            pageSchema: 'DELIVERY',
-          );
-        }
-
-        // REDOSE flow - compute product variants same as DELIVERY
-        // Use navigation params to filter by age condition
-        final navParams = FlowCrudStateRegistry().getNavigationParams('REDOSE');
-        final cycleIndex = navParams?['cycleIndex'];
-        final ageStr = navParams?['selectedIndividualAgeInMonths'];
-        final age = int.tryParse(ageStr?.toString() ?? '');
-
-        final projectType = context.selectedProjectType;
-        final cycles = projectType?.cycles;
-
-        // Find the cycle matching cycleIndex from nav params
-        final currentCycle = cycles?.firstWhereOrNull(
-          (c) => c.id.toString() == cycleIndex?.toString(),
-        );
-
-        // Use first delivery's dose criteria (all deliveries have same criteria)
-        final firstDelivery = currentCycle?.deliveries?.firstOrNull;
-        final matchingCriteria = <Map<String, dynamic>>[];
-
-        if (firstDelivery?.doseCriteria != null && age != null) {
-          for (final dc in firstDelivery!.doseCriteria!) {
-            if (dc.condition != null && dc.condition!.isNotEmpty) {
-              // Evaluate condition e.g. "3<=ageandage<=11"
-              final sanitized = dc.condition!
-                  .replaceAll(' and ', ' && ')
-                  .replaceAll('and', '&&');
-              try {
-                final parser = FormulaParser(sanitized, {'age': age});
-                final result = parser.parse;
-                if (result['isSuccess'] && result['value'] == true) {
-                  matchingCriteria.add(dc.toMap());
-                }
-              } catch (e) {
-                debugPrint('REDOSE condition eval error: $e');
-              }
-            } else {
-              // No condition - include by default
-              matchingCriteria.add(dc.toMap());
-            }
-          }
-        }
-
-        final redoseState = FlowCrudState(
-          stateWrapper: [
-            {'eligibleProductVariants': matchingCriteria}
-          ],
-        );
-
+        // Build your component with access to all this data
         return ResourceCard(
-          stateData: redoseState,
-          pageSchema: 'REDOSE',
+          stateData: beneficiaryDetails,
+          pageSchema: 'DELIVERY',
         );
       },
     );

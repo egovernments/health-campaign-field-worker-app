@@ -41,8 +41,6 @@ class StockCalculationUtils {
     double stockDamaged = 0;
     double stockExcess = 0;
     double stockLess = 0;
-    double stockWastage = 0;
-    double stockPartialUsed = 0;
     bool hasDistributorReturns = isDistributor;
 
     for (final stock in filteredStock) {
@@ -51,12 +49,6 @@ class StockCalculationUtils {
       final quantity = double.tryParse(stock.quantity ?? '0') ?? 0.0;
       final status = _getAdditionalFieldValue(stock, 'status');
       final stockEntryType = _getStockEntryType(stock);
-      final wastage =
-          double.tryParse(_getAdditionalFieldValue(stock, 'quantityWastage')) ??
-              0.0;
-      final partialUsed = double.tryParse(
-              _getAdditionalFieldValue(stock, 'quantityPartialUsed')) ??
-          0.0;
       final isReceiver = stock.receiverId == facilityId;
       final isSender = stock.senderId == facilityId;
 
@@ -70,13 +62,9 @@ class StockCalculationUtils {
           transactionType: transactionType,
           stockEntryType: stockEntryType,
           quantity: quantity,
-          wastage: wastage,
-          partialUsed: calculatePartial ? partialUsed : 0,
           status: status,
           stockReceived: (v) => stockReceived += v,
           stockReturned: (v) => stockReturned += v,
-          stockWastage: (v) => stockWastage += v,
-          stockPartialUsed: (v) => stockPartialUsed += v,
           stockExcess: (v) => stockExcess += v,
           stockLess: (v) => stockLess += v,
           stockLost: (v) => stockLost += v,
@@ -121,12 +109,7 @@ class StockCalculationUtils {
     // For distributor, partial used is also deducted from stock in hand
     final double stockInHand = hasDistributorReturns
         ? stockReceived -
-            (stockReturned +
-                stockWastage +
-                stockPartialUsed +
-                stockIssued +
-                stockDamaged +
-                stockLost)
+            (stockReturned + stockIssued + stockDamaged + stockLost)
         : stockReceived +
             stockReturned -
             (stockIssued + stockDamaged + stockLost);
@@ -139,8 +122,6 @@ class StockCalculationUtils {
       'stockDamaged': stockDamaged,
       'stockExcess': stockExcess,
       'stockLess': stockLess,
-      'stockWastage': stockWastage,
-      'stockPartialUsed': stockPartialUsed,
       'stockInHand': stockInHand,
     };
   }
@@ -149,13 +130,9 @@ class StockCalculationUtils {
     required String transactionType,
     required String stockEntryType,
     required double quantity,
-    required double wastage,
-    required double partialUsed,
     required String status,
     required void Function(double) stockReceived,
     required void Function(double) stockReturned,
-    required void Function(double) stockWastage,
-    required void Function(double) stockPartialUsed,
     required void Function(double) stockExcess,
     required void Function(double) stockLess,
     required void Function(double) stockLost,
@@ -164,8 +141,6 @@ class StockCalculationUtils {
     if (transactionType == 'RECEIVED') {
       if (stockEntryType == 'RETURNED') {
         stockReturned(quantity);
-        stockWastage(wastage);
-        stockPartialUsed(partialUsed);
       } else if (stockEntryType == 'EXCESS') {
         stockExcess(quantity);
       } else if (stockEntryType == 'LESS') {
@@ -176,8 +151,6 @@ class StockCalculationUtils {
     } else if (transactionType == 'DISPATCHED') {
       if (stockEntryType == 'RETURNED') {
         stockReturned(quantity);
-        stockWastage(wastage);
-        stockPartialUsed(partialUsed);
       } else if (status == 'ACCEPTED') {
         stockReceived(quantity);
       } else if (stockEntryType == 'LOSS') {
@@ -263,8 +236,6 @@ class StockCalculationUtils {
         'stockDamaged': 0,
         'stockExcess': 0,
         'stockLess': 0,
-        'stockWastage': 0,
-        'stockPartialUsed': 0,
         'stockInHand': 0,
       };
 
