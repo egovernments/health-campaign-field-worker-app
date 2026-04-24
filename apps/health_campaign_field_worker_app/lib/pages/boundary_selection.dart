@@ -51,7 +51,6 @@ class _BoundarySelectionPageState
   Map<String, TextEditingController> dropdownControllers = {};
   late StreamSubscription syncSubscription;
   var leastLevelBoundaries;
-  final String setLocale = "en_MZ";
 
   @override
   void initState() {
@@ -159,7 +158,8 @@ class _BoundarySelectionPageState
                                           element.value ==
                                           AppSharedPreferences()
                                               .getSelectedLocale),
-                                  code: setLocale));
+                                  code: AppSharedPreferences()
+                                      .getSelectedLocale!));
                         }
                       },
                       child: ReactiveFormBuilder(
@@ -177,7 +177,8 @@ class _BoundarySelectionPageState
                                                 element.value ==
                                                 AppSharedPreferences()
                                                     .getSelectedLocale),
-                                        code: setLocale));
+                                        code: AppSharedPreferences()
+                                            .getSelectedLocale!));
                                 Future.delayed(const Duration(milliseconds: 10),
                                     () {
                                   downSyncState.maybeWhen(
@@ -647,7 +648,8 @@ class _BoundarySelectionPageState
                                                                         AppSharedPreferences()
                                                                             .getSelectedLocale),
                                                                 code:
-                                                                    setLocale));
+                                                                AppSharedPreferences()
+                                                                    .getSelectedLocale!));
                                                     Future.delayed(
                                                         const Duration(
                                                             milliseconds: 10),
@@ -1042,7 +1044,8 @@ class _BoundarySelectionPageState
           LocalizationEvent.onUpdateLocalizationIndex(
               index: appConfiguration.languages!.indexWhere((element) =>
                   element.value == AppSharedPreferences().getSelectedLocale),
-              code: setLocale));
+              code: AppSharedPreferences()
+                  .getSelectedLocale!));
     }
     for (int i = 0; i < labelList.length; i++) {
       final label = labelList[i];
