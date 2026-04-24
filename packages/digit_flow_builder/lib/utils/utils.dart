@@ -34,6 +34,7 @@ class FlowBuilderSingleton {
   Map<String, TemplateConfig>? _templateConfigs;
   List<Map<String, dynamic>>?
       _userRoles; // User roles from app level (e.g., [{"code": "WAREHOUSE_MANAGER", "name": "Warehouse Manager"}])
+  int? _beneficiaryIdMinCount;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -53,6 +54,7 @@ class FlowBuilderSingleton {
     required ProjectModel selectedProject,
     required UserModel? loggedInUser,
     List<Map<String, dynamic>>? userRoles,
+    int? beneficiaryIdMinCount,
   }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
@@ -62,6 +64,7 @@ class FlowBuilderSingleton {
     _selectedProject = selectedProject;
     _loggedInUser = loggedInUser;
     _userRoles = userRoles;
+    _beneficiaryIdMinCount = beneficiaryIdMinCount;
   }
 
   void setUserRoles(List<Map<String, dynamic>>? userRoles) {
@@ -100,6 +103,8 @@ class FlowBuilderSingleton {
   Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
 
   List<Map<String, dynamic>>? get userRoles => _userRoles;
+
+  int? get beneficiaryIdMinCount => _beneficiaryIdMinCount;
 }
 
 /// TODO: WILL REMOVE THIS FUNCTION ALSO : TEMPORARY
@@ -191,6 +196,53 @@ dynamic resolveValue(dynamic value, dynamic contextData,
   final resolved = resolveValueRaw(value, contextData,
       widgetData: widgetData, screenKey: screenKey);
   return resolved;
+}
+
+/// New method to resolve values with enhanced logic, including fallback and support for multiple data sources
+dynamic resolveNavigationDataValue({
+  required dynamic rawValue,
+  Map<String, dynamic>? stateFormData,
+  dynamic stateWrapperFirst,
+  required Map<String, dynamic> contextData,
+}) {
+  dynamic resolvedValue =
+      resolveValue(rawValue, stateFormData ?? stateWrapperFirst);
+
+  if (resolvedValue == null || resolvedValue == rawValue) {
+    resolvedValue = resolveValue(rawValue, contextData);
+  }
+
+  // Fallback for unresolved template values like {{ec1}} when form data is
+  // stored under nested keys such as eligibilityChecklist.ec1.
+  if ((resolvedValue == null || resolvedValue == rawValue) &&
+      rawValue is String &&
+      rawValue.startsWith('{{') &&
+      rawValue.endsWith('}}')) {
+    final key = rawValue.substring(2, rawValue.length - 2).trim();
+
+    final candidateKeys = <String>{
+      key,
+      'formData.$key',
+      'contextData.$key',
+    };
+
+    for (final candidate in candidateKeys) {
+      final candidateTemplate = '{{$candidate}}';
+
+      final fromState =
+          resolveValue(candidateTemplate, stateFormData ?? stateWrapperFirst);
+      if (fromState != null && fromState != candidateTemplate) {
+        return fromState;
+      }
+
+      final fromContext = resolveValue(candidateTemplate, contextData);
+      if (fromContext != null && fromContext != candidateTemplate) {
+        return fromContext;
+      }
+    }
+  }
+
+  return resolvedValue;
 }
 
 /// New method: resolves strings with multiple placeholders
@@ -474,6 +526,7 @@ Map<String, dynamic> singletonToMap() {
     "userRoles": s.userRoles,
     "templateConfigs":
         s.templateConfigs?.map((k, v) => MapEntry(k, v.toJson())),
+    "beneficiaryIdMinCount": s.beneficiaryIdMinCount
   };
 }
 

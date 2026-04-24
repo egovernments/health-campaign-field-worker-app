@@ -215,7 +215,7 @@ class WidgetStateContext {
     final updatedState = (currentState ?? const FlowCrudState()).copyWith(
       widgetData: existing,
     );
-    FlowCrudStateRegistry().update(compositeKey!, updatedState);
+        FlowCrudStateRegistry().update(compositeKey!, updatedState);
   }
 
   /// Update multiple widgetData entries.

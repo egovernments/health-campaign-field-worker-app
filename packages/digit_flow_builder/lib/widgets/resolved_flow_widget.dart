@@ -9,7 +9,6 @@ import '../utils/conditional_evaluator.dart';
 import '../utils/flow_widget_state.dart';
 import '../utils/interpolation.dart';
 import '../utils/utils.dart';
-import '../widget_registry.dart';
 import 'flow_widget_interface.dart';
 import 'localization_context.dart';
 
@@ -109,8 +108,7 @@ class ResolvedWidgetContext {
   /// registry (not stale build-time data).
   Map<String, dynamic> getFreshEvalContext() {
     final key = compositeKey ?? screenKey;
-    final registryState =
-        key != null ? FlowCrudStateRegistry().get(key) : null;
+    final registryState = key != null ? FlowCrudStateRegistry().get(key) : null;
     final currentWidgetData = registryState?.widgetData ?? widgetData;
     final currentFormData = registryState?.formData ?? formData;
 
@@ -135,8 +133,7 @@ class ResolvedWidgetContext {
     if (navData == null) return actionJson;
 
     final key = compositeKey ?? screenKey;
-    final registryState =
-        key != null ? FlowCrudStateRegistry().get(key) : null;
+    final registryState = key != null ? FlowCrudStateRegistry().get(key) : null;
     final currentWidgetData = registryState?.widgetData ?? widgetData;
     final currentFormData = registryState?.formData ?? formData;
 
@@ -144,7 +141,8 @@ class ResolvedWidgetContext {
       final rawValue = entry['value'];
 
       // Try evalContext first, then widgetData, then formData
-      dynamic resolvedValue = resolveValue(rawValue, currentEvalContext) ?? rawValue;
+      dynamic resolvedValue =
+          resolveValue(rawValue, currentEvalContext) ?? rawValue;
 
       if (resolvedValue == rawValue && currentWidgetData.isNotEmpty) {
         resolvedValue = resolveValue(rawValue, currentWidgetData);
@@ -315,14 +313,16 @@ abstract class ResolvedFlowWidget implements FlowWidget {
   ) {
     final state = WidgetStateContext.of(context);
     final localization = LocalizationContext.maybeOf(context);
+    final stateKey = state.compositeKey ?? state.screenKey;
 
     // Auto-resolve visibility
     if (json['visible'] != null) {
       final visible = ConditionalEvaluator.evaluate(
         json['visible'],
         state.evalContext,
-        screenKey: state.screenKey,
+        screenKey: stateKey,
         stateData: state.stateData,
+        widgetdata: state.widgetData
       );
       if (visible == false) {
         return const SizedBox.shrink();
@@ -335,8 +335,9 @@ abstract class ResolvedFlowWidget implements FlowWidget {
       final disabledResult = ConditionalEvaluator.evaluate(
         json['disabled'],
         state.evalContext,
-        screenKey: state.screenKey,
+        screenKey: stateKey,
         stateData: state.stateData,
+          widgetdata: state.widgetData
       );
       isDisabled = disabledResult == true;
     }
@@ -352,14 +353,15 @@ abstract class ResolvedFlowWidget implements FlowWidget {
           item: state.itemData,
         );
         if (!resolvedLabel.contains('{{')) {
-          resolvedLabel = localization?.translate(resolvedLabel) ?? resolvedLabel;
+          resolvedLabel =
+              localization?.translate(resolvedLabel) ?? resolvedLabel;
         }
       } else {
         resolvedLabel = resolveTemplate(
               labelText,
               state.evalContext,
               localization: localization,
-              screenKey: state.screenKey,
+              screenKey: stateKey,
               stateData: state.stateData,
             ) ??
             labelText;
@@ -373,7 +375,7 @@ abstract class ResolvedFlowWidget implements FlowWidget {
             descriptionText,
             state.evalContext,
             localization: localization,
-            screenKey: state.screenKey,
+            screenKey: stateKey,
             stateData: state.stateData,
           ) ??
           descriptionText;

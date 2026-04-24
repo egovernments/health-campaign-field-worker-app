@@ -1,4 +1,5 @@
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:flutter/material.dart';
 
@@ -152,7 +153,8 @@ class WidgetParsers {
   ///   json['properties'],
   /// );
   /// ```
-  static Widget wrapWithBottomGap(Widget child, Map<String, dynamic>? properties) {
+  static Widget wrapWithBottomGap(
+      Widget child, Map<String, dynamic>? properties) {
     if (properties == null) return child;
 
     final bottomGap = properties['bottomGap'];
@@ -165,5 +167,69 @@ class WidgetParsers {
       padding: EdgeInsets.only(bottom: gap),
       child: child,
     );
+  }
+
+  static double parseSize(String? size) {
+    switch (size) {
+      case 'spacer1':
+        return spacer1;
+      case 'spacer2':
+        return spacer2;
+      case 'spacer3':
+        return spacer3;
+      case 'spacer4':
+        return spacer4;
+      case 'spacer5':
+        return spacer5;
+      case 'spacer6':
+        return spacer6;
+      case 'spacer7':
+        return spacer7;
+      case 'spacer8':
+        return spacer8;
+      case 'spacer9':
+        return spacer9;
+      case 'spacer10':
+        return spacer10;
+      case 'spacer11':
+        return spacer11;
+      case 'spacer12':
+        return spacer12;
+      default:
+        return 0;
+    }
+  }
+
+  static TextStyle? parseTextStyle(BuildContext context, String? styleKey) {
+    if (styleKey == null) return null;
+
+    final digitTextTheme = Theme.of(context).digitTextTheme(context);
+
+    switch (styleKey) {
+      // Heading styles
+      case 'headingXl':
+        return digitTextTheme.headingXl;
+      case 'headingL':
+        return digitTextTheme.headingL;
+      case 'headingM':
+        return digitTextTheme.headingM;
+      case 'headingS':
+        return digitTextTheme.headingS;
+      // Body styles
+      case 'bodyL':
+        return digitTextTheme.bodyL;
+      case 'bodyS':
+        return digitTextTheme.bodyS;
+      // Caption styles
+      case 'captionL':
+        return digitTextTheme.captionL;
+      case 'captionS':
+        return digitTextTheme.captionS;
+      // Label style
+      case 'label':
+        return digitTextTheme.label;
+      default:
+        return null;
+    }
   }
 }

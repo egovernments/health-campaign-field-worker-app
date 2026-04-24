@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../action_handler/action_config.dart';
 import '../blocs/flow_crud_bloc.dart';
 import '../utils/conditional_evaluator.dart';
+import '../utils/function_registry.dart';
 import '../widget_registry.dart';
 
 /// Base interface for all flow widgets
@@ -33,16 +34,18 @@ class FlowWidgetFactory {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
+    // Set context for FunctionRegistry so fn: functions can access repositories
+    FunctionRegistry.setContext(context);
+
     // Handle visibility check at factory level before building widget
     final crudCtx = CrudItemContext.of(context);
     final modelMap = crudCtx?.stateData?.modelMap ?? {};
     final stateData = crudCtx?.stateData;
 
     // Get screenKey and widget data for visibility evaluation
-    final screenKey = crudCtx?.screenKey;
-    final flowState = screenKey != null
-        ? FlowCrudStateRegistry().get(screenKey)
-        : null;
+    final stateKey = crudCtx?.compositeKey ?? crudCtx?.screenKey;
+    final flowState =
+        stateKey != null ? FlowCrudStateRegistry().get(stateKey) : null;
     final widgetData = flowState?.widgetData ?? {};
     final formData = flowState?.formData ?? {};
 
@@ -65,7 +68,7 @@ class FlowWidgetFactory {
       final hiddenResult = ConditionalEvaluator.evaluate(
         json['hidden'],
         evalContext,
-        screenKey: screenKey,
+        screenKey: stateKey,
         stateData: stateData,
       );
       if (hiddenResult == true) {
@@ -78,8 +81,9 @@ class FlowWidgetFactory {
       final visibleResult = ConditionalEvaluator.evaluate(
         json['visible'],
         evalContext,
-        screenKey: screenKey,
+        screenKey: stateKey,
         stateData: stateData,
+        widgetdata: widgetData
       );
       if (visibleResult == false) {
         visible = false;

@@ -68,11 +68,10 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      name: attendance_management
-      sha256: "4cff17a4188f05010fffc0f853549ec09d035581f3409b058e0952a6999f427c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.6"
+      path: "../attendance_management"
+      relative: true
+    source: path
+    version: "1.0.5+2"
   audioplayers:
     dependency: transitive
     description:
@@ -437,11 +436,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: d59c5082ff5ad8ddb7ee87c0e150efa1a1de031034713d73d0bae9a0393ba95a
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.0"
+      path: "../digit_data_model"
+      relative: true
+    source: path
+    version: "1.2.0-dev.2-console"
   digit_scanner:
     dependency: transitive
     description:
@@ -1435,14 +1433,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
-  sqlite3_flutter_libs:
-    dependency: transitive
-    description:
-      name: sqlite3_flutter_libs
-      sha256: eeb9e3a45207649076b808f8a5a74d68770d0b7f26ccef6d5f43106eee5375ad
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.42"
   sqlparser:
     dependency: transitive
     description:

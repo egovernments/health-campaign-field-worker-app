@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -175,7 +174,7 @@ class NotificationService {
     debugPrint('FCM TOKEN (copied to clipboard):');
     debugPrint(token);
     debugPrint('═══════════════════════════════════════════');
-    await Clipboard.setData(ClipboardData(text: token));
+    // await Clipboard.setData(ClipboardData(text: token));
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_fcmTokenKey, token);
   }

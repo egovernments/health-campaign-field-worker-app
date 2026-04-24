@@ -25,6 +25,7 @@ class HFReferralRemoteRepository
     int? offSet,
     int? limit,
     int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) async {
     Response response;
 
@@ -36,8 +37,8 @@ class HFReferralRemoteRepository
             queryParameters: {
               'offset': offSet ?? 0,
               'limit': limit ?? 100,
-              if (lastSyncedTime != null)
-                'lastChangedSince': lastSyncedTime,
+              if (includeOnlyUpdatedByOthers != null) 'includeOnlyUpdatedByOthers': includeOnlyUpdatedByOthers,
+              if (lastSyncedTime != null) 'lastChangedSince': lastSyncedTime,
               'tenantId': DigitDataModelSingleton().tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
             },
@@ -96,6 +97,7 @@ class HFReferralRemoteRepository
     HFReferralSearchModel query, {
     int? offSet,
     int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) async {
     Response response;
 
@@ -108,6 +110,7 @@ class HFReferralRemoteRepository
               'offset': offSet ?? 0,
               'limit': 0,
               if (lastSyncedTime != null) 'lastChangedSince': lastSyncedTime,
+              if (includeOnlyUpdatedByOthers != null) 'includeOnlyUpdatedByOthers': includeOnlyUpdatedByOthers,
               'tenantId': DigitDataModelSingleton().tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
             },

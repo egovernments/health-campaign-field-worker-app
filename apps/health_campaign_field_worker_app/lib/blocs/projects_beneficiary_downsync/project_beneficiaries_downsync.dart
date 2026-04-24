@@ -100,7 +100,7 @@ class BeneficiaryDownSyncBloc
       );
       emit(BeneficiaryDownSyncState.getBatchSize(
         configuredBatchSize,
-        event.projectId,
+        event.projectModel,
         event.boundaries,
         event.pendingSyncCount,
       ));
@@ -138,7 +138,7 @@ class BeneficiaryDownSyncBloc
           isDeleted: true,
           lastSyncedTime: lastSyncedTime,
           tenantId: envConfig.variables.tenantId,
-          projectId: event.projectId,
+          projectId: event.projectModel.id,
         ),
       );
       if (initialResults.isNotEmpty) {
@@ -208,7 +208,7 @@ class BeneficiaryDownSyncBloc
                 limit: event.batchSize,
                 totalCount: totalCount,
                 tenantId: envConfig.variables.tenantId,
-                projectId: event.projectId,
+                projectId: event.projectModel.id,
                 lastSyncedTime: lastSyncedTime,
                 isDeleted: true,
               ),
@@ -218,7 +218,7 @@ class BeneficiaryDownSyncBloc
 
             // check if the API response is there or it failed
             if (downSyncResults.isNotEmpty) {
-              await writeToFile(event.projectId, event.boundaryCode,
+              await writeToFile(event.projectModel.id, event.boundaryCode,
                   event.boundaryName, downSyncResults);
               await SyncServiceSingleton()
                   .entityMapper
@@ -318,13 +318,12 @@ class BeneficiaryDownSyncBloc
             isDeleted: true,
             lastSyncedTime: lastSyncedTime,
             tenantId: envConfig.variables.tenantId,
-            projectId: event.projectId,
+            projectId: event.projectModel.id,
           ),
         );
 
         if (initialResults.isNotEmpty) {
-          final count =
-              initialResults["DownsyncCriteria"]["totalCount"] as int;
+          final count = initialResults["DownsyncCriteria"]["totalCount"] as int;
           if (count > 0) {
             boundaryCounts[boundaryCode] = count;
             totalServerCount += count;
@@ -379,9 +378,8 @@ class BeneficiaryDownSyncBloc
             locality: boundaryCode,
           ));
 
-          int offset = loopDownSyncData.isEmpty
-              ? 0
-              : loopDownSyncData.first.offset ?? 0;
+          int offset =
+              loopDownSyncData.isEmpty ? 0 : loopDownSyncData.first.offset ?? 0;
           int totalCount = boundaryTotalCount;
           int? loopLastSyncedTime = loopDownSyncData.isEmpty
               ? null
@@ -414,7 +412,7 @@ class BeneficiaryDownSyncBloc
                 limit: event.batchSize,
                 totalCount: totalCount,
                 tenantId: envConfig.variables.tenantId,
-                projectId: event.projectId,
+                projectId: event.projectModel.id,
                 lastSyncedTime: loopLastSyncedTime,
                 isDeleted: true,
               ),
@@ -422,7 +420,7 @@ class BeneficiaryDownSyncBloc
 
             if (downSyncResults.isNotEmpty) {
               await writeToFile(
-                  event.projectId, boundaryCode, boundaryName, downSyncResults);
+                  event.projectModel.id, boundaryCode, boundaryName, downSyncResults);
               await SyncServiceSingleton()
                   .entityMapper
                   ?.writeToEntityDB(downSyncResults, [
@@ -576,7 +574,7 @@ class BeneficiaryDownSyncBloc
 @freezed
 class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
   const factory BeneficiaryDownSyncEvent.downSync({
-    required String projectId,
+    required ProjectModel projectModel,
     required String boundaryCode,
     required int batchSize,
     required int initialServerCount,
@@ -584,7 +582,7 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
   }) = DownSyncBeneficiaryEvent;
 
   const factory BeneficiaryDownSyncEvent.checkForData({
-    required String projectId,
+    required ProjectModel projectModel,
     required String boundaryCode,
     required int pendingSyncCount,
     required int batchSize,
@@ -593,20 +591,20 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
 
   const factory BeneficiaryDownSyncEvent.getBatchSize({
     required List<AppConfiguration> appConfiguration,
-    required String projectId,
+    required ProjectModel projectModel,
     required List<BoundaryModel> boundaries,
     required int pendingSyncCount,
   }) = DownSyncGetBatchSizeEvent;
 
   const factory BeneficiaryDownSyncEvent.downSyncAll({
-    required String projectId,
+    required ProjectModel projectModel,
     required List<BoundaryModel> boundaries,
     required int batchSize,
     required int pendingSyncCount,
   }) = DownSyncAllBoundariesEvent;
 
   const factory BeneficiaryDownSyncEvent.downloadAll({
-    required String projectId,
+    required ProjectModel projectModel,
     required List<BoundaryModel> boundaries,
     required int batchSize,
     required Map<String, int> boundaryCounts,
@@ -632,7 +630,7 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
 
   const factory BeneficiaryDownSyncState.getBatchSize(
     int batchSize,
-    String projectId,
+    ProjectModel projectModel,
     List<BoundaryModel> boundaries,
     int pendingSyncCount,
   ) = _DownSyncGetBatchSizeState;

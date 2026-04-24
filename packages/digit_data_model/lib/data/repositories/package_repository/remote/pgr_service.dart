@@ -107,6 +107,7 @@ class PgrServiceRemoteRepository
     int? offSet,
     int? limit,
     int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) =>
       throw UnimplementedError();
 

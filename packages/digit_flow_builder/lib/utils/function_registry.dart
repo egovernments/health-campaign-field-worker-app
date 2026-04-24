@@ -1,7 +1,11 @@
 import 'package:collection/collection.dart';
-import 'package:digit_data_model/models/entities/project_type.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
+import 'package:digit_flow_builder/widget_registry.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'interpolation.dart';
@@ -15,6 +19,7 @@ class TaskStatus {
   static const String beneficiaryMigrated = 'BENEFICIARY_MIGRATED';
   static const String beneficiaryAbsent = 'BENEFICIARY_ABSENT';
   static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
+  static const String visited = 'VISITED';
 }
 
 /// The signature for a function that can be registered in the [FunctionRegistry].
@@ -31,6 +36,11 @@ typedef RegistryFunction = dynamic Function(
 /// It supports direct invocation and type-safe helpers for common return types.
 class FunctionRegistry {
   static final Map<String, RegistryFunction> _registry = {};
+  static BuildContext? _context;
+
+  static void setContext(BuildContext context) => _context = context;
+  static void clearContext() => _context = null;
+  static BuildContext? get context => _context;
 
   /// Registers a function with a given name.
   ///
@@ -168,6 +178,20 @@ bool _recordedSideEffectInternal(
   }
 
   return false;
+}
+
+// Helper function matching hasLogWithType logic
+bool _hasLogWithType(attendanceLog, DateTime date, String type) {
+  final logTime = type == 'ENTRY'
+      ? DateTime(date.year, date.month, date.day, 9).millisecondsSinceEpoch
+      : DateTime(date.year, date.month, date.day, 18).millisecondsSinceEpoch;
+
+  return attendanceLog.any((element) {
+    if (element is! AttendanceLogModel) return false;
+    final elementTime = element.time;
+    final elementType = element.type?.toString();
+    return elementTime == logTime && elementType == type;
+  });
 }
 
 /// Initializes the [FunctionRegistry] with application-specific functions.
@@ -333,14 +357,23 @@ void initializeFunctionRegistry() {
     }
     if (currentCycle == null) return false;
 
+// --- Check age eligibility ---
+    int validMinAge = projectType.validMinAge ?? 3;
+    int validMaxAge = projectType.validMaxAge ?? 59;
+
+    final isWithinAge =
+        totalAgeMonths >= validMinAge && totalAgeMonths <= validMaxAge;
+    totalAgeMonths <= validMaxAge;
+
+    if (!isWithinAge) return false;
+
 // --- Eligibility logic ---
     bool recordedSideEffect = false;
 
     if (tasks.isNotEmpty) {
       // Get currentRunningCycle from third argument if provided
-      final currentRunningCycle = args.length > 2
-          ? int.tryParse(args[2]?.toString() ?? '')
-          : null;
+      final currentRunningCycle =
+          args.length > 2 ? int.tryParse(args[2]?.toString() ?? '') : null;
 
       for (final item in tasks) {
         Map<String, dynamic> task;
@@ -362,6 +395,9 @@ void initializeFunctionRegistry() {
         // BENEFICIARY_DIED returns false immediately regardless of cycle
         if (task['status'] == TaskStatus.beneficiaryDied) return false;
 
+        // INELIGIBLE status returns false immediately if no cycle filtering is needed
+        if (task['status'] == TaskStatus.ineligible) return false;
+
         // For other ineligible statuses, only check tasks matching the current cycle
         if (currentRunningCycle != null) {
           final additionalFields = task['additionalFields'];
@@ -372,8 +408,7 @@ void initializeFunctionRegistry() {
           if (fields != null) {
             for (final field in fields) {
               if (field is Map && field['key'] == 'cycleIndex') {
-                taskCycleIndex =
-                    int.tryParse(field['value']?.toString() ?? '');
+                taskCycleIndex = int.tryParse(field['value']?.toString() ?? '');
                 break;
               }
             }
@@ -401,10 +436,9 @@ void initializeFunctionRegistry() {
           (lastTaskTime >= (currentCycle['startDate'] ?? 0) &&
               lastTaskTime <= (currentCycle['endDate'] ?? 0));
 
-      final isWithinAge = projectType.validMinAge != null &&
-          projectType.validMaxAge != null &&
-          totalAgeMonths >= projectType.validMinAge! &&
-          totalAgeMonths <= projectType.validMaxAge!;
+      final isWithinAge =
+          totalAgeMonths >= validMinAge && totalAgeMonths <= validMaxAge;
+      totalAgeMonths <= validMaxAge;
 
       if (!isWithinAge) return false;
 
@@ -501,7 +535,8 @@ void initializeFunctionRegistry() {
     final status = value.trim().toUpperCase();
 
     // Match valid delivered statuses
-    if (status == TaskStatus.administrationSuccess || status == TaskStatus.delivered) {
+    if (status == TaskStatus.administrationSuccess ||
+        status == TaskStatus.delivered) {
       return true;
     }
 
@@ -582,7 +617,24 @@ void initializeFunctionRegistry() {
 
     // Check if tasks exist
     if ((tasks ?? []).isNotEmpty) {
-      final lastTask = tasks!.last;
+      // Filter out REDOSE tasks to evaluate based on delivery tasks only
+      final deliveryTasks = tasks!.where((t) {
+        final af = t['additionalFields'];
+        final fields = af?['fields'] as List?;
+        if (fields != null) {
+          for (final f in fields) {
+            if (f is Map &&
+                f['key'] == 'taskType' &&
+                f['value']?.toString().toUpperCase() == 'REDOSE') {
+              return false;
+            }
+          }
+        }
+        return true;
+      }).toList();
+
+      if (deliveryTasks.isEmpty) return false;
+      final lastTask = deliveryTasks.last;
 
       // Extract cycleIndex from additionalFields
       final additionalFields = lastTask['additionalFields'];
@@ -1180,7 +1232,7 @@ void initializeFunctionRegistry() {
 
             // Disable if any task status is success
             if (status == TaskStatus.administrationSuccess ||
-                status == TaskStatus.delivered ) {
+                status == TaskStatus.delivered) {
               return true;
             }
 
@@ -1259,6 +1311,34 @@ void initializeFunctionRegistry() {
         ?.id;
   });
 
+  /// Checks if the current member is the head of household.
+  ///
+  /// - **Function Name**: `'isHead'`
+  /// - **Arguments**: First argument is the member/household data.
+  /// - **Returns**: `true` if the member is the head of household, `false` otherwise.
+  ///
+  /// This function checks for an `isHeadOfHousehold` indicator which can be:
+  /// 1. A direct boolean field in the member data
+  /// 2. A field in additionalFields with key 'isHeadOfHousehold'
+  FunctionRegistry.register("isHead", (args, stateData) {
+    if (args.isEmpty || args.first == null) return false;
+
+    // Get member(s) list - try 'member' first, then 'members'
+    final membersList = args.first as List?;
+    if (membersList == null || membersList.isEmpty) return false;
+
+    // Check if any member is head of household
+    return membersList.any((member) {
+      if (member == null) return false;
+
+      final isHead = member.isHeadOfHousehold;
+      return isHead is bool
+          ? isHead
+          : isHead is String &&
+              (isHead.toLowerCase() == 'true' || isHead == '1');
+    });
+  });
+
   /// Checks if a referral exists for the current running cycle.
   ///
   /// - **Function Name**: `'hasReferralForCurrentCycle'`
@@ -1305,6 +1385,18 @@ void initializeFunctionRegistry() {
           }
         }
       }
+    }
+
+    return false;
+  });
+
+  FunctionRegistry.register("hasBeneficiaryId", (args, stateData) {
+    final identifier = args.isNotEmpty ? args.first : null;
+
+    if (identifier == null) return false;
+
+    if (identifier["identifierType"] == 'UNIQUE_BENEFICIARY_ID') {
+      return true;
     }
 
     return false;
@@ -1534,5 +1626,51 @@ void initializeFunctionRegistry() {
 
     // If registered before the current cycle's start date, return true
     return registrationTime < (currentCycle.startDate ?? 0);
+  });
+
+  FunctionRegistry.register('hasMinimumBeneficiaryId', (args, stateData) {
+    final minCountArg = args.isNotEmpty ? args.first : null;
+    final minCount = minCountArg is int
+        ? minCountArg
+        : int.tryParse(minCountArg?.toString() ?? '');
+
+    if (minCount == null) return false;
+
+    final currentCountArg = args.length > 1 ? args[1] : null;
+    final currentCount = currentCountArg is int
+        ? currentCountArg
+        : int.tryParse(currentCountArg?.toString() ?? '');
+
+    return (currentCount ?? 0) >= minCount;
+  });
+
+  FunctionRegistry.register('getLatestBeneficiaryId', (args, stateData) {
+    final context = FunctionRegistry.context;
+    if (context == null) return null;
+
+    final crudCtx = CrudItemContext.of(context);
+    if (crudCtx == null || crudCtx.compositeKey == null) return null;
+
+    final flowState = FlowCrudStateRegistry().get(crudCtx.compositeKey!);
+    final widgetData = Map<String, dynamic>.from(flowState?.widgetData ?? {});
+
+    return widgetData['latestBeneficiaryId'] as String?;
+  });
+
+  FunctionRegistry.register('getLatestBeneficiaryId', (args, stateData) {
+    final context = FunctionRegistry.context;
+    if (context == null) return null;
+
+    final crudCtx = CrudItemContext.of(context);
+    if (crudCtx == null || crudCtx.compositeKey == null) return null;
+
+    final flowState = FlowCrudStateRegistry().get(crudCtx.compositeKey!);
+    final stateWrapper = flowState?.stateWrapper;
+    final wrapperData = stateWrapper is List && stateWrapper.isNotEmpty
+        ? Map<String, dynamic>.from(
+            stateWrapper.first as Map<String, dynamic>? ?? {})
+        : <String, dynamic>{};
+
+    return wrapperData['latestBeneficiaryId'] as String?;
   });
 }

@@ -137,11 +137,28 @@ class WrapperBuilder {
             nestedData[nestedRelation['name']] = nestedEntities;
           }
 
-          if (entity is Map) {
-            entity.addAll(nestedData);
-          } else {
-            relatedEntities[i] = {'entity': entity, ...nestedData};
+          final relationItem = entity is Map
+              ? <String, dynamic>{...entity, ...nestedData}
+              : <String, dynamic>{'entity': entity, ...nestedData};
+
+          final mappedFields =
+              relation['mappedFields'] as Map<String, dynamic>?;
+          if (mappedFields != null && mappedFields.isNotEmpty) {
+            for (final entry in mappedFields.entries) {
+              final source = entry.value;
+              if (source is String) {
+                relationItem[entry.key] = resolver.resolveValue(
+                  source,
+                  relationItem,
+                  {...wrapperData, ...relationItem},
+                );
+              } else {
+                relationItem[entry.key] = source;
+              }
+            }
           }
+
+          relatedEntities[i] = relationItem;
         }
       }
     }

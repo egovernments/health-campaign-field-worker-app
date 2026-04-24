@@ -142,6 +142,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                         schema,
                         defaultValues: widget.defaultValues ?? {},
                         schemaKey: widget.currentSchemaKey,
+                        navigationParams: widget.navigationParams,
                       ),
                     ),
                 builder: (context, formGroup, child) {
@@ -426,17 +427,121 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                                     // Handle direct form submission (skip remaining pages)
                                     if (targetPageType == 'submit') {
-                                      context.read<FormsBloc>().add(
-                                          FormsSubmitEvent(
-                                              isEdit: widget.isEdit,
-                                              schemaKey:
-                                                  widget.currentSchemaKey));
-                                      // Pop all form pages
-                                      context.router.popUntil((route) {
-                                        return route.settings.name !=
-                                            FormsRenderRoute.name;
-                                      });
-                                      return; // Skip default logic
+                                      final contextValue =
+                                          buildVisibilityEvaluationContext(
+                                        currentPageKey: currentPageKey,
+                                        currentForm: formGroup,
+                                        pages: schemaObject.pages,
+
+                                        /// TODO: fix hardcode not null condition
+                                      );
+                                      if (schema.showAlertPopUp != null) {
+                                        showCustomPopup(
+                                          context: context,
+                                          builder: (BuildContext ctx) => Popup(
+                                              title: localizations.translate(
+                                                  _resolveTemplate(
+                                                      schema.showAlertPopUp!
+                                                          .title,
+                                                      schema.showAlertPopUp
+                                                          ?.conditions,
+                                                      contextValue)!),
+                                              description: localizations
+                                                  .translate(_resolveTemplate(
+                                                          translateIfPresent(
+                                                              schema
+                                                                  .showAlertPopUp
+                                                                  ?.description,
+                                                              localizations),
+                                                          schema.showAlertPopUp
+                                                              ?.conditions,
+                                                          contextValue) ??
+                                                      ""),
+
+                                              /// FIXME: need to send null as empty string will take space
+                                              actions: [
+                                                DigitButton(
+                                                    label: localizations
+                                                        .translate(schema
+                                                            .showAlertPopUp!
+                                                            .primaryActionLabel),
+                                                    onPressed: () {
+                                                      context
+                                                          .read<FormsBloc>()
+                                                          .add(FormsSubmitEvent(
+                                                              isEdit:
+                                                                  widget.isEdit,
+                                                              schemaKey: widget
+                                                                  .currentSchemaKey));
+                                                      // Pop all form pages (FormsRenderRoute)
+                                                      Navigator.of(
+                                                        ctx,
+                                                        rootNavigator: true,
+                                                      ).pop();
+                                                      context.router
+                                                          .popUntil((route) {
+                                                        return route.settings
+                                                                .name !=
+                                                            FormsRenderRoute
+                                                                .name;
+                                                      });
+                                                    },
+                                                    type:
+                                                        DigitButtonType.primary,
+                                                    size:
+                                                        DigitButtonSize.large),
+                                                DigitButton(
+                                                    label: localizations
+                                                        .translate(schema
+                                                            .showAlertPopUp!
+                                                            .secondaryActionLabel),
+                                                    onPressed: () {
+                                                      Navigator.of(
+                                                        ctx,
+                                                        rootNavigator: true,
+                                                      ).pop();
+                                                      _isSubmitting = false;
+                                                      setState(() {});
+                                                    },
+                                                    type: DigitButtonType
+                                                        .secondary,
+                                                    size: DigitButtonSize.large)
+                                              ]),
+                                        ).then((_) {
+                                          // Reset flag if popup dismissed without submitting
+                                          // (e.g. tapping outside the popup)
+                                          if (_isSubmitting) {
+                                            _isSubmitting = false;
+                                            setState(() {});
+                                          }
+                                        });
+                                        return; // Skip default logic
+                                      } else {
+                                        context.read<FormsBloc>().add(
+                                            FormsSubmitEvent(
+                                                isEdit: widget.isEdit,
+                                                schemaKey:
+                                                    widget.currentSchemaKey));
+                                        // Pop all form pages (FormsRenderRoute)
+
+                                        /// FIXME: NOT BACKWARD COMPATIBLE
+                                        context.router.popUntil((route) {
+                                          return route.settings.name !=
+                                              FormsRenderRoute.name;
+                                        });
+                                        return; // Skip default logic
+                                      }
+                                      // context.read<FormsBloc>().add(
+                                      //     FormsSubmitEvent(
+                                      //         isEdit: widget.isEdit,
+                                      //         schemaKey:
+                                      //             widget.currentSchemaKey));
+                                      // // Pop all form pages
+                                      // context.router.popUntil((route) {
+                                      //   return route.settings.name !=
+                                      //       FormsRenderRoute.name;
+                                      // });
+                                      // return; // Skip default logic
                                     }
                                   }
                                 }
@@ -608,10 +713,11 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       ],
                     ),
                     children: [
-                      if (_hasDisplayOnlyProperties(schema))
-                        ...[
+                      if (_hasDisplayOnlyProperties(schema)) ...[
                         _buildDisplayOnlyCard(context, schema),
-                          const SizedBox(height: spacer4,)
+                        const SizedBox(
+                          height: spacer4,
+                        )
                       ],
                       DigitCard(
                         margin: const EdgeInsets.symmetric(
@@ -1142,6 +1248,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               schema,
               defaultValues: widget.defaultValues,
               schemaKey: widget.currentSchemaKey,
+              navigationParams: widget.navigationParams,
             );
             debugPrint(
                 'FormsRender: Created control for pre-created field: $fieldName');
@@ -1168,6 +1275,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
             schema,
             defaultValues: widget.defaultValues,
             schemaKey: widget.currentSchemaKey,
+            navigationParams: widget.navigationParams,
           );
         } else {
           // Only add once (not per entity)
@@ -1178,6 +1286,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               schema,
               defaultValues: widget.defaultValues,
               schemaKey: widget.currentSchemaKey,
+              navigationParams: widget.navigationParams,
             );
           }
         }
@@ -1331,8 +1440,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final popUpConfig = schema.showSecondaryAlertPopUp!;
     final commentController = TextEditingController();
     final bodyFields = popUpConfig.body ?? [];
-    final hasMandatoryFields =
-        bodyFields.any((field) => field.mandatory);
+    final hasMandatoryFields = bodyFields.any((field) => field.mandatory);
 
     bool showValidationError = false;
 
@@ -1342,36 +1450,27 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         return StatefulBuilder(
           builder: (popupCtx, setPopupState) {
             return Popup(
-              title: localizations
-                  .translate(popUpConfig.title),
+              title: localizations.translate(popUpConfig.title),
               description: popUpConfig.description != null
-                  ? localizations
-                      .translate(popUpConfig.description!)
+                  ? localizations.translate(popUpConfig.description!)
                   : null,
               additionalWidgets: [
                 ...bodyFields.map((field) {
                   final hasError = showValidationError &&
                       field.mandatory &&
-                      commentController.text
-                          .trim()
-                          .isEmpty;
+                      commentController.text.trim().isEmpty;
 
                   return Padding(
-                    padding: const EdgeInsets.only(
-                        top: spacer2),
+                    padding: const EdgeInsets.only(top: spacer2),
                     child: LabeledField(
-                      label: localizations
-                          .translate(field.label),
+                      label: localizations.translate(field.label),
                       isRequired: field.mandatory,
                       child: DigitTextAreaFormInput(
-                        initialValue:
-                            commentController.text,
+                        initialValue: commentController.text,
                         onChange: (value) {
-                          commentController.text =
-                              value;
+                          commentController.text = value;
                           setPopupState(() {
-                            showValidationError =
-                                false;
+                            showValidationError = false;
                           });
                         },
                         errorMessage: hasError
@@ -1384,45 +1483,34 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               ],
               actions: [
                 DigitButton(
-                  label: localizations.translate(
-                      popUpConfig.primaryActionLabel),
+                  label:
+                      localizations.translate(popUpConfig.primaryActionLabel),
                   onPressed: () {
-                    final hasEmptyMandatory =
-                        bodyFields.any((field) =>
-                            field.mandatory &&
-                            commentController.text
-                                .trim()
-                                .isEmpty);
+                    final hasEmptyMandatory = bodyFields.any((field) =>
+                        field.mandatory &&
+                        commentController.text.trim().isEmpty);
                     if (hasEmptyMandatory) {
                       setPopupState(() {
                         showValidationError = true;
                       });
                       return;
                     }
-                    final popupData =
-                        <String, dynamic>{};
-                    for (final field
-                        in bodyFields) {
+                    final popupData = <String, dynamic>{};
+                    for (final field in bodyFields) {
                       popupData[field.fieldName] =
-                          commentController.text
-                              .trim();
+                          commentController.text.trim();
                     }
-                    Navigator.of(ctx,
-                            rootNavigator: true)
-                        .pop();
-                    onConfirm(
-                        popupData: popupData);
+                    Navigator.of(ctx, rootNavigator: true).pop();
+                    onConfirm(popupData: popupData);
                   },
                   type: DigitButtonType.primary,
                   size: DigitButtonSize.large,
                 ),
                 DigitButton(
-                  label: localizations.translate(
-                      popUpConfig.secondaryActionLabel),
+                  label:
+                      localizations.translate(popUpConfig.secondaryActionLabel),
                   onPressed: () {
-                    Navigator.of(ctx,
-                            rootNavigator: true)
-                        .pop();
+                    Navigator.of(ctx, rootNavigator: true).pop();
                   },
                   type: DigitButtonType.secondary,
                   size: DigitButtonSize.large,

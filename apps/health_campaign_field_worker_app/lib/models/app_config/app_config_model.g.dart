@@ -121,6 +121,12 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       checklistTypes: (json['CHECKLIST_TYPES'] as List<dynamic>)
           .map((e) => CheckListTypes.fromJson(e as Map<String, dynamic>))
           .toList(),
+      deviceChangeReasons: (json['DEVICE_CHANGE_REASONS'] as List<dynamic>)
+          .map((e) => DeviceChangeReasons.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      singleUserLogin: (json['SINGLE_USER_LOGIN'] as List<dynamic>)
+          .map((e) => SingleUserLogin.fromJson(e as Map<String, dynamic>))
+          .toList(),
       idTypeOptions: (json['ID_TYPE_OPTIONS_POPULATOR'] as List<dynamic>)
           .map((e) => IdTypeOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -192,6 +198,8 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
           instance.householdMemberDeletionReasonOptions,
       'BACKGROUND_SERVICE_CONFIG': instance.backgroundServiceConfig,
       'CHECKLIST_TYPES': instance.checklistTypes,
+      'DEVICE_CHANGE_REASONS': instance.deviceChangeReasons,
+      'SINGLE_USER_LOGIN': instance.singleUserLogin,
       'ID_TYPE_OPTIONS_POPULATOR': instance.idTypeOptions,
       'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES': instance.relationShipTypeOptions,
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
@@ -571,6 +579,34 @@ Map<String, dynamic> _$$TransitPostTypeImplToJson(
       'name': instance.name,
       'code': instance.code,
       'active': instance.active,
+    };
+
+_$DeviceChangeReasonsImpl _$$DeviceChangeReasonsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$DeviceChangeReasonsImpl(
+      name: json['name'] as String,
+      code: json['code'] as String,
+    );
+
+Map<String, dynamic> _$$DeviceChangeReasonsImplToJson(
+        _$DeviceChangeReasonsImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'code': instance.code,
+    };
+
+_$SingleUserLoginImpl _$$SingleUserLoginImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SingleUserLoginImpl(
+      enabled: json['enabled'] as bool,
+      id: (json['id'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$SingleUserLoginImplToJson(
+        _$SingleUserLoginImpl instance) =>
+    <String, dynamic>{
+      'enabled': instance.enabled,
+      'id': instance.id,
     };
 
 _$TransportTypesImpl _$$TransportTypesImplFromJson(Map<String, dynamic> json) =>

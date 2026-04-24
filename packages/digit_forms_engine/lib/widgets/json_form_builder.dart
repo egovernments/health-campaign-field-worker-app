@@ -384,6 +384,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
+          navigationParams: widget.navigationParams,
           initialDate: _safeTimestamp("startDate") != null
               ? DateTime.fromMillisecondsSinceEpoch(
                   _safeTimestamp("startDate")!)

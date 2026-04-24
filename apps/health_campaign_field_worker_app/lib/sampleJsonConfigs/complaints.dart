@@ -555,7 +555,6 @@ final dynamic sampleComplaintFlows = {
           "properties": [
             {
               "type": "string",
-              "enums": [],
               "label": "COMPLAINT_TYPE_complaintType_LABEL",
               "order": 1,
               "value": "",

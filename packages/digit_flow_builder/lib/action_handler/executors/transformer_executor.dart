@@ -80,7 +80,6 @@ class TransformerExecutor extends ActionExecutor {
       }
     }
 
-
     final crudCtx = CrudItemContext.of(context);
     final flowState = const FlowCrudState().copyWith(formData: formValuesToUse);
     final screenKey =
@@ -88,16 +87,12 @@ class TransformerExecutor extends ActionExecutor {
 
     final config = FlowRegistry.getByName(screenKey ?? '');
 
-
-
-
     // Get composite key for FlowCrudStateRegistry operations
     // IMPORTANT: Try CrudItemContext.compositeKey first - it's correctly passed
     // from popups via ActionPopupWidget. Only fall back to getEffectiveCompositeKey
     // when not in a popup context.
     final compositeKey =
         crudCtx?.compositeKey ?? getEffectiveCompositeKey(context, contextData);
-
 
     // Update state with composite key if available, fallback to config name
     FlowCrudStateRegistry().update(compositeKey ?? config?["name"], flowState);
@@ -189,12 +184,14 @@ class TransformerExecutor extends ActionExecutor {
         'TRANSFORMER: isEdit=$isEdit, forceCreate=$forceCreate, existingModels=${existingModels?.length ?? 0}');
 
     final contextMap = {
+      "selectedProject":FlowBuilderSingleton().selectedProject,
       "projectId": FlowBuilderSingleton().selectedProject?.id,
       "user": FlowBuilderSingleton().loggedInUser,
       "tenantId": FlowBuilderSingleton().selectedProject?.tenantId,
       "selectedBoundaryCode": FlowBuilderSingleton().boundary?.code,
       // converting in json format to match nested object value as passing model will cause issue
       'userUUID': FlowBuilderSingleton().loggedInUser?.uuid,
+      'loggedInUserUuid': FlowBuilderSingleton().loggedInUserUuid,
       'householdType': HouseholdType.family.toValue(),
       ...extraContext,
       "beneficiaryType": FlowBuilderSingleton().beneficiaryType?.toValue(),
@@ -274,7 +271,7 @@ class TransformerExecutor extends ActionExecutor {
           // Map entity-specific fields (with _item_N suffix) to base field names
           modifiedFormValues = _mapEntityFieldsToBase(modifiedFormValues, i);
 
-          try{
+          try {
             final itemEntities = formEntityMapper.mapFormToEntities(
               formValues: modifiedFormValues,
               modelsConfig: transformerConfig,
@@ -282,8 +279,8 @@ class TransformerExecutor extends ActionExecutor {
               fallbackFormDataString: fallBackModel,
             );
             entities.addAll(itemEntities);
-          } catch (e){
-            print(e);
+          } catch (_) {
+            // Silent fail for entity mapping
           }
         }
       } else {
@@ -297,14 +294,14 @@ class TransformerExecutor extends ActionExecutor {
       }
     } else {
       // No multiEntityField configured, create entities normally
-      try{
+      try {
         entities = formEntityMapper.mapFormToEntities(
           formValues: formValuesToUse ?? {},
           modelsConfig: transformerConfig,
           context: contextMap,
           fallbackFormDataString: fallBackModel,
         );
-      }catch(e){
+      } catch (e) {
         debugPrint(e.toString());
       }
     }
@@ -325,10 +322,11 @@ class TransformerExecutor extends ActionExecutor {
 
       if (createdPvIds.isNotEmpty) {
         final filtered = existingModels
-            .where((e) =>
-                createdPvIds.contains(e.toMap()['productVariantId']?.toString()))
+            .where((e) => createdPvIds
+                .contains(e.toMap()['productVariantId']?.toString()))
             .toList();
-        debugPrint('TRANSFORMER: existingModels total=${existingModels.length}, createdPvIds=$createdPvIds, filtered=${filtered.length}');
+        debugPrint(
+            'TRANSFORMER: existingModels total=${existingModels.length}, createdPvIds=$createdPvIds, filtered=${filtered.length}');
         contextData['existingModels'] =
             filtered.isNotEmpty ? filtered : existingModels;
       } else {

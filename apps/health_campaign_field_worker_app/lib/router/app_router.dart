@@ -1,6 +1,7 @@
-import 'package:attendance_management/router/attendance_router.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendee.dart';
+import 'package:digit_data_model/models/entities/scanned_individual_data.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.dart';
@@ -16,6 +17,7 @@ import 'package:transit_post/router/transit_post_router.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
+import '../pages/attendance_qr_scanner.dart';
 import '../pages/authenticated.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/current_boundary.dart';
@@ -34,7 +36,9 @@ import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
+import '../pages/beneficiary_id_downsync/beneficiary_id_downsync.dart';
 import '../pages/unauthenticated.dart';
+import '../pages/device_switch_selection.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -42,7 +46,6 @@ part 'app_router.gr.dart';
 
 @AutoRouterConfig(
   modules: [
-    AttendanceRoute,
     DigitScannerPackageRoute,
     DashboardRoute,
     SurveyFormRoute,
@@ -67,6 +70,7 @@ class AppRouter extends _$AppRouter {
             initial: true),
         AutoRoute(page: LoginRoute.page, path: 'login'),
         AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
+        AutoRoute(page: DeviceChangeReasonRoute.page, path: 'device-change-reason'),
       ],
     ),
     AutoRoute(
@@ -85,7 +89,6 @@ class AppRouter extends _$AppRouter {
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
         ),
-
         // NonMobile User
         AutoRoute(
           page: NonMobileUserListRoute.page,
@@ -115,6 +118,9 @@ class AppRouter extends _$AppRouter {
                   path: 'surveyForm-acknowledgement'),
             ]),
         AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
+        AutoRoute(
+            page: BeneficiaryIdDownSyncRoute.page,
+            path: 'beneficiary-id-downsync'),
 
         AutoRoute(
           page: ProjectFacilitySelectionRoute.page,
@@ -137,9 +143,6 @@ class AppRouter extends _$AppRouter {
           page: CurrentBoundaryRoute.page,
           path: 'current-boundary',
         ),
-
-        // Attendance Route
-        ...AttendanceRoute().routes,
 
         // Forms Route
         ...FormsRoute().routes,

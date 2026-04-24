@@ -6,7 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/repositories/remote/notification_token.dart';
+import '../../models/auth/auth_model.dart';
+import '../../models/entities/roles_type.dart';
 import '../../notification_service.dart';
+import '../../utils/environment_config.dart';
 
 part 'push_notification.freezed.dart';
 
@@ -20,12 +23,14 @@ class PushNotificationBloc
   String? _currentUserId;
   String? _lastApiEndPoint;
   List<String>? _lastFacilityIds;
+  UserRequestModel? _lastUserObject;
 
   PushNotificationBloc({
     required this.notificationTokenRepository,
   }) : super(const PushNotificationState.initial()) {
     on(_onInitialize);
     on(_onLogin);
+    on(_onLogout);
     on(_onTokenRefreshed);
     on(_onRegisterToken);
     on(_onNotificationReceived);
@@ -80,6 +85,34 @@ class PushNotificationBloc
     }
   }
 
+  FutureOr<void> _onLogout(
+    PushNotificationLogoutEvent event,
+    PushNotificationEmitter emit,
+  ) async {
+    try {
+      final currentState = state;
+      final token = currentState is PushNotificationInitializedState
+          ? currentState.fcmToken
+          : null;
+
+      if (token != null && _lastUserObject != null) {
+        await notificationTokenRepository.unregisterToken(
+          apiEndPoint: event.apiEndPoint,
+          token: token,
+          userUuid: _lastUserObject!.uuid,
+          tenantId: _lastUserObject!.tenantId ?? envConfig.variables.tenantId,
+        );
+      }
+    } catch (e) {
+      debugPrint('PushNotificationBloc logout error: $e');
+    } finally {
+      _currentUserId = null;
+      _lastApiEndPoint = null;
+      _lastFacilityIds = null;
+      _lastUserObject = null;
+    }
+  }
+
   FutureOr<void> _onTokenRefreshed(
     PushNotificationTokenRefreshedEvent event,
     PushNotificationEmitter emit,
@@ -97,6 +130,7 @@ class PushNotificationBloc
       add(PushNotificationEvent.registerToken(
         apiEndPoint: _lastApiEndPoint!,
         facilityIds: _lastFacilityIds!,
+        userObject: _lastUserObject,
       ));
     }
   }
@@ -105,8 +139,13 @@ class PushNotificationBloc
     PushNotificationRegisterTokenEvent event,
     PushNotificationEmitter emit,
   ) async {
+    final userRoles = event.userObject?.roles.map((e) => e.code) ?? [];
+    final isDistributor =
+        userRoles.contains(RolesType.distributor.toValue()) ||
+            userRoles.contains(RolesType.communityDistributor.toValue());
     _lastApiEndPoint = event.apiEndPoint;
     _lastFacilityIds = event.facilityIds;
+    _lastUserObject = event.userObject;
 
     final currentState = state;
     final token = currentState is PushNotificationInitializedState
@@ -118,7 +157,9 @@ class PushNotificationBloc
     await notificationTokenRepository.registerToken(
       apiEndPoint: event.apiEndPoint,
       token: token,
-      facilityIds: event.facilityIds,
+      facilityIds: isDistributor
+          ? [event.userObject?.uuid ?? event.facilityIds.first]
+          : event.facilityIds,
     );
   }
 
@@ -149,6 +190,10 @@ class PushNotificationEvent with _$PushNotificationEvent {
     required String userId,
   }) = PushNotificationLoginEvent;
 
+  const factory PushNotificationEvent.logout({
+    required String apiEndPoint,
+  }) = PushNotificationLogoutEvent;
+
   const factory PushNotificationEvent.tokenRefreshed({
     required String token,
   }) = PushNotificationTokenRefreshedEvent;
@@ -156,6 +201,7 @@ class PushNotificationEvent with _$PushNotificationEvent {
   const factory PushNotificationEvent.registerToken({
     required String apiEndPoint,
     required List<String> facilityIds,
+    required UserRequestModel? userObject,
   }) = PushNotificationRegisterTokenEvent;
 
   const factory PushNotificationEvent.notificationReceived({
@@ -165,8 +211,7 @@ class PushNotificationEvent with _$PushNotificationEvent {
 
 @freezed
 class PushNotificationState with _$PushNotificationState {
-  const factory PushNotificationState.initial() =
-      PushNotificationInitialState;
+  const factory PushNotificationState.initial() = PushNotificationInitialState;
 
   const factory PushNotificationState.initialized({
     String? fcmToken,

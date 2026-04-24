@@ -18308,6 +18308,12 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
   late final GeneratedColumn<String> senderType = GeneratedColumn<String>(
       'sender_type', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _campaignNumberMeta =
+      const VerificationMeta('campaignNumber');
+  @override
+  late final GeneratedColumn<String> campaignNumber = GeneratedColumn<String>(
+      'campaign_number', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _dateOfEntryMeta =
       const VerificationMeta('dateOfEntry');
   @override
@@ -18428,6 +18434,7 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
         receiverType,
         senderId,
         senderType,
+        campaignNumber,
         dateOfEntry,
         auditCreatedBy,
         nonRecoverableError,
@@ -18529,6 +18536,12 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           _senderTypeMeta,
           senderType.isAcceptableOrUnknown(
               data['sender_type']!, _senderTypeMeta));
+    }
+    if (data.containsKey('campaign_number')) {
+      context.handle(
+          _campaignNumberMeta,
+          campaignNumber.isAcceptableOrUnknown(
+              data['campaign_number']!, _campaignNumberMeta));
     }
     if (data.containsKey('date_of_entry')) {
       context.handle(
@@ -18664,6 +18677,8 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           .read(DriftSqlType.string, data['${effectivePrefix}sender_id']),
       senderType: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}sender_type']),
+      campaignNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}campaign_number']),
       dateOfEntry: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}date_of_entry']),
       auditCreatedBy: attachedDatabase.typeMapping.read(
@@ -18720,6 +18735,7 @@ class StockData extends DataClass implements Insertable<StockData> {
   final String? receiverType;
   final String? senderId;
   final String? senderType;
+  final String? campaignNumber;
   final int? dateOfEntry;
   final String? auditCreatedBy;
   final bool? nonRecoverableError;
@@ -18751,6 +18767,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       this.receiverType,
       this.senderId,
       this.senderType,
+      this.campaignNumber,
       this.dateOfEntry,
       this.auditCreatedBy,
       this.nonRecoverableError,
@@ -18811,6 +18828,9 @@ class StockData extends DataClass implements Insertable<StockData> {
     }
     if (!nullToAbsent || senderType != null) {
       map['sender_type'] = Variable<String>(senderType);
+    }
+    if (!nullToAbsent || campaignNumber != null) {
+      map['campaign_number'] = Variable<String>(campaignNumber);
     }
     if (!nullToAbsent || dateOfEntry != null) {
       map['date_of_entry'] = Variable<int>(dateOfEntry);
@@ -18903,6 +18923,9 @@ class StockData extends DataClass implements Insertable<StockData> {
       senderType: senderType == null && nullToAbsent
           ? const Value.absent()
           : Value(senderType),
+      campaignNumber: campaignNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(campaignNumber),
       dateOfEntry: dateOfEntry == null && nullToAbsent
           ? const Value.absent()
           : Value(dateOfEntry),
@@ -18972,6 +18995,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       receiverType: serializer.fromJson<String?>(json['receiverType']),
       senderId: serializer.fromJson<String?>(json['senderId']),
       senderType: serializer.fromJson<String?>(json['senderType']),
+      campaignNumber: serializer.fromJson<String?>(json['campaignNumber']),
       dateOfEntry: serializer.fromJson<int?>(json['dateOfEntry']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       nonRecoverableError:
@@ -19010,6 +19034,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       'receiverType': serializer.toJson<String?>(receiverType),
       'senderId': serializer.toJson<String?>(senderId),
       'senderType': serializer.toJson<String?>(senderType),
+      'campaignNumber': serializer.toJson<String?>(campaignNumber),
       'dateOfEntry': serializer.toJson<int?>(dateOfEntry),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
@@ -19044,6 +19069,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           Value<String?> receiverType = const Value.absent(),
           Value<String?> senderId = const Value.absent(),
           Value<String?> senderType = const Value.absent(),
+          Value<String?> campaignNumber = const Value.absent(),
           Value<int?> dateOfEntry = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
           Value<bool?> nonRecoverableError = const Value.absent(),
@@ -19085,6 +19111,8 @@ class StockData extends DataClass implements Insertable<StockData> {
             receiverType.present ? receiverType.value : this.receiverType,
         senderId: senderId.present ? senderId.value : this.senderId,
         senderType: senderType.present ? senderType.value : this.senderType,
+        campaignNumber:
+            campaignNumber.present ? campaignNumber.value : this.campaignNumber,
         dateOfEntry: dateOfEntry.present ? dateOfEntry.value : this.dateOfEntry,
         auditCreatedBy:
             auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
@@ -19142,6 +19170,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           ..write('receiverType: $receiverType, ')
           ..write('senderId: $senderId, ')
           ..write('senderType: $senderType, ')
+          ..write('campaignNumber: $campaignNumber, ')
           ..write('dateOfEntry: $dateOfEntry, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
@@ -19178,6 +19207,7 @@ class StockData extends DataClass implements Insertable<StockData> {
         receiverType,
         senderId,
         senderType,
+        campaignNumber,
         dateOfEntry,
         auditCreatedBy,
         nonRecoverableError,
@@ -19213,6 +19243,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           other.receiverType == this.receiverType &&
           other.senderId == this.senderId &&
           other.senderType == this.senderType &&
+          other.campaignNumber == this.campaignNumber &&
           other.dateOfEntry == this.dateOfEntry &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.nonRecoverableError == this.nonRecoverableError &&
@@ -19246,6 +19277,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
   final Value<String?> receiverType;
   final Value<String?> senderId;
   final Value<String?> senderType;
+  final Value<String?> campaignNumber;
   final Value<int?> dateOfEntry;
   final Value<String?> auditCreatedBy;
   final Value<bool?> nonRecoverableError;
@@ -19278,6 +19310,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.receiverType = const Value.absent(),
     this.senderId = const Value.absent(),
     this.senderType = const Value.absent(),
+    this.campaignNumber = const Value.absent(),
     this.dateOfEntry = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
@@ -19311,6 +19344,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.receiverType = const Value.absent(),
     this.senderId = const Value.absent(),
     this.senderType = const Value.absent(),
+    this.campaignNumber = const Value.absent(),
     this.dateOfEntry = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
@@ -19344,6 +19378,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     Expression<String>? receiverType,
     Expression<String>? senderId,
     Expression<String>? senderType,
+    Expression<String>? campaignNumber,
     Expression<int>? dateOfEntry,
     Expression<String>? auditCreatedBy,
     Expression<bool>? nonRecoverableError,
@@ -19379,6 +19414,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       if (receiverType != null) 'receiver_type': receiverType,
       if (senderId != null) 'sender_id': senderId,
       if (senderType != null) 'sender_type': senderType,
+      if (campaignNumber != null) 'campaign_number': campaignNumber,
       if (dateOfEntry != null) 'date_of_entry': dateOfEntry,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (nonRecoverableError != null)
@@ -19416,6 +19452,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       Value<String?>? receiverType,
       Value<String?>? senderId,
       Value<String?>? senderType,
+      Value<String?>? campaignNumber,
       Value<int?>? dateOfEntry,
       Value<String?>? auditCreatedBy,
       Value<bool?>? nonRecoverableError,
@@ -19448,6 +19485,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       receiverType: receiverType ?? this.receiverType,
       senderId: senderId ?? this.senderId,
       senderType: senderType ?? this.senderType,
+      campaignNumber: campaignNumber ?? this.campaignNumber,
       dateOfEntry: dateOfEntry ?? this.dateOfEntry,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
@@ -19513,6 +19551,9 @@ class StockCompanion extends UpdateCompanion<StockData> {
     }
     if (senderType.present) {
       map['sender_type'] = Variable<String>(senderType.value);
+    }
+    if (campaignNumber.present) {
+      map['campaign_number'] = Variable<String>(campaignNumber.value);
     }
     if (dateOfEntry.present) {
       map['date_of_entry'] = Variable<int>(dateOfEntry.value);
@@ -19585,6 +19626,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
           ..write('receiverType: $receiverType, ')
           ..write('senderId: $senderId, ')
           ..write('senderType: $senderType, ')
+          ..write('campaignNumber: $campaignNumber, ')
           ..write('dateOfEntry: $dateOfEntry, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
@@ -49858,6 +49900,7 @@ typedef $$StockTableInsertCompanionBuilder = StockCompanion Function({
   Value<String?> receiverType,
   Value<String?> senderId,
   Value<String?> senderType,
+  Value<String?> campaignNumber,
   Value<int?> dateOfEntry,
   Value<String?> auditCreatedBy,
   Value<bool?> nonRecoverableError,
@@ -49891,6 +49934,7 @@ typedef $$StockTableUpdateCompanionBuilder = StockCompanion Function({
   Value<String?> receiverType,
   Value<String?> senderId,
   Value<String?> senderType,
+  Value<String?> campaignNumber,
   Value<int?> dateOfEntry,
   Value<String?> auditCreatedBy,
   Value<bool?> nonRecoverableError,
@@ -49943,6 +49987,7 @@ class $$StockTableTableManager extends RootTableManager<
             Value<String?> receiverType = const Value.absent(),
             Value<String?> senderId = const Value.absent(),
             Value<String?> senderType = const Value.absent(),
+            Value<String?> campaignNumber = const Value.absent(),
             Value<int?> dateOfEntry = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> nonRecoverableError = const Value.absent(),
@@ -49976,6 +50021,7 @@ class $$StockTableTableManager extends RootTableManager<
             receiverType: receiverType,
             senderId: senderId,
             senderType: senderType,
+            campaignNumber: campaignNumber,
             dateOfEntry: dateOfEntry,
             auditCreatedBy: auditCreatedBy,
             nonRecoverableError: nonRecoverableError,
@@ -50009,6 +50055,7 @@ class $$StockTableTableManager extends RootTableManager<
             Value<String?> receiverType = const Value.absent(),
             Value<String?> senderId = const Value.absent(),
             Value<String?> senderType = const Value.absent(),
+            Value<String?> campaignNumber = const Value.absent(),
             Value<int?> dateOfEntry = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> nonRecoverableError = const Value.absent(),
@@ -50042,6 +50089,7 @@ class $$StockTableTableManager extends RootTableManager<
             receiverType: receiverType,
             senderId: senderId,
             senderType: senderType,
+            campaignNumber: campaignNumber,
             dateOfEntry: dateOfEntry,
             auditCreatedBy: auditCreatedBy,
             nonRecoverableError: nonRecoverableError,
@@ -50145,6 +50193,11 @@ class $$StockTableFilterComposer
 
   ColumnFilters<String> get senderType => $state.composableBuilder(
       column: $state.table.senderType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get campaignNumber => $state.composableBuilder(
+      column: $state.table.campaignNumber,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -50299,6 +50352,11 @@ class $$StockTableOrderingComposer
 
   ColumnOrderings<String> get senderType => $state.composableBuilder(
       column: $state.table.senderType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get campaignNumber => $state.composableBuilder(
+      column: $state.table.campaignNumber,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

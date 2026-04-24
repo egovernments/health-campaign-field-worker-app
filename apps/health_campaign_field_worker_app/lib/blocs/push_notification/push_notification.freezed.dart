@@ -20,8 +20,10 @@ mixin _$PushNotificationEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
     required TResult Function(String userId) login,
+    required TResult Function(String apiEndPoint) logout,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) =>
@@ -30,8 +32,10 @@ mixin _$PushNotificationEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
+    TResult? Function(String apiEndPoint)? logout,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) =>
@@ -40,8 +44,10 @@ mixin _$PushNotificationEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
     TResult Function(String userId)? login,
+    TResult Function(String apiEndPoint)? logout,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),
@@ -51,6 +57,7 @@ mixin _$PushNotificationEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(PushNotificationInitializeEvent value) initialize,
     required TResult Function(PushNotificationLoginEvent value) login,
+    required TResult Function(PushNotificationLogoutEvent value) logout,
     required TResult Function(PushNotificationTokenRefreshedEvent value)
         tokenRefreshed,
     required TResult Function(PushNotificationRegisterTokenEvent value)
@@ -63,6 +70,7 @@ mixin _$PushNotificationEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(PushNotificationInitializeEvent value)? initialize,
     TResult? Function(PushNotificationLoginEvent value)? login,
+    TResult? Function(PushNotificationLogoutEvent value)? logout,
     TResult? Function(PushNotificationTokenRefreshedEvent value)?
         tokenRefreshed,
     TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
@@ -74,6 +82,7 @@ mixin _$PushNotificationEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(PushNotificationInitializeEvent value)? initialize,
     TResult Function(PushNotificationLoginEvent value)? login,
+    TResult Function(PushNotificationLogoutEvent value)? logout,
     TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
     TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
     TResult Function(PushNotificationNotificationReceivedEvent value)?
@@ -155,8 +164,10 @@ class _$PushNotificationInitializeEventImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
     required TResult Function(String userId) login,
+    required TResult Function(String apiEndPoint) logout,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) {
@@ -168,8 +179,10 @@ class _$PushNotificationInitializeEventImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
+    TResult? Function(String apiEndPoint)? logout,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) {
@@ -181,8 +194,10 @@ class _$PushNotificationInitializeEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
     TResult Function(String userId)? login,
+    TResult Function(String apiEndPoint)? logout,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),
@@ -198,6 +213,7 @@ class _$PushNotificationInitializeEventImpl
   TResult map<TResult extends Object?>({
     required TResult Function(PushNotificationInitializeEvent value) initialize,
     required TResult Function(PushNotificationLoginEvent value) login,
+    required TResult Function(PushNotificationLogoutEvent value) logout,
     required TResult Function(PushNotificationTokenRefreshedEvent value)
         tokenRefreshed,
     required TResult Function(PushNotificationRegisterTokenEvent value)
@@ -213,6 +229,7 @@ class _$PushNotificationInitializeEventImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(PushNotificationInitializeEvent value)? initialize,
     TResult? Function(PushNotificationLoginEvent value)? login,
+    TResult? Function(PushNotificationLogoutEvent value)? logout,
     TResult? Function(PushNotificationTokenRefreshedEvent value)?
         tokenRefreshed,
     TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
@@ -227,6 +244,7 @@ class _$PushNotificationInitializeEventImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(PushNotificationInitializeEvent value)? initialize,
     TResult Function(PushNotificationLoginEvent value)? login,
+    TResult Function(PushNotificationLogoutEvent value)? logout,
     TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
     TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
     TResult Function(PushNotificationNotificationReceivedEvent value)?
@@ -326,8 +344,10 @@ class _$PushNotificationLoginEventImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
     required TResult Function(String userId) login,
+    required TResult Function(String apiEndPoint) logout,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) {
@@ -339,8 +359,10 @@ class _$PushNotificationLoginEventImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
+    TResult? Function(String apiEndPoint)? logout,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) {
@@ -352,8 +374,10 @@ class _$PushNotificationLoginEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
     TResult Function(String userId)? login,
+    TResult Function(String apiEndPoint)? logout,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),
@@ -369,6 +393,7 @@ class _$PushNotificationLoginEventImpl
   TResult map<TResult extends Object?>({
     required TResult Function(PushNotificationInitializeEvent value) initialize,
     required TResult Function(PushNotificationLoginEvent value) login,
+    required TResult Function(PushNotificationLogoutEvent value) logout,
     required TResult Function(PushNotificationTokenRefreshedEvent value)
         tokenRefreshed,
     required TResult Function(PushNotificationRegisterTokenEvent value)
@@ -384,6 +409,7 @@ class _$PushNotificationLoginEventImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(PushNotificationInitializeEvent value)? initialize,
     TResult? Function(PushNotificationLoginEvent value)? login,
+    TResult? Function(PushNotificationLogoutEvent value)? logout,
     TResult? Function(PushNotificationTokenRefreshedEvent value)?
         tokenRefreshed,
     TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
@@ -398,6 +424,7 @@ class _$PushNotificationLoginEventImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(PushNotificationInitializeEvent value)? initialize,
     TResult Function(PushNotificationLoginEvent value)? login,
+    TResult Function(PushNotificationLogoutEvent value)? logout,
     TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
     TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
     TResult Function(PushNotificationNotificationReceivedEvent value)?
@@ -418,6 +445,191 @@ abstract class PushNotificationLoginEvent implements PushNotificationEvent {
   String get userId;
   @JsonKey(ignore: true)
   _$$PushNotificationLoginEventImplCopyWith<_$PushNotificationLoginEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$PushNotificationLogoutEventImplCopyWith<$Res> {
+  factory _$$PushNotificationLogoutEventImplCopyWith(
+          _$PushNotificationLogoutEventImpl value,
+          $Res Function(_$PushNotificationLogoutEventImpl) then) =
+      __$$PushNotificationLogoutEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String apiEndPoint});
+}
+
+/// @nodoc
+class __$$PushNotificationLogoutEventImplCopyWithImpl<$Res>
+    extends _$PushNotificationEventCopyWithImpl<$Res,
+        _$PushNotificationLogoutEventImpl>
+    implements _$$PushNotificationLogoutEventImplCopyWith<$Res> {
+  __$$PushNotificationLogoutEventImplCopyWithImpl(
+      _$PushNotificationLogoutEventImpl _value,
+      $Res Function(_$PushNotificationLogoutEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? apiEndPoint = null,
+  }) {
+    return _then(_$PushNotificationLogoutEventImpl(
+      apiEndPoint: null == apiEndPoint
+          ? _value.apiEndPoint
+          : apiEndPoint // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$PushNotificationLogoutEventImpl
+    with DiagnosticableTreeMixin
+    implements PushNotificationLogoutEvent {
+  const _$PushNotificationLogoutEventImpl({required this.apiEndPoint});
+
+  @override
+  final String apiEndPoint;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'PushNotificationEvent.logout(apiEndPoint: $apiEndPoint)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'PushNotificationEvent.logout'))
+      ..add(DiagnosticsProperty('apiEndPoint', apiEndPoint));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PushNotificationLogoutEventImpl &&
+            (identical(other.apiEndPoint, apiEndPoint) ||
+                other.apiEndPoint == apiEndPoint));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, apiEndPoint);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PushNotificationLogoutEventImplCopyWith<_$PushNotificationLogoutEventImpl>
+      get copyWith => __$$PushNotificationLogoutEventImplCopyWithImpl<
+          _$PushNotificationLogoutEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
+    required TResult Function(String userId) login,
+    required TResult Function(String apiEndPoint) logout,
+    required TResult Function(String token) tokenRefreshed,
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
+        registerToken,
+    required TResult Function(Map<String, dynamic> data) notificationReceived,
+  }) {
+    return logout(apiEndPoint);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
+    TResult? Function(String userId)? login,
+    TResult? Function(String apiEndPoint)? logout,
+    TResult? Function(String token)? tokenRefreshed,
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
+        registerToken,
+    TResult? Function(Map<String, dynamic> data)? notificationReceived,
+  }) {
+    return logout?.call(apiEndPoint);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
+    TResult Function(String userId)? login,
+    TResult Function(String apiEndPoint)? logout,
+    TResult Function(String token)? tokenRefreshed,
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
+        registerToken,
+    TResult Function(Map<String, dynamic> data)? notificationReceived,
+    required TResult orElse(),
+  }) {
+    if (logout != null) {
+      return logout(apiEndPoint);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(PushNotificationInitializeEvent value) initialize,
+    required TResult Function(PushNotificationLoginEvent value) login,
+    required TResult Function(PushNotificationLogoutEvent value) logout,
+    required TResult Function(PushNotificationTokenRefreshedEvent value)
+        tokenRefreshed,
+    required TResult Function(PushNotificationRegisterTokenEvent value)
+        registerToken,
+    required TResult Function(PushNotificationNotificationReceivedEvent value)
+        notificationReceived,
+  }) {
+    return logout(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(PushNotificationInitializeEvent value)? initialize,
+    TResult? Function(PushNotificationLoginEvent value)? login,
+    TResult? Function(PushNotificationLogoutEvent value)? logout,
+    TResult? Function(PushNotificationTokenRefreshedEvent value)?
+        tokenRefreshed,
+    TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
+    TResult? Function(PushNotificationNotificationReceivedEvent value)?
+        notificationReceived,
+  }) {
+    return logout?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(PushNotificationInitializeEvent value)? initialize,
+    TResult Function(PushNotificationLoginEvent value)? login,
+    TResult Function(PushNotificationLogoutEvent value)? logout,
+    TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
+    TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
+    TResult Function(PushNotificationNotificationReceivedEvent value)?
+        notificationReceived,
+    required TResult orElse(),
+  }) {
+    if (logout != null) {
+      return logout(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PushNotificationLogoutEvent implements PushNotificationEvent {
+  const factory PushNotificationLogoutEvent(
+      {required final String apiEndPoint}) = _$PushNotificationLogoutEventImpl;
+
+  String get apiEndPoint;
+  @JsonKey(ignore: true)
+  _$$PushNotificationLogoutEventImplCopyWith<_$PushNotificationLogoutEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -502,8 +714,10 @@ class _$PushNotificationTokenRefreshedEventImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
     required TResult Function(String userId) login,
+    required TResult Function(String apiEndPoint) logout,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) {
@@ -515,8 +729,10 @@ class _$PushNotificationTokenRefreshedEventImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
+    TResult? Function(String apiEndPoint)? logout,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) {
@@ -528,8 +744,10 @@ class _$PushNotificationTokenRefreshedEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
     TResult Function(String userId)? login,
+    TResult Function(String apiEndPoint)? logout,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),
@@ -545,6 +763,7 @@ class _$PushNotificationTokenRefreshedEventImpl
   TResult map<TResult extends Object?>({
     required TResult Function(PushNotificationInitializeEvent value) initialize,
     required TResult Function(PushNotificationLoginEvent value) login,
+    required TResult Function(PushNotificationLogoutEvent value) logout,
     required TResult Function(PushNotificationTokenRefreshedEvent value)
         tokenRefreshed,
     required TResult Function(PushNotificationRegisterTokenEvent value)
@@ -560,6 +779,7 @@ class _$PushNotificationTokenRefreshedEventImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(PushNotificationInitializeEvent value)? initialize,
     TResult? Function(PushNotificationLoginEvent value)? login,
+    TResult? Function(PushNotificationLogoutEvent value)? logout,
     TResult? Function(PushNotificationTokenRefreshedEvent value)?
         tokenRefreshed,
     TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
@@ -574,6 +794,7 @@ class _$PushNotificationTokenRefreshedEventImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(PushNotificationInitializeEvent value)? initialize,
     TResult Function(PushNotificationLoginEvent value)? login,
+    TResult Function(PushNotificationLogoutEvent value)? logout,
     TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
     TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
     TResult Function(PushNotificationNotificationReceivedEvent value)?
@@ -607,7 +828,12 @@ abstract class _$$PushNotificationRegisterTokenEventImplCopyWith<$Res> {
           $Res Function(_$PushNotificationRegisterTokenEventImpl) then) =
       __$$PushNotificationRegisterTokenEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String apiEndPoint, List<String> facilityIds});
+  $Res call(
+      {String apiEndPoint,
+      List<String> facilityIds,
+      UserRequestModel? userObject});
+
+  $UserRequestModelCopyWith<$Res>? get userObject;
 }
 
 /// @nodoc
@@ -625,6 +851,7 @@ class __$$PushNotificationRegisterTokenEventImplCopyWithImpl<$Res>
   $Res call({
     Object? apiEndPoint = null,
     Object? facilityIds = null,
+    Object? userObject = freezed,
   }) {
     return _then(_$PushNotificationRegisterTokenEventImpl(
       apiEndPoint: null == apiEndPoint
@@ -635,7 +862,23 @@ class __$$PushNotificationRegisterTokenEventImplCopyWithImpl<$Res>
           ? _value._facilityIds
           : facilityIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      userObject: freezed == userObject
+          ? _value.userObject
+          : userObject // ignore: cast_nullable_to_non_nullable
+              as UserRequestModel?,
     ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserRequestModelCopyWith<$Res>? get userObject {
+    if (_value.userObject == null) {
+      return null;
+    }
+
+    return $UserRequestModelCopyWith<$Res>(_value.userObject!, (value) {
+      return _then(_value.copyWith(userObject: value));
+    });
   }
 }
 
@@ -645,7 +888,9 @@ class _$PushNotificationRegisterTokenEventImpl
     with DiagnosticableTreeMixin
     implements PushNotificationRegisterTokenEvent {
   const _$PushNotificationRegisterTokenEventImpl(
-      {required this.apiEndPoint, required final List<String> facilityIds})
+      {required this.apiEndPoint,
+      required final List<String> facilityIds,
+      required this.userObject})
       : _facilityIds = facilityIds;
 
   @override
@@ -659,8 +904,11 @@ class _$PushNotificationRegisterTokenEventImpl
   }
 
   @override
+  final UserRequestModel? userObject;
+
+  @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationEvent.registerToken(apiEndPoint: $apiEndPoint, facilityIds: $facilityIds)';
+    return 'PushNotificationEvent.registerToken(apiEndPoint: $apiEndPoint, facilityIds: $facilityIds, userObject: $userObject)';
   }
 
   @override
@@ -669,7 +917,8 @@ class _$PushNotificationRegisterTokenEventImpl
     properties
       ..add(DiagnosticsProperty('type', 'PushNotificationEvent.registerToken'))
       ..add(DiagnosticsProperty('apiEndPoint', apiEndPoint))
-      ..add(DiagnosticsProperty('facilityIds', facilityIds));
+      ..add(DiagnosticsProperty('facilityIds', facilityIds))
+      ..add(DiagnosticsProperty('userObject', userObject));
   }
 
   @override
@@ -680,12 +929,14 @@ class _$PushNotificationRegisterTokenEventImpl
             (identical(other.apiEndPoint, apiEndPoint) ||
                 other.apiEndPoint == apiEndPoint) &&
             const DeepCollectionEquality()
-                .equals(other._facilityIds, _facilityIds));
+                .equals(other._facilityIds, _facilityIds) &&
+            (identical(other.userObject, userObject) ||
+                other.userObject == userObject));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, apiEndPoint,
-      const DeepCollectionEquality().hash(_facilityIds));
+      const DeepCollectionEquality().hash(_facilityIds), userObject);
 
   @JsonKey(ignore: true)
   @override
@@ -700,12 +951,14 @@ class _$PushNotificationRegisterTokenEventImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
     required TResult Function(String userId) login,
+    required TResult Function(String apiEndPoint) logout,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) {
-    return registerToken(apiEndPoint, facilityIds);
+    return registerToken(apiEndPoint, facilityIds, userObject);
   }
 
   @override
@@ -713,12 +966,14 @@ class _$PushNotificationRegisterTokenEventImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
+    TResult? Function(String apiEndPoint)? logout,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) {
-    return registerToken?.call(apiEndPoint, facilityIds);
+    return registerToken?.call(apiEndPoint, facilityIds, userObject);
   }
 
   @override
@@ -726,14 +981,16 @@ class _$PushNotificationRegisterTokenEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
     TResult Function(String userId)? login,
+    TResult Function(String apiEndPoint)? logout,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),
   }) {
     if (registerToken != null) {
-      return registerToken(apiEndPoint, facilityIds);
+      return registerToken(apiEndPoint, facilityIds, userObject);
     }
     return orElse();
   }
@@ -743,6 +1000,7 @@ class _$PushNotificationRegisterTokenEventImpl
   TResult map<TResult extends Object?>({
     required TResult Function(PushNotificationInitializeEvent value) initialize,
     required TResult Function(PushNotificationLoginEvent value) login,
+    required TResult Function(PushNotificationLogoutEvent value) logout,
     required TResult Function(PushNotificationTokenRefreshedEvent value)
         tokenRefreshed,
     required TResult Function(PushNotificationRegisterTokenEvent value)
@@ -758,6 +1016,7 @@ class _$PushNotificationRegisterTokenEventImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(PushNotificationInitializeEvent value)? initialize,
     TResult? Function(PushNotificationLoginEvent value)? login,
+    TResult? Function(PushNotificationLogoutEvent value)? logout,
     TResult? Function(PushNotificationTokenRefreshedEvent value)?
         tokenRefreshed,
     TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
@@ -772,6 +1031,7 @@ class _$PushNotificationRegisterTokenEventImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(PushNotificationInitializeEvent value)? initialize,
     TResult Function(PushNotificationLoginEvent value)? login,
+    TResult Function(PushNotificationLogoutEvent value)? logout,
     TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
     TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
     TResult Function(PushNotificationNotificationReceivedEvent value)?
@@ -789,11 +1049,13 @@ abstract class PushNotificationRegisterTokenEvent
     implements PushNotificationEvent {
   const factory PushNotificationRegisterTokenEvent(
           {required final String apiEndPoint,
-          required final List<String> facilityIds}) =
+          required final List<String> facilityIds,
+          required final UserRequestModel? userObject}) =
       _$PushNotificationRegisterTokenEventImpl;
 
   String get apiEndPoint;
   List<String> get facilityIds;
+  UserRequestModel? get userObject;
   @JsonKey(ignore: true)
   _$$PushNotificationRegisterTokenEventImplCopyWith<
           _$PushNotificationRegisterTokenEventImpl>
@@ -892,8 +1154,10 @@ class _$PushNotificationNotificationReceivedEventImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
     required TResult Function(String userId) login,
+    required TResult Function(String apiEndPoint) logout,
     required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds)
+    required TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)
         registerToken,
     required TResult Function(Map<String, dynamic> data) notificationReceived,
   }) {
@@ -905,8 +1169,10 @@ class _$PushNotificationNotificationReceivedEventImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
     TResult? Function(String userId)? login,
+    TResult? Function(String apiEndPoint)? logout,
     TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds)?
+    TResult? Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult? Function(Map<String, dynamic> data)? notificationReceived,
   }) {
@@ -918,8 +1184,10 @@ class _$PushNotificationNotificationReceivedEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
     TResult Function(String userId)? login,
+    TResult Function(String apiEndPoint)? logout,
     TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds)?
+    TResult Function(String apiEndPoint, List<String> facilityIds,
+            UserRequestModel? userObject)?
         registerToken,
     TResult Function(Map<String, dynamic> data)? notificationReceived,
     required TResult orElse(),
@@ -935,6 +1203,7 @@ class _$PushNotificationNotificationReceivedEventImpl
   TResult map<TResult extends Object?>({
     required TResult Function(PushNotificationInitializeEvent value) initialize,
     required TResult Function(PushNotificationLoginEvent value) login,
+    required TResult Function(PushNotificationLogoutEvent value) logout,
     required TResult Function(PushNotificationTokenRefreshedEvent value)
         tokenRefreshed,
     required TResult Function(PushNotificationRegisterTokenEvent value)
@@ -950,6 +1219,7 @@ class _$PushNotificationNotificationReceivedEventImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(PushNotificationInitializeEvent value)? initialize,
     TResult? Function(PushNotificationLoginEvent value)? login,
+    TResult? Function(PushNotificationLogoutEvent value)? logout,
     TResult? Function(PushNotificationTokenRefreshedEvent value)?
         tokenRefreshed,
     TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
@@ -964,6 +1234,7 @@ class _$PushNotificationNotificationReceivedEventImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(PushNotificationInitializeEvent value)? initialize,
     TResult Function(PushNotificationLoginEvent value)? login,
+    TResult Function(PushNotificationLogoutEvent value)? logout,
     TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
     TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
     TResult Function(PushNotificationNotificationReceivedEvent value)?

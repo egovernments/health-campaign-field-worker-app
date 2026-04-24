@@ -32,6 +32,7 @@ import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../blocs/stock_downsync/stock_downsync.dart';
+import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../blocs/push_notification/push_notification.dart';
 import '../data/local_store/app_shared_preferences.dart';
@@ -261,11 +262,9 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                               LocalRepository<FacilityModel,
                                   FacilitySearchModel>>(),
                           stockRemoteRepository: ctx.read<
-                              RemoteRepository<StockModel,
-                                  StockSearchModel>>(),
+                              RemoteRepository<StockModel, StockSearchModel>>(),
                           stockLocalRepository: ctx.read<
-                              LocalRepository<StockModel,
-                                  StockSearchModel>>(),
+                              LocalRepository<StockModel, StockSearchModel>>(),
                           projectResourceLocalRepository: ctx.read<
                               LocalRepository<ProjectResourceModel,
                                   ProjectResourceSearchModel>>(),
@@ -319,23 +318,20 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                               final notificationData =
                                   NotificationData.fromMap(state.data);
 
-                              NotificationHandlerFactory
-                                  .getHandler(
+                              NotificationHandlerFactory.getHandler(
                                       notificationData.notificationType)
-                                  ?.handle(
-                                      context, notificationData.payload);
+                                  ?.handle(context, notificationData.payload);
                             }
                           },
                         ),
                         BlocListener<HFReferralDownSyncBloc,
                             HFReferralDownSyncState>(
                           listener: (context, hfDownSyncState) {
-                            final localizations =
-                                AppLocalizations.of(context);
-                            final appConfiguration =
-                                (context.read<AppInitializationBloc>().state
-                                        as AppInitialized)
-                                    .appConfiguration;
+                            final localizations = AppLocalizations.of(context);
+                            final appConfiguration = (context
+                                    .read<AppInitializationBloc>()
+                                    .state as AppInitialized)
+                                .appConfiguration;
                             hfDownSyncState.maybeWhen(
                               orElse: () {},
                               loading: () {
@@ -351,8 +347,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                               },
                               dataFound: (newCount, serverTotalCount) {
                                 Navigator.of(context, rootNavigator: true)
-                                    .popUntil(
-                                        (route) => route is! PopupRoute);
+                                    .popUntil((route) => route is! PopupRoute);
                                 showCustomPopup(
                                   barrierDismissible: false,
                                   context: context,
@@ -360,8 +355,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                     title: localizations.translate(
                                       newCount > 0
                                           ? i18.beneficiaryDetails.dataFound
-                                          : i18.beneficiaryDetails
-                                              .noDataFound,
+                                          : i18.beneficiaryDetails.noDataFound,
                                     ),
                                     titleIcon: Icon(
                                       Icons.info_outline_rounded,
@@ -387,8 +381,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                         onPressed: () {
                                           if (newCount > 0) {
                                             context
-                                                .read<
-                                                    HFReferralDownSyncBloc>()
+                                                .read<HFReferralDownSyncBloc>()
                                                 .add(
                                                   HFReferralDownSyncDownloadEvent(
                                                     projectId:
@@ -397,7 +390,8 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                       appConfiguration
                                                     ],
                                                     totalCount: newCount,
-                                                    serverTotalCount: serverTotalCount,
+                                                    serverTotalCount:
+                                                        serverTotalCount,
                                                   ),
                                                 );
                                           } else {
@@ -432,8 +426,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                 );
                               },
                               inProgress: (syncedCount, totalCount) {
-                                final progressData =
-                                    HFReferralProgressData(
+                                final progressData = HFReferralProgressData(
                                   progress: totalCount == 0
                                       ? 0
                                       : (syncedCount / totalCount)
@@ -443,10 +436,8 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                 );
                                 if (syncedCount < 1) {
                                   if (_hfReferralProgress.isClosed) {
-                                    _hfReferralProgress =
-                                        StreamController<
-                                                HFReferralProgressData>
-                                            .broadcast();
+                                    _hfReferralProgress = StreamController<
+                                        HFReferralProgressData>.broadcast();
                                   }
                                   showHFReferralProgressDialog(
                                     context,
@@ -454,8 +445,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                       i18.beneficiaryDetails
                                           .dataDownloadInProgress,
                                     ),
-                                    progressController:
-                                        _hfReferralProgress,
+                                    progressController: _hfReferralProgress,
                                     initialData: progressData,
                                   );
                                 }
@@ -465,8 +455,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                               },
                               success: (syncedCount, totalCount) {
                                 Navigator.of(context, rootNavigator: true)
-                                    .popUntil(
-                                        (route) => route is! PopupRoute);
+                                    .popUntil((route) => route is! PopupRoute);
                                 DigitSyncDialog.show(
                                   context,
                                   type: DialogType.complete,
@@ -476,22 +465,19 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                   ),
                                   primaryAction: DigitDialogActions(
                                     label: localizations.translate(
-                                      i18.common.coreCommonGoback,
+                                      i18.acknowledgementSuccess.goToHome,
                                     ),
                                     action: (ctx) {
-                                      Navigator.of(context,
-                                              rootNavigator: true)
+                                      Navigator.of(context, rootNavigator: true)
                                           .pop();
-                                      context.router
-                                          .replaceAll([HomeRoute()]);
+                                      context.router.replaceAll([HomeRoute()]);
                                     },
                                   ),
                                 );
                               },
                               failed: () {
                                 Navigator.of(context, rootNavigator: true)
-                                    .popUntil(
-                                        (route) => route is! PopupRoute);
+                                    .popUntil((route) => route is! PopupRoute);
                                 DigitSyncDialog.show(
                                   context,
                                   type: DialogType.failed,
@@ -503,8 +489,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                       i18.syncDialog.retryButtonLabel,
                                     ),
                                     action: (ctx) {
-                                      Navigator.of(context,
-                                              rootNavigator: true)
+                                      Navigator.of(context, rootNavigator: true)
                                           .pop();
                                       context
                                           .read<HFReferralDownSyncBloc>()
@@ -524,11 +509,9 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                           .proceedWithoutDownloading,
                                     ),
                                     action: (ctx) {
-                                      Navigator.of(context,
-                                              rootNavigator: true)
+                                      Navigator.of(context, rootNavigator: true)
                                           .pop();
-                                      context.router
-                                          .replaceAll([HomeRoute()]);
+                                      context.router.replaceAll([HomeRoute()]);
                                     },
                                   ),
                                 );
@@ -555,12 +538,12 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                           shouldShowDrawer = true;
                                       }
 
-                                    _drawerVisibilityController
-                                        .add(shouldShowDrawer);
-                                  },
-                                ),
-                              ],
-                            );
+                                      _drawerVisibilityController
+                                          .add(shouldShowDrawer);
+                                    },
+                                  ),
+                                ],
+                              );
                       }),
                     ),
                   ),
@@ -639,65 +622,6 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   },
                   icon: Icons.home,
                 ),
-                if (appInitializationBloc.state is AppInitialized) ...[
-                  SidebarItem(
-                    title: AppLocalizations.of(context).translate(
-                      i18.common.coreCommonlanguage,
-                    ),
-                    isSearchEnabled: false,
-                    icon: Icons.language,
-                    onPressed: () {},
-                    children: (localizationModulesList != null)
-                        ? buildLanguage(localizationModulesList, languages,
-                            context, appConfig)
-                        : null,
-                  )
-                ],
-                SidebarItem(
-                  title: AppLocalizations.of(context).translate(
-                    i18.common.coreCommonProfile,
-                  ),
-                  icon: Icons.person,
-                  onPressed: () async {
-                    final connectivityResult =
-                        await (Connectivity().checkConnectivity());
-                    final isOnline = connectivityResult
-                            .contains(ConnectivityResult.wifi) ||
-                        connectivityResult.contains(ConnectivityResult.mobile);
-
-                    if (isOnline) {
-                      if (context.mounted) {
-                        Navigator.of(context, rootNavigator: true).pop();
-                        context.router.push(ProfileRoute());
-                      }
-                    } else {
-                      if (context.mounted) {
-                        showCustomPopup(
-                          context: context,
-                          builder: (ctx) => Popup(
-                            title: AppLocalizations.of(context).translate(
-                              i18.common.connectionLabel,
-                            ),
-                            description: AppLocalizations.of(context).translate(
-                              i18.common.connectionContent,
-                            ),
-                            actions: [
-                              DigitButton(
-                                  label: AppLocalizations.of(context).translate(
-                                    i18.common.coreCommonOk,
-                                  ),
-                                  onPressed: () =>
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop(),
-                                  type: DigitButtonType.primary,
-                                  size: DigitButtonSize.large)
-                            ],
-                          ),
-                        );
-                      }
-                    }
-                  },
-                ),
                 if (isDistributor) ...[
                   SidebarItem(
                     title: AppLocalizations.of(context).translate(
@@ -711,33 +635,99 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   ),
 
                   // TODO: Non system user
-
-                  SidebarItem(
-                    title: AppLocalizations.of(context).translate(
-                      //TODO: TO append the total count of non- system users
-                      i18.nonMobileUser.nonMobileUserLabel,
-                    ),
-                    icon: Icons.group,
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      context.router.push(const NonMobileUserListRoute());
-                    },
-                  ),
                 ],
               ],
               logOutDigitButtonLabel: AppLocalizations.of(context)
                   .translate(i18.common.coreCommonLogout),
-              onLogOut: () {
-                context.read<BoundaryBloc>().add(const BoundaryResetEvent());
-                context.read<LocalizationBloc>().add(
-                      LocalizationEvent.onLoadLocalization(
-                        module: Constants.homeLocalizationModules.join(','),
-                        tenantId: envConfig.variables.tenantId,
-                        locale: AppSharedPreferences().getSelectedLocale ?? '',
-                        path: Constants.localizationApiPath,
+              onLogOut: () async {
+                final isConnected = await getIsConnected();
+                if (context.mounted) {
+                  if (isConnected) {
+                    await showCustomPopup(
+                      context: context,
+                      builder: (ctx) => Popup(
+                        title: AppLocalizations.of(context).translate(
+                          i18.common.coreCommonWarning,
+                        ),
+                        description: AppLocalizations.of(context).translate(
+                          i18.common.logOutWarningMsg,
+                        ),
+                        onOutsideTap: () {
+                          Navigator.of(ctx).pop();
+                        },
+                        type: PopUpType.simple,
+                        actions: [
+                          DigitButton(
+                              label: AppLocalizations.of(context).translate(
+                                i18.common.coreCommonOk,
+                              ),
+                              onPressed: () async {
+                                final isar = context.read<Isar>();
+                                final serviceRegistry = await isar
+                                    .serviceRegistrys
+                                    .where()
+                                    .findAll();
+                                final apiEndPoint = Constants.getNotificationEndPoint(
+                                  serviceRegistry: serviceRegistry,
+                                  service: 'NOTIFICATION',
+                                  action: ApiOperation.unRegister.toValue(),
+                                  entityName: 'NotificationToken',
+                                );
+
+                                if (context.mounted) {
+                                  context.read<PushNotificationBloc>().add(
+                                        PushNotificationEvent.logout(
+                                          apiEndPoint: apiEndPoint,
+                                        ),
+                                      );
+                                  context
+                                      .read<BoundaryBloc>()
+                                      .add(const BoundaryResetEvent());
+                                  context.read<LocalizationBloc>().add(
+                                        LocalizationEvent.onLoadLocalization(
+                                          module: Constants
+                                              .homeLocalizationModules
+                                              .join(','),
+                                          tenantId:
+                                              envConfig.variables.tenantId,
+                                          locale: AppSharedPreferences()
+                                                  .getSelectedLocale ??
+                                              '',
+                                          path: Constants.localizationApiPath,
+                                        ),
+                                      );
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(const AuthLogoutEvent());
+                                }
+                              },
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.large),
+                          DigitButton(
+                              label: AppLocalizations.of(context).translate(
+                                i18.common.coreCommonNo,
+                              ),
+                              onPressed: () {
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(true);
+                              },
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large)
+                        ],
                       ),
                     );
-                context.read<AuthBloc>().add(const AuthLogoutEvent());
+                  } else {
+                    Toast.showToast(
+                      context,
+                      message: AppLocalizations.of(context).translate(
+                        i18.login.noInternetError,
+                      ),
+                      type: ToastType.error,
+                    );
+                  }
+                }
               },
               footer: PoweredByDigit(
                 version: Constants().version,
