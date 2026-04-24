@@ -1044,14 +1044,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       await downSyncStockBalances(project.id);
 
-      // After stock download, calculate and create/update UserAction balance records
-      await _createStockBalanceUserActions(
-        project: project,
-        receiverIds: receiverIds,
-        productVariantIds: productVariantIds,
-        userRoles: userRoles,
-        userObject: userObject,
-      );
+      // TODO: COMMENTING USER CREATION ON DOWNSYNC
+      // await _createStockBalanceUserActions(
+      //   project: project,
+      //   receiverIds: receiverIds,
+      //   productVariantIds: productVariantIds,
+      //   userRoles: userRoles,
+      //   userObject: userObject,
+      // );
 
       debugPrint(
           'SILENT_STOCK_DOWNSYNC: Completed. Synced $syncedCount/$totalCount');
