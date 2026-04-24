@@ -1412,10 +1412,10 @@ class _HomePageState extends LocalizedState<HomePage> {
               barrierDismissible: false,
             );
           },
-          getBatchSize: (batchSize, projectId) {
+          getBatchSize: (batchSize, projectModel) {
             context.read<StockDownSyncBloc>().add(
                   StockDownSyncCheckTotalCountEvent(
-                    projectId: projectId,
+                    projectModel: projectModel,
                     batchSize: batchSize,
                   ),
                 );
@@ -1429,7 +1429,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       ? i18.common.stockDataFound
                       : i18.common.stockNoDataFound,
                 ),
-                projectId: context.projectId,
+                projectModel: context.selectedProject,
                 boundaries: [],
                 batchSize: batchSize,
                 totalCount: initialServerCount,
@@ -1464,7 +1464,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   title: localizations.translate(
                     i18.beneficiaryDetails.dataDownloadInProgress,
                   ),
-                  projectId: context.projectId,
+                  projectModel: context.selectedProject,
                   boundaries: [],
                   syncCount: syncCount,
                   totalCount: totalCount,
@@ -1509,7 +1509,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                           i18.common.coreCommonDownloadFailed,
                         ),
                         appConfiguartion: appConfiguration,
-                        projectId: context.projectId,
+                        projectModel: context.selectedProject,
                         boundaries: [],
                         primaryButtonLabel: localizations.translate(
                           i18.syncDialog.retryButtonLabel,
@@ -1535,7 +1535,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                           i18.common.coreCommonDownloadFailed,
                         ),
                         appConfiguartion: appConfiguration,
-                        projectId: context.projectId,
+                        projectModel: context.selectedProject,
                         boundaries: [],
                         primaryButtonLabel: localizations.translate(
                           i18.syncDialog.retryButtonLabel,
@@ -1560,7 +1560,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 content: localizations.translate(
                   i18.beneficiaryDetails.insufficientStorageContent,
                 ),
-                projectId: context.projectId,
+                projectModel: context.selectedProject,
                 boundaries: [],
                 primaryButtonLabel: localizations.translate(
                   i18.common.coreCommonOk,
@@ -2761,7 +2761,7 @@ void setPackagesSingleton(BuildContext context) {
               ? appConfiguration.transitPostType!.map((e) => e.code).toList()
               : [],
           loggedInUserUuid: context.loggedInUserUuid,
-          projectId: context.selectedProject.id,
+          projectId: context.projectId,
           minAge: context.selectedProjectType?.validMinAge,
           maxAge: context.selectedProjectType?.validMaxAge,
         );

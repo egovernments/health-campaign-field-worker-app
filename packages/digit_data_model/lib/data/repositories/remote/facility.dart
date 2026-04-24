@@ -21,6 +21,7 @@ class FacilityRemoteRepository
     int? offSet,
     int? limit,
     int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) async {
     int defaultBatchSize = limit ?? 100; // Default batch size for fetching data
     int currentOffset = offSet ?? 0;

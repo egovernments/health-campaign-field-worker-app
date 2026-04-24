@@ -24,7 +24,7 @@ void triggerStockDownSync(BuildContext context) {
           context.read<StockDownSyncBloc>().add(
                 StockDownSyncGetBatchSizeEvent(
                   appConfiguration: [appConfiguration],
-                  projectId: context.projectId,
+                  projectModel: context.selectedProject,
                 ),
               );
         },
@@ -56,7 +56,7 @@ void showStockDownloadDialog(
             context.read<StockDownSyncBloc>().add(
                   StockDownSyncGetBatchSizeEvent(
                     appConfiguration: [model.appConfiguartion!],
-                    projectId: model.projectId,
+                    projectModel: model.projectModel,
                   ),
                 );
           },
@@ -91,7 +91,7 @@ void showStockDownloadDialog(
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<StockDownSyncBloc>().add(
                         StockDownSyncDownloadEvent(
-                          projectId: model.projectId,
+                          projectModel: model.projectModel,
                           batchSize: model.batchSize ?? 1,
                           initialServerCount: model.totalCount ?? 0,
                         ),

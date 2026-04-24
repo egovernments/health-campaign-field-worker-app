@@ -266,7 +266,7 @@ void showDownloadDialog(
               context.read<BeneficiaryDownSyncBloc>().add(
                     DownSyncGetBatchSizeEvent(
                       appConfiguration: [model.appConfiguartion!],
-                      projectId: context.projectId,
+                      projectModel: model.projectModel,
                       boundaries: model.boundaries,
                       pendingSyncCount: model.pendingSyncCount ?? 0,
                     ),
@@ -313,7 +313,7 @@ void showDownloadDialog(
                     if ((model.totalCount ?? 0) > 0) {
                       context.read<BeneficiaryDownSyncBloc>().add(
                             DownSyncDownloadAllEvent(
-                              projectId: context.projectId,
+                              projectModel: model.projectModel,
                               boundaries: model.boundaries,
                               batchSize: model.batchSize ?? 1,
                               boundaryCounts: model.boundaryCounts,

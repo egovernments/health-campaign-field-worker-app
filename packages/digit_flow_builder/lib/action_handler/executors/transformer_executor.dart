@@ -184,6 +184,7 @@ class TransformerExecutor extends ActionExecutor {
         'TRANSFORMER: isEdit=$isEdit, forceCreate=$forceCreate, existingModels=${existingModels?.length ?? 0}');
 
     final contextMap = {
+      "selectedProject":FlowBuilderSingleton().selectedProject,
       "projectId": FlowBuilderSingleton().selectedProject?.id,
       "user": FlowBuilderSingleton().loggedInUser,
       "tenantId": FlowBuilderSingleton().selectedProject?.tenantId,

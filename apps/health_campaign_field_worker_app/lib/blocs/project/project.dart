@@ -980,6 +980,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       final stockSearchModel = StockSearchModel(
         receiverId: receiverIds.first,
         senderId: receiverIds.first,
+        campaignNumber: project.referenceID,
       );
 
       final existingDownSyncData =
@@ -1006,6 +1007,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         stockSearchModel,
         offSet: 0,
         lastSyncedTime: lastSyncedTime,
+        includeOnlyUpdatedByOthers: true,
       );
 
       if (totalCount <= 0) return;
@@ -1021,6 +1023,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           offSet: offset,
           limit: batchSize,
           lastSyncedTime: lastSyncedTime,
+          includeOnlyUpdatedByOthers: true,
         );
 
         if (stockEntries.isEmpty) break;

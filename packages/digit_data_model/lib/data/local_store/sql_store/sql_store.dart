@@ -317,6 +317,15 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               }
             }
           }
+          if (from < 9) {
+            try {
+              await migrator.addColumn(stock, stock.campaignNumber);
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to add columns for stock, campaignNumber");
+              }
+            }
+          }
         },
       );
 

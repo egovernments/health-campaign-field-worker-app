@@ -501,7 +501,8 @@ class DownloadProgressData {
 
 class DownloadBeneficiary {
   String title;
-  String projectId;
+  ProjectModel projectModel;
+  String get projectId => projectModel.id;
   List<BoundaryModel> boundaries;
   int? pendingSyncCount;
   int? syncCount;
@@ -517,7 +518,7 @@ class DownloadBeneficiary {
 
   DownloadBeneficiary({
     required this.title,
-    required this.projectId,
+    required this.projectModel,
     required this.boundaries,
     this.appConfiguartion,
     this.pendingSyncCount,
