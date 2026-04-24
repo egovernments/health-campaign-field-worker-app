@@ -154,7 +154,6 @@ class _StockReconciliationCardState
 
   @override
   Widget build(BuildContext context) {
-
     final isDistributor = context.loggedInUserRoles
         .any((role) => role.code == RolesType.distributor.toValue());
     final theme = Theme.of(context);
@@ -307,7 +306,7 @@ class _StockReconciliationCardState
                   ),
                 ),
                 if (_selectedFacility != null && _selectedProduct != null)
-                const SizedBox(height: spacer4),
+                  const SizedBox(height: spacer4),
 
                 // Stock Metrics Display (only show if both facility and product are selected)
                 if (_selectedFacility != null && _selectedProduct != null) ...[
@@ -353,38 +352,38 @@ class _StockReconciliationCardState
                         labelFlex: 5,
                       ),
                       const DigitDivider(),
-                      if(isDistributor)
-                        ...[
-                          LabelValueItem(
-                            label: localizations.translate(
-                                i18.stockReconciliationMetrics.stockLost),
-                            value: _stockMetrics['stockLost']!.toStringAsFixed(0),
-                            labelFlex: 5,
-                          ),
-                          const DigitDivider(),
-                          LabelValueItem(
-                            label: localizations.translate(
-                                i18.stockReconciliationMetrics.stockDamaged),
-                            value:
-                            _stockMetrics['stockDamaged']!.toStringAsFixed(0),
-                            labelFlex: 5,
-                          ),
-                          const DigitDivider(),
-                          LabelValueItem(
-                            label: localizations.translate(
-                                i18.stockReconciliationMetrics.stockExcess),
-                            value: _stockMetrics['stockExcess']!.toStringAsFixed(0),
-                            labelFlex: 5,
-                          ),
-                          const DigitDivider(),
-                          LabelValueItem(
-                            label: localizations.translate(
-                                i18.stockReconciliationMetrics.stockLess),
-                            value: _stockMetrics['stockLess']!.toStringAsFixed(0),
-                            labelFlex: 5,
-                          ),
-                          const DigitDivider(),
-                        ],
+                      if (isDistributor) ...[
+                        LabelValueItem(
+                          label: localizations.translate(
+                              i18.stockReconciliationMetrics.stockLost),
+                          value: _stockMetrics['stockLost']!.toStringAsFixed(0),
+                          labelFlex: 5,
+                        ),
+                        const DigitDivider(),
+                        LabelValueItem(
+                          label: localizations.translate(
+                              i18.stockReconciliationMetrics.stockDamaged),
+                          value:
+                              _stockMetrics['stockDamaged']!.toStringAsFixed(0),
+                          labelFlex: 5,
+                        ),
+                        const DigitDivider(),
+                        LabelValueItem(
+                          label: localizations.translate(
+                              i18.stockReconciliationMetrics.stockExcess),
+                          value:
+                              _stockMetrics['stockExcess']!.toStringAsFixed(0),
+                          labelFlex: 5,
+                        ),
+                        const DigitDivider(),
+                        LabelValueItem(
+                          label: localizations.translate(
+                              i18.stockReconciliationMetrics.stockLess),
+                          value: _stockMetrics['stockLess']!.toStringAsFixed(0),
+                          labelFlex: 5,
+                        ),
+                        const DigitDivider(),
+                      ],
                       LabelValueItem(
                         label: localizations.translate(
                             i18.stockReconciliationMetrics.stockOnHand),
@@ -393,16 +392,15 @@ class _StockReconciliationCardState
                       ),
                     ],
                   ),
-                  // TODO: COMMENTING THIS AS INFOCARD IS NOT REQUIRED FOR NOW
-                  // const SizedBox(height: spacer4),
-                  // InfoCard(
-                  //   type: InfoType.info,
-                  //   description: localizations.translate(
-                  //     '${context.selectedProject.projectType}_STOCK_RECONCILIATION_INFO_CARD_CONTENT',
-                  //   ),
-                  //   title: localizations
-                  //       .translate('STOCK_RECONCILIATION_INFO_CARD_TITLE'),
-                  // ),
+                  const SizedBox(height: spacer4),
+                  InfoCard(
+                    type: InfoType.info,
+                    description: localizations.translate(
+                      '${context.selectedProject.projectType}_STOCK_RECONCILIATION_INFO_CARD_CONTENT',
+                    ),
+                    title: localizations
+                        .translate('STOCK_RECONCILIATION_INFO_CARD_TITLE'),
+                  ),
                 ],
               ],
             );
@@ -538,18 +536,15 @@ class _StockReconciliationCardState
       if (stateWrapper is List && stateWrapper.isNotEmpty) {
         final firstItem = stateWrapper.first;
         if (firstItem is Map) {
-          final wrapperList =
-              stateWrapper as List<Map<String, List<dynamic>>>;
-          projectFacilities = wrapperList
-              .firstWhere(
-                (m) => m.containsKey('ProjectFacilityModel'),
-                orElse: () => {'ProjectFacilityModel': []},
-              )['ProjectFacilityModel'];
-          allFacilities = wrapperList
-              .firstWhere(
-                (m) => m.containsKey('FacilityModel'),
-                orElse: () => {'FacilityModel': []},
-              )['FacilityModel'];
+          final wrapperList = stateWrapper as List<Map<String, List<dynamic>>>;
+          projectFacilities = wrapperList.firstWhere(
+            (m) => m.containsKey('ProjectFacilityModel'),
+            orElse: () => {'ProjectFacilityModel': []},
+          )['ProjectFacilityModel'];
+          allFacilities = wrapperList.firstWhere(
+            (m) => m.containsKey('FacilityModel'),
+            orElse: () => {'FacilityModel': []},
+          )['FacilityModel'];
         }
       }
 
