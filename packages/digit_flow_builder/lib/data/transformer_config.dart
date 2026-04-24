@@ -50,8 +50,7 @@ final jsonConfig = {
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
-            "memberCount": "householdDetails.memberCount",
-            "caregiverConsent": "caregiverConsent.consentToParticipate"
+            "memberCount": "householdDetails.memberCount"
           }
         }
       },
@@ -1277,12 +1276,6 @@ final jsonConfig = {
             "gender": "__context:selectedIndividualGender",
             "ageInMonths": "__context:selectedIndividualAgeInMonths",
             "dateOfEvaluation": "__value:DATETIME.NOW",
-            "ec1Value": "__context:ec1",
-            "ec2Value": "__context:ec2",
-            "ec3Value": "__context:ec3",
-            "ec4Value": "__context:ec4",
-            // Referral reasons mapped from checklist: SICK for ec1=YES, FEVER for ec2=YES
-            "referralReasons": "__context:referralReasons"
           }
         }
       }
