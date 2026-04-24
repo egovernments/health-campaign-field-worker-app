@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/localization/app_localization.dart';
 import '../utils/utils.dart';
 
 class PolioStatsCard extends StatefulWidget {
@@ -103,17 +104,24 @@ class _PolioStatsCardState extends State<PolioStatsCard>
             int.tryParse(unusableField?.value?.toString() ?? '0') ?? 0;
       }
 
-      // Also check individual STOCK_DETAILS entries
+      // Also check individual stock vial entries (saved as LOCATION_CAPTURE
+      // with form=POLIO_STOCK in additionalFields)
       final stockResults = await userActionRepo.search(
         UserActionSearchModel(
-          action: 'STOCK_DETAILS',
+          action: 'LOCATION_CAPTURE',
           projectId: projectId,
           isDeleted: false,
         ),
       );
 
       for (final ua in stockResults) {
-        if (ua.action != 'STOCK_DETAILS') continue;
+        if (ua.action != 'LOCATION_CAPTURE') continue;
+        // Only count entries that are stock vial records
+        final formField = ua.additionalFields?.fields
+            .where((f) => f.key == 'form')
+            .firstOrNull;
+        if (formField?.value?.toString() != 'POLIO_STOCK') continue;
+
         totalVialsOpened++;
         final vvmField = ua.additionalFields?.fields
             .where((f) => f.key == 'vvmStatus')
@@ -142,6 +150,8 @@ class _PolioStatsCardState extends State<PolioStatsCard>
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Padding(
       padding:
           const EdgeInsets.symmetric(horizontal: spacer2, vertical: spacer1),
@@ -155,7 +165,9 @@ class _PolioStatsCardState extends State<PolioStatsCard>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Number of Vials Opened',
+                    localizations.translate(
+                      'POLIO_HOME_STATS_VIALS_OPENED',
+                    ),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   Text(
@@ -172,13 +184,17 @@ class _PolioStatsCardState extends State<PolioStatsCard>
                 children: [
                   _buildCountChip(
                     context,
-                    label: 'Usable',
+                    label: localizations.translate(
+                      'POLIO_HOME_STATS_USABLE',
+                    ),
                     count: vialsUsable,
                     color: Colors.green,
                   ),
                   _buildCountChip(
                     context,
-                    label: 'Unusable',
+                    label: localizations.translate(
+                      'POLIO_HOME_STATS_UNUSABLE',
+                    ),
                     count: vialsUnusable,
                     color: Colors.red,
                   ),

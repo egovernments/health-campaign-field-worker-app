@@ -1675,7 +1675,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
-          "action": "__value:STOCK_DETAILS",
+          "action": "__value:LOCATION_CAPTURE",
           "latitude": "vialDetails.latLng[0]",
           "longitude": "vialDetails.latLng[1]",
           "locationAccuracy": "vialDetails.latLng[2]",
@@ -1684,6 +1684,7 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            "form": "__value:POLIO_STOCK",
             "batchLotNumber": "vialDetails.batchLotNumber",
             "expiryDate": "vialDetails.expiryDate",
             "vvmStatus": "vialDetails.vvmStatus",
@@ -1725,7 +1726,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
-          "action": "__value:LQA_DATA_COLLECTION",
+          "action": "__value:LOCATION_CAPTURE",
           "latitude": "clusterInfo.gpsStart[0]",
           "longitude": "clusterInfo.gpsStart[1]",
           "locationAccuracy": "clusterInfo.gpsStart[2]",
@@ -1734,6 +1735,7 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            "form": "__value:POLIO_LQA",
             // ── clusterInfo (13 fields) ──
             "surveyDate": "clusterInfo.surveyDate",
             "settlementArea": "clusterInfo.settlementArea",

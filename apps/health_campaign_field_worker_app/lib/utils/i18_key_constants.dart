@@ -709,13 +709,19 @@ class Home {
 
   String get polioMissedChildrenLabel => 'HOME_MARK_CLOSE_HOUSEHOLD_LABEL';
 
-  String get polioStockDetailsLabel => 'Stock Details';
+  String get polioStockDetailsLabel => 'POLIO_HOME_STOCK_DETAILS_LABEL';
 
-  String get polioAfpCaseLabel => 'AFP Case';
+  String get polioAfpCaseLabel => 'POLIO_HOME_AFP_CASE_LABEL';
 
-  String get polioTallySheetLabel => 'Tally Sheet';
+  String get polioTallySheetLabel => 'POLIO_HOME_TALLY_SHEET_LABEL';
 
-  String get polioLqaDataCollectionLabel => 'LQA Data Collection';
+  String get polioLqaDataCollectionLabel => 'POLIO_HOME_LQA_DATA_COLLECTION_LABEL';
+
+  String get polioStatsVialsOpened => 'POLIO_HOME_STATS_VIALS_OPENED';
+
+  String get polioStatsUsable => 'POLIO_HOME_STATS_USABLE';
+
+  String get polioStatsUnusable => 'POLIO_HOME_STATS_UNUSABLE';
 }
 
 class DataShare {

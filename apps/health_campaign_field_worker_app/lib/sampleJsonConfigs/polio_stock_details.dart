@@ -1,7 +1,7 @@
 final dynamic samplePolioStockDetailsFlows = {
-  "name": "POLIO_STOCK_DETAILS",
+  "name": "STOCK",
   "initialPage": "stockEntry",
-  "project": "POLIO-SIA",
+  "project": "POLIO",
   "version": 1,
   "disabled": false,
   "isSelected": true,
@@ -21,15 +21,15 @@ final dynamic samplePolioStockDetailsFlows = {
       "pages": [
         {
           "page": "vialDetails",
-          "label": "Vial Details",
+          "label": "POLIO_STOCK_VIAL_DETAILS_HEADING",
           "order": 1,
           "type": "object",
-          "description": "Enter vial details",
-          "actionLabel": "Submit",
+          "description": "POLIO_STOCK_ENTER_VIAL_DETAILS",
+          "actionLabel": "POLIO_STOCK_SUBMIT_BUTTON",
           "properties": [
             {
               "type": "string",
-              "label": "Detected Location",
+              "label": "POLIO_STOCK_DETECTED_LOCATION_LABEL",
               "order": 0,
               "value": "",
               "format": "latLng",
@@ -47,7 +47,7 @@ final dynamic samplePolioStockDetailsFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Location coordinates are required"
+                  "message": "POLIO_STOCK_LOCATION_REQUIRED"
                 }
               ],
               "errorMessage": "",
@@ -55,13 +55,13 @@ final dynamic samplePolioStockDetailsFlows = {
             },
             {
               "type": "string",
-              "label": "Batch/Lot Number",
+              "label": "POLIO_STOCK_BATCH_LOT_NUMBER_LABEL",
               "order": 1,
               "value": "",
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Scan or type the batch/lot number",
+              "helpText": "POLIO_STOCK_BATCH_LOT_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "batchLotNumber",
@@ -72,12 +72,12 @@ final dynamic samplePolioStockDetailsFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Batch/Lot number is required"
+                  "message": "POLIO_STOCK_BATCH_LOT_REQUIRED"
                 },
                 {
                   "type": "minLength",
                   "value": 2,
-                  "message": "Must be at least 2 characters"
+                  "message": "POLIO_STOCK_MIN_LENGTH_2"
                 }
               ],
               "errorMessage": "",
@@ -85,13 +85,13 @@ final dynamic samplePolioStockDetailsFlows = {
             },
             {
               "type": "integer",
-              "label": "Expiry Date",
+              "label": "POLIO_STOCK_EXPIRY_DATE_LABEL",
               "order": 2,
               "value": "",
               "format": "date",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Enter the expiry date from the label",
+              "helpText": "POLIO_STOCK_EXPIRY_DATE_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "expiryDate",
@@ -102,12 +102,12 @@ final dynamic samplePolioStockDetailsFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Expiry date is required"
+                  "message": "POLIO_STOCK_EXPIRY_DATE_REQUIRED"
                 },
                 {
                   "type": "startDate",
                   "value": "TODAY",
-                  "message": "Expiry date must be a future date"
+                  "message": "POLIO_STOCK_EXPIRY_DATE_FUTURE"
                 }
               ],
               "errorMessage": "",
@@ -115,13 +115,13 @@ final dynamic samplePolioStockDetailsFlows = {
             },
             {
               "type": "string",
-              "label": "VVM Status at Opening",
+              "label": "POLIO_STOCK_VVM_STATUS_LABEL",
               "order": 3,
               "value": "",
               "format": "dropdown",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Select VVM status",
+              "helpText": "POLIO_STOCK_VVM_STATUS_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "vvmStatus",
@@ -132,19 +132,19 @@ final dynamic samplePolioStockDetailsFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "VVM status is required"
+                  "message": "POLIO_STOCK_VVM_STATUS_REQUIRED"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": [
-                {"code": "USABLE", "name": "Usable"},
-                {"code": "UNUSABLE", "name": "Unusable"}
+                {"code": "USABLE", "name": "POLIO_STOCK_VVM_USABLE"},
+                {"code": "UNUSABLE", "name": "POLIO_STOCK_VVM_UNUSABLE"}
               ]
             },
             {
               "type": "string",
-              "label": "Time of Opening",
+              "label": "POLIO_STOCK_TIME_OF_OPENING_LABEL",
               "order": 4,
               "value": "",
               "format": "text",
@@ -189,7 +189,7 @@ final dynamic samplePolioStockDetailsFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {"message": "POLIO_STOCK_ERROR_FETCH_CONFIG"}
               }
             ]
           }
@@ -201,9 +201,7 @@ final dynamic samplePolioStockDetailsFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {
-                  "message": "Failed to record vial details."
-                }
+                "properties": {"message": "POLIO_STOCK_ERROR_RECORD_VIAL"}
               }
             ]
           }
@@ -216,7 +214,7 @@ final dynamic samplePolioStockDetailsFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
+                "properties": {"message": "POLIO_STOCK_ERROR_NAVIGATION"}
               }
             ]
           }
@@ -240,24 +238,25 @@ final dynamic samplePolioStockDetailsFlows = {
         {
           "type": "template",
           "format": "panelCard",
-          "label": "Vial Details Entered Successfully",
-          "description":
-              "The vial details have been recorded successfully",
+          "fieldName": "successCard",
+          "label": "POLIO_STOCK_SUCCESS_HEADING",
+          "description": "POLIO_STOCK_SUCCESS_DESCRIPTION",
           "properties": {"type": "success"},
           "primaryAction": {
-            "label": "Add Another Vial",
+            "type": "template",
+            "fieldName": "addAnotherVialButton",
+            "label": "POLIO_STOCK_ADD_ANOTHER_VIAL",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
-                "properties": {
-                  "type": "FORM",
-                  "name": "stockEntry"
-                }
+                "properties": {"type": "FORM", "name": "stockEntry"}
               }
             ]
           },
           "secondaryAction": {
-            "label": "Back to Home",
+            "type": "template",
+            "fieldName": "backToHomeButton",
+            "label": "POLIO_STOCK_BACK_TO_HOME",
             "onAction": [
               {
                 "actionType": "BACK_NAVIGATION",

@@ -1,405 +1,11 @@
-/// Maximum number of child interview pages.
-const int lqaChildCount = 10;
-
-// Helper to build a standard page-level null block
-Map<String, dynamic> _pageNulls() => {
-      "value": null,
-      "required": null,
-      "hidden": null,
-      "helpText": null,
-      "innerLabel": null,
-      "validations": null,
-      "tooltip": null,
-      "startDate": null,
-      "endDate": null,
-      "readOnly": null,
-      "charCount": null,
-      "systemDate": null,
-      "isMultiSelect": null,
-      "includeInForm": null,
-      "includeInSummary": null,
-      "autoEnable": null,
-    };
-
-/// Helper to build a visibilityCondition map from a condition expression.
-/// Example: _vc("child1.fingerMarked=='NO'")
-Map<String, dynamic> _vc(String condition) => {
-      "expression": [
-        {"condition": condition, "type": "custom"}
-      ]
-    };
-
-// Helper to build a standard property skeleton
-Map<String, dynamic> _prop({
-  required String type,
-  required String label,
-  required int order,
-  required String format,
-  required String fieldName,
-  String value = "",
-  bool hidden = false,
-  String tooltip = "",
-  String helpText = "",
-  String infoText = "",
-  bool readOnly = false,
-  bool deleteFlag = false,
-  String innerLabel = "",
-  bool systemDate = false,
-  bool? isEditable,
-  List<Map<String, dynamic>> validations = const [],
-  String errorMessage = "",
-  bool isMultiSelect = false,
-  List<Map<String, String>>? enums,
-  Map<String, dynamic>? visibilityCondition,
-  List<Map<String, String>>? autoFillCondition,
-}) {
-  final m = <String, dynamic>{
-    "type": type,
-    "label": label,
-    "order": order,
-    "value": value,
-    "format": format,
-    "hidden": hidden,
-    "tooltip": tooltip,
-    "helpText": helpText,
-    "infoText": infoText,
-    "readOnly": readOnly,
-    "fieldName": fieldName,
-    "deleteFlag": deleteFlag,
-    "innerLabel": innerLabel,
-    "systemDate": systemDate,
-    "validations": validations,
-    "errorMessage": errorMessage,
-    "isMultiSelect": isMultiSelect,
-  };
-  if (isEditable != null) m["isEditable"] = isEditable;
-  if (enums != null) m["enums"] = enums;
-  if (visibilityCondition != null) {
-    m["visibilityCondition"] = visibilityCondition;
-  }
-  if (autoFillCondition != null) m["autoFillCondition"] = autoFillCondition;
-  return m;
-}
-
-/// Build one child-interview page.
-/// [childIndex] is 1-based.  [nextPage] is the default page to navigate to
-/// (e.g. "child2", or "closeout" for the last child).
-Map<String, dynamic> _childPage(int childIndex, String nextPage) {
-  final pageName = "child$childIndex";
-  return {
-    "page": pageName,
-    "label": "Child $childIndex",
-    "order": childIndex + 1, // page 1 is clusterInfo → order 1
-    "type": "object",
-    "description": "Interview child $childIndex in this cluster",
-    "actionLabel": "Next",
-    ..._pageNulls(),
-    "navigateTo": {"name": nextPage, "type": "form"},
-    // Dynamic page skip: when this is the last child based on numberOfInterviews
-    if (childIndex < lqaChildCount)
-      "conditionalNavigateTo": [
-        {
-          "type": "custom",
-          "condition": "clusterInfo.numberOfInterviews=='$childIndex'",
-          "navigateTo": {"name": "closeout", "type": "form"}
-        }
-      ],
-    "properties": [
-      // 1. childrenUnder5
-      _prop(
-        type: "integer",
-        label: "Children under 5 in household",
-        order: 1,
-        format: "numeric",
-        fieldName: "childrenUnder5",
-        value: "0",
-        isEditable: true,
-        helpText:
-            "Total <5yr children belonging to household (excluding visitors)",
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 2. childAgeMonths
-      _prop(
-        type: "integer",
-        label: "Age of selected child (months)",
-        order: 2,
-        format: "numeric",
-        fieldName: "childAgeMonths",
-        value: "",
-        isEditable: true,
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-          {"type": "max", "value": 59, "message": "Must be 59 or less"},
-        ],
-      ),
-
-      // 3. childSex
-      _prop(
-        type: "string",
-        label: "Sex of child",
-        order: 3,
-        format: "dropdown",
-        fieldName: "childSex",
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-        ],
-        enums: [
-          {"code": "MALE", "name": "Male"},
-          {"code": "FEMALE", "name": "Female"},
-        ],
-      ),
-
-      // 4. fingerMarked — core LQAS coverage indicator
-      _prop(
-        type: "string",
-        label: "Is child's finger marked for OPV?",
-        order: 4,
-        format: "dropdown",
-        fieldName: "fingerMarked",
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-        ],
-        enums: [
-          {"code": "YES", "name": "Yes"},
-          {"code": "NO", "name": "No"},
-        ],
-      ),
-
-      // ── Conditional block: shown only when fingerMarked == NO ──
-
-      // 5. reasonNotMarked (non-mandatory)
-      _prop(
-        type: "string",
-        label: "Reason finger not marked",
-        order: 5,
-        format: "dropdown",
-        fieldName: "reasonNotMarked",
-        validations: [],
-        enums: [
-          {"code": "CHILD_ABSENT", "name": "Child Absent"},
-          {"code": "NON_COMPLIANCE", "name": "Non Compliance / Refusal"},
-          {"code": "HOUSE_NOT_VISITED", "name": "House not visited"},
-          {
-            "code": "VACCINATED_NOT_MARKED",
-            "name": "Vaccinated but not finger marked"
-          },
-          {"code": "CHILD_ASLEEP", "name": "Child was asleep"},
-          {"code": "CHILD_VISITOR", "name": "Child is a visitor"},
-          {"code": "OTHER", "name": "Other"},
-        ],
-        visibilityCondition: _vc("$pageName.fingerMarked=='NO'"),
-      ),
-
-      // 6. reasonNotMarkedOther (non-mandatory)
-      _prop(
-        type: "string",
-        label: "Other reason (specify)",
-        order: 6,
-        format: "text",
-        fieldName: "reasonNotMarkedOther",
-        validations: [],
-        visibilityCondition: _vc("$pageName.reasonNotMarked=='OTHER'"),
-      ),
-
-      // ── Sub-conditional: shown when reasonNotMarked == NON_COMPLIANCE ──
-
-      // 7. refusalReason (non-mandatory)
-      _prop(
-        type: "string",
-        label: "Reason for refusal",
-        order: 7,
-        format: "dropdown",
-        fieldName: "refusalReason",
-        validations: [],
-        enums: [
-          {
-            "code": "RELIGIOUS_CULTURAL",
-            "name": "Religious / Cultural beliefs"
-          },
-          {"code": "VACCINE_NOT_SAFE", "name": "Vaccine is not safe"},
-          {"code": "NO_FELT_NEED", "name": "No felt need"},
-          {"code": "TOO_MANY_ROUNDS", "name": "Too many rounds"},
-          {"code": "NO_CAREGIVER_CONSENT", "name": "No caregiver consent"},
-          {"code": "CHILD_SICK", "name": "Child was sick"},
-          {"code": "COVID_RELATED", "name": "COVID-19 related reasons"},
-          {"code": "AFRICA_POLIO_FREE", "name": "Africa is polio free"},
-          {"code": "NOPV_CONCERNS", "name": "Concerns about nOPV"},
-          {"code": "OTHERS", "name": "Others"},
-        ],
-        visibilityCondition:
-            _vc("$pageName.reasonNotMarked=='NON_COMPLIANCE'"),
-      ),
-
-      // 8. refusalReasonOther (non-mandatory)
-      _prop(
-        type: "string",
-        label: "Other refusal reason (specify)",
-        order: 8,
-        format: "text",
-        fieldName: "refusalReasonOther",
-        validations: [],
-        visibilityCondition: _vc("$pageName.refusalReason=='OTHERS'"),
-      ),
-
-      // ── Sub-conditional: shown when reasonNotMarked == CHILD_ABSENT ──
-
-      // 9. absenceReason (non-mandatory)
-      _prop(
-        type: "string",
-        label: "Reason for absence",
-        order: 9,
-        format: "dropdown",
-        fieldName: "absenceReason",
-        validations: [],
-        enums: [
-          {"code": "AT_FARM", "name": "At the farm"},
-          {"code": "IN_MARKET", "name": "In market"},
-          {"code": "AT_SCHOOL", "name": "At school"},
-          {"code": "IN_PLAYGROUND", "name": "In playground"},
-          {"code": "TRAVELLED", "name": "Travelled"},
-          {"code": "OTHER", "name": "Other"},
-        ],
-        visibilityCondition: _vc("$pageName.reasonNotMarked=='CHILD_ABSENT'"),
-      ),
-
-      // 10. absenceReasonOther (non-mandatory)
-      _prop(
-        type: "string",
-        label: "Other absence reason (specify)",
-        order: 10,
-        format: "text",
-        fieldName: "absenceReasonOther",
-        validations: [],
-        visibilityCondition: _vc("$pageName.absenceReason=='OTHER'"),
-      ),
-
-      // ── End of fingerMarked == NO conditional block ──
-
-      // 11. caregiverInformed
-      _prop(
-        type: "string",
-        label: "Was caregiver informed about the campaign?",
-        order: 11,
-        format: "dropdown",
-        fieldName: "caregiverInformed",
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-        ],
-        enums: [
-          {"code": "YES", "name": "Yes"},
-          {"code": "NO", "name": "No"},
-        ],
-      ),
-
-      // 12. campaignAwareness — show when caregiverInformed == YES
-      _prop(
-        type: "string",
-        label: "How did caregiver know about the campaign?",
-        order: 12,
-        format: "dropdown",
-        fieldName: "campaignAwareness",
-        validations: [],
-        enums: [
-          {"code": "TV", "name": "TV"},
-          {"code": "RADIO", "name": "Radio / community radio"},
-          {"code": "MOB_VAN", "name": "Mob Van / PA"},
-          {"code": "HEALTH_WORKER", "name": "Health worker"},
-          {
-            "code": "VOLUNTEER_CHW",
-            "name": "Volunteer community health workers"
-          },
-          {"code": "RELIGIOUS_LEADER", "name": "Religious leader"},
-          {"code": "COMMUNITY_LEADER", "name": "Community leader"},
-          {
-            "code": "SOCIAL_MEDIA",
-            "name": "Mobile Messaging / Social Media"
-          },
-          {"code": "SCHOOL", "name": "School (Teachers / students)"},
-          {"code": "IEC_MATERIALS", "name": "IEC materials"},
-          {"code": "SOCIAL_MOBILIZER", "name": "Social Mobilizer / CBV"},
-          {"code": "NEIGHBOUR", "name": "Neighbour"},
-          {"code": "NEWSPAPER", "name": "Newspaper"},
-          {"code": "OTHERS", "name": "Others"},
-        ],
-        visibilityCondition: _vc("$pageName.caregiverInformed=='YES'"),
-      ),
-
-      // 13. awarenessOther — optional, shown alongside campaignAwareness
-      _prop(
-        type: "string",
-        label: "Other awareness source (specify)",
-        order: 13,
-        format: "text",
-        fieldName: "awarenessOther",
-        validations: [],
-        visibilityCondition: _vc("$pageName.caregiverInformed=='YES'"),
-      ),
-
-      // 14. opvDosesFromBirth
-      _prop(
-        type: "integer",
-        label: "Total OPV doses received from birth",
-        order: 14,
-        format: "numeric",
-        fieldName: "opvDosesFromBirth",
-        value: "",
-        isEditable: true,
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 15. afpAwareness
-      _prop(
-        type: "string",
-        label: "Caregiver aware of AFP cases in community (last 2 months)?",
-        order: 15,
-        format: "dropdown",
-        fieldName: "afpAwareness",
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-        ],
-        enums: [
-          {"code": "YES", "name": "Yes"},
-          {"code": "NO", "name": "No"},
-        ],
-      ),
-
-      // 16. afpCaseCount — show when afpAwareness == YES
-      _prop(
-        type: "integer",
-        label: "Number of AFP cases known",
-        order: 16,
-        format: "numeric",
-        fieldName: "afpCaseCount",
-        value: "",
-        isEditable: true,
-        validations: [
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-        visibilityCondition: _vc("$pageName.afpAwareness=='YES'"),
-      ),
-    ],
-  };
-}
-
 final dynamic samplePolioLqaDataCollectionFlows = {
-  "name": "POLIO_LQA_DATA_COLLECTION",
+  "name": "LQA",
   "initialPage": "lqaDataEntry",
-  "project": "POLIO-SIA",
+  "project": "POLIO",
   "version": 1,
   "disabled": false,
   "isSelected": true,
   "flows": [
-    // ──────────────────────────────────────────────────────────
-    // 1. lqaDataEntry (FORM, order:1) — LQA Data Collection
-    // ──────────────────────────────────────────────────────────
     {
       "screenType": "FORM",
       "name": "lqaDataEntry",
@@ -410,326 +16,6103 @@ final dynamic samplePolioLqaDataCollectionFlows = {
       "initActions": [],
       "wrapperConfig": {},
       "pages": [
-        // ── Page 1: Cluster Info ──
         {
           "page": "clusterInfo",
-          "label": "Cluster Information",
+          "label": "LQA_CLUSTER_INFO_LABEL",
           "order": 1,
           "type": "object",
-          "description":
-              "Lot/cluster header — geographic info, surveyor details, GPS",
-          "actionLabel": "Next",
-          ..._pageNulls(),
+          "description": "LQA_CLUSTER_INFO_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
           "navigateTo": {"name": "child1", "type": "form"},
           "properties": [
-            // 1. surveyDate
-            _prop(
-              type: "string",
-              label: "Survey Date",
-              order: 1,
-              format: "text",
-              fieldName: "surveyDate",
-              readOnly: true,
-              systemDate: true,
-              validations: [
+            {
+              "type": "string",
+              "label": "LQA_SURVEY_DATE_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "surveyDate",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Survey date is required"
-                },
+                  "message": "LQA_VALIDATION_SURVEY_DATE_REQUIRED"
+                }
               ],
-            ),
-
-            // 2. settlementArea — auto-populated from selected boundary
-            _prop(
-              type: "string",
-              label: "Settlement Area",
-              order: 2,
-              format: "locality",
-              fieldName: "settlementArea",
-              readOnly: true,
-              validations: [],
-            ),
-
-            // 3. healthFacilityArea
-            _prop(
-              type: "string",
-              label: "Health Facility Area",
-              order: 3,
-              format: "text",
-              fieldName: "healthFacilityArea",
-              validations: [],
-            ),
-
-            // 4. lotNumber
-            _prop(
-              type: "string",
-              label: "Sub-County LOT Number",
-              order: 4,
-              format: "text",
-              fieldName: "lotNumber",
-              validations: [
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "LQA_SETTLEMENT_AREA_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "locality",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "settlementArea",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "LQA_HEALTH_FACILITY_AREA_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "healthFacilityArea",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "LQA_LOT_NUMBER_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "lotNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Lot number is required"
-                },
+                  "message": "LQA_VALIDATION_LOT_NUMBER_REQUIRED"
+                }
               ],
-            ),
-
-            // 5. clusterNumber
-            _prop(
-              type: "string",
-              label: "Cluster Number",
-              order: 5,
-              format: "dropdown",
-              fieldName: "clusterNumber",
-              validations: [
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "LQA_CLUSTER_NUMBER_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "clusterNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Cluster number is required"
-                },
+                  "message": "LQA_VALIDATION_CLUSTER_NUMBER_REQUIRED"
+                }
               ],
-              enums: [
-                {"code": "1", "name": "Cluster 1"},
-                {"code": "2", "name": "Cluster 2"},
-                {"code": "3", "name": "Cluster 3"},
-                {"code": "4", "name": "Cluster 4"},
-                {"code": "5", "name": "Cluster 5"},
-                {"code": "6", "name": "Cluster 6"},
-              ],
-            ),
-
-            // 6. numberOfInterviews — controls how many child pages are shown
-            _prop(
-              type: "integer",
-              label: "Number of Child Interviews",
-              order: 6,
-              format: "numeric",
-              fieldName: "numberOfInterviews",
-              value: "5",
-              isEditable: true,
-              helpText: "How many children to interview in this cluster (1-10)",
-              validations: [
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "1", "name": "LQA_ENUM_CLUSTER_1"},
+                {"code": "2", "name": "LQA_ENUM_CLUSTER_2"},
+                {"code": "3", "name": "LQA_ENUM_CLUSTER_3"},
+                {"code": "4", "name": "LQA_ENUM_CLUSTER_4"},
+                {"code": "5", "name": "LQA_ENUM_CLUSTER_5"},
+                {"code": "6", "name": "LQA_ENUM_CLUSTER_6"}
+              ]
+            },
+            {
+              "type": "integer",
+              "label": "LQA_NUMBER_OF_INTERVIEWS_LABEL",
+              "order": 6,
+              "value": "5",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_NUMBER_OF_INTERVIEWS_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "numberOfInterviews",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required"
+                  "message": "LQA_VALIDATION_REQUIRED"
                 },
                 {
                   "type": "min",
                   "value": 1,
-                  "message": "Minimum 1 interview"
+                  "message": "LQA_VALIDATION_MIN_1_INTERVIEW"
                 },
                 {
                   "type": "max",
                   "value": 10,
-                  "message": "Maximum 10 interviews"
-                },
-              ],
-            ),
-
-            // 7. surveyorName — auto-populated from logged-in user
-            _prop(
-              type: "string",
-              label: "Surveyor Name",
-              order: 7,
-              format: "text",
-              fieldName: "surveyorName",
-              readOnly: true,
-              helpText: "Auto-populated from logged-in user",
-              validations: [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "Surveyor name is required"
-                },
-              ],
-              autoFillCondition: [
-                {
-                  "value": "{{loggedInUserName}}",
-                  "expression": "true==true"
+                  "message": "LQA_VALIDATION_MAX_10_INTERVIEWS"
                 }
               ],
-            ),
-
-            // 8. surveyorPhone — auto-populated from logged-in user
-            _prop(
-              type: "string",
-              label: "Surveyor Phone Number",
-              order: 8,
-              format: "phone",
-              fieldName: "surveyorPhone",
-              readOnly: true,
-              helpText: "Auto-populated from logged-in user",
-              validations: [
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_SURVEYOR_NAME_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_SURVEYOR_NAME_HELPTEXT",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "surveyorName",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Phone number is required"
-                },
+                  "message": "LQA_VALIDATION_SURVEYOR_NAME_REQUIRED"
+                }
               ],
-              autoFillCondition: [
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "autoFillCondition": [
+                {"value": "{{loggedInUserName}}", "expression": "true==true"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_SURVEYOR_PHONE_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "phone",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_SURVEYOR_PHONE_HELPTEXT",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "surveyorPhone",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_PHONE_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "autoFillCondition": [
                 {
                   "value": "{{loggedInUserMobileNumber}}",
                   "expression": "true==true"
                 }
-              ],
-            ),
-
-            // 9. lqasCoordinatorName
-            _prop(
-              type: "string",
-              label: "LQAS Coordinator Name",
-              order: 9,
-              format: "text",
-              fieldName: "lqasCoordinatorName",
-              validations: [
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_COORDINATOR_NAME_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "lqasCoordinatorName",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Coordinator name is required"
+                  "message": "LQA_VALIDATION_COORDINATOR_NAME_REQUIRED"
                 },
                 {
                   "type": "minLength",
                   "value": 2,
-                  "message": "Name must be at least 2 characters"
-                },
+                  "message": "LQA_VALIDATION_NAME_MIN_2_CHARS"
+                }
               ],
-            ),
-
-            // 10. startingVillage
-            _prop(
-              type: "string",
-              label: "Starting Village / Settlement",
-              order: 10,
-              format: "text",
-              fieldName: "startingVillage",
-              validations: [
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "LQA_STARTING_VILLAGE_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "startingVillage",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Starting village is required"
-                },
+                  "message": "LQA_VALIDATION_STARTING_VILLAGE_REQUIRED"
+                }
               ],
-            ),
-
-            // 11. settlementType
-            _prop(
-              type: "string",
-              label: "Settlement Type",
-              order: 11,
-              format: "dropdown",
-              fieldName: "settlementType",
-              validations: [
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "LQA_SETTLEMENT_TYPE_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "settlementType",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Settlement type is required"
-                },
+                  "message": "LQA_VALIDATION_SETTLEMENT_TYPE_REQUIRED"
+                }
               ],
-              enums: [
-                {"code": "URBAN", "name": "Urban"},
-                {"code": "RURAL", "name": "Rural"},
-                {"code": "SLUMS", "name": "Slums"},
-                {"code": "REFUGEES_IDPS", "name": "Refugees / IDPs"},
-                {"code": "HARD_TO_REACH", "name": "Hard to Reach"},
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "URBAN", "name": "LQA_ENUM_URBAN"},
+                {"code": "RURAL", "name": "LQA_ENUM_RURAL"},
+                {"code": "SLUMS", "name": "LQA_ENUM_SLUMS"},
+                {"code": "REFUGEES_IDPS", "name": "LQA_ENUM_REFUGEES_IDPS"},
+                {"code": "HARD_TO_REACH", "name": "LQA_ENUM_HARD_TO_REACH"},
                 {
                   "code": "NOMADS_PASTORALISTS",
-                  "name": "Nomads / Pastoralists"
+                  "name": "LQA_ENUM_NOMADS_PASTORALISTS"
                 },
                 {
                   "code": "SECURITY_COMPROMISED",
-                  "name": "Security Compromised"
+                  "name": "LQA_ENUM_SECURITY_COMPROMISED"
                 },
-                {"code": "IMMIGRANTS", "name": "Immigrants"},
-                {"code": "CROSS_BORDER", "name": "Cross-Border"},
-              ],
-            ),
-
-            // 12. settlementSmall
-            _prop(
-              type: "string",
-              label: "Is settlement less than 20 houses?",
-              order: 12,
-              format: "dropdown",
-              fieldName: "settlementSmall",
-              validations: [
-                {"type": "required", "value": true, "message": "Required"},
-              ],
-              enums: [
-                {"code": "YES", "name": "Yes"},
-                {"code": "NO", "name": "No"},
-              ],
-            ),
-
-            // 13. gpsStart
-            _prop(
-              type: "string",
-              label: "Detected Start Location",
-              order: 13,
-              format: "latLng",
-              fieldName: "gpsStart",
-              helpText: "Capture GPS coordinates at cluster starting point",
-              validations: [
+                {"code": "IMMIGRANTS", "name": "LQA_ENUM_IMMIGRANTS"},
+                {"code": "CROSS_BORDER", "name": "LQA_ENUM_CROSS_BORDER"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_SETTLEMENT_SMALL_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "settlementSmall",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "GPS location is required"
-                },
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
               ],
-            ),
-          ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_GPS_START_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_GPS_START_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "gpsStart",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_GPS_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            }
+          ]
         },
-
-        // ── Child pages: generated dynamically (max lqaChildCount) ──
-        for (int i = 1; i <= lqaChildCount; i++)
-          _childPage(
-            i,
-            i < lqaChildCount ? "child${i + 1}" : "closeout",
-          ),
-
-        // ── Closeout page ──
+        {
+          "page": "child1",
+          "label": "LQA_CHILD_PAGE_LABEL",
+          "order": 2,
+          "type": "object",
+          "description": "LQA_CHILD_PAGE_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "child2", "type": "form"},
+          "conditionalNavigateTo": [
+            {
+              "type": "custom",
+              "condition": "clusterInfo.numberOfInterviews=='1'",
+              "navigateTo": {"name": "closeout", "type": "form"}
+            }
+          ],
+          "properties": [
+            {
+              "type": "integer",
+              "label": "LQA_CHILDREN_UNDER_5_LABEL",
+              "order": 1,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_CHILDREN_UNDER_5_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenUnder5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "integer",
+              "label": "LQA_CHILD_AGE_MONTHS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childAgeMonths",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message": "LQA_VALIDATION_MAX_59_MONTHS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_CHILD_SEX_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childSex",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "MALE", "name": "LQA_ENUM_MALE"},
+                {"code": "FEMALE", "name": "LQA_ENUM_FEMALE"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINGER_MARKED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "fingerMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_REASON_NOT_MARKED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "CHILD_ABSENT", "name": "LQA_ENUM_CHILD_ABSENT"},
+                {"code": "NON_COMPLIANCE", "name": "LQA_ENUM_NON_COMPLIANCE"},
+                {
+                  "code": "HOUSE_NOT_VISITED",
+                  "name": "LQA_ENUM_HOUSE_NOT_VISITED"
+                },
+                {
+                  "code": "VACCINATED_NOT_MARKED",
+                  "name": "LQA_ENUM_VACCINATED_NOT_MARKED"
+                },
+                {"code": "CHILD_ASLEEP", "name": "LQA_ENUM_CHILD_ASLEEP"},
+                {"code": "CHILD_VISITOR", "name": "LQA_ENUM_CHILD_VISITOR"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child1.fingerMarked=='NO'", "type": "custom"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REASON_SPECIFY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarkedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child1.reasonNotMarked=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_REFUSAL_REASON_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "LQA_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "LQA_ENUM_VACCINE_NOT_SAFE"
+                },
+                {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {"code": "CHILD_SICK", "name": "LQA_ENUM_CHILD_SICK"},
+                {"code": "COVID_RELATED", "name": "LQA_ENUM_COVID_RELATED"},
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "LQA_ENUM_AFRICA_POLIO_FREE"
+                },
+                {"code": "NOPV_CONCERNS", "name": "LQA_ENUM_NOPV_CONCERNS"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child1.reasonNotMarked=='NON_COMPLIANCE'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REFUSAL_REASON_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child1.refusalReason=='OTHERS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_ABSENCE_REASON_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "AT_FARM", "name": "LQA_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "LQA_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "LQA_ENUM_AT_SCHOOL"},
+                {"code": "IN_PLAYGROUND", "name": "LQA_ENUM_IN_PLAYGROUND"},
+                {"code": "TRAVELLED", "name": "LQA_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child1.reasonNotMarked=='CHILD_ABSENT'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_ABSENCE_REASON_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child1.absenceReason=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAREGIVER_INFORMED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAMPAIGN_AWARENESS_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "TV", "name": "LQA_ENUM_TV"},
+                {"code": "RADIO", "name": "LQA_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "LQA_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "LQA_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "LQA_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "LQA_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "LQA_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "LQA_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "LQA_ENUM_SCHOOL"},
+                {"code": "IEC_MATERIALS", "name": "LQA_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "LQA_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "LQA_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "LQA_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child1.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_AWARENESS_OTHER_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "awarenessOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child1.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "LQA_OPV_DOSES_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "opvDosesFromBirth",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_AFP_AWARENESS_LABEL",
+              "order": 15,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "integer",
+              "label": "LQA_AFP_CASE_COUNT_LABEL",
+              "order": 16,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpCaseCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child1.afpAwareness=='YES'", "type": "custom"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "page": "child2",
+          "label": "LQA_CHILD_PAGE_LABEL",
+          "order": 3,
+          "type": "object",
+          "description": "LQA_CHILD_PAGE_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "child3", "type": "form"},
+          "conditionalNavigateTo": [
+            {
+              "type": "custom",
+              "condition": "clusterInfo.numberOfInterviews=='2'",
+              "navigateTo": {"name": "closeout", "type": "form"}
+            }
+          ],
+          "properties": [
+            {
+              "type": "integer",
+              "label": "LQA_CHILDREN_UNDER_5_LABEL",
+              "order": 1,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_CHILDREN_UNDER_5_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenUnder5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "integer",
+              "label": "LQA_CHILD_AGE_MONTHS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childAgeMonths",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message": "LQA_VALIDATION_MAX_59_MONTHS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_CHILD_SEX_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childSex",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "MALE", "name": "LQA_ENUM_MALE"},
+                {"code": "FEMALE", "name": "LQA_ENUM_FEMALE"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINGER_MARKED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "fingerMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_REASON_NOT_MARKED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "CHILD_ABSENT", "name": "LQA_ENUM_CHILD_ABSENT"},
+                {"code": "NON_COMPLIANCE", "name": "LQA_ENUM_NON_COMPLIANCE"},
+                {
+                  "code": "HOUSE_NOT_VISITED",
+                  "name": "LQA_ENUM_HOUSE_NOT_VISITED"
+                },
+                {
+                  "code": "VACCINATED_NOT_MARKED",
+                  "name": "LQA_ENUM_VACCINATED_NOT_MARKED"
+                },
+                {"code": "CHILD_ASLEEP", "name": "LQA_ENUM_CHILD_ASLEEP"},
+                {"code": "CHILD_VISITOR", "name": "LQA_ENUM_CHILD_VISITOR"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child2.fingerMarked=='NO'", "type": "custom"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REASON_SPECIFY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarkedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child2.reasonNotMarked=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_REFUSAL_REASON_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "LQA_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "LQA_ENUM_VACCINE_NOT_SAFE"
+                },
+                {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {"code": "CHILD_SICK", "name": "LQA_ENUM_CHILD_SICK"},
+                {"code": "COVID_RELATED", "name": "LQA_ENUM_COVID_RELATED"},
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "LQA_ENUM_AFRICA_POLIO_FREE"
+                },
+                {"code": "NOPV_CONCERNS", "name": "LQA_ENUM_NOPV_CONCERNS"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child2.reasonNotMarked=='NON_COMPLIANCE'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REFUSAL_REASON_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child2.refusalReason=='OTHERS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_ABSENCE_REASON_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "AT_FARM", "name": "LQA_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "LQA_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "LQA_ENUM_AT_SCHOOL"},
+                {"code": "IN_PLAYGROUND", "name": "LQA_ENUM_IN_PLAYGROUND"},
+                {"code": "TRAVELLED", "name": "LQA_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child2.reasonNotMarked=='CHILD_ABSENT'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_ABSENCE_REASON_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child2.absenceReason=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAREGIVER_INFORMED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAMPAIGN_AWARENESS_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "TV", "name": "LQA_ENUM_TV"},
+                {"code": "RADIO", "name": "LQA_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "LQA_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "LQA_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "LQA_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "LQA_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "LQA_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "LQA_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "LQA_ENUM_SCHOOL"},
+                {"code": "IEC_MATERIALS", "name": "LQA_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "LQA_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "LQA_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "LQA_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child2.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_AWARENESS_OTHER_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "awarenessOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child2.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "LQA_OPV_DOSES_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "opvDosesFromBirth",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_AFP_AWARENESS_LABEL",
+              "order": 15,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "integer",
+              "label": "LQA_AFP_CASE_COUNT_LABEL",
+              "order": 16,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpCaseCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child2.afpAwareness=='YES'", "type": "custom"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "page": "child3",
+          "label": "LQA_CHILD_PAGE_LABEL",
+          "order": 4,
+          "type": "object",
+          "description": "LQA_CHILD_PAGE_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "child4", "type": "form"},
+          "conditionalNavigateTo": [
+            {
+              "type": "custom",
+              "condition": "clusterInfo.numberOfInterviews=='3'",
+              "navigateTo": {"name": "closeout", "type": "form"}
+            }
+          ],
+          "properties": [
+            {
+              "type": "integer",
+              "label": "LQA_CHILDREN_UNDER_5_LABEL",
+              "order": 1,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_CHILDREN_UNDER_5_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenUnder5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "integer",
+              "label": "LQA_CHILD_AGE_MONTHS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childAgeMonths",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message": "LQA_VALIDATION_MAX_59_MONTHS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_CHILD_SEX_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childSex",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "MALE", "name": "LQA_ENUM_MALE"},
+                {"code": "FEMALE", "name": "LQA_ENUM_FEMALE"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINGER_MARKED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "fingerMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_REASON_NOT_MARKED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "CHILD_ABSENT", "name": "LQA_ENUM_CHILD_ABSENT"},
+                {"code": "NON_COMPLIANCE", "name": "LQA_ENUM_NON_COMPLIANCE"},
+                {
+                  "code": "HOUSE_NOT_VISITED",
+                  "name": "LQA_ENUM_HOUSE_NOT_VISITED"
+                },
+                {
+                  "code": "VACCINATED_NOT_MARKED",
+                  "name": "LQA_ENUM_VACCINATED_NOT_MARKED"
+                },
+                {"code": "CHILD_ASLEEP", "name": "LQA_ENUM_CHILD_ASLEEP"},
+                {"code": "CHILD_VISITOR", "name": "LQA_ENUM_CHILD_VISITOR"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child3.fingerMarked=='NO'", "type": "custom"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REASON_SPECIFY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarkedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child3.reasonNotMarked=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_REFUSAL_REASON_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "LQA_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "LQA_ENUM_VACCINE_NOT_SAFE"
+                },
+                {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {"code": "CHILD_SICK", "name": "LQA_ENUM_CHILD_SICK"},
+                {"code": "COVID_RELATED", "name": "LQA_ENUM_COVID_RELATED"},
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "LQA_ENUM_AFRICA_POLIO_FREE"
+                },
+                {"code": "NOPV_CONCERNS", "name": "LQA_ENUM_NOPV_CONCERNS"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child3.reasonNotMarked=='NON_COMPLIANCE'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REFUSAL_REASON_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child3.refusalReason=='OTHERS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_ABSENCE_REASON_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "AT_FARM", "name": "LQA_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "LQA_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "LQA_ENUM_AT_SCHOOL"},
+                {"code": "IN_PLAYGROUND", "name": "LQA_ENUM_IN_PLAYGROUND"},
+                {"code": "TRAVELLED", "name": "LQA_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child3.reasonNotMarked=='CHILD_ABSENT'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_ABSENCE_REASON_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child3.absenceReason=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAREGIVER_INFORMED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAMPAIGN_AWARENESS_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "TV", "name": "LQA_ENUM_TV"},
+                {"code": "RADIO", "name": "LQA_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "LQA_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "LQA_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "LQA_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "LQA_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "LQA_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "LQA_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "LQA_ENUM_SCHOOL"},
+                {"code": "IEC_MATERIALS", "name": "LQA_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "LQA_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "LQA_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "LQA_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child3.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_AWARENESS_OTHER_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "awarenessOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child3.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "LQA_OPV_DOSES_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "opvDosesFromBirth",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_AFP_AWARENESS_LABEL",
+              "order": 15,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "integer",
+              "label": "LQA_AFP_CASE_COUNT_LABEL",
+              "order": 16,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpCaseCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child3.afpAwareness=='YES'", "type": "custom"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "page": "child4",
+          "label": "LQA_CHILD_PAGE_LABEL",
+          "order": 5,
+          "type": "object",
+          "description": "LQA_CHILD_PAGE_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "child5", "type": "form"},
+          "conditionalNavigateTo": [
+            {
+              "type": "custom",
+              "condition": "clusterInfo.numberOfInterviews=='4'",
+              "navigateTo": {"name": "closeout", "type": "form"}
+            }
+          ],
+          "properties": [
+            {
+              "type": "integer",
+              "label": "LQA_CHILDREN_UNDER_5_LABEL",
+              "order": 1,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_CHILDREN_UNDER_5_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenUnder5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "integer",
+              "label": "LQA_CHILD_AGE_MONTHS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childAgeMonths",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message": "LQA_VALIDATION_MAX_59_MONTHS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_CHILD_SEX_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childSex",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "MALE", "name": "LQA_ENUM_MALE"},
+                {"code": "FEMALE", "name": "LQA_ENUM_FEMALE"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINGER_MARKED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "fingerMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_REASON_NOT_MARKED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "CHILD_ABSENT", "name": "LQA_ENUM_CHILD_ABSENT"},
+                {"code": "NON_COMPLIANCE", "name": "LQA_ENUM_NON_COMPLIANCE"},
+                {
+                  "code": "HOUSE_NOT_VISITED",
+                  "name": "LQA_ENUM_HOUSE_NOT_VISITED"
+                },
+                {
+                  "code": "VACCINATED_NOT_MARKED",
+                  "name": "LQA_ENUM_VACCINATED_NOT_MARKED"
+                },
+                {"code": "CHILD_ASLEEP", "name": "LQA_ENUM_CHILD_ASLEEP"},
+                {"code": "CHILD_VISITOR", "name": "LQA_ENUM_CHILD_VISITOR"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child4.fingerMarked=='NO'", "type": "custom"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REASON_SPECIFY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarkedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child4.reasonNotMarked=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_REFUSAL_REASON_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "LQA_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "LQA_ENUM_VACCINE_NOT_SAFE"
+                },
+                {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {"code": "CHILD_SICK", "name": "LQA_ENUM_CHILD_SICK"},
+                {"code": "COVID_RELATED", "name": "LQA_ENUM_COVID_RELATED"},
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "LQA_ENUM_AFRICA_POLIO_FREE"
+                },
+                {"code": "NOPV_CONCERNS", "name": "LQA_ENUM_NOPV_CONCERNS"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child4.reasonNotMarked=='NON_COMPLIANCE'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REFUSAL_REASON_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child4.refusalReason=='OTHERS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_ABSENCE_REASON_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "AT_FARM", "name": "LQA_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "LQA_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "LQA_ENUM_AT_SCHOOL"},
+                {"code": "IN_PLAYGROUND", "name": "LQA_ENUM_IN_PLAYGROUND"},
+                {"code": "TRAVELLED", "name": "LQA_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child4.reasonNotMarked=='CHILD_ABSENT'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_ABSENCE_REASON_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child4.absenceReason=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAREGIVER_INFORMED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAMPAIGN_AWARENESS_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "TV", "name": "LQA_ENUM_TV"},
+                {"code": "RADIO", "name": "LQA_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "LQA_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "LQA_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "LQA_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "LQA_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "LQA_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "LQA_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "LQA_ENUM_SCHOOL"},
+                {"code": "IEC_MATERIALS", "name": "LQA_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "LQA_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "LQA_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "LQA_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child4.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_AWARENESS_OTHER_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "awarenessOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child4.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "LQA_OPV_DOSES_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "opvDosesFromBirth",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_AFP_AWARENESS_LABEL",
+              "order": 15,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "integer",
+              "label": "LQA_AFP_CASE_COUNT_LABEL",
+              "order": 16,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpCaseCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child4.afpAwareness=='YES'", "type": "custom"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "page": "child5",
+          "label": "LQA_CHILD_PAGE_LABEL",
+          "order": 6,
+          "type": "object",
+          "description": "LQA_CHILD_PAGE_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "child6", "type": "form"},
+          "conditionalNavigateTo": [
+            {
+              "type": "custom",
+              "condition": "clusterInfo.numberOfInterviews=='5'",
+              "navigateTo": {"name": "closeout", "type": "form"}
+            }
+          ],
+          "properties": [
+            {
+              "type": "integer",
+              "label": "LQA_CHILDREN_UNDER_5_LABEL",
+              "order": 1,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_CHILDREN_UNDER_5_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenUnder5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "integer",
+              "label": "LQA_CHILD_AGE_MONTHS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childAgeMonths",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message": "LQA_VALIDATION_MAX_59_MONTHS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_CHILD_SEX_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childSex",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "MALE", "name": "LQA_ENUM_MALE"},
+                {"code": "FEMALE", "name": "LQA_ENUM_FEMALE"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINGER_MARKED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "fingerMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_REASON_NOT_MARKED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "CHILD_ABSENT", "name": "LQA_ENUM_CHILD_ABSENT"},
+                {"code": "NON_COMPLIANCE", "name": "LQA_ENUM_NON_COMPLIANCE"},
+                {
+                  "code": "HOUSE_NOT_VISITED",
+                  "name": "LQA_ENUM_HOUSE_NOT_VISITED"
+                },
+                {
+                  "code": "VACCINATED_NOT_MARKED",
+                  "name": "LQA_ENUM_VACCINATED_NOT_MARKED"
+                },
+                {"code": "CHILD_ASLEEP", "name": "LQA_ENUM_CHILD_ASLEEP"},
+                {"code": "CHILD_VISITOR", "name": "LQA_ENUM_CHILD_VISITOR"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child5.fingerMarked=='NO'", "type": "custom"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REASON_SPECIFY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarkedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child5.reasonNotMarked=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_REFUSAL_REASON_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "LQA_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "LQA_ENUM_VACCINE_NOT_SAFE"
+                },
+                {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {"code": "CHILD_SICK", "name": "LQA_ENUM_CHILD_SICK"},
+                {"code": "COVID_RELATED", "name": "LQA_ENUM_COVID_RELATED"},
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "LQA_ENUM_AFRICA_POLIO_FREE"
+                },
+                {"code": "NOPV_CONCERNS", "name": "LQA_ENUM_NOPV_CONCERNS"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child5.reasonNotMarked=='NON_COMPLIANCE'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REFUSAL_REASON_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child5.refusalReason=='OTHERS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_ABSENCE_REASON_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "AT_FARM", "name": "LQA_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "LQA_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "LQA_ENUM_AT_SCHOOL"},
+                {"code": "IN_PLAYGROUND", "name": "LQA_ENUM_IN_PLAYGROUND"},
+                {"code": "TRAVELLED", "name": "LQA_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child5.reasonNotMarked=='CHILD_ABSENT'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_ABSENCE_REASON_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child5.absenceReason=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAREGIVER_INFORMED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAMPAIGN_AWARENESS_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "TV", "name": "LQA_ENUM_TV"},
+                {"code": "RADIO", "name": "LQA_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "LQA_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "LQA_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "LQA_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "LQA_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "LQA_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "LQA_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "LQA_ENUM_SCHOOL"},
+                {"code": "IEC_MATERIALS", "name": "LQA_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "LQA_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "LQA_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "LQA_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child5.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_AWARENESS_OTHER_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "awarenessOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child5.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "LQA_OPV_DOSES_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "opvDosesFromBirth",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_AFP_AWARENESS_LABEL",
+              "order": 15,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "integer",
+              "label": "LQA_AFP_CASE_COUNT_LABEL",
+              "order": 16,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpCaseCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child5.afpAwareness=='YES'", "type": "custom"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "page": "child6",
+          "label": "LQA_CHILD_PAGE_LABEL",
+          "order": 7,
+          "type": "object",
+          "description": "LQA_CHILD_PAGE_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "child7", "type": "form"},
+          "conditionalNavigateTo": [
+            {
+              "type": "custom",
+              "condition": "clusterInfo.numberOfInterviews=='6'",
+              "navigateTo": {"name": "closeout", "type": "form"}
+            }
+          ],
+          "properties": [
+            {
+              "type": "integer",
+              "label": "LQA_CHILDREN_UNDER_5_LABEL",
+              "order": 1,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_CHILDREN_UNDER_5_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenUnder5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "integer",
+              "label": "LQA_CHILD_AGE_MONTHS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childAgeMonths",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message": "LQA_VALIDATION_MAX_59_MONTHS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_CHILD_SEX_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childSex",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "MALE", "name": "LQA_ENUM_MALE"},
+                {"code": "FEMALE", "name": "LQA_ENUM_FEMALE"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINGER_MARKED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "fingerMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_REASON_NOT_MARKED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "CHILD_ABSENT", "name": "LQA_ENUM_CHILD_ABSENT"},
+                {"code": "NON_COMPLIANCE", "name": "LQA_ENUM_NON_COMPLIANCE"},
+                {
+                  "code": "HOUSE_NOT_VISITED",
+                  "name": "LQA_ENUM_HOUSE_NOT_VISITED"
+                },
+                {
+                  "code": "VACCINATED_NOT_MARKED",
+                  "name": "LQA_ENUM_VACCINATED_NOT_MARKED"
+                },
+                {"code": "CHILD_ASLEEP", "name": "LQA_ENUM_CHILD_ASLEEP"},
+                {"code": "CHILD_VISITOR", "name": "LQA_ENUM_CHILD_VISITOR"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child6.fingerMarked=='NO'", "type": "custom"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REASON_SPECIFY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarkedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child6.reasonNotMarked=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_REFUSAL_REASON_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "LQA_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "LQA_ENUM_VACCINE_NOT_SAFE"
+                },
+                {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {"code": "CHILD_SICK", "name": "LQA_ENUM_CHILD_SICK"},
+                {"code": "COVID_RELATED", "name": "LQA_ENUM_COVID_RELATED"},
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "LQA_ENUM_AFRICA_POLIO_FREE"
+                },
+                {"code": "NOPV_CONCERNS", "name": "LQA_ENUM_NOPV_CONCERNS"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child6.reasonNotMarked=='NON_COMPLIANCE'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REFUSAL_REASON_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child6.refusalReason=='OTHERS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_ABSENCE_REASON_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "AT_FARM", "name": "LQA_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "LQA_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "LQA_ENUM_AT_SCHOOL"},
+                {"code": "IN_PLAYGROUND", "name": "LQA_ENUM_IN_PLAYGROUND"},
+                {"code": "TRAVELLED", "name": "LQA_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child6.reasonNotMarked=='CHILD_ABSENT'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_ABSENCE_REASON_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child6.absenceReason=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAREGIVER_INFORMED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAMPAIGN_AWARENESS_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "TV", "name": "LQA_ENUM_TV"},
+                {"code": "RADIO", "name": "LQA_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "LQA_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "LQA_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "LQA_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "LQA_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "LQA_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "LQA_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "LQA_ENUM_SCHOOL"},
+                {"code": "IEC_MATERIALS", "name": "LQA_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "LQA_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "LQA_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "LQA_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child6.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_AWARENESS_OTHER_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "awarenessOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child6.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "LQA_OPV_DOSES_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "opvDosesFromBirth",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_AFP_AWARENESS_LABEL",
+              "order": 15,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "integer",
+              "label": "LQA_AFP_CASE_COUNT_LABEL",
+              "order": 16,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpCaseCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child6.afpAwareness=='YES'", "type": "custom"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "page": "child7",
+          "label": "LQA_CHILD_PAGE_LABEL",
+          "order": 8,
+          "type": "object",
+          "description": "LQA_CHILD_PAGE_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "child8", "type": "form"},
+          "conditionalNavigateTo": [
+            {
+              "type": "custom",
+              "condition": "clusterInfo.numberOfInterviews=='7'",
+              "navigateTo": {"name": "closeout", "type": "form"}
+            }
+          ],
+          "properties": [
+            {
+              "type": "integer",
+              "label": "LQA_CHILDREN_UNDER_5_LABEL",
+              "order": 1,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_CHILDREN_UNDER_5_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenUnder5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "integer",
+              "label": "LQA_CHILD_AGE_MONTHS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childAgeMonths",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message": "LQA_VALIDATION_MAX_59_MONTHS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_CHILD_SEX_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childSex",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "MALE", "name": "LQA_ENUM_MALE"},
+                {"code": "FEMALE", "name": "LQA_ENUM_FEMALE"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINGER_MARKED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "fingerMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_REASON_NOT_MARKED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "CHILD_ABSENT", "name": "LQA_ENUM_CHILD_ABSENT"},
+                {"code": "NON_COMPLIANCE", "name": "LQA_ENUM_NON_COMPLIANCE"},
+                {
+                  "code": "HOUSE_NOT_VISITED",
+                  "name": "LQA_ENUM_HOUSE_NOT_VISITED"
+                },
+                {
+                  "code": "VACCINATED_NOT_MARKED",
+                  "name": "LQA_ENUM_VACCINATED_NOT_MARKED"
+                },
+                {"code": "CHILD_ASLEEP", "name": "LQA_ENUM_CHILD_ASLEEP"},
+                {"code": "CHILD_VISITOR", "name": "LQA_ENUM_CHILD_VISITOR"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child7.fingerMarked=='NO'", "type": "custom"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REASON_SPECIFY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarkedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child7.reasonNotMarked=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_REFUSAL_REASON_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "LQA_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "LQA_ENUM_VACCINE_NOT_SAFE"
+                },
+                {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {"code": "CHILD_SICK", "name": "LQA_ENUM_CHILD_SICK"},
+                {"code": "COVID_RELATED", "name": "LQA_ENUM_COVID_RELATED"},
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "LQA_ENUM_AFRICA_POLIO_FREE"
+                },
+                {"code": "NOPV_CONCERNS", "name": "LQA_ENUM_NOPV_CONCERNS"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child7.reasonNotMarked=='NON_COMPLIANCE'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REFUSAL_REASON_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child7.refusalReason=='OTHERS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_ABSENCE_REASON_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "AT_FARM", "name": "LQA_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "LQA_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "LQA_ENUM_AT_SCHOOL"},
+                {"code": "IN_PLAYGROUND", "name": "LQA_ENUM_IN_PLAYGROUND"},
+                {"code": "TRAVELLED", "name": "LQA_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child7.reasonNotMarked=='CHILD_ABSENT'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_ABSENCE_REASON_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child7.absenceReason=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAREGIVER_INFORMED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAMPAIGN_AWARENESS_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "TV", "name": "LQA_ENUM_TV"},
+                {"code": "RADIO", "name": "LQA_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "LQA_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "LQA_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "LQA_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "LQA_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "LQA_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "LQA_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "LQA_ENUM_SCHOOL"},
+                {"code": "IEC_MATERIALS", "name": "LQA_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "LQA_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "LQA_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "LQA_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child7.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_AWARENESS_OTHER_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "awarenessOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child7.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "LQA_OPV_DOSES_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "opvDosesFromBirth",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_AFP_AWARENESS_LABEL",
+              "order": 15,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "integer",
+              "label": "LQA_AFP_CASE_COUNT_LABEL",
+              "order": 16,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpCaseCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child7.afpAwareness=='YES'", "type": "custom"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "page": "child8",
+          "label": "LQA_CHILD_PAGE_LABEL",
+          "order": 9,
+          "type": "object",
+          "description": "LQA_CHILD_PAGE_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "child9", "type": "form"},
+          "conditionalNavigateTo": [
+            {
+              "type": "custom",
+              "condition": "clusterInfo.numberOfInterviews=='8'",
+              "navigateTo": {"name": "closeout", "type": "form"}
+            }
+          ],
+          "properties": [
+            {
+              "type": "integer",
+              "label": "LQA_CHILDREN_UNDER_5_LABEL",
+              "order": 1,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_CHILDREN_UNDER_5_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenUnder5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "integer",
+              "label": "LQA_CHILD_AGE_MONTHS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childAgeMonths",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message": "LQA_VALIDATION_MAX_59_MONTHS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_CHILD_SEX_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childSex",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "MALE", "name": "LQA_ENUM_MALE"},
+                {"code": "FEMALE", "name": "LQA_ENUM_FEMALE"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINGER_MARKED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "fingerMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_REASON_NOT_MARKED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "CHILD_ABSENT", "name": "LQA_ENUM_CHILD_ABSENT"},
+                {"code": "NON_COMPLIANCE", "name": "LQA_ENUM_NON_COMPLIANCE"},
+                {
+                  "code": "HOUSE_NOT_VISITED",
+                  "name": "LQA_ENUM_HOUSE_NOT_VISITED"
+                },
+                {
+                  "code": "VACCINATED_NOT_MARKED",
+                  "name": "LQA_ENUM_VACCINATED_NOT_MARKED"
+                },
+                {"code": "CHILD_ASLEEP", "name": "LQA_ENUM_CHILD_ASLEEP"},
+                {"code": "CHILD_VISITOR", "name": "LQA_ENUM_CHILD_VISITOR"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child8.fingerMarked=='NO'", "type": "custom"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REASON_SPECIFY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarkedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child8.reasonNotMarked=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_REFUSAL_REASON_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "LQA_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "LQA_ENUM_VACCINE_NOT_SAFE"
+                },
+                {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {"code": "CHILD_SICK", "name": "LQA_ENUM_CHILD_SICK"},
+                {"code": "COVID_RELATED", "name": "LQA_ENUM_COVID_RELATED"},
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "LQA_ENUM_AFRICA_POLIO_FREE"
+                },
+                {"code": "NOPV_CONCERNS", "name": "LQA_ENUM_NOPV_CONCERNS"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child8.reasonNotMarked=='NON_COMPLIANCE'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REFUSAL_REASON_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child8.refusalReason=='OTHERS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_ABSENCE_REASON_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "AT_FARM", "name": "LQA_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "LQA_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "LQA_ENUM_AT_SCHOOL"},
+                {"code": "IN_PLAYGROUND", "name": "LQA_ENUM_IN_PLAYGROUND"},
+                {"code": "TRAVELLED", "name": "LQA_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child8.reasonNotMarked=='CHILD_ABSENT'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_ABSENCE_REASON_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child8.absenceReason=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAREGIVER_INFORMED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAMPAIGN_AWARENESS_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "TV", "name": "LQA_ENUM_TV"},
+                {"code": "RADIO", "name": "LQA_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "LQA_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "LQA_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "LQA_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "LQA_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "LQA_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "LQA_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "LQA_ENUM_SCHOOL"},
+                {"code": "IEC_MATERIALS", "name": "LQA_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "LQA_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "LQA_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "LQA_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child8.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_AWARENESS_OTHER_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "awarenessOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child8.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "LQA_OPV_DOSES_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "opvDosesFromBirth",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_AFP_AWARENESS_LABEL",
+              "order": 15,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "integer",
+              "label": "LQA_AFP_CASE_COUNT_LABEL",
+              "order": 16,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpCaseCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child8.afpAwareness=='YES'", "type": "custom"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "page": "child9",
+          "label": "LQA_CHILD_PAGE_LABEL",
+          "order": 10,
+          "type": "object",
+          "description": "LQA_CHILD_PAGE_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "child10", "type": "form"},
+          "conditionalNavigateTo": [
+            {
+              "type": "custom",
+              "condition": "clusterInfo.numberOfInterviews=='9'",
+              "navigateTo": {"name": "closeout", "type": "form"}
+            }
+          ],
+          "properties": [
+            {
+              "type": "integer",
+              "label": "LQA_CHILDREN_UNDER_5_LABEL",
+              "order": 1,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_CHILDREN_UNDER_5_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenUnder5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "integer",
+              "label": "LQA_CHILD_AGE_MONTHS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childAgeMonths",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message": "LQA_VALIDATION_MAX_59_MONTHS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_CHILD_SEX_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childSex",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "MALE", "name": "LQA_ENUM_MALE"},
+                {"code": "FEMALE", "name": "LQA_ENUM_FEMALE"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINGER_MARKED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "fingerMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_REASON_NOT_MARKED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "CHILD_ABSENT", "name": "LQA_ENUM_CHILD_ABSENT"},
+                {"code": "NON_COMPLIANCE", "name": "LQA_ENUM_NON_COMPLIANCE"},
+                {
+                  "code": "HOUSE_NOT_VISITED",
+                  "name": "LQA_ENUM_HOUSE_NOT_VISITED"
+                },
+                {
+                  "code": "VACCINATED_NOT_MARKED",
+                  "name": "LQA_ENUM_VACCINATED_NOT_MARKED"
+                },
+                {"code": "CHILD_ASLEEP", "name": "LQA_ENUM_CHILD_ASLEEP"},
+                {"code": "CHILD_VISITOR", "name": "LQA_ENUM_CHILD_VISITOR"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child9.fingerMarked=='NO'", "type": "custom"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REASON_SPECIFY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarkedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child9.reasonNotMarked=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_REFUSAL_REASON_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "LQA_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "LQA_ENUM_VACCINE_NOT_SAFE"
+                },
+                {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {"code": "CHILD_SICK", "name": "LQA_ENUM_CHILD_SICK"},
+                {"code": "COVID_RELATED", "name": "LQA_ENUM_COVID_RELATED"},
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "LQA_ENUM_AFRICA_POLIO_FREE"
+                },
+                {"code": "NOPV_CONCERNS", "name": "LQA_ENUM_NOPV_CONCERNS"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child9.reasonNotMarked=='NON_COMPLIANCE'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REFUSAL_REASON_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child9.refusalReason=='OTHERS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_ABSENCE_REASON_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "AT_FARM", "name": "LQA_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "LQA_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "LQA_ENUM_AT_SCHOOL"},
+                {"code": "IN_PLAYGROUND", "name": "LQA_ENUM_IN_PLAYGROUND"},
+                {"code": "TRAVELLED", "name": "LQA_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child9.reasonNotMarked=='CHILD_ABSENT'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_ABSENCE_REASON_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child9.absenceReason=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAREGIVER_INFORMED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAMPAIGN_AWARENESS_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "TV", "name": "LQA_ENUM_TV"},
+                {"code": "RADIO", "name": "LQA_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "LQA_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "LQA_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "LQA_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "LQA_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "LQA_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "LQA_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "LQA_ENUM_SCHOOL"},
+                {"code": "IEC_MATERIALS", "name": "LQA_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "LQA_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "LQA_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "LQA_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child9.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_AWARENESS_OTHER_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "awarenessOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child9.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "LQA_OPV_DOSES_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "opvDosesFromBirth",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_AFP_AWARENESS_LABEL",
+              "order": 15,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "integer",
+              "label": "LQA_AFP_CASE_COUNT_LABEL",
+              "order": 16,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpCaseCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child9.afpAwareness=='YES'", "type": "custom"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "page": "child10",
+          "label": "LQA_CHILD_PAGE_LABEL",
+          "order": 11,
+          "type": "object",
+          "description": "LQA_CHILD_PAGE_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "closeout", "type": "form"},
+          "properties": [
+            {
+              "type": "integer",
+              "label": "LQA_CHILDREN_UNDER_5_LABEL",
+              "order": 1,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_CHILDREN_UNDER_5_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenUnder5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "integer",
+              "label": "LQA_CHILD_AGE_MONTHS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childAgeMonths",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message": "LQA_VALIDATION_MAX_59_MONTHS"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_CHILD_SEX_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childSex",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "MALE", "name": "LQA_ENUM_MALE"},
+                {"code": "FEMALE", "name": "LQA_ENUM_FEMALE"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINGER_MARKED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "fingerMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_REASON_NOT_MARKED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "CHILD_ABSENT", "name": "LQA_ENUM_CHILD_ABSENT"},
+                {"code": "NON_COMPLIANCE", "name": "LQA_ENUM_NON_COMPLIANCE"},
+                {
+                  "code": "HOUSE_NOT_VISITED",
+                  "name": "LQA_ENUM_HOUSE_NOT_VISITED"
+                },
+                {
+                  "code": "VACCINATED_NOT_MARKED",
+                  "name": "LQA_ENUM_VACCINATED_NOT_MARKED"
+                },
+                {"code": "CHILD_ASLEEP", "name": "LQA_ENUM_CHILD_ASLEEP"},
+                {"code": "CHILD_VISITOR", "name": "LQA_ENUM_CHILD_VISITOR"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child10.fingerMarked=='NO'", "type": "custom"}
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REASON_SPECIFY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarkedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child10.reasonNotMarked=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_REFUSAL_REASON_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "LQA_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "LQA_ENUM_VACCINE_NOT_SAFE"
+                },
+                {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {"code": "CHILD_SICK", "name": "LQA_ENUM_CHILD_SICK"},
+                {"code": "COVID_RELATED", "name": "LQA_ENUM_COVID_RELATED"},
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "LQA_ENUM_AFRICA_POLIO_FREE"
+                },
+                {"code": "NOPV_CONCERNS", "name": "LQA_ENUM_NOPV_CONCERNS"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child10.reasonNotMarked=='NON_COMPLIANCE'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REFUSAL_REASON_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child10.refusalReason=='OTHERS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_ABSENCE_REASON_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "AT_FARM", "name": "LQA_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "LQA_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "LQA_ENUM_AT_SCHOOL"},
+                {"code": "IN_PLAYGROUND", "name": "LQA_ENUM_IN_PLAYGROUND"},
+                {"code": "TRAVELLED", "name": "LQA_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child10.reasonNotMarked=='CHILD_ABSENT'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_ABSENCE_REASON_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child10.absenceReason=='OTHER'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAREGIVER_INFORMED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_CAMPAIGN_AWARENESS_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "TV", "name": "LQA_ENUM_TV"},
+                {"code": "RADIO", "name": "LQA_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "LQA_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "LQA_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "LQA_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "LQA_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "LQA_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "LQA_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "LQA_ENUM_SCHOOL"},
+                {"code": "IEC_MATERIALS", "name": "LQA_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "LQA_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "LQA_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "LQA_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child10.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_AWARENESS_OTHER_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "awarenessOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "child10.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "LQA_OPV_DOSES_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "opvDosesFromBirth",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true
+            },
+            {
+              "type": "string",
+              "label": "LQA_AFP_AWARENESS_LABEL",
+              "order": 15,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ]
+            },
+            {
+              "type": "integer",
+              "label": "LQA_AFP_CASE_COUNT_LABEL",
+              "order": 16,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpCaseCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "isEditable": true,
+              "visibilityCondition": {
+                "expression": [
+                  {"condition": "child10.afpAwareness=='YES'", "type": "custom"}
+                ]
+              }
+            }
+          ]
+        },
         {
           "page": "closeout",
-          "label": "Cluster Closeout",
-          "order":
-              lqaChildCount + 2, // clusterInfo=1, children=2..N+1, closeout=N+2
+          "label": "LQA_CLOSEOUT_LABEL",
+          "order": 12,
           "type": "object",
-          "description": "Final Detected Location and comments",
-          "actionLabel": "Submit",
-          ..._pageNulls(),
+          "description": "LQA_CLOSEOUT_DESCRIPTION",
+          "actionLabel": "LQA_ACTION_SUBMIT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
           "properties": [
-            // 1. gpsFinal
-            _prop(
-              type: "string",
-              label: "Detected Final Location",
-              order: 1,
-              format: "latLng",
-              fieldName: "gpsFinal",
-              helpText: "Capture GPS coordinates at end of cluster walk",
-              validations: [],
-            ),
-
-            // 2. finalComments
-            _prop(
-              type: "string",
-              label: "Final Comments / Observations",
-              order: 2,
-              format: "textArea",
-              fieldName: "finalComments",
-              helpText: "Comments or observations for program management",
-              validations: [
+            {
+              "type": "string",
+              "label": "LQA_GPS_FINAL_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_GPS_FINAL_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "gpsFinal",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINAL_COMMENTS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "textArea",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_FINAL_COMMENTS_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "finalComments",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
                   "type": "maxLength",
                   "value": 500,
-                  "message": "Max 500 characters"
-                },
+                  "message": "LQA_VALIDATION_MAX_500_CHARS"
+                }
               ],
-            ),
-          ],
-        },
+              "errorMessage": "",
+              "isMultiSelect": false
+            }
+          ]
+        }
       ],
       "onAction": [
         {
@@ -740,7 +6123,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {"message": "LQA_ERROR_FETCH_CONFIG"}
               }
             ]
           }
@@ -752,7 +6135,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to record LQA data."}
+                "properties": {"message": "LQA_ERROR_RECORD_DATA"}
               }
             ]
           }
@@ -765,17 +6148,13 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
+                "properties": {"message": "LQA_ERROR_NAVIGATION"}
               }
             ]
           }
         }
       ]
     },
-
-    // ──────────────────────────────────────────────────────────
-    // 2. lqaSuccess (TEMPLATE, order:2)
-    // ──────────────────────────────────────────────────────────
     {
       "screenType": "TEMPLATE",
       "name": "lqaSuccess",
@@ -789,12 +6168,11 @@ final dynamic samplePolioLqaDataCollectionFlows = {
         {
           "type": "template",
           "format": "panelCard",
-          "label": "LQA Data Collected Successfully",
-          "description":
-              "The LQA cluster data has been recorded successfully",
+          "label": "LQA_SUCCESS_HEADING",
+          "description": "LQA_SUCCESS_DESCRIPTION",
           "properties": {"type": "success"},
           "primaryAction": {
-            "label": "Add Another Cluster",
+            "label": "LQA_SUCCESS_ADD_ANOTHER",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -803,7 +6181,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             ]
           },
           "secondaryAction": {
-            "label": "Back to Home",
+            "label": "LQA_SUCCESS_BACK_HOME",
             "onAction": [
               {
                 "actionType": "BACK_NAVIGATION",

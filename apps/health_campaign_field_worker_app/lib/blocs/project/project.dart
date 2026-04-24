@@ -5,6 +5,7 @@ import 'dart:core';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
@@ -16,6 +17,7 @@ import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
+
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
@@ -23,16 +25,15 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
-import '../push_notification/push_notification.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
-import '../../utils/background_service.dart';
 import '../../models/entities/transaction_type.dart';
+import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/utils.dart';
-import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
+import '../push_notification/push_notification.dart';
 
 part 'project.freezed.dart';
 
@@ -665,32 +666,32 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }
 
       try {
-        // final formConfigResult = await mdmsRepository.searchMDMS(
-        //   envConfig.variables.mdmsApiPath,
-        //   MdmsRequestModel(
-        //     mdmsCriteria: MdmsCriteriaModel(
-        //       tenantId: envConfig.variables.tenantId,
-        //       moduleDetails: [
-        //         MdmsModuleDetailModel(
-        //           moduleName: 'HCM-ADMIN-CONSOLE',
-        //           masterDetails: [
-        //             MdmsMasterDetailModel(
-        //               'FormConfig',
-        //               filter:
-        //                   "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
-        //             ),
-        //           ],
-        //         ),
-        //       ],
-        //     ),
-        //   ).toJson(),
-        // );
-        //
-        // final formConfigs = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
-        //
-        // for (final config in formConfigs) {
-        //   await enrichFormSchemasWithEnumsForForms(config);
-        // }
+        final formConfigResult = await mdmsRepository.searchMDMS(
+          envConfig.variables.mdmsApiPath,
+          MdmsRequestModel(
+            mdmsCriteria: MdmsCriteriaModel(
+              tenantId: envConfig.variables.tenantId,
+              moduleDetails: [
+                MdmsModuleDetailModel(
+                  moduleName: 'HCM-ADMIN-CONSOLE',
+                  masterDetails: [
+                    MdmsMasterDetailModel(
+                      'FormConfig',
+                      filter:
+                          "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ).toJson(),
+        );
+
+        final formConfigs = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
+
+        for (final config in formConfigs) {
+          await enrichFormSchemasWithEnumsForForms(config);
+        }
       } catch (e) {
         emit(
           state.copyWith(
@@ -903,8 +904,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         receiverIds = projectFacilities.map((e) => e.facilityId).toList();
       } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
         receiverIds = projectFacilities.map((e) => e.facilityId).toList();
-      } else if (userRoles
-          .contains(RolesType.communityDistributor.toValue())) {
+      } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
         receiverIds = [userObject.uuid];
       }
 
@@ -917,8 +917,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             productVariantIds.isNotEmpty ? productVariantIds : null,
       );
 
-      final totalCount = await (stockRemoteRepository
-              as StockRemoteRepository)
+      final totalCount = await (stockRemoteRepository as StockRemoteRepository)
           .fetchTotalCount(stockSearchModel, offSet: 0);
 
       if (totalCount <= 0) return;

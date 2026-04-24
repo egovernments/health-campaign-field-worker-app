@@ -1423,7 +1423,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 isTriggerLocalisation = false;
 
                 final prefs = await SharedPreferences.getInstance();
-                // final schemaJsonRaw = prefs.getString('app_config_schemas');
+                final schemaJsonRaw = prefs.getString('app_config_schemas');
 
                 FlowBuilderSingleton().setPersistenceConfiguration(
                     persistenceConfiguration:
@@ -1537,40 +1537,41 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  // if (schemaJsonRaw != null) {
-                  //   final allSchemas =
-                  //   json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                  //   final data = allSchemas['REGISTRATION'];
-                  //
-                  //   final registrationDeliveryData = data?['data'];
-                  //   final flowsData = (registrationDeliveryData['flows']
-                  //   as List<dynamic>?)
-                  //       ?.map((e) => Map<String, dynamic>.from(e as Map))
-                  //       .toList() ??
-                  //       [];
-                  //   FlowRegistry.setConfig(flowsData);
-                  //   NavigationRegistry.setupNavigation(ctx);
-                  //
-                  //   ctx.router.push(
-                  //     FlowBuilderHomeRoute(
-                  //         pageName: registrationDeliveryData["initialPage"]),
-                  //   );
-                  // } else {
-                  final isHousehold = FlowBuilderSingleton().beneficiaryType ==
-                      BeneficiaryType.household;
-                  final registrationConfig = isHousehold
-                      ? sampleHouseholdFlows
-                      : isPolio
-                          ? sampleFlows
-                          : sampleSmcFlows;
-                  FlowRegistry.setConfig(registrationConfig["flows"]
-                      as List<Map<String, dynamic>>);
-                  NavigationRegistry.setupNavigation(ctx);
-                  ctx.router.push(
-                    FlowBuilderHomeRoute(
-                        pageName: registrationConfig["initialPage"]),
-                  );
-                  // }
+                  if (schemaJsonRaw != null) {
+                    final allSchemas =
+                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    final data = allSchemas['REGISTRATION'];
+
+                    final registrationDeliveryData = data?['data'];
+                    final flowsData = (registrationDeliveryData['flows']
+                                as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                    FlowRegistry.setConfig(flowsData);
+                    NavigationRegistry.setupNavigation(ctx);
+
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: registrationDeliveryData["initialPage"]),
+                    );
+                  } else {
+                    final isHousehold =
+                        FlowBuilderSingleton().beneficiaryType ==
+                            BeneficiaryType.household;
+                    final registrationConfig = isHousehold
+                        ? sampleHouseholdFlows
+                        : isPolio
+                            ? sampleFlows
+                            : sampleSmcFlows;
+                    FlowRegistry.setConfig(registrationConfig["flows"]
+                        as List<Map<String, dynamic>>);
+                    NavigationRegistry.setupNavigation(ctx);
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: registrationConfig["initialPage"]),
+                    );
+                  }
                 } catch (e) {
                   debugPrint('error $e');
                 }
@@ -1618,14 +1619,14 @@ class _HomePageState extends LocalizedState<HomePage> {
               await context.router.push(CurrentBoundaryRoute(
                 onBoundarySelected: (ctx) async {
                   final moduleName =
-                      'hcm-poliostockdetails-${context.selectedProject.referenceID}';
+                      'hcm-stock-${context.selectedProject.referenceID}';
                   triggerLocalization(module: moduleName);
                   isTriggerLocalisation = false;
 
                   await FlowNavigationUtils.navigateToFlowModule(
                     context: ctx,
                     config: FlowModuleConfig(
-                      schemaKey: 'POLIO_STOCK_DETAILS',
+                      schemaKey: 'STOCK',
                       sampleFlows: samplePolioStockDetailsFlows,
                     ),
                   );
@@ -1668,14 +1669,14 @@ class _HomePageState extends LocalizedState<HomePage> {
               context.router.push(CurrentBoundaryRoute(
                 onBoundarySelected: (ctx) async {
                   final moduleName =
-                      'hcm-poliolqa-${context.selectedProject.referenceID}';
+                      'hcm-lqa-${context.selectedProject.referenceID}';
                   triggerLocalization(module: moduleName);
                   isTriggerLocalisation = false;
 
                   await FlowNavigationUtils.navigateToFlowModule(
                     context: ctx,
                     config: FlowModuleConfig(
-                      schemaKey: 'POLIO_LQA_DATA_COLLECTION',
+                      schemaKey: 'LQA',
                       sampleFlows: samplePolioLqaDataCollectionFlows,
                     ),
                   );
@@ -2131,7 +2132,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db ||
-            (isPolio && isDistributor && element == i18.home.transitPostLabel) ||
+            (isPolio &&
+                isDistributor &&
+                element == i18.home.transitPostLabel) ||
             (isDistributor &&
                 (element == i18.home.polioRegistrationLabel ||
                     (element == i18.home.polioMissedChildrenLabel &&
@@ -2139,8 +2142,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                             BeneficiaryType.individual) ||
                     (isPolio &&
                         (element == i18.home.polioStockDetailsLabel ||
-                            element ==
-                                i18.home.polioLqaDataCollectionLabel)))))
+                            element == i18.home.polioLqaDataCollectionLabel)))))
         .toList();
 
     final showcaseKeys =

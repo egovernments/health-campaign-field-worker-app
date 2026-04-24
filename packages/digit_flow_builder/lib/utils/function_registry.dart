@@ -340,8 +340,18 @@ void initializeFunctionRegistry() {
               final match = RegExp(r'(\d+)<=ageandage<=(\d+)')
                   .firstMatch(condition);
               if (match != null) {
-                minAge ??= int.tryParse(match.group(1) ?? '');
-                maxAge ??= int.tryParse(match.group(2) ?? '');
+                final parsedMin = int.tryParse(match.group(1) ?? '');
+                final parsedMax = int.tryParse(match.group(2) ?? '');
+                if (parsedMin != null) {
+                  minAge = (minAge == null || parsedMin < minAge!)
+                      ? parsedMin
+                      : minAge;
+                }
+                if (parsedMax != null) {
+                  maxAge = (maxAge == null || parsedMax > maxAge!)
+                      ? parsedMax
+                      : maxAge;
+                }
               }
             }
           }
