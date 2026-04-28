@@ -15,6 +15,7 @@ class TaskStatus {
   static const String beneficiaryMigrated = 'BENEFICIARY_MIGRATED';
   static const String beneficiaryAbsent = 'BENEFICIARY_ABSENT';
   static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
+  static const String administrationFailed = 'ADMINISTRATION_FAILED';
 }
 
 /// The signature for a function that can be registered in the [FunctionRegistry].
@@ -651,6 +652,14 @@ void initializeFunctionRegistry() {
       final lastTaskStatus = lastTask['status']?.toString().toUpperCase();
       final isDelivered = lastTaskStatus == 'DELIVERED';
 
+      // If ADMINISTRATION_FAILED task exists for current cycle, treat as done
+      // (Unable To Deliver was recorded — no more delivery needed this cycle)
+      if (lastTaskStatus == TaskStatus.administrationFailed &&
+          lastCycle != null &&
+          lastCycle == selectedCycle.id) {
+        return true;
+      }
+
       // If last dose equals total deliveries in cycle AND cycle matches AND status is NOT delivered
       // -> return true (last dose attempted but not delivered)
       if (lastDose != null &&
@@ -677,6 +686,61 @@ void initializeFunctionRegistry() {
     }
 
     // No tasks exist -> return false (doses pending)
+    return false;
+  });
+
+  /// Checks if an ADMINISTRATION_FAILED (Unable To Deliver) task exists
+  /// for the current running cycle.
+  ///
+  /// - **Function Name**: `'hasUnableToDeliverForCurrentCycle'`
+  /// - **Arguments**: A list where the first element is the tasks list.
+  /// - **Returns**: `true` if a task with ADMINISTRATION_FAILED status exists
+  ///   for the current cycle, `false` otherwise.
+  FunctionRegistry.register("hasUnableToDeliverForCurrentCycle",
+      (args, stateData) {
+    List<Map<String, dynamic>>? tasks;
+    if (args.isNotEmpty && args.first != null) {
+      if (args.first is List) {
+        final rawList = args.first as List;
+        tasks = rawList.map((item) {
+          if (item is Map<String, dynamic>) return item;
+          if (item is Map) return Map<String, dynamic>.from(item);
+          try {
+            return (item as dynamic).toMap() as Map<String, dynamic>;
+          } catch (_) {
+            return <String, dynamic>{};
+          }
+        }).toList();
+      }
+    }
+
+    if (tasks == null || tasks.isEmpty) return false;
+
+    final projectType = FlowBuilderSingleton().projectType;
+    final selectedCycle = projectType?.cycles?.firstWhereOrNull(
+      (e) =>
+          (e.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+          (e.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch,
+    );
+
+    if (selectedCycle == null) return false;
+
+    for (final task in tasks) {
+      final status = task['status']?.toString().toUpperCase();
+      if (status != TaskStatus.administrationFailed) continue;
+
+      final additionalFields = task['additionalFields'];
+      final fields = additionalFields?['fields'] as List?;
+      if (fields == null) continue;
+
+      for (final field in fields) {
+        if (field is Map && field['key'] == 'cycleIndex') {
+          final cycleIndex = int.tryParse(field['value']?.toString() ?? '');
+          if (cycleIndex == selectedCycle.id) return true;
+        }
+      }
+    }
+
     return false;
   });
 
@@ -1222,9 +1286,10 @@ void initializeFunctionRegistry() {
           if (taskMap != null) {
             final status = taskMap['status']?.toString().toUpperCase().trim();
 
-            // Disable if any task status is success
+            // Disable if any task status is success or failed (unable to deliver)
             if (status == TaskStatus.administrationSuccess ||
-                status == TaskStatus.delivered ) {
+                status == TaskStatus.delivered ||
+                status == TaskStatus.administrationFailed) {
               return true;
             }
 

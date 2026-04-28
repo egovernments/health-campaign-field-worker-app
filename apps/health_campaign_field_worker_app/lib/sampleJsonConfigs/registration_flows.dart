@@ -637,7 +637,10 @@ final dynamic sampleFlows = {
                       "actionType": "REVERSE_TRANSFORM",
                       "properties": {
                         "configName": "beneficiaryRegistration",
-                        "entityTypes": ["HouseholdModel", "ProjectBeneficiaryModel"]
+                        "entityTypes": [
+                          "HouseholdModel",
+                          "ProjectBeneficiaryModel"
+                        ]
                       }
                     },
                     {
@@ -819,10 +822,19 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTRATION_FAILED_TAG",
+                    "format": "tag",
+                    "visible":
+                        "{{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{item.member.0.isHeadOfHousehold}}==false",
+                    "fieldName": "administrationFailed",
+                    "properties": {"tagType": "error", "bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
                     "label": "HCM_HOUSEHOLD_OVERVIEW_NOT_VISITED_TAG",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{item.member.0.isHeadOfHousehold}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{item.member.0.isHeadOfHousehold}}==false",
                     "fieldName": "notVisited",
                     "properties": {"tagType": "info", "bottomGap": 16}
                   },
@@ -885,6 +897,53 @@ final dynamic sampleFlows = {
                     "properties": {
                       "size": "medium",
                       "type": "primary",
+                      "bottomGap": 8,
+                      "mainAxisSize": "max",
+                      "mainAxisAlignment": "center"
+                    }
+                  },
+                  {
+                    "type": "template",
+                    "label": "HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
+                    "format": "button",
+                    "visible":
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{item.member.0.isHeadOfHousehold}}==false",
+                    "onAction": [
+                      {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "data": [
+                            {
+                              "key": "selectedIndividualClientReferenceId",
+                              "value": "{{item.individual.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "HouseholdClientReferenceId",
+                              "value":
+                                  "{{item.member.0.householdClientReferenceId}}"
+                            },
+                            {
+                              "key": "ProjectBeneficiaryClientReferenceId",
+                              "value":
+                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "cycleIndex",
+                              "value": "{{contextData.0.currentRunningCycle}}"
+                            },
+                            {"key": "doseIndex", "value": "1"}
+                          ],
+                          "name": "UNABLETODELIVER",
+                          "type": "FORM"
+                        }
+                      }
+                    ],
+                    "fieldName": "unableToDeliverButton",
+                    "mandatory": true,
+                    "properties": {
+                      "size": "medium",
+                      "type": "secondary",
+                      "bottomGap": 16,
                       "mainAxisSize": "max",
                       "mainAxisAlignment": "center"
                     }
@@ -895,7 +954,7 @@ final dynamic sampleFlows = {
                     "label": "HCM_HOUSEHOLD_OVERVIEW_VIEW_DETAILS_BUTTON",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{item.member.0.isHeadOfHousehold}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{item.member.0.isHeadOfHousehold}}==false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1042,6 +1101,20 @@ final dynamic sampleFlows = {
       ],
       "wrapperConfig": {
         "filters": [],
+        "computed": {
+          "currentRunningCycle": {
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 1,
+            "where": [
+              {"left": "{{startDate}}", "right": "{{now}}", "operator": "lt"},
+              {"left": "{{endDate}}", "right": "{{now}}", "operator": "gt"}
+            ],
+            "select": "{{id}}",
+            "default": -1,
+            "takeFirst": true
+          }
+        },
         "relations": [
           {
             "name": "household",
@@ -1558,7 +1631,7 @@ final dynamic sampleFlows = {
             {
               "type": "scanLimit",
               "value": 1,
-              "message": "Scan limit shouldn't be greater than 1"
+              "message": "SCAN_LIMIT_ERROR_LABEL"
             },
             {"type": "isGS1", "value": false}
           ],
@@ -1896,7 +1969,7 @@ final dynamic sampleFlows = {
               "tooltip": "",
               "helpText": "",
               "infoText": "",
-              "readOnly": false,
+              "readOnly": true,
               "required": true,
               "fieldName": "resourceCard",
               "mandatory": true,
@@ -1925,14 +1998,6 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "label": "HCM_DELIVERY_COMMENTS_LABEL",
-              "order": 3,
-              "value": "",
-              "format": "dropdown",
-              "hidden": false,
-              "isMdms": true,
-              "tooltip": "",
-              "helpText": "",
               "enums": [
                 {
                   "code": "SUCCESSFUL_DELIVERY",
@@ -1951,6 +2016,14 @@ final dynamic sampleFlows = {
                   "name": "HCM_DELIVERY_COMMENT_ABSENT"
                 }
               ],
+              "label": "HCM_DELIVERY_COMMENTS_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "isMdms": true,
+              "tooltip": "",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "deliveryComment",
@@ -2020,6 +2093,36 @@ final dynamic sampleFlows = {
               "includeInForm": true,
               "isMultiSelect": false,
               "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "HCM_COMMON_YES"},
+                {"code": "NO", "name": "HCM_COMMON_NO"}
+              ],
+              "label": "HCM_DELIVERY_RECEIVED_OPV_BEFORE_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": false,
+              "fieldName": "receivedOPVBefore",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true
             }
           ],
           "actionLabel": "HCM_DELIVERY_SAVE_BUTTON",
@@ -2345,12 +2448,37 @@ final dynamic sampleFlows = {
               "isMultiSelect": false
             },
             {
+              "type": "boolean",
+              "label": "HCM_REGISTRATION_IS_GUEST_LABEL",
+              "order": 3,
+              "value": false,
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": false,
+              "fieldName": "isGuestMember",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "HCM_REGISTRATION_IS_GUEST_LABEL",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "additionalFields": true
+            },
+            {
               "type": "string",
               "enums": [
                 {"code": "DEFAULT", "name": "Default"}
               ],
               "label": "HCM_REGISTRATION_ID_POPULATOR_LABEL",
-              "order": 3,
+              "order": 4,
               "value": "DEFAULT",
               "format": "idPopulator",
               "hidden": false,
@@ -2367,7 +2495,11 @@ final dynamic sampleFlows = {
               "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
               "systemDate": false,
               "validations": [
-                {"type": "required", "value": true, "message": "ID is required"}
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_ID_REQUIRED_FIELD"
+                }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
@@ -2379,12 +2511,12 @@ final dynamic sampleFlows = {
                 },
                 {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
               ],
-              "required.message": "ID is required"
+              "required.message": "HCM_ID_REQUIRED_FIELD"
             },
             {
               "type": "string",
               "label": "HCM_REGISTRATION_DOB_LABEL",
-              "order": 4,
+              "order": 5,
               "value": "",
               "format": "dob",
               "hidden": false,
@@ -2433,7 +2565,7 @@ final dynamic sampleFlows = {
                 {"code": "FEMALE", "name": "HCM_COMMON_FEMALE"}
               ],
               "label": "HCM_REGISTRATION_GENDER_LABEL",
-              "order": 5,
+              "order": 6,
               "value": "",
               "format": "select",
               "hidden": false,
@@ -2467,7 +2599,7 @@ final dynamic sampleFlows = {
             {
               "type": "string",
               "label": "HCM_REGISTRATION_MOBILE_LABEL",
-              "order": 6,
+              "order": 7,
               "value": "",
               "format": "mobileNumber",
               "hidden": false,
@@ -2518,7 +2650,7 @@ final dynamic sampleFlows = {
             {
               "type": "string",
               "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
-              "order": 7,
+              "order": 8,
               "value": "",
               "format": "scanner",
               "hidden": false,
@@ -2765,7 +2897,7 @@ final dynamic sampleFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel, TaskModel, ProjectBeneficiaryModel",
+                    "entity": "HouseholdModel, TaskModel",
                     "modify": [
                       {"key": "TaskModel.status", "value": "NOT_ADMINISTERED"}
                     ],
@@ -2824,7 +2956,7 @@ final dynamic sampleFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel, ProjectBeneficiaryModel",
+                    "entity": "HouseholdModel",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -3328,7 +3460,7 @@ final dynamic sampleFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel, ProjectBeneficiaryModel",
+                    "entity": "HouseholdModel",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -3451,6 +3583,10 @@ final dynamic sampleFlows = {
               "type": "integer",
               "label": "HCM_REGISTRATION_CHILDREN_COUNT_LABEL",
               "order": 2,
+              "range": {
+                "min": "1",
+                "errorMessage": "HCM_VALIDATION_MIN_CHILDREN_1"
+              },
               "value": "1",
               "format": "numeric",
               "hidden": false,
@@ -3465,10 +3601,6 @@ final dynamic sampleFlows = {
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "range": {
-                "min": "1",
-                "errorMessage": "HCM_VALIDATION_MIN_CHILDREN_1"
-              },
               "validations": [
                 {
                   "type": "min",
@@ -3478,75 +3610,6 @@ final dynamic sampleFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label": "HCM_REGISTRATION_PREGNANT_WOMEN_LABEL",
-              "order": 3,
-              "value": "0",
-              "format": "numeric",
-              "hidden": true,
-              "includeInForm": true,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "pregnantWomenCount",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label": "HCM_REGISTRATION_TOTAL_MEMBERS_LABEL",
-              "order": 4,
-              "range": {
-                "max": "10",
-                "min": "1",
-                "errorMessage": "HCM_VALIDATION_MAX_MEMBERS"
-              },
-              "value": "1",
-              "format": "numeric",
-              "hidden": true,
-              "includeInForm": true,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "memberCount",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED"
-                },
-                {
-                  "type": "min",
-                  "value": "1",
-                  "message": "HCM_VALIDATION_MAX_MEMBERS"
-                },
-                {
-                  "type": "max",
-                  "value": "10",
-                  "message": "HCM_VALIDATION_MAX_MEMBERS"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "required.message": "HCM_VALIDATION_REQUIRED"
             }
           ],
           "actionLabel": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
@@ -3665,7 +3728,7 @@ final dynamic sampleFlows = {
                 {
                   "actionType": "UPDATE_EVENT",
                   "properties": {
-                    "entity": "HouseholdModel, ProjectBeneficiaryModel",
+                    "entity": "HouseholdModel",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -4252,6 +4315,225 @@ final dynamic sampleFlows = {
           "primary": "household"
         }
       },
+      "scrollListener": {}
+    },
+    {
+      "name": "UNABLETODELIVER",
+      "order": 12,
+      "pages": [
+        {
+          "body": null,
+          "flow": "UNABLETODELIVER",
+          "page": "unableToDeliver",
+          "type": "object",
+          "label": "UNABLETODELIVERY_FLOW_LABEL",
+          "order": 2,
+          "footer": [
+            {
+              "label": "UNABLETODELIVERY_FLOW_HEADING",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "name": "householdOverview",
+                    "type": "template"
+                  }
+                }
+              ],
+              "fieldName": "unableToDeliverSubmitButton",
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "UNABLETODELIVERY_FLOW_SCREEN_HEADING",
+          "summary": false,
+          "version": 1,
+          "navigateTo": {"name": "household-overview", "type": "template"},
+          "properties": [
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "VACCINATED_ELSEWHERE",
+                  "name": "VACCINATED_ELSEWHERE"
+                },
+                {"code": "FEVER_INELIGIBLE", "name": "FEVER_INELIGIBLE"},
+                {"code": "AEFI", "name": "AEFI"}
+              ],
+              "label": "UNABLETODELIVERY_FLOW_reason_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reason",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "UNABLETODELIVERY_FLOW_reason_REQUIRED_ERROR_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "additionalFields": true
+            },
+            {
+              "type": "string",
+              "label": "APPONE_UNABLETODELIVER_LATLNG_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "latLng",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "label": "UNABLETODELIVERY_FLOW_comment_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "textArea",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "comment",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "additionalFields": true
+            }
+          ],
+          "actionLabel": "UNABLETODELIVERY_FLOW_ACTION_LABEL",
+          "description": "UNABLETODELIVERY_FLOW_DESCRIPTION",
+          "showTabView": false,
+          "showAlertPopUp": {
+            "title": "UNABLETODELIVER_FLOW_ALERT_TITLE",
+            "conditions": [
+              {
+                "value": "VACCINATED_ELSEWHERE",
+                "expression": "unableToDeliver.reason == VACCINATED_ELSEWHERE"
+              },
+              {
+                "value": "INELIGIBLE",
+                "expression": "unableToDeliver.reason == FEVER_INELIGIBLE"
+              },
+              {"value": "AEFI", "expression": "DEFAULT"}
+            ],
+            "description": "UNABLETODELIVER_FLOWT_ALERT_DESCRIPTION",
+            "primaryActionLabel": "UNABLETODELIVER_FLOW_ACTION_SUBMIT",
+            "secondaryActionLabel": "UNABLETODELIVER_FLOW_ACTION_CANCEL"
+          },
+          "submitCondition": null,
+          "preventScreenCapture": false,
+          "conditionalNavigateTo": null
+        }
+      ],
+      "summary": false,
+      "version": 1,
+      "category": "DELIVERY",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"}
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch config."}
+              }
+            ],
+            "configName": "unableToDeliverConfig"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "TASK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to create household."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {
+                "key": "HouseholdClientReferenceId",
+                "value": "{{navigation.HouseholdClientReferenceId}}"
+              }
+            ],
+            "name": "householdOverview",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Navigation failed."}
+              }
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "searchBeneficiary"
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {},
       "scrollListener": {}
     }
   ],
