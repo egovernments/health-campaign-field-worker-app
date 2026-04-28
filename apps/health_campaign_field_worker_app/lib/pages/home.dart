@@ -13,11 +13,11 @@ import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
 import 'package:digit_flow_builder/data/digit_crud_service.dart';
-import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:digit_flow_builder/widgets/flow_widget_interface.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -162,8 +162,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
         // REDOSE flow - compute product variants same as DELIVERY
         // Use navigation params to filter by age condition
-        final navParams =
-            FlowCrudStateRegistry().getNavigationParams('REDOSE');
+        final navParams = FlowCrudStateRegistry().getNavigationParams('REDOSE');
         final cycleIndex = navParams?['cycleIndex'];
         final ageStr = navParams?['selectedIndividualAgeInMonths'];
         final age = int.tryParse(ageStr?.toString() ?? '');
@@ -2247,6 +2246,10 @@ class _HomePageState extends LocalizedState<HomePage> {
             triggerLocalization(module: moduleName);
             isTriggerLocalisation = false;
             // }
+            SurveyFormSingleton().setBoundary(
+                boundary: BoundaryModel(
+                    code: LeastLevelBoundarySingleton().boundary?.first));
+
             context.router.push(SurveyFormWrapperRoute());
           },
         ),
@@ -2589,7 +2592,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           context.router.push(const TransitPostWrapperRoute());
         },
       )),
-
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -2616,8 +2618,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
-      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId
-          .showcaseKey,
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.showcaseKey,
@@ -2638,8 +2639,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
       i18.home.dashboard,
-      i18.home
-          .beneficiaryIdLabel,
+      i18.home.beneficiaryIdLabel,
       i18.home.faceRegistrationLabel,
       i18.home.dataShare,
       i18.home.stockSyncDataLabel,
