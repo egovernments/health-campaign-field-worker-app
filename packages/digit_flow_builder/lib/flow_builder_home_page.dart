@@ -95,28 +95,33 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
     final config = FlowRegistry.getByName(widget.pageName);
     if (config == null) return const Center(child: Text('Page not found'));
 
+    final canPop = config['canPop'] ?? true;
+
     DataConverterSingleton()
         .setData(dynamicEntityModelListener: EntityModelJsonMapper());
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<CrudBloc>(
-          create: (context) {
-            final crudService = CrudBlocSingleton().crudService;
+    return PopScope(
+      canPop: canPop is bool ? canPop : true,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<CrudBloc>(
+            create: (context) {
+              final crudService = CrudBlocSingleton().crudService;
 
-            return FlowCrudBloc(
-              flowConfig: config,
-              service: crudService,
-              instanceId: _instanceId,
-              onUpdate: (screenKey, state) {},
-            )..add(const CrudEventInitialize());
-          },
+              return FlowCrudBloc(
+                flowConfig: config,
+                service: crudService,
+                instanceId: _instanceId,
+                onUpdate: (screenKey, state) {},
+              )..add(const CrudEventInitialize());
+            },
+          ),
+        ],
+        child: ScreenBuilder(
+          config: config,
+          navigationParams: widget.navigationParams,
+          instanceId: _instanceId,
         ),
-      ],
-      child: ScreenBuilder(
-        config: config,
-        navigationParams: widget.navigationParams,
-        instanceId: _instanceId,
       ),
     );
   }

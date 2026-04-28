@@ -104,5 +104,47 @@
     "locale": "",
     "message": "No boundary data associated with this project.",
     "module": "hcm-home"
+  },
+  {
+    "code": "POLIO_HOME_STOCK_DETAILS_LABEL",
+    "locale": "",
+    "message": "Stock Details",
+    "module": "hcm-home"
+  },
+  {
+    "code": "POLIO_HOME_AFP_CASE_LABEL",
+    "locale": "",
+    "message": "AFP Case",
+    "module": "hcm-home"
+  },
+  {
+    "code": "POLIO_HOME_TALLY_SHEET_LABEL",
+    "locale": "",
+    "message": "Tally Sheet",
+    "module": "hcm-home"
+  },
+  {
+    "code": "POLIO_HOME_LQA_DATA_COLLECTION_LABEL",
+    "locale": "",
+    "message": "LQA Data Collection",
+    "module": "hcm-home"
+  },
+  {
+    "code": "POLIO_HOME_STATS_VIALS_OPENED",
+    "locale": "",
+    "message": "Number of Vials Opened",
+    "module": "hcm-home"
+  },
+  {
+    "code": "POLIO_HOME_STATS_USABLE",
+    "locale": "",
+    "message": "Usable",
+    "module": "hcm-home"
+  },
+  {
+    "code": "POLIO_HOME_STATS_UNUSABLE",
+    "locale": "",
+    "message": "Unusable",
+    "module": "hcm-home"
   }
 ]

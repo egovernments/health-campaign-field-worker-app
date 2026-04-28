@@ -1785,6 +1785,111 @@ final jsonConfig = {
       }
     }
   },
+  // ── LQA Cluster Pattern: 3 separate transformer configs ──
+  "lqaClusterData": {
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "resourceTag": "__ref:UserActionModel.clientReferenceId",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:LQA_CLUSTER_DATA",
+          "latitude": "clusterInfo.gpsStart[0]",
+          "longitude": "clusterInfo.gpsStart[1]",
+          "locationAccuracy": "clusterInfo.gpsStart[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "form": "__value:POLIO_LQA",
+            "surveyDate": "clusterInfo.surveyDate",
+            "settlementArea": "clusterInfo.settlementArea",
+            "healthFacilityArea": "clusterInfo.healthFacilityArea",
+            "lotNumber": "clusterInfo.lotNumber",
+            "clusterNumber": "clusterInfo.clusterNumber",
+            "surveyorName": "clusterInfo.surveyorName",
+            "surveyorPhone": "clusterInfo.surveyorPhone",
+            "lqasCoordinatorName": "clusterInfo.lqasCoordinatorName",
+            "startingVillage": "clusterInfo.startingVillage",
+            "settlementType": "clusterInfo.settlementType",
+            "settlementSmall": "clusterInfo.settlementSmall",
+            "gpsStartLat": "clusterInfo.gpsStart[0]",
+            "gpsStartLng": "clusterInfo.gpsStart[1]",
+          }
+        }
+      }
+    }
+  },
+  "lqaChildData": {
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:LQA_CHILD_DATA",
+          "resourceTag": "__context:ClusterClientReferenceId",
+          "latitude": "__value:0.0",
+          "longitude": "__value:0.0",
+          "locationAccuracy": "__value:0.0",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "form": "__value:POLIO_LQA",
+            "childrenUnder5": "childDetails.childrenUnder5",
+            "childAgeMonths": "childDetails.childAgeMonths",
+            "childSex": "childDetails.childSex",
+            "fingerMarked": "childDetails.fingerMarked",
+            "reasonNotMarked": "childDetails.reasonNotMarked",
+            "reasonNotMarkedOther": "childDetails.reasonNotMarkedOther",
+            "refusalReason": "childDetails.refusalReason",
+            "refusalReasonOther": "childDetails.refusalReasonOther",
+            "absenceReason": "childDetails.absenceReason",
+            "absenceReasonOther": "childDetails.absenceReasonOther",
+            "caregiverInformed": "childDetails.caregiverInformed",
+            "campaignAwareness": "childDetails.campaignAwareness",
+            "awarenessOther": "childDetails.awarenessOther",
+            "opvDosesFromBirth": "childDetails.opvDosesFromBirth",
+            "afpAwareness": "childDetails.afpAwareness",
+            "afpCaseCount": "childDetails.afpCaseCount",
+          }
+        }
+      }
+    }
+  },
+  "lqaCloseoutData": {
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:LQA_CLOSEOUT",
+          "resourceTag": "__context:ClusterClientReferenceId",
+          "latitude": "closeout.gpsFinal[0]",
+          "longitude": "closeout.gpsFinal[1]",
+          "locationAccuracy": "closeout.gpsFinal[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "form": "__value:POLIO_LQA",
+            "gpsFinalLat": "closeout.gpsFinal[0]",
+            "gpsFinalLng": "closeout.gpsFinal[1]",
+            "finalComments": "closeout.finalComments",
+          }
+        }
+      }
+    }
+  },
   "polioInsideHousehold": {
     "models": {
       "UserActionModel": {

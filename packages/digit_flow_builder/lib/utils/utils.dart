@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:flutter/material.dart';
@@ -641,6 +642,7 @@ dynamic _resolvePath(dynamic root, String path) {
             final typeString = item is EntityModel
                 ? getEntityTypeName(item).toLowerCase()
                 : item.runtimeType.toString().toLowerCase();
+            debugPrint('RESOLVE_PATH: type-based search: looking for "$part", item type="$typeString"');
             if (typeString == part.toLowerCase()) {
               foundItem = item;
               break;
@@ -653,6 +655,7 @@ dynamic _resolvePath(dynamic root, String path) {
         if (foundItem != null) {
           current = foundItem;
         } else {
+          debugPrint('RESOLVE_PATH: type-based search FAILED for "$part" in list of ${current.length} items');
           return null;
         }
       }
@@ -808,6 +811,7 @@ String getEntityTypeName(EntityModel entity) {
   if (entity is ReferralModel) return 'ReferralModel';
   if (entity is IdentifierModel) return 'IdentifierModel';
   if (entity is AddressModel) return 'AddressModel';
+  if (entity is UserActionModel) return 'UserActionModel';
   if (entity is SideEffectModel) return 'SideEffectModel';
   if (entity is FacilityModel) return 'FacilityModel';
   if (entity is ProjectTypeModel) return 'ProjectTypeModel';
