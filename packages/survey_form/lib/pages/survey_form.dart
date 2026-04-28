@@ -128,7 +128,7 @@ class SurveyFormPageState extends State<SurveyformPage> {
                                                   ServiceSearchEvent(
                                                     serviceSearchModel:
                                                         ServiceSearchModel(
-                                                      id: e.id,
+                                                      serviceDefId: e.id,
                                                     ),
                                                   ),
                                                 );
