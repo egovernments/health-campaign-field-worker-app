@@ -234,7 +234,8 @@ final jsonConfig = {
           "additionalFields": {
             "weight": "beneficiaryDetails.weight",
             "height": "beneficiaryDetails.height",
-            "isPregnant": "beneficiaryDetails.isPregnant"
+            "isPregnant": "beneficiaryDetails.isPregnant",
+            "isGuestMember": "beneficiaryDetails.isGuestMember"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
@@ -708,7 +709,7 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
-          "status": "unableToDeliver.reason",
+          "status": "__value:ADMINISTRATION_FAILED",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "tenantId": "__context:tenantId",
@@ -749,6 +750,8 @@ final jsonConfig = {
             "auditDetails": "__generate:audit"
           },
           "additionalFields": {
+            "taskType": "__value:UNABLE_TO_DELIVER",
+            "reason": "unableToDeliver.reason",
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
             "comment": "unableToDeliver.comment",

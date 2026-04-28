@@ -303,14 +303,6 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
     if (match != null) {
       var path = match.group(1)!.trim();
 
-      if (path.contains('headIndividual')) {
-        debugPrint('DEBUG_RESOLVE: resolveValueRaw called for "$value"');
-        debugPrint('DEBUG_RESOLVE:   contextData type=${contextData.runtimeType}');
-        if (contextData is Map) {
-          debugPrint('DEBUG_RESOLVE:   contextData keys=${contextData.keys.toList()}');
-        }
-      }
-
       // Check if contextData is a structured evaluation context (has nested keys)
       final isStructuredContext = contextData is Map &&
           (contextData.containsKey('contextData') ||
@@ -358,25 +350,13 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
 
       // Handle contextData. prefix
       if (path.startsWith('contextData.')) {
-        if (path.contains('headIndividual')) {
-          debugPrint('DEBUG_RESOLVE: contextData prefix detected. isStructuredContext=$isStructuredContext, '
-              'has contextData key=${contextData.containsKey('contextData')}');
-        }
         if (isStructuredContext && contextData.containsKey('contextData')) {
           // Resolve from nested contextData map
           final innerPath = path.substring('contextData.'.length);
-          if (path.contains('headIndividual')) {
-            debugPrint('DEBUG_RESOLVE: using nested contextData, innerPath=$innerPath, '
-                'contextData["contextData"] type=${contextData['contextData'].runtimeType}');
-          }
           return _resolvePath(contextData['contextData'], innerPath);
         }
         // Legacy behavior: strip prefix and resolve from root
         path = path.substring('contextData.'.length);
-        if (path.contains('headIndividual')) {
-          debugPrint('DEBUG_RESOLVE: legacy mode, stripped path=$path, '
-              'contextData keys=${contextData.keys.toList()}');
-        }
       }
 
       // Handle item. prefix - legacy (maps to itemData)
@@ -506,31 +486,9 @@ Map<String, dynamic> singletonToMap() {
 dynamic _resolvePath(dynamic root, String path) {
   var parts = path.split('.');
 
-  final _debugThis = path.contains('headIndividual');
-  if (_debugThis) {
-    debugPrint('DEBUG_RESOLVE: _resolvePath called with path="$path", '
-        'root type=${root.runtimeType}, root is List=${root is List}, '
-        'root is Map=${root is Map}');
-    if (root is List) {
-      debugPrint('DEBUG_RESOLVE:   root list length=${root.length}');
-      if (root.isNotEmpty) {
-        debugPrint('DEBUG_RESOLVE:   root[0] type=${root.first.runtimeType}');
-        if (root.first is Map) {
-          debugPrint('DEBUG_RESOLVE:   root[0] keys=${(root.first as Map).keys.toList()}');
-        }
-      }
-    }
-  }
-
   dynamic current = root;
   for (var i = 0; i < parts.length; i++) {
     final part = parts[i];
-    if (_debugThis) {
-      debugPrint('DEBUG_RESOLVE: step $i: part="$part", current type=${current.runtimeType}');
-      if (current is List) debugPrint('DEBUG_RESOLVE:   list length=${current.length}');
-      if (current is Map) debugPrint('DEBUG_RESOLVE:   map keys=${current.keys.toList()}');
-      if (current is EntityModel) debugPrint('DEBUG_RESOLVE:   entity map=${current.toMap()}');
-    }
 
     // ✅ If current is JSON string, decode it into Map/List
     if (current is String &&
@@ -580,7 +538,8 @@ dynamic _resolvePath(dynamic root, String path) {
             final fieldsMap = <String, dynamic>{};
             for (var field in current) {
               if (field is Map && field['key'] != null) {
-                fieldsMap[field['key'].toString()] = field['value'];
+                fieldsMap[field['key'].toString()] =
+                    _coerceAdditionalFieldValue(field['value']);
               }
             }
             current = fieldsMap;
@@ -624,7 +583,7 @@ dynamic _resolvePath(dynamic root, String path) {
             // Search for the field with matching key
             for (var field in current) {
               if (field is Map && field['key'] == part) {
-                current = field['value'];
+                current = _coerceAdditionalFieldValue(field['value']);
                 break;
               }
             }
@@ -642,7 +601,6 @@ dynamic _resolvePath(dynamic root, String path) {
             final typeString = item is EntityModel
                 ? getEntityTypeName(item).toLowerCase()
                 : item.runtimeType.toString().toLowerCase();
-            debugPrint('RESOLVE_PATH: type-based search: looking for "$part", item type="$typeString"');
             if (typeString == part.toLowerCase()) {
               foundItem = item;
               break;
@@ -655,7 +613,6 @@ dynamic _resolvePath(dynamic root, String path) {
         if (foundItem != null) {
           current = foundItem;
         } else {
-          debugPrint('RESOLVE_PATH: type-based search FAILED for "$part" in list of ${current.length} items');
           return null;
         }
       }
@@ -683,10 +640,6 @@ dynamic _resolvePath(dynamic root, String path) {
       }
     }
   }
-  if (_debugThis) {
-    debugPrint('DEBUG_RESOLVE: _resolvePath RESULT for "$path": '
-        'type=${current.runtimeType}, value=$current');
-  }
   if (current is List) {
     return current;
   }
@@ -696,10 +649,28 @@ dynamic _resolvePath(dynamic root, String path) {
   if (current is num) {
     return current;
   }
+  if (current is bool) {
+    return current;
+  }
   if (current is Map) {
     return current;
   }
   return current?.toString();
+}
+
+/// Coerces additionalFields string values to their proper types.
+/// Converts "true"/"false" to bool and numeric strings to num.
+dynamic _coerceAdditionalFieldValue(dynamic value) {
+  if (value is String) {
+    // Boolean coercion
+    if (value.toLowerCase() == 'true') return true;
+    if (value.toLowerCase() == 'false') return false;
+
+    // Numeric coercion
+    final n = num.tryParse(value);
+    if (n != null) return n;
+  }
+  return value;
 }
 
 Map<String, dynamic> flattenFormData(Map<String, dynamic> data,

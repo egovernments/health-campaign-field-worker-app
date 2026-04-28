@@ -795,6 +795,14 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_GUEST_TAG",
+                    "format": "tag",
+                    "visible": "{{fn:isGuestMember(item.individual)}}==true",
+                    "fieldName": "guestTag",
+                    "properties": {"tagType": "info", "bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
                     "label": "HCM_HOUSEHOLD_OVERVIEW_NOT_ELIGIBLE_TAG",
                     "format": "tag",
                     "visible":
@@ -3610,6 +3618,16 @@ final dynamic sampleFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "value": "1",
+              "format": "numeric",
+              "hidden": true,
+              "includeInForm": true,
+              "fieldName": "memberCount",
+              "mandatory": true,
+              "validations": []
             }
           ],
           "actionLabel": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
@@ -4363,8 +4381,7 @@ final dynamic sampleFlows = {
                   "code": "VACCINATED_ELSEWHERE",
                   "name": "VACCINATED_ELSEWHERE"
                 },
-                {"code": "FEVER_INELIGIBLE", "name": "FEVER_INELIGIBLE"},
-                {"code": "AEFI", "name": "AEFI"}
+                {"code": "FEVER_INELIGIBLE", "name": "FEVER_INELIGIBLE"}
               ],
               "label": "UNABLETODELIVERY_FLOW_reason_LABEL",
               "order": 1,

@@ -1644,4 +1644,46 @@ void initializeFunctionRegistry() {
     // If registered before the current cycle's start date, return true
     return registrationTime < (currentCycle.startDate ?? 0);
   });
+
+  /// Checks if the individual is a guest member.
+  ///
+  /// - **Function Name**: `'isGuestMember'`
+  /// - **Arguments**: First argument is the individual list.
+  /// - **Returns**: `true` if isGuestMember is true in additionalFields, `false` otherwise.
+  FunctionRegistry.register('isGuestMember', (args, stateData) {
+    if (args.isEmpty || args.first == null) return false;
+
+    final individuals = args.first;
+    dynamic individual;
+    if (individuals is List && individuals.isNotEmpty) {
+      individual = individuals.first;
+    } else {
+      individual = individuals;
+    }
+
+    Map<String, dynamic>? indMap;
+    if (individual is Map<String, dynamic>) {
+      indMap = individual;
+    } else {
+      try {
+        indMap = (individual as dynamic).toMap() as Map<String, dynamic>;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    final additionalFields = indMap['additionalFields'];
+    if (additionalFields is Map && additionalFields['fields'] is List) {
+      for (final field in additionalFields['fields']) {
+        final key = field is Map ? field['key'] : null;
+        final value = field is Map ? field['value'] : null;
+        if (key == 'isGuestMember') {
+          if (value is bool) return value;
+          return value?.toString().toLowerCase() == 'true';
+        }
+      }
+    }
+
+    return false;
+  });
 }
