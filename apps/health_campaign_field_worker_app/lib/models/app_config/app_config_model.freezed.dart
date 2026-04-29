@@ -955,6 +955,12 @@ mixin _$HCMWrapperModel {
       throw _privateConstructorUsedError;
   @JsonKey(name: 'CHECKLIST_TYPES')
   List<CheckListTypes> get checklistTypes => throw _privateConstructorUsedError;
+  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+  List<DeviceChangeReasons> get deviceChangeReasons =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'SINGLE_USER_LOGIN')
+  List<SingleUserLogin> get singleUserLogin =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
   List<IdTypeOptions> get idTypeOptions => throw _privateConstructorUsedError;
   @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -998,6 +1004,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'TRANSIT_POST_TYPE')
   List<TransitPostType>? get transitPostType =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'BOUNDARY_RELATIONSHIP')
+  List<BoundaryRelationship>? get boundaryRelationship =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1026,6 +1035,9 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
       List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1050,7 +1062,9 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
       @JsonKey(name: 'TRANSIT_POST_TYPE')
-      List<TransitPostType>? transitPostType});
+      List<TransitPostType>? transitPostType,
+      @JsonKey(name: 'BOUNDARY_RELATIONSHIP')
+      List<BoundaryRelationship>? boundaryRelationship});
 }
 
 /// @nodoc
@@ -1074,6 +1088,8 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? householdMemberDeletionReasonOptions = null,
     Object? backgroundServiceConfig = freezed,
     Object? checklistTypes = null,
+    Object? deviceChangeReasons = null,
+    Object? singleUserLogin = null,
     Object? idTypeOptions = null,
     Object? relationShipTypeOptions = null,
     Object? deliveryCommentOptions = null,
@@ -1089,6 +1105,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
     Object? transitPostType = freezed,
+    Object? boundaryRelationship = freezed,
   }) {
     return _then(_value.copyWith(
       appConfig: null == appConfig
@@ -1124,6 +1141,14 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.checklistTypes
           : checklistTypes // ignore: cast_nullable_to_non_nullable
               as List<CheckListTypes>,
+      deviceChangeReasons: null == deviceChangeReasons
+          ? _value.deviceChangeReasons
+          : deviceChangeReasons // ignore: cast_nullable_to_non_nullable
+              as List<DeviceChangeReasons>,
+      singleUserLogin: null == singleUserLogin
+          ? _value.singleUserLogin
+          : singleUserLogin // ignore: cast_nullable_to_non_nullable
+              as List<SingleUserLogin>,
       idTypeOptions: null == idTypeOptions
           ? _value.idTypeOptions
           : idTypeOptions // ignore: cast_nullable_to_non_nullable
@@ -1184,6 +1209,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.transitPostType
           : transitPostType // ignore: cast_nullable_to_non_nullable
               as List<TransitPostType>?,
+      boundaryRelationship: freezed == boundaryRelationship
+          ? _value.boundaryRelationship
+          : boundaryRelationship // ignore: cast_nullable_to_non_nullable
+              as List<BoundaryRelationship>?,
     ) as $Val);
   }
 }
@@ -1211,6 +1240,9 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
       List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1235,7 +1267,9 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
       @JsonKey(name: 'TRANSIT_POST_TYPE')
-      List<TransitPostType>? transitPostType});
+      List<TransitPostType>? transitPostType,
+      @JsonKey(name: 'BOUNDARY_RELATIONSHIP')
+      List<BoundaryRelationship>? boundaryRelationship});
 }
 
 /// @nodoc
@@ -1257,6 +1291,8 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? householdMemberDeletionReasonOptions = null,
     Object? backgroundServiceConfig = freezed,
     Object? checklistTypes = null,
+    Object? deviceChangeReasons = null,
+    Object? singleUserLogin = null,
     Object? idTypeOptions = null,
     Object? relationShipTypeOptions = null,
     Object? deliveryCommentOptions = null,
@@ -1272,6 +1308,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
     Object? transitPostType = freezed,
+    Object? boundaryRelationship = freezed,
   }) {
     return _then(_$HCMWrapperModelImpl(
       appConfig: null == appConfig
@@ -1307,6 +1344,14 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._checklistTypes
           : checklistTypes // ignore: cast_nullable_to_non_nullable
               as List<CheckListTypes>,
+      deviceChangeReasons: null == deviceChangeReasons
+          ? _value._deviceChangeReasons
+          : deviceChangeReasons // ignore: cast_nullable_to_non_nullable
+              as List<DeviceChangeReasons>,
+      singleUserLogin: null == singleUserLogin
+          ? _value._singleUserLogin
+          : singleUserLogin // ignore: cast_nullable_to_non_nullable
+              as List<SingleUserLogin>,
       idTypeOptions: null == idTypeOptions
           ? _value._idTypeOptions
           : idTypeOptions // ignore: cast_nullable_to_non_nullable
@@ -1367,6 +1412,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._transitPostType
           : transitPostType // ignore: cast_nullable_to_non_nullable
               as List<TransitPostType>?,
+      boundaryRelationship: freezed == boundaryRelationship
+          ? _value._boundaryRelationship
+          : boundaryRelationship // ignore: cast_nullable_to_non_nullable
+              as List<BoundaryRelationship>?,
     ));
   }
 }
@@ -1391,6 +1440,10 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       final List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES')
       required final List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      required final List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN')
+      required final List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1420,7 +1473,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       @JsonKey(name: 'FIREBASE_CONFIG')
       required final List<FirebaseConfig>? firebaseConfig,
       @JsonKey(name: 'TRANSIT_POST_TYPE')
-      final List<TransitPostType>? transitPostType})
+      final List<TransitPostType>? transitPostType,
+      @JsonKey(name: 'BOUNDARY_RELATIONSHIP')
+      final List<BoundaryRelationship>? boundaryRelationship})
       : _appConfig = appConfig,
         _bandWidthBatchSize = bandWidthBatchSize,
         _beneficiaryIdConfig = beneficiaryIdConfig,
@@ -1430,6 +1485,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             householdMemberDeletionReasonOptions,
         _backgroundServiceConfig = backgroundServiceConfig,
         _checklistTypes = checklistTypes,
+        _deviceChangeReasons = deviceChangeReasons,
+        _singleUserLogin = singleUserLogin,
         _idTypeOptions = idTypeOptions,
         _relationShipTypeOptions = relationShipTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
@@ -1444,7 +1501,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _houseStructureTypes = houseStructureTypes,
         _refusalReasons = refusalReasons,
         _firebaseConfig = firebaseConfig,
-        _transitPostType = transitPostType;
+        _transitPostType = transitPostType,
+        _boundaryRelationship = boundaryRelationship;
 
   factory _$HCMWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$HCMWrapperModelImplFromJson(json);
@@ -1527,6 +1585,25 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     if (_checklistTypes is EqualUnmodifiableListView) return _checklistTypes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_checklistTypes);
+  }
+
+  final List<DeviceChangeReasons> _deviceChangeReasons;
+  @override
+  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+  List<DeviceChangeReasons> get deviceChangeReasons {
+    if (_deviceChangeReasons is EqualUnmodifiableListView)
+      return _deviceChangeReasons;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_deviceChangeReasons);
+  }
+
+  final List<SingleUserLogin> _singleUserLogin;
+  @override
+  @JsonKey(name: 'SINGLE_USER_LOGIN')
+  List<SingleUserLogin> get singleUserLogin {
+    if (_singleUserLogin is EqualUnmodifiableListView) return _singleUserLogin;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_singleUserLogin);
   }
 
   final List<IdTypeOptions> _idTypeOptions;
@@ -1694,9 +1771,21 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<BoundaryRelationship>? _boundaryRelationship;
+  @override
+  @JsonKey(name: 'BOUNDARY_RELATIONSHIP')
+  List<BoundaryRelationship>? get boundaryRelationship {
+    final value = _boundaryRelationship;
+    if (value == null) return null;
+    if (_boundaryRelationship is EqualUnmodifiableListView)
+      return _boundaryRelationship;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, beneficiaryIdConfig: $beneficiaryIdConfig, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, relationShipTypeOptions: $relationShipTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, manualAttendanceReasonList: $manualAttendanceReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, transitPostType: $transitPostType)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, beneficiaryIdConfig: $beneficiaryIdConfig, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, deviceChangeReasons: $deviceChangeReasons, singleUserLogin: $singleUserLogin, idTypeOptions: $idTypeOptions, relationShipTypeOptions: $relationShipTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, manualAttendanceReasonList: $manualAttendanceReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, transitPostType: $transitPostType, boundaryRelationship: $boundaryRelationship)';
   }
 
   @override
@@ -1723,6 +1812,10 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 other._backgroundServiceConfig, _backgroundServiceConfig) &&
             const DeepCollectionEquality()
                 .equals(other._checklistTypes, _checklistTypes) &&
+            const DeepCollectionEquality()
+                .equals(other._deviceChangeReasons, _deviceChangeReasons) &&
+            const DeepCollectionEquality()
+                .equals(other._singleUserLogin, _singleUserLogin) &&
             const DeepCollectionEquality()
                 .equals(other._idTypeOptions, _idTypeOptions) &&
             const DeepCollectionEquality().equals(
@@ -1753,7 +1846,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality()
                 .equals(other._firebaseConfig, _firebaseConfig) &&
             const DeepCollectionEquality()
-                .equals(other._transitPostType, _transitPostType));
+                .equals(other._transitPostType, _transitPostType) &&
+            const DeepCollectionEquality()
+                .equals(other._boundaryRelationship, _boundaryRelationship));
   }
 
   @JsonKey(ignore: true)
@@ -1769,6 +1864,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             .hash(_householdMemberDeletionReasonOptions),
         const DeepCollectionEquality().hash(_backgroundServiceConfig),
         const DeepCollectionEquality().hash(_checklistTypes),
+        const DeepCollectionEquality().hash(_deviceChangeReasons),
+        const DeepCollectionEquality().hash(_singleUserLogin),
         const DeepCollectionEquality().hash(_idTypeOptions),
         const DeepCollectionEquality().hash(_relationShipTypeOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptions),
@@ -1783,7 +1880,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         const DeepCollectionEquality().hash(_houseStructureTypes),
         const DeepCollectionEquality().hash(_refusalReasons),
         const DeepCollectionEquality().hash(_firebaseConfig),
-        const DeepCollectionEquality().hash(_transitPostType)
+        const DeepCollectionEquality().hash(_transitPostType),
+        const DeepCollectionEquality().hash(_boundaryRelationship)
       ]);
 
   @JsonKey(ignore: true)
@@ -1819,6 +1917,10 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       final List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES')
       required final List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      required final List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN')
+      required final List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1848,7 +1950,10 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       @JsonKey(name: 'FIREBASE_CONFIG')
       required final List<FirebaseConfig>? firebaseConfig,
       @JsonKey(name: 'TRANSIT_POST_TYPE')
-      final List<TransitPostType>? transitPostType}) = _$HCMWrapperModelImpl;
+      final List<TransitPostType>? transitPostType,
+      @JsonKey(name: 'BOUNDARY_RELATIONSHIP')
+      final List<BoundaryRelationship>?
+          boundaryRelationship}) = _$HCMWrapperModelImpl;
 
   factory _HCMWrapperModel.fromJson(Map<String, dynamic> json) =
       _$HCMWrapperModelImpl.fromJson;
@@ -1877,6 +1982,12 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'CHECKLIST_TYPES')
   List<CheckListTypes> get checklistTypes;
+  @override
+  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+  List<DeviceChangeReasons> get deviceChangeReasons;
+  @override
+  @JsonKey(name: 'SINGLE_USER_LOGIN')
+  List<SingleUserLogin> get singleUserLogin;
   @override
   @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
   List<IdTypeOptions> get idTypeOptions;
@@ -1922,6 +2033,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'TRANSIT_POST_TYPE')
   List<TransitPostType>? get transitPostType;
+  @override
+  @JsonKey(name: 'BOUNDARY_RELATIONSHIP')
+  List<BoundaryRelationship>? get boundaryRelationship;
   @override
   @JsonKey(ignore: true)
   _$$HCMWrapperModelImplCopyWith<_$HCMWrapperModelImpl> get copyWith =>
@@ -2912,6 +3026,8 @@ mixin _$AppConfig {
   String? get tenantId => throw _privateConstructorUsedError;
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   double? get maxRadius => throw _privateConstructorUsedError;
+  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+  int? get boundaryLastLevelMaxSelection => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -2930,7 +3046,9 @@ abstract class $AppConfigCopyWith<$Res> {
       @JsonKey(name: 'SYNC_METHOD') String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
       @JsonKey(name: 'TENANT_ID') String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius});
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      int? boundaryLastLevelMaxSelection});
 }
 
 /// @nodoc
@@ -2952,6 +3070,7 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
     Object? syncTrigger = null,
     Object? tenantId = freezed,
     Object? maxRadius = freezed,
+    Object? boundaryLastLevelMaxSelection = freezed,
   }) {
     return _then(_value.copyWith(
       networkDetection: null == networkDetection
@@ -2978,6 +3097,10 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
           ? _value.maxRadius
           : maxRadius // ignore: cast_nullable_to_non_nullable
               as double?,
+      boundaryLastLevelMaxSelection: freezed == boundaryLastLevelMaxSelection
+          ? _value.boundaryLastLevelMaxSelection
+          : boundaryLastLevelMaxSelection // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -2996,7 +3119,9 @@ abstract class _$$AppConfigImplCopyWith<$Res>
       @JsonKey(name: 'SYNC_METHOD') String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
       @JsonKey(name: 'TENANT_ID') String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius});
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      int? boundaryLastLevelMaxSelection});
 }
 
 /// @nodoc
@@ -3016,6 +3141,7 @@ class __$$AppConfigImplCopyWithImpl<$Res>
     Object? syncTrigger = null,
     Object? tenantId = freezed,
     Object? maxRadius = freezed,
+    Object? boundaryLastLevelMaxSelection = freezed,
   }) {
     return _then(_$AppConfigImpl(
       networkDetection: null == networkDetection
@@ -3042,6 +3168,10 @@ class __$$AppConfigImplCopyWithImpl<$Res>
           ? _value.maxRadius
           : maxRadius // ignore: cast_nullable_to_non_nullable
               as double?,
+      boundaryLastLevelMaxSelection: freezed == boundaryLastLevelMaxSelection
+          ? _value.boundaryLastLevelMaxSelection
+          : boundaryLastLevelMaxSelection // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -3055,7 +3185,9 @@ class _$AppConfigImpl implements _AppConfig {
       @JsonKey(name: 'SYNC_METHOD') required this.syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') required this.syncTrigger,
       @JsonKey(name: 'TENANT_ID') this.tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') this.maxRadius});
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') this.maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      this.boundaryLastLevelMaxSelection});
 
   factory _$AppConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$AppConfigImplFromJson(json);
@@ -3078,10 +3210,13 @@ class _$AppConfigImpl implements _AppConfig {
   @override
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   final double? maxRadius;
+  @override
+  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+  final int? boundaryLastLevelMaxSelection;
 
   @override
   String toString() {
-    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, tenantId: $tenantId, maxRadius: $maxRadius)';
+    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, tenantId: $tenantId, maxRadius: $maxRadius, boundaryLastLevelMaxSelection: $boundaryLastLevelMaxSelection)';
   }
 
   @override
@@ -3100,13 +3235,24 @@ class _$AppConfigImpl implements _AppConfig {
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
             (identical(other.maxRadius, maxRadius) ||
-                other.maxRadius == maxRadius));
+                other.maxRadius == maxRadius) &&
+            (identical(other.boundaryLastLevelMaxSelection,
+                    boundaryLastLevelMaxSelection) ||
+                other.boundaryLastLevelMaxSelection ==
+                    boundaryLastLevelMaxSelection));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, networkDetection,
-      persistenceMode, syncMethod, syncTrigger, tenantId, maxRadius);
+  int get hashCode => Object.hash(
+      runtimeType,
+      networkDetection,
+      persistenceMode,
+      syncMethod,
+      syncTrigger,
+      tenantId,
+      maxRadius,
+      boundaryLastLevelMaxSelection);
 
   @JsonKey(ignore: true)
   @override
@@ -3130,8 +3276,9 @@ abstract class _AppConfig implements AppConfig {
       @JsonKey(name: 'SYNC_METHOD') required final String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') required final String syncTrigger,
       @JsonKey(name: 'TENANT_ID') final String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-      final double? maxRadius}) = _$AppConfigImpl;
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      final int? boundaryLastLevelMaxSelection}) = _$AppConfigImpl;
 
   factory _AppConfig.fromJson(Map<String, dynamic> json) =
       _$AppConfigImpl.fromJson;
@@ -3154,6 +3301,9 @@ abstract class _AppConfig implements AppConfig {
   @override
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   double? get maxRadius;
+  @override
+  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+  int? get boundaryLastLevelMaxSelection;
   @override
   @JsonKey(ignore: true)
   _$$AppConfigImplCopyWith<_$AppConfigImpl> get copyWith =>
@@ -6153,6 +6303,316 @@ abstract class _TransitPostType implements TransitPostType {
       throw _privateConstructorUsedError;
 }
 
+DeviceChangeReasons _$DeviceChangeReasonsFromJson(Map<String, dynamic> json) {
+  return _DeviceChangeReasons.fromJson(json);
+}
+
+/// @nodoc
+mixin _$DeviceChangeReasons {
+  String get name => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $DeviceChangeReasonsCopyWith<DeviceChangeReasons> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $DeviceChangeReasonsCopyWith<$Res> {
+  factory $DeviceChangeReasonsCopyWith(
+          DeviceChangeReasons value, $Res Function(DeviceChangeReasons) then) =
+      _$DeviceChangeReasonsCopyWithImpl<$Res, DeviceChangeReasons>;
+  @useResult
+  $Res call({String name, String code});
+}
+
+/// @nodoc
+class _$DeviceChangeReasonsCopyWithImpl<$Res, $Val extends DeviceChangeReasons>
+    implements $DeviceChangeReasonsCopyWith<$Res> {
+  _$DeviceChangeReasonsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$DeviceChangeReasonsImplCopyWith<$Res>
+    implements $DeviceChangeReasonsCopyWith<$Res> {
+  factory _$$DeviceChangeReasonsImplCopyWith(_$DeviceChangeReasonsImpl value,
+          $Res Function(_$DeviceChangeReasonsImpl) then) =
+      __$$DeviceChangeReasonsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String code});
+}
+
+/// @nodoc
+class __$$DeviceChangeReasonsImplCopyWithImpl<$Res>
+    extends _$DeviceChangeReasonsCopyWithImpl<$Res, _$DeviceChangeReasonsImpl>
+    implements _$$DeviceChangeReasonsImplCopyWith<$Res> {
+  __$$DeviceChangeReasonsImplCopyWithImpl(_$DeviceChangeReasonsImpl _value,
+      $Res Function(_$DeviceChangeReasonsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+  }) {
+    return _then(_$DeviceChangeReasonsImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$DeviceChangeReasonsImpl implements _DeviceChangeReasons {
+  _$DeviceChangeReasonsImpl({required this.name, required this.code});
+
+  factory _$DeviceChangeReasonsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DeviceChangeReasonsImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String code;
+
+  @override
+  String toString() {
+    return 'DeviceChangeReasons(name: $name, code: $code)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DeviceChangeReasonsImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) || other.code == code));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, code);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DeviceChangeReasonsImplCopyWith<_$DeviceChangeReasonsImpl> get copyWith =>
+      __$$DeviceChangeReasonsImplCopyWithImpl<_$DeviceChangeReasonsImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$DeviceChangeReasonsImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _DeviceChangeReasons implements DeviceChangeReasons {
+  factory _DeviceChangeReasons(
+      {required final String name,
+      required final String code}) = _$DeviceChangeReasonsImpl;
+
+  factory _DeviceChangeReasons.fromJson(Map<String, dynamic> json) =
+      _$DeviceChangeReasonsImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get code;
+  @override
+  @JsonKey(ignore: true)
+  _$$DeviceChangeReasonsImplCopyWith<_$DeviceChangeReasonsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+SingleUserLogin _$SingleUserLoginFromJson(Map<String, dynamic> json) {
+  return _SingleUserLogin.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SingleUserLogin {
+  bool get enabled => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SingleUserLoginCopyWith<SingleUserLogin> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SingleUserLoginCopyWith<$Res> {
+  factory $SingleUserLoginCopyWith(
+          SingleUserLogin value, $Res Function(SingleUserLogin) then) =
+      _$SingleUserLoginCopyWithImpl<$Res, SingleUserLogin>;
+  @useResult
+  $Res call({bool enabled, int id});
+}
+
+/// @nodoc
+class _$SingleUserLoginCopyWithImpl<$Res, $Val extends SingleUserLogin>
+    implements $SingleUserLoginCopyWith<$Res> {
+  _$SingleUserLoginCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enabled = null,
+    Object? id = null,
+  }) {
+    return _then(_value.copyWith(
+      enabled: null == enabled
+          ? _value.enabled
+          : enabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SingleUserLoginImplCopyWith<$Res>
+    implements $SingleUserLoginCopyWith<$Res> {
+  factory _$$SingleUserLoginImplCopyWith(_$SingleUserLoginImpl value,
+          $Res Function(_$SingleUserLoginImpl) then) =
+      __$$SingleUserLoginImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({bool enabled, int id});
+}
+
+/// @nodoc
+class __$$SingleUserLoginImplCopyWithImpl<$Res>
+    extends _$SingleUserLoginCopyWithImpl<$Res, _$SingleUserLoginImpl>
+    implements _$$SingleUserLoginImplCopyWith<$Res> {
+  __$$SingleUserLoginImplCopyWithImpl(
+      _$SingleUserLoginImpl _value, $Res Function(_$SingleUserLoginImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enabled = null,
+    Object? id = null,
+  }) {
+    return _then(_$SingleUserLoginImpl(
+      enabled: null == enabled
+          ? _value.enabled
+          : enabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SingleUserLoginImpl implements _SingleUserLogin {
+  _$SingleUserLoginImpl({required this.enabled, required this.id});
+
+  factory _$SingleUserLoginImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SingleUserLoginImplFromJson(json);
+
+  @override
+  final bool enabled;
+  @override
+  final int id;
+
+  @override
+  String toString() {
+    return 'SingleUserLogin(enabled: $enabled, id: $id)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SingleUserLoginImpl &&
+            (identical(other.enabled, enabled) || other.enabled == enabled) &&
+            (identical(other.id, id) || other.id == id));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, enabled, id);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SingleUserLoginImplCopyWith<_$SingleUserLoginImpl> get copyWith =>
+      __$$SingleUserLoginImplCopyWithImpl<_$SingleUserLoginImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SingleUserLoginImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SingleUserLogin implements SingleUserLogin {
+  factory _SingleUserLogin(
+      {required final bool enabled,
+      required final int id}) = _$SingleUserLoginImpl;
+
+  factory _SingleUserLogin.fromJson(Map<String, dynamic> json) =
+      _$SingleUserLoginImpl.fromJson;
+
+  @override
+  bool get enabled;
+  @override
+  int get id;
+  @override
+  @JsonKey(ignore: true)
+  _$$SingleUserLoginImplCopyWith<_$SingleUserLoginImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 TransportTypes _$TransportTypesFromJson(Map<String, dynamic> json) {
   return _TransportTypes.fromJson(json);
 }
@@ -6619,4 +7079,398 @@ abstract class _FirebaseConfig implements FirebaseConfig {
   @JsonKey(ignore: true)
   _$$FirebaseConfigImplCopyWith<_$FirebaseConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+BoundaryRelationship _$BoundaryRelationshipFromJson(Map<String, dynamic> json) {
+  return _BoundaryRelationship.fromJson(json);
+}
+
+/// @nodoc
+mixin _$BoundaryRelationship {
+  String get boundaryType => throw _privateConstructorUsedError;
+  int get order => throw _privateConstructorUsedError;
+  BoundaryRelationshipRef? get parent => throw _privateConstructorUsedError;
+  List<BoundaryRelationshipRef>? get children =>
+      throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $BoundaryRelationshipCopyWith<BoundaryRelationship> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $BoundaryRelationshipCopyWith<$Res> {
+  factory $BoundaryRelationshipCopyWith(BoundaryRelationship value,
+          $Res Function(BoundaryRelationship) then) =
+      _$BoundaryRelationshipCopyWithImpl<$Res, BoundaryRelationship>;
+  @useResult
+  $Res call(
+      {String boundaryType,
+      int order,
+      BoundaryRelationshipRef? parent,
+      List<BoundaryRelationshipRef>? children});
+
+  $BoundaryRelationshipRefCopyWith<$Res>? get parent;
+}
+
+/// @nodoc
+class _$BoundaryRelationshipCopyWithImpl<$Res,
+        $Val extends BoundaryRelationship>
+    implements $BoundaryRelationshipCopyWith<$Res> {
+  _$BoundaryRelationshipCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? boundaryType = null,
+    Object? order = null,
+    Object? parent = freezed,
+    Object? children = freezed,
+  }) {
+    return _then(_value.copyWith(
+      boundaryType: null == boundaryType
+          ? _value.boundaryType
+          : boundaryType // ignore: cast_nullable_to_non_nullable
+              as String,
+      order: null == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int,
+      parent: freezed == parent
+          ? _value.parent
+          : parent // ignore: cast_nullable_to_non_nullable
+              as BoundaryRelationshipRef?,
+      children: freezed == children
+          ? _value.children
+          : children // ignore: cast_nullable_to_non_nullable
+              as List<BoundaryRelationshipRef>?,
+    ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $BoundaryRelationshipRefCopyWith<$Res>? get parent {
+    if (_value.parent == null) {
+      return null;
+    }
+
+    return $BoundaryRelationshipRefCopyWith<$Res>(_value.parent!, (value) {
+      return _then(_value.copyWith(parent: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$BoundaryRelationshipImplCopyWith<$Res>
+    implements $BoundaryRelationshipCopyWith<$Res> {
+  factory _$$BoundaryRelationshipImplCopyWith(_$BoundaryRelationshipImpl value,
+          $Res Function(_$BoundaryRelationshipImpl) then) =
+      __$$BoundaryRelationshipImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String boundaryType,
+      int order,
+      BoundaryRelationshipRef? parent,
+      List<BoundaryRelationshipRef>? children});
+
+  @override
+  $BoundaryRelationshipRefCopyWith<$Res>? get parent;
+}
+
+/// @nodoc
+class __$$BoundaryRelationshipImplCopyWithImpl<$Res>
+    extends _$BoundaryRelationshipCopyWithImpl<$Res, _$BoundaryRelationshipImpl>
+    implements _$$BoundaryRelationshipImplCopyWith<$Res> {
+  __$$BoundaryRelationshipImplCopyWithImpl(_$BoundaryRelationshipImpl _value,
+      $Res Function(_$BoundaryRelationshipImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? boundaryType = null,
+    Object? order = null,
+    Object? parent = freezed,
+    Object? children = freezed,
+  }) {
+    return _then(_$BoundaryRelationshipImpl(
+      boundaryType: null == boundaryType
+          ? _value.boundaryType
+          : boundaryType // ignore: cast_nullable_to_non_nullable
+              as String,
+      order: null == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int,
+      parent: freezed == parent
+          ? _value.parent
+          : parent // ignore: cast_nullable_to_non_nullable
+              as BoundaryRelationshipRef?,
+      children: freezed == children
+          ? _value._children
+          : children // ignore: cast_nullable_to_non_nullable
+              as List<BoundaryRelationshipRef>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$BoundaryRelationshipImpl implements _BoundaryRelationship {
+  _$BoundaryRelationshipImpl(
+      {required this.boundaryType,
+      required this.order,
+      this.parent,
+      final List<BoundaryRelationshipRef>? children})
+      : _children = children;
+
+  factory _$BoundaryRelationshipImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BoundaryRelationshipImplFromJson(json);
+
+  @override
+  final String boundaryType;
+  @override
+  final int order;
+  @override
+  final BoundaryRelationshipRef? parent;
+  final List<BoundaryRelationshipRef>? _children;
+  @override
+  List<BoundaryRelationshipRef>? get children {
+    final value = _children;
+    if (value == null) return null;
+    if (_children is EqualUnmodifiableListView) return _children;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'BoundaryRelationship(boundaryType: $boundaryType, order: $order, parent: $parent, children: $children)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BoundaryRelationshipImpl &&
+            (identical(other.boundaryType, boundaryType) ||
+                other.boundaryType == boundaryType) &&
+            (identical(other.order, order) || other.order == order) &&
+            (identical(other.parent, parent) || other.parent == parent) &&
+            const DeepCollectionEquality().equals(other._children, _children));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, boundaryType, order, parent,
+      const DeepCollectionEquality().hash(_children));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BoundaryRelationshipImplCopyWith<_$BoundaryRelationshipImpl>
+      get copyWith =>
+          __$$BoundaryRelationshipImplCopyWithImpl<_$BoundaryRelationshipImpl>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$BoundaryRelationshipImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _BoundaryRelationship implements BoundaryRelationship {
+  factory _BoundaryRelationship(
+          {required final String boundaryType,
+          required final int order,
+          final BoundaryRelationshipRef? parent,
+          final List<BoundaryRelationshipRef>? children}) =
+      _$BoundaryRelationshipImpl;
+
+  factory _BoundaryRelationship.fromJson(Map<String, dynamic> json) =
+      _$BoundaryRelationshipImpl.fromJson;
+
+  @override
+  String get boundaryType;
+  @override
+  int get order;
+  @override
+  BoundaryRelationshipRef? get parent;
+  @override
+  List<BoundaryRelationshipRef>? get children;
+  @override
+  @JsonKey(ignore: true)
+  _$$BoundaryRelationshipImplCopyWith<_$BoundaryRelationshipImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+BoundaryRelationshipRef _$BoundaryRelationshipRefFromJson(
+    Map<String, dynamic> json) {
+  return _BoundaryRelationshipRef.fromJson(json);
+}
+
+/// @nodoc
+mixin _$BoundaryRelationshipRef {
+  String get boundaryType => throw _privateConstructorUsedError;
+  int get order => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $BoundaryRelationshipRefCopyWith<BoundaryRelationshipRef> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $BoundaryRelationshipRefCopyWith<$Res> {
+  factory $BoundaryRelationshipRefCopyWith(BoundaryRelationshipRef value,
+          $Res Function(BoundaryRelationshipRef) then) =
+      _$BoundaryRelationshipRefCopyWithImpl<$Res, BoundaryRelationshipRef>;
+  @useResult
+  $Res call({String boundaryType, int order});
+}
+
+/// @nodoc
+class _$BoundaryRelationshipRefCopyWithImpl<$Res,
+        $Val extends BoundaryRelationshipRef>
+    implements $BoundaryRelationshipRefCopyWith<$Res> {
+  _$BoundaryRelationshipRefCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? boundaryType = null,
+    Object? order = null,
+  }) {
+    return _then(_value.copyWith(
+      boundaryType: null == boundaryType
+          ? _value.boundaryType
+          : boundaryType // ignore: cast_nullable_to_non_nullable
+              as String,
+      order: null == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$BoundaryRelationshipRefImplCopyWith<$Res>
+    implements $BoundaryRelationshipRefCopyWith<$Res> {
+  factory _$$BoundaryRelationshipRefImplCopyWith(
+          _$BoundaryRelationshipRefImpl value,
+          $Res Function(_$BoundaryRelationshipRefImpl) then) =
+      __$$BoundaryRelationshipRefImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String boundaryType, int order});
+}
+
+/// @nodoc
+class __$$BoundaryRelationshipRefImplCopyWithImpl<$Res>
+    extends _$BoundaryRelationshipRefCopyWithImpl<$Res,
+        _$BoundaryRelationshipRefImpl>
+    implements _$$BoundaryRelationshipRefImplCopyWith<$Res> {
+  __$$BoundaryRelationshipRefImplCopyWithImpl(
+      _$BoundaryRelationshipRefImpl _value,
+      $Res Function(_$BoundaryRelationshipRefImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? boundaryType = null,
+    Object? order = null,
+  }) {
+    return _then(_$BoundaryRelationshipRefImpl(
+      boundaryType: null == boundaryType
+          ? _value.boundaryType
+          : boundaryType // ignore: cast_nullable_to_non_nullable
+              as String,
+      order: null == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$BoundaryRelationshipRefImpl implements _BoundaryRelationshipRef {
+  _$BoundaryRelationshipRefImpl(
+      {required this.boundaryType, required this.order});
+
+  factory _$BoundaryRelationshipRefImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BoundaryRelationshipRefImplFromJson(json);
+
+  @override
+  final String boundaryType;
+  @override
+  final int order;
+
+  @override
+  String toString() {
+    return 'BoundaryRelationshipRef(boundaryType: $boundaryType, order: $order)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BoundaryRelationshipRefImpl &&
+            (identical(other.boundaryType, boundaryType) ||
+                other.boundaryType == boundaryType) &&
+            (identical(other.order, order) || other.order == order));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, boundaryType, order);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BoundaryRelationshipRefImplCopyWith<_$BoundaryRelationshipRefImpl>
+      get copyWith => __$$BoundaryRelationshipRefImplCopyWithImpl<
+          _$BoundaryRelationshipRefImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$BoundaryRelationshipRefImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _BoundaryRelationshipRef implements BoundaryRelationshipRef {
+  factory _BoundaryRelationshipRef(
+      {required final String boundaryType,
+      required final int order}) = _$BoundaryRelationshipRefImpl;
+
+  factory _BoundaryRelationshipRef.fromJson(Map<String, dynamic> json) =
+      _$BoundaryRelationshipRefImpl.fromJson;
+
+  @override
+  String get boundaryType;
+  @override
+  int get order;
+  @override
+  @JsonKey(ignore: true)
+  _$$BoundaryRelationshipRefImplCopyWith<_$BoundaryRelationshipRefImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

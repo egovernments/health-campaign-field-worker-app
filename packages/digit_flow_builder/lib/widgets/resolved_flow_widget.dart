@@ -1,3 +1,5 @@
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 
 import '../action_handler/action_config.dart';
@@ -7,7 +9,6 @@ import '../utils/conditional_evaluator.dart';
 import '../utils/flow_widget_state.dart';
 import '../utils/interpolation.dart';
 import '../utils/utils.dart';
-import '../widget_registry.dart';
 import 'flow_widget_interface.dart';
 import 'localization_context.dart';
 
@@ -107,8 +108,7 @@ class ResolvedWidgetContext {
   /// registry (not stale build-time data).
   Map<String, dynamic> getFreshEvalContext() {
     final key = compositeKey ?? screenKey;
-    final registryState =
-        key != null ? FlowCrudStateRegistry().get(key) : null;
+    final registryState = key != null ? FlowCrudStateRegistry().get(key) : null;
     final currentWidgetData = registryState?.widgetData ?? widgetData;
     final currentFormData = registryState?.formData ?? formData;
 
@@ -133,8 +133,7 @@ class ResolvedWidgetContext {
     if (navData == null) return actionJson;
 
     final key = compositeKey ?? screenKey;
-    final registryState =
-        key != null ? FlowCrudStateRegistry().get(key) : null;
+    final registryState = key != null ? FlowCrudStateRegistry().get(key) : null;
     final currentWidgetData = registryState?.widgetData ?? widgetData;
     final currentFormData = registryState?.formData ?? formData;
 
@@ -142,7 +141,8 @@ class ResolvedWidgetContext {
       final rawValue = entry['value'];
 
       // Try evalContext first, then widgetData, then formData
-      dynamic resolvedValue = resolveValue(rawValue, currentEvalContext) ?? rawValue;
+      dynamic resolvedValue =
+          resolveValue(rawValue, currentEvalContext) ?? rawValue;
 
       if (resolvedValue == rawValue && currentWidgetData.isNotEmpty) {
         resolvedValue = resolveValue(rawValue, currentWidgetData);
@@ -240,10 +240,27 @@ class ResolvedWidgetContext {
             {}
         : <String, dynamic>{};
 
+    // Get entities from registry state (from initActions SEARCH_EVENT)
+    final registryState = key != null ? FlowCrudStateRegistry().get(key) : null;
+    List<EntityModel> entities = [];
+    final base = registryState?.base;
+    if (base is CrudStateLoaded) {
+      for (final entityList in base.results.values) {
+        entities.addAll(entityList);
+      }
+    }
+    if (entities.isEmpty) {
+      final wrapper = registryState?.stateWrapper;
+      if (wrapper is List) {
+        entities = wrapper.whereType<EntityModel>().toList();
+      }
+    }
+
     final initialContextData = <String, dynamic>{
       'wrappers': const [],
       ...currentEvalContext,
       'navigation': navigationParams,
+      if (entities.isNotEmpty) 'entities': entities,
     };
 
     await ActionHandler.executeActions(
@@ -296,14 +313,16 @@ abstract class ResolvedFlowWidget implements FlowWidget {
   ) {
     final state = WidgetStateContext.of(context);
     final localization = LocalizationContext.maybeOf(context);
+    final stateKey = state.compositeKey ?? state.screenKey;
 
     // Auto-resolve visibility
     if (json['visible'] != null) {
       final visible = ConditionalEvaluator.evaluate(
         json['visible'],
         state.evalContext,
-        screenKey: state.screenKey,
+        screenKey: stateKey,
         stateData: state.stateData,
+        widgetdata: state.widgetData
       );
       if (visible == false) {
         return const SizedBox.shrink();
@@ -316,8 +335,9 @@ abstract class ResolvedFlowWidget implements FlowWidget {
       final disabledResult = ConditionalEvaluator.evaluate(
         json['disabled'],
         state.evalContext,
-        screenKey: state.screenKey,
+        screenKey: stateKey,
         stateData: state.stateData,
+          widgetdata: state.widgetData
       );
       isDisabled = disabledResult == true;
     }
@@ -333,14 +353,15 @@ abstract class ResolvedFlowWidget implements FlowWidget {
           item: state.itemData,
         );
         if (!resolvedLabel.contains('{{')) {
-          resolvedLabel = localization?.translate(resolvedLabel) ?? resolvedLabel;
+          resolvedLabel =
+              localization?.translate(resolvedLabel) ?? resolvedLabel;
         }
       } else {
         resolvedLabel = resolveTemplate(
               labelText,
               state.evalContext,
               localization: localization,
-              screenKey: state.screenKey,
+              screenKey: stateKey,
               stateData: state.stateData,
             ) ??
             labelText;
@@ -354,7 +375,7 @@ abstract class ResolvedFlowWidget implements FlowWidget {
             descriptionText,
             state.evalContext,
             localization: localization,
-            screenKey: state.screenKey,
+            screenKey: stateKey,
             stateData: state.stateData,
           ) ??
           descriptionText;

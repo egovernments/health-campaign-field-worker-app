@@ -1,4 +1,5 @@
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
@@ -18,9 +19,15 @@ class ButtonWidget extends ResolvedFlowWidget {
   ) {
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
 
+    DigitButtonType type = WidgetParsers.parseButtonType(props['type']);
+    DigitButtonSize size = WidgetParsers.parseButtonSize(props['size']);
+    String? height = props['height'];
+    String? radius = props['radius'];
+
     return WidgetParsers.wrapWithBottomGap(
       DigitButton(
         crossAxisAlignment: CrossAxisAlignment.center,
+        capitalizeLetters: false,
         label: resolved.resolvedLabel ?? '',
         isDisabled: resolved.isDisabled,
         onPressed: () async {
@@ -30,8 +37,34 @@ class ButtonWidget extends ResolvedFlowWidget {
             await resolved.executeActions(actionsList, context);
           }
         },
-        type: WidgetParsers.parseButtonType(props['type']),
-        size: WidgetParsers.parseButtonSize(props['size']),
+        type: type,
+        size: size,
+        digitButtonThemeData:
+            DigitButtonThemeData.defaultTheme(context).copyWith(
+          smallDigitButtonHeight:
+              (size == DigitButtonSize.small && height != null)
+                  ? WidgetParsers.parseSize(height)
+                  : DigitButtonThemeData.defaultTheme(context)
+                      .smallDigitButtonHeight,
+          mediumDigitButtonHeight:
+              (size == DigitButtonSize.medium && height != null)
+                  ? WidgetParsers.parseSize(height)
+                  : DigitButtonThemeData.defaultTheme(context)
+                      .mediumDigitButtonHeight,
+          largeDigitButtonHeight:
+              (size == DigitButtonSize.large && height != null)
+                  ? WidgetParsers.parseSize(height)
+                  : DigitButtonThemeData.defaultTheme(context)
+                      .largeDigitButtonHeight,
+          smallMediumRadius: ((size == DigitButtonSize.small ||
+                      size == DigitButtonSize.medium) &&
+                  radius != null)
+              ? BorderRadius.circular(WidgetParsers.parseSize(radius))
+              : DigitButtonThemeData.defaultTheme(context).smallMediumRadius,
+          largeRadius: (size == DigitButtonSize.large && radius != null)
+              ? BorderRadius.circular(WidgetParsers.parseSize(radius))
+              : DigitButtonThemeData.defaultTheme(context).largeRadius,
+        ),
         mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment:
             WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),

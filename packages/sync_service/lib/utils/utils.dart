@@ -1,6 +1,6 @@
+import 'dart:async';
+
 import 'package:digit_data_model/data_model.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
 /// The `SyncServiceSingleton` class is a singleton that provides access to sync service related configurations and listeners.
@@ -60,25 +60,34 @@ class SyncServiceSingleton {
   // Getter for the persistence configuration
   PersistenceConfiguration? get persistenceConfiguration =>
       _persistenceConfiguration;
+
+  // Stream controller for sync progress updates
+  final _progressController = StreamController<SyncProgress>.broadcast();
+
+  /// Stream of sync progress updates (which entity/operation is being synced).
+  Stream<SyncProgress> get progressStream => _progressController.stream;
+
+  /// Emits a sync progress update.
+  void reportProgress(SyncProgress progress) {
+    _progressController.add(progress);
+  }
 }
 
-class SyncUtils {
-  // sync refresh
-  void syncRefresh(BuildContext context, String loggedInUserUuid) {
-    final syncBloc = context.read<SyncBloc>();
-    syncBloc.add(SyncRefreshEvent(loggedInUserUuid));
-  }
+/// Represents the current sync operation in progress.
+class SyncProgress {
+  final String entityType;
+  final String operation; // 'syncUp' or 'syncDown'
+  final DataOperation? dataOperation; // create, update, delete etc.
 
-// insert sync count
-  SyncState? syncCount(
-    BuildContext context,
-  ) {
-    SyncState? state;
-    final syncBloc = context.read<SyncBloc>();
-    syncBloc.stream.listen((state) {
-      state = state;
-    });
+  const SyncProgress({
+    required this.entityType,
+    required this.operation,
+    this.dataOperation,
+  });
 
-    return state;
+  @override
+  String toString() {
+    final op = dataOperation?.name ?? operation;
+    return '$op: $entityType';
   }
 }

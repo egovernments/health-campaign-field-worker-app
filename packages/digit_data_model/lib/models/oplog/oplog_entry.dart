@@ -121,9 +121,13 @@ enum DataOperation {
 enum ApiOperation {
   login,
   create,
+  register,
+  unRegister,
   search,
   update,
   delete,
+  validate,
+  switchUser,
   bulkCreate,
   bulkUpdate,
   bulkDelete,

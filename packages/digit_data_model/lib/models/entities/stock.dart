@@ -10,15 +10,16 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   final String? id;
   final String? tenantId;
   final String? facilityId;
-  final String? productVariantId;
+  final List<String>? productVariantId;
   final String? referenceId;
   final String? referenceIdType;
   final String? transactingPartyId;
   final String? transactingPartyType;
-  final List<String>? receiverId;
+  final String? receiverId;
   final String? receiverType;
   final String? senderId;
   final String? senderType;
+  final String? campaignNumber;
   final List<String>? clientReferenceId;
   final List<String>? transactionType;
   final List<String>? transactionReason;
@@ -40,6 +41,7 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
+    this.campaignNumber,
     int? dateOfEntry,
     super.boundaryCode,
     super.isDeleted,
@@ -65,6 +67,7 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
+    this.campaignNumber,
     int? dateOfEntry,
     super.boundaryCode,
   })  : dateOfEntryTime = dateOfEntry == null
@@ -93,6 +96,7 @@ class StockModel extends EntityModel with StockModelMappable {
   final String? receiverType;
   final String? senderId;
   final String? senderType;
+  final String? campaignNumber;
   final bool? nonRecoverableError;
   final String clientReferenceId;
   final int? rowVersion;
@@ -100,6 +104,7 @@ class StockModel extends EntityModel with StockModelMappable {
   final String? transactionReason;
   final StockAdditionalFields? additionalFields;
   final DateTime? dateOfEntryTime;
+
 
   StockModel({
     int? dateOfEntry,
@@ -116,6 +121,7 @@ class StockModel extends EntityModel with StockModelMappable {
     this.waybillNumber,
     this.receiverId,
     this.receiverType,
+    this.campaignNumber,
     this.senderId,
     this.senderType,
     this.nonRecoverableError = false,
@@ -165,6 +171,7 @@ class StockModel extends EntityModel with StockModelMappable {
       transactionType: Value(transactionType),
       transactionReason: Value(transactionReason),
       dateOfEntry: Value(dateOfEntry),
+      campaignNumber: Value(campaignNumber)
     );
   }
 }

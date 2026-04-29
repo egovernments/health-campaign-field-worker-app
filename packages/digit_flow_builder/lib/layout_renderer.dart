@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_flow_builder/utils/conditional_evaluator.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localization_context.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/digit_tag_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +104,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
     // Skip if not scrollable or already loading
     final isLoading =
         FlowCrudStateRegistry().get(compositeKey)?.isLoading ?? false;
-    debugPrint('ScrollListener: ScrollUpdate - maxExtent=${metrics.maxScrollExtent}, '
+    debugPrint(
+        'ScrollListener: ScrollUpdate - maxExtent=${metrics.maxScrollExtent}, '
         'pixels=${metrics.pixels}, isLoading=$isLoading, triggerMode=$_triggerMode, '
         'compositeKey=$compositeKey');
     if (metrics.maxScrollExtent == 0 || isLoading) return false;
@@ -341,16 +345,34 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Tag(
+                              label: localizations.translate(
+                                  FlowBuilderSingleton().boundary?.code ?? ""),
+                              isIcon: true,
+                              customTextStyle: Theme.of(context)
+                                  .digitTextTheme(context)
+                                  .bodyS
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorTheme
+                                          .alert
+                                          .info),
+                              type: TagType.monochrome,
+                              customIcon: Icon(
+                                Icons.location_on_outlined,
+                                color: Theme.of(context).colorTheme.alert.info,
+                                size: 16,
+                              ),
+                              themeData: TagThemeData(
+                                  monochromeBackgroundColor:
+                                      Theme.of(context).colorTheme.alert.infoBg,
+                                  iconLabelGap: spacer1),
+                            ),
+                            const SizedBox(height: spacer2),
                             DigitTextBlock(
                               padding: EdgeInsets.zero,
-                              heading: (widget.config['heading'] != null &&
-                                      localizations
-                                          .translate(widget.config['heading'])
-                                          .trim()
-                                          .isNotEmpty)
-                                  ? localizations
-                                      .translate(widget.config['heading'])
-                                  : null,
+                              heading: _resolveHeading(
+                                  widget.config['heading'], screenKey),
                               headingStyle: Theme.of(context)
                                   .digitTextTheme(context)
                                   .headingXl
@@ -359,52 +381,53 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                           .colorTheme
                                           .primary
                                           .primary2),
-                              description: (widget.config['description'] !=
-                                          null &&
-                                      localizations
-                                          .translate(
-                                              widget.config['description'])
-                                          .trim()
-                                          .isNotEmpty)
-                                  ? localizations
-                                      .translate(widget.config['description'])
-                                  : null,
+                              description: _resolveDescription(
+                                  widget.config['description'], screenKey),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: spacer4),
                             ...body
-                                .map((e) {
-                                  final processed =
-                                      preprocessConfigWithState(e, stateData);
+                                .asMap()
+                                .entries
+                                .map<MapEntry<bool, CrudItemContext>>((entry) {
+                              final e = entry.value;
+                              final processed =
+                                  preprocessConfigWithState(e, stateData);
+                              final isVisible = _checkWidgetVisibility(
+                                  processed, stateData, screenKey);
 
-                                  return CrudItemContext(
-                                    stateData: stateData,
-                                    screenKey: screenKey,
+                              return MapEntry(
+                                isVisible,
+                                CrudItemContext(
+                                  stateData: stateData,
+                                  screenKey: screenKey,
+                                  compositeKey: compositeKey,
+                                  child: LayoutMapper.map(
+                                    processed,
+                                    stateData,
+                                    context,
+                                    (action) {
+                                      ActionHandler.execute(action, context, {
+                                        'wrappers': const [],
+                                        '_compositeKey': compositeKey,
+                                      });
+                                    },
                                     compositeKey: compositeKey,
-                                    child: LayoutMapper.map(
-                                      processed,
-                                      stateData,
-                                      context,
-                                      (action) {
-                                        ActionHandler.execute(action, context, {
-                                          'wrappers': const [],
-                                          '_compositeKey': compositeKey,
-                                        });
-                                      },
-                                      compositeKey: compositeKey,
-                                    ),
-                                  );
-                                })
-                                .expand((widget) => [
-                                      widget,
-                                      const SizedBox(height: 16),
-                                    ])
-                                .toList()
+                                  ),
+                                ),
+                              );
+                            }).expand((entry) {
+                              if (!entry.key) return <Widget>[];
+                              return <Widget>[
+                                entry.value,
+                                const SizedBox(height: spacer4),
+                              ];
+                            }).toList()
                               ..removeLast(),
                             // Scroll loading indicator at bottom of content
                             if (_showLoadingIndicator && isLoading)
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16.0),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: spacer4),
                                 child: Center(
                                   child: DigitLoaders.inlineLoader(),
                                 ),
@@ -423,6 +446,46 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
         );
       },
     );
+  }
+
+  bool _checkWidgetVisibility(
+      Map<String, dynamic> json, CrudStateData? stateData, String? screenKey) {
+    final modelMap = stateData?.modelMap ?? {};
+    final evalContext = {
+      'item': null,
+      'contextData': stateData?.rawState ?? {},
+      ...modelMap,
+    };
+
+    bool visible = true;
+
+    // Check hidden condition first
+    if (json['hidden'] != null) {
+      final hiddenResult = ConditionalEvaluator.evaluate(
+        json['hidden'],
+        evalContext,
+        screenKey: screenKey,
+        stateData: stateData,
+      );
+      if (hiddenResult == true) {
+        visible = false;
+      }
+    }
+
+    // If not hidden, check visible condition
+    if (visible && json['visible'] != null) {
+      final visibleResult = ConditionalEvaluator.evaluate(
+        json['visible'],
+        evalContext,
+        screenKey: screenKey,
+        stateData: stateData,
+      );
+      if (visibleResult == false) {
+        visible = false;
+      }
+    }
+
+    return visible;
   }
 
   String? _resolveHeading(dynamic heading, String screenKey) {

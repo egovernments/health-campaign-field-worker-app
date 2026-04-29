@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:digit_data_converter/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/models/entities/attendee.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 
 class EntityModelJsonMapper extends DynamicEntityModelListener {
@@ -40,5 +43,11 @@ class EntityModelJsonMapper extends DynamicEntityModelListener {
             PgrAddressModelMapper.fromJson(jsonEncode(json)),
         'HFReferralModel': (json) =>
             HFReferralModelMapper.fromJson(jsonEncode(json)),
+        'AttendanceRegisterModel': (json) =>
+            AttendanceRegisterModelMapper.fromJson(jsonEncode(json)),
+        'AttendeeModel': (json) =>
+            AttendeeModelMapper.fromJson(jsonEncode(json)),
+        'AttendanceLogModel': (json) =>
+            AttendanceLogModelMapper.fromJson(jsonEncode(json)),
       };
 }

@@ -106,7 +106,8 @@ class PgrServiceRemoteRepository
     PgrServiceSearchModel query, {
     int? offSet,
     int? limit,
-    int? lastChangedSince,
+    int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) =>
       throw UnimplementedError();
 

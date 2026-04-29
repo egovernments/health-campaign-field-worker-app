@@ -14,7 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../models/entities/roles_type.dart';
 import '../../utils/stock_calculation_utils.dart';
+import '../../utils/utils.dart';
 import '../localized.dart';
 
 /// GlobalKey to access StockReconciliationCard state for validation
@@ -60,6 +62,8 @@ class _StockReconciliationCardState
     'stockReturned': 0,
     'stockLost': 0,
     'stockDamaged': 0,
+    'stockExcess': 0,
+    'stockLess': 0,
     'stockInHand': 0,
   };
 
@@ -150,6 +154,8 @@ class _StockReconciliationCardState
 
   @override
   Widget build(BuildContext context) {
+    final isDistributor = context.loggedInUserRoles
+        .any((role) => role.code == RolesType.distributor.toValue());
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
@@ -171,8 +177,11 @@ class _StockReconciliationCardState
       formControlName: 'stockReconciliationCard',
       schema: fieldSchema,
       builder: (field) {
-        // When form control is touched and invalid, trigger internal validation
-        if (field.control.touched && !_facilityTouched && !_productTouched) {
+        // When submit touches the combined control, propagate validation to any
+        // dropdown that has not been interacted with yet.
+        if (field.control.touched &&
+            field.control.invalid &&
+            (!_facilityTouched || !_productTouched)) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) validate();
           });
@@ -187,7 +196,7 @@ class _StockReconciliationCardState
 
             // Cache facilities and product variants when they're loaded
             // This prevents them from being cleared when stock search happens
-            if (facilities.isNotEmpty && _cachedFacilities.isEmpty) {
+            if (facilities.isNotEmpty) {
               _cachedFacilities = facilities;
             }
             if (productVariants.isNotEmpty && _cachedProductVariants.isEmpty) {
@@ -244,8 +253,6 @@ class _StockReconciliationCardState
                       setState(() {
                         _facilityTouched = true;
                         _selectedFacility = selected;
-                        // Mark product as touched too - so error shows if not selected
-                        _productTouched = true;
                         // Reset flags when facility changes
                         _manualCountInitialized = false;
                         _needsMetricsRecalculation = true;
@@ -255,7 +262,7 @@ class _StockReconciliationCardState
                     },
                   ),
                 ),
-                const SizedBox(height: spacer2),
+                const SizedBox(height: spacer4),
 
                 // Product Variant Dropdown
                 LabeledField(
@@ -286,7 +293,8 @@ class _StockReconciliationCardState
                       setState(() {
                         _productTouched = true;
                         _selectedProduct = selected;
-                        // Mark facility as touched too - so error shows if not selected
+                        // If user interacts with product first, facility should
+                        // show as required until it is selected.
                         _facilityTouched = true;
                         // Reset flags when product changes
                         _manualCountInitialized = false;
@@ -297,7 +305,8 @@ class _StockReconciliationCardState
                     },
                   ),
                 ),
-                const SizedBox(height: spacer4),
+                if (_selectedFacility != null && _selectedProduct != null)
+                  const SizedBox(height: spacer4),
 
                 // Stock Metrics Display (only show if both facility and product are selected)
                 if (_selectedFacility != null && _selectedProduct != null) ...[
@@ -343,21 +352,38 @@ class _StockReconciliationCardState
                         labelFlex: 5,
                       ),
                       const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate(
-                            i18.stockReconciliationMetrics.stockLost),
-                        value: _stockMetrics['stockLost']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate(
-                            i18.stockReconciliationMetrics.stockDamaged),
-                        value:
-                            _stockMetrics['stockDamaged']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
+                      if (isDistributor) ...[
+                        LabelValueItem(
+                          label: localizations.translate(
+                              i18.stockReconciliationMetrics.stockLost),
+                          value: _stockMetrics['stockLost']!.toStringAsFixed(0),
+                          labelFlex: 5,
+                        ),
+                        const DigitDivider(),
+                        LabelValueItem(
+                          label: localizations.translate(
+                              i18.stockReconciliationMetrics.stockDamaged),
+                          value:
+                              _stockMetrics['stockDamaged']!.toStringAsFixed(0),
+                          labelFlex: 5,
+                        ),
+                        const DigitDivider(),
+                        LabelValueItem(
+                          label: localizations.translate(
+                              i18.stockReconciliationMetrics.stockExcess),
+                          value:
+                              _stockMetrics['stockExcess']!.toStringAsFixed(0),
+                          labelFlex: 5,
+                        ),
+                        const DigitDivider(),
+                        LabelValueItem(
+                          label: localizations.translate(
+                              i18.stockReconciliationMetrics.stockLess),
+                          value: _stockMetrics['stockLess']!.toStringAsFixed(0),
+                          labelFlex: 5,
+                        ),
+                        const DigitDivider(),
+                      ],
                       LabelValueItem(
                         label: localizations.translate(
                             i18.stockReconciliationMetrics.stockOnHand),
@@ -366,11 +392,11 @@ class _StockReconciliationCardState
                       ),
                     ],
                   ),
-                  const SizedBox(height: spacer2),
+                  const SizedBox(height: spacer4),
                   InfoCard(
                     type: InfoType.info,
                     description: localizations.translate(
-                      'STOCK_RECONCILIATION_INFO_CARD_CONTENT',
+                      '${context.selectedProject.projectType}_STOCK_RECONCILIATION_INFO_CARD_CONTENT',
                     ),
                     title: localizations
                         .translate('STOCK_RECONCILIATION_INFO_CARD_TITLE'),
@@ -499,44 +525,55 @@ class _StockReconciliationCardState
 
   List<FacilityModel> _getFacilities(FlowCrudState? flowState) {
     try {
-      // Access data from FlowCrudState's stateWrapper
       final stateWrapper = flowState?.stateWrapper;
       if (stateWrapper == null || stateWrapper.isEmpty) return [];
 
-      // stateWrapper is a List<Map<String, List<dynamic>>>
-      for (final wrapperMap in stateWrapper) {
-        if (wrapperMap is Map &&
-            wrapperMap.containsKey('ProjectFacilityModel')) {
-          final projectFacilities = wrapperMap['ProjectFacilityModel'] as List?;
-          if (projectFacilities == null || projectFacilities.isEmpty) continue;
+      // Extract ProjectFacilityModel and FacilityModel from wrapper
+      // Same pattern as custom_facility_widgets.dart
+      List<dynamic>? projectFacilities;
+      List<dynamic>? allFacilities;
 
-          // Extract facilities from project facilities
-          final facilities = <FacilityModel>[];
-          for (final pf in projectFacilities) {
-            if (pf is Map && pf.containsKey('facility')) {
-              final facilityData = pf['facility'];
-              if (facilityData is FacilityModel) {
-                facilities.add(facilityData);
-              } else if (facilityData is Map) {
-                facilities.add(FacilityModelMapper.fromMap(
-                    facilityData as Map<String, dynamic>));
-              }
-            }
-          }
-          if (facilities.isNotEmpty) return facilities;
+      if (stateWrapper is List && stateWrapper.isNotEmpty) {
+        final firstItem = stateWrapper.first;
+        if (firstItem is Map) {
+          final wrapperList = stateWrapper as List<Map<String, List<dynamic>>>;
+          projectFacilities = wrapperList.firstWhere(
+            (m) => m.containsKey('ProjectFacilityModel'),
+            orElse: () => {'ProjectFacilityModel': []},
+          )['ProjectFacilityModel'];
+          allFacilities = wrapperList.firstWhere(
+            (m) => m.containsKey('FacilityModel'),
+            orElse: () => {'FacilityModel': []},
+          )['FacilityModel'];
         }
+      }
 
-        // Fallback: Try direct FacilityModel list
-        if (wrapperMap is Map && wrapperMap.containsKey('FacilityModel')) {
-          final facilityData = wrapperMap['FacilityModel'] as List?;
-          if (facilityData != null && facilityData.isNotEmpty) {
-            return facilityData
-                .map((e) => e is FacilityModel
-                    ? e
-                    : FacilityModelMapper.fromMap(e as Map<String, dynamic>))
-                .toList();
-          }
-        }
+      if (projectFacilities == null || projectFacilities.isEmpty) return [];
+
+      // Filter by facilityLevel == 'current' (same as custom_facility_widgets.dart)
+      final filteredProjectFacilities = projectFacilities.where((e) {
+        final model = e as ProjectFacilityModel;
+        final facilityLevel = model.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
+      // Get the filtered facility IDs
+      final facilityIds = filteredProjectFacilities
+          .cast<ProjectFacilityModel>()
+          .map((pf) => pf.facilityId)
+          .toSet();
+
+      // Return FacilityModel entries matching filtered IDs
+      if (allFacilities != null && allFacilities.isNotEmpty) {
+        return allFacilities
+            .map((e) => e is FacilityModel
+                ? e
+                : FacilityModelMapper.fromMap(e as Map<String, dynamic>))
+            .where((f) => facilityIds.contains(f.id))
+            .toList();
       }
     } catch (e) {
       // Silently handle parsing errors

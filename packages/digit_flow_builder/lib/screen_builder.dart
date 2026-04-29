@@ -1,8 +1,8 @@
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_data_model/utils/utils.dart';
-import 'package:digit_flow_builder/blocs/search_state_manager.dart';
-import 'package:digit_flow_builder/utils/utils.dart';
+import 'package:digit_flow_builder/utils/scanner_comparison_utils.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
-import 'package:digit_forms_engine/blocs/forms/forms.dart';
+import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_forms_engine/pages/forms_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -133,13 +133,30 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
     final onSubmit = widget.config['onAction'] as List<dynamic>?;
 
     // Merge widget.navigationParams with registry params (registry takes precedence)
+    final registryNavParams =
+        FlowCrudStateRegistry().getNavigationParams(_compositeKey);
     final mergedNavParams = {
       ...?widget.navigationParams,
+      ...?registryNavParams,
     };
+
+    // Get entities from registry state (from initActions SEARCH_EVENT)
+    final registryState = FlowCrudStateRegistry().get(_compositeKey);
+    List<dynamic> entities = [];
+    final base = registryState?.base;
+    if (base is CrudStateLoaded) {
+      for (final entityList in base.results.values) {
+        entities.addAll(entityList);
+      }
+    }
+    if (entities.isEmpty) {
+      entities = registryState?.stateWrapper ?? [];
+    }
 
     Map<String, dynamic> contextData = {
       'formData': formData,
       'navigation': mergedNavParams,
+      if (entities.isNotEmpty) 'entities': entities,
     };
 
     if (onSubmit != null) {
@@ -199,11 +216,52 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
       final schemaKey = config['name'] ?? '';
       final defaultValues = config['defaultValues'] as Map<String, dynamic>?;
 
+      // Build secondary action callback from screen-level onSecondaryAction
+      final secondaryActions = config['onSecondaryAction'] as List<dynamic>?;
+      void Function({Map<String, dynamic>? popupData})? onSecondaryAction;
+      if (secondaryActions != null) {
+        onSecondaryAction = ({Map<String, dynamic>? popupData}) {
+          final navParams = {
+            ...?widget.navigationParams,
+          };
+
+          // Get entities from registry - try base results first, then stateWrapper
+          final registryState = FlowCrudStateRegistry().get(_compositeKey);
+          List<dynamic> entities = [];
+          final base = registryState?.base;
+          if (base is CrudStateLoaded) {
+            for (final entityList in base.results.values) {
+              entities.addAll(entityList);
+            }
+          }
+          if (entities.isEmpty) {
+            entities = registryState?.stateWrapper ?? [];
+          }
+
+          // Get form data from registry and merge popup data (e.g., reject comment)
+          final formData = {
+            ...registryState?.formData ?? {},
+            ...?popupData,
+          };
+
+          ActionHandler.executeActions(
+            secondaryActions,
+            context,
+            {
+              'formData': formData,
+              'navigation': navParams,
+              'entities': entities,
+            },
+          );
+        };
+      }
+
       return _FormScreenWrapper(
         schemaKey: schemaKey,
         defaultValues: defaultValues,
         navigationParams: widget.navigationParams,
         compositeKey: _compositeKey,
+        onSecondaryAction: onSecondaryAction,
       );
     } else if (screenType == 'TEMPLATE') {
       return LayoutRendererPage(
@@ -221,12 +279,14 @@ class _FormScreenWrapper extends LocalizedStatefulWidget {
   final Map<String, dynamic>? defaultValues;
   final Map<String, dynamic>? navigationParams;
   final String compositeKey;
+  final void Function({Map<String, dynamic>? popupData})? onSecondaryAction;
 
   const _FormScreenWrapper({
     required this.schemaKey,
     this.defaultValues,
     this.navigationParams,
     required this.compositeKey,
+    this.onSecondaryAction,
   });
 
   @override
@@ -251,14 +311,14 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
             FlowCrudStateRegistry().getNavigationParams(compositeKey);
 
         // Extract instanceId from compositeKey (format: screenKey::instanceId)
-        final instanceId = compositeKey.contains('::')
-            ? compositeKey.split('::').last
-            : null;
+        final instanceId =
+            compositeKey.contains('::') ? compositeKey.split('::').last : null;
 
         // Merge widget.navigationParams with registry params (registry takes precedence)
         // Include _instanceId to ensure FormsRenderPage can use it as key for fresh FormGroup
         final mergedNavParams = <String, dynamic>{
           ...?widget.navigationParams,
+          ...?registryNavParams,
           if (instanceId != null) '_instanceId': instanceId,
         };
 
@@ -285,36 +345,56 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
             // Get formData from FlowCrudStateRegistry (set by REVERSE_TRANSFORM action)
             final registryFormData = flowState?.formData ?? {};
 
-            return FormsRenderPage(
-              pageName: pageName,
-              navigationParams: mergedNavParams,
-              currentSchemaKey: widget.schemaKey,
-              isEdit: isEdit,
-              // Pass custom components from registry with enhanced state access
-              customComponents: _buildCustomComponents(
-                context,
-                flowState,
-              ),
-              // defaultValues priority (lowest to highest):
-              // defaultValues priority (lowest to highest):
-              // 1. mergedNavParams - navigation data merged from widget and registry
-              // 2. widget.defaultValues - config-defined defaults
-              // 3. registryFormData - data from REVERSE_TRANSFORM action (highest priority for prefill)
-              // 4. System values like administrativeArea, availableIDs
-              defaultValues: {
-                ...?widget.defaultValues,
-                ...mergedNavParams,
-                ...?widget.defaultValues,
-                if (isEdit) ...registryFormData,
-                // System values always present
-                'administrativeArea': localizations
-                    .translate(FlowBuilderSingleton().boundary?.code ?? ''),
-                'availableIDs': {'DEFAULT': IdGen.instance.identifier},
-                'loggedInUserName': FlowBuilderSingleton().loggedInUser?.name,
-                'loggedInUserUuid': FlowBuilderSingleton().loggedInUser?.uuid,
-                'loggedInUserMobileNumber':
-                    FlowBuilderSingleton().loggedInUser?.mobileNumber,
+            return ScannerComparisonProvider(
+              duplicateCheckFn: (fieldName, scannedValue, formValues) {
+                // Read the latest cached schema at call time (not build time)
+                // to ensure cross-page field values are up to date.
+                final latestSchema = context
+                    .read<FormsBloc>()
+                    .state
+                    .cachedSchemas[widget.schemaKey];
+                return ScannerComparisonUtils.executeDuplicateCheck(
+                  latestSchema ?? schemaObject,
+                  widget.compositeKey,
+                  fieldName,
+                  scannedValue,
+                  formValues,
+                  mergedNavParams,
+                );
               },
+              duplicateErrorMessage: (fieldName) =>
+                  ScannerComparisonUtils.getDuplicateErrorMessage(
+                      schemaObject, fieldName),
+              child: FormsRenderPage(
+                pageName: pageName,
+                navigationParams: mergedNavParams,
+                currentSchemaKey: widget.schemaKey,
+                isEdit: isEdit,
+                onSecondaryAction: widget.onSecondaryAction,
+                // Pass custom components from registry with enhanced state access
+                customComponents: _buildCustomComponents(
+                  context,
+                  flowState,
+                ),
+                // defaultValues priority (lowest to highest):
+                // 1. widget.defaultValues - config-defined defaults
+                // 2. mergedNavParams - navigation data merged from widget and registry
+                // 3. registryFormData - data from REVERSE_TRANSFORM action (highest priority for prefill)
+                // 4. System values like administrativeArea, availableIDs
+                defaultValues: {
+                  ...?widget.defaultValues,
+                  ...mergedNavParams,
+                  if (isEdit) ...registryFormData,
+                  // System values always present
+                  'administrativeArea': localizations
+                      .translate(FlowBuilderSingleton().boundary?.code ?? ''),
+                  'availableIDs': {'DEFAULT': IdGen.instance.identifier},
+                  'loggedInUserName': FlowBuilderSingleton().loggedInUser?.name,
+                  'loggedInUserUuid': FlowBuilderSingleton().loggedInUser?.uuid,
+                  'loggedInUserMobileNumber':
+                      FlowBuilderSingleton().loggedInUser?.mobileNumber,
+                },
+              ),
             );
           }
           return const Center(child: CircularProgressIndicator());

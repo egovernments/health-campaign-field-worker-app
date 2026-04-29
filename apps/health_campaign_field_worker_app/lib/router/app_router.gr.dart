@@ -30,6 +30,21 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    AttendanceDigitScannerRoute.name: (routeData) {
+      final args = routeData.argsAs<AttendanceDigitScannerRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AttendanceDigitScannerPage(
+          key: args.key,
+          enableDynamicQRScanning: args.enableDynamicQRScanning,
+          attendees: args.attendees,
+          onScanResult: args.onScanResult,
+          quantity: args.quantity,
+          singleValue: args.singleValue,
+          isGS1code: args.isGS1code,
+        ),
+      );
+    },
     AuthenticatedRouteWrapper.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -42,6 +57,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BeneficiariesReportPage(),
       );
     },
+    BeneficiaryIdDownSyncRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryIdDownSyncRouteArgs>(
+          orElse: () => const BeneficiaryIdDownSyncRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BeneficiaryIdDownSyncPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     BoundarySelectionRoute.name: (routeData) {
       final args = routeData.argsAs<BoundarySelectionRouteArgs>(
           orElse: () => const BoundarySelectionRouteArgs());
@@ -50,6 +76,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: BoundarySelectionPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CurrentBoundaryRoute.name: (routeData) {
+      final args = routeData.argsAs<CurrentBoundaryRouteArgs>(
+          orElse: () => const CurrentBoundaryRouteArgs());
+      return AutoRoutePage<BoundaryModel>(
+        routeData: routeData,
+        child: CurrentBoundaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          onBoundarySelected: args.onBoundarySelected,
         ),
       );
     },
@@ -78,6 +116,18 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           nearbyService: args.nearbyService,
           connectedDevices: args.connectedDevices,
+        ),
+      );
+    },
+    DeviceChangeReasonRoute.name: (routeData) {
+      final args = routeData.argsAs<DeviceChangeReasonRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DeviceChangeReasonPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          username: args.username,
+          password: args.password,
         ),
       );
     },
@@ -186,7 +236,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ...AttendanceRoute().pagesMap,
     ...DigitScannerPackageRoute().pagesMap,
     ...DashboardRoute().pagesMap,
     ...SurveyFormRoute().pagesMap,
@@ -255,6 +304,76 @@ class AcknowledgementRouteArgs {
 }
 
 /// generated route for
+/// [AttendanceDigitScannerPage]
+class AttendanceDigitScannerRoute
+    extends PageRouteInfo<AttendanceDigitScannerRouteArgs> {
+  AttendanceDigitScannerRoute({
+    Key? key,
+    required bool enableDynamicQRScanning,
+    required List<AttendeeModel> attendees,
+    required void Function(
+      ScannedIndividualDataModel,
+      AttendanceValidationResult,
+    ) onScanResult,
+    int quantity = 1,
+    bool singleValue = false,
+    bool isGS1code = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          AttendanceDigitScannerRoute.name,
+          args: AttendanceDigitScannerRouteArgs(
+            key: key,
+            enableDynamicQRScanning: enableDynamicQRScanning,
+            attendees: attendees,
+            onScanResult: onScanResult,
+            quantity: quantity,
+            singleValue: singleValue,
+            isGS1code: isGS1code,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'AttendanceDigitScannerRoute';
+
+  static const PageInfo<AttendanceDigitScannerRouteArgs> page =
+      PageInfo<AttendanceDigitScannerRouteArgs>(name);
+}
+
+class AttendanceDigitScannerRouteArgs {
+  const AttendanceDigitScannerRouteArgs({
+    this.key,
+    required this.enableDynamicQRScanning,
+    required this.attendees,
+    required this.onScanResult,
+    this.quantity = 1,
+    this.singleValue = false,
+    this.isGS1code = false,
+  });
+
+  final Key? key;
+
+  final bool enableDynamicQRScanning;
+
+  final List<AttendeeModel> attendees;
+
+  final void Function(
+    ScannedIndividualDataModel,
+    AttendanceValidationResult,
+  ) onScanResult;
+
+  final int quantity;
+
+  final bool singleValue;
+
+  final bool isGS1code;
+
+  @override
+  String toString() {
+    return 'AttendanceDigitScannerRouteArgs{key: $key, enableDynamicQRScanning: $enableDynamicQRScanning, attendees: $attendees, onScanResult: $onScanResult, quantity: $quantity, singleValue: $singleValue, isGS1code: $isGS1code}';
+  }
+}
+
+/// generated route for
 /// [AuthenticatedPageWrapper]
 class AuthenticatedRouteWrapper extends PageRouteInfo<void> {
   const AuthenticatedRouteWrapper({List<PageRouteInfo>? children})
@@ -280,6 +399,45 @@ class BeneficiariesReportRoute extends PageRouteInfo<void> {
   static const String name = 'BeneficiariesReportRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [BeneficiaryIdDownSyncPage]
+class BeneficiaryIdDownSyncRoute
+    extends PageRouteInfo<BeneficiaryIdDownSyncRouteArgs> {
+  BeneficiaryIdDownSyncRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BeneficiaryIdDownSyncRoute.name,
+          args: BeneficiaryIdDownSyncRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BeneficiaryIdDownSyncRoute';
+
+  static const PageInfo<BeneficiaryIdDownSyncRouteArgs> page =
+      PageInfo<BeneficiaryIdDownSyncRouteArgs>(name);
+}
+
+class BeneficiaryIdDownSyncRouteArgs {
+  const BeneficiaryIdDownSyncRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BeneficiaryIdDownSyncRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
 }
 
 /// generated route for
@@ -317,6 +475,49 @@ class BoundarySelectionRouteArgs {
   @override
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CurrentBoundaryPage]
+class CurrentBoundaryRoute extends PageRouteInfo<CurrentBoundaryRouteArgs> {
+  CurrentBoundaryRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    dynamic Function(BuildContext)? onBoundarySelected,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CurrentBoundaryRoute.name,
+          args: CurrentBoundaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            onBoundarySelected: onBoundarySelected,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CurrentBoundaryRoute';
+
+  static const PageInfo<CurrentBoundaryRouteArgs> page =
+      PageInfo<CurrentBoundaryRouteArgs>(name);
+}
+
+class CurrentBoundaryRouteArgs {
+  const CurrentBoundaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.onBoundarySelected,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final dynamic Function(BuildContext)? onBoundarySelected;
+
+  @override
+  String toString() {
+    return 'CurrentBoundaryRouteArgs{key: $key, appLocalizations: $appLocalizations, onBoundarySelected: $onBoundarySelected}';
   }
 }
 
@@ -417,6 +618,55 @@ class DataTransferRouteArgs {
   @override
   String toString() {
     return 'DataTransferRouteArgs{key: $key, nearbyService: $nearbyService, connectedDevices: $connectedDevices}';
+  }
+}
+
+/// generated route for
+/// [DeviceChangeReasonPage]
+class DeviceChangeReasonRoute
+    extends PageRouteInfo<DeviceChangeReasonRouteArgs> {
+  DeviceChangeReasonRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    required String username,
+    required String password,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DeviceChangeReasonRoute.name,
+          args: DeviceChangeReasonRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            username: username,
+            password: password,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DeviceChangeReasonRoute';
+
+  static const PageInfo<DeviceChangeReasonRouteArgs> page =
+      PageInfo<DeviceChangeReasonRouteArgs>(name);
+}
+
+class DeviceChangeReasonRouteArgs {
+  const DeviceChangeReasonRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.username,
+    required this.password,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final String username;
+
+  final String password;
+
+  @override
+  String toString() {
+    return 'DeviceChangeReasonRouteArgs{key: $key, appLocalizations: $appLocalizations, username: $username, password: $password}';
   }
 }
 

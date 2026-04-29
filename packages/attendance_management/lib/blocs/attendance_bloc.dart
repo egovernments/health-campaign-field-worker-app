@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/models/entities/attendee.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -129,11 +132,12 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 
   // Method to fetch attendance registers
   fetchRegisters({required int offSet, required int limit}) async {
+    var staffId = AttendanceSingleton().loggedInIndividualId;
     final registers = await attendanceDataRepository?.search(
       AttendanceRegisterSearchModel(
         limit: limit,
         offSet: offSet,
-        staffId: AttendanceSingleton().loggedInIndividualId,
+        staffId: staffId,
         referenceId: AttendanceSingleton().project!.id,
       ),
     );
@@ -200,7 +204,6 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     return register.copyWith(
       individualList: individualList,
       attendees: attendeeList,
-      attendanceLog: list,
       completedDays: completedDaysCount,
     );
   }

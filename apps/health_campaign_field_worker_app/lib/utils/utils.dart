@@ -6,12 +6,12 @@ import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
-import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
+import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
 import 'package:digit_ui_components/digit_components.dart';
@@ -30,19 +30,20 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:sync_service/data/sync_service.dart' show SyncLock;
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
+import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
-import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
-import '../blocs/localization/app_localization.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -132,6 +133,8 @@ performBackgroundService({
           type: ToastType.success,
         );
       }
+    } else if (context != null && context.mounted) {
+      debugPrint('Background service not started: isRunning=$isRunning, isOnline=$isOnline');
     }
   }
 }
@@ -235,65 +238,13 @@ Future<bool> getIsConnected() async {
   }
 }
 
-void triggerSilentHFReferralDownSync({
-  required BuildContext context,
-  required List<AppConfiguration> appConfiguration,
-  required String projectId,
-  required String boundaryCode,
-  required String boundaryName,
-}) {
-  final bloc = context.read<HFReferralDownSyncBloc>();
-
-  late StreamSubscription<HFReferralDownSyncState> subscription;
-  subscription = bloc.stream.listen((state) {
-    state.maybeWhen(
-      orElse: () {},
-      getBatchSize: (batchSize, _, __, ___, ____) {
-        bloc.add(
-          HFReferralDownSyncCheckTotalCountEvent(
-            projectId: projectId,
-            boundaryCode: boundaryCode,
-            pendingSyncCount: 0,
-            boundaryName: boundaryName,
-            batchSize: batchSize,
-          ),
-        );
-      },
-      dataFound: (initialServerCount, batchSize, offset, lastSyncedTime) {
-        bloc.add(
-          HFReferralDownSyncStartEvent(
-            projectId: projectId,
-            boundaryCode: boundaryCode,
-            batchSize: batchSize,
-            initialServerCount: initialServerCount,
-            boundaryName: boundaryName,
-          ),
-        );
-      },
-      success: (_) => subscription.cancel(),
-      failed: () => subscription.cancel(),
-      totalCountCheckFailed: () => subscription.cancel(),
-      pendingSync: () => subscription.cancel(),
-    );
-  });
-
-  bloc.add(
-    HFReferralDownSyncGetBatchSizeEvent(
-      appConfiguration: appConfiguration,
-      projectId: projectId,
-      boundaryCode: boundaryCode,
-      pendingSyncCount: 0,
-      boundaryName: boundaryName,
-    ),
-  );
-}
-
 void showDownloadDialog(
   BuildContext context, {
   required DownloadBeneficiary model,
   required DigitProgressDialogType dialogType,
   bool isPop = true,
-  StreamController<double>? downloadProgressController,
+  StreamController<DownloadProgressData>? downloadProgressController,
+  DownloadProgressData? initialProgressData,
 }) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
@@ -315,10 +266,9 @@ void showDownloadDialog(
               context.read<BeneficiaryDownSyncBloc>().add(
                     DownSyncGetBatchSizeEvent(
                       appConfiguration: [model.appConfiguartion!],
-                      projectId: context.projectId,
-                      boundaryCode: model.boundary,
+                      projectModel: model.projectModel,
+                      boundaries: model.boundaries,
                       pendingSyncCount: model.pendingSyncCount ?? 0,
-                      boundaryName: model.boundaryName,
                     ),
                   );
             } else {
@@ -339,6 +289,7 @@ void showDownloadDialog(
     case DigitProgressDialogType.pendingSync:
     case DigitProgressDialogType.insufficientStorage:
       showCustomPopup(
+        barrierDismissible: false,
         context: context,
         builder: (ctx) => Popup(
           title: model.title,
@@ -361,13 +312,11 @@ void showDownloadDialog(
                   } else {
                     if ((model.totalCount ?? 0) > 0) {
                       context.read<BeneficiaryDownSyncBloc>().add(
-                            DownSyncBeneficiaryEvent(
-                              projectId: context.projectId,
-                              boundaryCode: model.boundary,
-                              // Batch Size need to be defined based on Internet speed.
+                            DownSyncDownloadAllEvent(
+                              projectModel: model.projectModel,
+                              boundaries: model.boundaries,
                               batchSize: model.batchSize ?? 1,
-                              initialServerCount: model.totalCount ?? 0,
-                              boundaryName: model.boundaryName,
+                              boundaryCounts: model.boundaryCounts,
                             ),
                           );
                     } else {
@@ -397,17 +346,28 @@ void showDownloadDialog(
       );
     case DigitProgressDialogType.inProgress:
       showCustomPopup(
+        barrierDismissible: false,
         context: context,
         builder: (ctx) => Popup(title: "", additionalWidgets: [
-          StreamBuilder<double>(
+          StreamBuilder<DownloadProgressData>(
             stream: downloadProgressController?.stream,
+            initialData: initialProgressData,
             builder: (context, snapshot) {
+              final data = snapshot.data;
+              final progress = data?.progress ?? 0;
+              final totalCount = data?.totalCount ?? model.totalCount ?? 0;
+              final syncedCount = data?.syncedCount ?? 0;
+              final boundaryName = data?.boundaryName ?? '';
+              final currentIndex = data?.currentIndex ?? 0;
+              final totalBoundaries = data?.totalBoundaries ?? 1;
+
               return ProgressIndicatorContainer(
-                label: '',
-                prefixLabel: '',
-                suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
-                value: snapshot.data ?? 0,
+                label: boundaryName.isNotEmpty
+                    ? '$boundaryName (${currentIndex + 1}/$totalBoundaries)'
+                    : '',
+                prefixLabel: '$syncedCount',
+                suffixLabel: '$totalCount',
+                value: progress,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   Theme.of(context).colorTheme.primary.primary1,
                 ),
@@ -420,6 +380,56 @@ void showDownloadDialog(
     default:
       return;
   }
+}
+
+void showHFReferralProgressDialog(
+  BuildContext context, {
+  required String title,
+  required StreamController<HFReferralProgressData> progressController,
+  required HFReferralProgressData initialData,
+}) {
+  Navigator.of(context, rootNavigator: true)
+      .popUntil((route) => route is! PopupRoute);
+
+  showCustomPopup(
+    barrierDismissible: false,
+    context: context,
+    builder: (ctx) => Popup(title: "", additionalWidgets: [
+      StreamBuilder<HFReferralProgressData>(
+        stream: progressController.stream,
+        initialData: initialData,
+        builder: (context, snapshot) {
+          final data = snapshot.data;
+          final progress = data?.progress ?? 0;
+          final totalCount = data?.totalCount ?? 0;
+          final syncedCount = data?.syncedCount ?? 0;
+
+          return ProgressIndicatorContainer(
+            label: '',
+            prefixLabel: '$syncedCount',
+            suffixLabel: '$totalCount',
+            value: progress,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).colorTheme.primary.primary1,
+            ),
+            subLabel: title,
+          );
+        },
+      ),
+    ]),
+  );
+}
+
+class HFReferralProgressData {
+  final double progress;
+  final int syncedCount;
+  final int totalCount;
+
+  const HFReferralProgressData({
+    required this.progress,
+    required this.syncedCount,
+    required this.totalCount,
+  });
 }
 
 // Existing _findLeastLevelBoundaryCode method remains unchanged
@@ -528,7 +538,7 @@ getSelectedLanguage(AppInitialized state, int index) {
 initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => data_model_mappers.initializeMappers()),
-    Future(() => attendance_mappers.initializeMappers()),
+    // Future(() => attendance_mappers.initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
     Future(() => dss_mappers.initializeMappers()),
     Future(() => survey_form_mappers.initializeMappers())
@@ -569,7 +579,18 @@ void attemptSyncUp(BuildContext context) async {
     return;
   }
 
-  await LocalSecureStore.instance.setManualSyncTrigger(true);
+  if (await SyncLock.isLocked()) {
+    if (context.mounted) {
+      Toast.showToast(
+        context,
+        message: AppLocalizations.of(context).translate(
+          i18.common.coreCommonSyncInProgress,
+        ),
+        type: ToastType.success,
+      );
+    }
+    return;
+  }
 
   if (context.mounted) {
     context.read<SyncBloc>().add(

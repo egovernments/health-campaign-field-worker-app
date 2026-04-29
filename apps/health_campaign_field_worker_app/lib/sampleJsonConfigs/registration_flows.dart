@@ -1243,7 +1243,7 @@ final dynamic sampleFlows = {
                       "mainAxisAlignment": "center",
                       "bottomGap": 16
                     }
-                  }
+                  },
                 ],
                 "fieldName": "memberCard",
                 "properties": {
@@ -2315,7 +2315,7 @@ final dynamic sampleFlows = {
             "mainAxisSize": "max",
             "mainAxisAlignment": "center"
           },
-          "schemaCode": null
+          "schemaCode": null,
         },
         {
           "type": "template",
@@ -3078,6 +3078,7 @@ final dynamic sampleFlows = {
         {
           "actionType": "CREATE_EVENT",
           "properties": {
+            "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -3226,6 +3227,7 @@ final dynamic sampleFlows = {
             {
               "actionType": "CREATE_EVENT",
               "properties": {
+                "entity": "TASK",
                 "status": "VISITED",
                 "onError": [
                   {
@@ -3242,7 +3244,7 @@ final dynamic sampleFlows = {
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
                   },
                   {
                     "key": "HouseholdClientReferenceId",

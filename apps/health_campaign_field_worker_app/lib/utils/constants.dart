@@ -1,5 +1,7 @@
-import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/utils/utils.dart';
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data/repositories/local/attendance_logs.dart';
+import 'package:digit_data_model/data/repositories/local/attendance_register.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/hf_referral.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/household.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/household_member.dart';
@@ -11,6 +13,8 @@ import 'package:digit_data_model/data/repositories/package_repository/local/stoc
 import 'package:digit_data_model/data/repositories/package_repository/local/stock_reconciliation.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/task.dart';
 import 'package:digit_data_model/data/repositories/package_repository/oplog/oplog.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/attendance_logs.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/attendance_register.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/hf_referral.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/household.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/household_member.dart';
@@ -109,6 +113,7 @@ class Constants {
     'hcm-login',
     'hcm-common',
     'hcm-scanner',
+    'hcm-beneficiary',
     'hcm-peer-to-peer',
     'hcm-transit-post',
     'hcm-attendance',
@@ -120,6 +125,7 @@ class Constants {
     'hcm-common',
     'hcm-login',
     'hcm-scanner',
+    'hcm-beneficiary',
     'hcm-peer-to-peer',
     'hcm-transit-post',
     'hcm-attendance',
@@ -130,6 +136,7 @@ class Constants {
   static const List<String> homeLocalizationModules = [
     'hcm-login',
     'hcm-common',
+    'hcm-beneficiary',
     'digit-privacy-policy',
     'hcm-scanner',
     'hcm-peer-to-peer',
@@ -147,6 +154,7 @@ class Constants {
 
   static const String dashboardAnalyticsPath =
       '/dashboard-analytics/dashboard/getChartV2';
+  static const String logoutUserPath = '/user/_logout';
 
   static RegExp mobileNumberRegExp =
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
@@ -158,6 +166,23 @@ class Constants {
   static const String stateBoundaryLevel = 'State';
   static const String stateFacility = 'State Facility';
   static const String lgaFacility = 'LGA Facility';
+  static const String deviceSwitch = 'DEVICE_SWITCH';
+  static const String other = 'OTHER';
+  static const String deviceSwitchReason = 'DEVICE_SWITCH_REASON';
+  static const String oldDeviceToken = 'OLD_TOKEN';
+  static const String newDeviceToken = 'NEW_TOKEN';
+  static const String deviceSelectionOtherReason = 'OTHERS';
+  static const String multiLoginService = 'MULTILOGIN';
+  static const String multiLoginEntity = 'MultiLogin';
+  static const String multiLoginSwitchOperation = 'switch';
+  static const String userActionService = 'USER-ACTION';
+  static const String userActionEntity = 'userAction';
+
+  static const String downloadAnimation =
+      'assets/animated_json/download_animation.json';
+
+  static const String downloadSuccessAnimation =
+      'assets/animated_json/download_success.json';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -234,10 +259,15 @@ class Constants {
     final appConfigs = await isar.appConfigurations.where().findAll();
     final config = appConfigs.firstOrNull;
 
+    // Always initialize Firebase Core (required for FCM, analytics, etc.)
+    await firebase_services.initialize(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
     final enableCrashlytics =
-        config?.firebaseConfig?.enableCrashlytics ?? false; // TODO: Remove hardcoding and uncomment above
+        config?.firebaseConfig?.enableCrashlytics ?? false;
     if (enableCrashlytics) {
-      firebase_services.initialize(
+      await firebase_services.initialize(
         options: DefaultFirebaseOptions.currentPlatform,
         onErrorMessage: (value) {
           AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
@@ -338,6 +368,38 @@ class Constants {
     return actionResult ?? '';
   }
 
+  static String getMultiLoginEndPoint({
+    required List<ServiceRegistry> serviceRegistry,
+    required String service,
+    required String action,
+    required String entityName,
+  }) {
+    final actionResult = serviceRegistry
+        .firstWhereOrNull((element) => element.service == service)
+        ?.actions
+        .firstWhereOrNull((element) =>
+            element.entityName == entityName && element.action == action)
+        ?.path;
+
+    return actionResult ?? '';
+  }
+
+  static String getNotificationEndPoint({
+    required List<ServiceRegistry> serviceRegistry,
+    required String service,
+    required String action,
+    required String entityName,
+  }) {
+    final actionResult = serviceRegistry
+        .firstWhereOrNull((element) => element.service == service)
+        ?.actions
+        .firstWhereOrNull((element) =>
+    element.entityName == entityName && element.action == action)
+        ?.path;
+
+    return actionResult ?? '';
+  }
+
   static List<KeyValue> yesNo = [
     KeyValue('CORE_COMMON_YES', true),
     KeyValue('CORE_COMMON_NO', false),
@@ -419,11 +481,29 @@ enum DigitProgressDialogType {
   pendingSync,
 }
 
+class DownloadProgressData {
+  final double progress;
+  final String boundaryName;
+  final int syncedCount;
+  final int totalCount;
+  final int currentIndex;
+  final int totalBoundaries;
+
+  const DownloadProgressData({
+    required this.progress,
+    required this.boundaryName,
+    required this.syncedCount,
+    required this.totalCount,
+    required this.currentIndex,
+    required this.totalBoundaries,
+  });
+}
+
 class DownloadBeneficiary {
   String title;
-  String projectId;
-  String boundary;
-  String boundaryName;
+  ProjectModel projectModel;
+  String get projectId => projectModel.id;
+  List<BoundaryModel> boundaries;
   int? pendingSyncCount;
   int? syncCount;
   int? totalCount;
@@ -434,12 +514,12 @@ class DownloadBeneficiary {
   String? prefixLabel;
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
+  Map<String, int> boundaryCounts;
 
   DownloadBeneficiary({
     required this.title,
-    required this.projectId,
-    required this.boundary,
-    required this.boundaryName,
+    required this.projectModel,
+    required this.boundaries,
     this.appConfiguartion,
     this.pendingSyncCount,
     this.batchSize,
@@ -450,5 +530,6 @@ class DownloadBeneficiary {
     this.secondaryButtonLabel,
     this.prefixLabel,
     this.suffixLabel,
+    this.boundaryCounts = const {},
   });
 }

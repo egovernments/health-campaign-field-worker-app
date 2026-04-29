@@ -228,6 +228,17 @@ class DropdownWidget extends ResolvedFlowWidget {
       }
     }
 
+    final showWhenSingleOption = json['showWhenSingleOption'] == true;
+
+    // Hide dropdown when no items available (search triggered via initActions)
+    // or when only 1 item and showWhenSingleOption is not enabled
+    if (items.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    if (items.length <= 1 && !showWhenSingleOption) {
+      return const SizedBox.shrink();
+    }
+
     return LabeledField(
       label: label,
       isRequired: isRequired,
@@ -303,9 +314,8 @@ class DropdownWidget extends ResolvedFlowWidget {
     );
   }
 
-  List<DropdownItem> _buildDropdownItems(
-      dynamic sourceData, String displayKey, String valueKey,
-      BuildContext context) {
+  List<DropdownItem> _buildDropdownItems(dynamic sourceData, String displayKey,
+      String valueKey, BuildContext context) {
     final items = <DropdownItem>[];
 
     if (sourceData == null) return items;

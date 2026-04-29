@@ -119,6 +119,15 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedBoundary;
   }
 
+  void setBoundary(BoundaryModel selectedBoundary) {
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
+    AttendanceSingleton().setBoundary(boundary: selectedBoundary);
+    TransitPostSingleton().setBoundary(boundary: selectedBoundary);
+    LocationTrackerSingleton()
+        .setBoundaryName(boundaryName: selectedBoundary.code!);
+    FlowBuilderSingleton().setBoundary(boundary: selectedBoundary);
+  }
+
   BoundaryModel? get boundaryOrNull {
     try {
       return boundary;
@@ -157,6 +166,21 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     return individualUUID;
+  }
+
+  String? get currentRegisteredToken {
+    final authBloc = _get<PushNotificationBloc>();
+    final fcmToken = authBloc.state.whenOrNull(
+      initialized: (fcmToken) {
+        return fcmToken;
+      },
+    );
+
+    if (fcmToken == null) {
+      return null;
+    }
+
+    return fcmToken;
   }
 
   UserModel? get loggedInUserModel {

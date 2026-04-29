@@ -356,9 +356,9 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "address.latLng[0]",
-            "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.latLng[1]",
+            "latitude": "DeliveryDetails.latLng[0]",
+            "longitude": "DeliveryDetails.latLng[1]",
+            "locationAccuracy": "DeliveryDetails.latLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -439,9 +439,9 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "address.latLng[0]",
-            "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.latLng[1]",
+            "latitude": "DeliveryDetails.latLng[0]",
+            "longitude": "DeliveryDetails.latLng[1]",
+            "locationAccuracy": "DeliveryDetails.latLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -558,6 +558,154 @@ final jsonConfig = {
       }
     }
   },
+  "unableToDeliverConfig": {
+    "fallbackModel": "TaskModel",
+    "models": {
+      "TaskModel": {
+        "mappings": {
+          "id": "taskDetails.id",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
+          "projectBeneficiaryClientReferenceId":
+              "__context:ProjectBeneficiaryClientReferenceId",
+          "createdBy": "__context:userId",
+          "status": "unableToDeliver.reason",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "plannedStartDate": "taskDetails.plannedStartDate",
+          "plannedEndDate": "taskDetails.plannedEndDate",
+          "actualStartDate": "taskDetails.actualStartDate",
+          "actualEndDate": "taskDetails.actualEndDate",
+          "createdDate": "__generate:timestamp",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "unableToDeliver.latLng[0]",
+            "longitude": "unableToDeliver.latLng[1]",
+            "locationAccuracy": "unableToDeliver.latLng[2]",
+            "addressLine1": "address.addressLine1",
+            "addressLine2": "address.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "type": "__value:PERMANENT",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion"
+            },
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "additionalFields": {
+            "doseIndex": "__context:doseIndex",
+            "cycleIndex": "__context:cycleIndex",
+            "comment": "unableToDeliver.comment"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        }
+      }
+    }
+  },
+  "redose": {
+    "fallbackModel": "TaskModel",
+    "models": {
+      "TaskModel": {
+        "mappings": {
+          "id": "taskDetails.id",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
+          "projectBeneficiaryClientReferenceId":
+              "__context:ProjectBeneficiaryClientReferenceId",
+          "createdBy": "__context:userId",
+          "status": "__value:VISITED",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "resources": "list:TaskResourceModel",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "plannedStartDate": "taskDetails.plannedStartDate",
+          "plannedEndDate": "taskDetails.plannedEndDate",
+          "actualStartDate": "taskDetails.actualStartDate",
+          "actualEndDate": "taskDetails.actualEndDate",
+          "createdDate": "__generate:timestamp",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "address.latLng[0]",
+            "longitude": "address.latLng[1]",
+            "locationAccuracy": "address.latLng[1]",
+            "addressLine1": "address.addressLine1",
+            "addressLine2": "address.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "type": "__value:PERMANENT",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion"
+            },
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "additionalFields": {
+            "doseIndex": "__context:doseIndex",
+            "cycleIndex": "__context:cycleIndex",
+            "reasonForRedose": "RedoseDetails.reasonForRedose",
+            "redoseComments": "RedoseDetails.redoseComments",
+            "taskType": "__value:REDOSE"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        },
+        "listMappings": {
+          "TaskResourceModel": {
+            "listSource": "RedoseDetails.resourceCard",
+            "mappings": {
+              "id": "id",
+              "clientReferenceId": "__generate:uuid",
+              "taskId": "taskId",
+              "productVariantId":
+                  "RedoseDetails.resourceCard.resourceDelivered.productId",
+              "quantity": "RedoseDetails.resourceCard.quantityDistributed",
+              "isDelivered": "__value:true",
+              "deliveryComment": "__value:REDOSE",
+              "nonRecoverableError": "error.nonRecoverable",
+              "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit",
+            }
+          }
+        }
+      }
+    }
+  },
   "stock": {
     "fallbackModel": "StockModel",
     "multiEntityField": "stockDetails.productdetail",
@@ -578,15 +726,16 @@ final jsonConfig = {
               "__switch:__context:stockEntryType:{RECEIPT:__value:RECEIVED,RETURNED:__value:RETURNED,ISSUED:__value:null,DAMAGED:stockDetails.transactionReason,LOSS:stockDetails.transactionReason}",
           "transactingPartyId": "stockDetails.transactingPartyId",
           "senderId":
-              "__switch:__context:stockEntryType:{RECEIPT:stockDetails.facilityFromWhich,RETURNED:stockDetails.facilityFromWhich,ISSUED:warehouseDetails.facilityToWhich,DAMAGED:warehouseDetails.facilityToWhich,LOSS:warehouseDetails.facilityToWhich}",
+              "__switch:__context:senderPartyType:{STAFF:__context:loggedInUserUuid,default:stockDetails.facilityFromWhich}",
           "senderType":
-              "__switch:__context:stockEntryType:{RECEIPT:__context:secondaryType,RETURNED:__context:secondaryType,ISSUED:__value:WAREHOUSE,DAMAGED:__value:WAREHOUSE,LOSS:__value:WAREHOUSE}",
+              "__switch:__context:senderPartyType:{STAFF:__value:STAFF,default:__value:WAREHOUSE}",
           "receiverId":
-              "__switch:__context:stockEntryType:{RECEIPT:warehouseDetails.facilityToWhich,RETURNED:warehouseDetails.facilityToWhich,ISSUED:stockDetails.facilityFromWhich,DAMAGED:stockDetails.facilityFromWhich,LOSS:stockDetails.facilityFromWhich}",
+              "__switch:__context:receiverPartyType:{STAFF:warehouseDetails.teamCode,default:warehouseDetails.facilityToWhich}",
           "receiverType":
-              "__switch:__context:stockEntryType:{RECEIPT:__value:WAREHOUSE,RETURNED:__value:WAREHOUSE,ISSUED:__context:secondaryType,DAMAGED:__context:secondaryType,LOSS:__context:secondaryType}",
+              "__switch:__context:receiverPartyType:{STAFF:__value:STAFF,default:__value:WAREHOUSE}",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
+          "campaignNumber": "__context:selectedProject.referenceID",
           "rowVersion": "meta.rowVersion",
           "additionalFields": {
             "sku": "stockDetails.productdetail.sku",
@@ -599,13 +748,129 @@ final jsonConfig = {
             "mrnNumber": "__context:mrnNumber",
             "stockEntryType": "__context:stockEntryType",
             "primaryRole": "__context:primaryRole",
-            "secondaryRole": "__context:secondaryRole"
+            "secondaryRole": "__context:secondaryRole",
+            "status":
+                "__switch:__context:stockEntryType:{ISSUED:__value:IN_TRANSIT,RETURNED:__value:IN_TRANSIT,LOSS:__value:LOST,DAMAGED:__value:DAMAGED}",
+            "scanResource": "stockProductDetails.scanResource",
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "dateOfEntry": "warehouseDetails.dateOfEntry"
         }
       },
+    }
+  },
+  "stockReceipt": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "id": "stockReceiptDetails.id",
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "__context:userFacilityId",
+          "productVariantId": "__context:productVariantId",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "__context:quantity",
+          "waybillNumber": "stockReceiptDetails.wayBillNumber",
+          "transactionType": "__context:transactionType",
+          "transactionReason": "__value:RECEIVED",
+          "campaignNumber": "__context:selectedProject.referenceID",
+          "senderId": "__context:senderFacilityId",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "__context:userFacilityId",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "sku": "__context:sku",
+            "batchNumber": "stockReceiptDetails.batchNumber",
+            "expiryDate": "stockReceiptDetails.expiryDate",
+            "comments": "stockReceiptDetails.comment",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "primaryRole": "__context:primaryRole",
+            "secondaryRole": "__context:secondaryRole"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "__value:DATETIME.NOW"
+        }
+      },
+    }
+  },
+  "stockReject": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "__context:userFacilityId",
+          "productVariantId": "__context:productVariantId",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "__context:quantity",
+          "campaignNumber": "__context:selectedProject.referenceID",
+          "waybillNumber": "stockReceiptDetails.wayBillNumber",
+          "transactionType": "__value:DISPATCHED",
+          "transactionReason": "__value:null",
+          "senderId": "__context:senderFacilityId",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "__context:receiverFacilityId",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "sku": "__context:sku",
+            "batchNumber": "stockReceiptDetails.batchNumber",
+            "expiryDate": "stockReceiptDetails.expiryDate",
+            "comments": "stockReceiptDetails.comment",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "primaryRole": "__context:primaryRole",
+            "secondaryRole": "__context:secondaryRole"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "__value:DATETIME.NOW"
+        }
+      },
+    }
+  },
+  "stockLessExcess": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "warehouseDetails.facilityToWhich",
+          "productVariantId": "lessExcessDetails.productVariant.id",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "lessExcessDetails.quantity",
+          "campaignNumber": "__context:selectedProject.referenceID",
+          "transactionType": "__value:RECEIVED",
+          "transactionReason": "lessExcessDetails.reasonForLessExcess",
+          "senderId": "lessExcessDetails.facilityFromWhich",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "warehouseDetails.facilityToWhich",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "sku": "lessExcessDetails.productVariant.sku",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "adjustmentReason": "lessExcessDetails.reasonForLessExcess"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "warehouseDetails.dateOfEntry"
+        }
+      }
     }
   },
   "stockReconciliation": {
@@ -639,6 +904,10 @@ final jsonConfig = {
                 "stockRecon.stockReconciliationCard.stockMetrics.stockLost",
             "stockDamaged":
                 "stockRecon.stockReconciliationCard.stockMetrics.stockDamaged",
+            "stockExcess":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockExcess",
+            "stockLess":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockLess",
             "stockInHand":
                 "stockRecon.stockReconciliationCard.stockMetrics.stockInHand"
           },
@@ -989,7 +1258,8 @@ final jsonConfig = {
           "beneficiaryId": "__context:selectedIndividualIdentifierId",
           "referralCode": "__context:selectedIndividualClientReferenceId",
           "name": "__context:selectedIndividualName",
-          "symptom": "referBeneficiary.referralReason",
+          "symptom":
+              "__switch:__context:sourceFlow:{CHECKLIST:__context:referralReasons,default:referBeneficiary.referralReason}",
           "nonRecoverableError": "referral.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "rowVersion": "meta.rowVersion",
@@ -1005,8 +1275,97 @@ final jsonConfig = {
             "referralCycle": "__context:cycleIndex",
             "gender": "__context:selectedIndividualGender",
             "ageInMonths": "__context:selectedIndividualAgeInMonths",
-            "dateOfEvaluation": "__value:DATETIME.NOW"
+            "dateOfEvaluation": "__value:DATETIME.NOW",
           }
+        }
+      }
+    }
+  },
+  "markAttendancePresent": {
+    "fallbackModel": "AttendanceLogModel",
+    "models": {
+      "AttendanceLogModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "__context:tenantId",
+          "registerId": "__context:registerId",
+          "individualId": "__context:individualId",
+          "time": "__context:entryTime",
+          "status": "__value:ACTIVE",
+          "type": "__value:ENTRY",
+          "uploadToServer": "__value:false",
+          "rowVersion": "__value:1",
+          "additionalDetails": "__context:additionalFields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        }
+      }
+    }
+  },
+  "attendanceLogSave": {
+    "fallbackModel": "AttendanceLogModel",
+    "multiEntityField": "attendanceLogs",
+    "models": {
+      "AttendanceLogModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "attendanceLogs.tenantId",
+          "registerId": "attendanceLogs.registerId",
+          "individualId": "attendanceLogs.individualId",
+          "time": "attendanceLogs.entryTime",
+          "status": "attendanceLogs.status",
+          "type": "attendanceLogs.type",
+          "uploadToServer": "attendanceLogs.uploadToServer",
+          "rowVersion": "__value:1",
+          "additionalDetails": "attendanceLogs.additionalFields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        }
+      }
+    }
+  },
+  "attendanceLogSubmit": {
+    "fallbackModel": "AttendanceLogModel",
+    "multiEntityField": "attendanceLogs",
+    "models": {
+      "AttendanceLogModel": {
+        "mappings": {
+          "clientReferenceId": "attendanceLogs.uuid",
+          "tenantId": "attendanceLogs.tenantId",
+          "registerId": "attendanceLogs.registerId",
+          "individualId": "attendanceLogs.individualId",
+          "time": "attendanceLogs.entryTime",
+          "status": "attendanceLogs.status",
+          "type": "attendanceLogs.type",
+          "uploadToServer": "__value:true",
+          "rowVersion": "attendanceLogs.rowVersion",
+          "additionalDetails": "attendanceLogs.additionalFields",
+          "clientAuditDetails": "attendanceLogs.clientAudit",
+          "auditDetails": "attendanceLogs.audit"
+        }
+      }
+    }
+  },
+  "attendanceAttendeeStatusReset": {
+    "fallbackModel": "AttendeeModel",
+    "multiEntityField": "attendees",
+    "models": {
+      "AttendeeModel": {
+        "mappings": {
+          "id": "attendees.id",
+          "tenantId": "attendees.tenantId",
+          "registerId": "attendees.registerId",
+          "individualId": "attendees.individualId",
+          "enrollmentDate": "attendees.enrollmentDate",
+          "denrollmentDate": "attendees.denrollmentDate",
+          "name": "attendees.name",
+          "rowVersion": "attendees.rowVersion",
+          "status": "attendees.status",
+          "tag": "attendees.tag",
+          "nonRecoverableError": "attendees.nonRecoverableError",
+          "additionalFields": "attendees.additionalFields",
+          "auditDetails": "attendees.auditDetails",
+          "clientAuditDetails": "attendees.clientAuditDetails"
         }
       }
     }
