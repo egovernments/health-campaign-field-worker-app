@@ -144,8 +144,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           if (!bloc.isClosed) {
                             bloc.add(SyncRefreshEvent(userId));
                           }
-    /* Every time when the user changes the screen
-     this will refresh the data of sync count */
+                          /* Every time when the user changes the screen
+       this will refresh the data of sync count */
                           isar.opLogs
                               .filter()
                               .createdByEqualTo(userId)
@@ -226,29 +226,30 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         ),
                       ),
                     ],
-                    child: ErrorBoundary(
-                      builder: (context, error) {
-                        return error != null ? const ErrorScreen() : AutoRouter(
-                          navigatorObservers: () => [
-                            AuthenticatedRouteObserver(
-                              onNavigated: () {
-                                bool shouldShowDrawer;
-                                switch (context.router.topRoute.name) {
-                                  case ProjectSelectionRoute.name:
-                                  case BoundarySelectionRoute.name:
-                                    shouldShowDrawer = false;
-                                    break;
-                                  default:
-                                    shouldShowDrawer = true;
-                                }
+                    child: ErrorBoundary(builder: (context, error) {
+                      return error != null
+                          ? const ErrorScreen()
+                          : AutoRouter(
+                              navigatorObservers: () => [
+                                AuthenticatedRouteObserver(
+                                  onNavigated: () {
+                                    bool shouldShowDrawer;
+                                    switch (context.router.topRoute.name) {
+                                      case ProjectSelectionRoute.name:
+                                      case BoundarySelectionRoute.name:
+                                        shouldShowDrawer = false;
+                                        break;
+                                      default:
+                                        shouldShowDrawer = true;
+                                    }
 
-                                _drawerVisibilityController.add(shouldShowDrawer);
-                              },
-                            ),
-                          ],
-                        );
-                      }
-                    ),
+                                    _drawerVisibilityController
+                                        .add(shouldShowDrawer);
+                                  },
+                                ),
+                              ],
+                            );
+                    }),
                   ),
                 ),
               );

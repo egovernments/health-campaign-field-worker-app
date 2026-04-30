@@ -145,12 +145,17 @@ class Common {
 
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
   String get coreCommonError => 'CORE_COMMON_UNKNOWN_ERROR_OCCURRED';
-  String get coreCommonErrorDescription => 'CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION';
-
+  String get coreCommonErrorDescription =>
+      'CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION';
 
   String get qrInventory => 'QR_INVENTORY';
 
   String get qrAttendance => 'QR_ATTENDANCE';
+
+  String get exitApp => 'EXIT_APP';
+
+  String get rootedDeviceDetectedTitle => 'ROOTED_DEVICE_DETECTED_TITLE';
+  String get rootedDeviceDetectedMessage => 'ROOTED_DEVICE_DETECTED_MESSAGE';
 }
 
 class HomeShowcase {

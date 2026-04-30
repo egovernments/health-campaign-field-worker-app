@@ -1,7 +1,7 @@
 name: health_campaign_field_worker_app
 description: A new Flutter project.
 publish_to: 'none'
-version: 1.8.0
+version: 1.8.7+7
 
 environment:
   sdk: '>=3.0.0 <=4.0.0'
@@ -77,6 +77,8 @@ dependencies:
       ref: master
   percent_indicator: ^4.2.4
   lottie: ^3.1.0
+  jailbreak_root_detection: ^1.1.6
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:
@@ -114,6 +116,7 @@ flutter:
     - assets/images/
     - assets/audio/add.wav
     - assets/audio/buzzer.wav
+    - assets/certificates/
 
   fonts:
     - family: Roboto
