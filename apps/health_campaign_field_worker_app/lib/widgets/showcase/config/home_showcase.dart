@@ -34,6 +34,7 @@ class _HomePageShowcaseData {
         polioAfpCase,
         polioTallySheet,
         polioLqaDataCollection,
+        polioInsideMonitoring,
       ];
 
   final distributorProgressBar = ShowcaseItemBuilder(
@@ -154,6 +155,10 @@ class _HomePageShowcaseData {
 
   final polioLqaDataCollection = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.polioLqaDataCollectionLabel,
+  );
+
+  final polioInsideMonitoring = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.polioInsideMonitoringLabel,
   );
 
   final clf = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.clf);

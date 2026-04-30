@@ -717,6 +717,8 @@ class Home {
 
   String get polioLqaDataCollectionLabel => 'POLIO_HOME_LQA_DATA_COLLECTION_LABEL';
 
+  String get polioInsideMonitoringLabel => 'POLIO_HOME_INSIDE_MONITORING_LABEL';
+
   String get polioStatsVialsOpened => 'POLIO_HOME_STATS_VIALS_OPENED';
 
   String get polioStatsUsable => 'POLIO_HOME_STATS_USABLE';

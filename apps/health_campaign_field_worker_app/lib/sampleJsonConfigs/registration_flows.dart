@@ -1298,6 +1298,14 @@ final dynamic sampleFlows = {
                     {
                       "code": "CLOSED_HOUSEHOLD",
                       "name": "HCM_SEARCH_FILTER_MISSED_CHILDREN"
+                    },
+                    {
+                      "code": "NOT_ADMINISTERED",
+                      "name": "HCM_SEARCH_FILTER_NOT_ADMINISTERED"
+                    },
+                    {
+                      "code": "ADMINISTRATION_FAILED",
+                      "name": "HCM_SEARCH_FILTER_ADMINISTRATION_FAILED"
                     }
                   ],
                   "format": "selectionCard",
@@ -1415,6 +1423,27 @@ final dynamic sampleFlows = {
                       ],
                       "condition": {
                         "expression": "selectedStatus == BENEFICIARY_REFERRED"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "data": [
+                              {
+                                "key": "status",
+                                "root": "task",
+                                "value": {"values": ["ADMINISTRATION_SUCCESS"], "scope": "projectBeneficiary"},
+                                "operation": "notExists"
+                              }
+                            ],
+                            "name": "task"
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == NOT_ADMINISTERED"
                       }
                     }
                   ],
@@ -2587,7 +2616,7 @@ final dynamic sampleFlows = {
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
-              "schemaCode": "common-masters.GenderType",
+              "schemaCode": null,
               "systemDate": false,
               "validations": [
                 {
@@ -3272,7 +3301,7 @@ final dynamic sampleFlows = {
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
-              "schemaCode": "common-masters.GenderType",
+              "schemaCode": null,
               "systemDate": false,
               "validations": [
                 {
@@ -3624,10 +3653,10 @@ final dynamic sampleFlows = {
               "value": "1",
               "format": "numeric",
               "hidden": true,
-              "includeInForm": true,
               "fieldName": "memberCount",
               "mandatory": true,
-              "validations": []
+              "validations": [],
+              "includeInForm": true
             }
           ],
           "actionLabel": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",

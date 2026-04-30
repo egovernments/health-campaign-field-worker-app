@@ -110,6 +110,7 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
       clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
       isSync: Value(isSync),
       nonRecoverableError: Value(nonRecoverableError),
+      rowVersion: Value(rowVersion),
       timestamp: Value(timestamp),
       id: Value(id),
     );

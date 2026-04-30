@@ -175,10 +175,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "autoFillCondition": [
-                {
-                  "value": "{{loggedInUserName}}",
-                  "expression": "true==true"
-                }
+                {"value": "{{loggedInUserName}}", "expression": "true==true"}
               ]
             },
             {
@@ -408,7 +405,8 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             "data": [
               {
                 "key": "ClusterClientReferenceId",
-                "value": "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                "value":
+                    "{{contextData.entities.UserActionModel.clientReferenceId}}"
               }
             ],
             "name": "clusterOverview",
@@ -495,7 +493,28 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             "children": [
               {
                 "type": "template",
+                "value":
+                    "{{ item.child.0.additionalFields.fields.fingerMarked }}",
+                "format": "tag",
+                "visible":
+                    "{{ item.child.0.additionalFields.fields.fingerMarked }}!=null",
+                "fieldName": "fingerMarkedTag",
+                "properties": {
+                  "tagType": "status",
+                  "bottomGap": 8,
+                  "tagMapping": {
+                    "YES": {
+                      "label": "LQA_TAG_FINGER_MARKED",
+                      "type": "success"
+                    },
+                    "NO": {"label": "LQA_TAG_NOT_MARKED", "type": "error"}
+                  }
+                }
+              },
+              {
+                "type": "template",
                 "format": "row",
+                "properties": {"bottomGap": 8},
                 "children": [
                   {
                     "type": "template",
@@ -508,19 +527,202 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               },
               {
                 "type": "template",
-                "value":
-                    "{{ item.child.0.additionalFields.fields.fingerMarked }}",
-                "format": "tag",
-                "visible":
-                    "{{ item.child.0.additionalFields.fields.fingerMarked }}!=null",
-                "fieldName": "fingerMarkedTag",
-                "properties": {
-                  "tagType": "status",
-                  "tagMapping": {
-                    "YES": {"label": "LQA_TAG_FINGER_MARKED", "type": "success"},
-                    "NO": {"label": "LQA_TAG_NOT_MARKED", "type": "error"}
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "Children Under 5: {{ item.child.0.additionalFields.fields.childrenUnder5 }}",
+                    "format": "textTemplate",
+                    "fieldName": "childrenUnder5"
                   }
-                }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "visible":
+                    "{{ item.child.0.additionalFields.fields.reasonNotMarked }}!=null",
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "Reason Not Marked: {{ item.child.0.additionalFields.fields.reasonNotMarked }}",
+                    "format": "textTemplate",
+                    "fieldName": "reasonNotMarked"
+                  }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "visible":
+                    "{{ item.child.0.additionalFields.fields.reasonNotMarkedOther }}!=null",
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "Other Reason: {{ item.child.0.additionalFields.fields.reasonNotMarkedOther }}",
+                    "format": "textTemplate",
+                    "fieldName": "reasonNotMarkedOther"
+                  }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "visible":
+                    "{{ item.child.0.additionalFields.fields.refusalReason }}!=null",
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "Refusal Reason: {{ item.child.0.additionalFields.fields.refusalReason }}",
+                    "format": "textTemplate",
+                    "fieldName": "refusalReason"
+                  }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "visible":
+                    "{{ item.child.0.additionalFields.fields.refusalReasonOther }}!=null",
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "Other Refusal: {{ item.child.0.additionalFields.fields.refusalReasonOther }}",
+                    "format": "textTemplate",
+                    "fieldName": "refusalReasonOther"
+                  }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "visible":
+                    "{{ item.child.0.additionalFields.fields.absenceReason }}!=null",
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "Absence Reason: {{ item.child.0.additionalFields.fields.absenceReason }}",
+                    "format": "textTemplate",
+                    "fieldName": "absenceReason"
+                  }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "visible":
+                    "{{ item.child.0.additionalFields.fields.absenceReasonOther }}!=null",
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "Other Absence: {{ item.child.0.additionalFields.fields.absenceReasonOther }}",
+                    "format": "textTemplate",
+                    "fieldName": "absenceReasonOther"
+                  }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "Caregiver Informed: {{ item.child.0.additionalFields.fields.caregiverInformed }}",
+                    "format": "textTemplate",
+                    "fieldName": "caregiverInformed"
+                  }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "visible":
+                    "{{ item.child.0.additionalFields.fields.campaignAwareness }}!=null",
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "Campaign Awareness: {{ item.child.0.additionalFields.fields.campaignAwareness }}",
+                    "format": "textTemplate",
+                    "fieldName": "campaignAwareness"
+                  }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "visible":
+                    "{{ item.child.0.additionalFields.fields.awarenessOther }}!=null",
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "Other Awareness: {{ item.child.0.additionalFields.fields.awarenessOther }}",
+                    "format": "textTemplate",
+                    "fieldName": "awarenessOther"
+                  }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "OPV Doses From Birth: {{ item.child.0.additionalFields.fields.opvDosesFromBirth }}",
+                    "format": "textTemplate",
+                    "fieldName": "opvDosesFromBirth"
+                  }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {"bottomGap": 8},
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "AFP Awareness: {{ item.child.0.additionalFields.fields.afpAwareness }}",
+                    "format": "textTemplate",
+                    "fieldName": "afpAwareness"
+                  }
+                ]
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "visible":
+                    "{{ item.child.0.additionalFields.fields.afpCaseCount }}!=null",
+                "children": [
+                  {
+                    "type": "template",
+                    "value":
+                        "AFP Case Count: {{ item.child.0.additionalFields.fields.afpCaseCount }}",
+                    "format": "textTemplate",
+                    "fieldName": "afpCaseCount"
+                  }
+                ]
               }
             ],
             "fieldName": "childCard",
@@ -558,7 +760,11 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             }
           ],
           "fieldName": "addChildDetails",
-          "properties": {"icon": "AddIcon", "size": "medium", "type": "tertiary"}
+          "properties": {
+            "icon": "AddIcon",
+            "size": "medium",
+            "type": "tertiary"
+          }
         }
       ],
       "name": "clusterOverview",
@@ -586,7 +792,12 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             }
           ],
           "fieldName": "closeCluster",
-          "properties": {"type": "primary"}
+          "properties": {
+            "size": "large",
+            "type": "primary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          }
         }
       ],
       "header": [],
@@ -612,7 +823,8 @@ final dynamic samplePolioLqaDataCollectionFlows = {
       ],
       "wrapperConfig": {
         "filters": [
-          {"field": "action", "equals": "LQA_CLUSTER_DATA"}
+          {"field": "action", "equals": "LOCATION_CAPTURE"},
+          {"field": "additionalFields.form", "equals": "POLIO_LQA"}
         ],
         "relations": [
           {
@@ -631,7 +843,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             },
             "entity": "UserActionModel",
             "filters": [
-              {"field": "action", "equals": "LQA_CHILD_DATA"}
+              {"field": "additionalFields.formType", "equals": "LQA_CHILD_DATA"}
             ],
             "relations": [
               {
@@ -883,10 +1095,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "name": "LQA_ENUM_VACCINE_NOT_SAFE"
                 },
                 {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
-                {
-                  "code": "TOO_MANY_ROUNDS",
-                  "name": "LQA_ENUM_TOO_MANY_ROUNDS"
-                },
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
                 {
                   "code": "NO_CAREGIVER_CONSENT",
                   "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
@@ -983,8 +1192,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                 "expression": [
                   {
                     "type": "custom",
-                    "condition":
-                        "childDetails.reasonNotMarked=='CHILD_ABSENT'"
+                    "condition": "childDetails.reasonNotMarked=='CHILD_ABSENT'"
                   }
                 ]
               }
@@ -1087,7 +1295,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
-              "isMultiSelect": false,
+              "isMultiSelect": true,
               "visibilityCondition": {
                 "expression": [
                   {
@@ -1439,10 +1647,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             "onAction": [
               {
                 "actionType": "NAVIGATION",
-                "properties": {
-                  "name": "lqaClusterEntry",
-                  "type": "FORM"
-                }
+                "properties": {"name": "lqaClusterEntry", "type": "FORM"}
               }
             ],
             "fieldName": "addLqaEntry",

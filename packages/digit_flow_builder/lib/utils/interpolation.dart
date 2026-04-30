@@ -202,6 +202,30 @@ String interpolateWithCrudStates({
         if (idx != null && idx >= 0 && idx < value.length) {
           value = value[idx];
         } else {
+          // Handle List<AdditionalField> / List<{key, value}> lookup by key
+          if (value.isNotEmpty) {
+            final first = value.first;
+            if (first is AdditionalField) {
+              final match = value.cast<AdditionalField>().where(
+                    (f) => f.key == part,
+                  );
+              if (match.isNotEmpty) {
+                value = match.first.value;
+                continue;
+              }
+            } else if (first is Map &&
+                first.containsKey('key') &&
+                first.containsKey('value')) {
+              for (final item in value) {
+                if (item is Map && item['key']?.toString() == part) {
+                  value = item['value'];
+                  break;
+                }
+              }
+              // If value changed from the list, continue traversal
+              if (value is! List) continue;
+            }
+          }
           return null;
         }
       } else if (value is EntityModel) {

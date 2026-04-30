@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
@@ -109,7 +110,9 @@ class TransitPostBloc extends Bloc<TransitPostEvent, TransitPostState> {
         curCount: state.curCount != null ? state.curCount! + 1 : 1,
         totalCount: state.totalCount != null ? state.totalCount! + 1 : 1,
       ));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('TransitPostBloc: Failed to create UserAction record: $e');
+      debugPrint('TransitPostBloc: StackTrace: $stackTrace');
       rethrow;
     }
   }

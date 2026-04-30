@@ -1,390 +1,3 @@
-/// Maximum number of household pages.
-const int householdCount = 10;
-
-// Helper to build a standard page-level null block
-Map<String, dynamic> _pageNulls() => {
-      "value": null,
-      "required": null,
-      "hidden": null,
-      "helpText": null,
-      "innerLabel": null,
-      "validations": null,
-      "tooltip": null,
-      "startDate": null,
-      "endDate": null,
-      "readOnly": null,
-      "charCount": null,
-      "systemDate": null,
-      "isMultiSelect": null,
-      "includeInForm": null,
-      "includeInSummary": null,
-      "autoEnable": null,
-    };
-
-/// Helper to build a visibilityCondition map from a condition expression.
-Map<String, dynamic> _vc(String condition) => {
-      "expression": [
-        {"condition": condition, "type": "custom"}
-      ]
-    };
-
-// Helper to build a standard property skeleton
-Map<String, dynamic> _prop({
-  required String type,
-  required String label,
-  required int order,
-  required String format,
-  required String fieldName,
-  String value = "",
-  bool hidden = false,
-  String tooltip = "",
-  String helpText = "",
-  String infoText = "",
-  bool readOnly = false,
-  bool deleteFlag = false,
-  String innerLabel = "",
-  bool systemDate = false,
-  bool? isEditable,
-  List<Map<String, dynamic>> validations = const [],
-  String errorMessage = "",
-  bool isMultiSelect = false,
-  List<Map<String, String>>? enums,
-  Map<String, dynamic>? visibilityCondition,
-  List<Map<String, String>>? autoFillCondition,
-}) {
-  final m = <String, dynamic>{
-    "type": type,
-    "label": label,
-    "order": order,
-    "value": value,
-    "format": format,
-    "hidden": hidden,
-    "tooltip": tooltip,
-    "helpText": helpText,
-    "infoText": infoText,
-    "readOnly": readOnly,
-    "fieldName": fieldName,
-    "deleteFlag": deleteFlag,
-    "innerLabel": innerLabel,
-    "systemDate": systemDate,
-    "validations": validations,
-    "errorMessage": errorMessage,
-    "isMultiSelect": isMultiSelect,
-  };
-  if (isEditable != null) m["isEditable"] = isEditable;
-  if (enums != null) m["enums"] = enums;
-  if (visibilityCondition != null) {
-    m["visibilityCondition"] = visibilityCondition;
-  }
-  if (autoFillCondition != null) m["autoFillCondition"] = autoFillCondition;
-  return m;
-}
-
-/// Build one household page.
-/// [index] is 1-based. [nextPage] is the page to navigate to
-/// (e.g. "household2", or "closeout" for the last household).
-Map<String, dynamic> _householdPage(int index, String nextPage) {
-  final pageName = "household$index";
-  return {
-    "page": pageName,
-    "label": "Household $index",
-    "order": index + 1, // page 1 is sessionHeader → order 1
-    "type": "object",
-    "description": "Monitoring data for household $index",
-    "actionLabel": "Next",
-    ..._pageNulls(),
-    "navigateTo": {"name": nextPage, "type": "form"},
-    "properties": [
-      // 1. teamVisited
-      _prop(
-        type: "string",
-        label: "Was this household visited by the team?",
-        order: 1,
-        format: "dropdown",
-        fieldName: "teamVisited",
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-        ],
-        enums: [
-          {"code": "YES", "name": "Yes"},
-          {"code": "NO", "name": "No"},
-        ],
-      ),
-
-      // 2. houseMarked
-      _prop(
-        type: "string",
-        label: "Is the house marked?",
-        order: 2,
-        format: "dropdown",
-        fieldName: "houseMarked",
-        validations: [],
-        enums: [
-          {"code": "YES", "name": "Yes"},
-          {"code": "NO", "name": "No"},
-        ],
-        visibilityCondition: _vc("$pageName.teamVisited=='YES'"),
-      ),
-
-      // 3. childrenPresent
-      _prop(
-        type: "integer",
-        label: "Children present in household",
-        order: 3,
-        format: "numeric",
-        fieldName: "childrenPresent",
-        value: "0",
-        isEditable: true,
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 4. childrenVaccinated
-      _prop(
-        type: "integer",
-        label: "Children vaccinated",
-        order: 4,
-        format: "numeric",
-        fieldName: "childrenVaccinated",
-        value: "0",
-        isEditable: true,
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 5. vaccinationLocation
-      _prop(
-        type: "string",
-        label: "Where was the child vaccinated?",
-        order: 5,
-        format: "dropdown",
-        fieldName: "vaccinationLocation",
-        validations: [],
-        enums: [
-          {"code": "HOUSE", "name": "House"},
-          {"code": "HEALTH_FACILITY", "name": "Health Facility"},
-          {"code": "SCHOOL", "name": "School"},
-          {"code": "MARKET", "name": "Market"},
-          {"code": "FARM", "name": "Farm"},
-          {"code": "RELIGIOUS_CENTER", "name": "Religious Center"},
-          {"code": "TRANSIT_POINT", "name": "Transit Point"},
-          {"code": "COMMUNITY_CENTER", "name": "Community Center"},
-          {"code": "PLAYGROUND", "name": "Playground"},
-          {"code": "OTHER", "name": "Other"},
-        ],
-      ),
-
-      // 6. missedAbsent
-      _prop(
-        type: "integer",
-        label: "Missed - Absent",
-        order: 6,
-        format: "numeric",
-        fieldName: "missedAbsent",
-        value: "0",
-        isEditable: true,
-        validations: [
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 7. missedRefusal
-      _prop(
-        type: "integer",
-        label: "Missed - Refusal",
-        order: 7,
-        format: "numeric",
-        fieldName: "missedRefusal",
-        value: "0",
-        isEditable: true,
-        validations: [
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 8. missedNotVisited
-      _prop(
-        type: "integer",
-        label: "Missed - Not Visited",
-        order: 8,
-        format: "numeric",
-        fieldName: "missedNotVisited",
-        value: "0",
-        isEditable: true,
-        validations: [
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 9. missedNotRevisited
-      _prop(
-        type: "integer",
-        label: "Missed - Not Revisited",
-        order: 9,
-        format: "numeric",
-        fieldName: "missedNotRevisited",
-        value: "0",
-        isEditable: true,
-        validations: [
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 10. missedAsleep
-      _prop(
-        type: "integer",
-        label: "Missed - Asleep",
-        order: 10,
-        format: "numeric",
-        fieldName: "missedAsleep",
-        value: "0",
-        isEditable: true,
-        validations: [
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 11. missedRoutine
-      _prop(
-        type: "integer",
-        label: "Missed - Routine",
-        order: 11,
-        format: "numeric",
-        fieldName: "missedRoutine",
-        value: "0",
-        isEditable: true,
-        validations: [
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 12. missedOther
-      _prop(
-        type: "integer",
-        label: "Missed - Other",
-        order: 12,
-        format: "numeric",
-        fieldName: "missedOther",
-        value: "0",
-        isEditable: true,
-        validations: [
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 13. caregiverInformed
-      _prop(
-        type: "string",
-        label: "Was caregiver informed about the campaign?",
-        order: 13,
-        format: "dropdown",
-        fieldName: "caregiverInformed",
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-        ],
-        enums: [
-          {"code": "YES", "name": "Yes"},
-          {"code": "NO", "name": "No"},
-        ],
-      ),
-
-      // 14. campaignInfoSource
-      _prop(
-        type: "string",
-        label: "How did caregiver know about the campaign?",
-        order: 14,
-        format: "dropdown",
-        fieldName: "campaignInfoSource",
-        validations: [],
-        enums: [
-          {"code": "TV", "name": "TV"},
-          {"code": "RADIO", "name": "Radio"},
-          {"code": "MOB_VAN", "name": "Mob Van/PA"},
-          {"code": "HEALTH_WORKER", "name": "Health Worker"},
-          {"code": "VOLUNTEER_CHW", "name": "Volunteer CHW"},
-          {"code": "RELIGIOUS_LEADER", "name": "Religious Leader"},
-          {"code": "COMMUNITY_LEADER", "name": "Community Leader"},
-          {"code": "SOCIAL_MEDIA", "name": "Social Media"},
-          {"code": "SCHOOL", "name": "School"},
-          {"code": "IEC_MATERIALS", "name": "IEC Materials"},
-          {"code": "SOCIAL_MOBILIZER", "name": "Social Mobilizer/CBV"},
-          {"code": "NEIGHBOUR", "name": "Neighbour"},
-          {"code": "NEWSPAPER", "name": "Newspaper"},
-          {"code": "OTHERS", "name": "Others"},
-        ],
-        visibilityCondition: _vc("$pageName.caregiverInformed=='YES'"),
-      ),
-
-      // 15. infoSourceOther
-      _prop(
-        type: "string",
-        label: "Other information source (specify)",
-        order: 15,
-        format: "text",
-        fieldName: "infoSourceOther",
-        validations: [],
-        visibilityCondition: _vc("$pageName.caregiverInformed=='YES'"),
-      ),
-
-      // 16. afpLimbWeakness
-      _prop(
-        type: "string",
-        label: "Any child with sudden limb weakness (AFP)?",
-        order: 16,
-        format: "dropdown",
-        fieldName: "afpLimbWeakness",
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-        ],
-        enums: [
-          {"code": "YES", "name": "Yes"},
-          {"code": "NO", "name": "No"},
-        ],
-      ),
-
-      // 17. afpSuddenWeakness
-      _prop(
-        type: "integer",
-        label: "Number of AFP cases",
-        order: 17,
-        format: "numeric",
-        fieldName: "afpSuddenWeakness",
-        value: "0",
-        isEditable: true,
-        validations: [
-          {"type": "min", "value": 0, "message": "Must be 0 or more"},
-        ],
-      ),
-
-      // 18. caregiverName
-      _prop(
-        type: "string",
-        label: "Caregiver Name",
-        order: 18,
-        format: "text",
-        fieldName: "caregiverName",
-        validations: [
-          {"type": "required", "value": true, "message": "Required"},
-        ],
-      ),
-
-      // 19. caregiverPhone
-      _prop(
-        type: "string",
-        label: "Caregiver Phone Number",
-        order: 19,
-        format: "phone",
-        fieldName: "caregiverPhone",
-        validations: [],
-      ),
-    ],
-  };
-}
-
 final dynamic samplePolioInsideHouseholdMonitoringFlows = {
   "name": "POLIO_INSIDE_HOUSEHOLD_MONITORING",
   "initialPage": "insideHouseholdEntry",
@@ -393,9 +6,9 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
   "disabled": false,
   "isSelected": true,
   "flows": [
-    // ──────────────────────────────────────────────────────────
-    // 1. insideHouseholdEntry (FORM, order:1)
-    // ──────────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════
+    // Flow 1: insideHouseholdEntry (FORM) — 3 pages
+    // ══════════════════════════════════════════════════════════════════════
     {
       "screenType": "FORM",
       "name": "insideHouseholdEntry",
@@ -405,263 +18,1088 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
       "isSelected": true,
       "initActions": [],
       "wrapperConfig": {},
+      "includeSummary": true,
       "pages": [
-        // ── Page 1: Session Header ──
+        // ── Page 1: First Household Location ──
         {
-          "page": "sessionHeader",
-          "label": "Session Header",
+          "page": "firstHouseholdLocation",
+          "label": "IHM_FIRST_HOUSEHOLD_LOCATION_LABEL",
           "order": 1,
           "type": "object",
-          "description":
-              "Monitor details, location, and session header information",
-          "actionLabel": "Next",
-          ..._pageNulls(),
-          "navigateTo": {"name": "household1", "type": "form"},
+          "description": "IHM_FIRST_HOUSEHOLD_LOCATION_DESC",
+          "actionLabel": "IHM_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "monitoringDetails", "type": "form"},
           "properties": [
-            // 1. monitoringType
-            _prop(
-              type: "string",
-              label: "Monitoring Type",
-              order: 1,
-              format: "dropdown",
-              fieldName: "monitoringType",
-              validations: [
-                {"type": "required", "value": true, "message": "Required"},
-              ],
-              enums: [
-                {"code": "IN_PROCESS", "name": "In Process"},
-                {"code": "END_PROCESS", "name": "End Process"},
-              ],
-            ),
-
-            // 2. monitoringDate
-            _prop(
-              type: "string",
-              label: "Monitoring Date",
-              order: 2,
-              format: "text",
-              fieldName: "monitoringDate",
-              readOnly: true,
-              systemDate: true,
-              validations: [
-                {"type": "required", "value": true, "message": "Required"},
-              ],
-            ),
-
-            // 3. settlementArea
-            _prop(
-              type: "string",
-              label: "Settlement Area",
-              order: 3,
-              format: "locality",
-              fieldName: "settlementArea",
-              readOnly: true,
-              validations: [],
-            ),
-
-            // 4. settlementName
-            _prop(
-              type: "string",
-              label: "Settlement Name",
-              order: 4,
-              format: "text",
-              fieldName: "settlementName",
-              validations: [],
-            ),
-
-            // 5. settlementType
-            _prop(
-              type: "string",
-              label: "Settlement Type",
-              order: 5,
-              format: "dropdown",
-              fieldName: "settlementType",
-              validations: [
-                {"type": "required", "value": true, "message": "Required"},
-              ],
-              enums: [
-                {"code": "URBAN", "name": "Urban"},
-                {"code": "RURAL", "name": "Rural"},
-                {"code": "SLUMS", "name": "Slums"},
-                {"code": "REFUGEES_IDPS", "name": "Refugees/IDPs"},
-                {"code": "HARD_TO_REACH", "name": "Hard to Reach"},
+            {
+              "type": "string",
+              "label": "IHM_GPS_FIRST_HOUSEHOLD_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "gpsFirstHousehold",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
-                  "code": "NOMADS",
-                  "name": "Nomads/Pastoralists"
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            }
+          ]
+        },
+
+        // ── Page 2: Monitoring Details ──
+        {
+          "page": "monitoringDetails",
+          "label": "IHM_MONITORING_DETAILS_LABEL",
+          "order": 2,
+          "type": "object",
+          "description": "IHM_MONITORING_DETAILS_DESC",
+          "actionLabel": "IHM_NEXT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "closeout", "type": "form"},
+          "properties": [
+            // ── Monitor info ──
+
+            // 1. monitorDesignation
+            {
+              "type": "string",
+              "label": "IHM_MONITOR_DESIGNATION_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "monitorDesignation",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "WHO_HQ", "name": "IHM_ENUM_WHO_HQ"},
+                {"code": "WHO_REGION", "name": "IHM_ENUM_WHO_REGION"},
+                {"code": "WHO_COUNTRY", "name": "IHM_ENUM_WHO_COUNTRY"},
+                {"code": "WHO_HUB", "name": "IHM_ENUM_WHO_HUB"},
+                {
+                  "code": "WHO_SUB_NATIONAL",
+                  "name": "IHM_ENUM_WHO_SUB_NATIONAL"
                 },
+                {"code": "WHO_ZONAL", "name": "IHM_ENUM_WHO_ZONAL"},
+                {"code": "UNICEF_HQ", "name": "IHM_ENUM_UNICEF_HQ"},
+                {"code": "UNICEF_REGION", "name": "IHM_ENUM_UNICEF_REGION"},
+                {"code": "UNICEF_COUNTRY", "name": "IHM_ENUM_UNICEF_COUNTRY"},
+                {
+                  "code": "UNICEF_SUB_NATIONAL",
+                  "name": "IHM_ENUM_UNICEF_SUB_NATIONAL"
+                },
+                {"code": "CDC_HQ", "name": "IHM_ENUM_CDC_HQ"},
+                {"code": "CDC_COUNTRY", "name": "IHM_ENUM_CDC_COUNTRY"},
+                {"code": "BMGF", "name": "IHM_ENUM_BMGF"},
+                {"code": "ROTARY", "name": "IHM_ENUM_ROTARY"},
+                {"code": "MOH_NATIONAL", "name": "IHM_ENUM_MOH_NATIONAL"},
+                {"code": "MOH_STATE", "name": "IHM_ENUM_MOH_STATE"},
+                {"code": "MOH_LGA", "name": "IHM_ENUM_MOH_LGA"},
+                {"code": "NPHCDA", "name": "IHM_ENUM_NPHCDA"},
+                {"code": "SPHCDA", "name": "IHM_ENUM_SPHCDA"},
+                {"code": "LPHCDA", "name": "IHM_ENUM_LPHCDA"},
+                {"code": "PARTNER", "name": "IHM_ENUM_PARTNER"},
+                {"code": "VOLUNTEER", "name": "IHM_ENUM_VOLUNTEER"},
+                {"code": "STUDENT", "name": "IHM_ENUM_STUDENT"},
+                {"code": "OTHERS", "name": "IHM_ENUM_OTHERS"}
+              ]
+            },
+
+            // 2. designationOther
+            {
+              "type": "string",
+              "label": "IHM_DESIGNATION_OTHER_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "designationOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "monitoringDetails.monitorDesignation=='OTHERS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+
+            // 3. monitoringType
+            {
+              "type": "string",
+              "label": "IHM_MONITORING_TYPE_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "monitoringType",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "IN_PROCESS", "name": "IHM_ENUM_IN_PROCESS"},
+                {"code": "END_PROCESS", "name": "IHM_ENUM_END_PROCESS"}
+              ]
+            },
+
+            // 4. monitoringDate
+            {
+              "type": "string",
+              "label": "IHM_MONITORING_DATE_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "monitoringDate",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // 5. settlementArea
+            {
+              "type": "string",
+              "label": "IHM_SETTLEMENT_AREA_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "locality",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "settlementArea",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // 6. settlementName
+            {
+              "type": "string",
+              "label": "IHM_SETTLEMENT_NAME_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "settlementName",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // 7. settlementType
+            {
+              "type": "string",
+              "label": "IHM_SETTLEMENT_TYPE_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "settlementType",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "URBAN", "name": "IHM_ENUM_URBAN"},
+                {"code": "RURAL", "name": "IHM_ENUM_RURAL"},
+                {"code": "SLUMS", "name": "IHM_ENUM_SLUMS"},
+                {"code": "REFUGEES_IDPS", "name": "IHM_ENUM_REFUGEES_IDPS"},
+                {"code": "HARD_TO_REACH", "name": "IHM_ENUM_HARD_TO_REACH"},
+                {"code": "NOMADS", "name": "IHM_ENUM_NOMADS"},
                 {
                   "code": "SECURITY_COMPROMISED",
-                  "name": "Security Compromised"
+                  "name": "IHM_ENUM_SECURITY_COMPROMISED"
                 },
-                {"code": "IMMIGRANTS", "name": "Immigrants"},
-                {"code": "CROSS_BORDER", "name": "Cross-Border"},
-              ],
-            ),
+                {"code": "IMMIGRANTS", "name": "IHM_ENUM_IMMIGRANTS"},
+                {"code": "CROSS_BORDER", "name": "IHM_ENUM_CROSS_BORDER"}
+              ]
+            },
 
-            // 6. monitorName
-            _prop(
-              type: "string",
-              label: "Monitor Name",
-              order: 6,
-              format: "text",
-              fieldName: "monitorName",
-              readOnly: true,
-              validations: [
-                {"type": "required", "value": true, "message": "Required"},
+            // 8. monitorName
+            {
+              "type": "string",
+              "label": "IHM_MONITOR_NAME_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "monitorName",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
               ],
-              autoFillCondition: [
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "autoFillCondition": [
                 {
                   "value": "{{loggedInUserName}}",
                   "expression": "true==true"
                 }
-              ],
-            ),
+              ]
+            },
 
-            // 7. monitorPhone
-            _prop(
-              type: "string",
-              label: "Monitor Phone Number",
-              order: 7,
-              format: "phone",
-              fieldName: "monitorPhone",
-              readOnly: true,
-              validations: [],
-              autoFillCondition: [
+            // 9. monitorPhone
+            {
+              "type": "string",
+              "label": "IHM_MONITOR_PHONE_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "phone",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "monitorPhone",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "autoFillCondition": [
                 {
                   "value": "{{loggedInUserMobileNumber}}",
                   "expression": "true==true"
                 }
-              ],
-            ),
+              ]
+            },
 
-            // 8. monitorDesignation
-            _prop(
-              type: "string",
-              label: "Monitor Designation",
-              order: 8,
-              format: "dropdown",
-              fieldName: "monitorDesignation",
-              validations: [
-                {"type": "required", "value": true, "message": "Required"},
-              ],
-              enums: [
-                {"code": "WHO_HQ", "name": "WHO HQ"},
-                {"code": "WHO_REGION", "name": "WHO Region"},
-                {"code": "WHO_COUNTRY", "name": "WHO Country"},
-                {"code": "WHO_HUB", "name": "WHO Hub"},
-                {"code": "WHO_SUB_NATIONAL", "name": "WHO Sub-National"},
-                {"code": "WHO_ZONAL", "name": "WHO Zonal"},
-                {"code": "UNICEF_HQ", "name": "UNICEF HQ"},
-                {"code": "UNICEF_REGION", "name": "UNICEF Region"},
-                {"code": "UNICEF_COUNTRY", "name": "UNICEF Country"},
+            // ── Household-level questions (A through P) ──
+
+            // A. teamVisited
+            {
+              "type": "string",
+              "label": "IHM_TEAM_VISITED_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "teamVisited",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
-                  "code": "UNICEF_SUB_NATIONAL",
-                  "name": "UNICEF Sub-National"
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "IHM_ENUM_YES"},
+                {"code": "NO", "name": "IHM_ENUM_NO"}
+              ]
+            },
+
+            // B. houseMarked
+            {
+              "type": "string",
+              "label": "IHM_HOUSE_MARKED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "houseMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "IHM_ENUM_YES"},
+                {"code": "NO", "name": "IHM_ENUM_NO"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "monitoringDetails.teamVisited=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+
+            // C. childrenPresent
+            {
+              "type": "integer",
+              "label": "IHM_CHILDREN_PRESENT_LABEL",
+              "order": 12,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenPresent",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
                 },
-                {"code": "CDC_HQ", "name": "CDC HQ"},
-                {"code": "CDC_COUNTRY", "name": "CDC Country"},
-                {"code": "BMGF", "name": "BMGF"},
-                {"code": "ROTARY", "name": "Rotary"},
-                {"code": "MOH_NATIONAL", "name": "MOH National"},
-                {"code": "MOH_STATE", "name": "MOH State"},
-                {"code": "MOH_LGA", "name": "MOH LGA"},
-                {"code": "NPHCDA", "name": "NPHCDA"},
-                {"code": "SPHCDA", "name": "SPHCDA"},
-                {"code": "LPHCDA", "name": "LPHCDA"},
-                {"code": "PARTNER", "name": "Partner"},
-                {"code": "VOLUNTEER", "name": "Volunteer"},
-                {"code": "STUDENT", "name": "Student"},
-                {"code": "OTHERS", "name": "Others"},
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "IHM_VALIDATION_MIN_ZERO"
+                }
               ],
-            ),
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
 
-            // 9. designationOther
-            _prop(
-              type: "string",
-              label: "Other designation (specify)",
-              order: 9,
-              format: "text",
-              fieldName: "designationOther",
-              validations: [],
-              visibilityCondition:
-                  _vc("sessionHeader.monitorDesignation=='OTHERS'"),
-            ),
-
-            // 10. gpsFirstHousehold
-            _prop(
-              type: "string",
-              label: "GPS - First Household",
-              order: 10,
-              format: "latLng",
-              fieldName: "gpsFirstHousehold",
-              validations: [
-                {"type": "required", "value": true, "message": "Required"},
+            // D. childrenVaccinated
+            {
+              "type": "integer",
+              "label": "IHM_CHILDREN_VACCINATED_LABEL",
+              "order": 13,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenVaccinated",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "IHM_VALIDATION_MIN_ZERO"
+                }
               ],
-            ),
-          ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // E. vaccinationLocation
+            {
+              "type": "string",
+              "label": "IHM_VACCINATION_LOCATION_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "vaccinationLocation",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "HOUSE", "name": "IHM_ENUM_HOUSE"},
+                {"code": "HEALTH_FACILITY", "name": "IHM_ENUM_HEALTH_FACILITY"},
+                {"code": "SCHOOL", "name": "IHM_ENUM_SCHOOL"},
+                {"code": "MARKET", "name": "IHM_ENUM_MARKET"},
+                {"code": "FARM", "name": "IHM_ENUM_FARM"},
+                {
+                  "code": "RELIGIOUS_CENTER",
+                  "name": "IHM_ENUM_RELIGIOUS_CENTER"
+                },
+                {"code": "TRANSIT_POINT", "name": "IHM_ENUM_TRANSIT_POINT"},
+                {
+                  "code": "COMMUNITY_CENTER",
+                  "name": "IHM_ENUM_COMMUNITY_CENTER"
+                },
+                {"code": "PLAYGROUND", "name": "IHM_ENUM_PLAYGROUND"},
+                {"code": "OTHER", "name": "IHM_ENUM_OTHER"}
+              ]
+            },
+
+            // F. missedAbsent
+            {
+              "type": "integer",
+              "label": "IHM_MISSED_ABSENT_LABEL",
+              "order": 15,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "missedAbsent",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "IHM_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // G. missedRefusal
+            {
+              "type": "integer",
+              "label": "IHM_MISSED_REFUSAL_LABEL",
+              "order": 16,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "missedRefusal",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "IHM_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // H. missedNotVisited
+            {
+              "type": "integer",
+              "label": "IHM_MISSED_NOT_VISITED_LABEL",
+              "order": 17,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "missedNotVisited",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "IHM_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // I. missedNotRevisited
+            {
+              "type": "integer",
+              "label": "IHM_MISSED_NOT_REVISITED_LABEL",
+              "order": 18,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "missedNotRevisited",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "IHM_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // J. missedAsleep
+            {
+              "type": "integer",
+              "label": "IHM_MISSED_ASLEEP_LABEL",
+              "order": 19,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "missedAsleep",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "IHM_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // K. missedRoutine
+            {
+              "type": "integer",
+              "label": "IHM_MISSED_ROUTINE_LABEL",
+              "order": 20,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "missedRoutine",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "IHM_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // L. missedOther
+            {
+              "type": "integer",
+              "label": "IHM_MISSED_OTHER_LABEL",
+              "order": 21,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "missedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "IHM_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // M. caregiverInformed
+            {
+              "type": "string",
+              "label": "IHM_CAREGIVER_INFORMED_LABEL",
+              "order": 22,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "IHM_ENUM_YES"},
+                {"code": "NO", "name": "IHM_ENUM_NO"}
+              ]
+            },
+
+            // N. campaignInfoSource (multi-select)
+            {
+              "type": "string",
+              "label": "IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+              "order": 23,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignInfoSource",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": true,
+              "enums": [
+                {"code": "TV", "name": "IHM_ENUM_TV"},
+                {"code": "RADIO", "name": "IHM_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "IHM_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "IHM_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "IHM_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "IHM_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "IHM_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "IHM_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "IHM_ENUM_SCHOOL_SOURCE"},
+                {"code": "IEC_MATERIALS", "name": "IHM_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "IHM_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "IHM_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "IHM_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "IHM_ENUM_OTHERS_SOURCE"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "monitoringDetails.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+
+            // O. infoSourceOther
+            {
+              "type": "string",
+              "label": "IHM_INFO_SOURCE_OTHER_LABEL",
+              "order": 24,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "infoSourceOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "monitoringDetails.caregiverInformed=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+
+            // P. afpLimbWeakness
+            {
+              "type": "string",
+              "label": "IHM_AFP_LIMB_WEAKNESS_LABEL",
+              "order": 25,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpLimbWeakness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "IHM_ENUM_YES"},
+                {"code": "NO", "name": "IHM_ENUM_NO"}
+              ]
+            },
+
+            // afpSuddenWeakness (number of AFP cases)
+            {
+              "type": "integer",
+              "label": "IHM_AFP_CASE_COUNT_LABEL",
+              "order": 26,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpSuddenWeakness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "IHM_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "monitoringDetails.afpLimbWeakness=='YES'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+
+            // ── Caregiver details ──
+
+            // caregiverName
+            {
+              "type": "string",
+              "label": "IHM_CAREGIVER_NAME_LABEL",
+              "order": 27,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverName",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+
+            // caregiverPhone
+            {
+              "type": "string",
+              "label": "IHM_CAREGIVER_PHONE_LABEL",
+              "order": 28,
+              "value": "",
+              "format": "phone",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverPhone",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            }
+          ]
         },
 
-        // ── Household pages: generated dynamically (max householdCount) ──
-        for (int i = 1; i <= householdCount; i++)
-          _householdPage(
-            i,
-            i < householdCount ? "household${i + 1}" : "closeout",
-          ),
-
-        // ── Closeout page ──
+        // ── Page 3: Closeout (Last Household Location + Final observations) ──
         {
           "page": "closeout",
-          "label": "Closeout",
-          "order": householdCount +
-              2, // sessionHeader=1, households=2..N+1, closeout=N+2
+          "label": "IHM_CLOSEOUT_LABEL",
+          "order": 3,
           "type": "object",
-          "description": "Final GPS and observations",
-          "actionLabel": "Submit",
-          ..._pageNulls(),
+          "description": "IHM_CLOSEOUT_DESC",
+          "actionLabel": "IHM_SUBMIT",
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
           "properties": [
             // 1. gpsLastHousehold
-            _prop(
-              type: "string",
-              label: "GPS - Last Household",
-              order: 1,
-              format: "latLng",
-              fieldName: "gpsLastHousehold",
-              validations: [],
-            ),
+            {
+              "type": "string",
+              "label": "IHM_GPS_LAST_HOUSEHOLD_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "gpsLastHousehold",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
 
             // 2. poorlyCoveredAreas
-            _prop(
-              type: "string",
-              label: "Are there poorly covered areas?",
-              order: 2,
-              format: "dropdown",
-              fieldName: "poorlyCoveredAreas",
-              validations: [
-                {"type": "required", "value": true, "message": "Required"},
+            {
+              "type": "string",
+              "label": "IHM_POORLY_COVERED_AREAS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "poorlyCoveredAreas",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
               ],
-              enums: [
-                {"code": "YES", "name": "Yes"},
-                {"code": "NO", "name": "No"},
-              ],
-            ),
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "YES", "name": "IHM_ENUM_YES"},
+                {"code": "NO", "name": "IHM_ENUM_NO"}
+              ]
+            },
 
             // 3. finalComments
-            _prop(
-              type: "string",
-              label: "Final Comments / Observations",
-              order: 3,
-              format: "textArea",
-              fieldName: "finalComments",
-              validations: [
+            {
+              "type": "string",
+              "label": "IHM_FINAL_COMMENTS_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "textArea",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "finalComments",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
                 {
                   "type": "maxLength",
                   "value": 500,
-                  "message": "Max 500 characters"
-                },
+                  "message": "IHM_VALIDATION_MAX_500"
+                }
               ],
-            ),
-          ],
-        },
+              "errorMessage": "",
+              "isMultiSelect": false
+            }
+          ]
+        }
       ],
       "onAction": [
         {
@@ -672,9 +1110,7 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {
-                  "message": "Failed to fetch config."
-                }
+                "properties": {"message": "IHM_ERROR_FETCH_CONFIG"}
               }
             ]
           }
@@ -686,9 +1122,7 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {
-                  "message": "Failed to record inside household monitoring."
-                }
+                "properties": {"message": "IHM_ERROR_CREATE_RECORD"}
               }
             ]
           }
@@ -696,12 +1130,19 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
         {
           "actionType": "NAVIGATION",
           "properties": {
+            "data": [
+              {
+                "key": "SessionClientReferenceId",
+                "value":
+                    "{{contextData.entities.UserActionModel.clientReferenceId}}"
+              }
+            ],
+            "name": "insideMonitoringSummary",
             "type": "TEMPLATE",
-            "name": "insideHouseholdSuccess",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
+                "properties": {"message": "IHM_ERROR_NAVIGATION"}
               }
             ]
           }
@@ -709,46 +1150,211 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
       ]
     },
 
-    // ──────────────────────────────────────────────────────────
-    // 2. insideHouseholdSuccess (TEMPLATE, order:2)
-    // ──────────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════
+    // Flow 2: insideMonitoringSummary (TEMPLATE) — Summary of recorded data
+    // ══════════════════════════════════════════════════════════════════════
     {
       "screenType": "TEMPLATE",
-      "name": "insideHouseholdSuccess",
+      "name": "insideMonitoringSummary",
       "order": 2,
-      "heading": "",
-      "description": "",
+      "canPop": false,
+      "heading": "IHM_SUMMARY_HEADING",
+      "description": "IHM_SUMMARY_DESCRIPTION",
       "header": [],
-      "footer": [],
-      "initActions": [],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.SessionClientReferenceId}}",
+                "operation": "equals",
+                "root": "userAction"
+              }
+            ],
+            "name": "session",
+            "type": "SEARCH_EVENT"
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "filters": [
+          {"field": "action", "equals": "LOCATION_CAPTURE"},
+          {
+            "field": "additionalFields.form",
+            "equals": "POLIO_INSIDE_MONITORING"
+          }
+        ],
+        "relations": [
+          {
+            "name": "session",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "UserActionModel"
+          }
+        ],
+        "rootEntity": "UserActionModel",
+        "wrapperName": "InsideMonitoringWrapper",
+        "searchConfig": {
+          "select": ["userAction"],
+          "primary": "userAction"
+        }
+      },
       "body": [
+        // ── Summary card with labelPairList ──
         {
           "type": "template",
-          "format": "panelCard",
-          "label": "Inside Household Monitoring Recorded Successfully",
-          "description":
-              "The inside household monitoring data has been recorded successfully",
-          "properties": {"type": "success"},
-          "primaryAction": {
-            "label": "Add Another Session",
-            "onAction": [
-              {
-                "actionType": "NAVIGATION",
-                "properties": {
-                  "type": "FORM",
-                  "name": "insideHouseholdEntry"
+          "format": "card",
+          "fieldName": "summaryCard",
+          "properties": {"type": "primary"},
+          "children": [
+            {
+              "type": "template",
+              "format": "labelPairList",
+              "fieldName": "sessionSummary",
+              "data": [
+                {
+                  "key": "IHM_SUMMARY_MONITOR_NAME",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.monitorName}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_MONITORING_DATE",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.monitoringDate}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_SETTLEMENT_AREA",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.settlementArea}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_SETTLEMENT_TYPE",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.settlementType}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_MONITOR_DESIGNATION",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.monitorDesignation}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_CHILDREN_PRESENT",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.childrenPresent}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_CHILDREN_VACCINATED",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.childrenVaccinated}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_MISSED_ABSENT",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.missedAbsent}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_MISSED_REFUSAL",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.missedRefusal}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_MISSED_NOT_VISITED",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.missedNotVisited}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_MISSED_NOT_REVISITED",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.missedNotRevisited}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_MISSED_ASLEEP",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.missedAsleep}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_MISSED_ROUTINE",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.missedRoutine}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_MISSED_OTHER",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.missedOther}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_POORLY_COVERED",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.poorlyCoveredAreas}}",
+                  "isActive": true
+                },
+                {
+                  "key": "IHM_SUMMARY_FINAL_COMMENTS",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.finalComments}}",
+                  "isActive": true
                 }
+              ]
+            }
+          ]
+        }
+      ],
+      "footer": [
+        {
+          "type": "template",
+          "format": "button",
+          "label": "IHM_ADD_ANOTHER_SESSION",
+          "fieldName": "addAnotherSession",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "FORM",
+                "name": "insideHouseholdEntry"
               }
-            ]
-          },
-          "secondaryAction": {
-            "label": "Back to Home",
-            "onAction": [
-              {
-                "actionType": "BACK_NAVIGATION",
-                "properties": {"name": "HOME", "type": "HOME"}
-              }
-            ]
+            }
+          ],
+          "properties": {
+            "size": "large",
+            "type": "secondary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          }
+        },
+        {
+          "type": "template",
+          "format": "button",
+          "label": "IHM_BACK_TO_HOME",
+          "fieldName": "backToHome",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"name": "HOME", "type": "HOME"}
+            }
+          ],
+          "properties": {
+            "size": "large",
+            "type": "primary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
           }
         }
       ]

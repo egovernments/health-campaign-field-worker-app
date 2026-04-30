@@ -2,9 +2,6 @@
 /// polio_lqa_data_collection.dart).
 const int _lqaChildCount = 10;
 
-/// Number of household pages for Inside Household Monitoring.
-const int _householdCount = 10;
-
 /// Number of site pages for Outside House Monitoring.
 const int _siteCount = 5;
 
@@ -805,7 +802,8 @@ final jsonConfig = {
             "stockEntryType": "__context:stockEntryType",
             "primaryRole": "__context:primaryRole",
             "secondaryRole": "__context:secondaryRole",
-            "status": "__switch:__context:stockEntryType:{ISSUED:__value:IN_TRANSIT,RETURNED:__value:RETURNED}",
+            "status":
+                "__switch:__context:stockEntryType:{ISSUED:__value:IN_TRANSIT,RETURNED:__value:RETURNED}",
             "scanResource": "stockProductDetails.scanResource"
           },
           "clientAuditDetails": "__generate:clientAudit",
@@ -1338,7 +1336,11 @@ final jsonConfig = {
   },
   "polioMonitoring": {
     "fallbackModel": "HouseholdModel",
-    "sourcePages": ["householdMonitoring1", "householdMonitoring2", "householdMonitoring3"],
+    "sourcePages": [
+      "householdMonitoring1",
+      "householdMonitoring2",
+      "householdMonitoring3"
+    ],
     "sourcePageBase": "householdMonitoring",
     "models": {
       "HouseholdModel": {
@@ -1508,7 +1510,8 @@ final jsonConfig = {
             "campaignId": "householdInformation.campaignId",
             "village": "householdInformation.village",
             "settlementType": "householdInformation.settlementType",
-            "specialPopulationNotes": "householdInformation.specialPopulationNotes",
+            "specialPopulationNotes":
+                "householdInformation.specialPopulationNotes",
           }
         }
       },
@@ -1689,9 +1692,9 @@ final jsonConfig = {
           "additionalFields": {
             "form": "__value:POLIO_STOCK",
             "batchLotNumber": "vialDetails.batchLotNumber",
-            "expiryDate": "vialDetails.expiryDate",
-            "vvmStatus": "vialDetails.vvmStatus",
-            "timeOfOpening": "vialDetails.timeOfOpening",
+            "returnedUsable": "vialDetails.returnedUsable",
+            "returnedUnusable": "vialDetails.returnedUnusable",
+            "additionalReceived": "vialDetails.additionalReceived"
           }
         }
       }
@@ -1756,28 +1759,24 @@ final jsonConfig = {
             "gpsStartLng": "clusterInfo.gpsStart[1]",
 
             // ── child fields: generated from _lqaChildCount ──
-            for (int i = 1; i <= _lqaChildCount; i++)
-              ...{
-                "child${i}_childrenUnder5": "child$i.childrenUnder5",
-                "child${i}_childAgeMonths": "child$i.childAgeMonths",
-                "child${i}_childSex": "child$i.childSex",
-                "child${i}_fingerMarked": "child$i.fingerMarked",
-                "child${i}_reasonNotMarked": "child$i.reasonNotMarked",
-                "child${i}_reasonNotMarkedOther":
-                    "child$i.reasonNotMarkedOther",
-                "child${i}_refusalReason": "child$i.refusalReason",
-                "child${i}_refusalReasonOther":
-                    "child$i.refusalReasonOther",
-                "child${i}_absenceReason": "child$i.absenceReason",
-                "child${i}_absenceReasonOther":
-                    "child$i.absenceReasonOther",
-                "child${i}_caregiverInformed": "child$i.caregiverInformed",
-                "child${i}_campaignAwareness": "child$i.campaignAwareness",
-                "child${i}_awarenessOther": "child$i.awarenessOther",
-                "child${i}_opvDosesFromBirth": "child$i.opvDosesFromBirth",
-                "child${i}_afpAwareness": "child$i.afpAwareness",
-                "child${i}_afpCaseCount": "child$i.afpCaseCount",
-              },
+            for (int i = 1; i <= _lqaChildCount; i++) ...{
+              "child${i}_childrenUnder5": "child$i.childrenUnder5",
+              "child${i}_childAgeMonths": "child$i.childAgeMonths",
+              "child${i}_childSex": "child$i.childSex",
+              "child${i}_fingerMarked": "child$i.fingerMarked",
+              "child${i}_reasonNotMarked": "child$i.reasonNotMarked",
+              "child${i}_reasonNotMarkedOther": "child$i.reasonNotMarkedOther",
+              "child${i}_refusalReason": "child$i.refusalReason",
+              "child${i}_refusalReasonOther": "child$i.refusalReasonOther",
+              "child${i}_absenceReason": "child$i.absenceReason",
+              "child${i}_absenceReasonOther": "child$i.absenceReasonOther",
+              "child${i}_caregiverInformed": "child$i.caregiverInformed",
+              "child${i}_campaignAwareness": "child$i.campaignAwareness",
+              "child${i}_awarenessOther": "child$i.awarenessOther",
+              "child${i}_opvDosesFromBirth": "child$i.opvDosesFromBirth",
+              "child${i}_afpAwareness": "child$i.afpAwareness",
+              "child${i}_afpCaseCount": "child$i.afpCaseCount",
+            },
 
             // ── closeout (2 fields) ──
             "gpsFinalLat": "closeout.gpsFinal[0]",
@@ -1798,7 +1797,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
-          "action": "__value:LQA_CLUSTER_DATA",
+          "action": "__value:LOCATION_CAPTURE",
           "latitude": "clusterInfo.gpsStart[0]",
           "longitude": "clusterInfo.gpsStart[1]",
           "locationAccuracy": "clusterInfo.gpsStart[2]",
@@ -1808,6 +1807,7 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "additionalFields": {
             "form": "__value:POLIO_LQA",
+            "formType": "__value:LQA_CLUSTER_DATA",
             "surveyDate": "clusterInfo.surveyDate",
             "settlementArea": "clusterInfo.settlementArea",
             "healthFacilityArea": "clusterInfo.healthFacilityArea",
@@ -1834,7 +1834,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
-          "action": "__value:LQA_CHILD_DATA",
+          "action": "__value:LOCATION_CAPTURE",
           "resourceTag": "__context:ClusterClientReferenceId",
           "latitude": "__value:0.0",
           "longitude": "__value:0.0",
@@ -1845,6 +1845,7 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "additionalFields": {
             "form": "__value:POLIO_LQA",
+            "formType": "__value:LQA_CHILD_DATA",
             "childrenUnder5": "childDetails.childrenUnder5",
             "childAgeMonths": "childDetails.childAgeMonths",
             "childSex": "childDetails.childSex",
@@ -1874,7 +1875,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
-          "action": "__value:LQA_CLOSEOUT",
+          "action": "__value:LOCATION_CAPTURE",
           "resourceTag": "__context:ClusterClientReferenceId",
           "latitude": "closeout.gpsFinal[0]",
           "longitude": "closeout.gpsFinal[1]",
@@ -1885,6 +1886,7 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "additionalFields": {
             "form": "__value:POLIO_LQA",
+            "formType": "__value:LQA_CLOSEOUT",
             "gpsFinalLat": "closeout.gpsFinal[0]",
             "gpsFinalLng": "closeout.gpsFinal[1]",
             "finalComments": "closeout.finalComments",
@@ -1901,53 +1903,59 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
-          "action": "__value:INSIDE_HOUSEHOLD_MONITORING",
-          "latitude": "sessionHeader.gpsFirstHousehold[0]",
-          "longitude": "sessionHeader.gpsFirstHousehold[1]",
-          "locationAccuracy": "sessionHeader.gpsFirstHousehold[2]",
+          "action": "__value:LOCATION_CAPTURE",
+          "latitude": "firstHouseholdLocation.gpsFirstHousehold[0]",
+          "longitude": "firstHouseholdLocation.gpsFirstHousehold[1]",
+          "locationAccuracy": "firstHouseholdLocation.gpsFirstHousehold[2]",
           "timestamp": "__value:DATETIME.NOW",
           "isSync": "__value:false",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
-            // ── sessionHeader ──
-            "monitoringType": "sessionHeader.monitoringType",
-            "monitoringDate": "sessionHeader.monitoringDate",
-            "settlementArea": "sessionHeader.settlementArea",
-            "settlementName": "sessionHeader.settlementName",
-            "settlementType": "sessionHeader.settlementType",
-            "monitorName": "sessionHeader.monitorName",
-            "monitorPhone": "sessionHeader.monitorPhone",
-            "monitorDesignation": "sessionHeader.monitorDesignation",
-            "designationOther": "sessionHeader.designationOther",
-            "gpsFirstHouseholdLat": "sessionHeader.gpsFirstHousehold[0]",
-            "gpsFirstHouseholdLng": "sessionHeader.gpsFirstHousehold[1]",
+            "form": "__value:POLIO_INSIDE_MONITORING",
+            "formType": "__value:INSIDE_HOUSEHOLD_DATA",
 
-            // ── household fields ──
-            for (int i = 1; i <= _householdCount; i++)
-              ...{
-                "hh${i}_teamVisited": "household$i.teamVisited",
-                "hh${i}_houseMarked": "household$i.houseMarked",
-                "hh${i}_childrenPresent": "household$i.childrenPresent",
-                "hh${i}_childrenVaccinated": "household$i.childrenVaccinated",
-                "hh${i}_vaccinationLocation": "household$i.vaccinationLocation",
-                "hh${i}_missedAbsent": "household$i.missedAbsent",
-                "hh${i}_missedRefusal": "household$i.missedRefusal",
-                "hh${i}_missedNotVisited": "household$i.missedNotVisited",
-                "hh${i}_missedNotRevisited": "household$i.missedNotRevisited",
-                "hh${i}_missedAsleep": "household$i.missedAsleep",
-                "hh${i}_missedRoutine": "household$i.missedRoutine",
-                "hh${i}_missedOther": "household$i.missedOther",
-                "hh${i}_caregiverInformed": "household$i.caregiverInformed",
-                "hh${i}_campaignInfoSource": "household$i.campaignInfoSource",
-                "hh${i}_infoSourceOther": "household$i.infoSourceOther",
-                "hh${i}_afpLimbWeakness": "household$i.afpLimbWeakness",
-                "hh${i}_afpSuddenWeakness": "household$i.afpSuddenWeakness",
-                "hh${i}_caregiverName": "household$i.caregiverName",
-                "hh${i}_caregiverPhone": "household$i.caregiverPhone",
-              },
+            // ── GPS ──
+            "gpsFirstHouseholdLat":
+                "firstHouseholdLocation.gpsFirstHousehold[0]",
+            "gpsFirstHouseholdLng":
+                "firstHouseholdLocation.gpsFirstHousehold[1]",
 
-            // ── closeout ──
+            // ── Monitor info ──
+            "monitorDesignation": "monitoringDetails.monitorDesignation",
+            "designationOther": "monitoringDetails.designationOther",
+            "monitoringType": "monitoringDetails.monitoringType",
+            "monitoringDate": "monitoringDetails.monitoringDate",
+            "settlementArea": "monitoringDetails.settlementArea",
+            "settlementName": "monitoringDetails.settlementName",
+            "settlementType": "monitoringDetails.settlementType",
+            "monitorName": "monitoringDetails.monitorName",
+            "monitorPhone": "monitoringDetails.monitorPhone",
+
+            // ── Household questions A–P ──
+            "teamVisited": "monitoringDetails.teamVisited",
+            "houseMarked": "monitoringDetails.houseMarked",
+            "childrenPresent": "monitoringDetails.childrenPresent",
+            "childrenVaccinated": "monitoringDetails.childrenVaccinated",
+            "vaccinationLocation": "monitoringDetails.vaccinationLocation",
+            "missedAbsent": "monitoringDetails.missedAbsent",
+            "missedRefusal": "monitoringDetails.missedRefusal",
+            "missedNotVisited": "monitoringDetails.missedNotVisited",
+            "missedNotRevisited": "monitoringDetails.missedNotRevisited",
+            "missedAsleep": "monitoringDetails.missedAsleep",
+            "missedRoutine": "monitoringDetails.missedRoutine",
+            "missedOther": "monitoringDetails.missedOther",
+            "caregiverInformed": "monitoringDetails.caregiverInformed",
+            "campaignInfoSource": "monitoringDetails.campaignInfoSource",
+            "infoSourceOther": "monitoringDetails.infoSourceOther",
+            "afpLimbWeakness": "monitoringDetails.afpLimbWeakness",
+            "afpSuddenWeakness": "monitoringDetails.afpSuddenWeakness",
+
+            // ── Caregiver details ──
+            "caregiverName": "monitoringDetails.caregiverName",
+            "caregiverPhone": "monitoringDetails.caregiverPhone",
+
+            // ── Closeout ──
             "gpsLastHouseholdLat": "closeout.gpsLastHousehold[0]",
             "gpsLastHouseholdLng": "closeout.gpsLastHousehold[1]",
             "poorlyCoveredAreas": "closeout.poorlyCoveredAreas",
@@ -1989,15 +1997,14 @@ final jsonConfig = {
             "numberOfSites": "sessionHeader.numberOfSites",
 
             // ── site fields ──
-            for (int i = 1; i <= _siteCount; i++)
-              ...{
-                "site${i}_gpsLocationLat": "site$i.gpsLocation[0]",
-                "site${i}_gpsLocationLng": "site$i.gpsLocation[1]",
-                "site${i}_placeOfEvaluation": "site$i.placeOfEvaluation",
-                "site${i}_childrenChecked": "site$i.childrenChecked",
-                "site${i}_childrenFingerMarked": "site$i.childrenFingerMarked",
-                "site${i}_siteComments": "site$i.siteComments",
-              },
+            for (int i = 1; i <= _siteCount; i++) ...{
+              "site${i}_gpsLocationLat": "site$i.gpsLocation[0]",
+              "site${i}_gpsLocationLng": "site$i.gpsLocation[1]",
+              "site${i}_placeOfEvaluation": "site$i.placeOfEvaluation",
+              "site${i}_childrenChecked": "site$i.childrenChecked",
+              "site${i}_childrenFingerMarked": "site$i.childrenFingerMarked",
+              "site${i}_siteComments": "site$i.siteComments",
+            },
 
             // ── closeout ──
             "finalComments": "closeout.finalComments",
@@ -2062,7 +2069,8 @@ final jsonConfig = {
             "supervisorPresent": "checklist.supervisorPresent",
             "supervisorSupervisedToday": "checklist.supervisorSupervisedToday",
             "householdsCampaignAware": "checklist.householdsCampaignAware",
-            "routineVaccinationReminder": "checklist.routineVaccinationReminder",
+            "routineVaccinationReminder":
+                "checklist.routineVaccinationReminder",
             "handwashingReminder": "checklist.handwashingReminder",
             "afpInquiryConducted": "checklist.afpInquiryConducted",
 
@@ -2105,11 +2113,15 @@ final jsonConfig = {
             "usableVialsReceived": "stockData.usableVialsReceived",
             "usableVialsTransferredOut": "stockData.usableVialsTransferredOut",
             "usableVialsGivenToTeams": "stockData.usableVialsGivenToTeams",
-            "usableVialsReturnedFromTeams": "stockData.usableVialsReturnedFromTeams",
-            "unusableVialsReturnedFromTeams": "stockData.unusableVialsReturnedFromTeams",
+            "usableVialsReturnedFromTeams":
+                "stockData.usableVialsReturnedFromTeams",
+            "unusableVialsReturnedFromTeams":
+                "stockData.unusableVialsReturnedFromTeams",
             "childrenVaccinatedTotal": "stockData.childrenVaccinatedTotal",
-            "usableVialsClosingPhysical": "stockData.usableVialsClosingPhysical",
-            "unusableVialsClosingPhysical": "stockData.unusableVialsClosingPhysical",
+            "usableVialsClosingPhysical":
+                "stockData.usableVialsClosingPhysical",
+            "unusableVialsClosingPhysical":
+                "stockData.unusableVialsClosingPhysical",
 
             // ── closeout ──
             "discrepancyComment": "closeout.discrepancyComment",
@@ -2177,8 +2189,10 @@ final jsonConfig = {
             "plansImplemented": "socialMobilization.plansImplemented",
 
             // ── trainings ──
-            "supervisorsTrainedSeparately": "trainings.supervisorsTrainedSeparately",
-            "socialMobilizersTrainedSeparately": "trainings.socialMobilizersTrainedSeparately",
+            "supervisorsTrainedSeparately":
+                "trainings.supervisorsTrainedSeparately",
+            "socialMobilizersTrainedSeparately":
+                "trainings.socialMobilizersTrainedSeparately",
             "smallGroups": "trainings.smallGroups",
             "agendaRationale": "trainings.agendaRationale",
             "agendaMappingColdchain": "trainings.agendaMappingColdchain",
@@ -2223,18 +2237,29 @@ final jsonConfig = {
 
             // ── stockReconciliation ──
             "childrenVaccinated": "stockReconciliation.childrenVaccinated",
-            "usableVialsOpeningBalance": "stockReconciliation.usableVialsOpeningBalance",
+            "usableVialsOpeningBalance":
+                "stockReconciliation.usableVialsOpeningBalance",
             "usableVialsReceived": "stockReconciliation.usableVialsReceived",
-            "usableVialsResupplied": "stockReconciliation.usableVialsResupplied",
-            "usableVialsTransferredOut": "stockReconciliation.usableVialsTransferredOut",
-            "usableVialsDistributed": "stockReconciliation.usableVialsDistributed",
-            "usableVialsReceivedFromLower": "stockReconciliation.usableVialsReceivedFromLower",
-            "unusableVialsReceivedFromLower": "stockReconciliation.unusableVialsReceivedFromLower",
-            "usableVialsPhysicalCount": "stockReconciliation.usableVialsPhysicalCount",
-            "unusableVialsPhysicalCount": "stockReconciliation.unusableVialsPhysicalCount",
-            "usableVialsReturnedToHigher": "stockReconciliation.usableVialsReturnedToHigher",
-            "unusableVialsDisposedOnSite": "stockReconciliation.unusableVialsDisposedOnSite",
-            "reconciliationComments": "stockReconciliation.reconciliationComments",
+            "usableVialsResupplied":
+                "stockReconciliation.usableVialsResupplied",
+            "usableVialsTransferredOut":
+                "stockReconciliation.usableVialsTransferredOut",
+            "usableVialsDistributed":
+                "stockReconciliation.usableVialsDistributed",
+            "usableVialsReceivedFromLower":
+                "stockReconciliation.usableVialsReceivedFromLower",
+            "unusableVialsReceivedFromLower":
+                "stockReconciliation.unusableVialsReceivedFromLower",
+            "usableVialsPhysicalCount":
+                "stockReconciliation.usableVialsPhysicalCount",
+            "unusableVialsPhysicalCount":
+                "stockReconciliation.unusableVialsPhysicalCount",
+            "usableVialsReturnedToHigher":
+                "stockReconciliation.usableVialsReturnedToHigher",
+            "unusableVialsDisposedOnSite":
+                "stockReconciliation.unusableVialsDisposedOnSite",
+            "reconciliationComments":
+                "stockReconciliation.reconciliationComments",
           }
         }
       }

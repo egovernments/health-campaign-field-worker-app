@@ -48,6 +48,7 @@ import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
 import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
+import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
 import '../sampleJsonConfigs/registration_flows.dart';
@@ -1685,6 +1686,32 @@ class _HomePageState extends LocalizedState<HomePage> {
             },
           ),
         ),
+      if (isPolio)
+        i18.home.polioInsideMonitoringLabel:
+            homeShowcaseData.polioInsideMonitoring.buildWith(
+          child: HomeItemCard(
+            icon: Icons.home_work,
+            label: i18.home.polioInsideMonitoringLabel,
+            onPressed: () async {
+              context.router.push(CurrentBoundaryRoute(
+                onBoundarySelected: (ctx) async {
+                  final moduleName =
+                      'hcm-insidemonitoring-${context.selectedProject.referenceID}';
+                  triggerLocalization(module: moduleName);
+                  isTriggerLocalisation = false;
+
+                  await FlowNavigationUtils.navigateToFlowModule(
+                    context: ctx,
+                    config: FlowModuleConfig(
+                      schemaKey: 'INSIDEMONITORING',
+                      sampleFlows: samplePolioInsideHouseholdMonitoringFlows,
+                    ),
+                  );
+                },
+              ));
+            },
+          ),
+        ),
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.buildWith(
         child: HomeItemCard(
@@ -2048,10 +2075,13 @@ class _HomePageState extends LocalizedState<HomePage> {
         icon: Icons.local_post_office,
         label: i18.home.transitPostLabel,
         onPressed: () {
-          const module = "hcm-transit-post";
-          // if (isTriggerLocalisation) {
-          triggerLocalization(module: module);
-          context.router.push(const TransitPostWrapperRoute());
+          context.router.push(CurrentBoundaryRoute(
+            onBoundarySelected: (ctx) async {
+              const module = "hcm-transit-post";
+              triggerLocalization(module: module);
+              ctx.router.push(const TransitPostWrapperRoute());
+            },
+          ));
         },
       )),
     };
@@ -2085,6 +2115,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       // i18.home.polioAfpCaseLabel: homeShowcaseData.polioAfpCase.showcaseKey,
       i18.home.polioLqaDataCollectionLabel:
           homeShowcaseData.polioLqaDataCollection.showcaseKey,
+      i18.home.polioInsideMonitoringLabel:
+          homeShowcaseData.polioInsideMonitoring.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
@@ -2104,6 +2136,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.transitPostLabel,
       i18.home.polioStockDetailsLabel,
       i18.home.polioLqaDataCollectionLabel,
+      i18.home.polioInsideMonitoringLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.mySurveyForm,
@@ -2114,7 +2147,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel,
       i18.home.dashboard,
       // i18.home.beneficiaryIdLabel, // TODO: Uncomment when beneficiary downsync is implemented
-      i18.home.faceRegistrationLabel,
+      // i18.home.faceRegistrationLabel, // TODO: Uncomment when face registration card is implemented
       i18.home.dataShare,
       i18.home.stockSyncDataLabel,
       i18.home.db,
@@ -2142,7 +2175,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                             BeneficiaryType.individual) ||
                     (isPolio &&
                         (element == i18.home.polioStockDetailsLabel ||
-                            element == i18.home.polioLqaDataCollectionLabel)))))
+                            element == i18.home.polioLqaDataCollectionLabel ||
+                            element == i18.home.polioInsideMonitoringLabel)))))
         .toList();
 
     final showcaseKeys =
