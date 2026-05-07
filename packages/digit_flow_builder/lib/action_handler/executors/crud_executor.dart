@@ -41,23 +41,39 @@ class CrudExecutor extends ActionExecutor {
       debugPrint('CREATE_EVENT: Condition met, proceeding with create');
     }
 
-    final rawEntities = contextData['entities'];
-    if (rawEntities == null || (rawEntities is List && rawEntities.isEmpty)) {
-      debugPrint('CREATE_EVENT: No entities to create');
+    final entities = contextData['entities'];
+
+    if (entities == null || entities is! List || entities.isEmpty) {
+      debugPrint('CREATE_EVENT: No entities found in contextData');
       return contextData;
     }
 
-    final entities = rawEntities is List
-        ? rawEntities.whereType<EntityModel>().toList()
-        : [rawEntities as EntityModel];
+    var entityList = entities.whereType<EntityModel>().toList();
 
-    if (entities.isEmpty) {
-      debugPrint('CREATE_EVENT: No valid EntityModel entities to create');
+    // Filter by entity type if specified, otherwise send all (backward compatible)
+    final entityFilter = action.properties['entity'] as String?;
+    if (entityFilter != null && entityFilter.isNotEmpty) {
+      final allowedTypes = entityFilter
+          .split(',')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toSet();
+
+      entityList = entityList
+          .where((e) => allowedTypes.contains(getEntityTypeName(e)))
+          .toList();
+
+      debugPrint(
+          'CREATE_EVENT: Filtered to ${entityList.length} entities of types: $allowedTypes');
+    }
+
+    if (entityList.isEmpty) {
+      debugPrint('CREATE_EVENT: No entities after filtering');
       return contextData;
     }
 
-    debugPrint('CREATE_EVENT: Creating ${entities.length} entities');
-    context.read<CrudBloc>().add(CrudEventCreate(entities: entities));
+    context.read<CrudBloc>().add(CrudEventCreate(entities: entityList));
+
     return contextData;
   }
 
