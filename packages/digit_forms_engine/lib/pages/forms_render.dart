@@ -1241,7 +1241,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         if (RegExp(r'_item_\d+$').hasMatch(fieldName)) {
           // Only create control if it matches THIS entity's suffix
           if (fieldName.endsWith(entitySuffix) &&
-              !controls.containsKey(fieldName)) {
+              !controls.containsKey(fieldName) &&  (!isHidden(entry.value) || entry.value.includeInForm == true)) {
             controls[fieldName] = buildFormControl(
               fieldName,
               fieldSchema,
@@ -1265,7 +1265,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         if (shouldRename) {
           final suffixedFieldName = '$fieldName$entitySuffix';
           // Check if a pre-created field exists for this entity
-          if (originalProperties.containsKey(suffixedFieldName)) {
+          if (originalProperties.containsKey(suffixedFieldName) &&  (!isHidden(entry.value) || entry.value.includeInForm == true)) {
             // Skip - the pre-created field control will be added when we iterate to it
             continue;
           }
@@ -1279,7 +1279,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           );
         } else {
           // Only add once (not per entity)
-          if (!controls.containsKey(fieldName)) {
+          if (!controls.containsKey(fieldName) ||  (!isHidden(entry.value) || entry.value.includeInForm == true)) {
             controls[fieldName] = buildFormControl(
               fieldName,
               fieldSchema,
