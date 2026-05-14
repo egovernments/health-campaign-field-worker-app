@@ -127,7 +127,7 @@ class _ReVerificationListenerState extends State<ReVerificationListener> {
     try {
       return FaceAuthEventLogger(
         repository: context.read<LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>>(),
-        userId: context.loggedInUserUuid,
+        userId: context.loggedInIndividualIdOrNull ?? context.loggedInUserUuid,
         projectId: context.projectId,
         boundaryCode: context.boundaryOrNull?.code ?? '',
       );

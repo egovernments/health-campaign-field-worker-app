@@ -61,7 +61,7 @@ class _FaceGatePageState extends State<FaceGatePage> {
     try {
       _logger = FaceAuthEventLogger(
         repository: context.read<LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>>(),
-        userId: context.loggedInUserUuid,
+        userId: context.loggedInIndividualIdOrNull ?? context.loggedInUserUuid,
         projectId: context.projectId,
         boundaryCode: context.boundaryOrNull?.code ?? '',
       );
