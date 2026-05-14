@@ -94,6 +94,11 @@ class _HomePageState extends LocalizedState<HomePage> {
   /// Check if the logged-in user needs face enrollment (first time only).
   void _checkFaceEnrollment() async {
     try {
+      if (!context.isDistributorRole) return;
+
+      final individualId = await LocalSecureStore.instance.userIndividualId;
+      if (individualId == null || !mounted) return;
+
       final isEnrollmentComplete =
           await LocalSecureStore.instance.isFaceEnrollmentComplete;
       if (isEnrollmentComplete || !mounted) return;
@@ -1645,7 +1650,7 @@ void setPackagesSingleton(BuildContext context) {
 
         AttendanceSingleton().setInitialData(
           project: context.selectedProject,
-          loggedInIndividualId: context.loggedInIndividualId,
+          loggedInIndividualId: context.loggedInIndividualIdOrNull ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
           manualAttendanceReasons: appConfiguration.manualAttendanceReasons
@@ -1658,7 +1663,7 @@ void setPackagesSingleton(BuildContext context) {
         SurveyFormSingleton().setInitialData(
           projectId: context.projectId,
           projectName: context.selectedProject.name,
-          loggedInIndividualId: context.loggedInIndividualId,
+          loggedInIndividualId: context.loggedInIndividualIdOrNull ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
           roles: context.read<AuthBloc>().state.maybeMap(

@@ -120,24 +120,35 @@ class _NonMobileUserListPageState
                                   ),
                                   ...List.generate(
                                       registers.first.attendees!.length, (x) {
-                                    final individual =
-                                        registers.first.individualList![x];
+                                    final individualList =
+                                        registers.first.individualList;
+                                    if (individualList == null ||
+                                        x >= individualList.length) {
+                                      return const SizedBox.shrink();
+                                    }
+                                    final individual = individualList[x];
                                     final individualId =
-                                        individual.individualId!;
+                                        individual.individualId ?? '';
+                                    final givenName =
+                                        individual.name?.givenName ?? '';
+                                    final genderName = individual
+                                            .gender?.name
+                                            .toUpperCase() ??
+                                        '';
 
                                     return NonMobileUserCard(
                                       mobileNumber:
                                           individual.mobileNumber.toString(),
-                                      userName: individual.name!.givenName!,
+                                      userName: givenName,
                                       age: getAge(individual.dateOfBirth),
-                                      isFaceEnrolled:
+                                      isFaceEnrolled: individualId.isNotEmpty &&
                                           _enrolledIds.contains(individualId),
                                       onFaceEnroll: () async {
+                                        if (individualId.isEmpty) return;
                                         await context.router.push(
                                           NonMobileFaceEnrollRoute(
                                             individualId: individualId,
-                                            individualName:
-                                                individual.name!.givenName!,
+                                            individualName: givenName,
                                           ),
                                         );
                                         // Always reload enrollment status when
@@ -162,17 +173,15 @@ class _NonMobileUserListPageState
                                                                 .locality
                                                                 ?.code ??
                                                             ''),
-                                                    name: individual
-                                                        .name!.givenName!,
+                                                    name: givenName,
                                                     qrCreatedTime: DateTime
                                                             .now()
                                                         .millisecondsSinceEpoch),
                                             localizations: localizations,
                                             textTheme: textTheme);
                                       },
-                                      gender: localizations.translate(individual
-                                          .gender!.name
-                                          .toUpperCase()),
+                                      gender:
+                                          localizations.translate(genderName),
                                       individualId: individualId,
                                     );
                                   })

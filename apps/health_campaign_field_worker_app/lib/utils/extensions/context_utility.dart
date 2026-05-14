@@ -143,20 +143,35 @@ extension ContextUtilityExtensions on BuildContext {
     return userRequestObject;
   }
 
-  String get loggedInIndividualId {
-    final authBloc = _get<AuthBloc>();
-    final individualId = authBloc.state.whenOrNull(
-      authenticated:
-          (accessToken, refreshToken, userModel, actionsWrapper, individualId) {
-        return individualId;
-      },
-    );
+  bool get isDistributorRole {
+    try {
+      return loggedInUserRoles
+          .any((r) => r.code == RolesType.distributor.toValue());
+    } catch (_) {
+      return false;
+    }
+  }
 
-    if (individualId == null) {
+  String? get loggedInIndividualIdOrNull {
+    try {
+      final authBloc = _get<AuthBloc>();
+      return authBloc.state.whenOrNull(
+        authenticated:
+            (accessToken, refreshToken, userModel, actionsWrapper, individualId) {
+          return individualId;
+        },
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String get loggedInIndividualId {
+    final id = loggedInIndividualIdOrNull;
+    if (id == null) {
       throw AppException('Individual ID not available for authenticated user');
     }
-
-    return individualId;
+    return id;
   }
 
   UserModel? get loggedInUserModel {

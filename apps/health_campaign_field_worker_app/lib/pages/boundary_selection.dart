@@ -239,8 +239,9 @@ class _BoundarySelectionPageState
                                           ),
                                           appConfiguartion: appConfiguration,
                                           projectId: context.projectId,
-                                          boundaries: state
-                                              .selectedLastLevelBoundaries,
+                                          boundaries: selectedBoundary?.value != null
+                                              ? [selectedBoundary!.value!]
+                                              : state.selectedLastLevelBoundaries,
                                           batchSize: batchSize,
                                           totalCount: initialServerCount,
                                           boundaryCounts: boundaryCounts,

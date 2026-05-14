@@ -67,19 +67,26 @@ class NotificationService {
       onDidReceiveNotificationResponse: _onNotificationTapped,
     );
 
-    // Create the Android notification channel
     if (Platform.isAndroid) {
-      const AndroidNotificationChannel channel = AndroidNotificationChannel(
-        _channelId,
-        _channelName,
-        description: _channelDescription,
-        importance: Importance.high,
-      );
-
-      await flutterLocalNotificationsPlugin
+      final androidPlugin = flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(channel);
+              AndroidFlutterLocalNotificationsPlugin>();
+
+      // Request POST_NOTIFICATIONS at runtime (required on Android 13+).
+      await androidPlugin?.requestNotificationsPermission();
+
+      // Request exact alarm permission (required on Android 12+).
+      await androidPlugin?.requestExactAlarmsPermission();
+
+      // Create the FCM notification channel.
+      await androidPlugin?.createNotificationChannel(
+        const AndroidNotificationChannel(
+          _channelId,
+          _channelName,
+          description: _channelDescription,
+          importance: Importance.high,
+        ),
+      );
     }
   }
 

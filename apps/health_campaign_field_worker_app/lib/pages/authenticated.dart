@@ -125,6 +125,11 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
   }
 
   void _dispatchTrigger(ReVerificationTrigger trigger) async {
+    if (!context.isDistributorRole) {
+      debugPrint('AuthenticatedPage: non-distributor role, skipping re-verification');
+      return;
+    }
+
     // Skip re-verification triggers if no face enrollment exists yet
     try {
       final isar = context.read<Isar>();

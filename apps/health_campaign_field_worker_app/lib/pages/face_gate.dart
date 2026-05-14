@@ -39,8 +39,18 @@ class _FaceGatePageState extends State<FaceGatePage> {
   @override
   void initState() {
     super.initState();
-    final individualId = context.loggedInIndividualId;
+    final individualId = context.loggedInIndividualIdOrNull;
     debugPrint('FaceGatePage: checking enrollment for individualId=$individualId');
+    if (individualId == null) {
+      debugPrint('FaceGatePage: no individual ID, closing gate');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          Navigator.of(context).pop();
+          widget.onVerified();
+        }
+      });
+      return;
+    }
     _initLogger();
     context.read<FaceGateBloc>().add(
           FaceGateEvent.checkEnrollment(individualId: individualId),

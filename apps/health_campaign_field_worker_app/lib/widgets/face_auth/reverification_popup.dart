@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:digit_face_verification/digit_face_verification.dart';
@@ -66,6 +70,59 @@ class _ReVerificationListenerState extends State<ReVerificationListener> {
   bool _dismissedThisCycle = false; // true after "Remind me later" — resets on new iteration
   int _lastShownIteration = 0; // tracks which iteration we last showed the sheet for
 
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  StreamSubscription<PlayerState>? _playerStateSub;
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer.setAudioContext(AudioContext(
+      android: AudioContextAndroid(
+        // Permanent gain so camera initialization cannot revoke our focus.
+        audioFocus: AndroidAudioFocus.gain,
+        usageType: AndroidUsageType.notificationEvent,
+        contentType: AndroidContentType.sonification,
+      ),
+      iOS: AudioContextIOS(category: AVAudioSessionCategory.ambient),
+    ));
+    _audioPlayer.setVolume(1.0);
+    _audioPlayer.setReleaseMode(ReleaseMode.loop);
+  }
+
+  @override
+  void dispose() {
+    _stopAlertSound();
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void _startAlertSound() {
+    _stopAlertSound();
+    // Auto-restart if audio focus is lost (e.g. camera hardware grab).
+    _playerStateSub = _audioPlayer.onPlayerStateChanged.listen((state) {
+      if ((state == PlayerState.stopped || state == PlayerState.completed) &&
+          _playerStateSub != null &&
+          mounted) {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          if (_playerStateSub != null && mounted) {
+            _audioPlayer
+                .play(AssetSource('audio/add.wav'))
+                .catchError((e) => debugPrint('[ReVerif] restart: $e'));
+          }
+        });
+      }
+    });
+    _audioPlayer
+        .play(AssetSource('audio/add.wav'))
+        .catchError((e) => debugPrint('[ReVerif] start: $e'));
+  }
+
+  void _stopAlertSound() {
+    _playerStateSub?.cancel();
+    _playerStateSub = null;
+    _audioPlayer.stop();
+  }
+
   FaceAuthEventLogger? _createLogger(BuildContext context) {
     try {
       return FaceAuthEventLogger(
@@ -103,9 +160,11 @@ class _ReVerificationListenerState extends State<ReVerificationListener> {
             _showReVerificationSheet(context);
           }
         } else if (state is ReVerificationIdleState) {
+          _stopAlertSound(); // cycle reset — stop alert
           _dismissedThisCycle = false;
           _lastShownIteration = 0;
         } else if (state is ReVerificationVerifiedState) {
+          _stopAlertSound(); // verified inline — stop alert
           // Logging for re-verification is handled in _showReVerificationSheet
           // when using the external dialog flow (which returns face image bytes).
           // Only log here for inline verification (faceScanned/pinUsed events).
@@ -127,6 +186,7 @@ class _ReVerificationListenerState extends State<ReVerificationListener> {
           }
           _lastVerifiedViaDialog = false;
         } else if (state is ReVerificationMissedState) {
+          _stopAlertSound(); // missed/timed out — stop alert
           final logger = _createLogger(context);
           if (logger == null) {
             debugPrint('ReVerificationListener: logger is null, skipping missed log');
@@ -140,6 +200,7 @@ class _ReVerificationListenerState extends State<ReVerificationListener> {
 
   void _showReVerificationSheet(BuildContext context) {
     _isBusy = true;
+    _startAlertSound();
     final repository = context.read<FaceEmbeddingRepository>();
     final faceModelService = context.read<FaceModelService>();
     final reVerificationBloc = context.read<ReVerificationBloc>();
@@ -151,13 +212,11 @@ class _ReVerificationListenerState extends State<ReVerificationListener> {
       backgroundColor: Colors.transparent,
       builder: (_) => BlocProvider.value(
         value: reVerificationBloc,
-        child: _ReVerificationSheet(),
+        child: const _ReVerificationSheet(),
       ),
     ).then((openDialog) async {
       if (openDialog == true && mounted) {
-        // Don't pause the timer — let it keep running so the appbar
-        // banner stays visible. If it expires while the dialog is open,
-        // the next iteration will start automatically.
+        // Sound keeps playing through the face verification dialog.
         final result = await showFaceVerificationDialog(
           context,
           repository: repository,
@@ -167,19 +226,19 @@ class _ReVerificationListenerState extends State<ReVerificationListener> {
         _isBusy = false;
 
         if (result.passed) {
+          _stopAlertSound(); // verified — stop the alert
           _lastVerifiedViaDialog = true;
           if (mounted) {
             await logAndCompleteReVerification(context, result);
           }
         } else {
-          // User closed dialog without verifying — timer is still
-          // running, banner keeps showing. Suppress the sheet for
-          // this iteration so it doesn't immediately re-appear.
+          // Closed dialog without verifying — sound keeps going.
           _dismissedThisCycle = true;
         }
       } else {
+        // "Remind me later" — sound keeps going until verified.
         _isBusy = false;
-        _dismissedThisCycle = true; // user tapped "Remind me later"
+        _dismissedThisCycle = true;
       }
     });
   }
