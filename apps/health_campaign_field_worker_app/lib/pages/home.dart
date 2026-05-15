@@ -1182,6 +1182,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIconSize: spacer8,
           label: i18.home.mySurveyForm,
           onPressed: () {
+            SurveyFormSingleton().setBoundary(
+                boundary: BoundaryModel(
+                    code: LeastLevelBoundarySingleton().boundary?.first));
             // if (isTriggerLocalisation) {
             final moduleName =
                 'hcm-checklist-${context.selectedProject.referenceID}';
