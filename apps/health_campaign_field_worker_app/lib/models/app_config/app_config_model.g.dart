@@ -121,6 +121,12 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       checklistTypes: (json['CHECKLIST_TYPES'] as List<dynamic>)
           .map((e) => CheckListTypes.fromJson(e as Map<String, dynamic>))
           .toList(),
+      deviceChangeReasons: (json['DEVICE_CHANGE_REASONS'] as List<dynamic>)
+          .map((e) => DeviceChangeReasons.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      singleUserLogin: (json['SINGLE_USER_LOGIN'] as List<dynamic>)
+          .map((e) => SingleUserLogin.fromJson(e as Map<String, dynamic>))
+          .toList(),
       idTypeOptions: (json['ID_TYPE_OPTIONS_POPULATOR'] as List<dynamic>)
           .map((e) => IdTypeOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -174,6 +180,9 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       transitPostType: (json['TRANSIT_POST_TYPE'] as List<dynamic>?)
           ?.map((e) => TransitPostType.fromJson(e as Map<String, dynamic>))
           .toList(),
+      boundaryRelationship: (json['BOUNDARY_RELATIONSHIP'] as List<dynamic>?)
+          ?.map((e) => BoundaryRelationship.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$HCMWrapperModelImplToJson(
@@ -189,6 +198,8 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
           instance.householdMemberDeletionReasonOptions,
       'BACKGROUND_SERVICE_CONFIG': instance.backgroundServiceConfig,
       'CHECKLIST_TYPES': instance.checklistTypes,
+      'DEVICE_CHANGE_REASONS': instance.deviceChangeReasons,
+      'SINGLE_USER_LOGIN': instance.singleUserLogin,
       'ID_TYPE_OPTIONS_POPULATOR': instance.idTypeOptions,
       'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES': instance.relationShipTypeOptions,
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
@@ -204,6 +215,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'REFUSAL_REASONS': instance.refusalReasons,
       'FIREBASE_CONFIG': instance.firebaseConfig,
       'TRANSIT_POST_TYPE': instance.transitPostType,
+      'BOUNDARY_RELATIONSHIP': instance.boundaryRelationship,
     };
 
 _$AppConfigSecondaryWrapperModelImpl
@@ -299,6 +311,8 @@ _$AppConfigImpl _$$AppConfigImplFromJson(Map<String, dynamic> json) =>
       syncTrigger: json['SYNC_TRIGGER'] as String,
       tenantId: json['TENANT_ID'] as String?,
       maxRadius: (json['PROXIMITY_SEARCH_RANGE'] as num?)?.toDouble(),
+      boundaryLastLevelMaxSelection:
+          (json['BOUNDARY_LAST_LEVEL_MAX_SELECTION'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
@@ -309,6 +323,8 @@ Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
       'SYNC_TRIGGER': instance.syncTrigger,
       'TENANT_ID': instance.tenantId,
       'PROXIMITY_SEARCH_RANGE': instance.maxRadius,
+      'BOUNDARY_LAST_LEVEL_MAX_SELECTION':
+          instance.boundaryLastLevelMaxSelection,
     };
 
 _$IdTypeOptionsImpl _$$IdTypeOptionsImplFromJson(Map<String, dynamic> json) =>
@@ -565,6 +581,34 @@ Map<String, dynamic> _$$TransitPostTypeImplToJson(
       'active': instance.active,
     };
 
+_$DeviceChangeReasonsImpl _$$DeviceChangeReasonsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$DeviceChangeReasonsImpl(
+      name: json['name'] as String,
+      code: json['code'] as String,
+    );
+
+Map<String, dynamic> _$$DeviceChangeReasonsImplToJson(
+        _$DeviceChangeReasonsImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'code': instance.code,
+    };
+
+_$SingleUserLoginImpl _$$SingleUserLoginImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SingleUserLoginImpl(
+      enabled: json['enabled'] as bool,
+      id: (json['id'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$SingleUserLoginImplToJson(
+        _$SingleUserLoginImpl instance) =>
+    <String, dynamic>{
+      'enabled': instance.enabled,
+      'id': instance.id,
+    };
+
 _$TransportTypesImpl _$$TransportTypesImplFromJson(Map<String, dynamic> json) =>
     _$TransportTypesImpl(
       name: json['name'] as String,
@@ -601,4 +645,42 @@ Map<String, dynamic> _$$FirebaseConfigImplToJson(
     <String, dynamic>{
       'enableCrashlytics': instance.enableCrashlytics,
       'enableAnalytics': instance.enableAnalytics,
+    };
+
+_$BoundaryRelationshipImpl _$$BoundaryRelationshipImplFromJson(
+        Map<String, dynamic> json) =>
+    _$BoundaryRelationshipImpl(
+      boundaryType: json['boundaryType'] as String,
+      order: (json['order'] as num).toInt(),
+      parent: json['parent'] == null
+          ? null
+          : BoundaryRelationshipRef.fromJson(
+              json['parent'] as Map<String, dynamic>),
+      children: (json['children'] as List<dynamic>?)
+          ?.map((e) =>
+              BoundaryRelationshipRef.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$BoundaryRelationshipImplToJson(
+        _$BoundaryRelationshipImpl instance) =>
+    <String, dynamic>{
+      'boundaryType': instance.boundaryType,
+      'order': instance.order,
+      'parent': instance.parent,
+      'children': instance.children,
+    };
+
+_$BoundaryRelationshipRefImpl _$$BoundaryRelationshipRefImplFromJson(
+        Map<String, dynamic> json) =>
+    _$BoundaryRelationshipRefImpl(
+      boundaryType: json['boundaryType'] as String,
+      order: (json['order'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$BoundaryRelationshipRefImplToJson(
+        _$BoundaryRelationshipRefImpl instance) =>
+    <String, dynamic>{
+      'boundaryType': instance.boundaryType,
+      'order': instance.order,
     };

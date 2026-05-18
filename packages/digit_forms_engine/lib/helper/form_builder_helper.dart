@@ -9,6 +9,7 @@ FormControl buildFormControl(
   PropertySchema parentSchema, {
   String? defaultLatlng,
   Map<String, dynamic>? defaultValues,
+  Map<String, dynamic>? navigationParams,
   String? schemaKey,
 }) {
   final validators = buildValidators(schema, schemaKey: schemaKey);
@@ -56,7 +57,8 @@ FormControl buildFormControl(
 
     case PropertySchemaType.boolean:
       return FormControl<bool>(
-        value: parseBoolValue(getDefaultValue(name)) ?? parseBoolValue(rawValue),
+        value:
+            parseBoolValue(getDefaultValue(name)) ?? parseBoolValue(rawValue),
         validators: validators,
       );
 
@@ -78,9 +80,15 @@ FormControl buildFormControl(
         /// TODO: need to create constant beneficiary id type
         final availableIDs = defaultValues?['availableIDs'];
 
+        final uniqueBeneficiaryId =
+            navigationParams?['UNIQUE_BENEFICIARY_ID'] as String?;
+
         // Check for existing value first (edit mode)
         final existingValue = getDefaultValue(name);
-        if (existingValue != null && existingValue.toString().isNotEmpty) {
+        if (existingValue != null &&
+            existingValue.toString().isNotEmpty &&
+            (existingValue.contains('UNIQUE_BENEFICIARY_ID') ||
+                uniqueBeneficiaryId == null)) {
           // In edit mode, use the existing identifier value
           return FormControl<String>(
             value: existingValue.toString(),
@@ -89,10 +97,15 @@ FormControl buildFormControl(
         }
 
         // New registration - determine which ID to use and its label
-        final selectedLabel = availableIDs?['UNIQUE_BENEFICIARY_ID'] != null
+        var selectedLabel = availableIDs?['UNIQUE_BENEFICIARY_ID'] != null
             ? 'UNIQUE_BENEFICIARY_ID'
             : 'DEFAULT';
-        final selectedId = availableIDs?[selectedLabel]?.toString();
+        var selectedId = availableIDs?[selectedLabel]?.toString();
+
+        if (uniqueBeneficiaryId != null && uniqueBeneficiaryId.isNotEmpty) {
+          selectedLabel = 'UNIQUE_BENEFICIARY_ID';
+          selectedId = uniqueBeneficiaryId;
+        }
 
         return FormControl<String>(
           value: schema.hidden == true

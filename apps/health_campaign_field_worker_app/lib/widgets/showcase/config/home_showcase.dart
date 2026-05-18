@@ -46,6 +46,10 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.distributorSyncData,
   );
 
+  final stockSyncData = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.distributorSyncData,
+  );
+
   final warehouseManagerManageStock = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.warehouseManagerManageStock,
   );

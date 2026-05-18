@@ -47,6 +47,7 @@ abstract class $FormsRoute extends _i2.AutoRouterModule {
           defaultValues: args.defaultValues,
           navigationParams: args.navigationParams,
           isSummary: args.isSummary,
+          onSecondaryAction: args.onSecondaryAction,
         ),
       );
     }
@@ -66,6 +67,7 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
     Map<String, dynamic>? defaultValues,
     Map<String, dynamic>? navigationParams,
     bool isSummary = false,
+    void Function({Map<String, dynamic>? popupData})? onSecondaryAction,
     List<_i2.PageRouteInfo>? children,
   }) : super(
           FormsRenderRoute.name,
@@ -79,6 +81,7 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
             defaultValues: defaultValues,
             navigationParams: navigationParams,
             isSummary: isSummary,
+            onSecondaryAction: onSecondaryAction,
           ),
           rawPathParams: {'pageName': pageName},
           rawQueryParams: {
@@ -106,6 +109,7 @@ class FormsRenderRouteArgs {
     this.defaultValues,
     this.navigationParams,
     this.isSummary = false,
+    this.onSecondaryAction,
   });
 
   final _i3.Key? key;
@@ -126,8 +130,10 @@ class FormsRenderRouteArgs {
 
   final bool isSummary;
 
+  final void Function({Map<String, dynamic>? popupData})? onSecondaryAction;
+
   @override
   String toString() {
-    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, currentSchemaKey: $currentSchemaKey, pageName: $pageName, isEdit: $isEdit, customComponents: $customComponents, defaultValues: $defaultValues, navigationParams: $navigationParams, isSummary: $isSummary}';
+    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, currentSchemaKey: $currentSchemaKey, pageName: $pageName, isEdit: $isEdit, customComponents: $customComponents, defaultValues: $defaultValues, navigationParams: $navigationParams, isSummary: $isSummary, onSecondaryAction: $onSecondaryAction}';
   }
 }

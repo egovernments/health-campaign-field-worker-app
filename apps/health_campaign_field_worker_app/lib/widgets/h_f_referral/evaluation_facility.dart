@@ -28,7 +28,6 @@ class EvaluationKeyDropDown extends LocalizedStatefulWidget {
 
 class _EvaluationKeyDropDownState
     extends LocalizedState<EvaluationKeyDropDown> {
-
   @override
   void initState() {
     super.initState();
@@ -45,8 +44,15 @@ class _EvaluationKeyDropDownState
       builder: (context, state) {
         return state.maybeWhen(
           orElse: () => _buildDropdown(context, []),
-          fetched: (projectFacilities) =>
-              _buildDropdown(context, projectFacilities),
+          fetched: (projectFacilities) => _buildDropdown(
+              context,
+              projectFacilities.where((pf) {
+                final facilityLevel = pf.additionalFields?.fields
+                    .where((f) => f.key == 'facilityLevel')
+                    .firstOrNull
+                    ?.value;
+                return facilityLevel == null || facilityLevel == 'current';
+              }).toList()),
         );
       },
     );
@@ -59,8 +65,12 @@ class _EvaluationKeyDropDownState
     bool isRequiredFromSchema = false;
     dynamic validationMessages;
 
-    final pages =
-        context.read<FormsBloc>().state.cachedSchemas[widget.schemaName]?.pages ?? context.read<FormsBloc>().state.cachedSchemas["REFERRAL_CREATE"]?.pages;
+    final pages = context
+            .read<FormsBloc>()
+            .state
+            .cachedSchemas[widget.schemaName]
+            ?.pages ??
+        context.read<FormsBloc>().state.cachedSchemas["REFERRAL_CREATE"]?.pages;
 
     void walk(Map<String, PropertySchema> node, List<String> pathSoFar) {
       for (final entry in node.entries) {
@@ -72,7 +82,8 @@ class _EvaluationKeyDropDownState
               (schema.readOnly == true) || (schema.displayOnly == true);
           labelFromSchema = schema.label ?? schema.innerLabel;
           if (schema.validations != null) {
-            validationMessages = buildValidationMessages(schema.validations, localizations);
+            validationMessages =
+                buildValidationMessages(schema.validations, localizations);
             for (final validation in schema.validations!) {
               if (validation.type == "required" && validation.value == true) {
                 isRequiredFromSchema = true;
@@ -135,7 +146,7 @@ class _EvaluationKeyDropDownState
     return keys
         .map((key) => DropdownItem(
               name: key.facilityId,
-              code: widget.schemaName == "REFER_BENEFICIARY" ? key.facilityId : key.id,
+              code: key.id,
             ))
         .toList();
   }

@@ -22,6 +22,9 @@ class LocalSecureStore {
   static const manualSyncKey = 'manualSyncKey';
   static const selectedProjectTypeKey = 'selectedProjectType';
   static const dbEncryptionKeyKey = 'dbEncryptionKey';
+  static const userVsDeviceTokenMapKey = 'userVsDeviceTokenMapKey';
+  static const deviceSwitchReasonKey = 'deviceSwitchReasonKey';
+  static const existingDeviceTokenKey = 'existingDeviceTokenKey';
 
   final storage = const FlutterSecureStorage();
 
@@ -149,6 +152,86 @@ class LocalSecureStore {
     }
   }
 
+  Future<String?> getDeviceToken(String username) async {
+    final userTokenMapString = await storage.read(key: userVsDeviceTokenMapKey);
+
+    if (userTokenMapString == null) return null;
+
+    try {
+      Map<String, dynamic> userTokenMap = json.decode(userTokenMapString);
+
+      return userTokenMap[username] != null
+          ? userTokenMap[username] as String
+          : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> setUserDeviceToken(String deviceToken) async {
+    final userBody = await storage.read(key: userObjectKey);
+    if (userBody == null) return;
+
+    try {
+      final user = UserRequestModel.fromJson(json.decode(userBody));
+      if (user.userName == null) return;
+      final userTokenMapString =
+          await storage.read(key: userVsDeviceTokenMapKey);
+
+      Map<String, dynamic> userTokenMap = {};
+      if (userTokenMapString != null) {
+        try {
+          userTokenMap = json.decode(userTokenMapString);
+        } catch (_) {}
+      }
+
+      userTokenMap[user.userName!] = deviceToken;
+
+      await storage.write(
+        key: userVsDeviceTokenMapKey,
+        value: json.encode(userTokenMap),
+      );
+    } catch (_) {
+      return;
+    }
+  }
+
+  Future<String?> get deviceSwitchReason async {
+    final reason = await storage.read(key: deviceSwitchReasonKey);
+    return reason;
+  }
+
+  Future<void> setDeviceSwitchReason(String deviceSwitchReason) async {
+    await storage.write(
+      key: deviceSwitchReasonKey,
+      value: deviceSwitchReason,
+    );
+  }
+
+  Future<void> deleteDeviceSwitchReason() async {
+    await storage.delete(
+      key: deviceSwitchReasonKey,
+    );
+  }
+
+  Future<String?> get existingDeviceToken async {
+    final token = await storage.read(key: existingDeviceTokenKey);
+    return token;
+  }
+
+  Future<void> setExistingDeviceToken(String existingDeviceToken) async {
+    await storage.write(
+      key: existingDeviceTokenKey,
+      value: existingDeviceToken,
+    );
+  }
+
+  Future<void> deleteExistingDeviceToken() async {
+    await storage.delete(
+      key: existingDeviceTokenKey,
+    );
+  }
+
   Future<void> setSelectedProject(ProjectModel projectModel) async {
     await storage.write(
       key: selectedProjectKey,
@@ -228,12 +311,19 @@ class LocalSecureStore {
   Future<void> deleteAll() async {
     // Preserve the database encryption key before deleting all
     final encryptionKey = await storage.read(key: dbEncryptionKeyKey);
+    final userTokenMapString = await storage.read(key: userVsDeviceTokenMapKey);
 
     await storage.deleteAll();
 
     // Restore the encryption key if it existed
     if (encryptionKey != null) {
       await storage.write(key: dbEncryptionKeyKey, value: encryptionKey);
+    }
+    if (userTokenMapString != null) {
+      await storage.write(
+        key: userVsDeviceTokenMapKey,
+        value: userTokenMapString,
+      );
     }
   }
 

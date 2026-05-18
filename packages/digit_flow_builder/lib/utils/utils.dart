@@ -34,6 +34,7 @@ class FlowBuilderSingleton {
   Map<String, TemplateConfig>? _templateConfigs;
   List<Map<String, dynamic>>?
       _userRoles; // User roles from app level (e.g., [{"code": "WAREHOUSE_MANAGER", "name": "Warehouse Manager"}])
+  int? _beneficiaryIdMinCount;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -53,6 +54,7 @@ class FlowBuilderSingleton {
     required ProjectModel selectedProject,
     required UserModel? loggedInUser,
     List<Map<String, dynamic>>? userRoles,
+    int? beneficiaryIdMinCount,
   }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
@@ -62,6 +64,7 @@ class FlowBuilderSingleton {
     _selectedProject = selectedProject;
     _loggedInUser = loggedInUser;
     _userRoles = userRoles;
+    _beneficiaryIdMinCount = beneficiaryIdMinCount;
   }
 
   void setUserRoles(List<Map<String, dynamic>>? userRoles) {
@@ -100,6 +103,8 @@ class FlowBuilderSingleton {
   Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
 
   List<Map<String, dynamic>>? get userRoles => _userRoles;
+
+  int? get beneficiaryIdMinCount => _beneficiaryIdMinCount;
 }
 
 /// TODO: WILL REMOVE THIS FUNCTION ALSO : TEMPORARY
@@ -160,9 +165,11 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'visibilityCondition': pageMap['visibilityCondition'],
         'conditionalNavigateTo': pageMap['conditionalNavigateTo'],
         'showAlertPopUp': pageMap['showAlertPopUp'],
+        'showSecondaryAlertPopUp': pageMap['showSecondaryAlertPopUp'],
         'multiEntityConfig': pageMap['multiEntityConfig'],
         'preventScreenCapture': pageMap['preventScreenCapture'],
         'submitCondition': pageMap['submitCondition'],
+        'secondaryActionLabel': pageMap['secondaryActionLabel'],
       };
 
       if (type == 'template') {
@@ -189,6 +196,53 @@ dynamic resolveValue(dynamic value, dynamic contextData,
   final resolved = resolveValueRaw(value, contextData,
       widgetData: widgetData, screenKey: screenKey);
   return resolved;
+}
+
+/// New method to resolve values with enhanced logic, including fallback and support for multiple data sources
+dynamic resolveNavigationDataValue({
+  required dynamic rawValue,
+  Map<String, dynamic>? stateFormData,
+  dynamic stateWrapperFirst,
+  required Map<String, dynamic> contextData,
+}) {
+  dynamic resolvedValue =
+      resolveValue(rawValue, stateFormData ?? stateWrapperFirst);
+
+  if (resolvedValue == null || resolvedValue == rawValue) {
+    resolvedValue = resolveValue(rawValue, contextData);
+  }
+
+  // Fallback for unresolved template values like {{ec1}} when form data is
+  // stored under nested keys such as eligibilityChecklist.ec1.
+  if ((resolvedValue == null || resolvedValue == rawValue) &&
+      rawValue is String &&
+      rawValue.startsWith('{{') &&
+      rawValue.endsWith('}}')) {
+    final key = rawValue.substring(2, rawValue.length - 2).trim();
+
+    final candidateKeys = <String>{
+      key,
+      'formData.$key',
+      'contextData.$key',
+    };
+
+    for (final candidate in candidateKeys) {
+      final candidateTemplate = '{{$candidate}}';
+
+      final fromState =
+          resolveValue(candidateTemplate, stateFormData ?? stateWrapperFirst);
+      if (fromState != null && fromState != candidateTemplate) {
+        return fromState;
+      }
+
+      final fromContext = resolveValue(candidateTemplate, contextData);
+      if (fromContext != null && fromContext != candidateTemplate) {
+        return fromContext;
+      }
+    }
+  }
+
+  return resolvedValue;
 }
 
 /// New method: resolves strings with multiple placeholders
@@ -390,13 +444,11 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         if (fnMatch != null) {
           final fnName = fnMatch.group(1)!;
           final argsExpr = fnMatch.group(2) ?? '';
-          print('🟢 FUNCTION CALL: $fnName with argsExpr: "$argsExpr"');
 
           final resolvedArgs = argsExpr.trim().isEmpty
               ? <dynamic>[]
               : argsExpr.split(',').map((rawArg) {
                   final trimmed = rawArg.trim();
-                  print('🟢 Resolving arg: "$trimmed"');
 
                   // Check if it's a quoted literal (string)
                   if (trimmed.startsWith("'") || trimmed.startsWith('"')) {
@@ -420,11 +472,9 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
                       widgetData: widgetData,
                       screenKey: screenKey,
                       stateData: stateData);
-                  print('🟢 Arg "$trimmed" resolved to: ${resolved.runtimeType} = $resolved');
                   return resolved;
                 }).toList();
 
-          print('🟢 All resolved args: $resolvedArgs (types: ${resolvedArgs.map((e) => e.runtimeType).toList()})');
           return FunctionRegistry.call(
             fnName,
             resolvedArgs,
@@ -476,6 +526,7 @@ Map<String, dynamic> singletonToMap() {
     "userRoles": s.userRoles,
     "templateConfigs":
         s.templateConfigs?.map((k, v) => MapEntry(k, v.toJson())),
+    "beneficiaryIdMinCount": s.beneficiaryIdMinCount
   };
 }
 
@@ -644,7 +695,7 @@ dynamic _resolvePath(dynamic root, String path) {
   if (current is num) {
     return current;
   }
-  if(current is Map){
+  if (current is Map) {
     return current;
   }
   return current?.toString();
@@ -673,9 +724,9 @@ Map<String, dynamic> flattenFormData(Map<String, dynamic> data,
 /// Static parts (outside of {{}}) are translated using localization.
 /// Dynamic parts (inside {{}}) are preserved as-is.
 String resolveStaticString(
-    dynamic input,
-    dynamic localization,
-    ) {
+  dynamic input,
+  dynamic localization,
+) {
   if (input is! String) return input?.toString() ?? '';
 
   final regex = RegExp(r'{{.*?}}');

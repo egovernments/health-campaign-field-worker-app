@@ -40,37 +40,19 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) => BlocConsumer<DigitScannerBloc, DigitScannerState>(
           listenWhen: (previous, current) {
-            // Only listen if this scanner initiated the scan
-            return current.scannerId == formControlName;
-          },
-          buildWhen: (previous, current) {
-            // Only rebuild if this scanner initiated the scan
-            return current.scannerId == formControlName;
-          },
-          listener: (context, state) {
+        // Only listen if this scanner initiated the scan
+        return current.scannerId == formControlName;
+      }, buildWhen: (previous, current) {
+        // Only rebuild if this scanner initiated the scan
+        return current.scannerId == formControlName;
+      }, listener: (context, state) {
         if (state.qrCodes.isNotEmpty) {
           // Join multiple QR codes with comma separator
           form.control(formControlName).value = state.qrCodes.join(', ');
         } else if (state.barCodes.isNotEmpty) {
-          // Store all barcodes, separated by semicolon
-          // Each barcode is stored as: GTIN,SERIAL,BATCH,EXPIRY
-          final barcodeStrings = <String>[];
-          for (int i = 0; i < state.barCodes.length; i++) {
-            final gs1Data = DigitScannerUtils()
-                .getGs1CodeFormattedStringAtIndex(state.barCodes, i);
-
-            // Convert GS1 map to comma-separated string in order: GTIN, SERIAL, BATCH, EXPIRY
-            final gtin = gs1Data['01']?.toString() ?? '';
-            final serial = gs1Data['21']?.toString() ?? '';
-            final batch = gs1Data['10']?.toString() ?? '';
-            final expiry = gs1Data['17'] is DateTime
-                ? DateFormat('dd MMM yyyy').format(gs1Data['17'])
-                : gs1Data['17']?.toString() ?? '';
-
-            barcodeStrings.add('$gtin,$serial,$batch,$expiry');
-          }
-          // Join multiple barcodes with semicolon separator
-          form.control(formControlName).value = barcodeStrings.join(';');
+          // Serialize barcodes dynamically using only non-empty fields
+          form.control(formControlName).value =
+              DigitScannerUtils().serializeGs1Barcodes(state.barCodes);
         } else {
           // Clear the form value when all scanned data has been deleted
           form.control(formControlName).value = null;
@@ -92,25 +74,17 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
           }
         } else if (isThisScanner && state.barCodes.isNotEmpty) {
           // Sync barcodes - build expected form value and compare
-          final barcodeStrings = <String>[];
-          for (int i = 0; i < state.barCodes.length; i++) {
-            final gs1Data = DigitScannerUtils()
-                .getGs1CodeFormattedStringAtIndex(state.barCodes, i);
-            final gtin = gs1Data['01']?.toString() ?? '';
-            final serial = gs1Data['21']?.toString() ?? '';
-            final batch = gs1Data['10']?.toString() ?? '';
-            final expiry = gs1Data['17'] is DateTime
-                ? DateFormat('dd MMM yyyy').format(gs1Data['17'])
-                : gs1Data['17']?.toString() ?? '';
-            barcodeStrings.add('$gtin,$serial,$batch,$expiry');
-          }
-          final stateValue = barcodeStrings.join(';');
+          final stateValue =
+              DigitScannerUtils().serializeGs1Barcodes(state.barCodes);
           if (formValue != stateValue) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               form.control(formControlName).value = stateValue;
             });
           }
-        } else if (isThisScanner && state.qrCodes.isEmpty && state.barCodes.isEmpty && hasFormValue) {
+        } else if (isThisScanner &&
+            state.qrCodes.isEmpty &&
+            state.barCodes.isEmpty &&
+            hasFormValue) {
           // Clear form value when all scanned data has been deleted
           WidgetsBinding.instance.addPostFrameCallback((_) {
             form.control(formControlName).value = null;
@@ -118,19 +92,23 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
         }
 
         // Check if this is barcode data (GS1 format)
-        // Single barcode: GTIN,SERIAL,BATCH,EXPIRY (4 comma-separated parts)
-        // Multiple barcodes: barcode1;barcode2;barcode3 (semicolon-separated)
+        // New format: key:value|key:value (pipe-separated key-value pairs)
+        // Legacy format: GTIN,SERIAL,BATCH,EXPIRY (4 comma-separated parts)
         bool isGS1BarcodeFormat(String value) {
-          // Check for multiple barcodes (semicolon-separated)
+          // New format: contains '|' or starts with 2-digit AI code followed by ':'
+          if (value.contains('|') ||
+              RegExp(r'^\d{2}:').hasMatch(value.trim())) {
+            return true;
+          }
+          // Legacy format: check for semicolon-separated barcodes
           if (value.contains(';')) {
             final barcodes = value.split(';');
-            // Check if first barcode has 4 parts
-            final firstParts = barcodes.first.split(',').map((e) => e.trim()).toList();
+            final firstParts =
+                barcodes.first.split(',').map((e) => e.trim()).toList();
             return firstParts.length == 4;
           }
-          // Single barcode check
+          // Single legacy barcode check
           final parts = value.split(',').map((e) => e.trim()).toList();
-          // GS1 barcodes have exactly 4 parts
           return parts.length == 4;
         }
 
@@ -142,12 +120,17 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
         final displayQrCodes = isThisScanner && state.qrCodes.isNotEmpty
             ? state.qrCodes
             : (!isBarcodeData && hasFormValue
-                ? formValue.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList()
+                ? formValue
+                    .split(',')
+                    .map((e) => e.trim())
+                    .where((e) => e.isNotEmpty)
+                    .toList()
                 : <String>[]);
 
         // Show barcode summary first (if barcode data exists), then QR summary
         final showBarcodeSummary = isBarcodeData && summaryData;
-        final showQrSummary = !showBarcodeSummary && displayQrCodes.isNotEmpty && summaryData;
+        final showQrSummary =
+            !showBarcodeSummary && displayQrCodes.isNotEmpty && summaryData;
 
         // Show barcode (GS1) summary
         return showBarcodeSummary
@@ -164,14 +147,19 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: isThisScanner && state.barCodes.isNotEmpty
                             // Use bloc state when available - show all barcodes
-                            ? state.barCodes.asMap().entries.map((barcodeEntry) {
+                            ? state.barCodes
+                                .asMap()
+                                .entries
+                                .map((barcodeEntry) {
                                 final index = barcodeEntry.key;
                                 final gs1Data = DigitScannerUtils()
                                     .getGs1CodeFormattedStringAtIndex(
                                         state.barCodes, index);
                                 return Padding(
                                   padding: EdgeInsets.only(
-                                    bottom: index < state.barCodes.length - 1 ? 16.0 : 0,
+                                    bottom: index < state.barCodes.length - 1
+                                        ? 16.0
+                                        : 0,
                                   ),
                                   child: LabelValueSummary(
                                     padding: EdgeInsets.zero,
@@ -191,48 +179,28 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                                   ),
                                 );
                               }).toList()
-                            // Fall back to parsing form value (multiple barcodes separated by ;)
+                            // Fall back to parsing form value using deserializer
                             : () {
-                                final barcodeStrings = formValue!.split(';');
+                                final parsedBarcodes = DigitScannerUtils
+                                    .deserializeGs1Barcodes(formValue!);
                                 final widgets = <Widget>[];
-                                for (int i = 0; i < barcodeStrings.length; i++) {
-                                  final parts = barcodeStrings[i].split(',');
-                                  final items = <LabelValueItem>[];
-                                  if (parts.isNotEmpty && parts[0].trim().isNotEmpty) {
-                                    items.add(LabelValueItem(
-                                      labelFlex: 5,
-                                      label: "GS1_01",
-                                      value: parts[0].trim(),
-                                      maxLines: 5,
-                                    ));
-                                  }
-                                  if (parts.length > 1 && parts[1].trim().isNotEmpty) {
-                                    items.add(LabelValueItem(
-                                      labelFlex: 5,
-                                      label: "GS1_21",
-                                      value: parts[1].trim(),
-                                      maxLines: 5,
-                                    ));
-                                  }
-                                  if (parts.length > 2 && parts[2].trim().isNotEmpty) {
-                                    items.add(LabelValueItem(
-                                      labelFlex: 5,
-                                      label: "GS1_10",
-                                      value: parts[2].trim(),
-                                      maxLines: 5,
-                                    ));
-                                  }
-                                  if (parts.length > 3 && parts[3].trim().isNotEmpty) {
-                                    items.add(LabelValueItem(
-                                      labelFlex: 5,
-                                      label: "GS1_17",
-                                      value: parts[3].trim(),
-                                      maxLines: 5,
-                                    ));
-                                  }
+                                for (int i = 0;
+                                    i < parsedBarcodes.length;
+                                    i++) {
+                                  final items = parsedBarcodes[i]
+                                      .entries
+                                      .map((entry) => LabelValueItem(
+                                            labelFlex: 5,
+                                            label: "GS1_${entry.key}",
+                                            value: entry.value,
+                                            maxLines: 5,
+                                          ))
+                                      .toList();
                                   widgets.add(Padding(
                                     padding: EdgeInsets.only(
-                                      bottom: i < barcodeStrings.length - 1 ? 16.0 : 0,
+                                      bottom: i < parsedBarcodes.length - 1
+                                          ? 16.0
+                                          : 0,
                                     ),
                                     child: LabelValueSummary(
                                       padding: EdgeInsets.zero,
@@ -248,54 +216,25 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                     DigitButton(
                       label: '',
                       onPressed: () {
-                        // For barcode edit, use existing state.barCodes if available,
-                        // otherwise parse from form value
-                        List<GS1Barcode> existingBarcodes = [];
-                        if (isThisScanner && state.barCodes.isNotEmpty) {
-                          existingBarcodes = List.from(state.barCodes);
-                        } else if (formValue != null) {
-                          // Parse form value (multiple barcodes separated by ;)
-                          final barcodeStrings = formValue.split(';');
-                          for (final barcodeStr in barcodeStrings) {
-                            final parts = barcodeStr.split(',');
-                            if (parts.length >= 4) {
-                              final gtin = parts[0].trim();
-                              final serial = parts[1].trim();
-                              final batch = parts[2].trim();
-                              final expiryStr = parts[3].trim();
-
-                              DateTime expiryDate;
-                              try {
-                                expiryDate = DateFormat('dd MMM yyyy').parse(expiryStr);
-                              } catch (_) {
-                                expiryDate = DateTime.now().add(const Duration(days: 365));
-                              }
-
-                              final barcodeString = DigitScannerUtils().generateGS1Barcode(
-                                serialNumber: serial,
-                                expiryDate: expiryDate,
-                                batchNumber: batch,
-                                gtin: gtin,
-                              );
-
-                              final parser = GS1BarcodeParser.defaultParser();
-                              existingBarcodes.add(parser.parse(barcodeString));
-                            }
-                          }
-                        }
-
-                        // Send existing barcodes to bloc before navigating
-                        context.read<DigitScannerBloc>().add(
-                              DigitScannerEvent.handleScanner(
-                                barCode: existingBarcodes,
-                                qrCode: [],
-                                scannerId: formControlName,
-                              ),
-                            );
+                        // Pass form value directly to scanner page via route param
+                        // Scanner page will parse and dispatch to bloc in initState
+                        final provider = ScannerComparisonProvider.of(context);
+                        final registry = ScannerComparisonRegistry();
+                        final dupeFn = provider != null ? provider.duplicateCheckFn : registry.duplicateCheckFn;
+                        final dupeErrFn = provider != null ? provider.duplicateErrorMessage : registry.duplicateErrorMessage;
+                        final duplicateCheckFn = dupeFn != null
+                            ? (String scannedValue) => dupeFn(
+                                  formControlName, scannedValue, form.value)
+                            : null;
+                        final duplicateMsg = dupeErrFn?.call(formControlName);
                         context.router.push(DigitScannerRoute(
                           validations: _toScannerValidations(),
+                          isGS1code: true,
                           isEditEnabled: true,
+                          initialBarcodeData: formValue,
                           scannerId: formControlName,
+                          duplicateCheckFn: duplicateCheckFn,
+                          duplicateCheckMessage: duplicateMsg,
                         ));
                       },
                       type: DigitButtonType.tertiary,
@@ -344,11 +283,22 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                                   ),
                                 );
                             // Use displayQrCodes which already has the parsed data
+                            final provider2 = ScannerComparisonProvider.of(context);
+                            final registry2 = ScannerComparisonRegistry();
+                            final dupeFn2 = provider2 != null ? provider2.duplicateCheckFn : registry2.duplicateCheckFn;
+                            final dupeErrFn2 = provider2 != null ? provider2.duplicateErrorMessage : registry2.duplicateErrorMessage;
+                            final duplicateCheckFn2 = dupeFn2 != null
+                                ? (String scannedValue) => dupeFn2(
+                                      formControlName, scannedValue, form.value)
+                                : null;
+                            final duplicateMsg2 = dupeErrFn2?.call(formControlName);
                             context.router.push(DigitScannerRoute(
                               validations: _toScannerValidations(),
                               isEditEnabled: true,
                               initialQrCodes: displayQrCodes,
                               scannerId: formControlName,
+                              duplicateCheckFn: duplicateCheckFn2,
+                              duplicateCheckMessage: duplicateMsg2,
                             ));
                           },
                           type: DigitButtonType.tertiary,
@@ -369,9 +319,20 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                               scannerId: formControlName,
                             ),
                           );
+                      final provider3 = ScannerComparisonProvider.of(context);
+                      final registry3 = ScannerComparisonRegistry();
+                      final dupeFn3 = provider3 != null ? provider3.duplicateCheckFn : registry3.duplicateCheckFn;
+                      final dupeErrFn3 = provider3 != null ? provider3.duplicateErrorMessage : registry3.duplicateErrorMessage;
+                      final duplicateCheckFn3 = dupeFn3 != null
+                          ? (String scannedValue) => dupeFn3(
+                                formControlName, scannedValue, form.value)
+                          : null;
+                      final duplicateMsg3 = dupeErrFn3?.call(formControlName);
                       context.router.push(DigitScannerRoute(
                         validations: _toScannerValidations(),
                         scannerId: formControlName,
+                        duplicateCheckFn: duplicateCheckFn3,
+                        duplicateCheckMessage: duplicateMsg3,
                       ));
                     },
                     type: DigitButtonType.secondary,

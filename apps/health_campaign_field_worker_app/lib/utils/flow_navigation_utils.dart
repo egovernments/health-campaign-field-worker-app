@@ -84,7 +84,6 @@ class FlowNavigationUtils {
         }
       }
 
-      // Fallback to sample flows
       FlowRegistry.setConfig(
         config.sampleFlows["flows"] as List<Map<String, dynamic>>,
       );

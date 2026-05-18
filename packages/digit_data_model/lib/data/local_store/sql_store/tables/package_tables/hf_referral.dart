@@ -33,6 +33,7 @@ class HFReferral extends Table {
   IntColumn get rowVersion => integer().nullable()();
 
   TextColumn get additionalFields => text().nullable()();
+  TextColumn get localityCode => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {

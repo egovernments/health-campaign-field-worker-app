@@ -1,31 +1,14 @@
-# digit_forms_engine
+# DIGIT Forms Engine
 
-A dynamic form rendering engine for Flutter, built on top of the `digit_ui_components` package. It allows you to define flexible, multi-page forms using a JSON schema. The engine renders fields and pages based on configuration, with automatic validation, navigation, and summary generation.
+A dynamic form rendering engine for Flutter that builds multi-page, configurable forms from JSON schema. It handles field rendering, validation, conditional visibility, auto-fill, navigation, and summary generation — all driven by configuration, no hardcoded UI.
 
+## Installation
 
----
-
-## ✨ Features
-
-- **JSON-driven multi-page forms** - Define complex forms using simple JSON schemas
-- **Dynamic widget rendering** - Supports dropdowns, text fields, geolocation, checkboxes, radio buttons, and more
-- **Built-in validation** - Field-level and page-level validation with custom rules
-- **Navigation management** - Automatic page navigation with back/forward support
-- **Form state management** - Powered by BLoC pattern for efficient state handling
-- **Theming support** - Integrates seamlessly with `digit_ui_components` theming
-- **Localization ready** - Built-in support for multi-language forms
-- **Type-safe** - Full type safety with generated models
-- **Memory efficient** - Optimized for large forms with many fields
-
----
-
-## 📦 Installation
-
-Add this to your package's `pubspec.yaml` file:
+Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  digit_forms_engine: ^1.0.0
+  digit_forms_engine: ^0.0.2-dev
 ```
 
 Then run:
@@ -34,66 +17,73 @@ Then run:
 flutter pub get
 ```
 
----
+## Features
 
-## 🚀 Quick Start
+- Render multi-page forms from JSON schema
+- Support for 14+ field types — text, dropdown, radio, checkbox, date, DOB, numeric, GPS coordinates, QR/barcode scanner, locality search, and more
+- Built-in validation — required, min/max length, min/max value, regex pattern, cross-field comparison
+- Conditional field visibility — show or hide fields based on formula expressions at runtime
+- Auto-fill fields based on conditions (e.g., auto-calculate age from date of birth)
+- Conditional navigation — route to different pages based on field values
+- Multi-entity tab view — capture same fields for multiple selected entities
+- Summary page generation with edit support
+- Custom widget integration using `BaseReactiveFieldWrapper`
+- QR code and GS1 barcode scanning with validation
+- Screenshot protection on sensitive pages
+- Multi-language localization support
+
+## Getting Started
 
 ### 1. Define Your Form Schema
+
+Forms are defined as JSON schemas. Each schema has a `name`, `version`, and a map of `pages`. Each page contains `properties` — the individual form fields.
 
 ```json
 {
   "name": "USER_REGISTRATION",
   "version": 1,
+  "summary": true,
   "pages": {
     "personalInfo": {
       "type": "object",
       "label": "Personal Information",
-      "required": ["name", "email", "dateOfBirth"],
+      "order": 1,
       "properties": {
         "name": {
           "type": "string",
+          "format": "text",
           "label": "Full Name",
-          "hint": "Enter your full name",
-          "minLength": 2,
-          "maxLength": 50
-        },
-        "email": {
-          "type": "string",
-          "label": "Email Address",
-          "format": "email",
-          "hint": "Enter your email address"
+          "order": 1,
+          "validations": [
+            { "type": "required", "value": true, "message": "Name is required" },
+            { "type": "minLength", "value": 2, "message": "Minimum 2 characters" }
+          ]
         },
         "dateOfBirth": {
           "type": "string",
-          "format": "date",
+          "format": "dob",
           "label": "Date of Birth",
-          "hint": "Select your date of birth"
+          "order": 2,
+          "validations": [
+            { "type": "required", "value": true }
+          ]
         },
         "gender": {
           "type": "string",
-          "label": "Gender",
           "format": "dropdown",
-          "enums": ["Male", "Female", "Other", "Prefer not to say"]
-        }
-      }
-    },
-    "address": {
-      "type": "object",
-      "label": "Address Information",
-      "properties": {
-        "addressLine1": {
-          "type": "string",
-          "label": "Address Line 1"
-        },
-        "city": {
-          "type": "string",
-          "format": "locality",
-          "label": "City"
+          "label": "Gender",
+          "order": 3,
+          "isMultiSelect": false,
+          "enums": [
+            { "code": "M", "name": "MALE" },
+            { "code": "F", "name": "FEMALE" }
+          ]
         },
         "location": {
           "type": "string",
           "format": "latLng",
-          "label": "Location"
+          "label": "GPS Location",
+          "order": 4
         }
       }
     }
@@ -105,40 +95,24 @@ flutter pub get
 
 ```dart
 import 'package:digit_forms_engine/forms_engine.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MyFormPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => FormsBloc(),
-      child: Scaffold(
-        appBar: AppBar(title: Text('User Registration')),
-        body: BlocBuilder<FormsBloc, FormsState>(
-          builder: (context, state) {
-            // Load the form schema
-            if (state.cachedSchemas.isEmpty) {
-              context.read<FormsBloc>().add(
-                FormsEvent.load(schemas: [yourSchemaJson]),
-              );
-              return Center(child: CircularProgressIndicator());
-            }
+// Provide the FormsBloc
+BlocProvider(
+  create: (context) => FormsBloc(),
+  child: YourFormWidget(),
+)
 
-            // Get the first page
-            final schema = state.cachedSchemas['USER_REGISTRATION'];
-            final firstPage = schema.pages.keys.first;
-            
-            return FormsRenderPage(
-              pageName: firstPage,
-              currentSchemaKey: 'USER_REGISTRATION',
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
+// Load the form schema (pass JSON string)
+context.read<FormsBloc>().add(
+  FormsEvent.load(schemas: [yourSchemaJsonString]),
+);
+
+// Render the form
+FormsRenderPage(
+  pageName: 'personalInfo',
+  currentSchemaKey: 'USER_REGISTRATION',
+)
 ```
 
 ### 3. Handle Form Submission
@@ -148,97 +122,225 @@ BlocListener<FormsBloc, FormsState>(
   listener: (context, state) {
     if (state is FormsSubmittedState) {
       final formData = state.formData;
-      
-      // Process the submitted form data
+      // formData is Map<String, Map<String, dynamic>>
+      // { "personalInfo": { "name": "John", "gender": "M", ... } }
       print('Form submitted: $formData');
-      
-      // Navigate to next screen or show success message
-      Navigator.pushNamed(context, '/success');
     }
   },
   child: YourFormWidget(),
 )
+
+// Trigger submission
+context.read<FormsBloc>().add(
+  FormsEvent.submit(schemaKey: 'USER_REGISTRATION'),
+);
 ```
 
----
+## Schema Configuration Keys
 
-## 📚 API Reference
+### SchemaObject (Top-Level)
 
-### Core Classes
+| Key | Type | Required | Description |
+|-----|------|----------|-------------|
+| `name` | `String` | Yes | Unique form identifier |
+| `version` | `int` | Yes | Schema version number |
+| `summary` | `bool` | No | Show summary page before submission (default: false) |
+| `pages` | `Map<String, PropertySchema>` | Yes | Map of page name to page configuration |
+| `showAlertPopUp` | `Object` | No | Alert dialog configuration |
+| `actionSchema` | `List` | No | Custom action buttons |
 
-#### `FormsBloc`
-The main BLoC for managing form state and operations.
+### PropertySchema (Page/Field Configuration)
 
-**Events:**
-- `FormsEvent.load(schemas: List<String>)` - Load form schemas
-- `FormsEvent.submit(schemaKey: String)` - Submit the form
-- `FormsEvent.clearForm(schemaKey: String)` - Reset form to initial state
-- `FormsEvent.updateField(schemaKey: String, key: String, value: dynamic)` - Update field value
+| Key | Type | Required | Description |
+|-----|------|----------|-------------|
+| `type` | `String` | Yes | Data type: `object`, `string`, `integer`, `boolean`, `dynamic` |
+| `format` | `String` | No | Field display format (see Supported Field Types below) |
+| `label` | `String` | No | Field label (supports localization keys) |
+| `order` | `double` | No | Display order within the page |
+| `value` | `dynamic` | No | Default value |
+| `hidden` | `bool` | No | Hide field from UI |
+| `readOnly` | `bool` | No | Make field read-only |
+| `hint` | `String` | No | Placeholder hint text |
+| `helpText` | `String` | No | Help text displayed below field |
+| `tooltip` | `String` | No | Tooltip text |
+| `description` | `String` | No | Page heading / field description |
+| `enums` | `List<Option>` | No | Options for dropdown/radio (each with `code` and `name`) |
+| `isMultiSelect` | `bool` | No | Allow multiple selections for dropdowns |
+| `validations` | `List<ValidationRule>` | No | Validation rules for the field |
+| `properties` | `Map<String, PropertySchema>` | No | Nested fields (for `type: object`) |
+| `includeInForm` | `bool` | No | Include hidden field value in form submission |
+| `includeInSummary` | `bool` | No | Show field in summary page |
+| `preventScreenCapture` | `bool` | No | Prevent screenshots on this page |
+| `systemDate` | `bool` | No | Auto-set to current date |
+| `charCount` | `bool` | No | Show character count |
+| `startDate` | `String` | No | Minimum date for date pickers |
+| `endDate` | `String` | No | Maximum date for date pickers |
+| `prefixText` | `String` | No | Prefix text for input fields |
+| `suffixText` | `String` | No | Suffix text for input fields |
 
-**States:**
-- `FormsState` - Default state with cached schemas
-- `FormsSubmittedState` - Emitted when form is submitted
+### Conditional Visibility
 
-#### `FormsRenderPage`
-The main widget for rendering forms.
-
-**Parameters:**
-- `pageName: String` - Name of the page to render
-- `currentSchemaKey: String` - Key of the schema to use
-- `isSummary: bool` - Whether to show summary view
-- `isEdit: bool` - Whether in edit mode
-- `defaultValues: Map<String, dynamic>?` - Default values for fields
-
-### Field Types
-
-The engine supports various field types through the `type` and `format` properties:
-
-#### Basic Types
-- `string` - Text input
-- `integer` - Number input
-- `boolean` - Checkbox
-
-#### Format Types
-- `dropdown` - Dropdown selection
-- `radio` - Radio button group
-- `date` - Date picker
-- `latLng` - Location picker
-- `locality` - Location search
-- `scanner` - QR/Barcode scanner
-- `dob` - Date of birth picker
-
-### Validation
-
-Fields support various validation rules:
+Show or hide fields based on runtime conditions using `digit_formula_parser`:
 
 ```json
 {
-  "type": "string",
-  "format": "text",
-  "label": "Name",
-  "validations": [
-    { "type": "required", "value": true, "message": "Name is required" },
-    { "type": "minLength", "value": 2, "message": "Name too short" },
-    { "type": "maxLength", "value": 50 }
+  "fieldName": "ageInMonths",
+  "type": "integer",
+  "format": "numeric",
+  "visibilityCondition": {
+    "expression": [
+      { "condition": "calculateAgeInMonths(dateOfBirth) >= 0" }
+    ]
+  }
+}
+```
+
+### Display Behavior
+
+Show/hide fields based on whether other fields have values:
+
+```json
+{
+  "displayBehavior": {
+    "behavior": "show",
+    "oneOf": ["dateOfBirth"],
+    "allOf": ["firstName", "lastName"]
+  }
+}
+```
+
+| Key | Description |
+|-----|-------------|
+| `behavior` | `show` or `hide` |
+| `oneOf` | Show if ANY of these fields have a value |
+| `allOf` | Show if ALL of these fields have values |
+
+### Auto-Fill Conditions
+
+Automatically fill a field when a condition is met:
+
+```json
+{
+  "autoFillCondition": [
+    {
+      "expression": "calculateAgeInMonths(dateOfBirth) >= 0",
+      "value": "{calculateAgeInMonths(dateOfBirth)}"
+    }
   ]
 }
 ```
 
----
+### Conditional Navigation
 
+Navigate to different pages based on field values:
 
-### Theming
+```json
+{
+  "conditionalNavigateTo": [
+    {
+      "condition": "productCount > 5",
+      "navigateTo": {
+        "type": "form",
+        "name": "nextFormName"
+      }
+    }
+  ]
+}
+```
 
-The package integrates with `digit_ui_components` theming:
+## Supported Field Types
+
+| Format | Type | Description |
+|--------|------|-------------|
+| `text` | string | Plain text input |
+| `textArea` | string | Multi-line text input |
+| `numeric` | string | Number input with min/max constraints |
+| `dropdown` | string | Single or multi-select dropdown |
+| `radio` | string | Radio button group |
+| `checkbox` | boolean | Boolean checkbox |
+| `date` | string | Date picker with range support |
+| `dob` | string | Date of birth picker with age calculation |
+| `mobileNumber` | string | Phone number with format validation |
+| `latLng` | string | GPS coordinates (latitude, longitude, accuracy) |
+| `locality` | string | Location search / autocomplete |
+| `scanner` | string | QR code and GS1 barcode scanner |
+| `idPopulator` | string | Auto-generated ID field |
+| `custom` | any | Plug in any custom widget |
+
+## Supported Validations
+
+| Type | Value | Description |
+|------|-------|-------------|
+| `required` | `true` | Field must not be empty |
+| `minLength` | `int` | Minimum string length |
+| `maxLength` | `int` | Maximum string length |
+| `min` / `minValue` | `int` | Minimum numeric value |
+| `max` / `maxValue` | `int` | Maximum numeric value |
+| `pattern` | `String` (regex) | Regex pattern matching |
+| `notEqualTo` | `String` (field name) | Must not equal another field's value |
+| `scanLimit` | `int` | Maximum number of QR/barcode scans |
+| `isGS1` | `true` | Validate GS1 barcode format |
+
+Validation messages support localization keys:
+
+```json
+{
+  "validations": [
+    {
+      "type": "required",
+      "value": true,
+      "message": "REGISTRATION_NAME_REQUIRED_ERROR"
+    }
+  ]
+}
+```
+
+## Custom Widget Integration
+
+Use `BaseReactiveFieldWrapper` to plug in your own widgets:
 
 ```dart
-MaterialApp(
-  theme: DigitTheme.light,
-  home: YourFormPage(),
+BaseReactiveFieldWrapper(
+  formControlName: 'myField',
+  schema: fieldSchema,
+  builder: (field) {
+    return MyCustomWidget(
+      errorMessage: field.errorText,
+      onChanged: (value) {
+        field.control.value = value;
+      },
+    );
+  },
 )
 ```
 
+## FormsBloc Events
 
+| Event | Description |
+|-------|-------------|
+| `FormsEvent.load(schemas)` | Parse and load JSON schemas |
+| `FormsEvent.updateField(schemaKey, key, value)` | Update a single field value |
+| `FormsEvent.update(schema, schemaKey)` | Replace entire schema |
+| `FormsEvent.clearPage(schemaKey, pageKey)` | Clear all fields on a page |
+| `FormsEvent.clearForm(schemaKey)` | Reset form to initial state |
+| `FormsEvent.submit(schemaKey)` | Collect and submit form data |
 
+## FormsBloc States
 
+| State | Description |
+|-------|-------------|
+| `FormsState` | Default state with `cachedSchemas` map |
+| `FormsSubmittedState` | Emitted on submission with `formData` |
 
+## Core Exports
+
+```dart
+import 'package:digit_forms_engine/forms_engine.dart';
+
+// Gives you access to:
+// - FormsBloc, FormsEvent, FormsState, FormsSubmittedState
+// - FormsRenderPage
+// - PropertySchema, PropertySchemaType, PropertySchemaFormat
+// - SchemaObject, SummaryItem, ActionSchema
+// - ScreenProtectionManager
+```

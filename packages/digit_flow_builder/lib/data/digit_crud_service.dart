@@ -1,5 +1,8 @@
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/models/entities/attendee.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_flow_builder/utils/context_utility.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +51,14 @@ class DigitCrudService extends CrudService {
           .repository<HFReferralModel, HFReferralSearchModel>(context);
     } else if (entity is ReferralModel) {
       return context.repository<ReferralModel, ReferralSearchModel>(context);
+    } else if (entity is AttendanceRegisterModel) {
+      return context.repository<AttendanceRegisterModel,
+          AttendanceRegisterSearchModel>(context);
+    } else if (entity is AttendeeModel) {
+      return context.repository<AttendeeModel, AttendeeSearchModel>(context);
+    } else if (entity is AttendanceLogModel) {
+      return context
+          .repository<AttendanceLogModel, AttendanceLogSearchModel>(context);
     } else {
       return context.repository<EntityModel, EntitySearchModel>(context);
     }
@@ -59,6 +70,19 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
   EntityModel? dynamicEntityModelFromMap(
       String modelName, Map<String, dynamic> map) {
     final normalizedMap = normalizeKnownFlatFieldsRecursively(map);
+
+    Map<String, dynamic> normalizedMapAttendance =
+        Map<String, dynamic>.from(map);
+    if (normalizedMapAttendance.containsKey('additionalFields') &&
+        normalizedMapAttendance['additionalFields'] != null) {
+      normalizedMapAttendance['additionalDetails'] =
+          normalizedMapAttendance['additionalFields'];
+      normalizedMapAttendance.remove('additionalFields');
+    }
+    // Remove nested entity lists that are handled via NestedModelMapping
+    // to avoid dart_mappable decode errors
+    normalizedMapAttendance.remove('staff');
+    normalizedMapAttendance.remove('individualList');
 
     switch (modelName) {
       case 'individual':
@@ -93,6 +117,15 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return HFReferralModelMapper.fromMap(normalizedMap);
       case 'referral':
         return ReferralModelMapper.fromMap(normalizedMap);
+      case 'attendanceRegister':
+        return AttendanceRegisterModelMapper.fromMap(normalizedMapAttendance);
+      case 'attendee':
+        return AttendeeModelMapper.fromMap(normalizedMapAttendance);
+      case 'attendance':
+      case 'attendanceLog':
+        return AttendanceLogModelMapper.fromMap(normalizedMapAttendance);
+      case 'name':
+        return NameModelMapper.fromMap(normalizedMap);
       default:
         return EntityModelMapper.fromMap(normalizedMap);
     }

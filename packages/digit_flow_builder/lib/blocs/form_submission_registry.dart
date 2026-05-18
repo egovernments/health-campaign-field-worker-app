@@ -76,13 +76,17 @@ class FormSubmissionRegistry {
     required String instanceId,
     required FormSubmissionCallback handler,
   }) {
-    final existingInstance = _registeredInstances[schemaKey];
+    //  final existingInstance = _registeredInstances[schemaKey];
 
-    // If already registered by different instance, don't override
-    if (existingInstance != null && existingInstance != instanceId) {
-      return false;
-    }
-
+    // // If already registered by different instance, don't override
+    // if (existingInstance != null && existingInstance != instanceId) {
+    //   return false;
+    // }
+    // Always allow the latest instance to register its handler.
+    // Previous instances that are still in the navigation stack (not yet disposed)
+    // should not block new registrations, as the newest instance is always
+    // the active one. The old instance's unregister() is safe because it
+    // checks instanceId before removing.
     _handlers[schemaKey] = handler;
     _registeredInstances[schemaKey] = instanceId;
     return true;
@@ -177,7 +181,8 @@ mixin FormSubmissionRegistrationMixin<T extends StatefulWidget> on State<T> {
   @override
   void initState() {
     super.initState();
-    _instanceId = '${schemaKey}_${hashCode}_${DateTime.now().millisecondsSinceEpoch}';
+    _instanceId =
+        '${schemaKey}_${hashCode}_${DateTime.now().millisecondsSinceEpoch}';
   }
 
   /// Register this widget's form handler

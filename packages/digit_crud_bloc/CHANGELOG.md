@@ -1,27 +1,30 @@
+## 0.0.1
+
+- Added OR condition support to SQL query builder
+- Fixed service.isInitialized error
+- Added multi-table filter support
+- Updated query builder for search of list
+- Added SQL ordering support
+
 ## 0.0.3-dev
 
 - Fixed query for count fetching
 
 ## 0.0.2-dev
 
-- Major refactor for maintainability and clarity. No logic changes.
-- All BLoC, service, and singleton naming is now generic (CrudBloc, CrudService, etc.).
-- Extracted query-building, hydration, and relationship graph logic into dedicated helpers:
-  - `QueryBuilder` for SQL and filter utilities
-  - `HydrationHelper` for nested model hydration
-  - `RelationshipGraphHelper` for relationship pathfinding
-- Singleton setup now requires all dependencies to be set explicitly.
-- Improved documentation and code comments throughout.
-- The main repository class is now focused and readable, with helpers handling complex logic.
+- Major refactor for better readability and maintainability
+- Renamed all classes to generic names (CrudBloc, CrudService, etc.)
+- Extracted helper utilities into dedicated classes:
+  - `QueryBuilder` — SQL and filter utilities
+  - `HydrationHelper` — nested model data loading
+  - `RelationshipGraphHelper` — relationship pathfinding between entities
+- Singleton setup now requires all dependencies to be set explicitly
+- Improved documentation and code comments
 
 ## 0.0.1-dev
 
-- `RegistrationService` class to centralize entity-level CRUD operations and search logic.
-- Relationship graph support using `RelationshipMapping` to resolve parent-child entity relationships.
-- Nested model mapping via `NestedModelMapping` for resolving and filtering deeply nested fields.
-- Global search support through `GlobalSearchParameters` and `SearchEntityRepository`.
-- Full CRUD functionality:
-  - `registerEntities()` – Create
-  - `searchHouseholds()` – Read
-  - `updateEntities()` – Update
-  - `deleteEntities()` – Delete
+- Initial release
+- CRUD operations for all supported entity types (create, search, update, delete)
+- Relationship graph support for resolving parent-child entity relationships
+- Nested model mapping for filtering deeply nested fields
+- Global search with filters, pagination, and relationship traversal

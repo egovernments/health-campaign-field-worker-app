@@ -384,6 +384,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
+          navigationParams: widget.navigationParams,
           initialDate: _safeTimestamp("startDate") != null
               ? DateTime.fromMillisecondsSinceEpoch(
                   _safeTimestamp("startDate")!)
@@ -673,6 +674,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       FormGroup form, List<MapEntry<String, PropertySchema>> entries) {
     final visibleEntries = entries.where((entry) {
       final subSchema = entry.value;
+      if (subSchema.displayOnly == true) return false;
       return !_shouldHideField(form, subSchema, entry.key);
     }).toList();
 

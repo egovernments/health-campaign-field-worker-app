@@ -2,44 +2,53 @@ import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../flow_widget_interface.dart';
-import '../localization_context.dart';
+import '../../utils/flow_widget_state.dart';
+import '../resolved_flow_widget.dart';
 
-class SwitchWidget implements FlowWidget {
+class SwitchWidget extends ResolvedFlowWidget {
   @override
   String get format => 'switch';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final localization = LocalizationContext.maybeOf(context);
+    final fieldKey = json['fieldName'] as String? ?? 'switchValue';
 
-    return DigitSwitch(
-      label: localization?.translate(json['label'] ?? ''),
-      value: false,
-      mainAxisAlignment: MainAxisAlignment.start,
-      onChanged: (value) {
-        if (json['onAction'] != null) {
-          final actionsList = json['onAction'] is List
-              ? List<Map<String, dynamic>>.from(json['onAction'])
-              : [Map<String, dynamic>.from(json['onAction'])];
+    return WidgetStateContext.reactive(context, (ctx, state) {
+      if (state.widgetData[fieldKey] == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          state.updateWidgetData(fieldKey, false);
+        });
+      }
+      return DigitSwitch(
+        label: resolved.resolvedLabel,
+        value: state.widgetData[fieldKey] ?? false,
+        mainAxisAlignment: MainAxisAlignment.start,
+        onChanged: (value) {
+          state.updateWidgetData(fieldKey, value);
+          if (json['onAction'] != null) {
+            final actionsList = json['onAction'] is List
+                ? List<Map<String, dynamic>>.from(json['onAction'])
+                : [Map<String, dynamic>.from(json['onAction'])];
 
-          for (var raw in actionsList) {
-            raw['properties'] ??= {};
-            raw['properties']['data'] = [
-              {
-                'key': json['fieldName'] ?? 'switch',
-                'value': value,
-              }
-            ];
-            final action = ActionConfig.fromJson(raw);
-            onAction(action);
+            for (var raw in actionsList) {
+              raw['properties'] ??= {};
+              raw['properties']['data'] = [
+                {
+                  'key': json['fieldName'] ?? 'switch',
+                  'value': value,
+                }
+              ];
+              final action = ActionConfig.fromJson(raw);
+              onAction(action);
+            }
           }
-        }
-      },
-    );
+        },
+      );
+    });
   }
 }

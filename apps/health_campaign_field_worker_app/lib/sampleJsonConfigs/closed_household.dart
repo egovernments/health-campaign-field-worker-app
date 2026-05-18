@@ -95,11 +95,11 @@ final dynamic sampleCloseHouseholdFlows = {
               "includeInForm": true,
               "validations": [
                 {
-                  "type": "min",
-                  "value": 3,
+                  "type": "minLength",
+                  "value": "3",
                   "message":
                       "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR"
-                }
+                },
               ],
               "errorMessage": "",
               "isMultiSelect": false,
@@ -111,7 +111,7 @@ final dynamic sampleCloseHouseholdFlows = {
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "tooltip": "",
               "helpText": "",
               "infoText": "",

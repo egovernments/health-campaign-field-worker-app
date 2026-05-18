@@ -214,8 +214,14 @@ class SearchExecutor extends ActionExecutor {
       });
     }
 
+    // Check if this search should skip filter accumulation
+    final skipAccumulatedFilters =
+        data['skipAccumulatedFilters'] as bool? ?? false;
+
     // Update SearchStateManager with resolved filters (will merge with existing)
-    if (compositeKey != null && resolvedFilters.isNotEmpty) {
+    if (!skipAccumulatedFilters &&
+        compositeKey != null &&
+        resolvedFilters.isNotEmpty) {
       SearchStateManager().updateFilters(
         compositeKey,
         searchName,
@@ -227,12 +233,17 @@ class SearchExecutor extends ActionExecutor {
       SearchStateManager().resetPagination(compositeKey, searchName);
     }
 
-    // Get ALL accumulated filters from SearchStateManager (across all searchNames)
-    final accumulatedFilters = compositeKey != null
-        ? SearchStateManager().getAllFilters(compositeKey)
-        : resolvedFilters;
+    // Get filters: use only resolved filters when skipping accumulation,
+    // otherwise get ALL accumulated filters across all searchNames
+    final accumulatedFilters = skipAccumulatedFilters
+        ? resolvedFilters
+        : (compositeKey != null
+            ? SearchStateManager().getAllFilters(compositeKey)
+            : resolvedFilters);
 
     // Convert accumulated filters to SearchFilter objects
+    // Default root: use search name (e.g., "stock") which matches the primary table
+    final defaultRoot = searchName;
     final filters = <SearchFilter>[];
     for (final filterMap in accumulatedFilters) {
       if (filterMap is! Map) continue;
@@ -249,7 +260,7 @@ class SearchExecutor extends ActionExecutor {
       }
 
       filters.add(SearchFilter(
-        root: filterMap['root']?.toString() ?? '',
+        root: filterMap['root']?.toString() ?? defaultRoot,
         field: filterMap['key']?.toString() ?? '',
         operator: filterMap['operation']?.toString() ?? 'equals',
         value: filterMap['value'],
@@ -421,12 +432,22 @@ class SearchExecutor extends ActionExecutor {
       }
     }
 
+    // Get primaryModel and select from config
+    final primaryModel = config?['wrapperConfig']?['searchConfig']?['primary'];
+    final select = (config?['wrapperConfig']?['searchConfig']?['select'] as List?)
+            ?.cast<String>() ??
+        [];
+
+    // If no config available (e.g., on form pages), skip the search
+    if (primaryModel == null || select.isEmpty) {
+      debugPrint('SEARCH_EVENT: No searchConfig in config, skipping search. primaryModel=$primaryModel, select=$select');
+      return contextData;
+    }
+
     final searchParams = GlobalSearchParameters(
       filters: filters,
-      primaryModel: config?['wrapperConfig']['searchConfig']['primary'],
-      select: (config?['wrapperConfig']?['searchConfig']?['select'] as List?)
-              ?.cast<String>() ??
-          [],
+      primaryModel: primaryModel,
+      select: select,
       pagination: pagination,
       orderBy: orderBy,
       filterLogic: filterLogic,

@@ -13,12 +13,18 @@ class UserActionSearchModel extends EntitySearchModel
   final double? longitude;
   final bool? isSync;
   final int? timestamp;
+  final String? action;
+  final String? projectId;
+  final List<String>? clientReferenceId;
 
   UserActionSearchModel({
     this.latitude,
     this.longitude,
     this.isSync,
     this.timestamp,
+    this.action,
+    this.projectId,
+    this.clientReferenceId,
     super.isDeleted,
     super.boundaryCode,
     super.auditDetails,
@@ -28,8 +34,11 @@ class UserActionSearchModel extends EntitySearchModel
   UserActionSearchModel.ignoreDeleted({
     required this.latitude,
     required this.longitude,
-    required this.isSync,
-    required this.timestamp,
+    this.isSync,
+    this.timestamp,
+    required this.action,
+    required this.projectId,
+    required this.clientReferenceId,
     super.boundaryCode,
     super.auditDetails,
   }) : super(isDeleted: false);
@@ -42,8 +51,8 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
   final double longitude;
   final double locationAccuracy;
   final String clientReferenceId;
-  final bool isSync;
-  final int timestamp;
+  final bool? isSync;
+  final int? timestamp;
   final bool? nonRecoverableError;
   final String? tenantId;
   final String? id;
@@ -61,8 +70,8 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
     required this.longitude,
     required this.locationAccuracy,
     required this.clientReferenceId,
-    required this.isSync,
-    required this.timestamp,
+    this.isSync,
+    this.timestamp,
     required this.projectId,
     required this.boundaryCode,
     required this.action,
@@ -99,9 +108,9 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
       clientCreatedTime: Value(clientAuditDetails?.createdTime),
       clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
-      isSync: Value(isSync),
+      isSync: Value(isSync ?? false),   ///
       nonRecoverableError: Value(nonRecoverableError),
-      timestamp: Value(timestamp),
+      timestamp: Value(timestamp ?? 0),
       id: Value(id),
     );
   }

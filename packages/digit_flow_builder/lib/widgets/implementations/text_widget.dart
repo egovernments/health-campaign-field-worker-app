@@ -2,53 +2,87 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../utils/flow_widget_state.dart';
-import '../../utils/utils.dart';
 import '../../utils/widget_parsers.dart';
-import '../flow_widget_interface.dart';
-import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class TextWidget implements FlowWidget {
+class TextWidget extends ResolvedFlowWidget {
   @override
   String get format =>
       'textTemplate'; // add support to take multiple format types
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final state = WidgetStateContext.of(context);
-    final localization = LocalizationContext.maybeOf(context);
-
-    // Resolve template using state.evalContext which provides all contexts:
-    // itemData, parentData, contextData, formData, widgetData, modelMap
+    // Use the pre-resolved label, or resolve 'value' field as fallback
     final value = json['value'] ?? '';
-    final resolvedValue = resolveTemplate(
-          value,
-          state.evalContext,
-          localization: localization,
-        ) ??
-        value;
 
     // Get style from properties
     final properties = json['properties'] as Map<String, dynamic>? ?? {};
     final styleKey = properties['style']?.toString();
+    final separatedBy = properties['separatedBy'];
+    final replaceAll = properties['replaceAll'] as List?;
     final textStyle = _parseTextStyle(context, styleKey);
 
-    final displayValue = (resolvedValue ?? '')
+    var resolvedValue = (separatedBy != null && value is String)
+        ? value
+            .split(separatedBy)
+            .map((part) => resolved.resolveText(part))
+            .join(separatedBy)
+        : resolved.resolveText(value);
+
+    if (replaceAll != null) {
+      for (var replacement in replaceAll) {
+        final searchValue = replacement['searchValue']?.toString() ?? '';
+        final replaceValue = replacement['replaceValue']?.toString() ?? '';
+        resolvedValue = resolvedValue.replaceAll(searchValue, replaceValue);
+      }
+    }
+
+    final displayValue = (resolvedValue)
         .replaceAll(RegExp(r'\bnull\b', caseSensitive: false), '--');
 
     return WidgetParsers.wrapWithBottomGap(
       Text(
         displayValue.isEmpty ? '--' : displayValue,
-        style: textStyle,
+        style: textStyle?.copyWith(
+          color:
+              _parseTextColor(context, properties['color']?.toString()) ?? null,
+        ),
         overflow: TextOverflow.ellipsis,
-        maxLines: 2,
+        maxLines: json["maxLines"] ?? 2,
       ),
       properties,
     );
+  }
+
+  Color? _parseTextColor(BuildContext context, String? colorKey) {
+    if (colorKey == null) return null;
+
+    final theme = Theme.of(context);
+    switch (colorKey) {
+      case 'primary':
+        return theme.colorScheme.primary;
+      case 'onPrimary':
+        return theme.colorScheme.onPrimary;
+      case 'secondary':
+        return theme.colorScheme.secondary;
+      case 'onSecondary':
+        return theme.colorScheme.onSecondary;
+      case 'error':
+        return theme.colorScheme.error;
+      case 'onError':
+        return theme.colorScheme.onError;
+      case 'surface':
+        return theme.colorScheme.surface;
+      case 'onSurface':
+        return theme.colorScheme.onSurface;
+      default:
+        return null; // Could add support for custom colors here
+    }
   }
 
   TextStyle? _parseTextStyle(BuildContext context, String? styleKey) {

@@ -24,7 +24,7 @@ int? minFromValidations(List<ValidationRule>? validations) {
   if (validations == null) return null;
 
   final rule = validations.firstWhere(
-        (v) => v.type == 'min',
+    (v) => v.type == 'min',
     orElse: () => const ValidationRule(type: ''),
   );
 
@@ -39,7 +39,7 @@ int? maxFromValidations(List<ValidationRule>? validations) {
   if (validations == null) return null;
 
   final rule = validations.firstWhere(
-        (v) => v.type == 'max',
+    (v) => v.type == 'max',
     orElse: () => const ValidationRule(type: ''),
   );
 
@@ -152,15 +152,13 @@ bool isHidden(PropertySchema property) {
 
 /// Checks if the string can be parsed as a DateTime
 bool isDateTime(String input) {
-
   if (RegExp(r'^\d{4}-\d{2}-\d{2}').hasMatch(input)) {
-     return DateTime.tryParse(input) != null;// ISO 8601
+    return DateTime.tryParse(input) != null; // ISO 8601
   } else if (RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(input)) {
-     return DateTime.tryParse(input) != null;
-  }  
-  
-  return false;
+    return DateTime.tryParse(input) != null;
+  }
 
+  return false;
 }
 
 bool isDateLike(String input) {
@@ -256,7 +254,8 @@ ExpressionPreprocessResult _preprocessExpression(
         updatedValues[keyFromArgs] = functionResult;
 
         // Replace function call with the original key name
-        modifiedExpression = modifiedExpression.replaceAll(fullFunctionCall, keyFromArgs);
+        modifiedExpression =
+            modifiedExpression.replaceAll(fullFunctionCall, keyFromArgs);
       }
     }
   }
@@ -269,7 +268,6 @@ ExpressionPreprocessResult _preprocessExpression(
 
 bool evaluateVisibilityExpression(
     List<VisibilityExpression> expressions, Map<String, dynamic> values) {
-
   // Any condition must be true (OR logic)
   for (final expr in expressions) {
     // Preprocess expression to handle function calls

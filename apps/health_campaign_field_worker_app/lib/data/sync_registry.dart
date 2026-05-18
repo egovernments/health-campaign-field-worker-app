@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/pgr_service.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
@@ -75,18 +76,20 @@ class CustomSyncRegistry implements SyncUpOperation {
                 continue;
               }
 
-              PgrServiceCreateResponseModel pgrServiceCreateResponseModel;
-              PgrComplaintResponseModel pgrComplaintModel;
-              try {
-                pgrServiceCreateResponseModel =
-                    PgrServiceCreateResponseModelMapper.fromMap(
-                  responseData,
+              final pgrServiceCreateResponseModel =
+                  PgrServiceCreateResponseModelMapper.fromMap(
+                responseData,
+              );
+              if (pgrServiceCreateResponseModel.serviceWrappers.isEmpty) {
+                AppLogger.instance.error(
+                  title: 'NetworkManager : PgrServiceRemoteRepository',
+                  message: 'Empty serviceWrappers in response',
+                  stackTrace: StackTrace.current,
                 );
-                pgrComplaintModel =
-                    pgrServiceCreateResponseModel.serviceWrappers.first;
-              } catch (e) {
-                rethrow;
+                continue;
               }
+              final pgrComplaintModel =
+                  pgrServiceCreateResponseModel.serviceWrappers.first;
 
               final service = pgrComplaintModel.service;
               final serviceRequestId = service.serviceRequestId;
@@ -100,9 +103,19 @@ class CustomSyncRegistry implements SyncUpOperation {
                 continue;
               }
 
+              final matchingEntry = entry.firstWhereOrNull((element) =>
+                  element.clientReferenceId == entity.clientReferenceId);
+              if (matchingEntry == null) {
+                AppLogger.instance.error(
+                  title: 'NetworkManager : PgrServiceRemoteRepository',
+                  message:
+                      'No matching OpLog entry for clientReferenceId: ${entity.clientReferenceId}',
+                  stackTrace: StackTrace.current,
+                );
+                continue;
+              }
               await local.markSyncedUp(
-                entry: entry.firstWhere((element) =>
-                    element.clientReferenceId == entity.clientReferenceId),
+                entry: matchingEntry,
                 clientReferenceId: entity.clientReferenceId,
                 nonRecoverableError: entity.nonRecoverableError,
               );

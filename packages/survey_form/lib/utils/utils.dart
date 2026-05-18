@@ -19,6 +19,7 @@ class SurveyFormSingleton {
   String _appVersion = '';
   String _tenantId = '';
   Object _roles = [];
+  List<String> _checklistTypes = [];
   BoundaryModel? _boundaryModel;
   PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
@@ -34,13 +35,15 @@ class SurveyFormSingleton {
       required String loggedInIndividualId,
       required String loggedInUserUuid,
       required String appVersion,
-      required Object roles}) {
+      required Object roles,
+      List<String> checklistTypes = const []}) {
     _projectId = projectId;
     _projectName = projectName;
     _loggedInIndividualId = loggedInIndividualId;
     _loggedInUserUuid = loggedInUserUuid;
     _appVersion = appVersion;
     _roles = roles;
+    _checklistTypes = checklistTypes;
   }
 
   get projectId => _projectId;
@@ -58,6 +61,8 @@ class SurveyFormSingleton {
   get persistenceConfiguration => _persistenceConfiguration;
 
   get roles => _roles;
+
+  List<String> get checklistTypes => _checklistTypes;
 
   BoundaryModel? get boundary => _boundaryModel;
 

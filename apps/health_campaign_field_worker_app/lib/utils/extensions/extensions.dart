@@ -16,6 +16,7 @@ import 'package:transit_post/utils/utils.dart';
 
 import '../../blocs/auth/auth.dart';
 import '../../blocs/project/project.dart';
+import '../../blocs/push_notification/push_notification.dart';
 import '../../data/network_manager.dart';
 import '../../models/auth/auth_model.dart';
 import '../app_exception.dart';

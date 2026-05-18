@@ -19,7 +19,8 @@ class ProductVariantRemoteRepository
     ProductVariantSearchModel query, {
     int? offSet,
     int? limit,
-    int? lastChangedSince,
+    int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) async {
     Response response;
 

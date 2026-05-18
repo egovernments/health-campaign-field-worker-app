@@ -1,3 +1,22 @@
+## 1.3.0
+
+* Implemented database encryption using SQLCipher
+    * Replaced `sqlite3_flutter_libs` with `sqlcipher_flutter_libs` and `sqlite3`
+    * Added `DatabaseMigrationResult` enum for migration status tracking
+    * Added encryption key support in `LocalSqlDataStore` constructor
+* Moved registration delivery, inventory_management, referral_management, closed_household entities
+  to data_model
+* Moved local and remote package repositories for all moved entities
+* Added `lastChangedSince` parameter to `RemoteRepository.search` for incremental sync
+* Added `lastChangedSince` to `ProductVariantRemoteRepository` and `ProjectResourceRemoteRepository`
+  search methods
+* Added `name` field to `DeliveryProductVariant` in project_type model
+* Changed `order` field type from `int` to `String` in `AttributesModel`
+* Fixed oplog update operations with null `serverGeneratedId` by copying from create record
+* Updated `TemplateConfig.navigateTo` to handle empty map `{}` as null using custom deserializer
+* Added SQL ordering and improved inventory stock grouping
+* Updated `waybillNumber` in stock model
+
 ## 1.2.0-dev.2-console
 
 * Modified DioException to throw captured error

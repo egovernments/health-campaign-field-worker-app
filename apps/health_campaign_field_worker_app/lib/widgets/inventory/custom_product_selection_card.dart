@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
+import 'package:digit_flow_builder/utils/function_registry.dart';
+import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
 import 'package:digit_forms_engine/widgets/base_reactive_field_wrapper.dart';
@@ -51,12 +55,40 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
   /// Gets the facility ID from the previous page's form data (warehouseDetails.facilityToWhich)
   /// Reads from FormsBloc state which stores all page data
   String? _getFacilityIdFromFormData(BuildContext context) {
-    // Try to get from FormsBloc state (contains data from all pages)
+    // For stock-in-hand, we need the source facility (where stock is held)
+    // For ISSUED: source = current user's facility (getUserFacilityId)
+    // For RECEIPT/others: source = facilityToWhich
+    final navigationParams = FlowCrudStateRegistry()
+            .getNavigationParams('FORM::${widget.pageSchema}') ??
+        FlowCrudStateRegistry().getNavigationParams(widget.pageSchema) ??
+        {};
+    final transactionType =
+        navigationParams['transactionType']?.toString() ?? '';
+    final isIssue =
+        transactionType == 'DISPATCHED' || transactionType == 'ISSUED';
+    final isReturn = transactionType == 'RETURNED';
+
+    // For issue, use current user's facility directly
+    if (isIssue || isReturn) {
+      final stateData = widget.stateData is CrudStateData
+          ? widget.stateData as CrudStateData
+          : CrudStateData({}, []);
+      final userFacilityId = FunctionRegistry.call(
+        'getUserFacilityId',
+        [],
+        stateData,
+      );
+      if (userFacilityId != null && userFacilityId.toString().isNotEmpty) {
+        debugPrint(
+            'ProductSelectionCard: Using getUserFacilityId for issue: $userFacilityId');
+        return userFacilityId.toString();
+      }
+    }
+
     final formsState = context.read<FormsBloc>().state;
     final schema = formsState.cachedSchemas[widget.pageSchema];
 
     if (schema != null) {
-      // Try to find facilityToWhich in warehouseDetails page
       final warehouseDetailsPage = schema.pages['warehouseDetails'];
       if (warehouseDetailsPage?.properties != null) {
         final facilityField =
@@ -315,10 +347,11 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
           // This prevents entering any quantity when there's no stock
           ValidationRule(
             type: 'max',
-            value: maxValue,
-            message: maxValue > 0
-                ? 'Quantity cannot exceed stock in hand ($maxValue)'
-                : 'No stock available',
+            value: min(maxValue, 10000000),
+            message: maxValue >10000000 ? localizations.translate('QUANTITY_CANNOT_EXCEED_STOCK_MAX_LIMIT_VALUE') :maxValue > 0
+                 ?  localizations.translate('QUANTITY_CANNOT_EXCEED_STOCK_IN_HAND_VALUE')
+                .replaceAll('{maxValue}', maxValue.toString())
+                : localizations.translate("NO_STOCK_AVAILABLE_IN_HAND"),
           ),
         ];
 

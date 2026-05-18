@@ -4,28 +4,26 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../utils/conditional_evaluator.dart';
-import '../../utils/flow_widget_state.dart';
-import '../../utils/interpolation.dart';
-import '../../utils/utils.dart';
-import '../flow_widget_interface.dart';
 import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class MenuCardWidget implements FlowWidget {
+class MenuCardWidget extends ResolvedFlowWidget {
   @override
   String get format => 'menu_card';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final flowState = WidgetStateContext.of(context);
-
     return MenuCard(
       onTap: () {
         if (json['onAction'] != null) {
-          final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
+          final actionsList =
+              List<Map<String, dynamic>>.from(json['onAction']);
+          final currentEvalContext = resolved.getFreshEvalContext();
 
           for (var actionJson in actionsList) {
             // Check if this is a conditional action block
@@ -41,7 +39,7 @@ class MenuCardWidget implements FlowWidget {
               } else {
                 conditionMet = ConditionalEvaluator.evaluateExpression(
                   expression,
-                  flowState.evalContext,
+                  currentEvalContext,
                 );
               }
 
@@ -50,9 +48,9 @@ class MenuCardWidget implements FlowWidget {
                 final subActions =
                     actionJson['actions'] as List<dynamic>? ?? [];
                 for (var subActionJson in subActions) {
-                  final action = _resolveAction(
+                  final action = resolved.resolveAction(
                     subActionJson as Map<String, dynamic>,
-                    flowState.evalContext,
+                    currentEvalContext,
                   );
                   onAction(action);
                 }
@@ -61,7 +59,8 @@ class MenuCardWidget implements FlowWidget {
               }
             } else {
               // Legacy direct action (no condition)
-              final action = _resolveAction(actionJson, flowState.evalContext);
+              final action =
+                  resolved.resolveAction(actionJson, currentEvalContext);
               onAction(action);
             }
           }
@@ -77,44 +76,5 @@ class MenuCardWidget implements FlowWidget {
     if (text == null) return null;
     final localization = LocalizationContext.maybeOf(context);
     return localization?.translate(text) ?? text;
-  }
-
-  /// Resolves an action config with navigation data
-  ActionConfig _resolveAction(
-    Map<String, dynamic> actionJson,
-    Map<String, dynamic> evalContext,
-  ) {
-    var action = ActionConfig.fromJson(actionJson);
-
-    // Resolve navigation data if present
-    final navData = action.properties['data'] as List<dynamic>?;
-
-    if (navData != null) {
-      final resolvedData = navData.map((entry) {
-        final key = entry['key'] as String;
-        final rawValue = entry['value'];
-
-        // Resolve using evalContext which contains all data sources
-        final resolvedValue = resolveValue(rawValue, evalContext);
-
-        return {
-          "key": key,
-          "value": resolvedValue == rawValue ? rawValue : resolvedValue,
-        };
-      }).toList();
-
-      action = ActionConfig(
-        action: action.action,
-        actionType: action.actionType,
-        properties: {
-          ...action.properties,
-          'data': resolvedData,
-        },
-        condition: action.condition,
-        actions: action.actions,
-      );
-    }
-
-    return action;
   }
 }

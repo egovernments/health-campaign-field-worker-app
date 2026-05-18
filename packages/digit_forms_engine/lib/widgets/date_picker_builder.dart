@@ -42,7 +42,8 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
             DateTime? parsedDate;
             try {
               final currentLocale = Localizations.localeOf(context).toString();
-              parsedDate = DateFormat("dd MMM yyyy", currentLocale).parseStrict(value);
+              parsedDate =
+                  DateFormat("dd MMM yyyy", currentLocale).parseStrict(value);
             } catch (e) {
               // Optional: Handle invalid date input
               parsedDate = null;
@@ -64,8 +65,10 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
               parsed = rawValue;
             } else if (rawValue is String && rawValue.trim().isNotEmpty) {
               try {
-                final currentLocale = Localizations.localeOf(context).toString();
-                parsed = DateFormat("dd MMM yyyy", currentLocale).parseStrict(rawValue);
+                final currentLocale =
+                    Localizations.localeOf(context).toString();
+                parsed = DateFormat("dd MMM yyyy", currentLocale)
+                    .parseStrict(rawValue);
               } catch (_) {
                 parsed = null;
               }

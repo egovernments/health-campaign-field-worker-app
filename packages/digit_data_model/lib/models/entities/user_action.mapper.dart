@@ -29,10 +29,20 @@ class UserActionSearchModelMapper
       Field('longitude', _$longitude);
   static bool? _$isSync(UserActionSearchModel v) => v.isSync;
   static const Field<UserActionSearchModel, bool> _f$isSync =
-      Field('isSync', _$isSync);
+      Field('isSync', _$isSync, opt: true);
   static int? _$timestamp(UserActionSearchModel v) => v.timestamp;
   static const Field<UserActionSearchModel, int> _f$timestamp =
-      Field('timestamp', _$timestamp);
+      Field('timestamp', _$timestamp, opt: true);
+  static String? _$action(UserActionSearchModel v) => v.action;
+  static const Field<UserActionSearchModel, String> _f$action =
+      Field('action', _$action);
+  static String? _$projectId(UserActionSearchModel v) => v.projectId;
+  static const Field<UserActionSearchModel, String> _f$projectId =
+      Field('projectId', _$projectId);
+  static List<String>? _$clientReferenceId(UserActionSearchModel v) =>
+      v.clientReferenceId;
+  static const Field<UserActionSearchModel, List<String>> _f$clientReferenceId =
+      Field('clientReferenceId', _$clientReferenceId);
   static String? _$boundaryCode(UserActionSearchModel v) => v.boundaryCode;
   static const Field<UserActionSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -52,6 +62,9 @@ class UserActionSearchModelMapper
     #longitude: _f$longitude,
     #isSync: _f$isSync,
     #timestamp: _f$timestamp,
+    #action: _f$action,
+    #projectId: _f$projectId,
+    #clientReferenceId: _f$clientReferenceId,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -73,6 +86,9 @@ class UserActionSearchModelMapper
         longitude: data.dec(_f$longitude),
         isSync: data.dec(_f$isSync),
         timestamp: data.dec(_f$timestamp),
+        action: data.dec(_f$action),
+        projectId: data.dec(_f$projectId),
+        clientReferenceId: data.dec(_f$clientReferenceId),
         boundaryCode: data.dec(_f$boundaryCode),
         auditDetails: data.dec(_f$auditDetails));
   }
@@ -134,6 +150,8 @@ abstract class UserActionSearchModelCopyWith<
     $R,
     $In extends UserActionSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceId;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -142,6 +160,9 @@ abstract class UserActionSearchModelCopyWith<
       double? longitude,
       bool? isSync,
       int? timestamp,
+      String? action,
+      String? projectId,
+      List<String>? clientReferenceId,
       String? boundaryCode,
       AuditDetails? auditDetails});
   UserActionSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -157,6 +178,14 @@ class _UserActionSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<UserActionSearchModel> $mapper =
       UserActionSearchModelMapper.ensureInitialized();
   @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceId => $value.clientReferenceId != null
+          ? ListCopyWith(
+              $value.clientReferenceId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(clientReferenceId: v))
+          : null;
+  @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
@@ -165,6 +194,9 @@ class _UserActionSearchModelCopyWithImpl<$R, $Out>
           Object? longitude = $none,
           Object? isSync = $none,
           Object? timestamp = $none,
+          Object? action = $none,
+          Object? projectId = $none,
+          Object? clientReferenceId = $none,
           Object? boundaryCode = $none,
           Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
@@ -172,6 +204,9 @@ class _UserActionSearchModelCopyWithImpl<$R, $Out>
         if (longitude != $none) #longitude: longitude,
         if (isSync != $none) #isSync: isSync,
         if (timestamp != $none) #timestamp: timestamp,
+        if (action != $none) #action: action,
+        if (projectId != $none) #projectId: projectId,
+        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (boundaryCode != $none) #boundaryCode: boundaryCode,
         if (auditDetails != $none) #auditDetails: auditDetails
       }));
@@ -182,6 +217,10 @@ class _UserActionSearchModelCopyWithImpl<$R, $Out>
           longitude: data.get(#longitude, or: $value.longitude),
           isSync: data.get(#isSync, or: $value.isSync),
           timestamp: data.get(#timestamp, or: $value.timestamp),
+          action: data.get(#action, or: $value.action),
+          projectId: data.get(#projectId, or: $value.projectId),
+          clientReferenceId:
+              data.get(#clientReferenceId, or: $value.clientReferenceId),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
           auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
@@ -222,12 +261,12 @@ class UserActionModelMapper extends SubClassMapperBase<UserActionModel> {
   static String _$clientReferenceId(UserActionModel v) => v.clientReferenceId;
   static const Field<UserActionModel, String> _f$clientReferenceId =
       Field('clientReferenceId', _$clientReferenceId);
-  static bool _$isSync(UserActionModel v) => v.isSync;
+  static bool? _$isSync(UserActionModel v) => v.isSync;
   static const Field<UserActionModel, bool> _f$isSync =
-      Field('isSync', _$isSync);
-  static int _$timestamp(UserActionModel v) => v.timestamp;
+      Field('isSync', _$isSync, opt: true);
+  static int? _$timestamp(UserActionModel v) => v.timestamp;
   static const Field<UserActionModel, int> _f$timestamp =
-      Field('timestamp', _$timestamp);
+      Field('timestamp', _$timestamp, opt: true);
   static String _$projectId(UserActionModel v) => v.projectId;
   static const Field<UserActionModel, String> _f$projectId =
       Field('projectId', _$projectId);
@@ -437,8 +476,8 @@ class _UserActionModelCopyWithImpl<$R, $Out>
           double? longitude,
           double? locationAccuracy,
           String? clientReferenceId,
-          bool? isSync,
-          int? timestamp,
+          Object? isSync = $none,
+          Object? timestamp = $none,
           String? projectId,
           String? boundaryCode,
           String? action,
@@ -457,8 +496,8 @@ class _UserActionModelCopyWithImpl<$R, $Out>
         if (longitude != null) #longitude: longitude,
         if (locationAccuracy != null) #locationAccuracy: locationAccuracy,
         if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
-        if (isSync != null) #isSync: isSync,
-        if (timestamp != null) #timestamp: timestamp,
+        if (isSync != $none) #isSync: isSync,
+        if (timestamp != $none) #timestamp: timestamp,
         if (projectId != null) #projectId: projectId,
         if (boundaryCode != null) #boundaryCode: boundaryCode,
         if (action != null) #action: action,

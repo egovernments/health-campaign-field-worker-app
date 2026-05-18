@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
@@ -6,6 +7,69 @@ import 'package:drift/drift.dart';
 class StockLocalRepository
     extends LocalRepository<StockModel, StockSearchModel> {
   StockLocalRepository(super.sql, super.opLogManager);
+
+  void listenToChanges({
+    required StockSearchModel query,
+    required void Function(List<StockModel> data) listener,
+  }) async {
+    return retryLocalCallOperation(() async {
+      final select = sql.select(sql.stock)
+        ..where(
+          (tbl) => buildAnd([
+            if (query.receiverId != null)
+              tbl.receiverId.equals(query.receiverId!),
+            if (query.senderId != null) tbl.senderId.equals(query.senderId!),
+            if (query.productVariantId != null)
+              tbl.productVariantId.isIn(query.productVariantId!),
+            if (query.transactionType != null)
+              tbl.transactionType.isIn(query.transactionType!),
+          ]),
+        );
+
+      select.watch().listen((event) {
+        final data = event.map((e) {
+          final createdBy = e.auditCreatedBy;
+          final createdTime = e.auditCreatedTime;
+
+          return StockModel(
+            id: e.id,
+            tenantId: e.tenantId,
+            facilityId: e.facilityId,
+            productVariantId: e.productVariantId,
+            receiverId: e.receiverId,
+            senderId: e.senderId,
+            receiverType: e.receiverType,
+            senderType: e.senderType,
+            referenceId: e.referenceId,
+            referenceIdType: e.referenceIdType,
+            transactionType: e.transactionType,
+            transactionReason: e.transactionReason,
+            transactingPartyId: e.transactingPartyId,
+            transactingPartyType: e.transactingPartyType,
+            quantity: e.quantity,
+            waybillNumber: e.waybillNumber,
+            clientReferenceId: e.clientReferenceId,
+            isDeleted: e.isDeleted,
+            rowVersion: e.rowVersion,
+            additionalFields: _parseAdditionalFields(e.additionalFields),
+            auditDetails: createdTime == null || createdBy == null
+                ? null
+                : AuditDetails(createdTime: createdTime, createdBy: createdBy),
+            clientAuditDetails: createdTime == null || createdBy == null
+                ? null
+                : ClientAuditDetails(
+                    createdTime: e.clientCreatedTime!,
+                    createdBy: e.clientCreatedBy!,
+                    lastModifiedBy: e.clientModifiedBy,
+                    lastModifiedTime: e.clientModifiedTime,
+                  ),
+          );
+        }).toList();
+
+        listener(data);
+      });
+    });
+  }
 
   @override
   FutureOr<void> create(
@@ -38,11 +102,11 @@ class StockLocalRepository
                 [
                   if (query.id != null) sql.stock.id.equals(query.id!),
                   if (query.receiverId != null)
-                    sql.stock.receiverId.isIn(query.receiverId!),
+                    sql.stock.receiverId.equals(query.receiverId!),
                   if (query.senderId != null)
                     sql.stock.senderId.equals(query.senderId!),
                   if (query.productVariantId != null)
-                    sql.stock.productVariantId.equals(
+                    sql.stock.productVariantId.isIn(
                       query.productVariantId!,
                     ),
                   if (query.clientReferenceId != null)
@@ -92,6 +156,7 @@ class StockLocalRepository
           clientReferenceId: data.clientReferenceId,
           isDeleted: data.isDeleted,
           rowVersion: data.rowVersion,
+          additionalFields: _parseAdditionalFields(data.additionalFields),
           auditDetails: createdTime == null || createdBy == null
               ? null
               : AuditDetails(createdTime: createdTime, createdBy: createdBy),
@@ -146,6 +211,17 @@ class StockLocalRepository
         );
       });
     });
+  }
+
+  StockAdditionalFields? _parseAdditionalFields(String? jsonStr) {
+    if (jsonStr == null || jsonStr.isEmpty) return null;
+    try {
+      final map = jsonDecode(jsonStr);
+      if (map is Map<String, dynamic>) {
+        return StockAdditionalFieldsMapper.fromMap(map);
+      }
+    } catch (_) {}
+    return null;
   }
 
   @override

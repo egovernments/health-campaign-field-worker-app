@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Updated scanner and data_model package
+
 ## 1.0.5+2
 
 * Updated Readme

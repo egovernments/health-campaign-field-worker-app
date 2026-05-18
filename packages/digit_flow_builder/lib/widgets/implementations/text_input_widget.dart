@@ -4,31 +4,25 @@ import 'package:flutter/services.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
-import '../../utils/flow_widget_state.dart';
 import '../../utils/utils.dart';
-import '../flow_widget_interface.dart';
-import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class TextInputWidget implements FlowWidget {
+class TextInputWidget extends ResolvedFlowWidget {
   @override
   String get format => 'textInput';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final state = WidgetStateContext.of(context);
-    final localization = LocalizationContext.maybeOf(context);
-
     final key = (json['key'] ?? json['fieldName']) as String?;
-    final label = resolveTemplate(json['label'], state.evalContext) ?? '';
-    final localizedLabel = localization?.translate(label) ?? label;
+    final localizedLabel = resolved.resolvedLabel ?? '';
 
     final placeholder = json['placeholder'] as String? ?? '';
-    final localizedPlaceholder =
-        localization?.translate(placeholder) ?? placeholder;
+    final localizedPlaceholder = resolved.resolveText(placeholder);
 
     final isRequired = json['required'] == true;
     final isReadOnly = json['readOnly'] == true;
@@ -36,23 +30,12 @@ class TextInputWidget implements FlowWidget {
     final minLength = json['minLength'] as int?;
     final inputType = json['inputType'] as String? ?? 'text';
 
-    // Check visibility condition
-    final visible = json['visible'] == null ||
-        (json['visible'] is bool && json['visible'] == true) ||
-        (json['visible'] is String &&
-            resolveValue(json['visible'], state.evalContext) == true);
-
-    if (!visible) {
-      return const SizedBox.shrink();
-    }
-
     // Determine keyboard type based on inputType
     TextInputType keyboardType;
     List<TextInputFormatter> inputFormatters = [];
 
-    // Allow only ASCII characters (letters, numbers, punctuation, spaces) - blocks all emojis
     final noEmojiFilter = FilteringTextInputFormatter.allow(
-      RegExp(r'[\x00-\x7F]'),  // ASCII only (0-127)
+      RegExp(r'[\x00-\x7F]'),
     );
 
     switch (inputType.toLowerCase()) {
@@ -83,23 +66,23 @@ class TextInputWidget implements FlowWidget {
         inputFormatters = [noEmojiFilter];
     }
 
-    // Use compositeKey for registry operations (includes instanceId for proper isolation)
-    final compositeKey = state.compositeKey ?? state.screenKey;
+    // Use compositeKey for registry operations
+    final compositeKey = resolved.compositeKey;
 
-    // Get initial value from state for the stateful wrapper
+    // Get initial value from state
     dynamic initialValue;
     if (key != null && compositeKey != null) {
-      if (state.widgetData.containsKey(key)) {
-        initialValue = state.widgetData[key];
+      if (resolved.widgetData.containsKey(key)) {
+        initialValue = resolved.widgetData[key];
       } else {
-        initialValue = resolveValue('{{$key}}', state.evalContext);
+        initialValue =
+            resolveValue('{{$key}}', resolved.evalContext);
         if (initialValue == '{{$key}}' || initialValue == null) {
-          initialValue = state.formData[key];
+          initialValue = resolved.formData[key];
         }
       }
     }
 
-    // Use stateful wrapper to maintain controller and handle external updates
     return _ReactiveTextInput(
       key: ValueKey('${compositeKey}_$key'),
       compositeKey: compositeKey,
@@ -113,7 +96,7 @@ class TextInputWidget implements FlowWidget {
       maxLength: maxLength,
       json: json,
       onAction: onAction,
-      evalContext: state.evalContext,
+      evalContext: resolved.evalContext,
     );
   }
 }
@@ -176,25 +159,23 @@ class _ReactiveTextInputState extends State<_ReactiveTextInput> {
     final compositeKey = widget.compositeKey;
     final key = widget.fieldKey;
 
-    // If no compositeKey, just build without listening
     if (compositeKey == null) {
       return _buildInput(context);
     }
 
-    // Listen for external state changes
     return ValueListenableBuilder<FlowCrudState?>(
       valueListenable: FlowCrudStateRegistry().listen(compositeKey),
       builder: (context, flowState, child) {
         final widgetData = flowState?.widgetData ?? {};
         final formData = flowState?.formData ?? {};
 
-        // Get the current value from state
         dynamic externalValue;
         if (key != null) {
           if (widgetData.containsKey(key)) {
             externalValue = widgetData[key];
           } else {
-            externalValue = resolveValue('{{$key}}', widget.evalContext);
+            externalValue =
+                resolveValue('{{$key}}', widget.evalContext);
             if (externalValue == '{{$key}}' || externalValue == null) {
               externalValue = formData[key];
             }
@@ -203,11 +184,8 @@ class _ReactiveTextInputState extends State<_ReactiveTextInput> {
 
         final externalValueStr = externalValue?.toString() ?? '';
 
-        // Only update controller if the external value differs from what we last set
-        // AND differs from current controller text (to detect external changes)
         if (externalValueStr != _lastKnownValue &&
             externalValueStr != _controller.text) {
-          // This is an external change - update the controller
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted && _controller.text != externalValueStr) {
               _controller.text = externalValueStr;
@@ -224,7 +202,6 @@ class _ReactiveTextInputState extends State<_ReactiveTextInput> {
   Widget _buildInput(BuildContext context) {
     return Builder(
       builder: (builderContext) {
-        // Use compositeKey from widget for registry operations
         final compositeKeyForCallback = widget.compositeKey;
 
         return LabeledField(
@@ -237,14 +214,14 @@ class _ReactiveTextInputState extends State<_ReactiveTextInput> {
             inputFormatters: widget.inputFormatters,
             maxLength: widget.maxLength,
             onChange: (value) {
-              // Track the value we're setting
               _lastKnownValue = value;
 
-              if (widget.fieldKey != null && compositeKeyForCallback != null) {
+              if (widget.fieldKey != null &&
+                  compositeKeyForCallback != null) {
                 final currentState =
                     FlowCrudStateRegistry().get(compositeKeyForCallback);
-                final currentWidgetData =
-                    Map<String, dynamic>.from(currentState?.widgetData ?? {});
+                final currentWidgetData = Map<String, dynamic>.from(
+                    currentState?.widgetData ?? {});
 
                 currentWidgetData[widget.fieldKey!] = value;
 
@@ -252,18 +229,21 @@ class _ReactiveTextInputState extends State<_ReactiveTextInput> {
                   final updatedState = currentState.copyWith(
                     widgetData: currentWidgetData,
                   );
-                  FlowCrudStateRegistry().update(compositeKeyForCallback, updatedState);
+                  FlowCrudStateRegistry()
+                      .update(compositeKeyForCallback, updatedState);
                 } else {
                   final newState = FlowCrudState(
                     widgetData: currentWidgetData,
                   );
-                  FlowCrudStateRegistry().update(compositeKeyForCallback, newState);
+                  FlowCrudStateRegistry()
+                      .update(compositeKeyForCallback, newState);
                 }
               }
 
-              if (widget.fieldKey != null && widget.json['onChange'] != null) {
-                final actionsList =
-                    List<Map<String, dynamic>>.from(widget.json['onChange']);
+              if (widget.fieldKey != null &&
+                  widget.json['onChange'] != null) {
+                final actionsList = List<Map<String, dynamic>>.from(
+                    widget.json['onChange']);
 
                 for (var actionJson in actionsList) {
                   var action = ActionConfig.fromJson(actionJson);

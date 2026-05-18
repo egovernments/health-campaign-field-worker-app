@@ -3,9 +3,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 
-import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +19,8 @@ import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -26,12 +31,16 @@ import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
+import '../../models/downsync/downsync.dart';
 import '../../models/entities/roles_type.dart';
-import '../../models/entities/transaction_type.dart';
 import '../../utils/background_service.dart';
+import '../../utils/download_image.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
+import '../../utils/stock_calculation_utils.dart';
 import '../../utils/utils.dart';
+import '../auth/auth.dart';
+import '../push_notification/push_notification.dart';
 
 part 'project.freezed.dart';
 
@@ -46,68 +55,72 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
-  projectStaffRemoteRepository;
+      projectStaffRemoteRepository;
   final LocalRepository<ProjectStaffModel, ProjectStaffSearchModel>
-  projectStaffLocalRepository;
+      projectStaffLocalRepository;
 
   /// Project Repositories
   final RemoteRepository<ProjectModel, ProjectSearchModel>
-  projectRemoteRepository;
+      projectRemoteRepository;
   final LocalRepository<ProjectModel, ProjectSearchModel>
-  projectLocalRepository;
+      projectLocalRepository;
 
   final RemoteRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
-  attendanceRemoteRepository;
+      attendanceRemoteRepository;
   final LocalRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
-  attendanceLocalRepository;
+      attendanceLocalRepository;
   final RemoteRepository<IndividualModel, IndividualSearchModel>
-  individualRemoteRepository;
+      individualRemoteRepository;
   final LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>
-  attendanceLogLocalRepository;
+      attendanceLogLocalRepository;
   final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
-  attendanceLogRemoteRepository;
+      attendanceLogRemoteRepository;
   final LocalRepository<IndividualModel, IndividualSearchModel>
-  individualLocalRepository;
+      individualLocalRepository;
 
   /// Project Facility Repositories
   final RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
-  projectFacilityRemoteRepository;
+      projectFacilityRemoteRepository;
   final LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
-  projectFacilityLocalRepository;
+      projectFacilityLocalRepository;
 
   /// Facility Repositories
   final RemoteRepository<FacilityModel, FacilitySearchModel>
-  facilityRemoteRepository;
+      facilityRemoteRepository;
   final LocalRepository<FacilityModel, FacilitySearchModel>
-  facilityLocalRepository;
+      facilityLocalRepository;
 
   /// Stock Repositories
   final RemoteRepository<StockModel, StockSearchModel> stockRemoteRepository;
   final LocalRepository<StockModel, StockSearchModel> stockLocalRepository;
+  final LocalRepository<DownsyncModel, DownsyncSearchModel>
+      downSyncLocalRepository;
+  final UserActionLocalRepository userActionLocalRepository;
+  final UserActionRemoteRepository userActionRemoteRepository;
 
   /// Service Definition Repositories
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
-  serviceDefinitionRemoteRepository;
+      serviceDefinitionRemoteRepository;
   final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
-  serviceDefinitionLocalRepository;
+      serviceDefinitionLocalRepository;
 
   ///Boundary Resource Repositories
   final RemoteRepository<BoundaryModel, BoundarySearchModel>
-  boundaryRemoteRepository;
+      boundaryRemoteRepository;
   final LocalRepository<BoundaryModel, BoundarySearchModel>
-  boundaryLocalRepository;
+      boundaryLocalRepository;
 
   /// Project Resource Repositories
   final RemoteRepository<ProjectResourceModel, ProjectResourceSearchModel>
-  projectResourceRemoteRepository;
+      projectResourceRemoteRepository;
   final LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>
-  projectResourceLocalRepository;
+      projectResourceLocalRepository;
 
   /// Product Variant Repositories
   final RemoteRepository<ProductVariantModel, ProductVariantSearchModel>
-  productVariantRemoteRepository;
+      productVariantRemoteRepository;
   final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
-  productVariantLocalRepository;
+      productVariantLocalRepository;
   final DashboardRemoteRepository dashboardRemoteRepository;
   BuildContext context;
 
@@ -141,6 +154,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.attendanceLogLocalRepository,
     required this.attendanceLogRemoteRepository,
     required this.dashboardRemoteRepository,
+    required this.downSyncLocalRepository,
+    required this.userActionLocalRepository,
+    required this.userActionRemoteRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -149,9 +165,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _handleProjectInit(
-      ProjectInitializeEvent event,
-      ProjectEmitter emit,
-      ) async {
+    ProjectInitializeEvent event,
+    ProjectEmitter emit,
+  ) async {
     emit(const ProjectState(
       loading: true,
       projects: [],
@@ -165,9 +181,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       title: 'ProjectBloc',
     );
 
-    final isOnline =
-        connectivityResult.contains(ConnectivityResult.wifi) ||
-            connectivityResult.contains(ConnectivityResult.mobile);
+    final isOnline = connectivityResult.contains(ConnectivityResult.wifi) ||
+        connectivityResult.contains(ConnectivityResult.mobile);
     final selectedProject = await localSecureStore.selectedProject;
     final isProjectSetUpComplete = await localSecureStore
         .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
@@ -253,18 +268,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     if (projects.isNotEmpty) {
       try {
-        await _loadProjectFacilities(projects, batchSize);
-      } catch (_) {
-        emit(
-          state.copyWith(
-            projects: [],
-            loading: false,
-            syncError: ProjectSyncErrorType.projectFacilities,
-          ),
-        );
-        return;
-      }
-      try {
         await _loadFacilities(projects, batchSize);
       } catch (_) {
         emit(
@@ -327,8 +330,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         emit(state.copyWith(
           projectType: projectTypes.projectTypeWrapper?.projectTypes
               .where((element) =>
-          element.id ==
-              (additionalProjectTypeId ?? projects.first.projectTypeId))
+                  element.id ==
+                  (additionalProjectTypeId ?? projects.first.projectTypeId))
               .toList()
               .firstOrNull,
         ));
@@ -365,7 +368,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
 
     /* An empty BoundarySearchModel is sent to retrieve all boundaries from the repository.
-    This ensures that the entire dataset is fetched, as no specific filters or constraints are applied.
+    This ensures that the entire dataset is fetched, as no specific filters or constraints are applied.Facility
     The retrieved boundaries are then processed to find the least level boundaries and set them in the singleton.*/
     final boundaries = await boundaryLocalRepository.search(
       BoundarySearchModel(),
@@ -374,15 +377,74 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
   }
 
-  FutureOr<void> _loadProjectFacilities(
-      List<ProjectModel> projects, int batchSize) async {
+  FutureOr<void> _loadProjectFacilities(ProjectModel project) async {
+
+    final userObject = await localSecureStore.userRequestModel;
+    final assignedBoundaryType = project.address?.boundaryType;
+    List<String>? boundaryTypes;
+
+    if (assignedBoundaryType != null) {
+      final configs = await isar.appConfigurations.where().findAll();
+      final boundaryRelationships = configs.firstOrNull?.boundaryRelationship;
+
+      if (boundaryRelationships != null) {
+        final match = boundaryRelationships
+            .where((e) => e.boundaryType == assignedBoundaryType)
+            .firstOrNull;
+
+        if (match != null) {
+          boundaryTypes = [
+            if (match.parentBoundaryType.isNotEmpty) match.parentBoundaryType,
+            match.boundaryType,
+            if (match.childBoundaryTypes.isNotEmpty)
+              match.childBoundaryTypes.first,
+          ];
+        }
+      }
+
+      boundaryTypes ??= [assignedBoundaryType];
+    }
+
     final projectFacilities = await projectFacilityRemoteRepository.search(
       ProjectFacilitySearchModel(
-        projectId: projects.map((e) => e.id).toList(),
+        projectId: [project.id],
+        boundaryTypes: boundaryTypes,
       ),
     );
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
+
+    // Register notification token with current level facility IDs
+    final currentFacilityIds = projectFacilities
+        .where((pf) {
+          final facilityLevel = pf.additionalFields?.fields
+              .where((f) => f.key == 'facilityLevel')
+              .firstOrNull
+              ?.value;
+          return facilityLevel == 'current';
+        })
+        .map((pf) => pf.facilityId)
+        .toList();
+
+    if (currentFacilityIds.isNotEmpty) {
+      final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+      final apiEndPoint = Constants.getNotificationEndPoint(
+        serviceRegistry: serviceRegistry,
+        service: 'NOTIFICATION',
+        action: ApiOperation.register.toValue(),
+        entityName: 'NotificationToken',
+      );
+
+      if (apiEndPoint.isNotEmpty) {
+        context.read<PushNotificationBloc>().add(
+              PushNotificationEvent.registerToken(
+                apiEndPoint: apiEndPoint,
+                facilityIds: currentFacilityIds,
+                userObject: userObject
+              ),
+            );
+      }
+    }
   }
 
   FutureOr<void> _loadFacilities(
@@ -423,90 +485,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
-  // info: downloads stock data from remote , based on the user role
-  FutureOr<void> downloadStockDataBasedOnRole(
-      List<ProjectFacilityModel> projectFacilities,
-      List<FacilityModel> allFacilities,
-      String? boundaryType,
-      ProjectCycle? currentRunningCycle) async {
-    final userObject = await localSecureStore.userRequestModel;
-    final userRoles = userObject!.roles.map((e) => e.code);
-    final lastChangedSince = currentRunningCycle?.startDate;
-
-    Map<String, String> facilityIdUsageMap = {};
-
-    for (var element in allFacilities) {
-      facilityIdUsageMap[element.id] = element?.usage ?? "";
-    }
-
-    // info : assumption both roles will not be assigned to user
-
-    if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
-      List<String> receiverIds =
-      projectFacilities.map((e) => e.facilityId).toList();
-      receiverIds = receiverIds
-          .where((e) => facilityIdUsageMap[e] == Constants.healthFacility)
-          .toList();
-      final stockSearchModel = StockSearchModel(
-        receiverId: receiverIds,
-        transactionType: [TransactionType.dispatched.toValue()],
-      );
-      final stockEntriesDownloaded =
-      await downloadStockEntries(stockSearchModel, lastChangedSince);
-      // info : create entries in the local repository
-
-      await createStockDownloadedEntries(stockEntriesDownloaded);
-    } else if (userRoles.contains(RolesType.warehouseManager.toValue()) &&
-        boundaryType == Constants.lgaBoundaryLevel) {
-      List<String> receiverIds =
-      projectFacilities.map((e) => e.facilityId).toList();
-      receiverIds = receiverIds
-          .where((e) => facilityIdUsageMap[e] == Constants.lgaFacility)
-          .toList();
-      final stockSearchModel = StockSearchModel(
-        receiverId: receiverIds,
-        transactionType: [TransactionType.dispatched.toValue()],
-      );
-      final stockEntriesDownloaded =
-      await downloadStockEntries(stockSearchModel, lastChangedSince);
-
-      // info : create entries in the local repository
-      await createStockDownloadedEntries(stockEntriesDownloaded);
-    } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
-      final receiverIds = [context.loggedInUserUuid];
-      final stockSearchModel = StockSearchModel(
-        receiverId: receiverIds,
-        transactionType: [TransactionType.dispatched.toValue()],
-      );
-      final stockEntriesDownloaded =
-      await downloadStockEntries(stockSearchModel, lastChangedSince);
-
-      // info : create entries in the local repository
-      await createStockDownloadedEntries(stockEntriesDownloaded);
-    }
-  }
-
-  // info : insert data in db
-  FutureOr<void> createStockDownloadedEntries(
-      List<StockModel> stockEntries) async {
-    await stockLocalRepository.bulkCreate(stockEntries);
-  }
-
-  // info:  downloads the stock data from remote repository
-
-  FutureOr<List<StockModel>> downloadStockEntries(
-      StockSearchModel stockSearchModel, int? lastChangedSince) async {
-    var offset = 0;
-    var initialLimit = 10;
-
-    final stockEntries = await stockRemoteRepository.search(stockSearchModel,
-        limit: initialLimit,
-        offSet: offset,
-        lastChangedSince: lastChangedSince);
-
-    return stockEntries;
-  }
-
   FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
     for (final project in projects) {
       final projectResources = await projectResourceRemoteRepository.search(
@@ -535,10 +513,28 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  Future<List<AttendanceLogModel>> _updateLogsData(
+      List<AttendanceLogModel> logs) async {
+    List<AttendanceLogModel> updatedLogs = [];
+    for (var log in logs) {
+      var additionalDetails = log.additionalDetails;
+      if (additionalDetails != null &&
+          additionalDetails['isFirstSignature'] == "true" &&
+          additionalDetails['signatureFileStoreId'] != null) {
+        String signatureFileStoreId = additionalDetails['signatureFileStoreId'];
+        String signatureBase64 =
+            await DownloadImage.downloadSignature(signatureFileStoreId);
+        additionalDetails['signatureData'] = signatureBase64;
+      }
+      updatedLogs.add(log.copyWith(additionalDetails: additionalDetails));
+    }
+    return updatedLogs;
+  }
+
   Future<void> _handleProjectSelection(
-      ProjectSelectProjectEvent event,
-      ProjectEmitter emit,
-      ) async {
+    ProjectSelectProjectEvent event,
+    ProjectEmitter emit,
+  ) async {
     emit(state.copyWith(loading: true, syncError: null));
 
     List<BoundaryModel> boundaries;
@@ -547,12 +543,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         if (context.loggedInUserRoles
             .where(
               (role) =>
-          role.code == RolesType.districtSupervisor.toValue() ||
-              role.code ==
-                  RolesType.distributor
-                      .toValue() || // NOTE: Distributor also fetches registers for getting his team members (Non-Mobile users)
-              role.code == RolesType.teamSupervisor.toValue(),
-        )
+                  role.code == RolesType.districtSupervisor.toValue() ||
+                  role.code ==
+                      RolesType.distributor
+                          .toValue() || // NOTE: Distributor also fetches registers for getting his team members (Non-Mobile users)
+                  role.code == RolesType.teamSupervisor.toValue(),
+            )
             .toList()
             .isNotEmpty) {
           final loggedInIndividualId = await localSecureStore.userIndividualId;
@@ -561,9 +557,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           if (context.loggedInUserRoles
               .where(
                 (role) =>
-            role.code == RolesType.districtSupervisor.toValue() ||
-                role.code == RolesType.teamSupervisor.toValue(),
-          )
+                    role.code == RolesType.districtSupervisor.toValue() ||
+                    role.code == RolesType.teamSupervisor.toValue(),
+              )
               .toList()
               .isNotEmpty) {
             attendanceRegisters = await attendanceRemoteRepository.search(
@@ -597,9 +593,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 if (context.loggedInUserRoles
                     .where(
                       (role) =>
-                  role.code == RolesType.districtSupervisor.toValue() ||
-                      role.code == RolesType.teamSupervisor.toValue(),
-                )
+                          role.code == RolesType.districtSupervisor.toValue() ||
+                          role.code == RolesType.teamSupervisor.toValue(),
+                    )
                     .toList()
                     .isNotEmpty) {
                   final logs = await attendanceLogRemoteRepository.search(
@@ -607,7 +603,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                       registerId: register.id,
                     ),
                   );
-                  await attendanceLogLocalRepository.bulkCreate(logs);
+                  List<AttendanceLogModel> updatedLogs =
+                      await _updateLogsData(logs);
+                  await attendanceLogLocalRepository.bulkCreate(updatedLogs);
                 }
               } catch (_) {
                 emit(state.copyWith(
@@ -629,11 +627,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }
       try {
         final startDate = DateTime(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day)
+                DateTime.now().year, DateTime.now().month, DateTime.now().day)
             .toLocal()
             .millisecondsSinceEpoch;
         final endDate = DateTime(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day, 23, 59)
+                DateTime.now().day, 23, 59)
             .toLocal()
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
@@ -672,7 +670,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             });
           }
           final individuals =
-          await individualLocalRepository.search(IndividualSearchModel(
+              await individualLocalRepository.search(IndividualSearchModel(
             id: attendeesIndividualIds,
           ));
           final userUUIDList = individuals
@@ -681,11 +679,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .toList();
           await processDashboardConfig(
             dashboardConfig.first.dashboardConfigs
-                ?.where((config) =>
-            config.projectTypeId == event.model.projectTypeId ||
-                config.projectTypeCode == event.model.projectType)
-                .first
-                .charts ??
+                    ?.where((config) =>
+                        config.projectTypeId == event.model.projectTypeId ||
+                        config.projectTypeCode == event.model.projectType)
+                    .first
+                    .charts ??
                 [],
             startDate,
             endDate,
@@ -717,7 +715,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                     MdmsMasterDetailModel(
                       'FormConfig',
                       filter:
-                      "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
+                          "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
                     ),
                   ],
                 ),
@@ -788,18 +786,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       final selectedProjectType = projectType.projectTypeWrapper?.projectTypes
           .where(
             (element) =>
-        element.id ==
-            (additionalProjectTypeId ?? event.model.projectTypeId),
-      )
+                element.id ==
+                (additionalProjectTypeId ?? event.model.projectTypeId),
+          )
           .toList()
           .firstOrNull;
       final currentRunningCycle = selectedProjectType?.cycles
           ?.where(
             (e) =>
-        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-            (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-        // Return null when no matching cycle is found
-      )
+                (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+                (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+            // Return null when no matching cycle is found
+          )
           .firstOrNull;
 
       final cycles = List<Cycle>.from(
@@ -817,7 +815,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       final serverVersion = configResult.rowVersions?.rowVersionslist
           ?.where(
             (element) => element.module == 'egov-location',
-      )
+          )
           .toList()
           .firstOrNull
           ?.version;
@@ -892,40 +890,401 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
-    final getSelectedProjectType = await localSecureStore.selectedProjectType;
-    final getSelectedProject = await localSecureStore.selectedProject;
-
-    final currentRunningCycle =
-        getSelectedProject?.additionalDetails?.projectType?.cycles
-            ?.where(
-              (e) =>
-          (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-          // Return null when no matching cycle is found
-        )
-            .firstOrNull;
-
+    // Create useraction for device switch
     try {
-      final projectFacilities = await projectFacilityLocalRepository
-          .search(ProjectFacilitySearchModel());
-      final facilities =
-      await facilityLocalRepository.search(FacilitySearchModel());
-      await downloadStockDataBasedOnRole(projectFacilities, facilities,
-          event.model.address?.boundaryType, currentRunningCycle);
+      await _createUserActionForDeviceSwitch(event.model);
+    } catch (error) {
+      AppLogger.instance.error(
+        title: 'ProjectBloc',
+        message: '$error',
+      );
+    }
 
+    // Load project facilities after project selection
+    try {
+      await _loadProjectFacilities(event.model);
+    } catch (_) {
       emit(state.copyWith(
         selectedProject: event.model,
         loading: false,
-        syncError: null,
-        projectType: getSelectedProjectType,
-        selectedCycle: currentRunningCycle,
-      ));
-    } catch (_) {
-      emit(state.copyWith(
-        loading: false,
-        projects: [],
         syncError: ProjectSyncErrorType.projectFacilities,
       ));
+      return;
+    }
+
+    try {
+      // Trigger silent stock downsync after project facilities are loaded
+      await _silentStockDownSync(event.model);
+    } catch (_) {
+      emit(state.copyWith(
+        selectedProject: event.model,
+        loading: false,
+        syncError: ProjectSyncErrorType.stockDownsync,
+      ));
+      return;
+    }
+
+    final getSelectedProject = await localSecureStore.selectedProject;
+
+    emit(state.copyWith(
+      selectedProject: getSelectedProject,
+      loading: false,
+      syncError: null,
+    ));
+  }
+
+  /// Silently downloads dispatched stock from server without UI dialogs.
+  /// Runs in the background after project selection.
+  Future<void> _silentStockDownSync(ProjectModel project) async {
+    try {
+      final localityKey = 'stock_${project.id}';
+      final userObject = await localSecureStore.userRequestModel;
+      if (userObject == null) return;
+
+      final userRoles = userObject.roles.map((e) => e.code);
+
+      final projectFacilities = await projectFacilityLocalRepository.search(
+        ProjectFacilitySearchModel(projectId: [project.id]),
+      );
+
+      // Filter to only include facilities where facilityLevel is 'current'
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
+      final projectResources = await projectResourceLocalRepository.search(
+        ProjectResourceSearchModel(projectId: [project.id]),
+      );
+      final productVariantIds = projectResources
+          .map((pr) => pr.resource.productVariantId)
+          .whereType<String>()
+          .toSet()
+          .toList();
+
+      List<String> receiverIds = [];
+      if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
+        receiverIds = currentFacilities.map((e) => e.facilityId).toList();
+      } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
+        receiverIds = currentFacilities.map((e) => e.facilityId).toList();
+      } else if (userRoles.contains(RolesType.communityDistributor.toValue()) ||
+          userRoles.contains(RolesType.distributor.toValue())) {
+        receiverIds = [userObject.uuid];
+      }
+
+      if (receiverIds.isEmpty) return;
+
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds.first,
+        senderId: receiverIds.first,
+        campaignNumber: project.referenceID,
+      );
+
+      final existingDownSyncData =
+          await downSyncLocalRepository.search(DownsyncSearchModel(
+        locality: localityKey,
+      ));
+
+      final lastSyncedTime = existingDownSyncData.isEmpty
+          ? null
+          : existingDownSyncData.first.lastSyncedTime;
+
+      if (existingDownSyncData.isEmpty) {
+        await downSyncLocalRepository.create(DownsyncModel(
+          offset: 0,
+          limit: 50,
+          lastSyncedTime: lastSyncedTime,
+          totalCount: 0,
+          locality: localityKey,
+        ));
+      }
+
+      final totalCount = await (stockRemoteRepository as StockRemoteRepository)
+          .fetchTotalCount(
+        stockSearchModel,
+        offSet: 0,
+        lastSyncedTime: lastSyncedTime,
+        includeOnlyUpdatedByOthers: true,
+      );
+
+      if (totalCount <= 0) return;
+
+      const batchSize = 50;
+      int offset = 0;
+      int syncedCount = 0;
+      final currentSyncTime = DateTime.now().millisecondsSinceEpoch;
+
+      while (syncedCount < totalCount) {
+        final stockEntries = await stockRemoteRepository.search(
+          stockSearchModel,
+          offSet: offset,
+          limit: batchSize,
+          lastSyncedTime: lastSyncedTime,
+          includeOnlyUpdatedByOthers: true,
+        );
+
+        if (stockEntries.isEmpty) break;
+
+        await stockLocalRepository.bulkCreate(stockEntries);
+
+        await downSyncLocalRepository.update(DownsyncModel(
+          offset: 0,
+          limit: batchSize,
+          lastSyncedTime: currentSyncTime,
+          totalCount: totalCount,
+          locality: localityKey,
+        ));
+
+        offset += stockEntries.length;
+        syncedCount += stockEntries.length;
+      }
+
+      await downSyncStockBalances(project.id);
+
+      // TODO: COMMENTING USER CREATION ON DOWNSYNC
+      // await _createStockBalanceUserActions(
+      //   project: project,
+      //   receiverIds: receiverIds,
+      //   productVariantIds: productVariantIds,
+      //   userRoles: userRoles,
+      //   userObject: userObject,
+      // );
+
+      debugPrint(
+          'SILENT_STOCK_DOWNSYNC: Completed. Synced $syncedCount/$totalCount');
+    } catch (e) {
+      debugPrint('SILENT_STOCK_DOWNSYNC: Error - $e');
+    }
+  }
+
+  Future<void> downSyncStockBalances(String projectId) async {
+    try {
+      final userObject = await localSecureStore.userRequestModel;
+      final userRoles = userObject?.roles.map((e) => e.code) ?? [];
+      final isDistributor =
+          userRoles.contains(RolesType.distributor.toValue()) ||
+              userRoles.contains(RolesType.communityDistributor.toValue());
+
+      final projectFacilities = await projectFacilityLocalRepository.search(
+        ProjectFacilitySearchModel(projectId: [projectId]),
+      );
+
+      final projectResources = await projectResourceLocalRepository.search(
+        ProjectResourceSearchModel(projectId: [projectId]),
+      );
+
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
+      List<String> facilityIds;
+      if (isDistributor) {
+        facilityIds = [userObject?.uuid ?? ''];
+      } else {
+        facilityIds = currentFacilities
+            .map((e) => e.facilityId)
+            .whereType<String>()
+            .toSet()
+            .toList();
+      }
+
+      final productVariantIds = projectResources
+          .map((pr) => pr.resource.productVariantId)
+          .whereType<String>()
+          .toSet()
+          .toList();
+
+      if (facilityIds.isEmpty ||
+          productVariantIds.isEmpty ||
+          facilityIds.first.isEmpty) return;
+
+      // Build balance keys for all facility × product variant combinations
+      final balanceKeys = <String>[];
+      for (final facilityId in facilityIds) {
+        for (final productVariantId in productVariantIds) {
+          balanceKeys.add(generateBalanceKey(facilityId, productVariantId));
+        }
+      }
+
+      // Fetch from server
+      final remoteBalances = await userActionRemoteRepository.search(
+        UserActionSearchModel(clientReferenceId: balanceKeys),
+      );
+
+      if (remoteBalances.isEmpty) return;
+
+      // For each fetched balance, create or update locally
+      for (final remoteBalance in remoteBalances) {
+        final existing = await userActionLocalRepository.search(
+          UserActionSearchModel(
+            clientReferenceId: [remoteBalance.clientReferenceId],
+          ),
+        );
+
+        if (existing.isNotEmpty) {
+          await userActionLocalRepository.update(
+            remoteBalance,
+            createOpLog: false,
+          );
+        } else {
+          await userActionLocalRepository.create(
+            remoteBalance,
+            createOpLog: false,
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Stock balance downsync error: $e');
+    }
+  }
+
+  /// Creates or updates UserAction balance records after stock downsync.
+  /// This ensures that balance records exist for all facility × product variant combinations
+  /// based on the locally available stock data.
+  Future<void> _createStockBalanceUserActions({
+    required ProjectModel project,
+    required List<String> receiverIds,
+    required List<String> productVariantIds,
+    required Iterable<String> userRoles,
+    required UserRequestModel? userObject,
+  }) async {
+    try {
+      final isDistributor =
+          userRoles.contains(RolesType.distributor.toValue()) ||
+              userRoles.contains(RolesType.communityDistributor.toValue());
+
+      final projectFacilities = await projectFacilityLocalRepository.search(
+        ProjectFacilitySearchModel(projectId: [project.id]),
+      );
+
+      final currentFacilities = projectFacilities.where((pf) {
+        final facilityLevel = pf.additionalFields?.fields
+            .where((f) => f.key == 'facilityLevel')
+            .firstOrNull
+            ?.value;
+        return facilityLevel == null || facilityLevel == 'current';
+      }).toList();
+
+      List<String> facilityIds;
+      if (isDistributor) {
+        facilityIds = [userObject?.uuid ?? ''];
+      } else {
+        facilityIds = currentFacilities
+            .map((e) => e.facilityId)
+            .whereType<String>()
+            .toSet()
+            .toList();
+      }
+
+      if (facilityIds.isEmpty || facilityIds.first.isEmpty) return;
+      if (productVariantIds.isEmpty) return;
+
+      // Calculate balance for each facility × product variant combination
+      for (final facilityId in facilityIds) {
+        for (final productVariantId in productVariantIds) {
+          // Get all stocks for this facility and product
+          final receivedStocks = await stockLocalRepository.search(
+            StockSearchModel(receiverId: facilityId),
+          );
+          final sentStocks = await stockLocalRepository.search(
+            StockSearchModel(senderId: facilityId),
+          );
+
+          final allStocksMap = <String, StockModel>{};
+          for (final stock in receivedStocks) {
+            if (stock.productVariantId == productVariantId) {
+              allStocksMap[stock.clientReferenceId] = stock;
+            }
+          }
+          for (final stock in sentStocks) {
+            if (stock.productVariantId == productVariantId) {
+              allStocksMap[stock.clientReferenceId] = stock;
+            }
+          }
+          final allStocks = allStocksMap.values.toList();
+
+          // Calculate the balance
+          final metrics = StockCalculationUtils.calculateStockMetrics(
+            stockList: allStocks,
+            facilityId: facilityId,
+            productId: productVariantId,
+            isDistributor: isDistributor,
+          );
+
+          final balance = metrics['stockInHand'] ?? 0.0;
+          final balanceKey = generateBalanceKey(facilityId, productVariantId);
+
+          // Check if UserAction already exists
+          final existingActions = await userActionLocalRepository.search(
+            UserActionSearchModel(clientReferenceId: [balanceKey]),
+          );
+
+          final now = DateTime.now().millisecondsSinceEpoch;
+          final loggedInUserUuid = userObject?.uuid ?? '';
+
+          final balanceAction = UserActionModel(
+            clientReferenceId: balanceKey,
+            action: 'STOCK_BALANCE',
+            projectId: project.id,
+            boundaryCode: project.address?.boundary ?? "",
+            latitude: 0.0,
+            longitude: 0.0,
+            locationAccuracy: 0.0,
+            isSync: false,
+            timestamp: now,
+            id: existingActions.isNotEmpty ? existingActions.first.id : null,
+            rowVersion: existingActions.isNotEmpty
+                ? existingActions.first.rowVersion
+                : null,
+            tenantId: userObject?.tenantId ?? '',
+            nonRecoverableError: false,
+            additionalFields: UserActionAdditionalFields(
+              version: 1,
+              fields: [
+                AdditionalField('balance', balance.toString()),
+                AdditionalField('facilityId', facilityId),
+                AdditionalField('productVariantId', productVariantId),
+              ],
+            ),
+            auditDetails: existingActions.isNotEmpty
+                ? existingActions.first.auditDetails
+                : AuditDetails(createdBy: loggedInUserUuid, createdTime: now),
+            clientAuditDetails: existingActions.isNotEmpty
+                ? existingActions.first.clientAuditDetails
+                : ClientAuditDetails(
+                    createdBy: loggedInUserUuid,
+                    createdTime: now,
+                    lastModifiedBy: loggedInUserUuid,
+                    lastModifiedTime: now,
+                  ),
+          );
+
+          /// INFO: need to revisit as user action is getting create and update to server also
+          if (existingActions.isNotEmpty) {
+            await userActionLocalRepository.update(
+              balanceAction,
+              createOpLog: true,
+            );
+          } else {
+            await userActionLocalRepository.create(
+              balanceAction,
+              createOpLog: true,
+            );
+          }
+
+          debugPrint(
+              'STOCK_BALANCE_INIT: Created/updated balance for $facilityId/$productVariantId = $balance');
+        }
+      }
+    } catch (e) {
+      debugPrint('STOCK_BALANCE_INIT: Error - $e');
     }
   }
 
@@ -939,7 +1298,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     // Load existing schemas
     final existingSchemasRaw = prefs.getString(schemaKey);
     final Map<String, dynamic> existingSchemas =
-    existingSchemasRaw != null ? json.decode(existingSchemasRaw) : {};
+        existingSchemasRaw != null ? json.decode(existingSchemasRaw) : {};
 
     final updatedEntry = {
       'data': schemaJson,
@@ -953,8 +1312,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   Future<void> enrichFormSchemasWithEnumsForForms(
-      dynamic formConfigs,
-      ) async {
+    dynamic formConfigs,
+  ) async {
     // Filter only FORM type screens
     final formTypeConfigs = formConfigs['flows']
         .where((config) => config['screenType'] == 'FORM')
@@ -998,7 +1357,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return MdmsModuleDetailModel(
         moduleName: entry.key,
         masterDetails:
-        entry.value.map((m) => MdmsMasterDetailModel(m)).toList(),
+            entry.value.map((m) => MdmsMasterDetailModel(m)).toList(),
       );
     }).toList();
 
@@ -1030,9 +1389,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               if (enumValues != null) {
                 property['enums'] = enumValues
                     .map((e) => {
-                  'code': e['code'],
-                  'name': e['name'] ?? e['code'],
-                })
+                          'code': e['code'],
+                          'name': e['name'] ?? e['code'],
+                        })
                     .toList();
               }
             }
@@ -1063,6 +1422,63 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       rethrow;
     }
   }
+
+  Future<void> _createUserActionForDeviceSwitch(ProjectModel project) async {
+    final deviceSwitchReason = await localSecureStore.deviceSwitchReason;
+    final existingDeviceToken = await localSecureStore.existingDeviceToken;
+    try {
+      if (deviceSwitchReason != null && existingDeviceToken != null) {
+        final currentToken = context.currentRegisteredToken;
+        if (currentToken != null) {
+          await localSecureStore.setUserDeviceToken(currentToken);
+        }
+
+        UserActionModel userActionModel = UserActionModel(
+            latitude: 0,
+            longitude: 0,
+            locationAccuracy: 0,
+            clientReferenceId: IdGen.i.identifier,
+            projectId: project.id,
+            action: Constants.other,
+            beneficiaryTag: Constants.deviceSwitch,
+            tenantId: envConfig.variables.tenantId,
+            boundaryCode: project.address?.boundary ?? Constants.deviceSwitch,
+            auditDetails: AuditDetails(
+              createdBy: context.loggedInUserUuid,
+              createdTime: DateTime.now().millisecondsSinceEpoch,
+              lastModifiedBy: context.loggedInUserUuid,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            ),
+            clientAuditDetails: ClientAuditDetails(
+              createdBy: context.loggedInUserUuid,
+              createdTime: DateTime.now().millisecondsSinceEpoch,
+              lastModifiedBy: context.loggedInUserUuid,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            ),
+            additionalFields: UserActionAdditionalFields(version: 1, fields: [
+              AdditionalField(Constants.deviceSwitchReason, deviceSwitchReason),
+              AdditionalField(Constants.oldDeviceToken, existingDeviceToken),
+              if (currentToken != null)
+                AdditionalField(Constants.newDeviceToken, currentToken),
+            ]));
+
+        final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+        final apiEndPoint = Constants.getMultiLoginEndPoint(
+          serviceRegistry: serviceRegistry,
+          service: Constants.userActionService,
+          action: ApiOperation.bulkCreate.toValue(),
+          entityName: Constants.userActionEntity,
+        );
+
+        context.read<AuthBloc>().add(
+              AuthEvent.switchDeviceUserAction(
+                  userActionModel: userActionModel, apiEndPoint: apiEndPoint),
+            );
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
 }
 
 @freezed
@@ -1070,7 +1486,7 @@ class ProjectEvent with _$ProjectEvent {
   const factory ProjectEvent.initialize() = ProjectInitializeEvent;
 
   const factory ProjectEvent.selectProject(ProjectModel model) =
-  ProjectSelectProjectEvent;
+      ProjectSelectProjectEvent;
 }
 
 @freezed
@@ -1103,4 +1519,6 @@ enum ProjectSyncErrorType {
   boundary,
   appConfig,
   attendance,
+  userAction,
+  stockDownsync
 }

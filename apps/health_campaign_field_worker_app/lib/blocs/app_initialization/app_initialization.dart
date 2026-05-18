@@ -110,7 +110,10 @@ class AppInitializationBloc
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
                     MasterEnums.transitPostType.toValue(),
-                    MasterEnums.searchCLFFilters.toValue()
+                    MasterEnums.searchCLFFilters.toValue(),
+                    MasterEnums.boundaryRelationShip.toValue(),
+                    MasterEnums.deviceChangeReasons.toValue(),
+                    MasterEnums.singleUserLogin.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -130,6 +133,7 @@ class AppInitializationBloc
             ),
           ).toJson(),
         );
+
         final pgrServiceDefinitions =
             await mdmsRepository.searchPGRServiceDefinitions(
           envConfig.variables.mdmsApiPath,
@@ -220,7 +224,7 @@ class AppInitializationBloc
         .findAll();
 
     if (serviceRegistryList.isEmpty) {
-       throw Exception('`serviceRegistryList` cannot be empty');
+      throw Exception('`serviceRegistryList` cannot be empty');
     }
     if (configs.isEmpty) {
       throw Exception('`configs` cannot be empty');
@@ -229,7 +233,7 @@ class AppInitializationBloc
     return MdmsConfig(
       appConfigs: configs,
       serviceRegistryList: serviceRegistryList,
-      dashboardConfigSchema: dashboardConfigs.first.dashboardConfigs,
+      dashboardConfigSchema: dashboardConfigs.firstOrNull?.dashboardConfigs,
     );
   }
 }

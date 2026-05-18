@@ -1,6 +1,7 @@
-## 0.0.4-dev
+## 0.0.1
 
-- fixed mapping for update flow
+- Fixed mapping for update flow
+- Updated digit_data_model dependency to ^1.3.0
 
 ## 0.0.3-dev
 

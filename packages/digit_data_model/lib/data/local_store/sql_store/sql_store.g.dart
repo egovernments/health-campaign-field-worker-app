@@ -18308,6 +18308,12 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
   late final GeneratedColumn<String> senderType = GeneratedColumn<String>(
       'sender_type', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _campaignNumberMeta =
+      const VerificationMeta('campaignNumber');
+  @override
+  late final GeneratedColumn<String> campaignNumber = GeneratedColumn<String>(
+      'campaign_number', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _dateOfEntryMeta =
       const VerificationMeta('dateOfEntry');
   @override
@@ -18428,6 +18434,7 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
         receiverType,
         senderId,
         senderType,
+        campaignNumber,
         dateOfEntry,
         auditCreatedBy,
         nonRecoverableError,
@@ -18529,6 +18536,12 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           _senderTypeMeta,
           senderType.isAcceptableOrUnknown(
               data['sender_type']!, _senderTypeMeta));
+    }
+    if (data.containsKey('campaign_number')) {
+      context.handle(
+          _campaignNumberMeta,
+          campaignNumber.isAcceptableOrUnknown(
+              data['campaign_number']!, _campaignNumberMeta));
     }
     if (data.containsKey('date_of_entry')) {
       context.handle(
@@ -18664,6 +18677,8 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           .read(DriftSqlType.string, data['${effectivePrefix}sender_id']),
       senderType: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}sender_type']),
+      campaignNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}campaign_number']),
       dateOfEntry: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}date_of_entry']),
       auditCreatedBy: attachedDatabase.typeMapping.read(
@@ -18720,6 +18735,7 @@ class StockData extends DataClass implements Insertable<StockData> {
   final String? receiverType;
   final String? senderId;
   final String? senderType;
+  final String? campaignNumber;
   final int? dateOfEntry;
   final String? auditCreatedBy;
   final bool? nonRecoverableError;
@@ -18751,6 +18767,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       this.receiverType,
       this.senderId,
       this.senderType,
+      this.campaignNumber,
       this.dateOfEntry,
       this.auditCreatedBy,
       this.nonRecoverableError,
@@ -18811,6 +18828,9 @@ class StockData extends DataClass implements Insertable<StockData> {
     }
     if (!nullToAbsent || senderType != null) {
       map['sender_type'] = Variable<String>(senderType);
+    }
+    if (!nullToAbsent || campaignNumber != null) {
+      map['campaign_number'] = Variable<String>(campaignNumber);
     }
     if (!nullToAbsent || dateOfEntry != null) {
       map['date_of_entry'] = Variable<int>(dateOfEntry);
@@ -18903,6 +18923,9 @@ class StockData extends DataClass implements Insertable<StockData> {
       senderType: senderType == null && nullToAbsent
           ? const Value.absent()
           : Value(senderType),
+      campaignNumber: campaignNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(campaignNumber),
       dateOfEntry: dateOfEntry == null && nullToAbsent
           ? const Value.absent()
           : Value(dateOfEntry),
@@ -18972,6 +18995,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       receiverType: serializer.fromJson<String?>(json['receiverType']),
       senderId: serializer.fromJson<String?>(json['senderId']),
       senderType: serializer.fromJson<String?>(json['senderType']),
+      campaignNumber: serializer.fromJson<String?>(json['campaignNumber']),
       dateOfEntry: serializer.fromJson<int?>(json['dateOfEntry']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       nonRecoverableError:
@@ -19010,6 +19034,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       'receiverType': serializer.toJson<String?>(receiverType),
       'senderId': serializer.toJson<String?>(senderId),
       'senderType': serializer.toJson<String?>(senderType),
+      'campaignNumber': serializer.toJson<String?>(campaignNumber),
       'dateOfEntry': serializer.toJson<int?>(dateOfEntry),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
@@ -19044,6 +19069,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           Value<String?> receiverType = const Value.absent(),
           Value<String?> senderId = const Value.absent(),
           Value<String?> senderType = const Value.absent(),
+          Value<String?> campaignNumber = const Value.absent(),
           Value<int?> dateOfEntry = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
           Value<bool?> nonRecoverableError = const Value.absent(),
@@ -19085,6 +19111,8 @@ class StockData extends DataClass implements Insertable<StockData> {
             receiverType.present ? receiverType.value : this.receiverType,
         senderId: senderId.present ? senderId.value : this.senderId,
         senderType: senderType.present ? senderType.value : this.senderType,
+        campaignNumber:
+            campaignNumber.present ? campaignNumber.value : this.campaignNumber,
         dateOfEntry: dateOfEntry.present ? dateOfEntry.value : this.dateOfEntry,
         auditCreatedBy:
             auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
@@ -19142,6 +19170,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           ..write('receiverType: $receiverType, ')
           ..write('senderId: $senderId, ')
           ..write('senderType: $senderType, ')
+          ..write('campaignNumber: $campaignNumber, ')
           ..write('dateOfEntry: $dateOfEntry, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
@@ -19178,6 +19207,7 @@ class StockData extends DataClass implements Insertable<StockData> {
         receiverType,
         senderId,
         senderType,
+        campaignNumber,
         dateOfEntry,
         auditCreatedBy,
         nonRecoverableError,
@@ -19213,6 +19243,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           other.receiverType == this.receiverType &&
           other.senderId == this.senderId &&
           other.senderType == this.senderType &&
+          other.campaignNumber == this.campaignNumber &&
           other.dateOfEntry == this.dateOfEntry &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.nonRecoverableError == this.nonRecoverableError &&
@@ -19246,6 +19277,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
   final Value<String?> receiverType;
   final Value<String?> senderId;
   final Value<String?> senderType;
+  final Value<String?> campaignNumber;
   final Value<int?> dateOfEntry;
   final Value<String?> auditCreatedBy;
   final Value<bool?> nonRecoverableError;
@@ -19278,6 +19310,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.receiverType = const Value.absent(),
     this.senderId = const Value.absent(),
     this.senderType = const Value.absent(),
+    this.campaignNumber = const Value.absent(),
     this.dateOfEntry = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
@@ -19311,6 +19344,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.receiverType = const Value.absent(),
     this.senderId = const Value.absent(),
     this.senderType = const Value.absent(),
+    this.campaignNumber = const Value.absent(),
     this.dateOfEntry = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
@@ -19344,6 +19378,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     Expression<String>? receiverType,
     Expression<String>? senderId,
     Expression<String>? senderType,
+    Expression<String>? campaignNumber,
     Expression<int>? dateOfEntry,
     Expression<String>? auditCreatedBy,
     Expression<bool>? nonRecoverableError,
@@ -19379,6 +19414,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       if (receiverType != null) 'receiver_type': receiverType,
       if (senderId != null) 'sender_id': senderId,
       if (senderType != null) 'sender_type': senderType,
+      if (campaignNumber != null) 'campaign_number': campaignNumber,
       if (dateOfEntry != null) 'date_of_entry': dateOfEntry,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (nonRecoverableError != null)
@@ -19416,6 +19452,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       Value<String?>? receiverType,
       Value<String?>? senderId,
       Value<String?>? senderType,
+      Value<String?>? campaignNumber,
       Value<int?>? dateOfEntry,
       Value<String?>? auditCreatedBy,
       Value<bool?>? nonRecoverableError,
@@ -19448,6 +19485,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       receiverType: receiverType ?? this.receiverType,
       senderId: senderId ?? this.senderId,
       senderType: senderType ?? this.senderType,
+      campaignNumber: campaignNumber ?? this.campaignNumber,
       dateOfEntry: dateOfEntry ?? this.dateOfEntry,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
@@ -19513,6 +19551,9 @@ class StockCompanion extends UpdateCompanion<StockData> {
     }
     if (senderType.present) {
       map['sender_type'] = Variable<String>(senderType.value);
+    }
+    if (campaignNumber.present) {
+      map['campaign_number'] = Variable<String>(campaignNumber.value);
     }
     if (dateOfEntry.present) {
       map['date_of_entry'] = Variable<int>(dateOfEntry.value);
@@ -19585,6 +19626,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
           ..write('receiverType: $receiverType, ')
           ..write('senderId: $senderId, ')
           ..write('senderType: $senderType, ')
+          ..write('campaignNumber: $campaignNumber, ')
           ..write('dateOfEntry: $dateOfEntry, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
@@ -32262,6 +32304,12 @@ class $HFReferralTable extends HFReferral
   late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
       'additional_fields', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _localityCodeMeta =
+      const VerificationMeta('localityCode');
+  @override
+  late final GeneratedColumn<String> localityCode = GeneratedColumn<String>(
+      'locality_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -32286,7 +32334,8 @@ class $HFReferralTable extends HFReferral
         clientReferenceId,
         isDeleted,
         rowVersion,
-        additionalFields
+        additionalFields,
+        localityCode
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -32425,6 +32474,12 @@ class $HFReferralTable extends HFReferral
           additionalFields.isAcceptableOrUnknown(
               data['additional_fields']!, _additionalFieldsMeta));
     }
+    if (data.containsKey('locality_code')) {
+      context.handle(
+          _localityCodeMeta,
+          localityCode.isAcceptableOrUnknown(
+              data['locality_code']!, _localityCodeMeta));
+    }
     return context;
   }
 
@@ -32480,6 +32535,8 @@ class $HFReferralTable extends HFReferral
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+      localityCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}locality_code']),
     );
   }
 
@@ -32513,6 +32570,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
   final bool? isDeleted;
   final int? rowVersion;
   final String? additionalFields;
+  final String? localityCode;
   const HFReferralData(
       {this.id,
       this.tenantId,
@@ -32536,7 +32594,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       required this.clientReferenceId,
       this.isDeleted,
       this.rowVersion,
-      this.additionalFields});
+      this.additionalFields,
+      this.localityCode});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -32607,6 +32666,9 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
     }
+    if (!nullToAbsent || localityCode != null) {
+      map['locality_code'] = Variable<String>(localityCode);
+    }
     return map;
   }
 
@@ -32675,6 +32737,9 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
+      localityCode: localityCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localityCode),
     );
   }
 
@@ -32707,6 +32772,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+      localityCode: serializer.fromJson<String?>(json['localityCode']),
     );
   }
   @override
@@ -32736,6 +32802,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
       'additionalFields': serializer.toJson<String?>(additionalFields),
+      'localityCode': serializer.toJson<String?>(localityCode),
     };
   }
 
@@ -32762,7 +32829,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           String? clientReferenceId,
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<String?> additionalFields = const Value.absent()}) =>
+          Value<String?> additionalFields = const Value.absent(),
+          Value<String?> localityCode = const Value.absent()}) =>
       HFReferralData(
         id: id.present ? id.value : this.id,
         tenantId: tenantId.present ? tenantId.value : this.tenantId,
@@ -32814,6 +32882,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
+        localityCode:
+            localityCode.present ? localityCode.value : this.localityCode,
       );
   @override
   String toString() {
@@ -32840,7 +32910,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           ..write('clientReferenceId: $clientReferenceId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
-          ..write('additionalFields: $additionalFields')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('localityCode: $localityCode')
           ..write(')'))
         .toString();
   }
@@ -32869,7 +32940,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
         clientReferenceId,
         isDeleted,
         rowVersion,
-        additionalFields
+        additionalFields,
+        localityCode
       ]);
   @override
   bool operator ==(Object other) =>
@@ -32897,7 +32969,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           other.clientReferenceId == this.clientReferenceId &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
-          other.additionalFields == this.additionalFields);
+          other.additionalFields == this.additionalFields &&
+          other.localityCode == this.localityCode);
 }
 
 class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
@@ -32924,6 +32997,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
   final Value<String?> additionalFields;
+  final Value<String?> localityCode;
   final Value<int> rowid;
   const HFReferralCompanion({
     this.id = const Value.absent(),
@@ -32949,6 +33023,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.localityCode = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   HFReferralCompanion.insert({
@@ -32975,6 +33050,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.localityCode = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : clientReferenceId = Value(clientReferenceId);
   static Insertable<HFReferralData> custom({
@@ -33001,6 +33077,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
     Expression<String>? additionalFields,
+    Expression<String>? localityCode,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -33029,6 +33106,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
       if (additionalFields != null) 'additional_fields': additionalFields,
+      if (localityCode != null) 'locality_code': localityCode,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -33057,6 +33135,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
       Value<String?>? additionalFields,
+      Value<String?>? localityCode,
       Value<int>? rowid}) {
     return HFReferralCompanion(
       id: id ?? this.id,
@@ -33082,6 +33161,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
       additionalFields: additionalFields ?? this.additionalFields,
+      localityCode: localityCode ?? this.localityCode,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -33158,6 +33238,9 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
+    if (localityCode.present) {
+      map['locality_code'] = Variable<String>(localityCode.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -33190,6 +33273,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields, ')
+          ..write('localityCode: $localityCode, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -49816,6 +49900,7 @@ typedef $$StockTableInsertCompanionBuilder = StockCompanion Function({
   Value<String?> receiverType,
   Value<String?> senderId,
   Value<String?> senderType,
+  Value<String?> campaignNumber,
   Value<int?> dateOfEntry,
   Value<String?> auditCreatedBy,
   Value<bool?> nonRecoverableError,
@@ -49849,6 +49934,7 @@ typedef $$StockTableUpdateCompanionBuilder = StockCompanion Function({
   Value<String?> receiverType,
   Value<String?> senderId,
   Value<String?> senderType,
+  Value<String?> campaignNumber,
   Value<int?> dateOfEntry,
   Value<String?> auditCreatedBy,
   Value<bool?> nonRecoverableError,
@@ -49901,6 +49987,7 @@ class $$StockTableTableManager extends RootTableManager<
             Value<String?> receiverType = const Value.absent(),
             Value<String?> senderId = const Value.absent(),
             Value<String?> senderType = const Value.absent(),
+            Value<String?> campaignNumber = const Value.absent(),
             Value<int?> dateOfEntry = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> nonRecoverableError = const Value.absent(),
@@ -49934,6 +50021,7 @@ class $$StockTableTableManager extends RootTableManager<
             receiverType: receiverType,
             senderId: senderId,
             senderType: senderType,
+            campaignNumber: campaignNumber,
             dateOfEntry: dateOfEntry,
             auditCreatedBy: auditCreatedBy,
             nonRecoverableError: nonRecoverableError,
@@ -49967,6 +50055,7 @@ class $$StockTableTableManager extends RootTableManager<
             Value<String?> receiverType = const Value.absent(),
             Value<String?> senderId = const Value.absent(),
             Value<String?> senderType = const Value.absent(),
+            Value<String?> campaignNumber = const Value.absent(),
             Value<int?> dateOfEntry = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> nonRecoverableError = const Value.absent(),
@@ -50000,6 +50089,7 @@ class $$StockTableTableManager extends RootTableManager<
             receiverType: receiverType,
             senderId: senderId,
             senderType: senderType,
+            campaignNumber: campaignNumber,
             dateOfEntry: dateOfEntry,
             auditCreatedBy: auditCreatedBy,
             nonRecoverableError: nonRecoverableError,
@@ -50103,6 +50193,11 @@ class $$StockTableFilterComposer
 
   ColumnFilters<String> get senderType => $state.composableBuilder(
       column: $state.table.senderType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get campaignNumber => $state.composableBuilder(
+      column: $state.table.campaignNumber,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -50257,6 +50352,11 @@ class $$StockTableOrderingComposer
 
   ColumnOrderings<String> get senderType => $state.composableBuilder(
       column: $state.table.senderType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get campaignNumber => $state.composableBuilder(
+      column: $state.table.campaignNumber,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -55375,6 +55475,7 @@ typedef $$HFReferralTableInsertCompanionBuilder = HFReferralCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> localityCode,
   Value<int> rowid,
 });
 typedef $$HFReferralTableUpdateCompanionBuilder = HFReferralCompanion Function({
@@ -55401,6 +55502,7 @@ typedef $$HFReferralTableUpdateCompanionBuilder = HFReferralCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> localityCode,
   Value<int> rowid,
 });
 
@@ -55447,6 +55549,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> localityCode = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               HFReferralCompanion(
@@ -55473,6 +55576,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            localityCode: localityCode,
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
@@ -55499,6 +55603,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> localityCode = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               HFReferralCompanion.insert(
@@ -55525,6 +55630,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            localityCode: localityCode,
             rowid: rowid,
           ),
         ));
@@ -55659,6 +55765,11 @@ class $$HFReferralTableFilterComposer
       column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get localityCode => $state.composableBuilder(
+      column: $state.table.localityCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$HFReferralTableOrderingComposer
@@ -55776,6 +55887,11 @@ class $$HFReferralTableOrderingComposer
 
   ColumnOrderings<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get localityCode => $state.composableBuilder(
+      column: $state.table.localityCode,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }

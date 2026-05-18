@@ -98,6 +98,8 @@ class DigitScannerUtils {
     String? scanLimitMessage,
     String? regex,
     String? patternMessage,
+    Future<bool> Function(String scannedValue)? duplicateCheckFn,
+    String? duplicateCheckMessage,
   }) async {
     // Check if processing is allowed
     if (!canProcess) return;
@@ -135,14 +137,35 @@ class DigitScannerUtils {
             final parsedResult =
                 parser.parse(barcodes.first.displayValue.toString());
 
-            // Check if the barcode has already been scanned
-            final alreadyScanned = bloc.state.barCodes.any((element) {
-              if (element.elements.entries.isEmpty ||
-                  parsedResult.elements.entries.isEmpty) {
-                return false;
+            // Per-scan duplicate check
+            if (duplicateCheckFn != null) {
+              try {
+                final serialized =
+                    DigitScannerUtils().serializeGs1Barcodes([parsedResult]);
+                final isDuplicate = await duplicateCheckFn(serialized);
+                if (isDuplicate) {
+                  await handleError(duplicateCheckMessage ??
+                      localizations
+                          .translate(i18.scanner.resourceAlreadyScanned));
+                  return;
+                }
+              } catch (e) {
+                debugPrint('Duplicate check failed (GS1 camera scan): $e');
+                await handleError(localizations
+                    .translate(i18.scanner.duplicateCheckFailed));
+                return;
               }
-              return element.elements.entries.last.value.data ==
-                  parsedResult.elements.entries.last.value.data;
+            }
+
+            // Check if the barcode has already been scanned
+            // Compare full serialized form (all AI elements) to avoid false
+            // positives when serial number is optional and the last AI varies.
+            final newSerialized =
+                DigitScannerUtils().serializeGs1Barcodes([parsedResult]);
+            final alreadyScanned = bloc.state.barCodes.any((element) {
+              final existingSerialized =
+                  DigitScannerUtils().serializeGs1Barcodes([element]);
+              return existingSerialized == newSerialized;
             });
 
             if (alreadyScanned) {
@@ -151,8 +174,8 @@ class DigitScannerUtils {
                   localizations.translate(i18.scanner.resourceAlreadyScanned));
             } else if (regex != null &&
                 regex.trim().isNotEmpty &&
-                !RegExp(regex).hasMatch(
-                    barcodes.first.displayValue.toString())) {
+                !RegExp(regex)
+                    .hasMatch(barcodes.first.displayValue.toString())) {
               // Handle error if barcode doesn't match regex pattern
               final errorMsg = patternMessage != null
                   ? localizations.translate(patternMessage)
@@ -180,6 +203,25 @@ class DigitScannerUtils {
           }
         } else {
           // For non-GS1 codes
+          // Per-scan duplicate check
+          if (duplicateCheckFn != null) {
+            try {
+              final isDuplicate = await duplicateCheckFn(
+                  barcodes.first.displayValue.toString());
+              if (isDuplicate) {
+                await handleError(duplicateCheckMessage ??
+                    localizations
+                        .translate(i18.scanner.resourceAlreadyScanned));
+                return;
+              }
+            } catch (e) {
+              debugPrint('Duplicate check failed (QR camera scan): $e');
+              await handleError(localizations
+                  .translate(i18.scanner.duplicateCheckFailed));
+              return;
+            }
+          }
+
           if (bloc.state.qrCodes.contains(barcodes.first.displayValue)) {
             // Handle error if the QR code is already scanned
             await handleError(
@@ -187,8 +229,7 @@ class DigitScannerUtils {
             return;
           } else if (regex != null &&
               regex.trim().isNotEmpty &&
-              !RegExp(regex).hasMatch(
-                  barcodes.first.displayValue.toString())) {
+              !RegExp(regex).hasMatch(barcodes.first.displayValue.toString())) {
             // Handle error if QR code doesn't match regex pattern
             final errorMsg = patternMessage != null
                 ? localizations.translate(patternMessage)
@@ -252,7 +293,7 @@ class DigitScannerUtils {
         context,
         type: ToastType.error,
         message: localizations.translate(message),
-          sentenceCaseEnabled: false,
+        sentenceCaseEnabled: false,
       );
     }
 
@@ -324,14 +365,9 @@ class DigitScannerUtils {
     // Make a copy of the current barcodes from the bloc state
     List<GS1Barcode> result = List.from(initialResult);
 
-    // Remove duplicate entries based on the last value in the elements map
+    // Remove duplicate entries based on the full serialized barcode
     result.removeDuplicates(
-      (element) {
-        if (element.elements.entries.isEmpty) {
-          return ''; // Return empty string for empty elements
-        }
-        return element.elements.entries.last.value.data;
-      },
+      (element) => DigitScannerUtils().serializeGs1Barcodes([element]),
     );
 
     // Add the new parsed result to the list
@@ -355,23 +391,103 @@ class DigitScannerUtils {
       List<GS1Barcode> barCodes, int index) {
     if (index >= 0 && index < barCodes.length) {
       final elements = barCodes[index];
-      return elements.getAIsData;
+      final data = elements.getAIsData;
+      // Filter out entries with null or empty values
+      data.removeWhere((key, value) {
+        if (value == null) return true;
+        if (value is String && value.trim().isEmpty) return true;
+        return false;
+      });
+      return data;
     }
     return {};
+  }
+
+  /// Serializes GS1 barcode data to a form value string.
+  /// Format: key1:value1|key2:value2 per barcode, semicolons between barcodes.
+  /// Only includes entries with non-empty values.
+  String serializeGs1Barcodes(List<GS1Barcode> barCodes) {
+    final barcodeStrings = <String>[];
+    for (int i = 0; i < barCodes.length; i++) {
+      final gs1Data = getGs1CodeFormattedStringAtIndex(barCodes, i);
+      final parts = <String>[];
+      for (final entry in gs1Data.entries) {
+        final value = entry.value is DateTime
+            ? DateFormat('dd MMM yyyy').format(entry.value)
+            : entry.value?.toString() ?? '';
+        if (value.trim().isNotEmpty) {
+          parts.add('${entry.key}:$value');
+        }
+      }
+      if (parts.isNotEmpty) {
+        barcodeStrings.add(parts.join('|'));
+      }
+    }
+    return barcodeStrings.join(';');
+  }
+
+  /// Deserializes a GS1 barcode form value string back to a list of key-value maps.
+  /// Supports both new format (key:value|key:value) and legacy format (gtin,serial,batch,expiry).
+  static List<Map<String, String>> deserializeGs1Barcodes(String data) {
+    final result = <Map<String, String>>[];
+    final barcodeStrings = data.split(';');
+    for (final barcodeStr in barcodeStrings) {
+      if (barcodeStr.trim().isEmpty) continue;
+      // New format: contains '|' or starts with a 2-digit AI code followed by ':'
+      if (barcodeStr.contains('|') ||
+          RegExp(r'^\d{2}:').hasMatch(barcodeStr.trim())) {
+        final map = <String, String>{};
+        for (final pair in barcodeStr.split('|')) {
+          final colonIndex = pair.indexOf(':');
+          if (colonIndex > 0) {
+            final key = pair.substring(0, colonIndex).trim();
+            final value = pair.substring(colonIndex + 1).trim();
+            if (value.isNotEmpty) {
+              map[key] = value;
+            }
+          }
+        }
+        if (map.isNotEmpty) result.add(map);
+      } else {
+        // Legacy format: gtin,serial,batch,expiry (4 comma-separated positional values)
+        final parts = barcodeStr.split(',');
+        final map = <String, String>{};
+        if (parts.isNotEmpty && parts[0].trim().isNotEmpty) {
+          map['01'] = parts[0].trim();
+        }
+        if (parts.length > 1 && parts[1].trim().isNotEmpty) {
+          map['21'] = parts[1].trim();
+        }
+        if (parts.length > 2 && parts[2].trim().isNotEmpty) {
+          map['10'] = parts[2].trim();
+        }
+        if (parts.length > 3 && parts[3].trim().isNotEmpty) {
+          map['17'] = parts[3].trim();
+        }
+        if (map.isNotEmpty) result.add(map);
+      }
+    }
+    return result;
   }
 
   String generateGS1Barcode({
     required String batchNumber,
     required DateTime expiryDate,
-    required String serialNumber,
+    String? serialNumber,
     String? gtin,
   }) {
     const groupSeparator = '\u001d'; // ASCII 29
     final formattedDate = DateFormat('yyMMdd').format(expiryDate);
 
-    // Include GTIN (01) if provided
-    final gtinPart =
-        gtin != null && gtin.isNotEmpty ? '01$gtin$groupSeparator' : '';
-    return '${gtinPart}10$batchNumber${groupSeparator}17${formattedDate}21$serialNumber$groupSeparator';
+    // Include GTIN (01) if provided (fixed-length 14 digits, no GS needed)
+    if (gtin != null && gtin.isNotEmpty && !RegExp(r'^\d{14}$').hasMatch(gtin)) {
+      throw FormatException('GTIN must be exactly 14 digits, got: $gtin');
+    }
+    final gtinPart = gtin != null && gtin.isNotEmpty ? '01$gtin' : '';
+    // Include Serial (21) only if provided (variable-length, needs GS)
+    final serialPart = serialNumber != null && serialNumber.isNotEmpty
+        ? '21$serialNumber$groupSeparator'
+        : '';
+    return '${gtinPart}10$batchNumber${groupSeparator}17$formattedDate$serialPart';
   }
 }

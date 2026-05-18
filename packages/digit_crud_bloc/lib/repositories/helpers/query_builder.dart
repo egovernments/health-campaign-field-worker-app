@@ -71,6 +71,8 @@ class QueryBuilder {
           return '$column = ?';
         case 'contains':
           return '$column LIKE ?';
+        case 'notContains':
+          return '($column IS NULL OR $column NOT LIKE ?)';
         case 'isNotNull':
           return '$column IS NOT NULL';
         case 'isNull':
@@ -85,6 +87,9 @@ class QueryBuilder {
           return '$column NOT IN (${List.filled(values.length, '?').join(', ')})';
         case 'within':
           return '1 = 1';
+        case 'notEqual':
+        case 'notEquals':
+          return '$column != ?';
         case 'equalsAny':
           // Supports OR condition: field contains comma-separated column names
           // Example: field='senderId,receiverId', value='F-123'
@@ -104,7 +109,14 @@ class QueryBuilder {
         case 'equals':
           args.add(Variable.withString(filter.value.toString()));
           break;
+        case 'notEqual':
+        case 'notEquals':
+          args.add(Variable.withString(filter.value.toString()));
+          break;
         case 'contains':
+          args.add(Variable.withString('%${filter.value}%'));
+          break;
+        case 'notContains':
           args.add(Variable.withString('%${filter.value}%'));
           break;
         case 'in':
@@ -229,9 +241,17 @@ class QueryBuilder {
         case 'equals':
           whereClauses.add(col.equals(filter.value));
           break;
+        case 'notEqual':
+        case 'notEquals':
+          whereClauses.add(col.equals(filter.value).not());
+          break;
         case 'contains':
           whereClauses
               .add((col as Expression<String>).like('%${filter.value}%'));
+          break;
+        case 'notContains':
+          whereClauses
+              .add(col.isNull() | (col as Expression<String>).like('%${filter.value}%').not());
           break;
         case 'isNotNull':
           whereClauses.add(col.isNotNull());

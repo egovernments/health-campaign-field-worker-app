@@ -3,14 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../action_handler/action_handler.dart';
-import '../../utils/conditional_evaluator.dart';
-import '../../utils/flow_widget_state.dart';
-import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../utils/widget_parsers.dart';
-import '../../widget_registry.dart';
-import '../flow_widget_interface.dart';
-import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
 /// Scanner Button Widget
 ///
@@ -18,74 +13,26 @@ import '../localization_context.dart';
 /// When user returns after scanning, it processes the scanned data and executes onChange actions.
 ///
 /// This ensures onChange actions only execute AFTER returning from the scanner page.
-class QRScannerWidget implements FlowWidget {
+class QRScannerWidget extends ResolvedFlowWidget {
   @override
   String get format => 'qrScanner';
 
   @override
-  Widget build(
-      Map<String, dynamic> json,
-      BuildContext context,
-      void Function(ActionConfig) onAction,
-      ) {
-    final flowState = WidgetStateContext.of(context);
-    final crudStateData = flowState.stateData;
-
-    // Check visibility condition
-    if (json['visible'] != null) {
-      final visible = ConditionalEvaluator.evaluate(
-        json['visible'],
-        flowState.evalContext,
-        stateData: crudStateData,
-      );
-      if (visible == false) {
-        return const SizedBox.shrink();
-      }
-    }
-
-    // Check disabled condition
-    bool isDisabled = false;
-    if (json['disabled'] != null) {
-      final disabledResult = ConditionalEvaluator.evaluate(
-        json['disabled'],
-        flowState.evalContext,
-        stateData: crudStateData,
-      );
-      isDisabled = disabledResult == true;
-    }
-
+  Widget buildResolved(
+    Map<String, dynamic> json,
+    BuildContext context,
+    void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
+  ) {
+    // Visibility and disabled already checked by base class
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
-    final localization = LocalizationContext.maybeOf(context);
-
-    // Resolve template with localization support for mixed content
-    final labelText = json['label'] ?? '';
-    String resolvedLabel = labelText;
-    if (crudStateData != null && labelText.contains('{{')) {
-      // For complex templates, use interpolateWithCrudStates then localize non-placeholder parts
-      resolvedLabel = interpolateWithCrudStates(
-        template: labelText,
-        stateData: crudStateData,
-        item: flowState.itemData,
-      );
-      // Translate if it's a pure localization key (no templates remaining)
-      if (!resolvedLabel.contains('{{')) {
-        resolvedLabel = localization?.translate(resolvedLabel) ?? resolvedLabel;
-      }
-    } else {
-      resolvedLabel = resolveTemplate(
-            labelText,
-            flowState.evalContext,
-            localization: localization,
-          ) ??
-          labelText;
-    }
 
     // Extract validations from config to override OPEN_SCANNER properties
     final validations = json['validations'] as List<dynamic>?;
 
     return DigitButton(
-      label: resolvedLabel,
-      isDisabled: isDisabled,
+      label: resolved.resolvedLabel ?? (json['label'] ?? ''),
+      isDisabled: resolved.isDisabled,
       onPressed: () async {
         if (json['onAction'] != null) {
           final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
@@ -121,8 +68,8 @@ class QRScannerWidget implements FlowWidget {
                 final key = entry['key'] as String;
                 final rawValue = entry['value'];
 
-                // Resolve using flowState.evalContext which contains all data sources
-                dynamic resolvedValue = resolveValue(rawValue, flowState.evalContext);
+                // Resolve using evalContext which contains all data sources
+                dynamic resolvedValue = resolveValue(rawValue, resolved.evalContext);
                 if (resolvedValue == rawValue) {
                   resolvedValue = rawValue;
                 }
@@ -148,10 +95,10 @@ class QRScannerWidget implements FlowWidget {
             };
           }).toList();
 
-          // Build initial context data from current state using flowState.evalContext
+          // Build initial context data from current state using evalContext
           final initialContextData = <String, dynamic>{
             'wrappers': const [],
-            ...flowState.evalContext,
+            ...resolved.evalContext,
           };
 
           // Use ActionHandler.executeActions to chain actions with shared contextData

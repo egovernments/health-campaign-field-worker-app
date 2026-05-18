@@ -90,6 +90,7 @@ class LocationService : Service() {
 
     private fun sendLocationToMainActivity(location: Location) {
         val intent = Intent("LocationUpdate")
+        intent.setPackage(packageName)
         intent.putExtra("latitude", location.latitude)
         intent.putExtra("longitude", location.longitude)
         intent.putExtra("accuracy", location.accuracy)

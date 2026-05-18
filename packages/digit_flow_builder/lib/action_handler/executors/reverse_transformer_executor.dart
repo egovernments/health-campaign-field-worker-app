@@ -145,6 +145,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
           formData: Map<String, dynamic>.from(formData),
           stateWrapper:
           FlowCrudStateRegistry().get(compositeKey)?.stateWrapper,
+          widgetData: FlowCrudStateRegistry().get(compositeKey)?.widgetData
         );
 
         FlowCrudStateRegistry().update(compositeKey, updatedState);

@@ -32,7 +32,9 @@ class ProgressIndicatorContainer extends StatelessWidget {
       children: <Widget>[
         Text(
           label,
-          style: theme.textTheme.bodyMedium,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
           textAlign: TextAlign.center,
         ),
         Padding(

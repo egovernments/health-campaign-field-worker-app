@@ -11,14 +11,15 @@ class HFReferralSearchModel extends EntitySearchModel
   final List<String>? id;
   final String? tenantId;
   final String? name;
-  final List<String>? projectId;
-  final List<String>? projectFacilityId;
+  final String? projectId;
+  final String? projectFacilityId;
   final List<String>? symptomSurveyId;
   final List<String>? beneficiaryId;
   final List<String>? referralCode;
   final List<String>? nationalLevelId;
   final List<String>? symptom;
   final List<String>? clientReferenceId;
+  final List<String>? localityCode;
 
   HFReferralSearchModel({
     this.id,
@@ -32,6 +33,7 @@ class HFReferralSearchModel extends EntitySearchModel
     this.nationalLevelId,
     this.symptom,
     this.clientReferenceId,
+    this.localityCode,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -49,6 +51,7 @@ class HFReferralSearchModel extends EntitySearchModel
     this.nationalLevelId,
     this.symptom,
     this.clientReferenceId,
+    this.localityCode,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }
@@ -71,6 +74,7 @@ class HFReferralModel extends EntityModel with HFReferralModelMappable {
   final String clientReferenceId;
   final int? rowVersion;
   final HFReferralAdditionalFields? additionalFields;
+  final String? localityCode;
 
   HFReferralModel({
     this.additionalFields,
@@ -87,6 +91,7 @@ class HFReferralModel extends EntityModel with HFReferralModelMappable {
     this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.rowVersion,
+    this.localityCode,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
@@ -117,6 +122,7 @@ class HFReferralModel extends EntityModel with HFReferralModelMappable {
       nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       rowVersion: Value(rowVersion),
+      localityCode: Value(localityCode),
     );
   }
 }

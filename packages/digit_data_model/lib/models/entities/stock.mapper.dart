@@ -29,8 +29,9 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
   static String? _$facilityId(StockSearchModel v) => v.facilityId;
   static const Field<StockSearchModel, String> _f$facilityId =
       Field('facilityId', _$facilityId, opt: true);
-  static String? _$productVariantId(StockSearchModel v) => v.productVariantId;
-  static const Field<StockSearchModel, String> _f$productVariantId =
+  static List<String>? _$productVariantId(StockSearchModel v) =>
+      v.productVariantId;
+  static const Field<StockSearchModel, List<String>> _f$productVariantId =
       Field('productVariantId', _$productVariantId, opt: true);
   static String? _$referenceId(StockSearchModel v) => v.referenceId;
   static const Field<StockSearchModel, String> _f$referenceId =
@@ -46,8 +47,8 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
       v.transactingPartyType;
   static const Field<StockSearchModel, String> _f$transactingPartyType =
       Field('transactingPartyType', _$transactingPartyType, opt: true);
-  static List<String>? _$receiverId(StockSearchModel v) => v.receiverId;
-  static const Field<StockSearchModel, List<String>> _f$receiverId =
+  static String? _$receiverId(StockSearchModel v) => v.receiverId;
+  static const Field<StockSearchModel, String> _f$receiverId =
       Field('receiverId', _$receiverId, opt: true);
   static String? _$receiverType(StockSearchModel v) => v.receiverType;
   static const Field<StockSearchModel, String> _f$receiverType =
@@ -70,6 +71,9 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
       v.transactionReason;
   static const Field<StockSearchModel, List<String>> _f$transactionReason =
       Field('transactionReason', _$transactionReason, opt: true);
+  static String? _$campaignNumber(StockSearchModel v) => v.campaignNumber;
+  static const Field<StockSearchModel, String> _f$campaignNumber =
+      Field('campaignNumber', _$campaignNumber, opt: true);
   static int? _$dateOfEntry(StockSearchModel v) => v.dateOfEntry;
   static const Field<StockSearchModel, int> _f$dateOfEntry =
       Field('dateOfEntry', _$dateOfEntry, opt: true);
@@ -104,6 +108,7 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
     #clientReferenceId: _f$clientReferenceId,
     #transactionType: _f$transactionType,
     #transactionReason: _f$transactionReason,
+    #campaignNumber: _f$campaignNumber,
     #dateOfEntry: _f$dateOfEntry,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
@@ -138,6 +143,7 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
         clientReferenceId: data.dec(_f$clientReferenceId),
         transactionType: data.dec(_f$transactionType),
         transactionReason: data.dec(_f$transactionReason),
+        campaignNumber: data.dec(_f$campaignNumber),
         dateOfEntry: data.dec(_f$dateOfEntry),
         boundaryCode: data.dec(_f$boundaryCode));
   }
@@ -196,7 +202,8 @@ extension StockSearchModelValueCopy<$R, $Out>
 
 abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
     implements EntitySearchModelCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get receiverId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get productVariantId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
@@ -208,18 +215,19 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
       {String? id,
       String? tenantId,
       String? facilityId,
-      String? productVariantId,
+      List<String>? productVariantId,
       String? referenceId,
       String? referenceIdType,
       String? transactingPartyId,
       String? transactingPartyType,
-      List<String>? receiverId,
+      String? receiverId,
       String? receiverType,
       String? senderId,
       String? senderType,
       List<String>? clientReferenceId,
       List<String>? transactionType,
       List<String>? transactionReason,
+      String? campaignNumber,
       int? dateOfEntry,
       String? boundaryCode});
   StockSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -236,11 +244,11 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
       StockSearchModelMapper.ensureInitialized();
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
-      get receiverId => $value.receiverId != null
+      get productVariantId => $value.productVariantId != null
           ? ListCopyWith(
-              $value.receiverId!,
+              $value.productVariantId!,
               (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(receiverId: v))
+              (v) => call(productVariantId: v))
           : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
@@ -283,6 +291,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
           Object? clientReferenceId = $none,
           Object? transactionType = $none,
           Object? transactionReason = $none,
+          Object? campaignNumber = $none,
           Object? dateOfEntry = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
@@ -303,6 +312,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (transactionType != $none) #transactionType: transactionType,
         if (transactionReason != $none) #transactionReason: transactionReason,
+        if (campaignNumber != $none) #campaignNumber: campaignNumber,
         if (dateOfEntry != $none) #dateOfEntry: dateOfEntry,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
@@ -328,6 +338,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
       transactionType: data.get(#transactionType, or: $value.transactionType),
       transactionReason:
           data.get(#transactionReason, or: $value.transactionReason),
+      campaignNumber: data.get(#campaignNumber, or: $value.campaignNumber),
       dateOfEntry: data.get(#dateOfEntry, or: $value.dateOfEntry),
       boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
@@ -393,6 +404,9 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   static String? _$receiverType(StockModel v) => v.receiverType;
   static const Field<StockModel, String> _f$receiverType =
       Field('receiverType', _$receiverType, opt: true);
+  static String? _$campaignNumber(StockModel v) => v.campaignNumber;
+  static const Field<StockModel, String> _f$campaignNumber =
+      Field('campaignNumber', _$campaignNumber, opt: true);
   static String? _$senderId(StockModel v) => v.senderId;
   static const Field<StockModel, String> _f$senderId =
       Field('senderId', _$senderId, opt: true);
@@ -445,6 +459,7 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
     #waybillNumber: _f$waybillNumber,
     #receiverId: _f$receiverId,
     #receiverType: _f$receiverType,
+    #campaignNumber: _f$campaignNumber,
     #senderId: _f$senderId,
     #senderType: _f$senderType,
     #nonRecoverableError: _f$nonRecoverableError,
@@ -484,6 +499,7 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
         waybillNumber: data.dec(_f$waybillNumber),
         receiverId: data.dec(_f$receiverId),
         receiverType: data.dec(_f$receiverType),
+        campaignNumber: data.dec(_f$campaignNumber),
         senderId: data.dec(_f$senderId),
         senderType: data.dec(_f$senderType),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
@@ -570,6 +586,7 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       String? waybillNumber,
       String? receiverId,
       String? receiverType,
+      String? campaignNumber,
       String? senderId,
       String? senderType,
       bool? nonRecoverableError,
@@ -619,6 +636,7 @@ class _StockModelCopyWithImpl<$R, $Out>
           Object? waybillNumber = $none,
           Object? receiverId = $none,
           Object? receiverType = $none,
+          Object? campaignNumber = $none,
           Object? senderId = $none,
           Object? senderType = $none,
           Object? nonRecoverableError = $none,
@@ -646,6 +664,7 @@ class _StockModelCopyWithImpl<$R, $Out>
         if (waybillNumber != $none) #waybillNumber: waybillNumber,
         if (receiverId != $none) #receiverId: receiverId,
         if (receiverType != $none) #receiverType: receiverType,
+        if (campaignNumber != $none) #campaignNumber: campaignNumber,
         if (senderId != $none) #senderId: senderId,
         if (senderType != $none) #senderType: senderType,
         if (nonRecoverableError != $none)
@@ -679,6 +698,7 @@ class _StockModelCopyWithImpl<$R, $Out>
       waybillNumber: data.get(#waybillNumber, or: $value.waybillNumber),
       receiverId: data.get(#receiverId, or: $value.receiverId),
       receiverType: data.get(#receiverType, or: $value.receiverType),
+      campaignNumber: data.get(#campaignNumber, or: $value.campaignNumber),
       senderId: data.get(#senderId, or: $value.senderId),
       senderType: data.get(#senderType, or: $value.senderType),
       nonRecoverableError:
