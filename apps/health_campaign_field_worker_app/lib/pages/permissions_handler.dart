@@ -7,7 +7,6 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/TextTheme/digit_text_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,13 +76,13 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           bool granted = await _checkPermissions();
           if (!granted) {
             if (mounted) {
-              // Toast.showToast(
-              //   context,
-              //   message: localizations.translate(
-              //     i18.common.permissionsAlert,
-              //   ),
-              //   type: ToastType.error,
-              // );
+              Toast.showToast(
+                context,
+                message: localizations.translate(
+                  i18.common.permissionsAlert,
+                ),
+                type: ToastType.error,
+              );
             }
             return;
           }
@@ -100,7 +99,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   Future<void> _initializeConfig() async {
     final prefs = await SharedPreferences.getInstance();
     final schemaJsonRaw = prefs.getString('app_config_schemas');
-
     try {
       if (schemaJsonRaw != null) {
         final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
@@ -373,13 +371,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     }
   }
 
-  /// Request all permission (from config)
-  Future<void> _requestAllPermissions() async {
-    for (final e in requiredPermissions.entries) {
-      await _requestPermission(e.key);
-    }
-  }
-
   /// Check if a permission is granted by name
   bool _isPermissionGranted(String permissionName) {
     final permission = permissionMap[permissionName.toLowerCase()];
@@ -458,114 +449,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         }
         break;
     }
-  }
-
-  void attemptNavigation() async {
-    bool granted = await _checkPermissions();
-    if (!granted || !backgroundActivityConfirmed) {
-      Toast.showToast(
-        context,
-        message: localizations.translate(
-          !backgroundActivityConfirmed
-              ? i18.common.enablePermissionCheckbox
-              : i18.common.permissionsAlert,
-        ),
-        type: ToastType.error,
-      );
-      return;
-    }
-
-    if (mounted) {
-      context.router.replace(BoundarySelectionRoute());
-    }
-  }
-
-  Future<void> _dialogBuilder(BuildContext context) {
-    return showCustomPopup(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 10),
-
-                      // Warning Icon
-                      const Icon(
-                        Icons.warning,
-                        color: Colors.red,
-                        size: 50,
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Title
-                      const Text(
-                        'Access Required !',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF0B4D6E),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Message
-                      const Text(
-                        "The HCM app requires access to some phone features to function properly. Please allow access to proceed.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Button
-                      DigitButton(
-                        label: 'Allow Access',
-                        onPressed: () async {
-                          await _requestAllPermissions();
-
-                          if (mounted) {
-                            Navigator.pop(context);
-                            attemptNavigation();
-                          }
-                        },
-                        type: DigitButtonType.primary,
-                        size: DigitButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Close button
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
   }
 
   @override
@@ -648,22 +531,30 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           ],
         ),
         DigitButton(
-          label: 'Allow Access',
+          label: localizations.translate(i18.common.permissionContinue),
           type: DigitButtonType.primary,
           size: DigitButtonSize.large,
           mainAxisSize: MainAxisSize.max,
           onPressed: () async {
-            //   print(requiredPermissions.entries);
-            await _requestAllPermissions();
-            attemptNavigation();
+            bool granted = await _checkPermissions();
+            if (!granted || !backgroundActivityConfirmed) {
+              Toast.showToast(
+                context,
+                message: localizations.translate(
+                  !backgroundActivityConfirmed
+                      ? i18.common.enablePermissionCheckbox
+                      : i18.common.permissionsAlert,
+                ),
+                type: ToastType.error,
+              );
+              return;
+            }
+
+            if (mounted) {
+              context.router.replace(BoundarySelectionRoute());
+            }
           },
-        ),
-        DigitButton(
-            label: 'Dont Allow',
-            onPressed: () => _dialogBuilder(context),
-            mainAxisSize: MainAxisSize.max,
-            type: DigitButtonType.primary,
-            size: DigitButtonSize.large)
+        )
       ],
     );
   }
@@ -675,8 +566,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     DigitTextTheme textTheme,
   ) {
     final format = config['format'] as String?;
-
-    // print(format);
 
     // Check hidden condition
     if (config['hidden'] != null && _evaluateCondition(config['hidden'])) {
@@ -699,10 +588,10 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         return _buildTextTemplate(config, theme, textTheme);
       case 'icon':
         return _buildIcon(config, theme);
-      // case 'button':
-      //   return _buildButton(config, theme, textTheme);
-      // case 'tag':
-      //   return _buildTag(config, theme, textTheme);
+      case 'button':
+        return _buildButton(config, theme, textTheme);
+      case 'tag':
+        return _buildTag(config, theme, textTheme);
       case 'infoCard':
         return _buildInfoCard(config, theme, textTheme);
       default:
@@ -803,7 +692,19 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     if (required) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: spacer1),
-        child: Text(resolvedValue, style: textStyle),
+        child: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(text: resolvedValue, style: textStyle),
+              TextSpan(
+                text: " *",
+                style: textStyle.copyWith(
+                  color: theme.colorTheme.alert.error,
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     }
 
@@ -818,20 +719,9 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
     return Padding(
       padding: const EdgeInsets.only(right: 0),
-      child: Container(
-        width: 48,
-        height: 48,
-        decoration: BoxDecoration(
-          color: const Color(0xFFF8F1ED), // light peach background
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Center(
-          child: Icon(
-            DigitIconMapping.getIcon(iconName),
-            color: const Color(0xFFD95F0E), // orange icon color
-            size: 22,
-          ),
-        ),
+      child: Icon(
+        DigitIconMapping.getIcon(iconName),
+        color: theme.colorTheme.primary.primary1,
       ),
     );
   }
