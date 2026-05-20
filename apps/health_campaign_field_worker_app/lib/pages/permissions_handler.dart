@@ -472,20 +472,19 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       barrierDismissible: false,
       builder: (context) => Popup(
         title:
-            '${AppLocalizations.of(context).translate(i18.common.accessRequired)} !',
+            '${localizations.translate(i18.common.accessRequired)} !',
         type: PopUpType.alert,
         titleIcon: Icon(
           Icons.warning,
           color: Theme.of(context).colorTheme.alert.error,
           size: spacer12,
         ),
-        subHeading: AppLocalizations.of(context)
-            .translate(i18.common.accessPermissionDialogDesc),
+        subHeading: localizations.translate(i18.common.accessPermissionDialogDesc),
         onCrossTap: () => Navigator.pop(context),
         contentPadding: const EdgeInsets.symmetric(vertical: spacer12),
         actions: [
           DigitButton(
-              label: AppLocalizations.of(context)
+              label: localizations
                   .translate(i18.common.allowAccess),
               onPressed: () async {
                 await _requestAllPermissions();
@@ -595,7 +594,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           ],
         ),
         DigitButton(
-          label: AppLocalizations.of(context).translate(i18.common.allowAccess),
+          label: localizations.translate(i18.common.allowAccess),
           type: DigitButtonType.primary,
           size: DigitButtonSize.large,
           mainAxisSize: MainAxisSize.max,
@@ -605,7 +604,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           },
         ),
         DigitButton(
-            label: AppLocalizations.of(context).translate(i18.common.dontAllow),
+            label: localizations.translate(i18.common.dontAllow),
             onPressed: () => _dialogBuilder(context),
             mainAxisSize: MainAxisSize.max,
             type: DigitButtonType.secondary ,
@@ -643,10 +642,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         return _buildTextTemplate(config, theme, textTheme);
       case 'icon':
         return _buildIcon(config, theme);
-      // case 'button':
-      //   return _buildButton(config, theme, textTheme);
-      // case 'tag':
-      //   return _buildTag(config, theme, textTheme);
       case 'infoCard':
         return _buildInfoCard(config, theme, textTheme);
       default:
@@ -732,11 +727,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
     String resolvedValue = _resolveTemplate(value);
     resolvedValue = localizations.translate(resolvedValue);
-
-    debugPrint(
-      'TEXT_TEMPLATE NIKGIL value=${config['value']} style=${config['properties']?['style']}',
-    );
-
     final isDescription = style == 'description';
 
     TextStyle textStyle;
