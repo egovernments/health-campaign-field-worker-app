@@ -181,6 +181,9 @@ class Common {
 
   String get selectCurrentBoundary => 'CORE_COMMON_SELECT_CURRENT_BOUNDARY';
 
+  String get selectSettlementDetails => 'CORE_COMMON_SELECT_SETTLEMENT_DETAILS';
+
+
   String get wantToChooseAnotherBoundary =>
       'CORE_COMMON_WANT_TO_CHOOSE_ANOTHER_BOUNDARY';
 

@@ -291,7 +291,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "tooltip": "",
               "helpText": "",
               "infoText": "",
-              "readOnly": false,
+              "readOnly": true,
               "fieldName": "settlementType",
               "deleteFlag": false,
               "innerLabel": "",
@@ -304,7 +304,13 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                 }
               ],
               "errorMessage": "",
-              "isMultiSelect": false
+              "isMultiSelect": false,
+              "autoFillCondition": [
+                {
+                  "value": "{{singleton.settlementType}}",
+                  "expression": "true==true"
+                }
+              ]
             },
             {
               "type": "string",
@@ -1128,7 +1134,6 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "visibilityCondition": {
                 "expression": [
                   {
-                    "type": "custom",
                     "condition":
                         "childDetails.reasonNotMarked=='NON_COMPLIANCE'"
                   }

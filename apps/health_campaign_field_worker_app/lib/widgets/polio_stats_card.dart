@@ -27,6 +27,7 @@ class _PolioStatsCardState extends State<PolioStatsCard>
   int vialsOpened = 0;
   int vialsUsable = 0;
   int vialsUnusable = 0;
+  int additionalReceived = 0;
   bool _isLoading = false;
 
   @override
@@ -72,39 +73,7 @@ class _PolioStatsCardState extends State<PolioStatsCard>
 
       final projectId = context.projectId;
 
-      // Fetch Stock Details (vials) from tally sheet entries
-      final tallyResults = await userActionRepo.search(
-        UserActionSearchModel(
-          action: 'TALLY_SHEET',
-          projectId: projectId,
-          isDeleted: false,
-        ),
-      );
-
-      int totalVialsOpened = 0;
-      int usable = 0;
-      int unusable = 0;
-      for (final ua in tallyResults) {
-        if (ua.action != 'TALLY_SHEET') continue;
-        final vialsOpenedField = ua.additionalFields?.fields
-            .where((f) => f.key == 'vialsOpenedToday')
-            .firstOrNull;
-        final usableField = ua.additionalFields?.fields
-            .where((f) => f.key == 'vialsRemainingUsable')
-            .firstOrNull;
-        final unusableField = ua.additionalFields?.fields
-            .where((f) => f.key == 'vialsUnusable')
-            .firstOrNull;
-
-        totalVialsOpened +=
-            int.tryParse(vialsOpenedField?.value?.toString() ?? '0') ?? 0;
-        usable +=
-            int.tryParse(usableField?.value?.toString() ?? '0') ?? 0;
-        unusable +=
-            int.tryParse(unusableField?.value?.toString() ?? '0') ?? 0;
-      }
-
-      // Also check individual stock vial entries (saved as LOCATION_CAPTURE
+      // Fetch stock entries (saved as LOCATION_CAPTURE
       // with form=POLIO_STOCK in additionalFields)
       final stockResults = await userActionRepo.search(
         UserActionSearchModel(
@@ -114,24 +83,38 @@ class _PolioStatsCardState extends State<PolioStatsCard>
         ),
       );
 
+      int totalVialsOpened = 0;
+      int usable = 0;
+      int unusable = 0;
+      int received = 0;
       for (final ua in stockResults) {
         if (ua.action != 'LOCATION_CAPTURE') continue;
-        // Only count entries that are stock vial records
         final formField = ua.additionalFields?.fields
             .where((f) => f.key == 'form')
             .firstOrNull;
         if (formField?.value?.toString() != 'POLIO_STOCK') continue;
 
         totalVialsOpened++;
-        final vvmField = ua.additionalFields?.fields
-            .where((f) => f.key == 'vvmStatus')
+
+        final returnedUsableField = ua.additionalFields?.fields
+            .where((f) => f.key == 'returnedUsable')
             .firstOrNull;
-        final status = vvmField?.value?.toString() ?? '';
-        if (status == 'USABLE') {
-          usable++;
-        } else if (status == 'UNUSABLE') {
-          unusable++;
-        }
+        final returnedUnusableField = ua.additionalFields?.fields
+            .where((f) => f.key == 'returnedUnusable')
+            .firstOrNull;
+        final additionalReceivedField = ua.additionalFields?.fields
+            .where((f) => f.key == 'additionalReceived')
+            .firstOrNull;
+
+        usable += int.tryParse(
+                returnedUsableField?.value?.toString() ?? '0') ??
+            0;
+        unusable += int.tryParse(
+                returnedUnusableField?.value?.toString() ?? '0') ??
+            0;
+        received += int.tryParse(
+                additionalReceivedField?.value?.toString() ?? '0') ??
+            0;
       }
 
       if (mounted) {
@@ -139,6 +122,7 @@ class _PolioStatsCardState extends State<PolioStatsCard>
           vialsOpened = totalVialsOpened;
           vialsUsable = usable;
           vialsUnusable = unusable;
+          additionalReceived = received;
         });
       }
     } catch (e) {
@@ -179,8 +163,10 @@ class _PolioStatsCardState extends State<PolioStatsCard>
                 ],
               ),
               const SizedBox(height: spacer1),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Wrap(
+                spacing: spacer1,
+                runSpacing: spacer1,
+                alignment: WrapAlignment.spaceEvenly,
                 children: [
                   _buildCountChip(
                     context,
@@ -197,6 +183,14 @@ class _PolioStatsCardState extends State<PolioStatsCard>
                     ),
                     count: vialsUnusable,
                     color: Colors.red,
+                  ),
+                  _buildCountChip(
+                    context,
+                    label: localizations.translate(
+                      'POLIO_HOME_STATS_ADDITIONAL_RECEIVED',
+                    ),
+                    count: additionalReceived,
+                    color: Colors.blue,
                   ),
                 ],
               ),

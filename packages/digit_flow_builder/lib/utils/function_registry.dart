@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import 'interpolation.dart';
@@ -16,6 +17,7 @@ class TaskStatus {
   static const String beneficiaryAbsent = 'BENEFICIARY_ABSENT';
   static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
   static const String administrationFailed = 'ADMINISTRATION_FAILED';
+  static const String visited = 'VISITED';
 }
 
 /// The signature for a function that can be registered in the [FunctionRegistry].
@@ -338,8 +340,8 @@ void initializeFunctionRegistry() {
           for (final delivery in cycle.deliveries ?? []) {
             for (final dc in delivery.doseCriteria ?? []) {
               final condition = dc.condition ?? '';
-              final match = RegExp(r'(\d+)<=ageandage<=(\d+)')
-                  .firstMatch(condition);
+              final match =
+                  RegExp(r'(\d+)<=ageandage<=(\d+)').firstMatch(condition);
               if (match != null) {
                 final parsedMin = int.tryParse(match.group(1) ?? '');
                 final parsedMax = int.tryParse(match.group(2) ?? '');
@@ -384,9 +386,8 @@ void initializeFunctionRegistry() {
 
     if (tasks.isNotEmpty) {
       // Get currentRunningCycle from third argument if provided
-      final currentRunningCycle = args.length > 2
-          ? int.tryParse(args[2]?.toString() ?? '')
-          : null;
+      final currentRunningCycle =
+          args.length > 2 ? int.tryParse(args[2]?.toString() ?? '') : null;
 
       for (final item in tasks) {
         Map<String, dynamic> task;
@@ -418,8 +419,7 @@ void initializeFunctionRegistry() {
           if (fields != null) {
             for (final field in fields) {
               if (field is Map && field['key'] == 'cycleIndex') {
-                taskCycleIndex =
-                    int.tryParse(field['value']?.toString() ?? '');
+                taskCycleIndex = int.tryParse(field['value']?.toString() ?? '');
                 break;
               }
             }
@@ -546,7 +546,8 @@ void initializeFunctionRegistry() {
     final status = value.trim().toUpperCase();
 
     // Match valid delivered statuses
-    if (status == TaskStatus.administrationSuccess || status == TaskStatus.delivered) {
+    if (status == TaskStatus.administrationSuccess ||
+        status == TaskStatus.delivered) {
       return true;
     }
 
@@ -667,7 +668,7 @@ void initializeFunctionRegistry() {
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
           (lastTaskStatus == 'ADMINISTRATION_SUCCESS' ||
-              lastTaskStatus == 'DELIVERED')) {
+              lastTaskStatus == 'DELIVERED' || lastTaskStatus == 'VISITED')) {
         return true;
       }
 
@@ -725,13 +726,11 @@ void initializeFunctionRegistry() {
 
     if (selectedCycle == null) return false;
 
-    for (final task in tasks) {
-      final status = task['status']?.toString().toUpperCase();
-      if (status != TaskStatus.administrationFailed) continue;
-
+    // Filter tasks for current cycle
+    final currentCycleTasks = tasks.where((task) {
       final additionalFields = task['additionalFields'];
       final fields = additionalFields?['fields'] as List?;
-      if (fields == null) continue;
+      if (fields == null) return false;
 
       for (final field in fields) {
         if (field is Map && field['key'] == 'cycleIndex') {
@@ -739,9 +738,86 @@ void initializeFunctionRegistry() {
           if (cycleIndex == selectedCycle.id) return true;
         }
       }
+      return false;
+    }).toList();
+
+    if (currentCycleTasks.isEmpty) return false;
+
+    // Sort by createdTime (latest first)
+    currentCycleTasks.sort((a, b) {
+      final aTime = a['clientAuditDetails']?['createdTime'] ?? 0;
+      final bTime = b['clientAuditDetails']?['createdTime'] ?? 0;
+      return (bTime as num).compareTo(aTime as num);
+    });
+
+    // Check if the latest task has ADMINISTRATION_FAILED status
+    final latestTask = currentCycleTasks.first;
+    final status = latestTask['status']?.toString().toUpperCase();
+    return status == TaskStatus.administrationFailed;
+  });
+
+  /// Checks if a VISITED (Redose) task exists for the current running cycle.
+  ///
+  /// - **Function Name**: `'hasRedoseForCurrentCycle'`
+  /// - **Arguments**: A list where the first element is the tasks list.
+  /// - **Returns**: `true` if a task with VISITED status exists
+  ///   for the current cycle, `false` otherwise.
+  FunctionRegistry.register("hasRedoseForCurrentCycle", (args, stateData) {
+    List<Map<String, dynamic>>? tasks;
+    if (args.isNotEmpty && args.first != null) {
+      if (args.first is List) {
+        final rawList = args.first as List;
+        tasks = rawList.map((item) {
+          if (item is Map<String, dynamic>) return item;
+          if (item is Map) return Map<String, dynamic>.from(item);
+          try {
+            return (item as dynamic).toMap() as Map<String, dynamic>;
+          } catch (_) {
+            return <String, dynamic>{};
+          }
+        }).toList();
+      }
     }
 
-    return false;
+    if (tasks == null || tasks.isEmpty) return false;
+
+    final projectType = FlowBuilderSingleton().projectType;
+    final selectedCycle = projectType?.cycles?.firstWhereOrNull(
+      (e) =>
+          (e.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+          (e.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch,
+    );
+
+    if (selectedCycle == null) return false;
+
+    // Filter tasks for current cycle
+    final currentCycleTasks = tasks.where((task) {
+      final additionalFields = task['additionalFields'];
+      final fields = additionalFields?['fields'] as List?;
+      if (fields == null) return false;
+
+      for (final field in fields) {
+        if (field is Map && field['key'] == 'cycleIndex') {
+          final cycleIndex = int.tryParse(field['value']?.toString() ?? '');
+          if (cycleIndex == selectedCycle.id) return true;
+        }
+      }
+      return false;
+    }).toList();
+
+    if (currentCycleTasks.isEmpty) return false;
+
+    // Sort by createdTime (latest first)
+    currentCycleTasks.sort((a, b) {
+      final aTime = a['clientAuditDetails']?['createdTime'] ?? 0;
+      final bTime = b['clientAuditDetails']?['createdTime'] ?? 0;
+      return (bTime as num).compareTo(aTime as num);
+    });
+
+    // Check if the latest task has VISITED status
+    final latestTask = currentCycleTasks.first;
+    final status = latestTask['status']?.toString().toUpperCase();
+    return status == TaskStatus.visited;
   });
 
   /// Registers a function to check the status of tasks.
@@ -1685,5 +1761,82 @@ void initializeFunctionRegistry() {
     }
 
     return false;
+  });
+
+  /// Checks if the household has reached its member limit.
+  ///
+  /// - **Function Name**: `'hasReachedMemberLimit'`
+  /// - **Arguments**:
+  ///   - First argument: household data (with additionalFields containing memberCount)
+  ///   - Second argument: members list (list of individuals registered for the household)
+  /// - **Returns**: `true` if the number of registered members >= memberCount, `false` otherwise.
+  FunctionRegistry.register('hasReachedMemberLimit', (args, stateData) {
+    if (args.isEmpty || args.length < 2) return false;
+
+    try {
+      // Get household data
+      final householdData = args[0];
+      Map<String, dynamic>? householdMap;
+
+      if (householdData is Map<String, dynamic>) {
+        householdMap = householdData;
+      } else if (householdData is List && householdData.isNotEmpty) {
+        final firstItem = householdData.first;
+        if (firstItem is Map<String, dynamic>) {
+          householdMap = firstItem;
+        } else {
+          try {
+            householdMap =
+                (firstItem as dynamic).toMap() as Map<String, dynamic>;
+          } catch (_) {
+            return false;
+          }
+        }
+      } else {
+        try {
+          householdMap =
+              (householdData as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      // Get memberCount from additionalFields
+      int memberCount = 0;
+      final additionalFields = householdMap['additionalFields'];
+      if (additionalFields is Map && additionalFields['fields'] is List) {
+        for (final field in additionalFields['fields']) {
+          final key = field is Map ? field['key'] : null;
+          final value = field is Map ? field['value'] : null;
+          if (key == 'memberCount') {
+            if (value is int) {
+              memberCount = value;
+            } else if (value is String) {
+              memberCount = int.tryParse(value) ?? 0;
+            } else if (value is double) {
+              memberCount = value.toInt();
+            }
+            break;
+          }
+        }
+      }
+
+      // Get current count of members
+      final membersData = args[1];
+      int currentMemberCount = 0;
+
+      if (membersData is List) {
+        currentMemberCount = membersData.length;
+      } else if (membersData is Map) {
+        // If it's a map, try to get a count or length property
+        currentMemberCount = membersData['length'] ?? membersData['count'] ?? 0;
+      }
+
+      // Return true if we've reached or exceeded the limit
+      return currentMemberCount >= memberCount;
+    } catch (e) {
+      debugPrint('Error in hasReachedMemberLimit: $e');
+      return false;
+    }
   });
 }

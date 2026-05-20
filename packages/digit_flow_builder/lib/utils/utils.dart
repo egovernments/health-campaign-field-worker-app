@@ -35,9 +35,19 @@ class FlowBuilderSingleton {
   Map<String, TemplateConfig>? _templateConfigs;
   List<Map<String, dynamic>>?
       _userRoles; // User roles from app level (e.g., [{"code": "WAREHOUSE_MANAGER", "name": "Warehouse Manager"}])
+  String? _settlementType; // Settlement type selected by user (e.g., URBAN, RURAL, etc.)
+  String? _settlementName; // Settlement name entered by user
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
+  }
+
+  void setSettlementType({required String settlementType}) {
+    _settlementType = settlementType;
+  }
+
+  void setSettlementName({required String settlementName}) {
+    _settlementName = settlementName;
   }
 
   void setPersistenceConfiguration(
@@ -101,6 +111,10 @@ class FlowBuilderSingleton {
   Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
 
   List<Map<String, dynamic>>? get userRoles => _userRoles;
+
+  String? get settlementType => _settlementType;
+
+  String? get settlementName => _settlementName;
 }
 
 /// TODO: WILL REMOVE THIS FUNCTION ALSO : TEMPORARY
@@ -479,6 +493,8 @@ Map<String, dynamic> singletonToMap() {
     "userRoles": s.userRoles,
     "templateConfigs":
         s.templateConfigs?.map((k, v) => MapEntry(k, v.toJson())),
+    "settlementType": s.settlementType,
+    "settlementName": s.settlementName,
   };
 }
 

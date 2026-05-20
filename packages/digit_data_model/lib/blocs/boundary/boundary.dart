@@ -25,6 +25,8 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     on(_handleMultiSelect);
     on(_handleSubmit);
     on(_handlefind);
+    on(_handleSetSettlementName);
+    on(_handleSetSettlementType);
   }
 
   Future<void> _handleReset(
@@ -155,6 +157,29 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       allSelectedLastLevelBoundaries: merged,
     ));
   }
+
+  FutureOr<void> _handleSetSettlementName(
+    BoundarySetSettlementNameEvent event,
+    BoundaryEmitter emit,
+  ) async {
+    // Add to list if not already present
+    final updatedNames = List<String>.from(state.settlementNames);
+    if (!updatedNames.contains(event.settlementName)) {
+      updatedNames.add(event.settlementName);
+    }
+
+    emit(state.copyWith(
+      settlementNames: updatedNames,
+      selectedSettlementName: event.settlementName,
+    ));
+  }
+
+  FutureOr<void> _handleSetSettlementType(
+    BoundarySetSettlementTypeEvent event,
+    BoundaryEmitter emit,
+  ) async {
+    emit(state.copyWith(settlementType: event.settlementType));
+  }
 }
 
 @freezed
@@ -177,6 +202,14 @@ class BoundaryEvent with _$BoundaryEvent {
     required List<BoundaryModel> selectedBoundaries,
   }) = BoundaryMultiSelectEvent;
 
+  const factory BoundaryEvent.setSettlementName({
+    required String settlementName,
+  }) = BoundarySetSettlementNameEvent;
+
+  const factory BoundaryEvent.setSettlementType({
+    required String settlementType,
+  }) = BoundarySetSettlementTypeEvent;
+
   const factory BoundaryEvent.submit() = BoundarySubmitEvent;
 }
 
@@ -192,6 +225,9 @@ class BoundaryState with _$BoundaryState {
     @Default([]) List<BoundaryModel> selectedLastLevelBoundaries,
     @Default([]) List<BoundaryModel> allSelectedLastLevelBoundaries,
     @Default(false) bool hasSubmitted,
+    @Default([]) List<String> settlementNames,
+    String? selectedSettlementName,
+    String? settlementType,
   }) = _BoundaryState;
 
   @override

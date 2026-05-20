@@ -270,27 +270,6 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "isMultiSelect": false
             },
 
-            // 6. settlementName
-            {
-              "type": "string",
-              "label": "IHM_SETTLEMENT_NAME_LABEL",
-              "order": 6,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "settlementName",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-
             // 7. settlementType
             {
               "type": "string",
@@ -302,7 +281,7 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "tooltip": "",
               "helpText": "",
               "infoText": "",
-              "readOnly": false,
+              "readOnly": true,
               "fieldName": "settlementType",
               "deleteFlag": false,
               "innerLabel": "",
@@ -329,6 +308,9 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                 },
                 {"code": "IMMIGRANTS", "name": "IHM_ENUM_IMMIGRANTS"},
                 {"code": "CROSS_BORDER", "name": "IHM_ENUM_CROSS_BORDER"}
+              ],
+              "autoFillCondition": [
+                {"value": "{{singleton.settlementType}}", "expression": "true==true"}
               ]
             },
 

@@ -200,16 +200,6 @@ final dynamic samplePolioTeamSupervisionFlows = {
               validations: [],
             ),
 
-            // 6. settlementName
-            _prop(
-              type: "string",
-              label: "Settlement Name",
-              order: 6,
-              format: "text",
-              fieldName: "settlementName",
-              validations: [],
-            ),
-
             // 7. supervisorType
             _prop(
               type: "string",

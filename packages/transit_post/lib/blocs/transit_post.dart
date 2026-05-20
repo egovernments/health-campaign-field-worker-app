@@ -94,6 +94,10 @@ class TransitPostBloc extends Bloc<TransitPostEvent, TransitPostState> {
           ),
           additionalFields: UserActionAdditionalFields(version: 1, fields: [
             AdditionalField(
+              'recordType',
+              'TRANSIT_POST',
+            ),
+            AdditionalField(
               'transitPostType',
               state.transitPostType,
             ),

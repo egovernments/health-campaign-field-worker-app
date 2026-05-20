@@ -29,8 +29,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
-import 'package:transit_post/router/transit_post_router.gm.dart';
-import 'package:transit_post/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -69,8 +67,6 @@ import '../widgets/home/home_item_card.dart';
 import '../widgets/inventory/custom_facility_widgets.dart';
 import '../widgets/inventory/custom_product_selection_card.dart';
 import '../widgets/localized.dart';
-// import '../widgets/progress_bar/beneficiary_progress.dart';
-import '../widgets/polio_stats_card.dart';
 import '../widgets/progress_bar/hf_referral_progress.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
@@ -942,7 +938,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   showBackNavigation: false,
                   showHelp: false,
                 ),
-                if (isPolio) const PolioStatsCard(),
+                // if (isPolio) const PolioStatsCard(),
                 /////   hfreferral progress matrics
                 if (state.actionsWrapper.actions
                     .map((e) => e.displayName)
@@ -1538,40 +1534,39 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (schemaJsonRaw != null) {
-                    final allSchemas =
-                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                    final data = allSchemas['REGISTRATION'];
+                    if (schemaJsonRaw != null) {
+                      final allSchemas =
+                          json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                      final data = allSchemas['REGISTRATION'];
 
-                    final registrationDeliveryData = data?['data'];
-                    final flowsData = (registrationDeliveryData['flows']
-                                as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                    FlowRegistry.setConfig(flowsData);
-                    NavigationRegistry.setupNavigation(ctx);
+                      final registrationDeliveryData = data?['data'];
+                      final flowsData = (registrationDeliveryData['flows']
+                                  as List<dynamic>?)
+                              ?.map((e) => Map<String, dynamic>.from(e as Map))
+                              .toList() ??
+                          [];
+                      FlowRegistry.setConfig(flowsData);
+                      NavigationRegistry.setupNavigation(ctx);
 
-                    ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName: registrationDeliveryData["initialPage"]),
-                    );
-                  } else {
-                    final isHousehold =
-                        FlowBuilderSingleton().beneficiaryType ==
-                            BeneficiaryType.household;
-                    final registrationConfig = isHousehold
-                        ? sampleHouseholdFlows
-                        : isPolio
-                            ? sampleFlows
-                            : sampleSmcFlows;
-                    FlowRegistry.setConfig(registrationConfig["flows"]
-                        as List<Map<String, dynamic>>);
-                    NavigationRegistry.setupNavigation(ctx);
-                    ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName: registrationConfig["initialPage"]),
-                    );
+                      ctx.router.push(
+                        FlowBuilderHomeRoute(
+                            pageName: registrationDeliveryData["initialPage"]),
+                      );
+                    } else {
+                  final isHousehold = FlowBuilderSingleton().beneficiaryType ==
+                      BeneficiaryType.household;
+                  final registrationConfig = isHousehold
+                      ? sampleHouseholdFlows
+                      : isPolio
+                          ? sampleFlows
+                          : sampleSmcFlows;
+                  FlowRegistry.setConfig(registrationConfig["flows"]
+                      as List<Map<String, dynamic>>);
+                  NavigationRegistry.setupNavigation(ctx);
+                  ctx.router.push(
+                    FlowBuilderHomeRoute(
+                        pageName: registrationConfig["initialPage"]),
+                  );
                   }
                 } catch (e) {
                   debugPrint('error $e');
@@ -2069,21 +2064,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       //     customIcon: Constants.beneficiaryIdDownload,
       //   ),
       // ),
-
-      i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
-          child: HomeItemCard(
-        icon: Icons.local_post_office,
-        label: i18.home.transitPostLabel,
-        onPressed: () {
-          context.router.push(CurrentBoundaryRoute(
-            onBoundarySelected: (ctx) async {
-              const module = "hcm-transit-post";
-              triggerLocalization(module: module);
-              ctx.router.push(const TransitPostWrapperRoute());
-            },
-          ));
-        },
-      )),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -2118,7 +2098,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.polioInsideMonitoringLabel:
           homeShowcaseData.polioInsideMonitoring.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-      i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
+      // i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
       // i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey, // TODO: Uncomment when beneficiary downsync is implemented
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
@@ -2133,7 +2113,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       // i18.home.closedHouseHoldLabel,
       i18.home.polioRegistrationLabel,
       i18.home.polioMissedChildrenLabel,
-      i18.home.transitPostLabel,
+      // i18.home.transitPostLabel,
       i18.home.polioStockDetailsLabel,
       i18.home.polioLqaDataCollectionLabel,
       i18.home.polioInsideMonitoringLabel,
@@ -2165,9 +2145,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db ||
-            (isPolio &&
-                isDistributor &&
-                element == i18.home.transitPostLabel) ||
             (isDistributor &&
                 (element == i18.home.polioRegistrationLabel ||
                     (element == i18.home.polioMissedChildrenLabel &&
@@ -2248,16 +2225,6 @@ void setPackagesSingleton(BuildContext context) {
             dashboardConfigSchema ?? [], context.projectTypeCode ?? "");
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
-        TransitPostSingleton().setInitialData(
-          resources: context.selectedProjectType?.resources,
-          transitPostType: appConfiguration.transitPostType != null
-              ? appConfiguration.transitPostType!.map((e) => e.code).toList()
-              : [],
-          loggedInUserUuid: context.loggedInUserUuid,
-          projectId: context.selectedProject.id,
-          minAge: context.selectedProjectType?.validMinAge,
-          maxAge: context.selectedProjectType?.validMaxAge,
-        );
         FlowBuilderSingleton().setInitialData(
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,

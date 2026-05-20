@@ -45,6 +45,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
           showErrors: (control) => control.invalid && control.touched,
           builder: (field) => LabeledField(
             infoText: translateIfPresent(tooltipText, loc),
+            charCondition: true,
             label: label,
             capitalizedFirstLetter: false,
             isRequired: isRequired ?? false,

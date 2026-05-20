@@ -200,6 +200,7 @@ class TransformerExecutor extends ActionExecutor {
       // converting in json format to match nested object value as passing model will cause issue
       'userUUID': FlowBuilderSingleton().loggedInUser?.uuid,
       'householdType': HouseholdType.family.toValue(),
+      'settlementType': FlowBuilderSingleton().settlementType,
       ...extraContext,
       "beneficiaryType": FlowBuilderSingleton().beneficiaryType?.toValue(),
     };

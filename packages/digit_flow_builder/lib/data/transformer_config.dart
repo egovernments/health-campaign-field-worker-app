@@ -57,7 +57,8 @@ final jsonConfig = {
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
-            "memberCount": "householdDetails.memberCount"
+            "memberCount": "householdDetails.memberCount",
+            "settlementType": "__context:settlementType"
           }
         }
       },
@@ -91,7 +92,8 @@ final jsonConfig = {
           "additionalFields": {
             "weight": "beneficiaryDetails.weight",
             "height": "beneficiaryDetails.height",
-            "isPregnant": "beneficiaryDetails.isPregnant"
+            "isPregnant": "beneficiaryDetails.isPregnant",
+            "settlementType": "__context:settlementType"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
@@ -169,7 +171,9 @@ final jsonConfig = {
           /// Note: Generate uuid
           "rowVersion": "meta.rowVersion",
           "dateOfRegistration": "householdDetails.dateOfRegistration",
-          "additionalFields": "additionalInfo.fields",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
         }
@@ -190,7 +194,9 @@ final jsonConfig = {
           /// Note: Generate uuid
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
-          "additionalFields": "additionalInfo.fields",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
         }
@@ -232,7 +238,8 @@ final jsonConfig = {
             "weight": "beneficiaryDetails.weight",
             "height": "beneficiaryDetails.height",
             "isPregnant": "beneficiaryDetails.isPregnant",
-            "isGuestMember": "beneficiaryDetails.isGuestMember"
+            "isGuestMember": "beneficiaryDetails.isGuestMember",
+            "settlementType": "__context:settlementType"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
@@ -310,7 +317,9 @@ final jsonConfig = {
           /// Note: Generate uuid
           "rowVersion": "meta.rowVersion",
           "dateOfRegistration": "__value:DATETIME.NOW",
-          "additionalFields": "additionalInfo.fields",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
         }
@@ -330,7 +339,9 @@ final jsonConfig = {
           /// Note: Generate uuid
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
-          "additionalFields": "additionalInfo.fields",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
         }
@@ -368,7 +379,8 @@ final jsonConfig = {
           "additionalFields": {
             "weight": "beneficiaryDetails.weight",
             "height": "beneficiaryDetails.height",
-            "isPregnant": "beneficiaryDetails.isPregnant"
+            "isPregnant": "beneficiaryDetails.isPregnant",
+            "settlementType": "__context:settlementType"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
@@ -444,7 +456,9 @@ final jsonConfig = {
           "clientReferenceId": "__generate:uuid",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
-          "additionalFields": "additionalInfo.fields",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
         }
@@ -508,6 +522,7 @@ final jsonConfig = {
             "doseIndex": "__listItem:id",
             "cycleIndex": "__context:cycleIndex",
             "deliveryStrategy": "__listItem:deliveryStrategy",
+            "settlementType": "__context:settlementType",
             "latitude": "DeliveryDetails.latLng[0]",
             "longitude": "DeliveryDetails.latLng[1]",
             "locationAccuracy": "DeliveryDetails.latLng[2]",
@@ -596,6 +611,7 @@ final jsonConfig = {
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
             "deliveryStrategy": "__context:deliveryStrategy",
+            "settlementType": "__context:settlementType",
             "latitude": "DeliveryDetails.latLng[0]",
             "longitude": "DeliveryDetails.latLng[1]",
             "locationAccuracy": "DeliveryDetails.latLng[2]",
@@ -617,6 +633,96 @@ final jsonConfig = {
               "quantity": "DeliveryDetails.resourceCard.quantityDistributed",
               "isDelivered": "__value:true",
               "deliveryComment": "DeliveryDetails.deliveryComment",
+              "nonRecoverableError": "error.nonRecoverable",
+              "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit",
+            }
+          }
+        }
+      }
+    }
+  },
+  "redose": {
+    "fallbackModel": "TaskModel",
+    "models": {
+      "TaskModel": {
+        "mappings": {
+          "id": "taskDetails.id",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
+          "projectBeneficiaryClientReferenceId":
+              "__context:ProjectBeneficiaryClientReferenceId",
+          "createdBy": "__context:userId",
+          "status": "__value:VISITED",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "resources": "list:TaskResourceModel",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "plannedStartDate": "taskDetails.plannedStartDate",
+          "plannedEndDate": "taskDetails.plannedEndDate",
+          "actualStartDate": "taskDetails.actualStartDate",
+          "actualEndDate": "taskDetails.actualEndDate",
+          "createdDate": "__generate:timestamp",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "address.latLng[0]",
+            "longitude": "address.latLng[1]",
+            "locationAccuracy": "address.latLng[1]",
+            "addressLine1": "address.addressLine1",
+            "addressLine2": "address.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "type": "__value:PERMANENT",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion"
+            },
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "additionalFields": {
+            "doseIndex": "__context:doseIndex",
+            "cycleIndex": "__context:cycleIndex",
+            "deliveryStrategy": "__context:deliveryStrategy",
+            "settlementType": "__context:settlementType",
+            "latitude": "RedoseDetails.latLng[0]",
+            "longitude": "RedoseDetails.latLng[1]",
+            "locationAccuracy": "RedoseDetails.latLng[2]",
+            "lat": "RedoseDetails.latLng[0]",
+            "lng": "RedoseDetails.latLng[1]"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        },
+        "listMappings": {
+          "TaskResourceModel": {
+            "listSource": "RedoseDetails.resourceCard",
+            "mappings": {
+              "id": "id",
+              "clientReferenceId": "__generate:uuid",
+              "taskId": "taskId",
+              "productVariantId":
+                  "RedoseDetails.resourceCard.resourceDelivered.productId",
+              "quantity": "RedoseDetails.resourceCard.quantityDistributed",
+              "isDelivered": "__value:true",
+              "deliveryComment": "RedoseDetails.deliveryComment",
               "nonRecoverableError": "error.nonRecoverable",
               "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
               "tenantId": "__context:tenantId",
@@ -751,12 +857,83 @@ final jsonConfig = {
             "reason": "unableToDeliver.reason",
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
+            "settlementType": "__context:settlementType",
             "comment": "unableToDeliver.comment",
             "latitude": "DeliveryDetails.latLng[0]",
             "longitude": "DeliveryDetails.latLng[1]",
             "locationAccuracy": "DeliveryDetails.latLng[2]",
             "lat": "DeliveryDetails.latLng[0]",
             "lng": "DeliveryDetails.latLng[1]"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        }
+      }
+    }
+  },
+  "vaccinatedElsewhere": {
+    "fallbackModel": "TaskModel",
+    "models": {
+      "TaskModel": {
+        "mappings": {
+          "id": "taskDetails.id",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
+          "projectBeneficiaryClientReferenceId":
+              "__context:ProjectBeneficiaryClientReferenceId",
+          "createdBy": "__context:userId",
+          "status": "__value:ADMINISTRATION_SUCCESS",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "plannedStartDate": "taskDetails.plannedStartDate",
+          "plannedEndDate": "taskDetails.plannedEndDate",
+          "actualStartDate": "taskDetails.actualStartDate",
+          "actualEndDate": "taskDetails.actualEndDate",
+          "createdDate": "__generate:timestamp",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "address.latLng[0]",
+            "longitude": "address.latLng[1]",
+            "locationAccuracy": "address.latLng[1]",
+            "addressLine1": "address.addressLine1",
+            "addressLine2": "address.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "type": "__value:PERMANENT",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion"
+            },
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "additionalFields": {
+            "taskType": "__value:VACCINATED_ELSEWHERE",
+            "doseIndex": "__context:doseIndex",
+            "cycleIndex": "__context:cycleIndex",
+            "settlementType": "__context:settlementType",
+            "siteName": "vaccinatedElsewhere.siteName",
+            "region": "vaccinatedElsewhere.region",
+            "latitude": "vaccinatedElsewhere.latLng[0]",
+            "longitude": "vaccinatedElsewhere.latLng[1]",
+            "locationAccuracy": "vaccinatedElsewhere.latLng[2]",
+            "lat": "vaccinatedElsewhere.latLng[0]",
+            "lng": "vaccinatedElsewhere.latLng[1]"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -1070,6 +1247,9 @@ final jsonConfig = {
           "householdType": "__context:householdType",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          }
         }
       },
       "IndividualModel": {
@@ -1103,6 +1283,9 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "boundaryCode": "__context:boundary.code",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          }
         },
         "listMappings": {
           "IdentifierModel": {
@@ -1172,7 +1355,9 @@ final jsonConfig = {
           /// Note: Generate uuid
           "rowVersion": "meta.rowVersion",
           "dateOfRegistration": "__value:DATETIME.NOW",
-          "additionalFields": "additionalInfo.fields",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
         }
@@ -1193,7 +1378,9 @@ final jsonConfig = {
           /// Note: Generate uuid
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
-          "additionalFields": "additionalInfo.fields",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
         }
@@ -1247,6 +1434,7 @@ final jsonConfig = {
             "auditDetails": "__generate:audit"
           },
           "additionalFields": {
+            "settlementType": "__context:settlementType",
             "latitude": "closeHouseholdDetails.latLng[0]",
             "longitude": "closeHouseholdDetails.latLng[1]",
             "locationAccuracy": "closeHouseholdDetails.latLng[2]"
@@ -1370,7 +1558,6 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "additionalFields": {
             "monitoringType": "sessionHeader.monitoringType",
-            "settlementName": "sessionHeader.administrativeArea",
             "settlementType": "sessionHeader.settlementType",
             "monitorName": "sessionHeader.monitorName",
             "monitorPhone": "sessionHeader.monitorPhone",
@@ -1445,6 +1632,9 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "boundaryCode": "__context:selectedBoundaryCode",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          }
         }
       },
       "HouseholdMemberModel": {
@@ -1459,6 +1649,9 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          }
         }
       },
       "ProjectBeneficiaryModel": {
@@ -1472,6 +1665,9 @@ final jsonConfig = {
           "dateOfRegistration": "__value:DATETIME.NOW",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          }
         }
       }
     }
@@ -1509,7 +1705,7 @@ final jsonConfig = {
             "enumeratorName": "householdInformation.enumeratorName",
             "campaignId": "householdInformation.campaignId",
             "village": "householdInformation.village",
-            "settlementType": "householdInformation.settlementType",
+            "settlementType": "__context:settlementType",
             "specialPopulationNotes":
                 "householdInformation.specialPopulationNotes",
           }
@@ -1530,6 +1726,9 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "boundaryCode": "__context:selectedBoundaryCode",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          }
         }
       },
       "ProjectBeneficiaryModel": {
@@ -1542,6 +1741,9 @@ final jsonConfig = {
           "dateOfRegistration": "householdInformation.enumerationDate",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          }
         }
       },
       "HouseholdMemberModel": {
@@ -1555,6 +1757,9 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          }
         }
       }
     }
@@ -1579,6 +1784,7 @@ final jsonConfig = {
           "boundaryCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "isZeroDose": "childInformation.isZeroDose",
+            "settlementType": "__context:settlementType"
           }
         }
       },
@@ -1592,6 +1798,9 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "settlementType": "__context:settlementType"
+          }
         }
       }
     }
@@ -1614,6 +1823,7 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            "settlementType": "__context:settlementType",
             "tallyDate": "sessionHeader.tallyDate",
             "village": "sessionHeader.village",
             "facilityName": "sessionHeader.facilityName",
@@ -1660,6 +1870,7 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            "settlementType": "__context:settlementType",
             "headOfHouseholdName": "missedChildInfo.headOfHouseholdName",
             "villageLandmark": "missedChildInfo.villageLandmark",
             "phoneNumber": "missedChildInfo.phoneNumber",
@@ -1691,10 +1902,69 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "additionalFields": {
             "form": "__value:POLIO_STOCK",
+            "settlementType": "__context:settlementType",
             "batchLotNumber": "vialDetails.batchLotNumber",
             "returnedUsable": "vialDetails.returnedUsable",
             "returnedUnusable": "vialDetails.returnedUnusable",
             "additionalReceived": "vialDetails.additionalReceived"
+          }
+        }
+      }
+    }
+  },
+  "polioIssuedVials": {
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:LOCATION_CAPTURE",
+          "latitude": "issuedVialDetails.latLng[0]",
+          "longitude": "issuedVialDetails.latLng[1]",
+          "locationAccuracy": "issuedVialDetails.latLng[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "form": "__value:POLIO_STOCK_ISSUED",
+            "settlementType": "__context:settlementType",
+            "batchLotNumber": "issuedVialDetails.batchLotNumber",
+            "unopenedVialsReceived": "issuedVialDetails.unopenedVialsReceived",
+            "additionalUnopenedVialsReceived": "issuedVialDetails.additionalUnopenedVialsReceived",
+            "totalVialsReceivedForDay": "issuedVialDetails.totalVialsReceivedForDay"
+          }
+        }
+      }
+    }
+  },
+  "polioReturnedVials": {
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:LOCATION_CAPTURE",
+          "latitude": "returnedVialDetails.latLng[0]",
+          "longitude": "returnedVialDetails.latLng[1]",
+          "locationAccuracy": "returnedVialDetails.latLng[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "form": "__value:POLIO_STOCK_RETURNED",
+            "settlementType": "__context:settlementType",
+            "batchLotNumber": "returnedVialDetails.batchLotNumber",
+            "unopenedUsableVialsReturned": "returnedVialDetails.unopenedUsableVialsReturned",
+            "unopenedUsableVialsRetrieved": "returnedVialDetails.unopenedUsableVialsRetrieved",
+            "unopenedSpoiltVialsReturned": "returnedVialDetails.unopenedSpoiltVialsReturned",
+            "openedVialsReturned": "returnedVialDetails.openedVialsReturned",
+            "totalReturned": "returnedVialDetails.totalReturned"
           }
         }
       }
@@ -1717,8 +1987,9 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            "settlementType": "__context:settlementType",
             "settlement": "afpCaseInfo.settlement",
-            "afpCount": "afpCaseInfo.afpCount",
+            "afpCount": "afpCaseInfo.afpCount"
           }
         }
       }
@@ -1742,6 +2013,7 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "additionalFields": {
             "form": "__value:POLIO_LQA",
+            "settlementType": "__context:settlementType",
             // ── clusterInfo (13 fields) ──
             "surveyDate": "clusterInfo.surveyDate",
             "settlementArea": "clusterInfo.settlementArea",
@@ -1808,6 +2080,7 @@ final jsonConfig = {
           "additionalFields": {
             "form": "__value:POLIO_LQA",
             "formType": "__value:LQA_CLUSTER_DATA",
+            "settlementType": "__context:settlementType",
             "surveyDate": "clusterInfo.surveyDate",
             "settlementArea": "clusterInfo.settlementArea",
             "healthFacilityArea": "clusterInfo.healthFacilityArea",
@@ -1846,6 +2119,7 @@ final jsonConfig = {
           "additionalFields": {
             "form": "__value:POLIO_LQA",
             "formType": "__value:LQA_CHILD_DATA",
+            "settlementType": "__context:settlementType",
             "childrenUnder5": "childDetails.childrenUnder5",
             "childAgeMonths": "childDetails.childAgeMonths",
             "childSex": "childDetails.childSex",
@@ -1887,6 +2161,7 @@ final jsonConfig = {
           "additionalFields": {
             "form": "__value:POLIO_LQA",
             "formType": "__value:LQA_CLOSEOUT",
+            "settlementType": "__context:settlementType",
             "gpsFinalLat": "closeout.gpsFinal[0]",
             "gpsFinalLng": "closeout.gpsFinal[1]",
             "finalComments": "closeout.finalComments",
@@ -1914,6 +2189,7 @@ final jsonConfig = {
           "additionalFields": {
             "form": "__value:POLIO_INSIDE_MONITORING",
             "formType": "__value:INSIDE_HOUSEHOLD_DATA",
+            "settlementType": "__context:settlementType",
 
             // ── GPS ──
             "gpsFirstHouseholdLat":
@@ -1927,7 +2203,6 @@ final jsonConfig = {
             "monitoringType": "monitoringDetails.monitoringType",
             "monitoringDate": "monitoringDetails.monitoringDate",
             "settlementArea": "monitoringDetails.settlementArea",
-            "settlementName": "monitoringDetails.settlementName",
             "settlementType": "monitoringDetails.settlementType",
             "monitorName": "monitoringDetails.monitorName",
             "monitorPhone": "monitoringDetails.monitorPhone",
@@ -1982,13 +2257,13 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            "settlementType": "__context:settlementType",
             // ── sessionHeader ──
             "levelOfMonitoring": "sessionHeader.levelOfMonitoring",
             "otherMonitors": "sessionHeader.otherMonitors",
             "monitoringType": "sessionHeader.monitoringType",
             "monitoringDate": "sessionHeader.monitoringDate",
             "settlementArea": "sessionHeader.settlementArea",
-            "settlementName": "sessionHeader.settlementName",
             "settlementType": "sessionHeader.settlementType",
             "monitorName": "sessionHeader.monitorName",
             "monitorPhone": "sessionHeader.monitorPhone",
@@ -2030,13 +2305,13 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            "settlementType": "__context:settlementType",
             // ── teamHeader ──
             "reportDate": "teamHeader.reportDate",
             "teamType": "teamHeader.teamType",
             "teamNumber": "teamHeader.teamNumber",
             "supervisionDay": "teamHeader.supervisionDay",
             "settlementArea": "teamHeader.settlementArea",
-            "settlementName": "teamHeader.settlementName",
             "supervisorType": "teamHeader.supervisorType",
             "otherMonitors": "teamHeader.otherMonitors",
             "gpsLocationLat": "teamHeader.gpsLocation[0]",
@@ -2098,6 +2373,7 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            "settlementType": "__context:settlementType",
             // ── facilityInfo ──
             "monitoringDate": "facilityInfo.monitoringDate",
             "settlementArea": "facilityInfo.settlementArea",
@@ -2147,6 +2423,7 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            "settlementType": "__context:settlementType",
             // ── header ──
             "reportDate": "header.reportDate",
             "settlementArea": "header.settlementArea",
@@ -2225,6 +2502,7 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            "settlementType": "__context:settlementType",
             // ── facilityInfo ──
             "reportDate": "facilityInfo.reportDate",
             "settlementArea": "facilityInfo.settlementArea",

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
@@ -28,6 +29,24 @@ class CurrentBoundaryPage extends LocalizedStatefulWidget {
 }
 
 class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
+  String? _selectedSettlementType;
+
+  @override
+  void initState() {
+    super.initState();
+    // Pre-fill values from BoundaryBloc on page load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final boundaryBloc = context.read<BoundaryBloc>();
+      final boundaryState = boundaryBloc.state;
+
+      if (mounted) {
+        setState(() {
+          _selectedSettlementType = boundaryState.settlementType;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -75,6 +94,22 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
 
                       return InkWell(
                         onTap: () {
+                          // Validate settlement type
+                          if (_selectedSettlementType == null) {
+                            Toast.showToast(
+                              context,
+                              message: localizations.translate(
+                                  "SETTLEMENT_TYPE_REQUIRED"),
+                              type: ToastType.error,
+                            );
+                            return;
+                          }
+
+                          // Store settlement type in FlowBuilderSingleton
+                          FlowBuilderSingleton().setSettlementType(
+                            settlementType: _selectedSettlementType!,
+                          );
+
                           context.setBoundary(boundary);
                           if (widget.onBoundarySelected != null) {
                             widget.onBoundarySelected!(context);

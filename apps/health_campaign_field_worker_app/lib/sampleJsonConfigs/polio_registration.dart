@@ -512,7 +512,7 @@ final dynamic samplePolioRegistrationFlows = {
               "tooltip": "",
               "helpText": "Select the type of settlement",
               "infoText": "",
-              "readOnly": false,
+              "readOnly": true,
               "fieldName": "settlementType",
               "deleteFlag": false,
               "innerLabel": "",
@@ -539,6 +539,9 @@ final dynamic samplePolioRegistrationFlows = {
                 },
                 {"code": "IMMIGRANTS", "name": "Immigrants"},
                 {"code": "CROSS_BORDER", "name": "Cross-Border"}
+              ],
+              "autoFillCondition": [
+                {"value": "{{singleton.settlementType}}", "expression": "true==true"}
               ]
             },
             {

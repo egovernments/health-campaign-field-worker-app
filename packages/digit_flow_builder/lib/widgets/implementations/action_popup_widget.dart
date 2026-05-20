@@ -89,7 +89,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
     String? compositeKey,
   ) {
     final localization = LocalizationContext.maybeOf(context);
-    final title = popupConfig['title'] as String? ?? 'Popup';
+    final title = popupConfig['title'] as String?;
     final description = popupConfig['description'] as String?;
     final titleIconName = popupConfig['titleIcon'] as String?;
     final showCloseButton = popupConfig['showCloseButton'] as bool? ?? true;
@@ -98,12 +98,17 @@ class ActionPopupWidget extends ResolvedFlowWidget {
     final bodyWidgets = popupConfig['body'] as List<dynamic>? ?? [];
     final footerActions = popupConfig['footerActions'] as List<dynamic>? ?? [];
 
+    // Only show title if it's provided and not empty
+    final translatedTitle = title != null && title.isNotEmpty
+        ? (localization?.translate(title) ?? title)
+        : null;
+
     return showCustomPopup(
       context: context,
       barrierDismissible: barrierDismissible,
       builder: (ctx) {
         return Popup(
-          title: localization?.translate(title) ?? title,
+          title: translatedTitle ?? '',
           description: description!=null && localization!.translate(description).trim().isNotEmpty ? description : null,
           titleIcon: titleIconName != null
               ? Icon(

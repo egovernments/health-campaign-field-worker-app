@@ -311,16 +311,6 @@ final dynamic samplePolioOutsideHouseMonitoringFlows = {
               validations: [],
             ),
 
-            // 6. settlementName
-            _prop(
-              type: "string",
-              label: "Settlement Name",
-              order: 6,
-              format: "text",
-              fieldName: "settlementName",
-              validations: [],
-            ),
-
             // 7. settlementType
             _prop(
               type: "string",
@@ -328,6 +318,7 @@ final dynamic samplePolioOutsideHouseMonitoringFlows = {
               order: 7,
               format: "dropdown",
               fieldName: "settlementType",
+              readOnly: true,
               validations: [
                 {"type": "required", "value": true, "message": "Required"},
               ],
@@ -347,6 +338,9 @@ final dynamic samplePolioOutsideHouseMonitoringFlows = {
                 },
                 {"code": "IMMIGRANTS", "name": "Immigrants"},
                 {"code": "CROSS_BORDER", "name": "Cross-Border"},
+              ],
+              autoFillCondition: [
+                {"value": "{{singleton.settlementType}}", "expression": "true==true"}
               ],
             ),
 

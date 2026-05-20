@@ -133,7 +133,19 @@ class EntityFilter {
     related = related.where((entity) {
       return filters.every((filter) {
         final field = filter['field'];
-        final actual = _resolver.resolveValue(field, entity, localContext);
+        // Use EnhancedEntityFieldAccessor for EntityModel to support
+        // additionalFields.* paths consistently with root-level filters.
+        dynamic actual;
+        if (entity is EntityModel) {
+          try {
+            actual =
+                EnhancedEntityFieldAccessor.getFieldValue(entity, field);
+          } catch (_) {
+            actual = null;
+          }
+        } else {
+          actual = _resolver.resolveValue(field, entity, localContext);
+        }
 
         // Handle 'equals' filter
         if (filter.containsKey('equals')) {

@@ -128,6 +128,38 @@ extension ContextUtilityExtensions on BuildContext {
     FlowBuilderSingleton().setBoundary(boundary: selectedBoundary);
   }
 
+  String? get settlementName {
+    final boundaryBloc = _get<BoundaryBloc>();
+    final boundaryState = boundaryBloc.state;
+    final settlementName = boundaryState.selectedSettlementName;
+
+    // Set settlement name in FlowBuilderSingleton if available
+    if (settlementName != null && settlementName.isNotEmpty) {
+      FlowBuilderSingleton().setSettlementName(settlementName: settlementName);
+    }
+
+    return settlementName;
+  }
+
+  List<String> get settlementNames {
+    final boundaryBloc = _get<BoundaryBloc>();
+    final boundaryState = boundaryBloc.state;
+    return boundaryState.settlementNames;
+  }
+
+  String? get settlementType {
+    final boundaryBloc = _get<BoundaryBloc>();
+    final boundaryState = boundaryBloc.state;
+    final settlementType = boundaryState.settlementType;
+
+    // Set settlement type in FlowBuilderSingleton if available
+    if (settlementType != null && settlementType.isNotEmpty) {
+      FlowBuilderSingleton().setSettlementType(settlementType: settlementType);
+    }
+
+    return settlementType;
+  }
+
   BoundaryModel? get boundaryOrNull {
     try {
       return boundary;

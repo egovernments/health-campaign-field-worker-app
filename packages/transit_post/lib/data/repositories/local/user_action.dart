@@ -47,6 +47,10 @@ class UserActionLocalRepository
         conditions.add(sql.userAction.clientCreatedBy.equalsNullable(userId));
       }
 
+      // Filter by recordType = TRANSIT_POST in additionalFields JSON
+      conditions.add(sql.userAction.additionalFields
+          .like('%"recordType"%"TRANSIT_POST"%'));
+
       if (query?.auditDetails?.createdTime != null) {
         DateTime createdDate;
 

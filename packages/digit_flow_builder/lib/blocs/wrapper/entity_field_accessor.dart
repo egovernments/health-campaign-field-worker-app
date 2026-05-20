@@ -34,6 +34,25 @@ class EnhancedEntityFieldAccessor {
         return entity.clientAuditDetails;
     }
 
+    // Handle additionalFields.<key> lookups — searches the fields list
+    // inside additionalFields for a matching key and returns its value.
+    if (fieldName.startsWith('additionalFields.')) {
+      final subKey = fieldName.substring('additionalFields.'.length);
+      final map = _getCachedMap(entity);
+      final af = map['additionalFields'];
+      if (af is Map) {
+        final fields = af['fields'];
+        if (fields is List) {
+          for (final f in fields) {
+            if (f is Map && f['key'] == subKey) {
+              return f['value'];
+            }
+          }
+        }
+      }
+      return null;
+    }
+
     // Get cached map
     final map = _getCachedMap(entity);
 

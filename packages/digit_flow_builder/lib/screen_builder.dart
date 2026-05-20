@@ -393,6 +393,8 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
                   'loggedInUserUuid': FlowBuilderSingleton().loggedInUser?.uuid,
                   'loggedInUserMobileNumber':
                       FlowBuilderSingleton().loggedInUser?.mobileNumber,
+                  'settlementType': FlowBuilderSingleton().settlementType,
+                  'settlementName': FlowBuilderSingleton().settlementName,
                 },
               ),
             );
