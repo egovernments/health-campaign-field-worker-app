@@ -6,11 +6,14 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/TextTheme/digit_text_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../blocs/localization/app_localization.dart';
 import '../router/app_router.dart';
 import '../sampleJsonConfigs/permission_handler.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -73,23 +76,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           // Skip if disabled
           if (_isDisabled) return;
 
-          bool granted = await _checkPermissions();
-          if (!granted) {
-            if (mounted) {
-              Toast.showToast(
-                context,
-                message: localizations.translate(
-                  i18.common.permissionsAlert,
-                ),
-                type: ToastType.error,
-              );
-            }
-            return;
-          }
-
-          if (mounted) {
-            context.router.replace(BoundarySelectionRoute());
-          }
+          attemptNavigation();
         });
       });
     });
@@ -99,6 +86,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   Future<void> _initializeConfig() async {
     final prefs = await SharedPreferences.getInstance();
     final schemaJsonRaw = prefs.getString('app_config_schemas');
+
     try {
       if (schemaJsonRaw != null) {
         final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
@@ -371,6 +359,13 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     }
   }
 
+  /// Request all permission (from config)
+  Future<void> _requestAllPermissions() async {
+    for (final e in requiredPermissions.entries) {
+      await _requestPermission(e.key);
+    }
+  }
+
   /// Check if a permission is granted by name
   bool _isPermissionGranted(String permissionName) {
     final permission = permissionMap[permissionName.toLowerCase()];
@@ -451,6 +446,62 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     }
   }
 
+  void attemptNavigation() async {
+    bool granted = await _checkPermissions();
+    if (mounted && (!granted || !backgroundActivityConfirmed)) {
+      Toast.showToast(
+        context,
+        message: localizations.translate(
+          !backgroundActivityConfirmed
+              ? i18.common.enablePermissionCheckbox
+              : i18.common.permissionsAlert,
+        ),
+        type: ToastType.error,
+      );
+      return;
+    }
+
+    if (mounted) {
+      context.router.replace(BoundarySelectionRoute());
+    }
+  }
+
+  Future<void> _dialogBuilder(BuildContext context) {
+    return showCustomPopup(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Popup(
+        title:
+            '${AppLocalizations.of(context).translate(i18.common.accessRequired)} !',
+        type: PopUpType.alert,
+        titleIcon: Icon(
+          Icons.warning,
+          color: Theme.of(context).colorTheme.alert.error,
+          size: spacer12,
+        ),
+        subHeading: AppLocalizations.of(context)
+            .translate(i18.common.accessPermissionDialogDesc),
+        onCrossTap: () => Navigator.pop(context),
+        contentPadding: const EdgeInsets.symmetric(vertical: spacer12),
+        actions: [
+          DigitButton(
+              label: AppLocalizations.of(context)
+                  .translate(i18.common.allowAccess),
+              onPressed: () async {
+                await _requestAllPermissions();
+
+                if (mounted) {
+                  Navigator.pop(context);
+                  attemptNavigation();
+                }
+              },
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.medium)
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -464,14 +515,27 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: [ 
                 // Header from config
                 if (screenConfig?['heading'] != null)
                   Padding(
-                    padding: const EdgeInsets.all(spacer2),
+                    padding: const EdgeInsets.all(spacer3),
                     child: Text(
                       localizations.translate(screenConfig!['heading']),
                       style: textTheme.headingXl.copyWith(
+                        color: theme.colorTheme.primary.primary2,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+              
+               // Description from config
+                if (screenConfig?['description'] != null)
+                  Padding(
+                    padding: const EdgeInsets.all(spacer3),
+                    child: Text(
+                      localizations.translate(screenConfig!['description']),
+                      style: textTheme.captionM.copyWith(
                         color: theme.colorTheme.primary.primary2,
                       ),
                       textAlign: TextAlign.left,
@@ -531,30 +595,21 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           ],
         ),
         DigitButton(
-          label: localizations.translate(i18.common.permissionContinue),
+          label: AppLocalizations.of(context).translate(i18.common.allowAccess),
           type: DigitButtonType.primary,
           size: DigitButtonSize.large,
           mainAxisSize: MainAxisSize.max,
           onPressed: () async {
-            bool granted = await _checkPermissions();
-            if (!granted || !backgroundActivityConfirmed) {
-              Toast.showToast(
-                context,
-                message: localizations.translate(
-                  !backgroundActivityConfirmed
-                      ? i18.common.enablePermissionCheckbox
-                      : i18.common.permissionsAlert,
-                ),
-                type: ToastType.error,
-              );
-              return;
-            }
-
-            if (mounted) {
-              context.router.replace(BoundarySelectionRoute());
-            }
+            await _requestAllPermissions();
+            attemptNavigation();
           },
-        )
+        ),
+        DigitButton(
+            label: AppLocalizations.of(context).translate(i18.common.dontAllow),
+            onPressed: () => _dialogBuilder(context),
+            mainAxisSize: MainAxisSize.max,
+            type: DigitButtonType.secondary ,
+            size: DigitButtonSize.large)
       ],
     );
   }
@@ -588,10 +643,10 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         return _buildTextTemplate(config, theme, textTheme);
       case 'icon':
         return _buildIcon(config, theme);
-      case 'button':
-        return _buildButton(config, theme, textTheme);
-      case 'tag':
-        return _buildTag(config, theme, textTheme);
+      // case 'button':
+      //   return _buildButton(config, theme, textTheme);
+      // case 'tag':
+      //   return _buildTag(config, theme, textTheme);
       case 'infoCard':
         return _buildInfoCard(config, theme, textTheme);
       default:
@@ -678,9 +733,23 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     String resolvedValue = _resolveTemplate(value);
     resolvedValue = localizations.translate(resolvedValue);
 
+    debugPrint(
+      'TEXT_TEMPLATE NIKGIL value=${config['value']} style=${config['properties']?['style']}',
+    );
+
+    final isDescription = style == 'description';
+
     TextStyle textStyle;
     if (style == 'heading') {
       textStyle = textTheme.headingM.copyWith(
+        color: theme.colorTheme.primary.primary2,
+      );
+    } else if (isDescription) {
+      textStyle = textTheme.bodyS.copyWith(
+        color: theme.colorTheme.text.secondary,
+      );
+    } else if (required || style == 'title') {
+      textStyle = textTheme.headingS.copyWith(
         color: theme.colorTheme.primary.primary2,
       );
     } else {
@@ -689,28 +758,16 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       );
     }
 
-    if (required) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: spacer1),
-        child: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(text: resolvedValue, style: textStyle),
-              TextSpan(
-                text: " *",
-                style: textStyle.copyWith(
-                  color: theme.colorTheme.alert.error,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: spacer1),
-      child: Text(resolvedValue, style: textStyle),
+      padding: EdgeInsets.only(
+        top: isDescription ? 0 : spacer1,
+        bottom: isDescription ? spacer1 : 0,
+      ),
+      child: Text(
+        resolvedValue,
+        style: textStyle,
+        softWrap: true,
+      ),
     );
   }
 
@@ -719,9 +776,20 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
     return Padding(
       padding: const EdgeInsets.only(right: 0),
-      child: Icon(
-        DigitIconMapping.getIcon(iconName),
-        color: theme.colorTheme.primary.primary1,
+      child: Container(
+        width: spacer12,
+        height: spacer12,
+        decoration: const BoxDecoration(
+          color: Color(0xFFF8F1ED), // light peach background
+          borderRadius: BorderRadius.all(Radius.circular(spacer2) ),
+        ),
+        child: Center(
+          child: Icon(
+            DigitIconMapping.getIcon(iconName),
+            color: const Color(0xFFD95F0E), // orange icon color
+            size: spacer6,
+          ),
+        ),
       ),
     );
   }

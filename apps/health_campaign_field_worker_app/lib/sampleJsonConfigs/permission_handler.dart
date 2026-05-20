@@ -11,7 +11,7 @@ final dynamic permission_handler_config = {
       "screenType": "TEMPLATE",
       "name": "permissionHandler",
       "heading": "CORE_COMMON_ALLOW_PERMISSIONS",
-      "description": "CORE_COMMON_ALLOW_PERMISSIONS",
+      "description": "CORE_COMMON_PERMISSION_ACCESS_PAGE_DESC",
       "header": [
         {
           "format": "backLink",
@@ -44,6 +44,7 @@ final dynamic permission_handler_config = {
                   "children": [
                     {
                       "format": "row",
+                      "expanded": true,
                       "properties": {
                         "mainAxisAlignment": "start",
                         "mainAxisSize": "min"
@@ -52,6 +53,7 @@ final dynamic permission_handler_config = {
                         {"format": "icon", "value": "NotificationsActive"},
                         {
                           "format": "column",
+                          "expanded": true,
                           "properties": {
                             "mainAxisAlignment": "start",
                             "mainAxisSize": "min"
@@ -61,6 +63,11 @@ final dynamic permission_handler_config = {
                               "format": "textTemplate",
                               "value": "CORE_COMMON_PERMISSION_NOTIFICATION",
                               "required": true
+                            },
+                            {
+                              "format": "textTemplate",
+                              "value": "CORE_COMMON_PERMISSION_NOTIFICATION_DESC",
+                              "properties": {"style": "description"}
                             }
                           ]
                         }
@@ -124,6 +131,12 @@ final dynamic permission_handler_config = {
                               "value":
                                   "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS",
                               "required": true
+                            },
+                            {
+                              "format": "textTemplate",
+                              "value":
+                                  "PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY",
+                              "properties": {"style": "description"}
                             }
                           ]
                         }
@@ -171,6 +184,7 @@ final dynamic permission_handler_config = {
                   "children": [
                     {
                       "format": "row",
+                      "expanded": true,
                       "properties": {
                         "mainAxisAlignment": "start",
                         "mainAxisSize": "min"
@@ -179,6 +193,7 @@ final dynamic permission_handler_config = {
                         {"format": "icon", "value": "LocationOn"},
                         {
                           "format": "column",
+                          "expanded": true,
                           "properties": {
                             "mainAxisAlignment": "start",
                             "mainAxisSize": "min"
@@ -188,6 +203,11 @@ final dynamic permission_handler_config = {
                               "format": "textTemplate",
                               "value": "CORE_COMMON_PERMISSION_LOCATION",
                               "required": true
+                            },
+                            {
+                              "format": "textTemplate",
+                              "value": "CORE_COMMON_PERMISSION_LOCATION_DESC",
+                              "properties": {"style": "description"}
                             }
                           ]
                         }
@@ -232,6 +252,7 @@ final dynamic permission_handler_config = {
                   "children": [
                     {
                       "format": "row",
+                      "expanded": true,
                       "properties": {
                         "mainAxisAlignment": "start",
                         "mainAxisSize": "min"
@@ -240,6 +261,7 @@ final dynamic permission_handler_config = {
                         {"format": "icon", "value": "PermScanWifi"},
                         {
                           "format": "column",
+                          "expanded": true,
                           "properties": {
                             "mainAxisAlignment": "start",
                             "mainAxisSize": "min"
@@ -250,6 +272,12 @@ final dynamic permission_handler_config = {
                               "value":
                                   "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES",
                               "required": true
+                            },
+                            {
+                              "format": "textTemplate",
+                              "value":
+                                  "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES_DESC",
+                              "properties": {"style": "description"}
                             }
                           ]
                         }
@@ -295,6 +323,7 @@ final dynamic permission_handler_config = {
                   "children": [
                     {
                       "format": "row",
+                      "expanded": true,
                       "properties": {
                         "mainAxisAlignment": "start",
                         "mainAxisSize": "min"
@@ -303,6 +332,7 @@ final dynamic permission_handler_config = {
                         {"format": "icon", "value": "PermScanWifi"},
                         {
                           "format": "column",
+                          "expanded": true,
                           "properties": {
                             "mainAxisAlignment": "start",
                             "mainAxisSize": "min"
@@ -312,6 +342,12 @@ final dynamic permission_handler_config = {
                               "format": "textTemplate",
                               "value": "CORE_COMMON_PERMISSION_BLUETOOTHSCAN",
                               "required": true
+                            },
+                            {
+                              "format": "textTemplate",
+                              "value":
+                                  "CORE_COMMON_PERMISSION_BLUETOOTHSCAN_DESC",
+                              "properties": {"style": "description"}
                             }
                           ]
                         }
@@ -356,6 +392,7 @@ final dynamic permission_handler_config = {
                   "children": [
                     {
                       "format": "row",
+                      "expanded": true,
                       "properties": {
                         "mainAxisAlignment": "start",
                         "mainAxisSize": "min"
@@ -364,6 +401,7 @@ final dynamic permission_handler_config = {
                         {"format": "icon", "value": "PermCameraMic"},
                         {
                           "format": "column",
+                          "expanded": true,
                           "properties": {
                             "mainAxisAlignment": "start",
                             "mainAxisSize": "min"
@@ -371,7 +409,13 @@ final dynamic permission_handler_config = {
                           "children": [
                             {
                               "format": "textTemplate",
-                              "value": "CORE_COMMON_PERMISSION_CAMERA"
+                              "value": "CORE_COMMON_PERMISSION_CAMERA",
+                              "properties": {"style": "title"}
+                            },
+                            {
+                              "format": "textTemplate",
+                              "value": "CORE_COMMON_PERMISSION_CAMERA_DESC",
+                              "properties": {"style": "description"}
                             }
                           ]
                         }
