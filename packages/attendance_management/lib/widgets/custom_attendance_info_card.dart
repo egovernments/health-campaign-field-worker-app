@@ -91,7 +91,8 @@ class CustomAttendanceInfoCard extends StatelessWidget {
           const SizedBox(height: spacer4),
           Row(
             children: [
-              if (!viewOnly && markManualAttendance)
+              if (!viewOnly &&
+                  (markManualAttendance || (isCurrentDate && status != 1)))
                 Expanded(
                   child: DigitButton(
                     prefixIcon: Icons.check,
@@ -119,10 +120,11 @@ class CustomAttendanceInfoCard extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (!viewOnly && markManualAttendance)
+              if (!viewOnly &&
+                  (markManualAttendance || (isCurrentDate && status != 1)))
                 const SizedBox(width: spacer3),
-              if (!viewOnly && markManualAttendance ||
-                  isCurrentDate && status == -1)
+              if (!viewOnly &&
+                  (markManualAttendance || (isCurrentDate && status != 1)))
                 Expanded(
                   child: DigitButton(
                     prefixIcon: Icons.cancel,
