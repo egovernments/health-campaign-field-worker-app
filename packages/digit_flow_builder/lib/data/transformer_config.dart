@@ -172,7 +172,11 @@ final jsonConfig = {
           "rowVersion": "meta.rowVersion",
           "dateOfRegistration": "householdDetails.dateOfRegistration",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "gender": "beneficiaryDetails.gender",
+            "ageInMonths": "__fn:ageInMonths:beneficiaryDetails.dobPicker",
+            "isHeadOfHousehold": "beneficiaryDetails.isHeadOfFamily",
+            "isGuestMember": "beneficiaryDetails.isGuestMember"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -318,7 +322,11 @@ final jsonConfig = {
           "rowVersion": "meta.rowVersion",
           "dateOfRegistration": "__value:DATETIME.NOW",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "gender": "beneficiaryDetails.gender",
+            "ageInMonths": "__fn:ageInMonths:beneficiaryDetails.dobPicker",
+            "isHeadOfHousehold": "__value:false",
+            "isGuestMember": "beneficiaryDetails.isGuestMember"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",

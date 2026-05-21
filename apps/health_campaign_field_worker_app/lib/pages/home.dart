@@ -1534,25 +1534,25 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                    if (schemaJsonRaw != null) {
-                      final allSchemas =
-                          json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                      final data = allSchemas['REGISTRATION'];
+                  if (schemaJsonRaw != null) {
+                    final allSchemas =
+                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    final data = allSchemas['REGISTRATION'];
 
-                      final registrationDeliveryData = data?['data'];
-                      final flowsData = (registrationDeliveryData['flows']
-                                  as List<dynamic>?)
-                              ?.map((e) => Map<String, dynamic>.from(e as Map))
-                              .toList() ??
-                          [];
-                      FlowRegistry.setConfig(flowsData);
-                      NavigationRegistry.setupNavigation(ctx);
+                    final registrationDeliveryData = data?['data'];
+                    final flowsData = (registrationDeliveryData['flows']
+                                as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                    FlowRegistry.setConfig(flowsData);
+                    NavigationRegistry.setupNavigation(ctx);
 
-                      ctx.router.push(
-                        FlowBuilderHomeRoute(
-                            pageName: registrationDeliveryData["initialPage"]),
-                      );
-                    } else {
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: registrationDeliveryData["initialPage"]),
+                    );
+                  } else {
                   final isHousehold = FlowBuilderSingleton().beneficiaryType ==
                       BeneficiaryType.household;
                   final registrationConfig = isHousehold

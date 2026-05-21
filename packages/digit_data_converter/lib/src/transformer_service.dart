@@ -1089,6 +1089,64 @@ class FormEntityMapper {
       }
     }
 
+    // Handle __fn: prefix for built-in functions
+    // Format: __fn:<functionName>:<sourcePath>
+    if (instruction.startsWith('__fn:')) {
+      final fnParts = instruction.substring(5).split(':');
+      if (fnParts.length >= 2) {
+        final functionName = fnParts[0];
+        final sourcePath = fnParts.sublist(1).join(':');
+
+        if (functionName == 'ageInMonths') {
+          final rawValue = _getValueFromPath(data, sourcePath);
+          if (rawValue == null) return null;
+
+          DateTime? birthDate;
+
+          if (rawValue is int) {
+            birthDate = DateTime.fromMillisecondsSinceEpoch(rawValue);
+          } else if (rawValue is String) {
+            // Try parsing as timestamp first
+            final timestamp = int.tryParse(rawValue);
+            if (timestamp != null) {
+              birthDate = DateTime.fromMillisecondsSinceEpoch(timestamp);
+            } else if (rawValue.contains('/')) {
+              // Handle dd/MM/yyyy format
+              try {
+                final parts = rawValue.split('/');
+                if (parts.length == 3) {
+                  final day = int.parse(parts[0]);
+                  final month = int.parse(parts[1]);
+                  final year = int.parse(parts[2]);
+                  birthDate = DateTime(year, month, day);
+                }
+              } catch (_) {
+                // Fall through to DateTime.tryParse
+              }
+            }
+            // Try parsing as ISO date string
+            birthDate ??= DateTime.tryParse(rawValue);
+          } else if (rawValue is DateTime) {
+            birthDate = rawValue;
+          }
+
+          if (birthDate == null) return 0;
+
+          final now = DateTime.now();
+          final months =
+              (now.year - birthDate.year) * 12 + (now.month - birthDate.month);
+
+          // Adjust if the day hasn't occurred yet this month
+          if (now.day < birthDate.day) {
+            return months - 1;
+          }
+
+          return months;
+        }
+      }
+      return null;
+    }
+
     if (instruction.startsWith('__context:')) {
       final path = instruction.replaceFirst('__context:', '');
       return _getValueFromPath(context, path);

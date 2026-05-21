@@ -213,7 +213,8 @@ class SearchExecutor extends ActionExecutor {
           filterData['root'] as String? ?? data['name'] as String?;
 
       debugPrint('DEBUG_SEARCH: filter key=$resolvedKey, value=$resolvedValue, '
-          'operation=$operation, root=$filterRoot (from filterData root=${filterData['root']}, '
+          'operation=$operation, root=$filterRoot, scope=${filterData['scope']} '
+          '(from filterData root=${filterData['root']}, '
           'fallback name=${data['name']})');
 
       // Store resolved filter as map for accumulation
@@ -224,6 +225,7 @@ class SearchExecutor extends ActionExecutor {
         'root': filterRoot ?? '',
         if (filterData['lat'] != null) 'lat': filterData['lat'],
         if (filterData['long'] != null) 'long': filterData['long'],
+        if (filterData['scope'] != null) 'scope': filterData['scope'],
       });
     }
 
@@ -275,12 +277,17 @@ class SearchExecutor extends ActionExecutor {
         }
       }
 
+      debugPrint('SEARCH_EXECUTOR_DEBUG: filterMap keys: ${filterMap.keys.toList()}');
+      debugPrint('SEARCH_EXECUTOR_DEBUG: filterMap[scope] = ${filterMap['scope']}');
+      debugPrint('SEARCH_EXECUTOR_DEBUG: Full filterMap = $filterMap');
+
       filters.add(SearchFilter(
         root: filterMap['root']?.toString() ?? defaultRoot,
         field: filterMap['key']?.toString() ?? '',
         operator: filterMap['operation']?.toString() ?? 'equals',
         value: filterMap['value'],
         coordinates: latLng,
+        scope: filterMap['scope']?.toString(),
       ));
     }
 
@@ -308,6 +315,7 @@ class SearchExecutor extends ActionExecutor {
         field: baseKey,
         operator: baseFilter['operation']?.toString() ?? 'equals',
         value: baseResolvedValue,
+        scope: baseFilter['scope']?.toString(),
       ));
       debugPrint('SEARCH_EVENT: Injected baseFilter key=$baseKey, value=$baseResolvedValue, root=$baseRoot');
     }
@@ -638,6 +646,7 @@ class SearchExecutor extends ActionExecutor {
         operator: filterMap['operation']?.toString() ?? 'equals',
         value: filterMap['value'],
         coordinates: latLng,
+        scope: filterMap['scope']?.toString(),
       ));
     }
 
@@ -662,6 +671,7 @@ class SearchExecutor extends ActionExecutor {
         field: baseKey,
         operator: baseFilter['operation']?.toString() ?? 'equals',
         value: baseResolvedValue,
+        scope: baseFilter['scope']?.toString(),
       ));
       debugPrint('SearchCallback: Injected baseFilter key=$baseKey, value=$baseResolvedValue');
     }

@@ -341,11 +341,32 @@ class MultiTableFilterResolver {
     required String primaryTable,
     required String primaryKeyField,
   }) async {
-    // Step 1: Query the related table with its filters
+    // Check if any filter has scope="latest"
+    final hasLatestScope = relatedFilters.any((f) => f.scope == 'latest');
+
+    _log('LATEST_SCOPE_DEBUG: hasLatestScope=$hasLatestScope for table $relatedTable');
+    for (final f in relatedFilters) {
+      _log('LATEST_SCOPE_DEBUG: filter field=${f.field}, op=${f.operator}, value=${f.value}, scope=${f.scope}');
+    }
+
+    // Step 1: Query the related table
+    // If scope is "latest", we need to query without the status filter first,
+    // then filter to latest records, then apply the status filter
+    List<SearchFilter> queryFilters = relatedFilters;
+    List<SearchFilter> postProcessFilters = [];
+
+    if (hasLatestScope) {
+      // Separate filters: those without scope go to query, those with scope are applied after
+      queryFilters = relatedFilters.where((f) => f.scope != 'latest').toList();
+      postProcessFilters = relatedFilters.where((f) => f.scope == 'latest').toList();
+
+      _log('LATEST_SCOPE_DEBUG: Split into queryFilters=${queryFilters.length}, postProcessFilters=${postProcessFilters.length}');
+    }
+
     final relatedRows = await QueryBuilder.queryRawTable(
       sql: _sql,
       table: relatedTable,
-      filters: relatedFilters,
+      filters: queryFilters,
       select: ['*'],
       isPrimaryTable: false,
     );
@@ -356,6 +377,24 @@ class MultiTableFilterResolver {
     }
 
     _log('Found ${relatedRows.length} rows in $relatedTable matching filters');
+
+    // Step 1.5: If scope="latest", filter to only the latest record per beneficiary
+    List<Map<String, dynamic>> filteredRows = relatedRows;
+    if (hasLatestScope) {
+      filteredRows = _filterToLatestRecords(relatedRows, relatedTable);
+      _log('After filtering to latest: ${filteredRows.length} rows');
+
+      // Now apply the post-process filters (status filter with scope="latest")
+      if (postProcessFilters.isNotEmpty) {
+        filteredRows = _applyPostProcessFilters(filteredRows, postProcessFilters);
+        _log('After applying scope filters: ${filteredRows.length} rows');
+      }
+
+      if (filteredRows.isEmpty) {
+        _log('No rows after latest filtering and status check');
+        return {};
+      }
+    }
 
     // Step 2: Find relationship path from related table to primary table
     final pathToPrimary = await RelationshipGraphHelper.findShortestPath(
@@ -377,7 +416,7 @@ class MultiTableFilterResolver {
 
     // Step 3: Traverse the path to reach primary table
     final primaryKeyValues = await _traversePathToPrimaryKeys(
-      startRows: relatedRows,
+      startRows: filteredRows,
       path: pathToPrimary,
       primaryKeyField: primaryKeyField,
     );
@@ -626,6 +665,163 @@ class MultiTableFilterResolver {
     _log('Scoped notExists: Resolved ${primaryKeys.length} primary keys to include');
 
     return primaryKeys;
+  }
+
+  /// Filters task rows to keep only the latest record per beneficiary.
+  ///
+  /// For task tables, groups by projectBeneficiaryClientReferenceId and keeps
+  /// only the row with the latest clientModifiedTime for each beneficiary.
+  List<Map<String, dynamic>> _filterToLatestRecords(
+    List<Map<String, dynamic>> rows,
+    String tableName,
+  ) {
+    _log('LATEST_FILTER_DEBUG: Starting with ${rows.length} rows');
+
+    // Group by beneficiary reference ID
+    final Map<String, List<Map<String, dynamic>>> grouped = {};
+
+    for (final row in rows) {
+      // For task table, use projectBeneficiaryClientReferenceId
+      final String? beneficiaryId = row['project_beneficiary_client_reference_id'] as String?;
+      final String? status = row['status'] as String?;
+      final int? modifiedTime = row['client_modified_time'] as int?;
+
+      _log('LATEST_FILTER_DEBUG: Row beneficiary=$beneficiaryId, status=$status, time=$modifiedTime');
+
+      if (beneficiaryId == null) {
+        // If no beneficiary ID, keep the row as-is
+        grouped.putIfAbsent('_null_', () => []).add(row);
+        continue;
+      }
+
+      grouped.putIfAbsent(beneficiaryId, () => []).add(row);
+    }
+
+    _log('LATEST_FILTER_DEBUG: Grouped into ${grouped.length} beneficiaries');
+
+    // For each group, keep only the latest record
+    final List<Map<String, dynamic>> latestRecords = [];
+
+    for (final entry in grouped.entries) {
+      final beneficiaryId = entry.key;
+      final group = entry.value;
+
+      if (group.isEmpty) continue;
+
+      _log('LATEST_FILTER_DEBUG: Beneficiary $beneficiaryId has ${group.length} tasks');
+
+      // Sort by clientModifiedTime descending and take the first (latest)
+      group.sort((a, b) {
+        final timeA = a['client_modified_time'] as int?;
+        final timeB = b['client_modified_time'] as int?;
+
+        if (timeA == null && timeB == null) return 0;
+        if (timeA == null) return 1;
+        if (timeB == null) return -1;
+
+        return timeB.compareTo(timeA); // Descending order
+      });
+
+      final latestTask = group.first;
+      final latestStatus = latestTask['status'] as String?;
+      final latestTime = latestTask['client_modified_time'] as int?;
+
+      _log('LATEST_FILTER_DEBUG: Beneficiary $beneficiaryId latest task: status=$latestStatus, time=$latestTime');
+
+      latestRecords.add(latestTask);
+    }
+
+    _log('LATEST_FILTER_DEBUG: Returning ${latestRecords.length} latest records');
+
+    return latestRecords;
+  }
+
+  /// Applies post-process filters to rows after latest filtering.
+  ///
+  /// This is used to apply filters with scope="latest" after we've already
+  /// filtered to the latest records.
+  List<Map<String, dynamic>> _applyPostProcessFilters(
+    List<Map<String, dynamic>> rows,
+    List<SearchFilter> filters,
+  ) {
+    _log('POST_FILTER_DEBUG: Starting with ${rows.length} rows, ${filters.length} filters');
+
+    List<Map<String, dynamic>> filtered = rows;
+
+    for (final filter in filters) {
+      final columnName = QueryBuilder.camelToSnake(filter.field);
+
+      _log('POST_FILTER_DEBUG: Applying filter field=${filter.field}, columnName=$columnName, op=${filter.operator}, value=${filter.value}');
+
+      final beforeCount = filtered.length;
+
+      filtered = filtered.where((row) {
+        final value = row[columnName];
+
+        _log('POST_FILTER_DEBUG: Checking row with $columnName=$value against filter value=${filter.value}');
+
+        switch (filter.operator) {
+          case 'equals':
+            final matches = value == filter.value;
+            _log('POST_FILTER_DEBUG: equals check: $value == ${filter.value} = $matches');
+            return matches;
+          case 'notEqual':
+          case 'notEquals':
+            final notMatches = value != filter.value;
+            _log('POST_FILTER_DEBUG: notEquals check: $value != ${filter.value} = $notMatches');
+            return notMatches;
+          case 'in':
+            if (filter.value is List) {
+              final matches = (filter.value as List).contains(value);
+              _log('POST_FILTER_DEBUG: in check: ${filter.value} contains $value = $matches');
+              return matches;
+            }
+            _log('POST_FILTER_DEBUG: in check FAILED - value is not a List: ${filter.value}');
+            return false;
+          case 'notIn':
+            if (filter.value is List) {
+              return !(filter.value as List).contains(value);
+            }
+            return true;
+          case 'like':
+            if (value is String) {
+              final pattern = (filter.value as String).replaceAll('%', '.*');
+              return RegExp(pattern, caseSensitive: false).hasMatch(value);
+            }
+            return false;
+          case 'gt':
+            if (value is num && filter.value is num) {
+              return value > (filter.value as num);
+            }
+            return false;
+          case 'gte':
+            if (value is num && filter.value is num) {
+              return value >= (filter.value as num);
+            }
+            return false;
+          case 'lt':
+            if (value is num && filter.value is num) {
+              return value < (filter.value as num);
+            }
+            return false;
+          case 'lte':
+            if (value is num && filter.value is num) {
+              return value <= (filter.value as num);
+            }
+            return false;
+          default:
+            _log('Unknown operator ${filter.operator} in post-process filter');
+            return true;
+        }
+      }).toList();
+
+      final afterCount = filtered.length;
+      _log('POST_FILTER_DEBUG: Filter reduced rows from $beforeCount to $afterCount');
+    }
+
+    _log('POST_FILTER_DEBUG: Final result: ${filtered.length} rows after all filters');
+
+    return filtered;
   }
 
   /// Logs debug information in debug mode only.

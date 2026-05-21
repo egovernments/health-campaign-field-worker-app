@@ -172,6 +172,7 @@ class RefreshSearchExecutor extends ActionExecutor {
         operator: filterMap['operation']?.toString() ?? 'equals',
         value: filterMap['value'],
         coordinates: latLng,
+        scope: filterMap['scope']?.toString(),
       ));
     }
 

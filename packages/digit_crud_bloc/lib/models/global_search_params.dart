@@ -55,6 +55,7 @@ class SearchFilter with _$SearchFilter {
     required dynamic value,
     required String root,
     LatLng? coordinates,
+    String? scope,
   }) = _SearchFilter;
 
   factory SearchFilter.fromJson(Map<String, dynamic> json) =>

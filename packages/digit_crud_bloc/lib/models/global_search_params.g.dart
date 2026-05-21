@@ -66,6 +66,7 @@ _$SearchFilterImpl _$$SearchFilterImplFromJson(Map<String, dynamic> json) =>
       coordinates: json['coordinates'] == null
           ? null
           : LatLng.fromJson(json['coordinates'] as Map<String, dynamic>),
+      scope: json['scope'] as String?,
     );
 
 Map<String, dynamic> _$$SearchFilterImplToJson(_$SearchFilterImpl instance) =>
@@ -75,6 +76,7 @@ Map<String, dynamic> _$$SearchFilterImplToJson(_$SearchFilterImpl instance) =>
       'value': instance.value,
       'root': instance.root,
       'coordinates': instance.coordinates,
+      'scope': instance.scope,
     };
 
 _$LatLngImpl _$$LatLngImplFromJson(Map<String, dynamic> json) => _$LatLngImpl(

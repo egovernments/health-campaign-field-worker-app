@@ -445,6 +445,7 @@ mixin _$SearchFilter {
   dynamic get value => throw _privateConstructorUsedError;
   String get root => throw _privateConstructorUsedError;
   LatLng? get coordinates => throw _privateConstructorUsedError;
+  String? get scope => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -463,7 +464,8 @@ abstract class $SearchFilterCopyWith<$Res> {
       String operator,
       dynamic value,
       String root,
-      LatLng? coordinates});
+      LatLng? coordinates,
+      String? scope});
 
   $LatLngCopyWith<$Res>? get coordinates;
 }
@@ -486,6 +488,7 @@ class _$SearchFilterCopyWithImpl<$Res, $Val extends SearchFilter>
     Object? value = freezed,
     Object? root = null,
     Object? coordinates = freezed,
+    Object? scope = freezed,
   }) {
     return _then(_value.copyWith(
       field: null == field
@@ -508,6 +511,10 @@ class _$SearchFilterCopyWithImpl<$Res, $Val extends SearchFilter>
           ? _value.coordinates
           : coordinates // ignore: cast_nullable_to_non_nullable
               as LatLng?,
+      scope: freezed == scope
+          ? _value.scope
+          : scope // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -537,7 +544,8 @@ abstract class _$$SearchFilterImplCopyWith<$Res>
       String operator,
       dynamic value,
       String root,
-      LatLng? coordinates});
+      LatLng? coordinates,
+      String? scope});
 
   @override
   $LatLngCopyWith<$Res>? get coordinates;
@@ -559,6 +567,7 @@ class __$$SearchFilterImplCopyWithImpl<$Res>
     Object? value = freezed,
     Object? root = null,
     Object? coordinates = freezed,
+    Object? scope = freezed,
   }) {
     return _then(_$SearchFilterImpl(
       field: null == field
@@ -581,6 +590,10 @@ class __$$SearchFilterImplCopyWithImpl<$Res>
           ? _value.coordinates
           : coordinates // ignore: cast_nullable_to_non_nullable
               as LatLng?,
+      scope: freezed == scope
+          ? _value.scope
+          : scope // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -593,7 +606,8 @@ class _$SearchFilterImpl implements _SearchFilter {
       required this.operator,
       required this.value,
       required this.root,
-      this.coordinates});
+      this.coordinates,
+      this.scope});
 
   factory _$SearchFilterImpl.fromJson(Map<String, dynamic> json) =>
       _$$SearchFilterImplFromJson(json);
@@ -608,10 +622,12 @@ class _$SearchFilterImpl implements _SearchFilter {
   final String root;
   @override
   final LatLng? coordinates;
+  @override
+  final String? scope;
 
   @override
   String toString() {
-    return 'SearchFilter(field: $field, operator: $operator, value: $value, root: $root, coordinates: $coordinates)';
+    return 'SearchFilter(field: $field, operator: $operator, value: $value, root: $root, coordinates: $coordinates, scope: $scope)';
   }
 
   @override
@@ -625,13 +641,14 @@ class _$SearchFilterImpl implements _SearchFilter {
             const DeepCollectionEquality().equals(other.value, value) &&
             (identical(other.root, root) || other.root == root) &&
             (identical(other.coordinates, coordinates) ||
-                other.coordinates == coordinates));
+                other.coordinates == coordinates) &&
+            (identical(other.scope, scope) || other.scope == scope));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, field, operator,
-      const DeepCollectionEquality().hash(value), root, coordinates);
+      const DeepCollectionEquality().hash(value), root, coordinates, scope);
 
   @JsonKey(ignore: true)
   @override
@@ -653,7 +670,8 @@ abstract class _SearchFilter implements SearchFilter {
       required final String operator,
       required final dynamic value,
       required final String root,
-      final LatLng? coordinates}) = _$SearchFilterImpl;
+      final LatLng? coordinates,
+      final String? scope}) = _$SearchFilterImpl;
 
   factory _SearchFilter.fromJson(Map<String, dynamic> json) =
       _$SearchFilterImpl.fromJson;
@@ -668,6 +686,8 @@ abstract class _SearchFilter implements SearchFilter {
   String get root;
   @override
   LatLng? get coordinates;
+  @override
+  String? get scope;
   @override
   @JsonKey(ignore: true)
   _$$SearchFilterImplCopyWith<_$SearchFilterImpl> get copyWith =>

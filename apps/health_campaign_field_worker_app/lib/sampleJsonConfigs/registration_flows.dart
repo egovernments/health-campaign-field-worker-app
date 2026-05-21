@@ -701,6 +701,7 @@ final dynamic sampleFlows = {
                         "label":
                             "HCM_HOUSEHOLD_OVERVIEW_EDIT_INDIVIDUAL_BUTTON",
                         "format": "button",
+                        "visible": "{{item.member.0.isHeadOfHousehold}}==false",
                         "disabled":
                             "{{fn:disableEdit(item.task, item.hFReferral)}}==true",
                         "onAction": [
@@ -1299,7 +1300,8 @@ final dynamic sampleFlows = {
                   "field": "projectBeneficiaryClientReferenceId",
                   "equalsFrom": "projectBeneficiary.clientReferenceId"
                 },
-                "entity": "TaskModel"
+                "entity": "TaskModel",
+                "sort": {"field": "clientModifiedTime", "order": "desc"}
               },
               {
                 "name": "hFReferral",
@@ -1321,6 +1323,7 @@ final dynamic sampleFlows = {
             "householdMember",
             "projectBeneficiary",
             "task",
+            "latestTask",
             "hFReferral"
           ],
           "primary": "household"
@@ -1465,7 +1468,7 @@ final dynamic sampleFlows = {
                     {
                       "actionType": "CLEAR_STATE",
                       "properties": {
-                        "name": "task",
+                        "name": "latestTask",
                         "filterKeys": [
                           "status",
                           "projectBeneficiary",
@@ -1483,7 +1486,8 @@ final dynamic sampleFlows = {
                               {
                                 "key": "status",
                                 "value": ["ADMINISTRATION_SUCCESS", "VISITED"],
-                                "operation": "in"
+                                "operation": "in",
+                                "scope": "latest"
                               }
                             ],
                             "name": "task"
@@ -1503,7 +1507,8 @@ final dynamic sampleFlows = {
                               {
                                 "key": "status",
                                 "value": "{{selectedStatus}}",
-                                "operation": "in"
+                                "operation": "in",
+                                "scope": "latest"
                               }
                             ],
                             "name": "task"
@@ -2178,18 +2183,6 @@ final dynamic sampleFlows = {
                 {
                   "code": "SUCCESSFUL_DELIVERY",
                   "name": "HCM_DELIVERY_COMMENT_SUCCESSFUL"
-                },
-                {
-                  "code": "INSUFFICIENT_RESOURCES",
-                  "name": "HCM_DELIVERY_COMMENT_INSUFFICIENT"
-                },
-                {
-                  "code": "BENEFICIARY_REFUSED",
-                  "name": "HCM_DELIVERY_COMMENT_REFUSED"
-                },
-                {
-                  "code": "BENEFICIARY_ABSENT",
-                  "name": "HCM_DELIVERY_COMMENT_ABSENT"
                 }
               ],
               "label": "HCM_DELIVERY_COMMENTS_LABEL",
@@ -4953,6 +4946,11 @@ final dynamic sampleFlows = {
                   "type": "required",
                   "value": true,
                   "message": "VACCINATED_ELSEWHERE_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 }
               ],
               "errorMessage": "",
@@ -4982,6 +4980,11 @@ final dynamic sampleFlows = {
                   "type": "required",
                   "value": true,
                   "message": "VACCINATED_ELSEWHERE_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 }
               ],
               "errorMessage": "",
@@ -5183,18 +5186,6 @@ final dynamic sampleFlows = {
                 {
                   "code": "SUCCESSFUL_DELIVERY",
                   "name": "HCM_REDOSE_COMMENT_SUCCESSFUL"
-                },
-                {
-                  "code": "INSUFFICIENT_RESOURCES",
-                  "name": "HCM_REDOSE_COMMENT_INSUFFICIENT"
-                },
-                {
-                  "code": "BENEFICIARY_REFUSED",
-                  "name": "HCM_REDOSE_COMMENT_REFUSED"
-                },
-                {
-                  "code": "BENEFICIARY_ABSENT",
-                  "name": "HCM_REDOSE_COMMENT_ABSENT"
                 }
               ],
               "label": "HCM_REDOSE_COMMENTS_LABEL",
