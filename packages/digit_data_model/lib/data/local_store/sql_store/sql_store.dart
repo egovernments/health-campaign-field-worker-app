@@ -144,7 +144,22 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 6; // Increment schema version
+  int get schemaVersion => 11; // Increment schema version
+
+  Future<void> _createTaskSearchIndexes() async {
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS task_search_project_created_status
+      ON task (project_id, client_created_by, status);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS task_search_project_created_status_modifiedtime
+      ON task (project_id, client_created_by, status, client_modified_time);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS task_search_project_created_status_plannedstart
+      ON task (project_id, client_created_by, status, planned_start_date);
+    ''');
+  }
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -326,6 +341,55 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               }
             }
           }
+
+          if (from < 10) {
+            try {
+              await _createTaskSearchIndexes();
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to create task search indexes");
+              }
+            }
+            try {
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS identifier_identifierid ON identifier (identifier_id)');
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS identifier_individualclientref ON identifier (individual_client_reference_id)');
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS address_localityboundarycode ON address (locality_boundary_code)');
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS address_relatedclientref ON address (related_client_reference_id)');
+              await customStatement('ANALYZE');
+            } catch (e) {
+              if (kDebugMode) {
+                print(
+                    "Failed to create identifier/address indexes in v10 migration: $e");
+              }
+            }
+          }
+
+          if (from < 11) {
+            try {
+              await _createTaskSearchIndexes();
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to create planned start task search index");
+              }
+            }
+            try {
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS task_status ON task (status)');
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS task_project_status ON task (project_id, status, is_deleted)');
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS task_clientmodifiedtime ON task (client_modified_time)');
+              await customStatement('ANALYZE');
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to create task indexes in v11 migration: $e");
+              }
+            }
+          }
         },
       );
 
@@ -357,7 +421,10 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       // Return a `NativeDatabase` that uses the file for storage.
       return NativeDatabase(
         file,
-        logStatements: kDebugMode,
+        // Statement logging is very expensive when queries carry large
+        // IN(...) clauses. Opt-in via dart-define rather than auto-on in debug.
+        logStatements: const bool.fromEnvironment('DRIFT_LOG_STATEMENTS',
+            defaultValue: false),
         setup: (database) {
           // If an encryption key is provided, set it using SQLCipher's PRAGMA key
           if (encryptionKey != null && encryptionKey.isNotEmpty) {
@@ -368,6 +435,11 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
           database.execute('PRAGMA journal_mode = WAL;');
           // Wait up to 5 seconds when the DB is locked by another isolate
           database.execute('PRAGMA busy_timeout = 5000;');
+          // Read-path tuning for large local datasets (120K+ rows).
+          database.execute('PRAGMA cache_size = -20000;'); // ~20 MB page cache
+          database.execute('PRAGMA temp_store = MEMORY;');
+          database.execute('PRAGMA mmap_size = 30000000;'); // 30 MB mmap
+          database.execute('PRAGMA synchronous = NORMAL;');
         },
       );
     });

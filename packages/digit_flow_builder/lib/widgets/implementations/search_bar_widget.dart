@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +28,8 @@ class SearchBarWidget extends ResolvedFlowWidget {
 
     final validations = json['validations'] as List<dynamic>? ?? [];
     int minSearchChars = 1;
+    int debounceMs = 400;
+    final currentEvalContext = resolved.getFreshEvalContext();
 
     for (final validation in validations) {
       if (validation is Map<String, dynamic> &&
@@ -35,6 +39,13 @@ class SearchBarWidget extends ResolvedFlowWidget {
           minSearchChars = value;
         } else if (value is String) {
           minSearchChars = int.tryParse(value) ?? 1;
+        } else if (validation['type'] == 'debounceMs') {
+          final value = validation['value'];
+          if (value is int) {
+            debounceMs = value;
+          } else if (value is String) {
+            debounceMs = int.tryParse(value) ?? 400;
+          }
         }
       }
     }
@@ -53,6 +64,7 @@ class SearchBarWidget extends ResolvedFlowWidget {
       fieldName: fieldName,
       compositeKey: compositeKey,
       minSearchChars: minSearchChars,
+      debounceMs: debounceMs,
       initialValue: initialValue,
       onAction: onAction,
       resolved: resolved,
@@ -66,6 +78,7 @@ class _ReactiveSearchBar extends StatefulWidget {
   final String fieldName;
   final String? compositeKey;
   final int minSearchChars;
+  final int debounceMs;
   final String initialValue;
   final void Function(ActionConfig) onAction;
   final ResolvedWidgetContext resolved;
@@ -77,6 +90,7 @@ class _ReactiveSearchBar extends StatefulWidget {
     required this.fieldName,
     required this.compositeKey,
     required this.minSearchChars,
+    required this.debounceMs,
     required this.initialValue,
     required this.onAction,
     required this.resolved,
@@ -90,6 +104,7 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
   late final TextEditingController _controller;
   String _lastHandledValue = '';
   bool _syncingExternalValue = false;
+  Timer? _debounceTimer;
 
   @override
   void initState() {
@@ -101,6 +116,7 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
 
   @override
   void dispose() {
+    _debounceTimer?.cancel();
     _controller.removeListener(_handleControllerChange);
     _controller.dispose();
     super.dispose();
@@ -119,6 +135,19 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
     _lastHandledValue = value;
     _updateWidgetData(value);
 
+    _debounceTimer?.cancel();
+    if (widget.debounceMs <= 0) {
+      _dispatchSearch(value);
+      return;
+    }
+    _debounceTimer = Timer(
+      Duration(milliseconds: widget.debounceMs),
+      () => _dispatchSearch(value),
+    );
+  }
+
+  void _dispatchSearch(String value) {
+    if (!mounted) return;
     if (value.length >= widget.minSearchChars) {
       _executeSearchActions(value);
     } else {

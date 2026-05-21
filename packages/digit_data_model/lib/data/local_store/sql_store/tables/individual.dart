@@ -5,6 +5,7 @@ import 'package:digit_data_model/models/entities/gender.dart';
 import 'package:drift/drift.dart';
 
 
+@TableIndex(name: 'individual_clientref', columns: {#clientReferenceId})
 class Individual extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get individualId => text().nullable()();
