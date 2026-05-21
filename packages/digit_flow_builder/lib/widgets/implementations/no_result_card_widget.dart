@@ -1,8 +1,10 @@
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../blocs/flow_crud_bloc.dart';
 import '../resolved_flow_widget.dart';
 
 class NoResultCardWidget extends ResolvedFlowWidget {
@@ -16,13 +18,41 @@ class NoResultCardWidget extends ResolvedFlowWidget {
     void Function(ActionConfig) onAction,
     ResolvedWidgetContext resolved,
   ) {
-    // Visibility already checked by base class
-    return NoResultCard(label: resolved.resolveText(json['label']));
+    final compositeKey = resolved.compositeKey;
+
+    if (compositeKey == null) {
+      return NoResultCard(
+        label: resolved.resolveText(json['label']),
+        description: resolved.resolveText(json['description']),
+      );
+    }
+
+    return ValueListenableBuilder<FlowCrudState?>(
+      valueListenable: FlowCrudStateRegistry().listen(compositeKey),
+      builder: (context, flowState, _) {
+        final showOnEmptySearch = json['showOnEmptySearch'] == true;
+        if (showOnEmptySearch) {
+          final base = flowState?.base;
+          final stateWrapper = flowState?.stateWrapper;
+          final hasSearchCompleted = base is CrudStateLoaded;
+          final hasNoResults = stateWrapper == null || stateWrapper.isEmpty;
+          if (!hasSearchCompleted || !hasNoResults) {
+            return const SizedBox.shrink();
+          }
+        }
+
+        return NoResultCard(
+          label: resolved.resolveText(json['label']),
+          description: resolved.resolveText(json['description']),
+        );
+      },
+    );
   }
 }
 
 class NoResultCard extends StatelessWidget {
   final String? label;
+  final String? description;
   final AlignmentGeometry align;
   final double padding;
 
@@ -31,6 +61,7 @@ class NoResultCard extends StatelessWidget {
     this.align = Alignment.center,
     this.padding = spacer4,
     required this.label,
+    this.description,
   });
 
   @override
@@ -51,7 +82,15 @@ class NoResultCard extends StatelessWidget {
                 Text(
                   label ?? '',
                   style: theme.textTheme.bodyMedium,
-                )
+                ),
+                if (description != null) ...[
+                  const SizedBox(height: spacer1),
+                  Text(
+                    description!,
+                    style: theme.textTheme.bodySmall,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ],
             )),
       ),

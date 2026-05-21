@@ -428,6 +428,11 @@ class Common {
       'CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES_DESC';
 
   String get permissionCameraDesc => 'CORE_COMMON_PERMISSION_CAMERA_DESC';
+
+  String get beneficiaryNotFound => 'CORE_COMMON_BENEFICIARY_NOT_FOUND';
+
+  String get beneficiaryNotFoundDesc =>
+      'CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC';
 }
 
 class HomeShowcase {
