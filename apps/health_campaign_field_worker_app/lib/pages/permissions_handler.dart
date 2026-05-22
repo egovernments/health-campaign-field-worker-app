@@ -75,8 +75,10 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           // Skip if disabled
           if (_isDisabled) return;
-
-          attemptNavigation();
+          bool granted = await _checkPermissions();
+          if(granted && mounted){
+            context.router.replace(BoundarySelectionRoute());
+          }
         });
       });
     });
