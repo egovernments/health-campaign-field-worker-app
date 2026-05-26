@@ -21,7 +21,6 @@ final dynamic permission_handler_config = {
           ]
         }
       ],
-      "footer": [],
       "footer": [
         {
           "format": "checkbox",
