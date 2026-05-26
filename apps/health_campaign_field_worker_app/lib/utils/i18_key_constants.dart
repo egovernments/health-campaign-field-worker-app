@@ -411,8 +411,6 @@ class Common {
   String get accessPermissionDialogDesc =>
       'CORE_COMMON_ACCESS_PERMISSION_DIALOG_DESC';
 
-  String get dontAllow => 'CORE_COMMON_DONT_ALLOW';
-
   String get allowBackgroundActivityDesc =>
       'PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY';
 
