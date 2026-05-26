@@ -37,6 +37,36 @@ final dynamic permission_handler_config = {
             "mainAxisSize": "max"
           },
           "onAction": [
+            {
+              "actionType": "REQUEST_PERMISSION",
+              "properties": {"permission": "camera", "required": false}
+            },
+            {
+              "actionType": "REQUEST_PERMISSION",
+              "properties": {
+                "permission": "nearbyWifiDevices",
+                "required": true
+              }
+            },
+            {
+              "actionType": "REQUEST_PERMISSION",
+              "properties": {"permission": "notification", "required": "true"},
+            },
+            {
+              "actionType": "REQUEST_PERMISSION",
+              "properties": {
+                "permission": "ignoreBatteryOptimizations",
+                "required": true
+              }
+            },
+            {
+              "actionType": "REQUEST_PERMISSION",
+              "properties": {"permission": "bluetoothScan", "required": "true"}
+            },
+            {
+              "actionType": "REQUEST_PERMISSION",
+              "properties": {"permission": "location", "required": true}
+            },
             {"actionType": "REQUEST_ALL_PERMISSIONS", "properties": {}},
             {"actionType": "ATTEMPT_NAVIGATION", "properties": {}}
           ]
@@ -98,28 +128,11 @@ final dynamic permission_handler_config = {
                             },
                             {
                               "format": "textTemplate",
-                              "value": "CORE_COMMON_PERMISSION_NOTIFICATION_DESC",
+                              "value":
+                                  "CORE_COMMON_PERMISSION_NOTIFICATION_DESC",
                               "properties": {"style": "description"}
                             }
                           ]
-                        }
-                      ]
-                    },
-                    {
-                      "format": "button",
-                      "label": "GRANT_PERMISSION",
-                      "hidden": true,
-                      "visible": "{{ !context.notificationPermissionGranted }}",
-                      "properties": {
-                        "type": "primary",
-                        "size": "small",
-                        "mainAxisSize": "min",
-                        "mainAxisAlignment": "center"
-                      },
-                      "onAction": [
-                        {
-                          "actionType": "REQUEST_PERMISSION",
-                          "properties": {"permission": "notification"}
                         }
                       ]
                     }
@@ -173,27 +186,6 @@ final dynamic permission_handler_config = {
                           ]
                         }
                       ]
-                    },
-                    {
-                      "format": "button",
-                      "label": "GRANT_PERMISSION",
-                      "hidden": true,
-                      "visible":
-                          "{{ !context.ignoreBatteryOptimizationsPermissionGranted }}",
-                      "properties": {
-                        "type": "primary",
-                        "size": "small",
-                        "mainAxisSize": "min",
-                        "mainAxisAlignment": "center"
-                      },
-                      "onAction": [
-                        {
-                          "actionType": "REQUEST_PERMISSION",
-                          "properties": {
-                            "permission": "ignoreBatteryOptimizations"
-                          }
-                        }
-                      ]
                     }
                   ]
                 },
@@ -242,24 +234,6 @@ final dynamic permission_handler_config = {
                               "properties": {"style": "description"}
                             }
                           ]
-                        }
-                      ]
-                    },
-                    {
-                      "format": "button",
-                      "label": "GRANT_PERMISSION",
-                      "hidden": true,
-                      "visible": "{{ !context.locationPermissionGranted }}",
-                      "properties": {
-                        "type": "primary",
-                        "size": "small",
-                        "mainAxisSize": "min",
-                        "mainAxisAlignment": "center"
-                      },
-                      "onAction": [
-                        {
-                          "actionType": "REQUEST_PERMISSION",
-                          "properties": {"permission": "location"}
                         }
                       ]
                     }
@@ -314,25 +288,6 @@ final dynamic permission_handler_config = {
                           ]
                         }
                       ]
-                    },
-                    {
-                      "format": "button",
-                      "label": "GRANT_PERMISSION",
-                      "hidden": true,
-                      "visible":
-                          "{{ !context.nearbyWifiDevicesPermissionGranted }}",
-                      "properties": {
-                        "type": "primary",
-                        "size": "small",
-                        "mainAxisSize": "min",
-                        "mainAxisAlignment": "center"
-                      },
-                      "onAction": [
-                        {
-                          "actionType": "REQUEST_PERMISSION",
-                          "properties": {"permission": "nearbyWifiDevices"}
-                        }
-                      ]
                     }
                   ]
                 },
@@ -384,25 +339,6 @@ final dynamic permission_handler_config = {
                           ]
                         }
                       ]
-                    },
-                    {
-                      "format": "button",
-                      "label": "GRANT_PERMISSION",
-                      "hidden": true,
-                      "visible":
-                          "{{ !context.bluetoothScanPermissionGranted }}",
-                      "properties": {
-                        "type": "primary",
-                        "size": "small",
-                        "mainAxisSize": "min",
-                        "mainAxisAlignment": "center"
-                      },
-                      "onAction": [
-                        {
-                          "actionType": "REQUEST_PERMISSION",
-                          "properties": {"permission": "bluetoothScan"}
-                        }
-                      ]
                     }
                   ]
                 },
@@ -450,24 +386,6 @@ final dynamic permission_handler_config = {
                               "properties": {"style": "description"}
                             }
                           ]
-                        }
-                      ]
-                    },
-                    {
-                      "format": "button",
-                      "label": "GRANT_PERMISSION",
-                      "hidden": true,
-                      "visible": "{{ !context.cameraPermissionGranted }}",
-                      "properties": {
-                        "type": "primary",
-                        "size": "small",
-                        "mainAxisSize": "min",
-                        "mainAxisAlignment": "center"
-                      },
-                      "onAction": [
-                        {
-                          "actionType": "REQUEST_PERMISSION",
-                          "properties": {"permission": "camera"}
                         }
                       ]
                     }

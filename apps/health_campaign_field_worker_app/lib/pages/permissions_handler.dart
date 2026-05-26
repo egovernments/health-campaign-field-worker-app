@@ -91,7 +91,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     final schemaJsonRaw = prefs.getString('app_config_schemas');
 
     try {
-      if (  schemaJsonRaw != null) {
+      if (schemaJsonRaw != null) {
         final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
         final data = allSchemas['PERMISSIONHANDLER'];
         if (data?['data']?['disabled'] == true) {
@@ -137,7 +137,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   Future<void> _initializePermissions() async {
     // Build requiredPermissions from config
     requiredPermissions = {};
-    _parsePermissionsFromConfig(bodyConfig);
+    _parsePermissionsFromConfig(footerConfig);
 
     // Handle platform-specific permissions
     if (Platform.isAndroid) {
@@ -174,75 +174,29 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
   /// Recursively parse permissions from config and build requiredPermissions map
   /// [parentCard] is the parent card that contains the permission button
-  void _parsePermissionsFromConfig(List<dynamic> items,
-      [Map<String, dynamic>? parentCard]) {
+  void _parsePermissionsFromConfig(List<dynamic> items) {
+    requiredPermissions = {};
     for (var item in items) {
-      if (item is Map) {
-        final itemMap = Map<String, dynamic>.from(item);
-
-        // Track if this is a card - it becomes the parent for children
-        final currentCard = itemMap['format'] == 'card' ? itemMap : parentCard;
-
-        // Check if this item has an onAction with REQUEST_PERMISSION
-        final onAction = itemMap['onAction'] as List<dynamic>?;
-        if (onAction != null) {
-          for (var action in onAction) {
-            if (action is Map && action['actionType'] == 'REQUEST_PERMISSION') {
-              final actionMap = Map<String, dynamic>.from(action);
-              final properties = actionMap['properties'] as Map?;
-              final permissionName = properties?['permission'] as String?;
-              if (permissionName != null) {
-                final permission = permissionMap[permissionName.toLowerCase()];
-                if (permission != null) {
-                  // Find if this permission is required by looking in the parent card
-                  final isRequired = currentCard != null
-                      ? _findRequiredInParent(currentCard)
-                      : false;
-                  debugPrint(
-                      'Parsed permission: $permissionName, hasCard: ${currentCard != null}, isRequired: $isRequired');
-                  requiredPermissions[permission] = isRequired;
-                }
-              }
-            }
-          }
-        }
-
-        // Recursively check children, passing the current card context
-        final children = itemMap['children'] as List<dynamic>?;
-        if (children != null) {
-          _parsePermissionsFromConfig(children, currentCard);
-        }
-      }
-    }
-  }
-
-  /// Find if a permission card has required: true in its textTemplate
-  bool _findRequiredInParent(Map<String, dynamic> item) {
-    // Check if this item itself has required
-    if (item['required'] == true) {
-      debugPrint('Found required: true at item level');
-      return true;
-    }
-
-    // Check children
-    final children = item['children'] as List<dynamic>?;
-    if (children != null) {
-      for (var child in children) {
-        if (child is Map) {
-          final childMap = Map<String, dynamic>.from(child);
-          if (childMap['format'] == 'textTemplate' &&
-              childMap['required'] == true) {
-            debugPrint('Found required: true in textTemplate');
-            return true;
-          }
-          // Recursively check nested children
-          if (_findRequiredInParent(childMap)) {
-            return true;
+      if (item is! Map) continue;
+      final onAction = (item as Map)['onAction'] as List<dynamic>?;
+      if (onAction == null) continue;
+      for (var action in onAction) {
+        if (action is! Map || action['actionType'] != 'REQUEST_PERMISSION')
+          continue;
+        final props =
+            Map<String, dynamic>.from(action['properties'] as Map? ?? {});
+        final permissionName = props['permission'] as String?;
+        final isRequired = props['required'] == true;
+        if (permissionName != null) {
+          final permission = permissionMap[permissionName.toLowerCase()];
+          if (permission != null) {
+            requiredPermissions[permission] = isRequired;
+            debugPrint(
+                'Parsed permission: $permissionName, required: $isRequired');
           }
         }
       }
     }
-    return false;
   }
 
   /// Check permission statuses and return true only if all required permissions are granted.
