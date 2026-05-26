@@ -22,6 +22,39 @@ final dynamic permission_handler_config = {
         }
       ],
       "footer": [],
+      "footer": [
+        {
+          "format": "checkbox",
+          "label": "PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY",
+          "required": true,
+          "fieldName": "backgroundActivityConfirmed"
+        },
+        {
+          "format": "button",
+          "label": "CORE_COMMON_ALLOW_ACCESS",
+          "properties": {
+            "type": "primary",
+            "size": "large",
+            "mainAxisSize": "max"
+          },
+          "onAction": [
+            {"actionType": "REQUEST_ALL_PERMISSIONS", "properties": {}},
+            {"actionType": "ATTEMPT_NAVIGATION", "properties": {}}
+          ]
+        },
+        {
+          "format": "button",
+          "label": "CORE_COMMON_DONT_ALLOW",
+          "properties": {
+            "type": "secondary",
+            "size": "large",
+            "mainAxisSize": "max"
+          },
+          "onAction": [
+            {"actionType": "SHOW_DIALOG", "properties": {}}
+          ]
+        }
+      ],
       "initActions": [],
       "wrapperConfig": {
         "wrapperName": "PermissionWrapper",
@@ -76,7 +109,7 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": false,
+                      "hidden": true,
                       "visible": "{{ !context.notificationPermissionGranted }}",
                       "properties": {
                         "type": "primary",
@@ -145,7 +178,7 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": false,
+                      "hidden": true,
                       "visible":
                           "{{ !context.ignoreBatteryOptimizationsPermissionGranted }}",
                       "properties": {
@@ -216,7 +249,7 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": false,
+                      "hidden": true,
                       "visible": "{{ !context.locationPermissionGranted }}",
                       "properties": {
                         "type": "primary",
@@ -286,7 +319,7 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": false,
+                      "hidden": true,
                       "visible":
                           "{{ !context.nearbyWifiDevicesPermissionGranted }}",
                       "properties": {
@@ -356,7 +389,7 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": false,
+                      "hidden": true,
                       "visible":
                           "{{ !context.bluetoothScanPermissionGranted }}",
                       "properties": {
@@ -424,7 +457,7 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": false,
+                      "hidden": true,
                       "visible": "{{ !context.cameraPermissionGranted }}",
                       "properties": {
                         "type": "primary",

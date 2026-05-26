@@ -52,6 +52,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   // Config from permission_handler_config
   Map<String, dynamic>? screenConfig;
   List<dynamic> bodyConfig = [];
+  List<dynamic> footerConfig = [];
 
   // Flag to track if permission handler is disabled
   bool _isDisabled = false;
@@ -76,7 +77,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           // Skip if disabled
           if (_isDisabled) return;
           bool granted = await _checkPermissions();
-          if(granted && mounted){
+          if (granted && mounted) {
             context.router.replace(BoundarySelectionRoute());
           }
         });
@@ -90,7 +91,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     final schemaJsonRaw = prefs.getString('app_config_schemas');
 
     try {
-      if (schemaJsonRaw != null) {
+      if (  schemaJsonRaw != null) {
         final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
         final data = allSchemas['PERMISSIONHANDLER'];
         if (data?['data']?['disabled'] == true) {
@@ -109,6 +110,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           if (flowsData.isNotEmpty) {
             screenConfig = flowsData[0];
             bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+            footerConfig = screenConfig?['footer'] as List<dynamic>? ?? [];
           }
         }
       } else {
@@ -123,6 +125,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           if (flows != null && flows.isNotEmpty) {
             screenConfig = flows[0] as Map<String, dynamic>;
             bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+            footerConfig = screenConfig?['footer'] as List<dynamic>? ?? [];
           }
         }
       }
@@ -174,17 +177,19 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   void _parsePermissionsFromConfig(List<dynamic> items,
       [Map<String, dynamic>? parentCard]) {
     for (var item in items) {
-      if (item is Map<String, dynamic>) {
+      if (item is Map) {
+        final itemMap = Map<String, dynamic>.from(item);
+
         // Track if this is a card - it becomes the parent for children
-        final currentCard = item['format'] == 'card' ? item : parentCard;
+        final currentCard = itemMap['format'] == 'card' ? itemMap : parentCard;
 
         // Check if this item has an onAction with REQUEST_PERMISSION
-        final onAction = item['onAction'] as List<dynamic>?;
+        final onAction = itemMap['onAction'] as List<dynamic>?;
         if (onAction != null) {
           for (var action in onAction) {
-            if (action is Map<String, dynamic> &&
-                action['actionType'] == 'REQUEST_PERMISSION') {
-              final properties = action['properties'] as Map<String, dynamic>?;
+            if (action is Map && action['actionType'] == 'REQUEST_PERMISSION') {
+              final actionMap = Map<String, dynamic>.from(action);
+              final properties = actionMap['properties'] as Map?;
               final permissionName = properties?['permission'] as String?;
               if (permissionName != null) {
                 final permission = permissionMap[permissionName.toLowerCase()];
@@ -203,7 +208,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         }
 
         // Recursively check children, passing the current card context
-        final children = item['children'] as List<dynamic>?;
+        final children = itemMap['children'] as List<dynamic>?;
         if (children != null) {
           _parsePermissionsFromConfig(children, currentCard);
         }
@@ -223,13 +228,15 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     final children = item['children'] as List<dynamic>?;
     if (children != null) {
       for (var child in children) {
-        if (child is Map<String, dynamic>) {
-          if (child['format'] == 'textTemplate' && child['required'] == true) {
+        if (child is Map) {
+          final childMap = Map<String, dynamic>.from(child);
+          if (childMap['format'] == 'textTemplate' &&
+              childMap['required'] == true) {
             debugPrint('Found required: true in textTemplate');
             return true;
           }
           // Recursively check nested children
-          if (_findRequiredInParent(child)) {
+          if (_findRequiredInParent(childMap)) {
             return true;
           }
         }
@@ -246,6 +253,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     // However, this depends on your policy: if you want empty config => allow navigation,
     // change the following check accordingly. For safety, we'll treat empty as NOT all granted.
     if (requiredPermissions.isEmpty) {
+      debugPrint('CHECK_PERM: requiredPermissions is EMPTY, returning false');
       // Refresh statuses for potential UI rendering.
       setState(() => statuses = currentStatuses);
       return false;
@@ -426,16 +434,27 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   }
 
   /// Handle actions from config
-  void _handleAction(Map<String, dynamic> action) {
+  Future<void> _handleAction(Map<String, dynamic> action) async {
     final actionType = action['actionType'] as String?;
-    final properties = action['properties'] as Map<String, dynamic>? ?? {};
+    final properties = action['properties'] != null
+        ? Map<String, dynamic>.from(action['properties'] as Map)
+        : <String, dynamic>{};
 
     switch (actionType) {
       case 'REQUEST_PERMISSION':
         final permission = properties['permission'] as String?;
         if (permission != null) {
-          _requestPermissionByName(permission);
+          await _requestPermissionByName(permission);
         }
+        break;
+      case 'REQUEST_ALL_PERMISSIONS':
+        await _requestAllPermissions();
+        break;
+      case 'ATTEMPT_NAVIGATION':
+        attemptNavigation();
+        break;
+      case 'SHOW_DIALOG':
+        await _dialogBuilder(context);
         break;
       case 'OPEN_APP_SETTINGS':
         openAppSettings();
@@ -473,21 +492,20 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => Popup(
-        title:
-            '${localizations.translate(i18.common.accessRequired)} !',
+        title: '${localizations.translate(i18.common.accessRequired)} !',
         type: PopUpType.alert,
         titleIcon: Icon(
           Icons.warning,
           color: Theme.of(context).colorTheme.alert.error,
           size: spacer12,
         ),
-        subHeading: localizations.translate(i18.common.accessPermissionDialogDesc),
+        subHeading:
+            localizations.translate(i18.common.accessPermissionDialogDesc),
         onCrossTap: () => Navigator.pop(context),
         contentPadding: const EdgeInsets.symmetric(vertical: spacer12),
         actions: [
           DigitButton(
-              label: localizations
-                  .translate(i18.common.allowAccess),
+              label: localizations.translate(i18.common.allowAccess),
               onPressed: () async {
                 await _requestAllPermissions();
 
@@ -516,7 +534,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [ 
+              children: [
                 // Header from config
                 if (screenConfig?['heading'] != null)
                   Padding(
@@ -529,8 +547,8 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                       textAlign: TextAlign.left,
                     ),
                   ),
-              
-               // Description from config
+
+                // Description from config
                 if (screenConfig?['description'] != null)
                   Padding(
                     padding: const EdgeInsets.all(spacer3),
@@ -556,62 +574,13 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   }
 
   Widget _buildFooter(ThemeData theme, DigitTextTheme textTheme) {
+    if (footerConfig.isEmpty) return const SizedBox.shrink();
     return DigitCard(
       margin: const EdgeInsets.only(top: spacer2),
-      children: [
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: spacer2),
-              child: DigitCheckbox(
-                value: backgroundActivityConfirmed,
-                onChanged: (val) {
-                  setState(() {
-                    backgroundActivityConfirmed = val ?? false;
-                  });
-                },
-              ),
-            ),
-            Expanded(
-              child: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: localizations
-                          .translate(i18.common.allowBackgroundActivityDesc),
-                      style: textTheme.bodyS.copyWith(
-                        color: theme.colorTheme.primary.primary2,
-                      ),
-                    ),
-                    TextSpan(
-                      text: " *",
-                      style: textTheme.bodyS.copyWith(
-                        color: theme.colorTheme.alert.error,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        DigitButton(
-          label: localizations.translate(i18.common.allowAccess),
-          type: DigitButtonType.primary,
-          size: DigitButtonSize.large,
-          mainAxisSize: MainAxisSize.max,
-          onPressed: () async {
-            await _requestAllPermissions();
-            attemptNavigation();
-          },
-        ),
-        DigitButton(
-            label: localizations.translate(i18.common.dontAllow),
-            onPressed: () => _dialogBuilder(context),
-            mainAxisSize: MainAxisSize.max,
-            type: DigitButtonType.secondary ,
-            size: DigitButtonSize.large)
-      ],
+      children: footerConfig
+          .map((item) =>
+              _buildWidget(item as Map<String, dynamic>, theme, textTheme))
+          .toList(),
     );
   }
 
@@ -622,7 +591,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     DigitTextTheme textTheme,
   ) {
     final format = config['format'] as String?;
-
     // Check hidden condition
     if (config['hidden'] != null && _evaluateCondition(config['hidden'])) {
       return const SizedBox.shrink();
@@ -646,6 +614,10 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         return _buildIcon(config, theme);
       case 'infoCard':
         return _buildInfoCard(config, theme, textTheme);
+      case 'checkbox':
+        return _buildCheckbox(config, theme, textTheme);
+      case 'button':
+        return _buildButton(config, theme, textTheme);
       default:
         return const SizedBox.shrink();
     }
@@ -771,18 +743,71 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       child: Container(
         width: spacer12,
         height: spacer12,
-        decoration: const BoxDecoration(
-          color: Color(0xFFF8F1ED), // light peach background
-          borderRadius: BorderRadius.all(Radius.circular(spacer2) ),
+        decoration: BoxDecoration(
+          color: theme.colorTheme.primary.primaryBg,
+          borderRadius: const BorderRadius.all(Radius.circular(spacer2)),
         ),
         child: Center(
           child: Icon(
             DigitIconMapping.getIcon(iconName),
-            color: const Color(0xFFD95F0E), // orange icon color
+            color: theme.colorTheme.primary.primary1,
             size: spacer6,
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildCheckbox(
+    Map<String, dynamic> config,
+    ThemeData theme,
+    DigitTextTheme textTheme,
+  ) {
+    final label = config['label'] as String? ?? '';
+    final fieldName = config['fieldName'] as String?;
+
+    bool isChecked;
+    if (fieldName == 'backgroundActivityConfirmed') {
+      isChecked = backgroundActivityConfirmed;
+    } else {
+      isChecked = false;
+    }
+
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(right: spacer2),
+          child: DigitCheckbox(
+            value: isChecked,
+            onChanged: (val) {
+              setState(() {
+                backgroundActivityConfirmed = val ?? false;
+              });
+            },
+          ),
+        ),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: localizations.translate(label),
+                  style: textTheme.bodyS.copyWith(
+                    color: theme.colorTheme.primary.primary2,
+                  ),
+                ),
+                if (config['required'] == true)
+                  TextSpan(
+                    text: " *",
+                    style: textTheme.bodyS.copyWith(
+                      color: theme.colorTheme.alert.error,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -802,10 +827,10 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       mainAxisSize: properties['mainAxisSize'] == 'max'
           ? MainAxisSize.max
           : MainAxisSize.min,
-      onPressed: () {
+      onPressed: () async {
         if (onAction != null) {
           for (var action in onAction) {
-            _handleAction(action as Map<String, dynamic>);
+            await _handleAction(Map<String, dynamic>.from(action));
           }
         }
       },
