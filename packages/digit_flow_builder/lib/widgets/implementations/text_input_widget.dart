@@ -35,7 +35,7 @@ class TextInputWidget extends ResolvedFlowWidget {
     List<TextInputFormatter> inputFormatters = [];
 
     final noEmojiFilter = FilteringTextInputFormatter.allow(
-      RegExp(r'[\x00-\x7F]'),
+      RegExp(r'[\x00-\x7F\u00C0-\u024F\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]'),
     );
 
     switch (inputType.toLowerCase()) {

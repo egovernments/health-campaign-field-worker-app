@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../widgets/localized.dart';
+import '../helper/computed_field_manager.dart';
 import '../helper/form_builder_helper.dart';
 import '../helper/validator_helper.dart';
 import '../models/property_schema/property_schema.dart';
@@ -56,6 +57,8 @@ class FormsRenderPage extends LocalizedStatefulWidget {
 class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   bool _hasInitializedProtection = false;
   bool _isSubmitting = false;
+  bool _hasSetupComputedFields = false;
+  ComputedFieldManager? _computedFieldManager;
 
   /// GlobalKey to access MultiEntityTabViewState for programmatic tab navigation
   final GlobalKey<MultiEntityTabViewState> _multiEntityTabKey =
@@ -75,6 +78,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
   @override
   void dispose() {
+    _computedFieldManager?.dispose();
     // Unregister from protection manager
     ScreenProtectionManager().unregisterPage(_protectionPageId);
     super.dispose();
@@ -145,6 +149,19 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       ),
                     ),
                 builder: (context, formGroup, child) {
+                  // One-time setup of ComputedFieldManager for auto-sum fields
+                  if (!_hasSetupComputedFields) {
+                    final computedConfigs =
+                        getComputedFields(widget.currentSchemaKey);
+                    if (computedConfigs != null && computedConfigs.isNotEmpty) {
+                      _computedFieldManager = ComputedFieldManager(
+                        formGroup: formGroup,
+                        configs: computedConfigs,
+                      );
+                    }
+                    _hasSetupComputedFields = true;
+                  }
+
                   return ScrollableContent(
                     enableFixedDigitButton: true,
                     header: const Column(
@@ -168,6 +185,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     .translate(schema.actionLabel ?? 'Next')
                                 : localizations
                                     .translate(schema.actionLabel ?? 'Submit'),
+                            isDisabled: _isSubmitting,
                             onPressed: () async {
                               // Prevent multiple simultaneous submissions
                               if (_isSubmitting) return;
@@ -490,6 +508,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     /// TODO: fix hardcode not null condition
                                   );
                                   if (schema.showAlertPopUp != null) {
+                                    bool popupSubmitted = false;
                                     showCustomPopup(
                                       context: context,
                                       builder: (BuildContext ctx) => Popup(
@@ -517,6 +536,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                     schema.showAlertPopUp!
                                                         .primaryActionLabel),
                                                 onPressed: () {
+                                                  if (popupSubmitted) return;
+                                                  popupSubmitted = true;
                                                   context.read<FormsBloc>().add(
                                                       FormsSubmitEvent(
                                                           isEdit: widget.isEdit,
@@ -792,6 +813,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               .translate(schema.actionLabel ?? 'Next')
                           : localizations
                               .translate(schema.actionLabel ?? 'Submit'),
+                      isDisabled: _isSubmitting,
                       onPressed: () async {
                         // Prevent multiple simultaneous submissions
                         if (_isSubmitting) return;
@@ -1210,6 +1232,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
             DigitButton(
               mainAxisSize: MainAxisSize.max,
               label: localizations.translate('CORE_COMMON_SUBMIT'),
+              isDisabled: _isSubmitting,
               onPressed: () async {
                 // Prevent multiple simultaneous submissions
                 if (_isSubmitting) return;
@@ -1335,6 +1358,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         bodyFields.any((field) => field.mandatory);
 
     bool showValidationError = false;
+    bool popupSubmitted = false;
 
     showCustomPopup(
       context: context,
@@ -1387,6 +1411,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                   label: localizations.translate(
                       popUpConfig.primaryActionLabel),
                   onPressed: () {
+                    if (popupSubmitted) return;
                     final hasEmptyMandatory =
                         bodyFields.any((field) =>
                             field.mandatory &&
@@ -1399,6 +1424,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       });
                       return;
                     }
+                    popupSubmitted = true;
                     final popupData =
                         <String, dynamic>{};
                     for (final field

@@ -24,10 +24,9 @@ class PolioStatsCard extends StatefulWidget {
 
 class _PolioStatsCardState extends State<PolioStatsCard>
     with WidgetsBindingObserver {
-  int vialsOpened = 0;
-  int vialsUsable = 0;
-  int vialsUnusable = 0;
-  int additionalReceived = 0;
+  int totalReceived = 0;
+  int totalReturned = 0;
+  int availableVials = 0;
   bool _isLoading = false;
 
   @override
@@ -64,6 +63,22 @@ class _PolioStatsCardState extends State<PolioStatsCard>
     _loadCounts();
   }
 
+  /// Helper to get an additionalField value by key from a UserActionModel.
+  String? _getAdditionalField(UserActionModel ua, String key) {
+    return ua.additionalFields?.fields
+        .where((f) => f.key == key)
+        .firstOrNull
+        ?.value
+        ?.toString();
+  }
+
+  /// Helper to parse an additionalField value as int.
+  int _getAdditionalFieldInt(UserActionModel ua, String key) {
+    final raw = _getAdditionalField(ua, key);
+    if (raw == null) return 0;
+    return int.tryParse(raw) ?? 0;
+  }
+
   Future<void> _loadCounts() async {
     if (_isLoading) return;
     _isLoading = true;
@@ -73,9 +88,10 @@ class _PolioStatsCardState extends State<PolioStatsCard>
 
       final projectId = context.projectId;
 
-      // Fetch stock entries (saved as LOCATION_CAPTURE
-      // with form=POLIO_STOCK in additionalFields)
-      final stockResults = await userActionRepo.search(
+      // Get current boundary code for locality filter
+      final currentBoundaryCode = context.boundaryOrNull?.code;
+
+      final results = await userActionRepo.search(
         UserActionSearchModel(
           action: 'LOCATION_CAPTURE',
           projectId: projectId,
@@ -83,46 +99,44 @@ class _PolioStatsCardState extends State<PolioStatsCard>
         ),
       );
 
-      int totalVialsOpened = 0;
-      int usable = 0;
-      int unusable = 0;
+      // Start-of-today in milliseconds
+      final now = DateTime.now();
+      final todayStart =
+          DateTime(now.year, now.month, now.day).millisecondsSinceEpoch;
+
       int received = 0;
-      for (final ua in stockResults) {
+      int returned = 0;
+
+      for (final ua in results) {
         if (ua.action != 'LOCATION_CAPTURE') continue;
-        final formField = ua.additionalFields?.fields
-            .where((f) => f.key == 'form')
-            .firstOrNull;
-        if (formField?.value?.toString() != 'POLIO_STOCK') continue;
 
-        totalVialsOpened++;
+        // Must match current boundary code
+        if (currentBoundaryCode != null && currentBoundaryCode.isNotEmpty) {
+          final locality = _getAdditionalField(ua, 'locality');
+          if (locality != currentBoundaryCode) continue;
+        }
 
-        final returnedUsableField = ua.additionalFields?.fields
-            .where((f) => f.key == 'returnedUsable')
-            .firstOrNull;
-        final returnedUnusableField = ua.additionalFields?.fields
-            .where((f) => f.key == 'returnedUnusable')
-            .firstOrNull;
-        final additionalReceivedField = ua.additionalFields?.fields
-            .where((f) => f.key == 'additionalReceived')
-            .firstOrNull;
+        // Must be created today
+        final createdTime =
+            ua.clientAuditDetails?.createdTime ?? ua.auditDetails?.createdTime;
+        if (createdTime == null || createdTime < todayStart) continue;
 
-        usable += int.tryParse(
-                returnedUsableField?.value?.toString() ?? '0') ??
-            0;
-        unusable += int.tryParse(
-                returnedUnusableField?.value?.toString() ?? '0') ??
-            0;
-        received += int.tryParse(
-                additionalReceivedField?.value?.toString() ?? '0') ??
-            0;
+        final formValue = _getAdditionalField(ua, 'form');
+
+        if (formValue == 'POLIO_STOCK_ISSUED') {
+          received += _getAdditionalFieldInt(ua, 'totalVialsReceivedForDay');
+        } else if (formValue == 'POLIO_STOCK_RETURNED') {
+          returned += _getAdditionalFieldInt(ua, 'totalReturned');
+        }
       }
+
+      final available = (received - returned) < 0 ? 0 : (received - returned);
 
       if (mounted) {
         setState(() {
-          vialsOpened = totalVialsOpened;
-          vialsUsable = usable;
-          vialsUnusable = unusable;
-          additionalReceived = received;
+          totalReceived = received;
+          totalReturned = returned;
+          availableVials = available;
         });
       }
     } catch (e) {
@@ -145,52 +159,46 @@ class _PolioStatsCardState extends State<PolioStatsCard>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    localizations.translate(
-                      'POLIO_HOME_STATS_VIALS_OPENED',
+              Text(
+                localizations.translate(
+                  'POLIO_HOME_STATS_TITLE',
+                ),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  Text(
-                    '$vialsOpened',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
               ),
-              const SizedBox(height: spacer1),
-              Wrap(
-                spacing: spacer1,
-                runSpacing: spacer1,
-                alignment: WrapAlignment.spaceEvenly,
+              const SizedBox(height: spacer2),
+              Row(
                 children: [
-                  _buildCountChip(
-                    context,
-                    label: localizations.translate(
-                      'POLIO_HOME_STATS_USABLE',
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      label: localizations.translate(
+                        'POLIO_HOME_STATS_TOTAL_RECEIVED',
+                      ),
+                      count: totalReceived,
+                      color: Colors.blue,
                     ),
-                    count: vialsUsable,
-                    color: Colors.green,
                   ),
-                  _buildCountChip(
-                    context,
-                    label: localizations.translate(
-                      'POLIO_HOME_STATS_UNUSABLE',
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      label: localizations.translate(
+                        'POLIO_HOME_STATS_TOTAL_RETURNED',
+                      ),
+                      count: totalReturned,
+                      color: Colors.orange,
                     ),
-                    count: vialsUnusable,
-                    color: Colors.red,
                   ),
-                  _buildCountChip(
-                    context,
-                    label: localizations.translate(
-                      'POLIO_HOME_STATS_ADDITIONAL_RECEIVED',
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      label: localizations.translate(
+                        'POLIO_HOME_STATS_AVAILABLE_VIALS',
+                      ),
+                      count: availableVials,
+                      color: Colors.green,
                     ),
-                    count: additionalReceived,
-                    color: Colors.blue,
                   ),
                 ],
               ),
@@ -201,38 +209,28 @@ class _PolioStatsCardState extends State<PolioStatsCard>
     );
   }
 
-  Widget _buildCountChip(
+  Widget _buildStatItem(
     BuildContext context, {
     required String label,
     required int count,
     required Color color,
   }) {
-    return Container(
-      padding:
-          const EdgeInsets.symmetric(horizontal: spacer2, vertical: spacer1),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(spacer1),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '$label - ',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: color,
-                ),
-          ),
-          Text(
-            '$count',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        Text(
+          '$count',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        const SizedBox(height: spacer1 / 2),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }

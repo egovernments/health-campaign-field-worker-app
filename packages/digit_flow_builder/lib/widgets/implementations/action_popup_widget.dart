@@ -153,12 +153,34 @@ class ActionPopupWidget extends ResolvedFlowWidget {
               : footerActions
                   .whereType<Map<String, dynamic>>()
                   .map((actionJson) {
-                  // Footer actions use original context which has LocalizationContext in its tree
-                  return FlowWidgetFactory.build(
-                    actionJson,
-                    context,
-                    onAction,
-                  ) as DigitButton;
+                  final actionProps = Map<String, dynamic>.from(
+                      actionJson['properties'] ?? {});
+                  final label = actionJson['label'] as String? ?? '';
+                  final translatedLabel =
+                      localization?.translate(label) ?? label;
+
+                  return DigitButton(
+                    capitalizeLetters: false,
+                    label: translatedLabel,
+                    onPressed: () {
+                      if (actionJson['onAction'] != null &&
+                          actionJson['onAction'] is List) {
+                        final actionsList =
+                            List<Map<String, dynamic>>.from(
+                                actionJson['onAction']);
+                        for (var raw in actionsList) {
+                          final action = ActionConfig.fromJson(raw);
+                          onAction(action);
+                        }
+                      }
+                    },
+                    type: _parseButtonType(actionProps['type']),
+                    size: _parseButtonSize(actionProps['size']),
+                    mainAxisSize:
+                        _parseMainAxisSize(actionProps['mainAxisSize']),
+                    mainAxisAlignment: _parseMainAxisAlignment(
+                        actionProps['mainAxisAlignment']),
+                  );
                 }).toList(),
           inlineActions: true,
         );

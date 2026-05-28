@@ -5,6 +5,7 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
+import '../blocs/flow_crud_bloc.dart';
 import 'interpolation.dart';
 
 class TaskStatus {
@@ -1839,4 +1840,165 @@ void initializeFunctionRegistry() {
       return false;
     }
   });
+
+  /// Computes the maximum number of vials that can be returned for the day.
+  ///
+  /// - **Function Name**: `'computeMaxReturnable'`
+  /// - **Arguments**: None. Reads UserAction records directly from
+  ///   `FlowCrudStateRegistry().get('vialDetailsMenu')`.
+  /// - **Logic**:
+  ///   All records filtered by: `action` == `"LOCATION_CAPTURE"`,
+  ///   `additionalFields.locality` == current boundary code,
+  ///   `clientCreatedTime` is today.
+  ///   - ISSUED records (`additionalFields.form` == `"POLIO_STOCK_ISSUED"`):
+  ///     sum `totalVialsReceivedForDay`
+  ///   - RETURNED records (`additionalFields.form` == `"POLIO_STOCK_RETURNED"`):
+  ///     sum `totalReturned`
+  /// - **Returns**: `(sumReceived - sumAlreadyReturned)` clamped to >= 0.
+  ///   Returns `0` when no issued records are found (cannot return what wasn't received).
+  FunctionRegistry.register('computeMaxReturnable', (args, stateData) {
+    try {
+      final currentBoundaryCode = FlowBuilderSingleton().boundary?.code;
+
+      // Get UserAction records directly from FlowCrudStateRegistry.
+      // The vialDetailsMenu screen loads them via SEARCH_EVENT / initActions.
+      List<Map<String, dynamic>> records = [];
+
+      final registryState =
+          FlowCrudStateRegistry().get('vialDetailsMenu');
+      final stateWrapper = registryState?.stateWrapper;
+
+      if (stateWrapper != null) {
+        for (final item in stateWrapper) {
+          // stateWrapper items are wrapper Maps like:
+          //   { 'UserActionModel': UserActionModel instance, ... }
+          // We need to extract the entity and call .toMap() on it.
+          try {
+            if (item is Map) {
+              final entity = item['UserActionModel'];
+              if (entity != null) {
+                final entityMap =
+                    (entity as dynamic).toMap() as Map<String, dynamic>;
+                records.add(entityMap);
+              } else {
+                // Fallback: if wrapper has action/additionalFields directly
+                final map = item is Map<String, dynamic>
+                    ? item
+                    : Map<String, dynamic>.from(item);
+                if (map.containsKey('action')) {
+                  records.add(map);
+                }
+              }
+            } else {
+              // Non-map item — try .toMap() directly
+              records
+                  .add((item as dynamic).toMap() as Map<String, dynamic>);
+            }
+          } catch (_) {
+            // skip un-convertible items
+          }
+        }
+      }
+
+      debugPrint(
+          'computeMaxReturnable: total records=${records.length}, boundaryCode=$currentBoundaryCode');
+
+      // Determine the start-of-today in milliseconds
+      final now = DateTime.now();
+      final todayStart =
+          DateTime(now.year, now.month, now.day).millisecondsSinceEpoch;
+
+      // Helper to read a string value from additionalFields.fields by key
+      String? getAdditionalFieldString(
+          Map<String, dynamic> record, String key) {
+        final additionalFields = record['additionalFields'];
+        if (additionalFields is Map && additionalFields['fields'] is List) {
+          for (final field in additionalFields['fields']) {
+            if (field is Map && field['key'] == key) {
+              return field['value']?.toString();
+            }
+          }
+        }
+        return null;
+      }
+
+      // Helper to read a numeric value from additionalFields.fields by key
+      num getAdditionalFieldNum(Map<String, dynamic> record, String key) {
+        final additionalFields = record['additionalFields'];
+        if (additionalFields is Map && additionalFields['fields'] is List) {
+          for (final field in additionalFields['fields']) {
+            if (field is Map && field['key'] == key) {
+              final v = field['value'];
+              if (v is num) return v;
+              if (v is String) return num.tryParse(v) ?? 0;
+            }
+          }
+        }
+        return 0;
+      }
+
+      // Helper to extract clientCreatedTime from a record
+      int? getCreatedTime(Map<String, dynamic> record) {
+        int? t;
+        if (record['clientAuditDetails'] is Map) {
+          t = _parseToInt(
+              (record['clientAuditDetails'] as Map)['createdTime']);
+        }
+        t ??= record['auditDetails'] is Map
+            ? _parseToInt((record['auditDetails'] as Map)['createdTime'])
+            : null;
+        // Also check top-level clientCreatedTime (flattened DB format)
+        t ??= _parseToInt(record['clientCreatedTime']);
+        return t;
+      }
+
+      num totalReceived = 0;
+      num alreadyReturned = 0;
+
+      for (final record in records) {
+        final action = (record['action'] ?? '').toString();
+
+        // Must be LOCATION_CAPTURE action
+        if (action != 'LOCATION_CAPTURE') continue;
+
+        // Must match current boundary code (locality)
+        if (currentBoundaryCode != null && currentBoundaryCode.isNotEmpty) {
+          final locality = getAdditionalFieldString(record, 'locality');
+          if (locality != currentBoundaryCode) continue;
+        }
+
+        // Must be created today
+        final createdTime = getCreatedTime(record);
+        if (createdTime == null || createdTime < todayStart) continue;
+
+        final formValue = getAdditionalFieldString(record, 'form');
+
+        if (formValue == 'POLIO_STOCK_ISSUED') {
+          // Sum totalVialsReceivedForDay from issued records
+          totalReceived +=
+              getAdditionalFieldNum(record, 'totalVialsReceivedForDay');
+        } else if (formValue == 'POLIO_STOCK_RETURNED') {
+          // Sum totalReturned from returned records
+          alreadyReturned +=
+              getAdditionalFieldNum(record, 'totalReturned');
+        }
+      }
+
+      final result = (totalReceived - alreadyReturned).toInt();
+      debugPrint(
+          'computeMaxReturnable: received=$totalReceived, alreadyReturned=$alreadyReturned, maxReturnable=$result');
+      return result < 0 ? 0 : result;
+    } catch (e) {
+      debugPrint('Error in computeMaxReturnable: $e');
+      return 0;
+    }
+  });
+}
+
+/// Helper to parse a value to int (handles int, double, String).
+int? _parseToInt(dynamic value) {
+  if (value is int) return value;
+  if (value is double) return value.toInt();
+  if (value is String) return int.tryParse(value);
+  return null;
 }

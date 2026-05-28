@@ -30,11 +30,13 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     final validationMessages = buildValidationMessages(validations, loc);
     final patternFormatter = getPatternFormatter(validations);
     final noEmojiFilter = FilteringTextInputFormatter.allow(
-      RegExp(r'[\x00-\x7F]'), // ASCII only (0-127)
+      RegExp(r'[\x00-\x7F\u00C0-\u024F\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]'),
     );
+    // When a pattern formatter exists, it already defines the allowed
+    // character set (e.g., Latin + Arabic), so skip the noEmojiFilter
+    // which would block non-ASCII characters prematurely.
     final formatters = [
-      noEmojiFilter,
-      if (patternFormatter != null) patternFormatter,
+      if (patternFormatter != null) patternFormatter else noEmojiFilter,
     ];
 
     return ReactiveFormConsumer(

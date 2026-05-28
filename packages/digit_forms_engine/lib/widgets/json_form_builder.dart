@@ -32,6 +32,16 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
     // Handle conditional display logic
     if (_shouldHideField(form, widget.schema, widget.formControlName)) {
+      // For hidden custom-format fields with includeInForm, still build the
+      // widget in an Offstage so it mounts and runs its initialization logic
+      // (e.g. auto-populating form values) without being visible.
+      if (widget.schema.format == PropertySchemaFormat.custom &&
+          widget.schema.includeInForm == true) {
+        final customWidget = _buildCustomComponent();
+        if (customWidget != null) {
+          return Offstage(offstage: true, child: customWidget);
+        }
+      }
       return const SizedBox.shrink();
     }
 
@@ -686,41 +696,75 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   /// Build the object fields column
   Widget _buildObjectFields(
       FormGroup form, List<MapEntry<String, PropertySchema>> entries) {
-    final visibleEntries = entries.where((entry) {
+    final visibleEntries = <MapEntry<String, PropertySchema>>[];
+    final hiddenCustomEntries = <MapEntry<String, PropertySchema>>[];
+
+    for (final entry in entries) {
       final subSchema = entry.value;
-      if (subSchema.displayOnly == true) return false;
-      return !_shouldHideField(form, subSchema, entry.key);
-    }).toList();
+      if (subSchema.displayOnly == true) continue;
+
+      if (_shouldHideField(form, subSchema, entry.key)) {
+        // Keep hidden custom fields with includeInForm so they can mount
+        // and run initialization logic (e.g., auto-populating form values)
+        if (subSchema.format == PropertySchemaFormat.custom &&
+            subSchema.includeInForm == true) {
+          hiddenCustomEntries.add(entry);
+        }
+        continue;
+      }
+      visibleEntries.add(entry);
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: visibleEntries.asMap().entries.map((entry) {
-        final index = entry.key;
-        final mapEntry = entry.value;
+      children: [
+        ...visibleEntries.asMap().entries.map((entry) {
+          final index = entry.key;
+          final mapEntry = entry.value;
 
-        final subSchema = mapEntry.value;
-        final subName = mapEntry.key;
+          final subSchema = mapEntry.value;
+          final subName = mapEntry.key;
 
-        final field = JsonFormBuilder(
-          key: ValueKey(subName),
-          pageName: widget.pageName,
-          currentSchemaKey: widget.currentSchemaKey,
-          formControlName: subName,
-          schema: subSchema,
-          components: widget.components,
-          navigationParams: widget.navigationParams,
-        );
+          final field = JsonFormBuilder(
+            key: ValueKey(subName),
+            pageName: widget.pageName,
+            currentSchemaKey: widget.currentSchemaKey,
+            formControlName: subName,
+            schema: subSchema,
+            components: widget.components,
+            navigationParams: widget.navigationParams,
+          );
 
-        final isLast = index == visibleEntries.length - 1;
+          final isLast = index == visibleEntries.length - 1;
 
-        return isLast
-            ? field
-            : Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: field,
-              );
-      }).toList(),
+          return isLast
+              ? field
+              : Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: field,
+                );
+        }),
+        // Hidden custom components rendered in Offstage so they mount and
+        // run their initialization (e.g., ResourceCard auto-populating form)
+        ...hiddenCustomEntries.map((mapEntry) {
+          final subSchema = mapEntry.value;
+          final subName = mapEntry.key;
+
+          return Offstage(
+            offstage: true,
+            child: JsonFormBuilder(
+              key: ValueKey(subName),
+              pageName: widget.pageName,
+              currentSchemaKey: widget.currentSchemaKey,
+              formControlName: subName,
+              schema: subSchema,
+              components: widget.components,
+              navigationParams: widget.navigationParams,
+            ),
+          );
+        }),
+      ],
     );
   }
 

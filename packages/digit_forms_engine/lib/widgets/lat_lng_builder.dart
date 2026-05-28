@@ -179,9 +179,7 @@ class _LatLngBuilderStatefulWrapperState
         // Determine display text for lat/lng coordinates
         String displayText = '';
         if (_latitude != null && _longitude != null) {
-          final latDir = _latitude! >= 0 ? 'N' : 'S';
-          final lngDir = _longitude! >= 0 ? 'E' : 'W';
-          displayText = '${_latitude!.abs().toStringAsFixed(4)}\u00B0 $latDir ${_longitude!.abs().toStringAsFixed(4)}\u00B0 $lngDir';
+          displayText = '${_latitude!.toStringAsFixed(6)}, ${_longitude!.toStringAsFixed(6)}';
         }
 
         return ReactiveFormConsumer(

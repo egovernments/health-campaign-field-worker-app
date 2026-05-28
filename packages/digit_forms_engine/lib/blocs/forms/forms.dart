@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:digit_forms_engine/forms_engine.dart';
+import 'package:digit_forms_engine/helper/computed_field_manager.dart';
 import 'package:digit_forms_engine/models/schema_object/schema_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,6 +86,63 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
 
     for (final schemaStr in event.schemas) {
       final raw = json.decode(schemaStr);
+
+      // Extract computedValue configs before parsing (SchemaObject.fromJson
+      // discards unknown keys, so we grab them from the raw map first).
+      final schemaName = raw['name'] as String? ?? '';
+      final computedConfigs = <String, Map<String, dynamic>>{};
+      final rawPages = raw['pages'];
+      if (rawPages is Map) {
+        for (final pageEntry in rawPages.entries) {
+          final pageMap = pageEntry.value;
+          if (pageMap is Map && pageMap['properties'] is Map) {
+            final props = pageMap['properties'] as Map;
+            for (final propEntry in props.entries) {
+              final propMap = propEntry.value;
+              if (propMap is Map && propMap.containsKey('computedValue')) {
+                final fieldName =
+                    propMap['fieldName'] as String? ?? propEntry.key as String;
+                computedConfigs[fieldName] =
+                    Map<String, dynamic>.from(propMap['computedValue'] as Map);
+              }
+            }
+          }
+          // Also support properties as a List (flow-builder transformed format)
+          if (pageMap is Map && pageMap['properties'] is List) {
+            final props = pageMap['properties'] as List;
+            for (final propMap in props) {
+              if (propMap is Map && propMap.containsKey('computedValue')) {
+                final fieldName = propMap['fieldName'] as String? ?? '';
+                if (fieldName.isNotEmpty) {
+                  computedConfigs[fieldName] =
+                      Map<String, dynamic>.from(propMap['computedValue'] as Map);
+                }
+              }
+            }
+          }
+        }
+      }
+      // Also handle pages as List
+      if (rawPages is List) {
+        for (final pageMap in rawPages) {
+          if (pageMap is Map && pageMap['properties'] is List) {
+            final props = pageMap['properties'] as List;
+            for (final propMap in props) {
+              if (propMap is Map && propMap.containsKey('computedValue')) {
+                final fieldName = propMap['fieldName'] as String? ?? '';
+                if (fieldName.isNotEmpty) {
+                  computedConfigs[fieldName] =
+                      Map<String, dynamic>.from(propMap['computedValue'] as Map);
+                }
+              }
+            }
+          }
+        }
+      }
+      if (computedConfigs.isNotEmpty) {
+        registerComputedFields(schemaName, computedConfigs);
+      }
+
       final schema = SchemaObject.fromJson(raw);
 
       final filteredPages = Map.fromEntries(

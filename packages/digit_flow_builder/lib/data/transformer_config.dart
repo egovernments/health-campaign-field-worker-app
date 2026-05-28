@@ -58,7 +58,8 @@ final jsonConfig = {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
             "memberCount": "householdDetails.memberCount",
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       },
@@ -93,7 +94,8 @@ final jsonConfig = {
             "weight": "beneficiaryDetails.weight",
             "height": "beneficiaryDetails.height",
             "isPregnant": "beneficiaryDetails.isPregnant",
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
@@ -176,7 +178,8 @@ final jsonConfig = {
             "gender": "beneficiaryDetails.gender",
             "ageInMonths": "__fn:ageInMonths:beneficiaryDetails.dobPicker",
             "isHeadOfHousehold": "beneficiaryDetails.isHeadOfFamily",
-            "isGuestMember": "beneficiaryDetails.isGuestMember"
+            "isGuestMember": "beneficiaryDetails.isGuestMember",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -199,7 +202,8 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -243,7 +247,8 @@ final jsonConfig = {
             "height": "beneficiaryDetails.height",
             "isPregnant": "beneficiaryDetails.isPregnant",
             "isGuestMember": "beneficiaryDetails.isGuestMember",
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
@@ -326,7 +331,8 @@ final jsonConfig = {
             "gender": "beneficiaryDetails.gender",
             "ageInMonths": "__fn:ageInMonths:beneficiaryDetails.dobPicker",
             "isHeadOfHousehold": "__value:false",
-            "isGuestMember": "beneficiaryDetails.isGuestMember"
+            "isGuestMember": "beneficiaryDetails.isGuestMember",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -348,7 +354,8 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -388,7 +395,8 @@ final jsonConfig = {
             "weight": "beneficiaryDetails.weight",
             "height": "beneficiaryDetails.height",
             "isPregnant": "beneficiaryDetails.isPregnant",
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
@@ -465,7 +473,8 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -535,7 +544,8 @@ final jsonConfig = {
             "longitude": "DeliveryDetails.latLng[1]",
             "locationAccuracy": "DeliveryDetails.latLng[2]",
             "lat": "DeliveryDetails.latLng[0]",
-            "lng": "DeliveryDetails.latLng[1]"
+            "lng": "DeliveryDetails.latLng[1]",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -624,7 +634,8 @@ final jsonConfig = {
             "longitude": "DeliveryDetails.latLng[1]",
             "locationAccuracy": "DeliveryDetails.latLng[2]",
             "lat": "DeliveryDetails.latLng[0]",
-            "lng": "DeliveryDetails.latLng[1]"
+            "lng": "DeliveryDetails.latLng[1]",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -714,7 +725,8 @@ final jsonConfig = {
             "longitude": "RedoseDetails.latLng[1]",
             "locationAccuracy": "RedoseDetails.latLng[2]",
             "lat": "RedoseDetails.latLng[0]",
-            "lng": "RedoseDetails.latLng[1]"
+            "lng": "RedoseDetails.latLng[1]",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -871,7 +883,8 @@ final jsonConfig = {
             "longitude": "DeliveryDetails.latLng[1]",
             "locationAccuracy": "DeliveryDetails.latLng[2]",
             "lat": "DeliveryDetails.latLng[0]",
-            "lng": "DeliveryDetails.latLng[1]"
+            "lng": "DeliveryDetails.latLng[1]",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -893,6 +906,7 @@ final jsonConfig = {
           "status": "__value:ADMINISTRATION_SUCCESS",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
+          "resources": "list:TaskResourceModel",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "plannedStartDate": "taskDetails.plannedStartDate",
@@ -941,10 +955,32 @@ final jsonConfig = {
             "longitude": "vaccinatedElsewhere.latLng[1]",
             "locationAccuracy": "vaccinatedElsewhere.latLng[2]",
             "lat": "vaccinatedElsewhere.latLng[0]",
-            "lng": "vaccinatedElsewhere.latLng[1]"
+            "lng": "vaccinatedElsewhere.latLng[1]",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
+        },
+        "listMappings": {
+          "TaskResourceModel": {
+            "listSource": "vaccinatedElsewhere.resourceCard",
+            "mappings": {
+              "id": "id",
+              "clientReferenceId": "__generate:uuid",
+              "taskId": "taskId",
+              "productVariantId":
+                  "vaccinatedElsewhere.resourceCard.resourceDelivered.productId",
+              "quantity": "vaccinatedElsewhere.resourceCard.quantityDistributed",
+              "isDelivered": "__value:true",
+              "deliveryComment": "vaccinatedElsewhere.deliveryComment",
+              "nonRecoverableError": "error.nonRecoverable",
+              "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit",
+            }
+          }
         }
       }
     }
@@ -1256,7 +1292,8 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       },
@@ -1292,7 +1329,8 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "boundaryCode": "__context:boundary.code",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           }
         },
         "listMappings": {
@@ -1364,7 +1402,8 @@ final jsonConfig = {
           "rowVersion": "meta.rowVersion",
           "dateOfRegistration": "__value:DATETIME.NOW",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -1387,7 +1426,8 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -1445,7 +1485,8 @@ final jsonConfig = {
             "settlementType": "__context:settlementType",
             "latitude": "closeHouseholdDetails.latLng[0]",
             "longitude": "closeHouseholdDetails.latLng[1]",
-            "locationAccuracy": "closeHouseholdDetails.latLng[2]"
+            "locationAccuracy": "closeHouseholdDetails.latLng[2]",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -1620,6 +1661,7 @@ final jsonConfig = {
             "gpsLastHouseholdLng": "gpsLastHousehold.gpsLastHousehold[1]",
             "poorlyCoveredAreas": "closingFields.poorlyCoveredAreas",
             "finalComments": "closingFields.finalComments",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       },
@@ -1641,7 +1683,8 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "boundaryCode": "__context:selectedBoundaryCode",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       },
@@ -1658,7 +1701,8 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       },
@@ -1674,7 +1718,8 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -1716,6 +1761,7 @@ final jsonConfig = {
             "settlementType": "__context:settlementType",
             "specialPopulationNotes":
                 "householdInformation.specialPopulationNotes",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       },
@@ -1735,7 +1781,8 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "boundaryCode": "__context:selectedBoundaryCode",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       },
@@ -1750,7 +1797,8 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       },
@@ -1766,7 +1814,8 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -1792,7 +1841,8 @@ final jsonConfig = {
           "boundaryCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "isZeroDose": "childInformation.isZeroDose",
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       },
@@ -1807,7 +1857,8 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
-            "settlementType": "__context:settlementType"
+            "settlementType": "__context:settlementType",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -1856,6 +1907,7 @@ final jsonConfig = {
             "supervisorName": "signatures.supervisorName",
             "supervisorSignature": "signatures.supervisorSignature",
             "supervisorDate": "signatures.supervisorDate",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -1887,6 +1939,7 @@ final jsonConfig = {
             "refusalReason": "missedChildInfo.refusalReason",
             "revisitDate": "missedChildInfo.revisitDate",
             "revisitOutcome": "missedChildInfo.revisitOutcome",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -1914,7 +1967,8 @@ final jsonConfig = {
             "batchLotNumber": "vialDetails.batchLotNumber",
             "returnedUsable": "vialDetails.returnedUsable",
             "returnedUnusable": "vialDetails.returnedUnusable",
-            "additionalReceived": "vialDetails.additionalReceived"
+            "additionalReceived": "vialDetails.additionalReceived",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -1942,7 +1996,8 @@ final jsonConfig = {
             "batchLotNumber": "issuedVialDetails.batchLotNumber",
             "unopenedVialsReceived": "issuedVialDetails.unopenedVialsReceived",
             "additionalUnopenedVialsReceived": "issuedVialDetails.additionalUnopenedVialsReceived",
-            "totalVialsReceivedForDay": "issuedVialDetails.totalVialsReceivedForDay"
+            "totalVialsReceivedForDay": "issuedVialDetails.totalVialsReceivedForDay",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -1972,7 +2027,8 @@ final jsonConfig = {
             "unopenedUsableVialsRetrieved": "returnedVialDetails.unopenedUsableVialsRetrieved",
             "unopenedSpoiltVialsReturned": "returnedVialDetails.unopenedSpoiltVialsReturned",
             "openedVialsReturned": "returnedVialDetails.openedVialsReturned",
-            "totalReturned": "returnedVialDetails.totalReturned"
+            "totalReturned": "returnedVialDetails.totalReturned",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -1997,7 +2053,8 @@ final jsonConfig = {
           "additionalFields": {
             "settlementType": "__context:settlementType",
             "settlement": "afpCaseInfo.settlement",
-            "afpCount": "afpCaseInfo.afpCount"
+            "afpCount": "afpCaseInfo.afpCount",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -2021,7 +2078,6 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "additionalFields": {
             "form": "__value:POLIO_LQA",
-            "settlementType": "__context:settlementType",
             // ── clusterInfo (13 fields) ──
             "surveyDate": "clusterInfo.surveyDate",
             "settlementArea": "clusterInfo.settlementArea",
@@ -2037,6 +2093,7 @@ final jsonConfig = {
             "settlementSmall": "clusterInfo.settlementSmall",
             "gpsStartLat": "clusterInfo.gpsStart[0]",
             "gpsStartLng": "clusterInfo.gpsStart[1]",
+
 
             // ── child fields: generated from _lqaChildCount ──
             for (int i = 1; i <= _lqaChildCount; i++) ...{
@@ -2088,7 +2145,6 @@ final jsonConfig = {
           "additionalFields": {
             "form": "__value:POLIO_LQA",
             "formType": "__value:LQA_CLUSTER_DATA",
-            "settlementType": "__context:settlementType",
             "surveyDate": "clusterInfo.surveyDate",
             "settlementArea": "clusterInfo.settlementArea",
             "healthFacilityArea": "clusterInfo.healthFacilityArea",
@@ -2098,10 +2154,10 @@ final jsonConfig = {
             "surveyorPhone": "clusterInfo.surveyorPhone",
             "lqasCoordinatorName": "clusterInfo.lqasCoordinatorName",
             "startingVillage": "clusterInfo.startingVillage",
-            "settlementType": "clusterInfo.settlementType",
             "settlementSmall": "clusterInfo.settlementSmall",
             "gpsStartLat": "clusterInfo.gpsStart[0]",
             "gpsStartLng": "clusterInfo.gpsStart[1]",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -2144,6 +2200,7 @@ final jsonConfig = {
             "opvDosesFromBirth": "childDetails.opvDosesFromBirth",
             "afpAwareness": "childDetails.afpAwareness",
             "afpCaseCount": "childDetails.afpCaseCount",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -2173,6 +2230,7 @@ final jsonConfig = {
             "gpsFinalLat": "closeout.gpsFinal[0]",
             "gpsFinalLng": "closeout.gpsFinal[1]",
             "finalComments": "closeout.finalComments",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -2211,7 +2269,6 @@ final jsonConfig = {
             "monitoringType": "monitoringDetails.monitoringType",
             "monitoringDate": "monitoringDetails.monitoringDate",
             "settlementArea": "monitoringDetails.settlementArea",
-            "settlementType": "monitoringDetails.settlementType",
             "monitorName": "monitoringDetails.monitorName",
             "monitorPhone": "monitoringDetails.monitorPhone",
 
@@ -2272,12 +2329,12 @@ final jsonConfig = {
             "monitoringType": "sessionHeader.monitoringType",
             "monitoringDate": "sessionHeader.monitoringDate",
             "settlementArea": "sessionHeader.settlementArea",
-            "settlementType": "sessionHeader.settlementType",
             "monitorName": "sessionHeader.monitorName",
             "monitorPhone": "sessionHeader.monitorPhone",
             "supervisorName": "sessionHeader.supervisorName",
             "supervisorPhone": "sessionHeader.supervisorPhone",
             "numberOfSites": "sessionHeader.numberOfSites",
+
 
             // ── site fields ──
             for (int i = 1; i <= _siteCount; i++) ...{
@@ -2359,6 +2416,7 @@ final jsonConfig = {
 
             // ── comments ──
             "finalComments": "comments.finalComments",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -2409,6 +2467,7 @@ final jsonConfig = {
 
             // ── closeout ──
             "discrepancyComment": "closeout.discrepancyComment",
+            "locality": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -2440,6 +2499,7 @@ final jsonConfig = {
             "gpsLocationLat": "header.gpsLocation[0]",
             "gpsLocationLng": "header.gpsLocation[1]",
             "supervisorName": "header.supervisorName",
+            "locality": "__context:selectedBoundaryCode",
 
             // ── microplan ──
             "microplanDone": "microplan.microplanDone",
@@ -2514,6 +2574,7 @@ final jsonConfig = {
             // ── facilityInfo ──
             "reportDate": "facilityInfo.reportDate",
             "settlementArea": "facilityInfo.settlementArea",
+            "locality": "__context:selectedBoundaryCode",
             "adminLevel": "facilityInfo.adminLevel",
             "facilityName": "facilityInfo.facilityName",
             "monitorName": "facilityInfo.monitorName",

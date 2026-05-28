@@ -41,7 +41,7 @@
         android:fullBackupContent="false"
         android:fullBackupOnly="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="WHO African Region HCM"
+        android:label="WHO African Region Health Campaign Management"
         android:networkSecurityConfig="@xml/network_security_config">
         <service
             android:name=".LocationService"

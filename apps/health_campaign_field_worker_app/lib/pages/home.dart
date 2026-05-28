@@ -2138,14 +2138,14 @@ class _HomePageState extends LocalizedState<HomePage> {
         .toList()
         .isNotEmpty;
 
+    final actionNames =
+        state.actionsWrapper.actions.map((e) => e.displayName).toList();
+
     final List<String> filteredLabels = homeItemsLabel
         .where((element) =>
-            state.actionsWrapper.actions
-                .map((e) => e.displayName)
-                .toList()
-                .contains(element) ||
-            element == i18.home.db ||
+            actionNames.contains(element) ||
             (isDistributor &&
+                actionNames.contains(element) &&
                 (element == i18.home.polioRegistrationLabel ||
                     (element == i18.home.polioMissedChildrenLabel &&
                         FlowBuilderSingleton().beneficiaryType ==
@@ -2195,7 +2195,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
                     module: module != null && module.isNotEmpty
-                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist"
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()}"
                         : localizationModulesList?.interfaces
                                 .where(
                                     (e) => e.type == Modules.localizationModule)

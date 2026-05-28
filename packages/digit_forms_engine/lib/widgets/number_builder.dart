@@ -66,7 +66,10 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
                 }
               },
               errorMessage: _getNumberErrorMessage(field.control, context),
-              inputFormatters: inputFormatter != null ? [inputFormatter] : null,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                if (inputFormatter != null) inputFormatter,
+              ],
             ),
           ),
         );

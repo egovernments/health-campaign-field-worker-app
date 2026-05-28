@@ -118,11 +118,11 @@ class FlowBuilderNavigationService implements NavigationService {
 
     /// Pops routes until the specified page name is found
     void _popUntilPage(StackRouter router, String targetPageName) {
-      // Special handling for HOME - exit the entire flow by popping all
-      // FlowBuilderHomeRoute pages, landing on whatever is below (e.g. CurrentBoundary)
+      // Special handling for HOME - exit the entire flow and intermediate
+      // screens (e.g. CurrentBoundary) by popping until HomeRoute is reached.
       if (targetPageName == 'HOME') {
         router.popUntil((route) =>
-            route.settings.name?.contains('FlowBuilderHomeRoute') != true);
+            route.settings.name == 'HomeRoute');
         return;
       }
 
@@ -155,12 +155,13 @@ class FlowBuilderNavigationService implements NavigationService {
   @override
   void navigateToHome() {
     try {
+      // Pop all flow pages and intermediate screens (e.g. CurrentBoundary)
+      // to land directly on HomeRoute.
       context.router.popUntil((route) {
-        // Exit the entire flow by popping all FlowBuilderHomeRoute pages
-        return route.settings.name?.contains('FlowBuilderHomeRoute') != true;
+        return route.settings.name == 'HomeRoute';
       });
     } catch (e) {
-      debugPrint('⚠️ Error navigating to HOME: $e');
+      debugPrint('Error navigating to HOME: $e');
       // Fallback: try to pop if possible
       if (context.router.canPop()) {
         context.router.pop();

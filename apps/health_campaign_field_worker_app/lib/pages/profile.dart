@@ -119,16 +119,25 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
               });
             },
             error: (error) {
-              Navigator.of(context, rootNavigator: true).pop();
+              if (isLoading) {
+                Navigator.of(context, rootNavigator: true).pop();
+              }
               setState(() {
                 isLoading = false;
                 isUpdate = false;
               });
               Toast.showToast(
                 context,
-                message: error ?? localizations.translate(error!),
+                message: error != null
+                    ? localizations.translate(error)
+                    : localizations.translate(
+                        i18.common.connectionContent),
                 type: ToastType.error,
               );
+              // Navigate back if the initial user search failed
+              if (!isUpdate) {
+                context.router.maybePop();
+              }
             },
           );
           // do stuff here based on BlocA's state

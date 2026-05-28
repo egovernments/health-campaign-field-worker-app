@@ -877,16 +877,7 @@ class _BoundarySelectionPageState
                                                               .boundaryLastLevelMaxSelection ??
                                                           1,
                                                       maxItemWarningCallback:
-                                                          () {
-                                                        Toast.showToast(
-                                                          context,
-                                                          message: localizations
-                                                              .translate(i18
-                                                                  .common
-                                                                  .maxBoundarySelectionReached),
-                                                          type: ToastType.info,
-                                                        );
-                                                      },
+                                                          () {},
                                                       isDisabled: labelIndex !=
                                                               0 &&
                                                           formControls[labelList[

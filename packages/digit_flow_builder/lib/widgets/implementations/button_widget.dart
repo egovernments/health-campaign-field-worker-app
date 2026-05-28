@@ -19,31 +19,71 @@ class ButtonWidget extends ResolvedFlowWidget {
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
 
     return WidgetParsers.wrapWithBottomGap(
-      DigitButton(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        capitalizeLetters: false,
-        label: resolved.resolvedLabel ?? '',
-        isDisabled: resolved.isDisabled,
-        onPressed: () async {
-          if (json['onAction'] != null) {
-            final actionsList =
-                List<Map<String, dynamic>>.from(json['onAction']);
-            await resolved.executeActions(actionsList, context);
-          }
-        },
-        type: WidgetParsers.parseButtonType(props['type']),
-        size: WidgetParsers.parseButtonSize(props['size']),
-        mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
-        mainAxisAlignment:
-            WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
-        suffixIcon: json['suffixIcon'] != null
-            ? DigitIconMapping.getIcon(json['suffixIcon'])
-            : null,
-        prefixIcon: json['prefixIcon'] != null
-            ? DigitIconMapping.getIcon(json['prefixIcon'])
-            : null,
+      _DebouncedButton(
+        json: json,
+        resolved: resolved,
+        props: props,
       ),
       props,
+    );
+  }
+}
+
+/// Stateful wrapper that prevents multiple rapid taps on flow buttons.
+class _DebouncedButton extends StatefulWidget {
+  final Map<String, dynamic> json;
+  final ResolvedWidgetContext resolved;
+  final Map<String, dynamic> props;
+
+  const _DebouncedButton({
+    required this.json,
+    required this.resolved,
+    required this.props,
+  });
+
+  @override
+  State<_DebouncedButton> createState() => _DebouncedButtonState();
+}
+
+class _DebouncedButtonState extends State<_DebouncedButton> {
+  bool _isProcessing = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return DigitButton(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      capitalizeLetters: false,
+      label: widget.resolved.resolvedLabel ?? '',
+      isDisabled: widget.resolved.isDisabled || _isProcessing,
+      onPressed: () async {
+        if (_isProcessing) return;
+
+        setState(() => _isProcessing = true);
+
+        try {
+          if (widget.json['onAction'] != null) {
+            final actionsList =
+                List<Map<String, dynamic>>.from(widget.json['onAction']);
+            await widget.resolved.executeActions(actionsList, context);
+          }
+        } finally {
+          if (mounted) {
+            setState(() => _isProcessing = false);
+          }
+        }
+      },
+      type: WidgetParsers.parseButtonType(widget.props['type']),
+      size: WidgetParsers.parseButtonSize(widget.props['size']),
+      mainAxisSize:
+          WidgetParsers.parseMainAxisSize(widget.props['mainAxisSize']),
+      mainAxisAlignment: WidgetParsers.parseMainAxisAlignment(
+          widget.props['mainAxisAlignment']),
+      suffixIcon: widget.json['suffixIcon'] != null
+          ? DigitIconMapping.getIcon(widget.json['suffixIcon'])
+          : null,
+      prefixIcon: widget.json['prefixIcon'] != null
+          ? DigitIconMapping.getIcon(widget.json['prefixIcon'])
+          : null,
     );
   }
 }

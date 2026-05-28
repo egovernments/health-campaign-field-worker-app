@@ -30,6 +30,7 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
         initialDate: initialDate ?? DateTime(1900),
         datePickerFormControl: formControlName,
         datePickerLabel: label ?? 'date of birth',
+        isRequired: hasRequiredValidation(validations),
         ageFieldLabel: loc.translate('AGE_LABEL_TEXT'),
         yearsHintLabel: loc.translate(
           'YEARS_HINT_TEXT',

@@ -31,7 +31,12 @@ final dynamic samplePolioStockDetailsFlows = {
             {
               "actionType": "NAVIGATION",
               "properties": {
-                "data": [],
+                "data": [
+                  {
+                    "key": "maxReturnable",
+                    "value": "{{fn:computeMaxReturnable()}}"
+                  }
+                ],
                 "name": "returnedVials",
                 "type": "FORM"
               }
@@ -58,7 +63,28 @@ final dynamic samplePolioStockDetailsFlows = {
       ],
       "heading": "POLIO_STOCK_VIAL_DETAILS_HEADING",
       "screenType": "TEMPLATE",
-      "initActions": []
+      "wrapperConfig": {
+        "rootEntity": "UserActionModel",
+        "searchConfig": {
+          "primary": "userAction",
+          "select": ["userAction"]
+        }
+      },
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "projectId",
+                "value": "{{singleton.selectedProject.id}}"
+              }
+            ],
+            "name": "userAction",
+            "awaitResults": true
+          }
+        }
+      ]
     },
     {
       "name": "issuedVials",
@@ -84,7 +110,7 @@ final dynamic samplePolioStockDetailsFlows = {
             {
               "type": "string",
               "label": "POLIO_STOCK_DETECTED_LOCATION_LABEL",
-              "order": 0,
+              "order": 1,
               "value": "",
               "format": "latLng",
               "hidden": false,
@@ -110,10 +136,10 @@ final dynamic samplePolioStockDetailsFlows = {
             {
               "type": "string",
               "label": "POLIO_STOCK_BATCH_LOT_NUMBER_LABEL",
-              "order": 1,
+              "order": 2,
               "value": "",
               "format": "text",
-              "hidden": false,
+              "hidden": true,
               "tooltip": "",
               "helpText": "POLIO_STOCK_BATCH_LOT_HELPTEXT",
               "infoText": "",
@@ -124,79 +150,6 @@ final dynamic samplePolioStockDetailsFlows = {
               "innerLabel": "",
               "systemDate": false,
               "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label": "POLIO_STOCK_UNOPENED_VIALS_RECEIVED_LABEL",
-              "order": 2,
-              "value": "",
-              "format": "number",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "POLIO_STOCK_UNOPENED_VIALS_RECEIVED_HELPTEXT",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "unopenedVialsReceived",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "POLIO_STOCK_UNOPENED_VIALS_RECEIVED_REQUIRED"
-                },
-                {
-                  "type": "min",
-                  "value": 0,
-                  "message": "POLIO_STOCK_VALUE_MUST_BE_POSITIVE"
-                },
-                {
-                  "type": "max",
-                  "value": 1000000,
-                  "message": "POLIO_STOCK_VALUE_TOO_LARGE"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label": "POLIO_STOCK_ADDITIONAL_UNOPENED_VIALS_RECEIVED_LABEL",
-              "order": 3,
-              "value": "",
-              "format": "number",
-              "hidden": false,
-              "tooltip": "",
-              "helpText":
-                  "POLIO_STOCK_ADDITIONAL_UNOPENED_VIALS_RECEIVED_HELPTEXT",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "additionalUnopenedVialsReceived",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "POLIO_STOCK_ADDITIONAL_UNOPENED_VIALS_REQUIRED"
-                },
-                {
-                  "type": "min",
-                  "value": 0,
-                  "message": "POLIO_STOCK_VALUE_MUST_BE_POSITIVE"
-                },
-                {
-                  "type": "max",
-                  "value": 1000000,
-                  "message": "POLIO_STOCK_VALUE_TOO_LARGE"
-                }
-              ],
               "errorMessage": "",
               "isMultiSelect": false
             },
@@ -224,7 +177,7 @@ final dynamic samplePolioStockDetailsFlows = {
                 },
                 {
                   "type": "min",
-                  "value": 0,
+                  "value": 1,
                   "message": "POLIO_STOCK_VALUE_MUST_BE_POSITIVE"
                 },
                 {
@@ -346,7 +299,7 @@ final dynamic samplePolioStockDetailsFlows = {
               "order": 1,
               "value": "",
               "format": "text",
-              "hidden": false,
+              "hidden": true,
               "tooltip": "",
               "helpText": "POLIO_STOCK_BATCH_LOT_HELPTEXT",
               "infoText": "",
@@ -362,8 +315,28 @@ final dynamic samplePolioStockDetailsFlows = {
             },
             {
               "type": "integer",
-              "label": "POLIO_STOCK_UNOPENED_USABLE_VIALS_RETURNED_LABEL",
+              "label": "POLIO_STOCK_AVAILABLE_TO_RETURN_LABEL",
               "order": 2,
+              "value": "",
+              "format": "number",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "maxReturnable",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "POLIO_STOCK_UNOPENED_USABLE_VIALS_RETURNED_LABEL",
+              "order": 3,
               "value": "",
               "format": "number",
               "hidden": false,
@@ -394,7 +367,7 @@ final dynamic samplePolioStockDetailsFlows = {
             {
               "type": "integer",
               "label": "POLIO_STOCK_UNOPENED_USABLE_VIALS_RETRIEVED_LABEL",
-              "order": 3,
+              "order": 4,
               "value": "",
               "format": "number",
               "hidden": false,
@@ -426,7 +399,7 @@ final dynamic samplePolioStockDetailsFlows = {
             {
               "type": "integer",
               "label": "POLIO_STOCK_UNOPENED_SPOILT_VIALS_RETURNED_LABEL",
-              "order": 4,
+              "order": 5,
               "value": "",
               "format": "number",
               "hidden": false,
@@ -457,7 +430,7 @@ final dynamic samplePolioStockDetailsFlows = {
             {
               "type": "integer",
               "label": "POLIO_STOCK_OPENED_VIALS_RETURNED_LABEL",
-              "order": 5,
+              "order": 6,
               "value": "",
               "format": "number",
               "hidden": false,
@@ -488,7 +461,7 @@ final dynamic samplePolioStockDetailsFlows = {
             {
               "type": "integer",
               "label": "POLIO_STOCK_TOTAL_RETURNED_LABEL",
-              "order": 6,
+              "order": 7,
               "value": "",
               "format": "number",
               "hidden": false,
@@ -501,6 +474,15 @@ final dynamic samplePolioStockDetailsFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
+              "computedValue": {
+                "sources": [
+                  "openedVialsReturned",
+                  "unopenedSpoiltVialsReturned",
+                  "unopenedUsableVialsRetrieved",
+                  "unopenedUsableVialsReturned"
+                ],
+                "operation": "sum"
+              },
               "validations": [
                 {
                   "type": "required",
@@ -509,13 +491,13 @@ final dynamic samplePolioStockDetailsFlows = {
                 },
                 {
                   "type": "min",
-                  "value": 0,
+                  "value": 1,
                   "message": "POLIO_STOCK_VALUE_MUST_BE_POSITIVE"
                 },
                 {
                   "type": "max",
-                  "value": 1000000,
-                  "message": "POLIO_STOCK_VALUE_TOO_LARGE"
+                  "value": "navigation.maxReturnable",
+                  "message": "POLIO_STOCK_TOTAL_RETURNED_EXCEEDS_RECEIVED"
                 }
               ],
               "errorMessage": "",

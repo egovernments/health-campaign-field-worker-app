@@ -853,12 +853,7 @@ final dynamic sampleFlows = {
                       "size": "medium",
                       "type": "primary",
                       "bottomGap": 16,
-                      "mainAxisSize": "max",
-                      "mainAxisAlignment": "center",
                       "popupConfig": {
-                        "title": "",
-                        "showCloseButton": true,
-                        "barrierDismissible": true,
                         "body": [
                           {
                             "type": "template",
@@ -922,8 +917,8 @@ final dynamic sampleFlows = {
                             "properties": {
                               "size": "medium",
                               "type": "secondary",
-                              "mainAxisSize": "max",
-                              "bottomGap": 8
+                              "bottomGap": 8,
+                              "mainAxisSize": "max"
                             }
                           },
                           {
@@ -969,8 +964,8 @@ final dynamic sampleFlows = {
                             "properties": {
                               "size": "medium",
                               "type": "secondary",
-                              "mainAxisSize": "max",
-                              "bottomGap": 8
+                              "bottomGap": 8,
+                              "mainAxisSize": "max"
                             }
                           },
                           {
@@ -1019,8 +1014,13 @@ final dynamic sampleFlows = {
                               "mainAxisSize": "max"
                             }
                           }
-                        ]
-                      }
+                        ],
+                        "title": "",
+                        "showCloseButton": true,
+                        "barrierDismissible": true
+                      },
+                      "mainAxisSize": "max",
+                      "mainAxisAlignment": "center"
                     }
                   },
                   {
@@ -1184,11 +1184,21 @@ final dynamic sampleFlows = {
       ],
       "name": "householdOverview",
       "order": 3,
+      "canPop": false,
       "footer": [],
       "header": [
         {
           "label": "HCM_COMMON_BACK_LABEL",
           "format": "backLink",
+          "popupConfig": {
+            "condition":
+                "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==false",
+            "title": "HCM_MEMBER_COUNT_MISMATCH_WARNING_TITLE",
+            "titleIcon": "Warning",
+            "description": "HCM_MEMBER_COUNT_MISMATCH_WARNING_DESCRIPTION",
+            "confirmLabel": "HCM_COMMON_CONTINUE_LABEL",
+            "cancelLabel": "HCM_COMMON_CANCEL_LABEL"
+          },
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -1296,12 +1306,12 @@ final dynamic sampleFlows = {
               },
               {
                 "name": "task",
+                "sort": {"field": "clientModifiedTime", "order": "desc"},
                 "match": {
                   "field": "projectBeneficiaryClientReferenceId",
                   "equalsFrom": "projectBeneficiary.clientReferenceId"
                 },
-                "entity": "TaskModel",
-                "sort": {"field": "clientModifiedTime", "order": "desc"}
+                "entity": "TaskModel"
               },
               {
                 "name": "hFReferral",
@@ -1419,7 +1429,8 @@ final dynamic sampleFlows = {
                     {
                       "code": "ADMINISTRATION_FAILED",
                       "name": "HCM_SEARCH_FILTER_ADMINISTRATION_FAILED"
-                    }
+                    },
+                    {"code": "VISITED", "name": "HCM_SEARCH_FILTER_REVISITED"}
                   ],
                   "format": "selectionCard",
                   "fieldName": "selectedStatus"
@@ -1485,9 +1496,9 @@ final dynamic sampleFlows = {
                             "data": [
                               {
                                 "key": "status",
+                                "scope": "latest",
                                 "value": ["ADMINISTRATION_SUCCESS", "VISITED"],
-                                "operation": "in",
-                                "scope": "latest"
+                                "operation": "in"
                               }
                             ],
                             "name": "task"
@@ -1506,9 +1517,9 @@ final dynamic sampleFlows = {
                             "data": [
                               {
                                 "key": "status",
+                                "scope": "latest",
                                 "value": "{{selectedStatus}}",
-                                "operation": "in",
-                                "scope": "latest"
+                                "operation": "in"
                               }
                             ],
                             "name": "task"
@@ -1517,7 +1528,7 @@ final dynamic sampleFlows = {
                       ],
                       "condition": {
                         "expression":
-                            "selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE"
+                            "selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE || selectedStatus == VISITED"
                       }
                     },
                     {
@@ -1967,7 +1978,6 @@ final dynamic sampleFlows = {
               "type": "template",
               "label": "HCM_DELIVERY_SAVE_BUTTON",
               "format": "button",
-              "fieldName": "deliverySaveButton",
               "onAction": [
                 {
                   "actionType": "NAVIGATION",
@@ -1977,6 +1987,7 @@ final dynamic sampleFlows = {
                   }
                 }
               ],
+              "fieldName": "deliverySaveButton",
               "properties": {
                 "size": "large",
                 "type": "primary",
@@ -2434,7 +2445,6 @@ final dynamic sampleFlows = {
               "type": "template",
               "label": "HCM_ADD_MEMBER_SAVE_BUTTON",
               "format": "button",
-              "fieldName": "addMemberSaveButton",
               "onAction": [
                 {
                   "actionType": "NAVIGATION",
@@ -2450,6 +2460,7 @@ final dynamic sampleFlows = {
                   }
                 }
               ],
+              "fieldName": "addMemberSaveButton",
               "properties": {
                 "size": "large",
                 "type": "primary",
@@ -2571,6 +2582,11 @@ final dynamic sampleFlows = {
                   "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 },
                 {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0600-\u06FF0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+                },
+                {
                   "type": "minLength",
                   "value": "2",
                   "message": "HCM_VALIDATION_SIZE_2_TO_200"
@@ -2613,6 +2629,11 @@ final dynamic sampleFlows = {
                   "type": "required",
                   "value": true,
                   "message": "HCM_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0600-\u06FF0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 },
                 {
                   "type": "minLength",
@@ -2694,7 +2715,7 @@ final dynamic sampleFlows = {
               "isMdms": false,
               "tooltip": "HCM_REGISTRATION_DOB_TOOLTIP",
               "ageRange": {
-                "maxAge": 59,
+                "maxAge": 1800,
                 "minAge": 0,
                 "errorMessage": "HCM_ADDMEMBER_VALIDATION_INVALID_AGE"
               },
@@ -2721,7 +2742,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "maxAge",
-                  "value": 59,
+                  "value": 1800,
                   "message": "HCM_VALIDATION_INVALID_AGE"
                 }
               ],
@@ -2974,7 +2995,6 @@ final dynamic sampleFlows = {
               "type": "template",
               "label": "HCM_REGISTRATION_SAVE_BENEFICIARY_BUTTON",
               "format": "button",
-              "fieldName": "saveBeneficiaryButton",
               "onAction": [
                 {
                   "actionType": "NAVIGATION",
@@ -2990,6 +3010,7 @@ final dynamic sampleFlows = {
                   }
                 }
               ],
+              "fieldName": "saveBeneficiaryButton",
               "properties": {
                 "size": "large",
                 "type": "primary",
@@ -3208,6 +3229,11 @@ final dynamic sampleFlows = {
                   "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 },
                 {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0600-\u06FF0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+                },
+                {
                   "type": "minLength",
                   "value": "2",
                   "message": "HCM_VALIDATION_SIZE_2_TO_200"
@@ -3250,6 +3276,11 @@ final dynamic sampleFlows = {
                   "type": "minLength",
                   "value": "2",
                   "message": "HCM_VALIDATION_MIN_2_CHARS_NEEDED"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0600-\u06FF0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 },
                 {
                   "type": "required",
@@ -3489,13 +3520,13 @@ final dynamic sampleFlows = {
               "type": "template",
               "label": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
               "format": "button",
-              "fieldName": "saveHouseholdButton",
               "onAction": [
                 {
                   "actionType": "NAVIGATION",
                   "properties": {"name": "beneficiaryDetails", "type": "form"}
                 }
               ],
+              "fieldName": "saveHouseholdButton",
               "properties": {
                 "size": "large",
                 "type": "primary",
@@ -3786,13 +3817,13 @@ final dynamic sampleFlows = {
               "type": "template",
               "label": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
               "format": "button",
-              "fieldName": "saveLocationButton",
               "onAction": [
                 {
                   "actionType": "NAVIGATION",
                   "properties": {"name": "householdDetails", "type": "form"}
                 }
               ],
+              "fieldName": "saveLocationButton",
               "properties": {
                 "size": "large",
                 "type": "primary",
@@ -4060,6 +4091,11 @@ final dynamic sampleFlows = {
                   "value": "2",
                   "message":
                       "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0600-\u06FF0-9 ]+\$",
+                  "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                 }
               ],
               "errorMessage": "",
@@ -4094,6 +4130,11 @@ final dynamic sampleFlows = {
                   "value": "2",
                   "message":
                       "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0600-\u06FF0-9 ]+\$",
+                  "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                 }
               ],
               "errorMessage": "",
@@ -4128,6 +4169,11 @@ final dynamic sampleFlows = {
                   "value": "2",
                   "message":
                       "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0600-\u06FF0-9 ]+\$",
+                  "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                 }
               ],
               "errorMessage": "",
@@ -4898,6 +4944,50 @@ final dynamic sampleFlows = {
           "navigateTo": {"name": "household-overview", "type": "template"},
           "properties": [
             {
+              "type": "dynamic",
+              "enums": [
+                {"code": "SP1", "name": "SP1"},
+                {"code": "SP2", "name": "SP2"},
+                {"code": "AQ1", "name": "AQ1"},
+                {"code": "AQ2", "name": "AQ2"}
+              ],
+              "label": "HCM_DELIVERY_RESOURCE_LABEL",
+              "order": 0,
+              "value": "",
+              "format": "custom",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "required": true,
+              "fieldName": "resourceCard",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "SP1", "name": "SP1"},
+                {"code": "SP2", "name": "SP2"},
+                {"code": "AQ1", "name": "AQ1"},
+                {"code": "AQ2", "name": "AQ2"}
+              ],
+              "includeInSummary": false,
+              "required.message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
+            },
+            {
               "type": "string",
               "label": "VACCINATED_ELSEWHERE_LATLNG_LABEL",
               "order": 1,
@@ -4929,27 +5019,22 @@ final dynamic sampleFlows = {
               "order": 2,
               "value": "",
               "format": "text",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "siteName",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
               "validations": [
                 {
-                  "type": "required",
-                  "value": true,
-                  "message": "VACCINATED_ELSEWHERE_VALIDATION_REQUIRED"
-                },
-                {
                   "type": "pattern",
-                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "value": "^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0600-\u06FF0-9 ]+\$",
                   "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 }
               ],
@@ -4963,27 +5048,22 @@ final dynamic sampleFlows = {
               "order": 3,
               "value": "",
               "format": "text",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "region",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
               "validations": [
                 {
-                  "type": "required",
-                  "value": true,
-                  "message": "VACCINATED_ELSEWHERE_VALIDATION_REQUIRED"
-                },
-                {
                   "type": "pattern",
-                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "value": "^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0600-\u06FF0-9 ]+\$",
                   "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 }
               ],
@@ -5085,7 +5165,6 @@ final dynamic sampleFlows = {
               "type": "template",
               "label": "HCM_REDOSE_SAVE_BUTTON",
               "format": "button",
-              "fieldName": "redoseSaveButton",
               "onAction": [
                 {
                   "actionType": "NAVIGATION",
@@ -5095,6 +5174,7 @@ final dynamic sampleFlows = {
                   }
                 }
               ],
+              "fieldName": "redoseSaveButton",
               "properties": {
                 "size": "large",
                 "type": "primary",

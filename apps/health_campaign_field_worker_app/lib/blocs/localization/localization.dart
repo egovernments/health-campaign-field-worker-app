@@ -141,10 +141,12 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     OnUpdateLocalizationIndexEvent event,
     LocalizationEmitter emit,
   ) async {
-    emit(state.copyWith(index: event.index));
     final List codes = event.code.split('_');
     AppSharedPreferences().setSelectedLocale(codes.join("_"));
-    _loadLocale(codes);
+    await _loadLocale(codes);
+    // Emit AFTER _loadLocale completes so that listeners see the state change
+    // only when the locale strings are fully loaded from DB.
+    emit(state.copyWith(index: event.index));
   }
 
   FutureOr<void> _loadLocale(List codes) async {

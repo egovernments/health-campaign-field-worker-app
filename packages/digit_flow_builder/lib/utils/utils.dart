@@ -278,7 +278,11 @@ String resolveTemplate(
     // Replace the placeholder in the result string
     // For null values, use the string "null" so expressions like "x != null" work
     final valueStr = resolvedValue == null ? 'null' : resolvedValue.toString();
-    result = result.replaceAll(fullPlaceholder, valueStr);
+    // Localize the individual resolved value (e.g., enum values like "MALE")
+    final localizedValueStr = localization != null
+        ? _translateWithLocalization(valueStr, localization)
+        : valueStr;
+    result = result.replaceAll(fullPlaceholder, localizedValueStr);
   }
 
   return _translateWithLocalization(result, localization);

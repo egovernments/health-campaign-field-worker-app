@@ -30,6 +30,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           .search(UserSearchModel(uuid: [event.uuid]));
       if (results.isNotEmpty) {
         emit(UserState.user(userModel: results.first));
+      } else {
+        emit(const UserErrorState('USER_NOT_FOUND'));
       }
     } catch (error) {
       emit(const UserErrorState());
