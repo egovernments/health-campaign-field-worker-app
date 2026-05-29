@@ -52,4 +52,14 @@ class FlowBuilderLocalization {
       return index != -1 ? _localizedStrings[index].message : localizedValues;
     }
   }
+
+  /// Static translate that does not require a [BuildContext].
+  /// Uses the already-loaded [_localizedStrings] list.
+  static String translateStatic(String key) {
+    if (_localizedStrings.isEmpty) return key;
+    final index = _localizedStrings.indexWhere(
+      (medium) => medium.code == key,
+    );
+    return index != -1 ? _localizedStrings[index].message : key;
+  }
 }

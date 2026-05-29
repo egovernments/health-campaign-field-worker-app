@@ -5,8 +5,38 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
+import '../blocs/app_localization.dart';
 import '../blocs/flow_crud_bloc.dart';
 import 'interpolation.dart';
+
+/// English month abbreviations indexed by [DateTime.month] (1-based).
+const _englishMonthAbbr = [
+  '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+];
+
+/// Localization keys indexed by [DateTime.month] (1-based).
+const _monthLocalizationKeys = [
+  '', 'HCM_MONTH_JAN', 'HCM_MONTH_FEB', 'HCM_MONTH_MAR',
+  'HCM_MONTH_APR', 'HCM_MONTH_MAY', 'HCM_MONTH_JUN',
+  'HCM_MONTH_JUL', 'HCM_MONTH_AUG', 'HCM_MONTH_SEP',
+  'HCM_MONTH_OCT', 'HCM_MONTH_NOV', 'HCM_MONTH_DEC',
+];
+
+/// Replaces the English month abbreviation in [formatted] with the
+/// localized month name looked up via [FlowBuilderLocalization].
+String _localizeFormattedDate(String formatted, DateTime date) {
+  final month = date.month;
+  if (month < 1 || month > 12) return formatted;
+
+  final key = _monthLocalizationKeys[month];
+  final localized = FlowBuilderLocalization.translateStatic(key);
+  // If the key came back unchanged, no translation is available – return as-is.
+  if (localized == key) return formatted;
+
+  final english = _englishMonthAbbr[month];
+  return formatted.replaceFirst(english, localized);
+}
 
 class TaskStatus {
   static const String administrationSuccess = 'ADMINISTRATION_SUCCESS';
@@ -247,12 +277,16 @@ void initializeFunctionRegistry() {
       case 'date':
         final date = parseDate(rawValue);
         if (date == null) return '--';
-        return DateFormat(format ?? "dd MMM yyyy").format(date);
+        final formattedDate =
+            DateFormat(format ?? "dd MMM yyyy").format(date);
+        return _localizeFormattedDate(formattedDate, date);
 
       case 'datetime':
         final date = parseDate(rawValue);
         if (date == null) return '--';
-        return DateFormat(format ?? "dd MMM yyyy HH:mm").format(date);
+        final formattedDateTime =
+            DateFormat(format ?? "dd MMM yyyy HH:mm").format(date);
+        return _localizeFormattedDate(formattedDateTime, date);
 
       case 'ageinmonths':
         DateTime? birthDate;
@@ -1311,7 +1345,8 @@ void initializeFunctionRegistry() {
                   : int.tryParse(createdTime.toString()) ?? 0;
               if (timestamp > 0) {
                 final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-                return DateFormat(dateFormat).format(date);
+                final formatted = DateFormat(dateFormat).format(date);
+                return _localizeFormattedDate(formatted, date);
               }
             } catch (_) {
               return '';
