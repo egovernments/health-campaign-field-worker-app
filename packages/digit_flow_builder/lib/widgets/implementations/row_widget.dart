@@ -20,12 +20,16 @@ class RowWidget extends ResolvedFlowWidget {
   ) {
     final stateData = resolved.stateData;
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
+    final childrenList = json['children'] as List;
+    final isSpaceBetween = props['mainAxisAlignment'] == 'spaceBetween';
+    final hasMultipleChildren = childrenList.length > 1;
 
     return WidgetParsers.wrapWithBottomGap(
       Row(
         mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment: WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
-        children: (json['children'] as List).map<Widget>((childJson) {
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: childrenList.map<Widget>((childJson) {
           final processedChild = stateData != null
               ? preprocessConfigWithState(
                   Map<String, dynamic>.from(childJson),
@@ -35,7 +39,12 @@ class RowWidget extends ResolvedFlowWidget {
                 )
               : Map<String, dynamic>.from(childJson);
 
-          return CrudItemContext(
+          final flex = processedChild['flex'];
+          final flexValue = flex is int ? flex : (flex is String ? int.tryParse(flex) : null);
+          final childFormat = processedChild['format']?.toString() ?? '';
+          final isActionChild = childFormat == 'button' || childFormat == 'actionPopup';
+
+          Widget child = CrudItemContext(
             stateData: stateData,
             listIndex: resolved.state.listIndex,
             item: resolved.state.itemData,
@@ -45,6 +54,14 @@ class RowWidget extends ResolvedFlowWidget {
                 item: resolved.state.itemData, listIndex: resolved.state.listIndex,
                 compositeKey: resolved.compositeKey),
           );
+
+          if (flexValue != null) {
+            child = Expanded(flex: flexValue, child: child);
+          } else if (isSpaceBetween && hasMultipleChildren && !isActionChild) {
+            child = Expanded(child: child);
+          }
+
+          return child;
         }).toList(),
       ),
       props,

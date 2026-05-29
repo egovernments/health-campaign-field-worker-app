@@ -1250,7 +1250,7 @@ final jsonConfig = {
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
-          "memberCount": "__value: 1",
+          "memberCount": "__value: 2",
           "latitude": "closeHouseholdDetails.latLng[0]",
           "longitude": "closeHouseholdDetails.latLng[1]",
           "nonRecoverableError": "errors.nonRecoverable",

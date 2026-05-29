@@ -157,7 +157,7 @@ final dynamic sampleSmcFlows = {
                   {
                     "header": "HCM_DELIVERY_TABLE_DELIVERY_NO_HEADER",
                     "isActive": true,
-                    "cellValue": "Dose {{item.id}}"
+                    "cellValue": "HCM_DELIVERY_DOSE_LABEL {{item.id}}"
                   },
                   {
                     "header": "HCM_DELIVERY_TABLE_STATUS_HEADER",
@@ -214,7 +214,7 @@ final dynamic sampleSmcFlows = {
                             {
                               "header": "HCM_DELIVERY_TABLE_DELIVERY_NO_HEADER",
                               "isActive": true,
-                              "cellValue": "Dose {{item.id}}"
+                              "cellValue": "HCM_DELIVERY_DOSE_LABEL {{item.id}}"
                             },
                             {
                               "header": "HCM_DELIVERY_TABLE_STATUS_HEADER",

@@ -4,6 +4,7 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../action_handler/action_handler.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -162,16 +163,24 @@ class ActionPopupWidget extends ResolvedFlowWidget {
                   return DigitButton(
                     capitalizeLetters: false,
                     label: translatedLabel,
-                    onPressed: () {
+                    onPressed: () async {
                       if (actionJson['onAction'] != null &&
                           actionJson['onAction'] is List) {
                         final actionsList =
                             List<Map<String, dynamic>>.from(
                                 actionJson['onAction']);
-                        for (var raw in actionsList) {
-                          final action = ActionConfig.fromJson(raw);
-                          onAction(action);
-                        }
+                        // Use executeActions to properly handle conditional
+                        // action groups (e.g., filter conditions with
+                        // "selectedStatus == X" expressions).
+                        await ActionHandler.executeActions(
+                          actionsList,
+                          context,
+                          {
+                            'wrappers': const [],
+                            if (compositeKey != null)
+                              '_compositeKey': compositeKey,
+                          },
+                        );
                       }
                     },
                     type: _parseButtonType(actionProps['type']),

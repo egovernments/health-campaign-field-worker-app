@@ -142,7 +142,7 @@ final dynamic sampleFlows = {
                   {
                     "header": "HCM_DELIVERY_TABLE_DELIVERY_NO_HEADER",
                     "isActive": true,
-                    "cellValue": "Dose {{item.id}}"
+                    "cellValue": "HCM_DELIVERY_DOSE_LABEL {{item.id}}"
                   },
                   {
                     "header": "HCM_DELIVERY_TABLE_STATUS_HEADER",
@@ -199,7 +199,7 @@ final dynamic sampleFlows = {
                             {
                               "header": "HCM_DELIVERY_TABLE_DELIVERY_NO_HEADER",
                               "isActive": true,
-                              "cellValue": "Dose {{item.id}}"
+                              "cellValue": "HCM_DELIVERY_DOSE_LABEL {{item.id}}"
                             },
                             {
                               "header": "HCM_DELIVERY_TABLE_STATUS_HEADER",
@@ -694,6 +694,7 @@ final dynamic sampleFlows = {
                         "type": "template",
                         "value": "{{ item.individual.0.name.givenName }}",
                         "format": "textTemplate",
+                        "flex": 1,
                         "fieldName": "individualName"
                       },
                       {
@@ -1631,6 +1632,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "value": "{{ item.headIndividual.0.name.givenName }}",
                     "format": "textTemplate",
+                    "flex": 1,
                     "fieldName": "headOfHousehold"
                   },
                   {
