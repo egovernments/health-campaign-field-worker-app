@@ -25,13 +25,17 @@ class FormLocalization {
 
   // Method to load localized strings
   Future<bool> load() async {
-    _localizedStrings.clear();
-    // Iterate over localized strings and filter based on locale
+    // Collect new strings first, then replace atomically to avoid a window
+    // where _localizedStrings is empty during the await (which causes
+    // translate() to return raw keys instead of translated values).
+    final newStrings = <dynamic>[];
     for (var element in await localizedStrings) {
       if (element.locale == '${locale.languageCode}_${locale.countryCode}') {
-        _localizedStrings.add(element);
+        newStrings.add(element);
       }
     }
+    _localizedStrings.clear();
+    _localizedStrings.addAll(newStrings);
 
     return true;
   }
