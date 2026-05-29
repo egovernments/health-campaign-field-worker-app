@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sync_service/utils/utils.dart';
 import '../../../models/bandwidth/bandwidth_model.dart';
 import 'remote_type.dart';
@@ -170,62 +171,68 @@ class PerformSyncUp {
               ?.getSyncRegistries(typeGroupedEntity.key, remote);
 
           for (final sublist in listOfBatchedOpLogList) {
-            final entities = getEntityModel(sublist, local);
-            if (operationGroupedEntity.key == DataOperation.create) {
-              if (registry != null) {
-                await registry.create(
-                    entities: entities,
-                    entry: sublist,
-                    local: local,
-                    operationGroupedEntity: operationGroupedEntity,
-                    typeGroupedEntity: typeGroupedEntity);
-              } else {
-                await remote.bulkCreate(entities);
-              }
-            } else if (operationGroupedEntity.key == DataOperation.update) {
-              await Future.delayed(const Duration(seconds: 1));
-              if (registry != null) {
-                await registry.update(entities, local);
-              } else {
-                await remote.bulkUpdate(entities);
-              }
-            } else if (operationGroupedEntity.key == DataOperation.delete) {
-              await Future.delayed(const Duration(seconds: 1));
-              if (registry != null) {
-                await registry.delete(entities, local);
-              } else {
-                await remote.bulkDelete(entities);
-              }
-            }
-            if (operationGroupedEntity.key == DataOperation.singleCreate) {
-              for (var element in entities) {
+            try {
+              final entities = getEntityModel(sublist, local);
+              if (operationGroupedEntity.key == DataOperation.create) {
                 if (registry != null) {
-                  await registry.singleCreate(element, local);
+                  await registry.create(
+                      entities: entities,
+                      entry: sublist,
+                      local: local,
+                      operationGroupedEntity: operationGroupedEntity,
+                      typeGroupedEntity: typeGroupedEntity);
                 } else {
-                  await remote.singleCreate(element);
+                  await remote.bulkCreate(entities);
+                }
+              } else if (operationGroupedEntity.key == DataOperation.update) {
+                await Future.delayed(const Duration(seconds: 1));
+                if (registry != null) {
+                  await registry.update(entities, local);
+                } else {
+                  await remote.bulkUpdate(entities);
+                }
+              } else if (operationGroupedEntity.key == DataOperation.delete) {
+                await Future.delayed(const Duration(seconds: 1));
+                if (registry != null) {
+                  await registry.delete(entities, local);
+                } else {
+                  await remote.bulkDelete(entities);
                 }
               }
-            }
-            if (operationGroupedEntity.key == DataOperation.singleUpdate) {
-              for (var element in entities) {
-                if (registry != null) {
-                  await registry.singleUpdate(element, local);
-                } else {
-                  await remote.singleUpdate(element);
+              if (operationGroupedEntity.key == DataOperation.singleCreate) {
+                for (var element in entities) {
+                  if (registry != null) {
+                    await registry.singleCreate(element, local);
+                  } else {
+                    await remote.singleCreate(element);
+                  }
                 }
               }
-            }
-            if (registry != null) {
-              await registry.localMarkSyncUp(sublist, local);
-            } else {
-              for (final syncedEntity in sublist) {
-                await local.markSyncedUp(
-                  entry: syncedEntity,
-                  id: syncedEntity.id,
-                  nonRecoverableError: syncedEntity.nonRecoverableError,
-                  clientReferenceId: syncedEntity.clientReferenceId,
-                );
+              if (operationGroupedEntity.key == DataOperation.singleUpdate) {
+                for (var element in entities) {
+                  if (registry != null) {
+                    await registry.singleUpdate(element, local);
+                  } else {
+                    await remote.singleUpdate(element);
+                  }
+                }
               }
+              if (registry != null) {
+                await registry.localMarkSyncUp(sublist, local);
+              } else {
+                for (final syncedEntity in sublist) {
+                  await local.markSyncedUp(
+                    entry: syncedEntity,
+                    id: syncedEntity.id,
+                    nonRecoverableError: syncedEntity.nonRecoverableError,
+                    clientReferenceId: syncedEntity.clientReferenceId,
+                  );
+                }
+              }
+            } catch (e) {
+              debugPrint('SyncUp: batch failed for '
+                  '${typeGroupedEntity.key}/${operationGroupedEntity.key}: $e');
+              continue;
             }
           }
         }

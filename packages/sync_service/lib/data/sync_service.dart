@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -17,12 +18,44 @@ class SyncService {
   /// It accepts a list of `LocalRepository` objects, a list of `RemoteRepository` objects,
   /// a `BandwidthModel`, and an optional `ServiceInstance` as parameters.
   /// It returns a `Future` that resolves to a `bool` indicating whether the sync operation is completed.
+  static const int maxIterations = 15;
+
   FutureOr<bool> performSync({
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
     required BandwidthModel bandwidthModel,
     ServiceInstance? service,
+    int currentIteration = 0,
   }) async {
+    if (currentIteration >= maxIterations) {
+      // Mark remaining stuck entries as non-recoverable so they flow
+      // through the error handler API on the next sync cycle.
+      final stuckSyncUpFutures = await Future.wait(
+        localRepositories
+            .map((e) => e.getItemsToBeSyncedUp(bandwidthModel.userId)),
+      );
+      final stuckSyncUpEntries =
+          stuckSyncUpFutures.expand((e) => e).toList();
+
+      for (final entry in stuckSyncUpEntries) {
+        final local = localRepositories.firstWhereOrNull(
+          (repo) => repo.type == entry.type,
+        );
+        if (local != null) {
+          await local.markSyncedUp(
+            entry: entry,
+            id: entry.id,
+            clientReferenceId: entry.clientReferenceId,
+            nonRecoverableError: true,
+          );
+        }
+      }
+
+      await const FlutterSecureStorage()
+          .write(key: 'manualSyncKey', value: false.toString());
+      return true;
+    }
+
     final configuration = SyncServiceSingleton().persistenceConfiguration;
 
     if (configuration == PersistenceConfiguration.onlineOnly) {
@@ -81,6 +114,7 @@ class SyncService {
         bandwidthModel: bandwidthModel,
         localRepositories: localRepositories,
         remoteRepositories: remoteRepositories,
+        currentIteration: currentIteration + 1,
       );
     } else if (pendingSyncUpEntries.isEmpty && pendingSyncDownEntries.isEmpty) {
       await const FlutterSecureStorage()

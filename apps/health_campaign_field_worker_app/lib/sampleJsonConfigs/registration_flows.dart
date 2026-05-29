@@ -1936,6 +1936,12 @@ final dynamic sampleFlows = {
               "root": "address",
               "value": "{{singleton.boundary.code}}",
               "operation": "equals"
+            },
+            {
+              "key": "projectId",
+              "root": "projectBeneficiary",
+              "value": "{{singleton.selectedProject.id}}",
+              "operation": "equals"
             }
           ]
         }

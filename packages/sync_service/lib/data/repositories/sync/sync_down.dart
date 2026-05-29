@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sync_service/utils/utils.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
@@ -39,45 +40,57 @@ class PerformSyncDown {
         );
 
     for (final typeGroupedEntity in groupedEntries.entries) {
-      final groupedOperations = typeGroupedEntity.value.groupListsBy(
-        (element) => element.operation,
-      );
+      try {
+        final groupedOperations = typeGroupedEntity.value.groupListsBy(
+          (element) => element.operation,
+        );
 
-      final remote = RepositoryType.getRemoteForType(
-        typeGroupedEntity.key,
-        remoteRepositories,
-      );
+        final remote = RepositoryType.getRemoteForType(
+          typeGroupedEntity.key,
+          remoteRepositories,
+        );
 
-      final local = RepositoryType.getLocalForType(
-        typeGroupedEntity.key,
-        localRepositories,
-      );
+        final local = RepositoryType.getLocalForType(
+          typeGroupedEntity.key,
+          localRepositories,
+        );
 
-      for (final operationGroupedEntity in groupedOperations.entries) {
-        final entities = operationGroupedEntity.value.map((e) {
-          final serverGeneratedId = e.serverGeneratedId;
-          final rowVersion = e.rowVersion;
-          if (serverGeneratedId != null && !e.nonRecoverableError) {
-            return local.opLogManager.applyServerGeneratedIdToEntity(
-              e.entity,
-              serverGeneratedId,
-              rowVersion,
-            );
+        for (final operationGroupedEntity in groupedOperations.entries) {
+          final entities = operationGroupedEntity.value.map((e) {
+            final serverGeneratedId = e.serverGeneratedId;
+            final rowVersion = e.rowVersion;
+            if (serverGeneratedId != null && !e.nonRecoverableError) {
+              return local.opLogManager.applyServerGeneratedIdToEntity(
+                e.entity,
+                serverGeneratedId,
+                rowVersion,
+              );
+            }
+
+            return e.entity;
+          }).toList();
+
+          List<EntityModel>? responseEntities = [];
+
+          responseEntities = await SyncServiceSingleton()
+              .entityMapper
+              ?.syncDownEntityResponse(typeGroupedEntity,
+                  operationGroupedEntity, entities, remote, local);
+
+          for (var element in responseEntities!) {
+            try {
+              await local.update(element, createOpLog: false);
+            } catch (e) {
+              debugPrint('SyncDown: failed to update entity '
+                  'for ${typeGroupedEntity.key}: $e');
+              continue;
+            }
           }
-
-          return e.entity;
-        }).toList();
-
-        List<EntityModel>? responseEntities = [];
-
-        responseEntities = await SyncServiceSingleton()
-            .entityMapper
-            ?.syncDownEntityResponse(typeGroupedEntity, operationGroupedEntity,
-                entities, remote, local);
-
-        for (var element in responseEntities!) {
-          await local.update(element, createOpLog: false);
         }
+      } catch (e) {
+        debugPrint('SyncDown: entity type ${typeGroupedEntity.key} '
+            'failed: $e');
+        continue;
       }
     }
   }
