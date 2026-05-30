@@ -77,6 +77,21 @@ class QueryBuilder {
 
     // Filters apply to the first (originally-rooted) related table.
     for (final filter in filtersOnFirstTable) {
+      if (filter.operator == 'within') {
+        final expr = _buildWithinBoundingBoxExpression(firstTable, filter);
+        if (expr != null) subquery.where(expr);
+        continue;
+      }
+      if (filter.operator == 'containsAll') {
+        final expr = _buildContainsAllExpression(firstTable, filter);
+        if (expr != null) subquery.where(expr);
+        continue;
+      }
+      if (filter.operator == 'equalsAny') {
+        final expr = _buildEqualsAnyExpression(firstTable, filter);
+        if (expr != null) subquery.where(expr);
+        continue;
+      }
       final col = _columnOf(firstTable, filter.field);
       final expr = _filterToExpression(col, filter);
       if (expr != null) subquery.where(expr);
@@ -102,7 +117,8 @@ class QueryBuilder {
   /// must fall back to one subquery per related table.
   static Expression<bool>? buildCombinedSubqueryExpression({
     required LocalSqlDataStore sql,
-    required List<({List<RelationshipMapping> path, List<SearchFilter> filters})>
+    required List<
+            ({List<RelationshipMapping> path, List<SearchFilter> filters})>
         pathFilterPairs,
     required GeneratedColumn<Object> primaryKeyColumn,
   }) {
@@ -157,6 +173,21 @@ class QueryBuilder {
     for (final pair in pathFilterPairs) {
       final filterTable = _tableInfo(sql, pair.path.first.from);
       for (final filter in pair.filters) {
+        if (filter.operator == 'within') {
+          final expr = _buildWithinBoundingBoxExpression(filterTable, filter);
+          if (expr != null) subquery.where(expr);
+          continue;
+        }
+        if (filter.operator == 'containsAll') {
+          final expr = _buildContainsAllExpression(filterTable, filter);
+          if (expr != null) subquery.where(expr);
+          continue;
+        }
+        if (filter.operator == 'equalsAny') {
+          final expr = _buildEqualsAnyExpression(filterTable, filter);
+          if (expr != null) subquery.where(expr);
+          continue;
+        }
         final col = _columnOf(filterTable, filter.field);
         final expr = _filterToExpression(col, filter);
         if (expr != null) subquery.where(expr);
@@ -164,6 +195,114 @@ class QueryBuilder {
     }
 
     return (primaryKeyColumn as Expression<String>).isInQuery(subquery);
+  }
+
+  /// Builds a lat/lon bounding-box `Expression<bool>` for a 'within' filter
+  /// applied inside a cross-table subquery. The subquery can only do the
+  /// coarse bounding-box prefilter — exact Haversine refinement requires
+  /// reading lat/lon into Dart, which the primary-table queryRawTable path
+  /// handles when 'within' is rooted on the primary table itself.
+  static Expression<bool>? _buildWithinBoundingBoxExpression(
+      TableInfo<Table, Object?> table, SearchFilter filter) {
+    if (filter.coordinates == null || filter.value == null) return null;
+
+    final latField = table.$columns.firstWhere(
+      (c) => c.$name == 'latitude',
+      orElse: () => throw Exception(
+          'Latitude column not found in ${table.actualTableName}'),
+    );
+    final lonField = table.$columns.firstWhere(
+      (c) => c.$name == 'longitude',
+      orElse: () => throw Exception(
+          'Longitude column not found in ${table.actualTableName}'),
+    );
+
+    final centerLat = filter.coordinates!.latitude;
+    final centerLon = filter.coordinates!.longitude;
+    final radiusInKm = (filter.value as num).toDouble();
+
+    const earthRadius = 6371.0;
+    const degToRad = math.pi / 180.0;
+
+    final deltaLat = radiusInKm / earthRadius;
+    final deltaLon =
+        radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
+
+    final minLat = centerLat - deltaLat;
+    final maxLat = centerLat + deltaLat;
+    final minLon = centerLon - deltaLon;
+    final maxLon = centerLon + deltaLon;
+
+    return (latField as Expression<double>).isBetweenValues(minLat, maxLat) &
+        (lonField as Expression<double>).isBetweenValues(minLon, maxLon);
+  }
+
+  /// Builds `(col1 = v OR col2 = v …)` for an `equalsAny` filter applied
+  /// inside a cross-table subquery. Mirrors the queryRawTable path's
+  /// existing equalsAny handling.
+  static Expression<bool>? _buildEqualsAnyExpression(
+      TableInfo<Table, Object?> table, SearchFilter filter) {
+    if (filter.value == null) return null;
+    final columnNames = filter.field
+        .split(',')
+        .map((f) => camelToSnake(f.trim()))
+        .where((f) => f.isNotEmpty)
+        .toList();
+    if (columnNames.isEmpty) return null;
+
+    Expression<bool>? combined;
+    for (final colName in columnNames) {
+      final col = table.$columns.firstWhere(
+        (c) => c.$name == colName,
+        orElse: () => throw Exception(
+            'Column $colName not found in ${table.actualTableName}'),
+      );
+      final clause = col.equals(filter.value);
+      combined = combined == null ? clause : combined | clause;
+    }
+    return combined;
+  }
+
+  /// Builds the `containsAll` expression: split the value on whitespace and
+  /// require every part to appear (LIKE) in at least one of the
+  /// comma-separated columns.
+  ///
+  /// Example: field='givenName,familyName', value='John Smith' →
+  ///   (given_name LIKE %John% OR family_name LIKE %John%) AND
+  ///   (given_name LIKE %Smith% OR family_name LIKE %Smith%)
+  static Expression<bool>? _buildContainsAllExpression(
+      TableInfo<Table, Object?> table, SearchFilter filter) {
+    final columnNames = filter.field
+        .split(',')
+        .map((f) => camelToSnake(f.trim()))
+        .where((f) => f.isNotEmpty)
+        .toList();
+    final parts = filter.value
+            ?.toString()
+            .trim()
+            .split(RegExp(r'\s+'))
+            .where((t) => t.isNotEmpty)
+            .toList() ??
+        const <String>[];
+    if (parts.isEmpty || columnNames.isEmpty) return null;
+
+    final columns = columnNames.map((colName) {
+      return table.$columns.firstWhere(
+        (c) => c.$name == colName,
+        orElse: () => throw Exception(
+            'Column $colName not found in ${table.actualTableName}'),
+      ) as Expression<String>;
+    }).toList();
+
+    Expression<bool>? combined;
+    for (final part in parts) {
+      Expression<bool> partClause = columns.first.like('%$part%');
+      for (var i = 1; i < columns.length; i++) {
+        partClause = partClause | columns[i].like('%$part%');
+      }
+      combined = combined == null ? partClause : combined & partClause;
+    }
+    return combined;
   }
 
   /// Converts a SearchFilter to a Drift `Expression<bool>` for the given
@@ -227,7 +366,11 @@ class QueryBuilder {
       // Split by comma if it contains commas, otherwise wrap as single-item list
       final trimmed = value.trim();
       if (trimmed.contains(',')) {
-        return trimmed.split(',').map((v) => v.trim()).where((v) => v.isNotEmpty).toList();
+        return trimmed
+            .split(',')
+            .map((v) => v.trim())
+            .where((v) => v.isNotEmpty)
+            .toList();
       }
       return [trimmed];
     }
@@ -300,8 +443,32 @@ class QueryBuilder {
           // Supports OR condition: field contains comma-separated column names
           // Example: field='senderId,receiverId', value='F-123'
           // Generates: (sender_id = ? OR receiver_id = ?)
-          final columns = filter.field.split(',').map((f) => camelToSnake(f.trim())).toList();
+          final columns = filter.field
+              .split(',')
+              .map((f) => camelToSnake(f.trim()))
+              .toList();
           return '(${columns.map((c) => '$c = ?').join(' OR ')})';
+        case 'containsAll':
+          // Every whitespace-separated part of the value must be contained
+          // in at least one of the comma-separated columns.
+          // Example: field='givenName,familyName', value='John Smith'
+          // Generates: ((given_name LIKE ? OR family_name LIKE ?) AND
+          //            (given_name LIKE ? OR family_name LIKE ?))
+          final cols = filter.field
+              .split(',')
+              .map((f) => camelToSnake(f.trim()))
+              .toList();
+          final parts = filter.value
+                  ?.toString()
+                  .trim()
+                  .split(RegExp(r'\s+'))
+                  .where((t) => t.isNotEmpty)
+                  .toList() ??
+              const <String>[];
+          if (parts.isEmpty || cols.isEmpty) return '1 = 1';
+          final partClauses = parts
+              .map((_) => '(${cols.map((c) => '$c LIKE ?').join(' OR ')})');
+          return '(${partClauses.join(' AND ')})';
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
       }
@@ -337,6 +504,23 @@ class QueryBuilder {
           final columnCount = filter.field.split(',').length;
           for (int i = 0; i < columnCount; i++) {
             args.add(Variable.withString(filter.value.toString()));
+          }
+          break;
+        case 'containsAll':
+          // One '%part%' arg per (part, column) pair, matching the
+          // clause structure built in buildWhereClauseRaw.
+          final cols = filter.field.split(',');
+          final parts = filter.value
+                  ?.toString()
+                  .trim()
+                  .split(RegExp(r'\s+'))
+                  .where((t) => t.isNotEmpty)
+                  .toList() ??
+              const <String>[];
+          for (final part in parts) {
+            for (var i = 0; i < cols.length; i++) {
+              args.add(Variable.withString('%$part%'));
+            }
           }
           break;
         case 'isNotNull':
@@ -469,13 +653,15 @@ class QueryBuilder {
 
       // Handle equalsAny operator separately (multiple columns with OR)
       if (filter.operator == 'equalsAny') {
-        final columnNames = filter.field.split(',').map((f) => camelToSnake(f.trim())).toList();
+        final columnNames =
+            filter.field.split(',').map((f) => camelToSnake(f.trim())).toList();
         final List<Expression<bool>> orClauses = [];
 
         for (final colName in columnNames) {
           final col = dynamicTable.$columns.firstWhere(
             (c) => c.$name == colName,
-            orElse: () => throw Exception('Column $colName not found in $table'),
+            orElse: () =>
+                throw Exception('Column $colName not found in $table'),
           );
           orClauses.add(col.equals(filter.value));
         }
@@ -488,6 +674,14 @@ class QueryBuilder {
           }
           whereClauses.add(combined);
         }
+        continue;
+      }
+
+      // Handle containsAll: split value on whitespace and require every
+      // part to appear (LIKE) in at least one of the comma-separated columns.
+      if (filter.operator == 'containsAll') {
+        final expr = _buildContainsAllExpression(dynamicTable, filter);
+        if (expr != null) whereClauses.add(expr);
         continue;
       }
 
@@ -510,8 +704,8 @@ class QueryBuilder {
               .add((col as Expression<String>).like('${filter.value}%'));
           break;
         case 'notContains':
-          whereClauses
-              .add(col.isNull() | (col as Expression<String>).like('%${filter.value}%').not());
+          whereClauses.add(col.isNull() |
+              (col as Expression<String>).like('%${filter.value}%').not());
           break;
         case 'isNotNull':
           whereClauses.add(col.isNotNull());
@@ -523,7 +717,9 @@ class QueryBuilder {
           final list = _normalizeToList(filter.value);
           if (list.isEmpty) break; // Empty list = no filter (match all)
           if (col is GeneratedColumn<int>) {
-            whereClauses.add(col.isIn(list.map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0).toList()));
+            whereClauses.add(col.isIn(list
+                .map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0)
+                .toList()));
           } else if (col is GeneratedColumn<String>) {
             whereClauses.add(col.isIn(list.map((v) => v.toString()).toList()));
           }
@@ -532,9 +728,12 @@ class QueryBuilder {
           final list = _normalizeToList(filter.value);
           if (list.isEmpty) break; // Empty list = no filter (match all)
           if (col is GeneratedColumn<int>) {
-            whereClauses.add(col.isNotIn(list.map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0).toList()));
+            whereClauses.add(col.isNotIn(list
+                .map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0)
+                .toList()));
           } else if (col is GeneratedColumn<String>) {
-            whereClauses.add(col.isNotIn(list.map((v) => v.toString()).toList()));
+            whereClauses
+                .add(col.isNotIn(list.map((v) => v.toString()).toList()));
           }
           break;
         default:
@@ -549,10 +748,10 @@ class QueryBuilder {
     if (isPrimaryTable && onCountFetched != null) {
       if (centerLat != null && centerLon != null && radiusInKm != null) {
         // Geo path: need lat/lon to apply Haversine filtering in Dart.
-        final whereClause = buildWhereClauseRaw(
-            filters.where((f) => f.root == table).toList());
-        final whereArgs = buildWhereArgs(
-            filters.where((f) => f.root == table).toList());
+        final whereClause =
+            buildWhereClauseRaw(filters.where((f) => f.root == table).toList());
+        final whereArgs =
+            buildWhereArgs(filters.where((f) => f.root == table).toList());
         countFuture = () async {
           final rawResults = await sql
               .customSelect(
@@ -605,9 +804,8 @@ class QueryBuilder {
         if (whereClauses.isNotEmpty) {
           countQuery.where(buildAnd(whereClauses));
         }
-        countFuture = countQuery
-            .getSingle()
-            .then((row) => row.read(countExpr!) ?? 0);
+        countFuture =
+            countQuery.getSingle().then((row) => row.read(countExpr!) ?? 0);
       }
     }
 
@@ -625,8 +823,7 @@ class QueryBuilder {
     // Project only requested columns when provided, else fetch all columns.
     final List<GeneratedColumn<Object>> projectedColumns;
     if (selectColumns != null && selectColumns.isNotEmpty) {
-      final wantedSnake =
-          selectColumns.map((c) => camelToSnake(c)).toSet();
+      final wantedSnake = selectColumns.map((c) => camelToSnake(c)).toSet();
       projectedColumns = dynamicTable.$columns
           .where((c) => wantedSnake.contains(c.$name))
           .toList();
@@ -704,8 +901,7 @@ class QueryBuilder {
             if (decoded is Map<String, dynamic>) {
               rowMap['additional_fields'] = decoded;
             }
-          } catch (e) {
-          }
+          } catch (e) {}
         }
       }
 

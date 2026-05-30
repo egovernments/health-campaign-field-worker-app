@@ -1428,7 +1428,13 @@ final dynamic sampleFlows = {
                   {
                     "key": "givenName",
                     "value": "field.value",
-                    "operation": "contains"
+                    "operation": "containsAll"
+                  },
+                  {
+                    "key": "localityBoundaryCode",
+                    "root": "address",
+                    "value": "{{singleton.boundary.code}}",
+                    "operation": "equals"
                   }
                 ],
                 "name": "name",
@@ -1443,6 +1449,40 @@ final dynamic sampleFlows = {
             {"type": "minSearchChars", "value": 2}
           ],
           "minSearchChars": 2
+        },
+        {
+          "type": "template",
+          "label": "ID_OF_INDIVIDUAL",
+          "format": "searchBar",
+          "visible": "{{idSearch}} == true",
+          "onAction": [
+            {
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "data": [
+                  {
+                    "key": "identifierId",
+                    "value": "field.value",
+                    "operation": "contains"
+                  },
+                  {
+                    "key": "localityBoundaryCode",
+                    "root": "address",
+                    "value": "{{singleton.boundary.code}}",
+                    "operation": "equals"
+                  }
+                ],
+                "name": "identifier",
+                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+              }
+            }
+          ],
+          "fieldName": "idSearchBar",
+          "mandatory": true,
+          "validations": [
+            {"type": "minSearchChars", "value": 3}
+          ],
+          "minSearchChars": 3
         },
         {
           "icon": "FilterAlt",
