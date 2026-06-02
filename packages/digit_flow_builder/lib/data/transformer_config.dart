@@ -207,7 +207,7 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "beneficiaryClientReferenceId": "clientReferenceId",
           "clientReferenceId": "__generate:uuid",
-          "dateOfRegistration": "__context:now",
+          "dateOfRegistration": "__value:DATETIME.NOW",
           "rowVersion": "meta.rowVersion",
           "auditDetails": "__generate:audit",
           "clientAuditDetails": "__generate:clientAudit",
