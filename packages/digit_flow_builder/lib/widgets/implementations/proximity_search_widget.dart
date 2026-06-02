@@ -172,6 +172,13 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
             'triggerSearch': true,
           },
         }));
+
+        // The targeted CLEAR_STATE above already removes the proximity-owned
+        // filters. Falling through to the resolved-action path would also fire
+        // the configured false-branch action (typically `CLEAR_STATE` with no
+        // filterKeys), which hits ClearStateExecutor's "clear everything"
+        // branch and wipes widgetData + sibling filters (e.g. the name search).
+        continue;
       }
 
       final updated = Map<String, dynamic>.from(raw);

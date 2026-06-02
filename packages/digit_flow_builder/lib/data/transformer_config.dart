@@ -190,6 +190,89 @@ final jsonConfig = {
       },
     }
   },
+  // Bulk-creates one ProjectBeneficiaryModel per individual passed in
+  // __context:individuals. Used by the search-page OPEN button when the row
+  // has zero projectBeneficiaries: the household + individuals already exist
+  // in the local store (downsynced), so we only need to mint the PB join rows
+  // to enroll every member in the current project — no form, no second
+  // registration. Implicit list-item context resolves the bare
+  // "clientReferenceId" mapping against individuals[index].clientReferenceId
+  // (see transformer_service.dart:882–916).
+  "bulkProjectBeneficiaryFromMembers": {
+    "models": {
+      "ProjectBeneficiaryModel": {
+        "listSource": "__context:individuals",
+        "mappings": {
+          "projectId": "__context:projectId",
+          "tenantId": "__context:tenantId",
+          "beneficiaryClientReferenceId": "clientReferenceId",
+          "clientReferenceId": "__generate:uuid",
+          "dateOfRegistration": "__context:now",
+          "rowVersion": "meta.rowVersion",
+          "auditDetails": "__generate:audit",
+          "clientAuditDetails": "__generate:clientAudit",
+        }
+      }
+    }
+  },
+  "householdConsentRegistration": {
+    "fallbackModel": "HouseholdModel",
+    "models": {
+      "HouseholdModel": {
+        "mappings": {
+          "id": "housing.id",
+          "memberCount": "householdDetails.memberCount",
+          "latitude": "beneficiaryLocation.latLng[0]",
+          "longitude": "beneficiaryLocation.latLng[1]",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId":
+                "__ref:HouseholdModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "beneficiaryLocation.latLng[0]",
+            "longitude": "beneficiaryLocation.latLng[1]",
+            "locationAccuracy": "beneficiaryLocation.latLng[2]",
+            "addressLine1": "beneficiaryLocation.addressLine1",
+            "addressLine2": "addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "type": "__value:PERMANENT",
+            "boundaryType": "address.boundaryType",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+            },
+            "boundary": "address.boundary",
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit",
+          },
+          "householdType": "__context:householdType",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "childrenCount": "householdDetails.childrenCount",
+            "pregnantWomenCount": "householdDetails.pregnantWomenCount",
+            "memberCount": "householdDetails.memberCount",
+            "caregiverConsent": "caregiverConsent.consentToParticipate",
+            "negativeConsentReason": "caregiverConsent.negativeConsentReason"
+          }
+        }
+      }
+    }
+  },
   "individualRegistration": {
     "fallbackModel": "IndividualModel",
     // fallback model to map form values which are not mapped to any field
