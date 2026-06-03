@@ -32,8 +32,7 @@ class BoundaryRemoteRepository
           queryParameters: {
             'tenantId': DigitDataModelSingleton().tenantId,
             'includeChildren': true,
-            'hierarchyType':
-                _stripCountrySuffix(DigitDataModelSingleton().hierarchyType),
+            'hierarchyType': DigitDataModelSingleton().hierarchyType,
             ...query.toMap(),
           },
           data: {},
@@ -139,16 +138,4 @@ class BoundaryRemoteRepository
 
   @override
   DataModelType get type => DataModelType.boundary;
-
-  /// Strips the trailing `_<COUNTRY>` suffix from a hierarchy-style value so
-  /// the boundary-relationships API receives only the prefix.
-  ///
-  /// Example: `CONSOLEHCM_NI` → `CONSOLEHCM`
-  ///          `CONSOLEHCM`    → `CONSOLEHCM` (no underscore, no change)
-  ///          `ADMIN`         → `ADMIN`
-  String? _stripCountrySuffix(String? raw) {
-    if (raw == null || raw.isEmpty) return raw;
-    final idx = raw.indexOf('_');
-    return idx == -1 ? raw : raw.substring(0, idx);
-  }
 }

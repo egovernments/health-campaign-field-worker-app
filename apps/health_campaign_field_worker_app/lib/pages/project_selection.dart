@@ -251,7 +251,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     localizationBloc.add(
       LocalizationEvent.onLoadLocalization(
         module:
-            'hcm-boundary-${stripCountrySuffix(runtimeHierarchyType()).toLowerCase()}',
+            'hcm-boundary-${runtimeHierarchyType().toLowerCase()}',
         tenantId: envConfig.variables.tenantId,
         locale: AppSharedPreferences().getSelectedLocale!,
         path: Constants.localizationApiPath,
