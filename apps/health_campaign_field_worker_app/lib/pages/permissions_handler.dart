@@ -423,7 +423,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
   void attemptNavigation() async {
     bool granted = await _checkPermissions();
-    if (mounted && (!granted || !backgroundActivityConfirmed)) {
+    if (mounted && !granted) {
       Toast.showToast(
         context,
         message: localizations.translate(
@@ -492,7 +492,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                 // Header from config
                 if (screenConfig?['heading'] != null)
                   Padding(
-                    padding: const EdgeInsets.all(spacer3),
+                    padding: const EdgeInsets.symmetric(vertical: spacer4, horizontal: spacer3),
                     child: Text(
                       localizations.translate(screenConfig!['heading']),
                       style: textTheme.headingXl.copyWith(
@@ -505,7 +505,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                 // Description from config
                 if (screenConfig?['description'] != null)
                   Padding(
-                    padding: const EdgeInsets.all(spacer3),
+                    padding: const EdgeInsets.symmetric(vertical: spacer1, horizontal: spacer3),
                     child: Text(
                       localizations.translate(screenConfig!['description']),
                       style: textTheme.captionM.copyWith(
@@ -514,6 +514,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                       textAlign: TextAlign.left,
                     ),
                   ),
+                const SizedBox(height: spacer4,),
                 // Build body widgets from config
                 ...bodyConfig.map(
                   (item) => _buildWidget(
@@ -568,8 +569,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         return _buildIcon(config, theme);
       case 'infoCard':
         return _buildInfoCard(config, theme, textTheme);
-      case 'checkbox':
-        return _buildCheckbox(config, theme, textTheme);
       case 'button':
         return _buildButton(config, theme, textTheme);
       default:
@@ -678,7 +677,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
     return Padding(
       padding: EdgeInsets.only(
-        top: isDescription ? 0 : spacer1,
+        top: isDescription ? spacer2 : spacer1,
         bottom: isDescription ? spacer1 : 0,
       ),
       child: Text(
@@ -709,59 +708,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildCheckbox(
-    Map<String, dynamic> config,
-    ThemeData theme,
-    DigitTextTheme textTheme,
-  ) {
-    final label = config['label'] as String? ?? '';
-    final fieldName = config['fieldName'] as String?;
-
-    bool isChecked;
-    if (fieldName == 'backgroundActivityConfirmed') {
-      isChecked = backgroundActivityConfirmed;
-    } else {
-      isChecked = false;
-    }
-
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(right: spacer2),
-          child: DigitCheckbox(
-            value: isChecked,
-            onChanged: (val) {
-              setState(() {
-                backgroundActivityConfirmed = val ?? false;
-              });
-            },
-          ),
-        ),
-        Expanded(
-          child: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: localizations.translate(label),
-                  style: textTheme.bodyS.copyWith(
-                    color: theme.colorTheme.primary.primary2,
-                  ),
-                ),
-                if (config['required'] == true)
-                  TextSpan(
-                    text: " *",
-                    style: textTheme.bodyS.copyWith(
-                      color: theme.colorTheme.alert.error,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 
