@@ -150,12 +150,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
     await localSecureStore.deleteAll();
     await localSecureStore.setBoundaryRefetch(true);
+    DigitDataModelSingleton().setHierarchyType(null);
     emit(const AuthUnauthenticatedState());
   }
 
   FutureOr<void> _onReset(AuthResetEvent event, AuthEmitter emit) async {
     await localSecureStore.deleteAll();
     await localSecureStore.setBoundaryRefetch(true);
+    DigitDataModelSingleton().setHierarchyType(null);
     emit(const AuthUnauthenticatedState());
   }
 

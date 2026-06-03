@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Hierarchy Support — Approach</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #6b7280;
+    --accent: #0f62fe;
+    --accent-soft: #e8f0fe;
+    --border: #e5e7eb;
+    --code-bg: #f5f5f7;
+    --table-header: #f9fafb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+  h1 + p { color: var(--muted); margin: 0 0 40px; }
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 40px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: -0.01em;
+  }
+  p { margin: 0 0 14px; }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  code {
+    font-family: "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #c0392b;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 12px 0 20px;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th {
+    background: var(--table-header);
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  blockquote {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    margin: 16px 0;
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+  }
+  blockquote p:last-child { margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<h1>Multi-Hierarchy Support</h1>
+<p>Moving <code>hierarchyType</code> from build-time <code>.env</code> into per-project runtime, so one APK can serve users whose projects use different hierarchies.</p>
+
+<h2>Current approach</h2>
+<ul>
+  <li><code>HIERARCHY_TYPE</code> is read once from <code>.env</code> at app startup and pushed into <code>DigitDataModelSingleton</code>.</li>
+  <li>The same value is used for every boundary fetch, every MDMS module key, and every localization key — across the whole app lifetime.</li>
+  <li>To support a different hierarchy, you rebuild the APK with a different <code>.env</code>.</li>
+  <li>Some hierarchy-keyed calls (splash, language selection, login) fire <strong>before</strong> the user picks a project — they have no choice, since hierarchy is baked in.</li>
+</ul>
+<blockquote><p>One APK = one hierarchy. Switching means a new build.</p></blockquote>
+
+<h2>New approach</h2>
+<ul>
+  <li>Each project carries its own <code>hierarchyType</code> inside <code>Project.additionalDetails</code> (server-populated).</li>
+  <li>On project selection, the app reads that value and pushes it into the singleton — then all downstream calls (boundary, MDMS, localization, hierarchy-scoped APIs) use it.</li>
+  <li>If the project's payload doesn't include <code>hierarchyType</code>, fall back to the <code>.env</code> value. <strong>Env is a missing-field safety net, nothing else.</strong></li>
+  <li>Any hierarchy-keyed call that today runs <strong>before</strong> project selection is <strong>moved</strong> to run after it. Pre-selection hierarchy work is not patched with an env read — it's relocated.</li>
+  <li>Switching hierarchy = logout → re-login → pick a different project. No mid-session switching.</li>
+  <li>On logout, cached boundaries and MDMS modules are cleared so the next login starts clean.</li>
+</ul>
+
+<table>
+  <thead>
+    <tr><th></th><th>Current</th><th>New</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Source of <code>hierarchyType</code></td><td><code>.env</code> (build time)</td><td>Project's <code>additionalDetails</code> (runtime), env fallback if missing</td></tr>
+    <tr><td>When is it set</td><td>App startup</td><td>On project selection</td></tr>
+    <tr><td>Calls before project pick</td><td>Allowed (env value)</td><td>Not allowed — moved to post-selection</td></tr>
+    <tr><td>To change hierarchy</td><td>Rebuild APK</td><td>Logout + pick another project</td></tr>
+    <tr><td>Cache on logout</td><td>Retained</td><td>Boundary + MDMS cleared</td></tr>
+  </tbody>
+</table>
+
+<h2>What needs to be thought of</h2>
+<ul>
+  <li><strong>Server payload.</strong> Backend has to actually return <code>hierarchyType</code> inside <code>Project.additionalDetails</code>. Until that ships, every project falls back to env — which is fine, but means we can't validate the runtime path end-to-end.</li>
+  <li><strong>Pre-selection audit.</strong> Find every hierarchy-keyed call that runs before project selection today (splash, language pick, login, boot blocs) and confirm each can be relocated without breaking that flow. If a screen genuinely needs hierarchy before login, that's a design problem to surface now, not later.</li>
+  <li><strong>Boundary cache shape.</strong> Today the boundary table is global. If a user logs into Project A (ADMIN) then logs out and into Project B (HEALTH), stale ADMIN rows must not leak. Decision: clear the table on logout (simplest), or add a <code>hierarchyType</code> column and filter on read.</li>
+  <li><strong>MDMS / localization keys.</strong> Module keys like <code>hcm-boundary-{hierarchy}</code> are built at several call sites that read <code>envConfig.variables.hierarchyType</code> directly. Each needs to route through a single resolver instead.</li>
+  <li><strong>Persistence across cold start.</strong> If the user kills and relaunches the app without logging out, the resolved hierarchy needs to survive. Persist to secure prefs, or force a re-resolve from the persisted selected-project state.</li>
+  <li><strong>API calls audit.</strong> Anything else that sends <code>hierarchyType</code> as a query param, header, or body field — project-staff search, facility search, master-data fetches — has to go through the resolver too. One-time grep job.</li>
+  <li><strong>Logout cleanup.</strong> What exactly gets wiped on logout? Boundary table, MDMS module cache, persisted hierarchyType, anything else keyed by hierarchy. List it before implementing so nothing is missed.</li>
+  <li><strong>Debug guard.</strong> The resolver should assert in debug builds if it's called before project selection. Catches regressions where someone adds a new pre-selection call site without realizing.</li>
+  <li><strong>Sequencing.</strong> This work ships before the single-APK refactor. Once merged, the single-APK plan can drop <code>HIERARCHY_TYPE</code> from its env-migration list and treat it as already runtime-sourced.</li>
+</ul>
+
+</body>
+</html>

@@ -159,14 +159,16 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   ) {
     setState(() {});
 
+    // Hierarchy-keyed boundary localization is deferred to
+    // post-project-selection. The language selector here may run before a
+    // project is picked, so we only include the non-hierarchy modules. The
+    // project-selection cascade triggers the boundary-hierarchy localization
+    // load after the runtime hierarchy is known.
     final filteredModules = localizationModulesList
         .where((element) =>
             element.type == Modules.localizationModule &&
             Constants.homeLocalizationModules.contains(element.name.toString()))
         .map((e) => e.name.toString())
-        .followedBy([
-          'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()}'
-        ])
         .join(',');
 
     context.read<LocalizationBloc>().add(
