@@ -1,8 +1,39 @@
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
+
+/// Returns the campaign-number suffix appended to balance keys, derived from
+/// the active project's `referenceID`. The suffix is the segment after the
+/// last `-` (e.g. `CMP-2025-08-04-004846` → `004846`); when no `-` is
+/// present, the trailing 6 chars are used. Returns an empty string when no
+/// project is selected.
+String _activeCampaignSuffix() {
+  final ref = FlowBuilderSingleton().selectedProject?.referenceID;
+  if (ref == null || ref.isEmpty) return '';
+  final idx = ref.lastIndexOf('-');
+  if (idx >= 0 && idx < ref.length - 1) return ref.substring(idx + 1);
+  return ref.length <= 6 ? ref : ref.substring(ref.length - 6);
+}
 
 /// Generates a balance key for UserAction STOCK_BALANCE records.
-/// Uses format: bal_{facilityId}{productVariantId}
-String generateBalanceKey(String facilityId, String productVariantId) =>
+///
+/// Current shape: `bal_{facilityId}{productVariantId}_{campaignSuffix}`.
+/// Legacy shape (pre-campaign-suffix): `bal_{facilityId}{productVariantId}`.
+///
+/// Call sites that write balances use this function via copy-on-first-touch
+/// migration: if no row exists for the new key but a row exists under
+/// [legacyBalanceKey], the legacy balance value is carried into the new row
+/// on the first write under the new key. Reads that need to support both
+/// shapes should query both keys.
+String generateBalanceKey(String facilityId, String productVariantId) {
+  final suffix = _activeCampaignSuffix();
+  final base = 'bal_$facilityId$productVariantId';
+  return suffix.isEmpty ? base : '${base}_$suffix';
+}
+
+/// Pre-campaign-suffix shape of the balance key. Retained for the
+/// copy-on-first-touch migration in stock balance writers and dual-key
+/// search in batch readers.
+String legacyBalanceKey(String facilityId, String productVariantId) =>
     'bal_$facilityId$productVariantId';
 
 class StockCalculationUtils {

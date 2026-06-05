@@ -1127,17 +1127,22 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           productVariantIds.isEmpty ||
           facilityIds.first.isEmpty) return;
 
-      // Build balance keys for all facility × product variant combinations
-      final balanceKeys = <String>[];
+      // Build balance keys for all facility × product variant combinations.
+      // Includes both the new campaign-suffixed shape and the legacy shape so
+      // pre-upgrade balance rows on the server are not missed.
+      final balanceKeys = <String>{};
       for (final facilityId in facilityIds) {
         for (final productVariantId in productVariantIds) {
-          balanceKeys.add(generateBalanceKey(facilityId, productVariantId));
+          balanceKeys
+              .add(generateBalanceKey(facilityId, productVariantId));
+          balanceKeys
+              .add(legacyBalanceKey(facilityId, productVariantId));
         }
       }
 
       // Fetch from server
       final remoteBalances = await userActionRemoteRepository.search(
-        UserActionSearchModel(clientReferenceId: balanceKeys),
+        UserActionSearchModel(clientReferenceId: balanceKeys.toList()),
       );
 
       if (remoteBalances.isEmpty) return;

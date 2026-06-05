@@ -242,6 +242,49 @@ class StockBalanceExecutor extends ActionExecutor {
     return '';
   }
 
+  /// Looks up an existing STOCK_BALANCE UserAction for (facility, product)
+  /// supporting copy-on-first-touch migration from the pre-campaign-suffix
+  /// key shape.
+  ///
+  ///   - When a row exists under the new key, [_BalanceLookup.existing] is
+  ///     set and [_BalanceLookup.legacySeed] is null — normal update path.
+  ///   - When no row exists under the new key but one exists under the
+  ///     legacy key, [_BalanceLookup.legacySeed] carries that row's balance
+  ///     value so the first write under the new key inherits it. The legacy
+  ///     row is left in place (orphaned, harmless).
+  ///   - When neither exists, both fields are null — fresh balance starts
+  ///     at 0.
+  Future<_BalanceLookup> _findOrSeedBalance(
+    UserActionLocalRepository repo,
+    String facilityId,
+    String productVariantId,
+  ) async {
+    final newKey = generateBalanceKey(facilityId, productVariantId);
+    final newResults = await repo.search(
+      UserActionSearchModel(clientReferenceId: [newKey]),
+    );
+    if (newResults.isNotEmpty) {
+      return _BalanceLookup(existing: newResults.first);
+    }
+
+    final oldKey = legacyBalanceKey(facilityId, productVariantId);
+    if (oldKey == newKey) return const _BalanceLookup();
+
+    final oldResults = await repo.search(
+      UserActionSearchModel(clientReferenceId: [oldKey]),
+    );
+    if (oldResults.isEmpty) return const _BalanceLookup();
+
+    final legacyBalance = double.tryParse(
+          oldResults.first.additionalFields?.fields
+                  ?.firstWhereOrNull((f) => f.key == 'balance')
+                  ?.value ??
+              '0',
+        ) ??
+        0.0;
+    return _BalanceLookup(legacySeed: legacyBalance);
+  }
+
   Future<void> _handleTaskEntity(
     BuildContext context,
     List<dynamic> entities,
@@ -335,12 +378,13 @@ class StockBalanceExecutor extends ActionExecutor {
     final loggedInUserUuid = _getLoggedInUserUuid(context);
     final balanceKey = generateBalanceKey(facilityId, productVariantId);
 
-    final existingBalances = await userActionRepo.search(
-      UserActionSearchModel(clientReferenceId: [balanceKey]),
+    final lookup = await _findOrSeedBalance(
+      userActionRepo,
+      facilityId,
+      productVariantId,
     );
-
-    final existing =
-        existingBalances.isNotEmpty ? existingBalances.first : null;
+    final existing = lookup.existing;
+    final legacySeed = lookup.legacySeed;
 
     // Get the current balance from UserAction (reflects all previous transactions including deliveries/returns)
     double currentBalance = 0.0;
@@ -349,6 +393,9 @@ class StockBalanceExecutor extends ActionExecutor {
           ?.firstWhereOrNull((f) => f.key == 'balance');
       currentBalance =
           double.tryParse(existingBalanceField?.value ?? '0') ?? 0.0;
+    } else if (legacySeed != null) {
+      // Copy-on-first-touch migration from the pre-campaign-suffix key shape.
+      currentBalance = legacySeed;
     }
 
     // deliveredQuantity can be positive (delivery) or negative (return)
@@ -418,12 +465,13 @@ class StockBalanceExecutor extends ActionExecutor {
     final loggedInUserUuid = _getLoggedInUserUuid(context);
     final balanceKey = generateBalanceKey(facilityId, productVariantId);
 
-    final existingBalances = await userActionRepo.search(
-      UserActionSearchModel(clientReferenceId: [balanceKey]),
+    final lookup = await _findOrSeedBalance(
+      userActionRepo,
+      facilityId,
+      productVariantId,
     );
-
-    final existing =
-        existingBalances.isNotEmpty ? existingBalances.first : null;
+    final existing = lookup.existing;
+    final legacySeed = lookup.legacySeed;
 
     // Always use the UserAction balance as the authoritative source
     double currentBalance = 0.0;
@@ -432,6 +480,9 @@ class StockBalanceExecutor extends ActionExecutor {
           ?.firstWhereOrNull((f) => f.key == 'balance');
       currentBalance =
           double.tryParse(existingBalanceField?.value ?? '0') ?? 0.0;
+    } else if (legacySeed != null) {
+      // Copy-on-first-touch migration from the pre-campaign-suffix key shape.
+      currentBalance = legacySeed;
     }
 
     // Apply the transaction delta to the current balance
@@ -481,4 +532,12 @@ class StockBalanceExecutor extends ActionExecutor {
       'UPDATE_STOCK_BALANCE: Updated balance for $facilityId/$productVariantId = $newBalance (previous: $currentBalance, delta: $quantityDelta, existing record: ${existing != null})',
     );
   }
+}
+
+/// Result of looking up an existing STOCK_BALANCE UserAction with
+/// copy-on-first-touch migration support. See [StockBalanceExecutor._findOrSeedBalance].
+class _BalanceLookup {
+  final UserActionModel? existing;
+  final double? legacySeed;
+  const _BalanceLookup({this.existing, this.legacySeed});
 }
