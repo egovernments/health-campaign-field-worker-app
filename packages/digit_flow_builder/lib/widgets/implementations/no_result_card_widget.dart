@@ -1,5 +1,6 @@
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -79,15 +80,23 @@ class NoResultCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SvgPicture.asset(noResultSvg),
+                const SizedBox(height: spacer2),
                 Text(
                   label ?? '',
-                  style: theme.textTheme.bodyMedium,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorTheme.primary.primary2,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
                 if (description != null) ...[
-                  const SizedBox(height: spacer1),
+                  const SizedBox(height: spacer2),
                   Text(
                     description!,
-                    style: theme.textTheme.bodySmall,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorTheme.text.secondary,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],

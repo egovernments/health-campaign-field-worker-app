@@ -43,7 +43,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   late Map<Permission, bool> requiredPermissions;
 
   Map<Permission, PermissionStatus> statuses = {};
-  bool backgroundActivityConfirmed = false;
 
   // Platform-specific visibility flags
   bool showNearbyWifiDevices = false;
@@ -426,11 +425,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     if (mounted && !granted) {
       Toast.showToast(
         context,
-        message: localizations.translate(
-          !backgroundActivityConfirmed
-              ? i18.common.enablePermissionCheckbox
-              : i18.common.permissionsAlert,
-        ),
+        message: localizations.translate(i18.common.permissionsAlert),
         type: ToastType.error,
       );
       return;
@@ -456,7 +451,8 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         subHeading:
             localizations.translate(i18.common.accessPermissionDialogDesc),
         onCrossTap: () => Navigator.pop(context),
-        contentPadding: const EdgeInsets.symmetric(vertical: spacer12),
+       // width: 10,
+       // contentPadding: const EdgeInsets.symmetric(vertical: 240),
         actions: [
           DigitButton(
               label: localizations.translate(i18.common.allowAccess),
@@ -508,8 +504,8 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                     padding: const EdgeInsets.symmetric(vertical: spacer1, horizontal: spacer3),
                     child: Text(
                       localizations.translate(screenConfig!['description']),
-                      style: textTheme.captionM.copyWith(
-                        color: theme.colorTheme.primary.primary2,
+                      style: textTheme.captionS.copyWith(
+                        color: theme.colorTheme.text.secondary,
                       ),
                       textAlign: TextAlign.left,
                     ),
