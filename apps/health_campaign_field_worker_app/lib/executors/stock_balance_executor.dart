@@ -124,6 +124,23 @@ class StockBalanceExecutor extends ActionExecutor {
 
     if (facilityId == null || facilityId.isEmpty) return;
 
+    // Set of inbound DISPATCHED clientReferenceIds already "claimed" by a
+    // RECEIVED row in this batch via additionalFields.dispatchClientReferenceId.
+    // Used to skip the legacy `isReceiver && DISPATCHED && status=ACCEPTED`
+    // delta when the new two-write Accept (or CDD scan) has already produced
+    // the receiver-owned RECEIVED row.
+    //
+    // Rollout bridge — remove when every campaign's `manage_stock` config has
+    // been rotated to include the `CREATE_EVENT` on Accept. At that point the
+    // legacy DISPATCHED-status-ACCEPTED branch below and this set can be
+    // deleted together. See `stock-receive-flow.html` for the steady-state
+    // design.
+    final dispatchRefsClaimedByReceived = stockEntities
+        .where((s) => (s.transactionType?.toUpperCase() ?? '') == 'RECEIVED')
+        .map((s) => _getAdditionalField(s, 'dispatchClientReferenceId'))
+        .where((v) => v.isNotEmpty)
+        .toSet();
+
     // Calculate the delta for each product variant based on transaction type
     final productDeltas = <String, double>{};
     for (final stock in stockEntities) {
@@ -163,8 +180,14 @@ class StockBalanceExecutor extends ActionExecutor {
                     ?.firstWhere((f) => f.key == 'status',
                         orElse: () => const AdditionalField('', ''))
                     .value ==
-                'ACCEPTED') {
-          delta = quantity; // Add accepted stock from dispatch
+                'ACCEPTED' &&
+            !dispatchRefsClaimedByReceived
+                .contains(stock.clientReferenceId)) {
+          // Legacy receiver-balance path: only counted when no RECEIVED row
+          // in this batch already claims this inbound via
+          // dispatchClientReferenceId. Prevents double-counting under the new
+          // two-write Accept + CDD scan flows.
+          delta = quantity;
         } else if (isSender && transactionType == 'DISPATCHED') {
           delta = -quantity; // Subtract issued/dispatched stock
         } else if (isSender && stockEntryType == 'RETURNED') {
@@ -200,6 +223,20 @@ class StockBalanceExecutor extends ActionExecutor {
     for (final field in fields) {
       if (field.key == 'stockEntryType') {
         return field.value?.toString().toUpperCase() ?? '';
+      }
+    }
+    return '';
+  }
+
+  /// Case-preserving additionalFields accessor. Used for identifier values
+  /// like `dispatchClientReferenceId` where uppercasing would corrupt the
+  /// data.
+  String _getAdditionalField(StockModel stock, String key) {
+    final fields = stock.additionalFields?.fields;
+    if (fields == null) return '';
+    for (final field in fields) {
+      if (field.key == key) {
+        return field.value?.toString() ?? '';
       }
     }
     return '';
