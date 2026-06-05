@@ -11,7 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_ui_components: ^0.3.0+1
+  digit_ui_components:
+   path: ../../apps/health_campaign_field_worker_app/packages/a1-downloaded/digit_components
+
   flutter_bloc: ^8.1.5
   reactive_forms: ^17.0.0
   intl: ^0.19.0
