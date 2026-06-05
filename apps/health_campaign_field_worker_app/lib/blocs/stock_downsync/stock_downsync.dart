@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
-import 'package:disk_space_update/disk_space_update.dart';
+import 'package:health_campaign_field_worker_app/utils/disk_space.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

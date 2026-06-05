@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.os.StatFs
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -71,6 +72,25 @@ class MainActivity : FlutterActivity() {
                     result.success(null)
                 }
 
+                else -> result.notImplemented()
+            }
+        }
+
+        // Disk space channel
+        MethodChannel(
+            flutterEngine!!.dartExecutor.binaryMessenger,
+            "disk_space_update"
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "getFreeDiskSpace" -> {
+                    try {
+                        val stat = StatFs(filesDir.absolutePath)
+                        val freeMb = stat.availableBytes.toDouble() / (1024 * 1024)
+                        result.success(freeMb)
+                    } catch (e: Exception) {
+                        result.error("DISK_ERROR", e.message, null)
+                    }
+                }
                 else -> result.notImplemented()
             }
         }

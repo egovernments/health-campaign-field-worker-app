@@ -10,7 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_ui_components: ^0.3.0+1
+  digit_ui_components:
+   path: ../../apps/health_campaign_field_worker_app/packages/a1-downloaded/digit_components
+
 
 dev_dependencies:
   flutter_test:
