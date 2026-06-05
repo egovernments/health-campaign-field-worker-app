@@ -19,7 +19,7 @@ dependencies:
   path_provider: ^2.1.3
   path: ^1.9.0
   digit_ui_components:
-   path: ./packages/a1-downloaded/digit_components
+   path: ../../../digit_eco/digit_components
   auto_route: ^8.3.0
   flutter_bloc: ^8.1.5
   collection: ^1.18.0
@@ -54,7 +54,8 @@ dependencies:
   package_info_plus: ^8.0.0
   expandable: ^5.0.1
   flutter_svg: ^2.0.10+1
-  digit_showcase: ^1.0.2+1
+  digit_showcase:
+   path: ../../../digit_eco/digit_showcase
   qr_flutter: ^4.1.0
   sync_service: ^1.0.2
   attendance_management: ^1.0.5+1
@@ -65,7 +66,7 @@ dependencies:
   digit_location_tracker: ^1.0.0
   permission_handler: ^11.3.1
   survey_form:
-   path: ../../packages/survey_form
+   path: ../../../digit_eco/survey_form
   encrypt: ^5.0.3
   chopper: ^6.1.1
   transit_post: ^1.0.0
@@ -114,47 +115,41 @@ dependency_overrides:
   file_selector_platform_interface: ^2.6.2
   camera_android_camerax: 0.6.7
 
-  attendance_management:
-    path: ../../packages/attendance_management
-  #  registration_delivery:
-  #    path: ../../packages/registration_delivery
-  #
-  digit_data_model:
-    path: ../../packages/digit_data_model
-  #
-  digit_dss:
-    path: ../../packages/digit_dss
-  #
-  digit_scanner:
-    path: ../../packages/digit_scanner
-  #
-  #  digit_showcase:
-  #    path: ../../packages/digit_showcase
-  #
-  sync_service:
-    path: ../../packages/sync_service
-  #  
-  
-  digit_flow_builder:
-    path: ../../packages/digit_flow_builder
-  
-  digit_forms_engine:
-    path: ../../packages/digit_forms_engine
+attendance_management:
+  path: ../../../digit_eco/attendance_management
 
-  digit_data_converter:
-    path: ../../packages/digit_data_converter
+digit_data_model:
+  path: ../../../digit_eco/digit_data_model
 
-  digit_crud_bloc:
-    path: ../../packages/digit_crud_bloc
+digit_dss:
+  path: ../../../digit_eco/digit_dss
 
-  digit_formula_parser:
-    path: ../../packages/digit_formula_parser
+digit_scanner:
+  path: ../../../digit_eco/digit_scanner
 
-  transit_post:
-    path: ../../packages/transit_post
+sync_service:
+  path: ../../../digit_eco/sync_service
 
-  survey_form:
-    path: ../../packages/survey_form
+digit_flow_builder:
+  path: ../../packages/digit_flow_builder
+
+digit_forms_engine:
+  path: ../../../digit_eco/digit_forms_engine
+
+digit_data_converter:
+  path: ../../../digit_eco/digit_data_converter
+
+digit_crud_bloc:
+  path: ../../../digit_eco/digit_crud_bloc
+
+digit_formula_parser:
+  path: ../../../digit_eco/digit_formula_parser
+
+transit_post:
+  path: ../../../digit_eco/transit_post
+
+survey_form:
+  path: ../../../digit_eco/survey_form
 #  
 #  digit_ui_components: ^0.2.4+1
 
