@@ -56,6 +56,8 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   // Flag to track if permission handler is disabled
   bool _isDisabled = false;
 
+  bool _settingsOpened = false;
+
   @override
   void initState() {
     super.initState();
@@ -263,54 +265,8 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           statuses[permission] = status;
         });
       }
-
-      // Handle permanently denied - must open app settings
-      if (status.isPermanentlyDenied && mounted) {
-        Toast.showToast(
-          context,
-          message: localizations.translate(
-            i18.common.permissionDeniedOpenSettings,
-          ),
-          type: ToastType.info,
-        );
-        await Future.delayed(const Duration(seconds: 1));
-        await openAppSettings();
-        // After returning from settings, refresh the status
-        if (mounted) {
-          final newStatus = await permission.status;
-          setState(() {
-            statuses[permission] = newStatus;
-          });
-        }
-        return;
-      }
-
-      if (permission == Permission.ignoreBatteryOptimizations &&
-          !status.isGranted) {
-        await openAppSettings();
-      }
     } catch (e) {
-      // Handle PHASE_CLIENT_ALREADY_HIDDEN or other permission request errors
-      // Directly open app settings
       debugPrint('Permission request error for $permission: $e');
-      if (mounted) {
-        Toast.showToast(
-          context,
-          message: localizations.translate(
-            i18.common.permissionDeniedOpenSettings,
-          ),
-          type: ToastType.info,
-        );
-        await Future.delayed(const Duration(seconds: 1));
-        await openAppSettings();
-        // After returning from settings, refresh the status
-        final newStatus = await permission.status;
-        if (mounted) {
-          setState(() {
-            statuses[permission] = newStatus;
-          });
-        }
-      }
     }
   }
 
@@ -324,9 +280,78 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
   /// Request all permission (from config)
   Future<void> _requestAllPermissions() async {
-    for (final e in requiredPermissions.entries) {
-      await _requestPermission(e.key);
+    bool hasDenied = false;
+    bool hasPermanentDenied = false;
+
+    for (final entry in requiredPermissions.entries) {
+      try {
+        final status = await entry.key.request();
+
+        statuses[entry.key] = status;
+
+        if (status.isDenied) {
+          hasDenied = true;
+        }
+
+        if (status.isPermanentlyDenied) {
+          hasPermanentDenied = true;
+        }
+
+        if (entry.key == Permission.ignoreBatteryOptimizations &&
+            !status.isGranted) {
+          hasPermanentDenied = true;
+        }
+      } catch (e) {
+        debugPrint(
+          'Permission request error for ${entry.key}: $e',
+        );
+      }
     }
+
+    if (mounted) {
+      setState(() {});
+    }
+
+    // User denied permission (first time)
+    if (hasDenied && !hasPermanentDenied && mounted) {
+      Toast.showToast(
+        context,
+        message: localizations.translate(
+          i18.common.permissionsAlert,
+        ),
+        type: ToastType.error,
+      );
+
+      return;
+    }
+
+    // User permanently denied permission
+    if (hasPermanentDenied && mounted) {
+      Toast.showToast(
+        context,
+        message: localizations.translate(
+          i18.common.permissionDeniedOpenSettings,
+        ),
+        type: ToastType.info,
+      );
+
+      await Future.delayed(
+        const Duration(milliseconds: 500),
+      );
+
+      await openAppSettings();
+
+      // Refresh statuses after returning from settings
+      for (final permission in requiredPermissions.keys) {
+        statuses[permission] = await permission.status;
+      }
+
+      if (mounted) {
+        setState(() {});
+      }
+    }
+
+    await _checkPermissions();
   }
 
   /// Check if a permission is granted by name
@@ -451,8 +476,8 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         subHeading:
             localizations.translate(i18.common.accessPermissionDialogDesc),
         onCrossTap: () => Navigator.pop(context),
-       // width: 10,
-       // contentPadding: const EdgeInsets.symmetric(vertical: 240),
+        // width: 10,
+        // contentPadding: const EdgeInsets.symmetric(vertical: 240),
         actions: [
           DigitButton(
               label: localizations.translate(i18.common.allowAccess),
@@ -461,7 +486,12 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
                 if (mounted) {
                   Navigator.pop(context);
-                  attemptNavigation();
+
+                  final granted = await _checkPermissions();
+
+                  if (granted) {
+                    context.router.replace(BoundarySelectionRoute());
+                  }
                 }
               },
               type: DigitButtonType.primary,
@@ -488,7 +518,8 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                 // Header from config
                 if (screenConfig?['heading'] != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: spacer4, horizontal: spacer3),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: spacer4, horizontal: spacer3),
                     child: Text(
                       localizations.translate(screenConfig!['heading']),
                       style: textTheme.headingXl.copyWith(
@@ -501,7 +532,8 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                 // Description from config
                 if (screenConfig?['description'] != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: spacer1, horizontal: spacer3),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: spacer1, horizontal: spacer3),
                     child: Text(
                       localizations.translate(screenConfig!['description']),
                       style: textTheme.captionS.copyWith(
@@ -510,7 +542,9 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                const SizedBox(height: spacer4,),
+                const SizedBox(
+                  height: spacer4,
+                ),
                 // Build body widgets from config
                 ...bodyConfig.map(
                   (item) => _buildWidget(
