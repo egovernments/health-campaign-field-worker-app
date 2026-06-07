@@ -477,8 +477,6 @@ class QueryBuilder {
         case 'contains':
         case 'matches':
           return '$column LIKE ?';
-        case 'notContains':
-          return '($column IS NULL OR $column NOT LIKE ?)';
         case 'isNotNull':
           return '$column IS NOT NULL';
         case 'isNull':
@@ -562,9 +560,6 @@ class QueryBuilder {
           args.add(Variable.withString('${filter.value}%'));
           break;
         case 'matches':
-          args.add(Variable.withString('%${filter.value}%'));
-          break;
-        case 'notContains':
           args.add(Variable.withString('%${filter.value}%'));
           break;
         case 'in':

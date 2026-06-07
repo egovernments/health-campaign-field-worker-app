@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   digit_ui_components:
-   path: ../../apps/health_campaign_field_worker_app/packages/a1-downloaded/digit_components
+   path: ../../../digit_eco/digit_components
 
   flutter_bloc: ^8.1.5
   freezed_annotation: ^2.4.1

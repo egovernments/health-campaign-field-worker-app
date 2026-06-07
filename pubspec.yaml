@@ -8,6 +8,8 @@ dev_dependencies:
   melos: ^3.1.0
 dependencies:
   dart_mappable: ^4.2.0
+  digit_crud_bloc: ^0.0.1
+  digit_scanner: ^1.0.2
 
 
 

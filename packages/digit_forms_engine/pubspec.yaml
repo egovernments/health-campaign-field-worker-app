@@ -20,13 +20,15 @@ dependencies:
   json_annotation: ^4.7.0
   reactive_forms: ^17.0.0
   digit_ui_components:
-   path: ../../apps/health_campaign_field_worker_app/packages/a1-downloaded/digit_components
+   path: ../../../digit_eco/digit_components
 
   flutter_bloc: ^8.1.1
   uuid: ^4.5.1
-  digit_scanner: ^1.0.6+2
+  digit_scanner:
+   path: ../../../digit_eco/digit_scanner  
   provider: ^6.1.5
-  digit_formula_parser: ^1.0.0
+  digit_formula_parser:
+    path: ../../../digit_eco/digit_formula_parser
   screen_protector: 1.4.1
   gs1_barcode_parser: ^1.0.5
 
