@@ -102,10 +102,19 @@ class SearchEntityRepository extends LocalRepository {
     }
   }
 
-  /// Infers the primary key field name based on common conventions.
+  /// Infers the primary key field name based on the actual table schema.
+  /// Falls back to 'id' for tables that don't have a clientReferenceId column.
   String _inferPrimaryKeyField(String tableName) {
-    // Default convention used in the codebase
-    return 'clientReferenceId';
+    try {
+      final table = sql.allTables.firstWhere(
+        (t) => t.actualTableName == QueryBuilder.camelToSnake(tableName),
+      );
+      final hasClientRef =
+          table.$columns.any((c) => c.$name == 'client_reference_id');
+      return hasClientRef ? 'clientReferenceId' : 'id';
+    } catch (_) {
+      return 'clientReferenceId';
+    }
   }
 
   /// Executes the multi-table search with filter resolution.
@@ -361,7 +370,8 @@ class SearchEntityRepository extends LocalRepository {
             );
           }
         } catch (e) {
-          _logError('Failed to convert row to $rowModelName entity', e, StackTrace.current);
+          _logError('Failed to convert row to $rowModelName entity', e,
+              StackTrace.current);
           // Continue processing other rows instead of failing entirely
         }
       }

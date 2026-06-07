@@ -10,16 +10,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_crud_bloc: ^0.0.2-dev
-  digit_data_converter: ^0.0.2-dev
-  digit_forms_engine: ^0.0.2-dev
+  digit_crud_bloc:
+   path: ../../../digit_eco/digit_crud_bloc
+  digit_data_converter: 
+   path: ../../../digit_eco/digit_data_converter
+  digit_forms_engine: 
+   path: ../digit_forms_engine
   digit_ui_components:
-   path: ../../apps/health_campaign_field_worker_app/packages/a1-downloaded/digit_components
+   path: ../../../digit_eco/digit_components
 
   flutter_bloc: ^8.1.5
   auto_route: ^8.1.3
-  digit_data_model: ^1.2.0-dev.1-console
-  digit_formula_parser: ^1.0.0
+  digit_data_model:
+   path: ../digit_data_model
+  digit_formula_parser:
+   path: ../../../digit_eco/digit_formula_parser
   collection: ^1.18.0
   intl: ^0.19.0
   qr_flutter: ^4.1.0
@@ -35,7 +40,8 @@ dev_dependencies:
   bloc_test: ^9.1.0
   mocktail: ^1.0.2
   build_runner: ^2.4.11
-  digit_scanner: ^1.0.6
+  digit_scanner: 
+   path: ../../../digit_eco/digit_scanner
   dart_mappable_builder:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/

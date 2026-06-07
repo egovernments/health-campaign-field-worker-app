@@ -557,10 +557,9 @@ packages:
   digit_location_tracker:
     dependency: "direct main"
     description:
-      name: digit_location_tracker
-      sha256: a93bda5b07db112210e08c7a76f0627957d931d5106c8a7db8876503cc2fd06f
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../../digit_eco/digit_location_tracker"
+      relative: true
+    source: path
     version: "1.0.0"
   digit_scanner:
     dependency: "direct main"
@@ -572,18 +571,16 @@ packages:
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: c1810508f03bece3310b136d36d80265c39ec8cca89384b7a1f1fd0a2132b3c5
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
+      path: "../../../digit_eco/digit_showcase"
+      relative: true
+    source: path
+    version: "1.0.2+1"
   digit_ui_components:
     dependency: "direct main"
     description:
-      name: digit_ui_components
-      sha256: dca1305d280dd65250beb0a9bbb9d6d04cc8f848e7134c5ebc5839ec75acd785
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../../digit_eco/digit_components"
+      relative: true
+    source: path
     version: "0.3.0+3"
   dio:
     dependency: "direct main"
