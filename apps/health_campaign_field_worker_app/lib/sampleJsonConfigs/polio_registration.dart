@@ -109,6 +109,7 @@ final dynamic samplePolioRegistrationFlows = {
                     "type": "template",
                     "value": "{{ item.headIndividual.0.name.givenName }}",
                     "format": "textTemplate",
+                    "flex": 1,
                     "fieldName": "headOfHousehold"
                   },
                   {

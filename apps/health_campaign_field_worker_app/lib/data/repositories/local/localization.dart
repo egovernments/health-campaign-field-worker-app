@@ -129,4 +129,10 @@ class LocalizationLocalRepository {
       });
     });
   }
+
+  FutureOr deleteAll(LocalSqlDataStore sql) async {
+    return retryLocalCallOperation(() async {
+      return sql.delete(sql.localization).go();
+    });
+  }
 }

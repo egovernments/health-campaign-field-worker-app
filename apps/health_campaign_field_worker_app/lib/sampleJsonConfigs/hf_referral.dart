@@ -275,6 +275,7 @@ final dynamic sampleReferralFlows = {
                     "type": "template",
                     "value": "{{ itemData.name }}",
                     "format": "textTemplate",
+                    "flex": 1,
                     "fieldName": "referralName"
                   },
                   {

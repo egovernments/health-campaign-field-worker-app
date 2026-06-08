@@ -3446,9 +3446,9 @@ final dynamic sampleFlows = {
               "format": "mobileNumber",
               "hidden": false,
               "isMdms": false,
-              "pattern": "^\\d+\$",
+              "pattern": "^[1-9]\\d*\$",
               "tooltip": "HCM_REGISTRATION_MOBILE_TOOLTIP",
-              "helpText": "HCM_REGISTRATION_MOBILE_HELPTEXT",
+              "helpText": "HCM_REGISTRATION_MOBILE_NO_ZERO_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "phone",
@@ -3458,30 +3458,30 @@ final dynamic sampleFlows = {
               "schemaCode": null,
               "systemDate": false,
               "lengthRange": {
-                "maxLength": 10,
-                "minLength": 10,
-                "errorMessage": "HCM_VALIDATION_MOBILE_10_DIGITS"
+                "maxLength": 8,
+                "minLength": 8,
+                "errorMessage": "HCM_VALIDATION_MOBILE_8_DIGITS"
               },
               "validations": [
                 {
                   "type": "pattern",
-                  "value": "^\\d+\$",
-                  "message": "HCM_VALIDATION_ONLY_NUMBERS"
+                  "value": "^[1-9]\\d*\$",
+                  "message": "HCM_VALIDATION_MOBILE_NO_LEADING_ZERO"
                 },
                 {
                   "type": "minLength",
-                  "value": 10,
-                  "message": "HCM_VALIDATION_MOBILE_10_DIGITS"
+                  "value": 8,
+                  "message": "HCM_VALIDATION_MOBILE_8_DIGITS"
                 },
                 {
                   "type": "maxLength",
-                  "value": 10,
-                  "message": "HCM_VALIDATION_MOBILE_10_DIGITS"
+                  "value": 8,
+                  "message": "HCM_VALIDATION_MOBILE_8_DIGITS"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "pattern.message": "HCM_VALIDATION_ONLY_NUMBERS"
+              "pattern.message": "HCM_VALIDATION_MOBILE_NO_LEADING_ZERO"
             },
             {
               "type": "string",

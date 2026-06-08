@@ -63,28 +63,25 @@ final dynamic samplePolioStockDetailsFlows = {
       ],
       "heading": "POLIO_STOCK_VIAL_DETAILS_HEADING",
       "screenType": "TEMPLATE",
-      "wrapperConfig": {
-        "rootEntity": "UserActionModel",
-        "searchConfig": {
-          "primary": "userAction",
-          "select": ["userAction"]
-        }
-      },
       "initActions": [
         {
           "actionType": "SEARCH_EVENT",
           "properties": {
             "data": [
-              {
-                "key": "projectId",
-                "value": "{{singleton.selectedProject.id}}"
-              }
+              {"key": "projectId", "value": "{{singleton.selectedProject.id}}"}
             ],
             "name": "userAction",
             "awaitResults": true
           }
         }
-      ]
+      ],
+      "wrapperConfig": {
+        "rootEntity": "UserActionModel",
+        "searchConfig": {
+          "select": ["userAction"],
+          "primary": "userAction"
+        }
+      }
     },
     {
       "name": "issuedVials",
@@ -474,15 +471,6 @@ final dynamic samplePolioStockDetailsFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "computedValue": {
-                "sources": [
-                  "openedVialsReturned",
-                  "unopenedSpoiltVialsReturned",
-                  "unopenedUsableVialsRetrieved",
-                  "unopenedUsableVialsReturned"
-                ],
-                "operation": "sum"
-              },
               "validations": [
                 {
                   "type": "required",
@@ -501,6 +489,15 @@ final dynamic samplePolioStockDetailsFlows = {
                 }
               ],
               "errorMessage": "",
+              "computedValue": {
+                "sources": [
+                  "openedVialsReturned",
+                  "unopenedSpoiltVialsReturned",
+                  "unopenedUsableVialsRetrieved",
+                  "unopenedUsableVialsReturned"
+                ],
+                "operation": "sum"
+              },
               "isMultiSelect": false
             }
           ],
