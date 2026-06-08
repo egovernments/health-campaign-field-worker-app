@@ -482,13 +482,10 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           DigitButton(
               label: localizations.translate(i18.common.allowAccess),
               onPressed: () async {
-                await _requestAllPermissions();
-
                 if (mounted) {
                   Navigator.pop(context);
-
+                  await _requestAllPermissions();
                   final granted = await _checkPermissions();
-
                   if (granted) {
                     context.router.replace(BoundarySelectionRoute());
                   }
