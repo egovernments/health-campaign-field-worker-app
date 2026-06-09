@@ -77,7 +77,7 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
 
 /// `FacilityEvent` is a freezed union of all possible events that can occur in the `FacilityBloc`.
 @freezed
-class FacilityEvent with _$FacilityEvent {
+abstract class FacilityEvent with _$FacilityEvent {
   /// The `FacilityLoadForProjectEvent` event is triggered when facilities need to be loaded for a project.
   const factory FacilityEvent.loadForProjectId({
     required String projectId,
@@ -87,7 +87,7 @@ class FacilityEvent with _$FacilityEvent {
 
 /// `FacilityState` is a freezed union of all possible states that can occur in the `FacilityBloc`.
 @freezed
-class FacilityState with _$FacilityState {
+abstract class FacilityState with _$FacilityState {
   /// The `FacilityEmptyState` state represents the state where no facilities are loaded.
   const factory FacilityState.empty() = FacilityEmptyState;
 

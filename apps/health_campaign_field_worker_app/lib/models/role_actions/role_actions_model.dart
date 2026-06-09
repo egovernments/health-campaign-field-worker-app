@@ -5,7 +5,7 @@ part 'role_actions_model.freezed.dart';
 part 'role_actions_model.g.dart';
 
 @freezed
-class RoleActionsWrapperModel with _$RoleActionsWrapperModel {
+abstract class RoleActionsWrapperModel with _$RoleActionsWrapperModel {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory RoleActionsWrapperModel({
     @JsonKey(name: 'actions') @Default([]) List<RoleActionsModel> actions,
@@ -16,7 +16,7 @@ class RoleActionsWrapperModel with _$RoleActionsWrapperModel {
 }
 
 @freezed
-class RoleActionsModel with _$RoleActionsModel {
+abstract class RoleActionsModel with _$RoleActionsModel {
   @JsonSerializable(explicitToJson: true)
   const factory RoleActionsModel({
     @JsonKey(name: 'id') required int id,

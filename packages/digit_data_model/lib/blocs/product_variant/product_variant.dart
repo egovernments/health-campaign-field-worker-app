@@ -59,7 +59,7 @@ class ProductVariantBloc
 
 /// `ProductVariantEvent` is a freezed union of all possible events that can occur in the `ProductVariantBloc`.
 @freezed
-class ProductVariantEvent with _$ProductVariantEvent {
+abstract class ProductVariantEvent with _$ProductVariantEvent {
   /// The `ProductVariantLoadEvent` event is triggered when product variants need to be loaded for a project.
   const factory ProductVariantEvent.load({
     required ProjectResourceSearchModel query,
@@ -68,7 +68,7 @@ class ProductVariantEvent with _$ProductVariantEvent {
 
 /// `ProductVariantState` is a freezed union of all possible states that can occur in the `ProductVariantBloc`.
 @freezed
-class ProductVariantState with _$ProductVariantState {
+abstract class ProductVariantState with _$ProductVariantState {
   /// The `ProductVariantLoadingState` state represents the state where product variants are being loaded.
   const factory ProductVariantState.loading() = ProductVariantLoadingState;
 

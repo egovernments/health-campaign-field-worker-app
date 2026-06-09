@@ -63,7 +63,7 @@ class ServiceDefinitionBloc
 }
 
 @freezed
-class ServiceDefinitionEvent with _$ServiceDefinitionEvent {
+abstract class ServiceDefinitionEvent with _$ServiceDefinitionEvent {
   const factory ServiceDefinitionEvent.fetch() = ServiceDefinitionFetchEvent;
   const factory ServiceDefinitionEvent.selectServiceDefinition({
     required ServiceDefinitionModel serviceDefinition,
@@ -71,7 +71,7 @@ class ServiceDefinitionEvent with _$ServiceDefinitionEvent {
 }
 
 @freezed
-class ServiceDefinitionState with _$ServiceDefinitionState {
+abstract class ServiceDefinitionState with _$ServiceDefinitionState {
   const factory ServiceDefinitionState.empty() = ServiceDefinitionEmptyState;
   const factory ServiceDefinitionState.isloading() =
   ServiceDefinitionIsloadingState;

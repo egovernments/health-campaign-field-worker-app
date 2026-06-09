@@ -79,7 +79,7 @@ const DashboardResponseSchema = CollectionSchema(
   getId: _dashboardResponseGetId,
   getLinks: _dashboardResponseGetLinks,
   attach: _dashboardResponseAttach,
-  version: '3.1.0+1',
+  version: '3.3.0',
 );
 
 int _dashboardResponseEstimateSize(

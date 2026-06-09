@@ -182,7 +182,7 @@ class PushNotificationBloc
 }
 
 @freezed
-class PushNotificationEvent with _$PushNotificationEvent {
+abstract class PushNotificationEvent with _$PushNotificationEvent {
   const factory PushNotificationEvent.initialize() =
       PushNotificationInitializeEvent;
 
@@ -210,7 +210,7 @@ class PushNotificationEvent with _$PushNotificationEvent {
 }
 
 @freezed
-class PushNotificationState with _$PushNotificationState {
+abstract class PushNotificationState with _$PushNotificationState {
   const factory PushNotificationState.initial() = PushNotificationInitialState;
 
   const factory PushNotificationState.initialized({

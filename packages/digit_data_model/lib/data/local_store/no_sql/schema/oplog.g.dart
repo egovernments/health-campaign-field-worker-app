@@ -107,7 +107,7 @@ const OpLogSchema = CollectionSchema(
   getId: _opLogGetId,
   getLinks: _opLogGetLinks,
   attach: _opLogAttach,
-  version: '3.1.0+1',
+  version: '3.3.0',
 );
 
 int _opLogEstimateSize(

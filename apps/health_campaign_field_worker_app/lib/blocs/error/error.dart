@@ -27,7 +27,7 @@ class ErrorBloc extends Bloc<ErrorEvent, ErrorState> {
 
 /// Events
 @freezed
-class ErrorEvent with _$ErrorEvent {
+abstract class ErrorEvent with _$ErrorEvent {
   /// Event to set an error
   const factory ErrorEvent.setError({required String errorMessage}) = SetErrorEvent;
 
@@ -37,7 +37,7 @@ class ErrorEvent with _$ErrorEvent {
 
 /// States
 @freezed
-class ErrorState with _$ErrorState {
+abstract class ErrorState with _$ErrorState {
   /// No error present
   const factory ErrorState.noError() = NoErrorState;
 

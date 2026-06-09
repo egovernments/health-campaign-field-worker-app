@@ -12,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/transit_post.dart';
-import '../router/transit_post_router.gm.dart';
+import '../router/transit_post_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';

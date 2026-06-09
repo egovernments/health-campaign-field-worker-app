@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,74 +9,52 @@ part of 'dashboard_config.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-DashboardConfigPrimaryWrapper _$DashboardConfigPrimaryWrapperFromJson(
-    Map<String, dynamic> json) {
-  return _DashboardConfigPrimaryWrapper.fromJson(json);
-}
 
 /// @nodoc
 mixin _$DashboardConfigPrimaryWrapper {
   @JsonKey(name: 'dashboardConfig')
-  List<DashboardConfigWrapper> get dashboardConfigWrapper =>
-      throw _privateConstructorUsedError;
+  List<DashboardConfigWrapper> get dashboardConfigWrapper;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $DashboardConfigPrimaryWrapperCopyWith<DashboardConfigPrimaryWrapper>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $DashboardConfigPrimaryWrapperCopyWith<$Res> {
-  factory $DashboardConfigPrimaryWrapperCopyWith(
-          DashboardConfigPrimaryWrapper value,
-          $Res Function(DashboardConfigPrimaryWrapper) then) =
-      _$DashboardConfigPrimaryWrapperCopyWithImpl<$Res,
-          DashboardConfigPrimaryWrapper>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'dashboardConfig')
-      List<DashboardConfigWrapper> dashboardConfigWrapper});
-}
-
-/// @nodoc
-class _$DashboardConfigPrimaryWrapperCopyWithImpl<$Res,
-        $Val extends DashboardConfigPrimaryWrapper>
-    implements $DashboardConfigPrimaryWrapperCopyWith<$Res> {
-  _$DashboardConfigPrimaryWrapperCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
+  /// Create a copy of DashboardConfigPrimaryWrapper
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
+  $DashboardConfigPrimaryWrapperCopyWith<DashboardConfigPrimaryWrapper>
+      get copyWith => _$DashboardConfigPrimaryWrapperCopyWithImpl<
+              DashboardConfigPrimaryWrapper>(
+          this as DashboardConfigPrimaryWrapper, _$identity);
+
+  /// Serializes this DashboardConfigPrimaryWrapper to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? dashboardConfigWrapper = null,
-  }) {
-    return _then(_value.copyWith(
-      dashboardConfigWrapper: null == dashboardConfigWrapper
-          ? _value.dashboardConfigWrapper
-          : dashboardConfigWrapper // ignore: cast_nullable_to_non_nullable
-              as List<DashboardConfigWrapper>,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is DashboardConfigPrimaryWrapper &&
+            const DeepCollectionEquality()
+                .equals(other.dashboardConfigWrapper, dashboardConfigWrapper));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(dashboardConfigWrapper));
+
+  @override
+  String toString() {
+    return 'DashboardConfigPrimaryWrapper(dashboardConfigWrapper: $dashboardConfigWrapper)';
   }
 }
 
 /// @nodoc
-abstract class _$$DashboardConfigPrimaryWrapperImplCopyWith<$Res>
-    implements $DashboardConfigPrimaryWrapperCopyWith<$Res> {
-  factory _$$DashboardConfigPrimaryWrapperImplCopyWith(
-          _$DashboardConfigPrimaryWrapperImpl value,
-          $Res Function(_$DashboardConfigPrimaryWrapperImpl) then) =
-      __$$DashboardConfigPrimaryWrapperImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $DashboardConfigPrimaryWrapperCopyWith<$Res> {
+  factory $DashboardConfigPrimaryWrapperCopyWith(
+          DashboardConfigPrimaryWrapper value,
+          $Res Function(DashboardConfigPrimaryWrapper) _then) =
+      _$DashboardConfigPrimaryWrapperCopyWithImpl;
   @useResult
   $Res call(
       {@JsonKey(name: 'dashboardConfig')
@@ -84,41 +62,205 @@ abstract class _$$DashboardConfigPrimaryWrapperImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DashboardConfigPrimaryWrapperImplCopyWithImpl<$Res>
-    extends _$DashboardConfigPrimaryWrapperCopyWithImpl<$Res,
-        _$DashboardConfigPrimaryWrapperImpl>
-    implements _$$DashboardConfigPrimaryWrapperImplCopyWith<$Res> {
-  __$$DashboardConfigPrimaryWrapperImplCopyWithImpl(
-      _$DashboardConfigPrimaryWrapperImpl _value,
-      $Res Function(_$DashboardConfigPrimaryWrapperImpl) _then)
-      : super(_value, _then);
+class _$DashboardConfigPrimaryWrapperCopyWithImpl<$Res>
+    implements $DashboardConfigPrimaryWrapperCopyWith<$Res> {
+  _$DashboardConfigPrimaryWrapperCopyWithImpl(this._self, this._then);
 
+  final DashboardConfigPrimaryWrapper _self;
+  final $Res Function(DashboardConfigPrimaryWrapper) _then;
+
+  /// Create a copy of DashboardConfigPrimaryWrapper
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? dashboardConfigWrapper = null,
   }) {
-    return _then(_$DashboardConfigPrimaryWrapperImpl(
+    return _then(_self.copyWith(
       dashboardConfigWrapper: null == dashboardConfigWrapper
-          ? _value._dashboardConfigWrapper
+          ? _self.dashboardConfigWrapper
           : dashboardConfigWrapper // ignore: cast_nullable_to_non_nullable
               as List<DashboardConfigWrapper>,
     ));
   }
 }
 
+/// Adds pattern-matching-related methods to [DashboardConfigPrimaryWrapper].
+extension DashboardConfigPrimaryWrapperPatterns
+    on DashboardConfigPrimaryWrapper {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_DashboardConfigPrimaryWrapper value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigPrimaryWrapper() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_DashboardConfigPrimaryWrapper value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigPrimaryWrapper():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_DashboardConfigPrimaryWrapper value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigPrimaryWrapper() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'dashboardConfig')
+            List<DashboardConfigWrapper> dashboardConfigWrapper)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigPrimaryWrapper() when $default != null:
+        return $default(_that.dashboardConfigWrapper);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'dashboardConfig')
+            List<DashboardConfigWrapper> dashboardConfigWrapper)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigPrimaryWrapper():
+        return $default(_that.dashboardConfigWrapper);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            @JsonKey(name: 'dashboardConfig')
+            List<DashboardConfigWrapper> dashboardConfigWrapper)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigPrimaryWrapper() when $default != null:
+        return $default(_that.dashboardConfigWrapper);
+      case _:
+        return null;
+    }
+  }
+}
+
 /// @nodoc
 @JsonSerializable()
-class _$DashboardConfigPrimaryWrapperImpl
-    implements _DashboardConfigPrimaryWrapper {
-  const _$DashboardConfigPrimaryWrapperImpl(
+class _DashboardConfigPrimaryWrapper implements DashboardConfigPrimaryWrapper {
+  const _DashboardConfigPrimaryWrapper(
       {@JsonKey(name: 'dashboardConfig')
       final List<DashboardConfigWrapper> dashboardConfigWrapper = const []})
       : _dashboardConfigWrapper = dashboardConfigWrapper;
-
-  factory _$DashboardConfigPrimaryWrapperImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$DashboardConfigPrimaryWrapperImplFromJson(json);
+  factory _DashboardConfigPrimaryWrapper.fromJson(Map<String, dynamic> json) =>
+      _$DashboardConfigPrimaryWrapperFromJson(json);
 
   final List<DashboardConfigWrapper> _dashboardConfigWrapper;
   @override
@@ -130,142 +272,134 @@ class _$DashboardConfigPrimaryWrapperImpl
     return EqualUnmodifiableListView(_dashboardConfigWrapper);
   }
 
+  /// Create a copy of DashboardConfigPrimaryWrapper
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'DashboardConfigPrimaryWrapper(dashboardConfigWrapper: $dashboardConfigWrapper)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$DashboardConfigPrimaryWrapperCopyWith<_DashboardConfigPrimaryWrapper>
+      get copyWith => __$DashboardConfigPrimaryWrapperCopyWithImpl<
+          _DashboardConfigPrimaryWrapper>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$DashboardConfigPrimaryWrapperToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DashboardConfigPrimaryWrapperImpl &&
+            other is _DashboardConfigPrimaryWrapper &&
             const DeepCollectionEquality().equals(
                 other._dashboardConfigWrapper, _dashboardConfigWrapper));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType,
       const DeepCollectionEquality().hash(_dashboardConfigWrapper));
 
-  @JsonKey(ignore: true)
   @override
-  @pragma('vm:prefer-inline')
-  _$$DashboardConfigPrimaryWrapperImplCopyWith<
-          _$DashboardConfigPrimaryWrapperImpl>
-      get copyWith => __$$DashboardConfigPrimaryWrapperImplCopyWithImpl<
-          _$DashboardConfigPrimaryWrapperImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DashboardConfigPrimaryWrapperImplToJson(
-      this,
-    );
+  String toString() {
+    return 'DashboardConfigPrimaryWrapper(dashboardConfigWrapper: $dashboardConfigWrapper)';
   }
 }
 
-abstract class _DashboardConfigPrimaryWrapper
-    implements DashboardConfigPrimaryWrapper {
-  const factory _DashboardConfigPrimaryWrapper(
-          {@JsonKey(name: 'dashboardConfig')
-          final List<DashboardConfigWrapper> dashboardConfigWrapper}) =
-      _$DashboardConfigPrimaryWrapperImpl;
-
-  factory _DashboardConfigPrimaryWrapper.fromJson(Map<String, dynamic> json) =
-      _$DashboardConfigPrimaryWrapperImpl.fromJson;
-
+/// @nodoc
+abstract mixin class _$DashboardConfigPrimaryWrapperCopyWith<$Res>
+    implements $DashboardConfigPrimaryWrapperCopyWith<$Res> {
+  factory _$DashboardConfigPrimaryWrapperCopyWith(
+          _DashboardConfigPrimaryWrapper value,
+          $Res Function(_DashboardConfigPrimaryWrapper) _then) =
+      __$DashboardConfigPrimaryWrapperCopyWithImpl;
   @override
-  @JsonKey(name: 'dashboardConfig')
-  List<DashboardConfigWrapper> get dashboardConfigWrapper;
-  @override
-  @JsonKey(ignore: true)
-  _$$DashboardConfigPrimaryWrapperImplCopyWith<
-          _$DashboardConfigPrimaryWrapperImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'dashboardConfig')
+      List<DashboardConfigWrapper> dashboardConfigWrapper});
 }
 
-DashboardConfigWrapper _$DashboardConfigWrapperFromJson(
-    Map<String, dynamic> json) {
-  return _DashboardConfigWrapper.fromJson(json);
+/// @nodoc
+class __$DashboardConfigPrimaryWrapperCopyWithImpl<$Res>
+    implements _$DashboardConfigPrimaryWrapperCopyWith<$Res> {
+  __$DashboardConfigPrimaryWrapperCopyWithImpl(this._self, this._then);
+
+  final _DashboardConfigPrimaryWrapper _self;
+  final $Res Function(_DashboardConfigPrimaryWrapper) _then;
+
+  /// Create a copy of DashboardConfigPrimaryWrapper
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? dashboardConfigWrapper = null,
+  }) {
+    return _then(_DashboardConfigPrimaryWrapper(
+      dashboardConfigWrapper: null == dashboardConfigWrapper
+          ? _self._dashboardConfigWrapper
+          : dashboardConfigWrapper // ignore: cast_nullable_to_non_nullable
+              as List<DashboardConfigWrapper>,
+    ));
+  }
 }
 
 /// @nodoc
 mixin _$DashboardConfigWrapper {
   @JsonKey(name: 'enableDashboard')
-  bool get enableDashboard => throw _privateConstructorUsedError;
+  bool get enableDashboard;
   @JsonKey(name: 'charts')
-  List<ChartConfigModel>? get charts => throw _privateConstructorUsedError;
-  String get projectTypeCode => throw _privateConstructorUsedError;
-  String? get projectTypeId => throw _privateConstructorUsedError;
+  List<ChartConfigModel>? get charts;
+  String get projectTypeCode;
+  String? get projectTypeId;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $DashboardConfigWrapperCopyWith<DashboardConfigWrapper> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $DashboardConfigWrapperCopyWith<$Res> {
-  factory $DashboardConfigWrapperCopyWith(DashboardConfigWrapper value,
-          $Res Function(DashboardConfigWrapper) then) =
-      _$DashboardConfigWrapperCopyWithImpl<$Res, DashboardConfigWrapper>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'enableDashboard') bool enableDashboard,
-      @JsonKey(name: 'charts') List<ChartConfigModel>? charts,
-      String projectTypeCode,
-      String? projectTypeId});
-}
-
-/// @nodoc
-class _$DashboardConfigWrapperCopyWithImpl<$Res,
-        $Val extends DashboardConfigWrapper>
-    implements $DashboardConfigWrapperCopyWith<$Res> {
-  _$DashboardConfigWrapperCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
+  /// Create a copy of DashboardConfigWrapper
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
+  $DashboardConfigWrapperCopyWith<DashboardConfigWrapper> get copyWith =>
+      _$DashboardConfigWrapperCopyWithImpl<DashboardConfigWrapper>(
+          this as DashboardConfigWrapper, _$identity);
+
+  /// Serializes this DashboardConfigWrapper to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? enableDashboard = null,
-    Object? charts = freezed,
-    Object? projectTypeCode = null,
-    Object? projectTypeId = freezed,
-  }) {
-    return _then(_value.copyWith(
-      enableDashboard: null == enableDashboard
-          ? _value.enableDashboard
-          : enableDashboard // ignore: cast_nullable_to_non_nullable
-              as bool,
-      charts: freezed == charts
-          ? _value.charts
-          : charts // ignore: cast_nullable_to_non_nullable
-              as List<ChartConfigModel>?,
-      projectTypeCode: null == projectTypeCode
-          ? _value.projectTypeCode
-          : projectTypeCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      projectTypeId: freezed == projectTypeId
-          ? _value.projectTypeId
-          : projectTypeId // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is DashboardConfigWrapper &&
+            (identical(other.enableDashboard, enableDashboard) ||
+                other.enableDashboard == enableDashboard) &&
+            const DeepCollectionEquality().equals(other.charts, charts) &&
+            (identical(other.projectTypeCode, projectTypeCode) ||
+                other.projectTypeCode == projectTypeCode) &&
+            (identical(other.projectTypeId, projectTypeId) ||
+                other.projectTypeId == projectTypeId));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      enableDashboard,
+      const DeepCollectionEquality().hash(charts),
+      projectTypeCode,
+      projectTypeId);
+
+  @override
+  String toString() {
+    return 'DashboardConfigWrapper(enableDashboard: $enableDashboard, charts: $charts, projectTypeCode: $projectTypeCode, projectTypeId: $projectTypeId)';
   }
 }
 
 /// @nodoc
-abstract class _$$DashboardConfigWrapperImplCopyWith<$Res>
-    implements $DashboardConfigWrapperCopyWith<$Res> {
-  factory _$$DashboardConfigWrapperImplCopyWith(
-          _$DashboardConfigWrapperImpl value,
-          $Res Function(_$DashboardConfigWrapperImpl) then) =
-      __$$DashboardConfigWrapperImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $DashboardConfigWrapperCopyWith<$Res> {
+  factory $DashboardConfigWrapperCopyWith(DashboardConfigWrapper value,
+          $Res Function(DashboardConfigWrapper) _then) =
+      _$DashboardConfigWrapperCopyWithImpl;
   @useResult
   $Res call(
       {@JsonKey(name: 'enableDashboard') bool enableDashboard,
@@ -275,15 +409,15 @@ abstract class _$$DashboardConfigWrapperImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DashboardConfigWrapperImplCopyWithImpl<$Res>
-    extends _$DashboardConfigWrapperCopyWithImpl<$Res,
-        _$DashboardConfigWrapperImpl>
-    implements _$$DashboardConfigWrapperImplCopyWith<$Res> {
-  __$$DashboardConfigWrapperImplCopyWithImpl(
-      _$DashboardConfigWrapperImpl _value,
-      $Res Function(_$DashboardConfigWrapperImpl) _then)
-      : super(_value, _then);
+class _$DashboardConfigWrapperCopyWithImpl<$Res>
+    implements $DashboardConfigWrapperCopyWith<$Res> {
+  _$DashboardConfigWrapperCopyWithImpl(this._self, this._then);
 
+  final DashboardConfigWrapper _self;
+  final $Res Function(DashboardConfigWrapper) _then;
+
+  /// Create a copy of DashboardConfigWrapper
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -292,39 +426,213 @@ class __$$DashboardConfigWrapperImplCopyWithImpl<$Res>
     Object? projectTypeCode = null,
     Object? projectTypeId = freezed,
   }) {
-    return _then(_$DashboardConfigWrapperImpl(
+    return _then(_self.copyWith(
       enableDashboard: null == enableDashboard
-          ? _value.enableDashboard
+          ? _self.enableDashboard
           : enableDashboard // ignore: cast_nullable_to_non_nullable
               as bool,
       charts: freezed == charts
-          ? _value._charts
+          ? _self.charts
           : charts // ignore: cast_nullable_to_non_nullable
               as List<ChartConfigModel>?,
       projectTypeCode: null == projectTypeCode
-          ? _value.projectTypeCode
+          ? _self.projectTypeCode
           : projectTypeCode // ignore: cast_nullable_to_non_nullable
               as String,
       projectTypeId: freezed == projectTypeId
-          ? _value.projectTypeId
+          ? _self.projectTypeId
           : projectTypeId // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
 }
 
+/// Adds pattern-matching-related methods to [DashboardConfigWrapper].
+extension DashboardConfigWrapperPatterns on DashboardConfigWrapper {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_DashboardConfigWrapper value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigWrapper() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_DashboardConfigWrapper value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigWrapper():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_DashboardConfigWrapper value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigWrapper() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'enableDashboard') bool enableDashboard,
+            @JsonKey(name: 'charts') List<ChartConfigModel>? charts,
+            String projectTypeCode,
+            String? projectTypeId)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigWrapper() when $default != null:
+        return $default(_that.enableDashboard, _that.charts,
+            _that.projectTypeCode, _that.projectTypeId);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'enableDashboard') bool enableDashboard,
+            @JsonKey(name: 'charts') List<ChartConfigModel>? charts,
+            String projectTypeCode,
+            String? projectTypeId)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigWrapper():
+        return $default(_that.enableDashboard, _that.charts,
+            _that.projectTypeCode, _that.projectTypeId);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            @JsonKey(name: 'enableDashboard') bool enableDashboard,
+            @JsonKey(name: 'charts') List<ChartConfigModel>? charts,
+            String projectTypeCode,
+            String? projectTypeId)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _DashboardConfigWrapper() when $default != null:
+        return $default(_that.enableDashboard, _that.charts,
+            _that.projectTypeCode, _that.projectTypeId);
+      case _:
+        return null;
+    }
+  }
+}
+
 /// @nodoc
 @JsonSerializable()
-class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
-  const _$DashboardConfigWrapperImpl(
+class _DashboardConfigWrapper implements DashboardConfigWrapper {
+  const _DashboardConfigWrapper(
       {@JsonKey(name: 'enableDashboard') required this.enableDashboard,
       @JsonKey(name: 'charts') final List<ChartConfigModel>? charts,
       required this.projectTypeCode,
       this.projectTypeId})
       : _charts = charts;
-
-  factory _$DashboardConfigWrapperImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DashboardConfigWrapperImplFromJson(json);
+  factory _DashboardConfigWrapper.fromJson(Map<String, dynamic> json) =>
+      _$DashboardConfigWrapperFromJson(json);
 
   @override
   @JsonKey(name: 'enableDashboard')
@@ -345,16 +653,27 @@ class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
   @override
   final String? projectTypeId;
 
+  /// Create a copy of DashboardConfigWrapper
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'DashboardConfigWrapper(enableDashboard: $enableDashboard, charts: $charts, projectTypeCode: $projectTypeCode, projectTypeId: $projectTypeId)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$DashboardConfigWrapperCopyWith<_DashboardConfigWrapper> get copyWith =>
+      __$DashboardConfigWrapperCopyWithImpl<_DashboardConfigWrapper>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$DashboardConfigWrapperToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DashboardConfigWrapperImpl &&
+            other is _DashboardConfigWrapper &&
             (identical(other.enableDashboard, enableDashboard) ||
                 other.enableDashboard == enableDashboard) &&
             const DeepCollectionEquality().equals(other._charts, _charts) &&
@@ -364,7 +683,7 @@ class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
                 other.projectTypeId == projectTypeId));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -373,127 +692,116 @@ class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
       projectTypeCode,
       projectTypeId);
 
-  @JsonKey(ignore: true)
   @override
-  @pragma('vm:prefer-inline')
-  _$$DashboardConfigWrapperImplCopyWith<_$DashboardConfigWrapperImpl>
-      get copyWith => __$$DashboardConfigWrapperImplCopyWithImpl<
-          _$DashboardConfigWrapperImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DashboardConfigWrapperImplToJson(
-      this,
-    );
+  String toString() {
+    return 'DashboardConfigWrapper(enableDashboard: $enableDashboard, charts: $charts, projectTypeCode: $projectTypeCode, projectTypeId: $projectTypeId)';
   }
 }
 
-abstract class _DashboardConfigWrapper implements DashboardConfigWrapper {
-  const factory _DashboardConfigWrapper(
-      {@JsonKey(name: 'enableDashboard') required final bool enableDashboard,
-      @JsonKey(name: 'charts') final List<ChartConfigModel>? charts,
-      required final String projectTypeCode,
-      final String? projectTypeId}) = _$DashboardConfigWrapperImpl;
-
-  factory _DashboardConfigWrapper.fromJson(Map<String, dynamic> json) =
-      _$DashboardConfigWrapperImpl.fromJson;
-
+/// @nodoc
+abstract mixin class _$DashboardConfigWrapperCopyWith<$Res>
+    implements $DashboardConfigWrapperCopyWith<$Res> {
+  factory _$DashboardConfigWrapperCopyWith(_DashboardConfigWrapper value,
+          $Res Function(_DashboardConfigWrapper) _then) =
+      __$DashboardConfigWrapperCopyWithImpl;
   @override
-  @JsonKey(name: 'enableDashboard')
-  bool get enableDashboard;
-  @override
-  @JsonKey(name: 'charts')
-  List<ChartConfigModel>? get charts;
-  @override
-  String get projectTypeCode;
-  @override
-  String? get projectTypeId;
-  @override
-  @JsonKey(ignore: true)
-  _$$DashboardConfigWrapperImplCopyWith<_$DashboardConfigWrapperImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'enableDashboard') bool enableDashboard,
+      @JsonKey(name: 'charts') List<ChartConfigModel>? charts,
+      String projectTypeCode,
+      String? projectTypeId});
 }
 
-ChartConfigModel _$ChartConfigModelFromJson(Map<String, dynamic> json) {
-  return _ChartConfigModel.fromJson(json);
+/// @nodoc
+class __$DashboardConfigWrapperCopyWithImpl<$Res>
+    implements _$DashboardConfigWrapperCopyWith<$Res> {
+  __$DashboardConfigWrapperCopyWithImpl(this._self, this._then);
+
+  final _DashboardConfigWrapper _self;
+  final $Res Function(_DashboardConfigWrapper) _then;
+
+  /// Create a copy of DashboardConfigWrapper
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? enableDashboard = null,
+    Object? charts = freezed,
+    Object? projectTypeCode = null,
+    Object? projectTypeId = freezed,
+  }) {
+    return _then(_DashboardConfigWrapper(
+      enableDashboard: null == enableDashboard
+          ? _self.enableDashboard
+          : enableDashboard // ignore: cast_nullable_to_non_nullable
+              as bool,
+      charts: freezed == charts
+          ? _self._charts
+          : charts // ignore: cast_nullable_to_non_nullable
+              as List<ChartConfigModel>?,
+      projectTypeCode: null == projectTypeCode
+          ? _self.projectTypeCode
+          : projectTypeCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectTypeId: freezed == projectTypeId
+          ? _self.projectTypeId
+          : projectTypeId // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
 
 /// @nodoc
 mixin _$ChartConfigModel {
   @JsonKey(name: 'active')
-  bool get active => throw _privateConstructorUsedError;
+  bool get active;
   @JsonKey(name: 'name')
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @JsonKey(name: 'vizType')
-  String? get vizType => throw _privateConstructorUsedError;
+  String? get vizType;
   @JsonKey(name: 'chartType')
-  String get chartType => throw _privateConstructorUsedError;
+  String get chartType;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ChartConfigModelCopyWith<ChartConfigModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ChartConfigModelCopyWith<$Res> {
-  factory $ChartConfigModelCopyWith(
-          ChartConfigModel value, $Res Function(ChartConfigModel) then) =
-      _$ChartConfigModelCopyWithImpl<$Res, ChartConfigModel>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'active') bool active,
-      @JsonKey(name: 'name') String name,
-      @JsonKey(name: 'vizType') String? vizType,
-      @JsonKey(name: 'chartType') String chartType});
-}
-
-/// @nodoc
-class _$ChartConfigModelCopyWithImpl<$Res, $Val extends ChartConfigModel>
-    implements $ChartConfigModelCopyWith<$Res> {
-  _$ChartConfigModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
+  /// Create a copy of ChartConfigModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
+  $ChartConfigModelCopyWith<ChartConfigModel> get copyWith =>
+      _$ChartConfigModelCopyWithImpl<ChartConfigModel>(
+          this as ChartConfigModel, _$identity);
+
+  /// Serializes this ChartConfigModel to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? active = null,
-    Object? name = null,
-    Object? vizType = freezed,
-    Object? chartType = null,
-  }) {
-    return _then(_value.copyWith(
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      vizType: freezed == vizType
-          ? _value.vizType
-          : vizType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      chartType: null == chartType
-          ? _value.chartType
-          : chartType // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is ChartConfigModel &&
+            (identical(other.active, active) || other.active == active) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.vizType, vizType) || other.vizType == vizType) &&
+            (identical(other.chartType, chartType) ||
+                other.chartType == chartType));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, active, name, vizType, chartType);
+
+  @override
+  String toString() {
+    return 'ChartConfigModel(active: $active, name: $name, vizType: $vizType, chartType: $chartType)';
   }
 }
 
 /// @nodoc
-abstract class _$$ChartConfigModelImplCopyWith<$Res>
-    implements $ChartConfigModelCopyWith<$Res> {
-  factory _$$ChartConfigModelImplCopyWith(_$ChartConfigModelImpl value,
-          $Res Function(_$ChartConfigModelImpl) then) =
-      __$$ChartConfigModelImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $ChartConfigModelCopyWith<$Res> {
+  factory $ChartConfigModelCopyWith(
+          ChartConfigModel value, $Res Function(ChartConfigModel) _then) =
+      _$ChartConfigModelCopyWithImpl;
   @useResult
   $Res call(
       {@JsonKey(name: 'active') bool active,
@@ -503,13 +811,15 @@ abstract class _$$ChartConfigModelImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ChartConfigModelImplCopyWithImpl<$Res>
-    extends _$ChartConfigModelCopyWithImpl<$Res, _$ChartConfigModelImpl>
-    implements _$$ChartConfigModelImplCopyWith<$Res> {
-  __$$ChartConfigModelImplCopyWithImpl(_$ChartConfigModelImpl _value,
-      $Res Function(_$ChartConfigModelImpl) _then)
-      : super(_value, _then);
+class _$ChartConfigModelCopyWithImpl<$Res>
+    implements $ChartConfigModelCopyWith<$Res> {
+  _$ChartConfigModelCopyWithImpl(this._self, this._then);
 
+  final ChartConfigModel _self;
+  final $Res Function(ChartConfigModel) _then;
+
+  /// Create a copy of ChartConfigModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -518,38 +828,212 @@ class __$$ChartConfigModelImplCopyWithImpl<$Res>
     Object? vizType = freezed,
     Object? chartType = null,
   }) {
-    return _then(_$ChartConfigModelImpl(
+    return _then(_self.copyWith(
       active: null == active
-          ? _value.active
+          ? _self.active
           : active // ignore: cast_nullable_to_non_nullable
               as bool,
       name: null == name
-          ? _value.name
+          ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
       vizType: freezed == vizType
-          ? _value.vizType
+          ? _self.vizType
           : vizType // ignore: cast_nullable_to_non_nullable
               as String?,
       chartType: null == chartType
-          ? _value.chartType
+          ? _self.chartType
           : chartType // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
 }
 
+/// Adds pattern-matching-related methods to [ChartConfigModel].
+extension ChartConfigModelPatterns on ChartConfigModel {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_ChartConfigModel value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _ChartConfigModel() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_ChartConfigModel value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _ChartConfigModel():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_ChartConfigModel value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _ChartConfigModel() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'name') String name,
+            @JsonKey(name: 'vizType') String? vizType,
+            @JsonKey(name: 'chartType') String chartType)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _ChartConfigModel() when $default != null:
+        return $default(
+            _that.active, _that.name, _that.vizType, _that.chartType);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'name') String name,
+            @JsonKey(name: 'vizType') String? vizType,
+            @JsonKey(name: 'chartType') String chartType)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _ChartConfigModel():
+        return $default(
+            _that.active, _that.name, _that.vizType, _that.chartType);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'name') String name,
+            @JsonKey(name: 'vizType') String? vizType,
+            @JsonKey(name: 'chartType') String chartType)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _ChartConfigModel() when $default != null:
+        return $default(
+            _that.active, _that.name, _that.vizType, _that.chartType);
+      case _:
+        return null;
+    }
+  }
+}
+
 /// @nodoc
 @JsonSerializable()
-class _$ChartConfigModelImpl implements _ChartConfigModel {
-  const _$ChartConfigModelImpl(
+class _ChartConfigModel implements ChartConfigModel {
+  const _ChartConfigModel(
       {@JsonKey(name: 'active') required this.active,
       @JsonKey(name: 'name') required this.name,
       @JsonKey(name: 'vizType') this.vizType,
       @JsonKey(name: 'chartType') required this.chartType});
-
-  factory _$ChartConfigModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ChartConfigModelImplFromJson(json);
+  factory _ChartConfigModel.fromJson(Map<String, dynamic> json) =>
+      _$ChartConfigModelFromJson(json);
 
   @override
   @JsonKey(name: 'active')
@@ -564,16 +1048,26 @@ class _$ChartConfigModelImpl implements _ChartConfigModel {
   @JsonKey(name: 'chartType')
   final String chartType;
 
+  /// Create a copy of ChartConfigModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'ChartConfigModel(active: $active, name: $name, vizType: $vizType, chartType: $chartType)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ChartConfigModelCopyWith<_ChartConfigModel> get copyWith =>
+      __$ChartConfigModelCopyWithImpl<_ChartConfigModel>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$ChartConfigModelToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ChartConfigModelImpl &&
+            other is _ChartConfigModel &&
             (identical(other.active, active) || other.active == active) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.vizType, vizType) || other.vizType == vizType) &&
@@ -581,51 +1075,69 @@ class _$ChartConfigModelImpl implements _ChartConfigModel {
                 other.chartType == chartType));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, active, name, vizType, chartType);
 
-  @JsonKey(ignore: true)
   @override
-  @pragma('vm:prefer-inline')
-  _$$ChartConfigModelImplCopyWith<_$ChartConfigModelImpl> get copyWith =>
-      __$$ChartConfigModelImplCopyWithImpl<_$ChartConfigModelImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ChartConfigModelImplToJson(
-      this,
-    );
+  String toString() {
+    return 'ChartConfigModel(active: $active, name: $name, vizType: $vizType, chartType: $chartType)';
   }
 }
 
-abstract class _ChartConfigModel implements ChartConfigModel {
-  const factory _ChartConfigModel(
-          {@JsonKey(name: 'active') required final bool active,
-          @JsonKey(name: 'name') required final String name,
-          @JsonKey(name: 'vizType') final String? vizType,
-          @JsonKey(name: 'chartType') required final String chartType}) =
-      _$ChartConfigModelImpl;
-
-  factory _ChartConfigModel.fromJson(Map<String, dynamic> json) =
-      _$ChartConfigModelImpl.fromJson;
-
+/// @nodoc
+abstract mixin class _$ChartConfigModelCopyWith<$Res>
+    implements $ChartConfigModelCopyWith<$Res> {
+  factory _$ChartConfigModelCopyWith(
+          _ChartConfigModel value, $Res Function(_ChartConfigModel) _then) =
+      __$ChartConfigModelCopyWithImpl;
   @override
-  @JsonKey(name: 'active')
-  bool get active;
-  @override
-  @JsonKey(name: 'name')
-  String get name;
-  @override
-  @JsonKey(name: 'vizType')
-  String? get vizType;
-  @override
-  @JsonKey(name: 'chartType')
-  String get chartType;
-  @override
-  @JsonKey(ignore: true)
-  _$$ChartConfigModelImplCopyWith<_$ChartConfigModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'active') bool active,
+      @JsonKey(name: 'name') String name,
+      @JsonKey(name: 'vizType') String? vizType,
+      @JsonKey(name: 'chartType') String chartType});
 }
+
+/// @nodoc
+class __$ChartConfigModelCopyWithImpl<$Res>
+    implements _$ChartConfigModelCopyWith<$Res> {
+  __$ChartConfigModelCopyWithImpl(this._self, this._then);
+
+  final _ChartConfigModel _self;
+  final $Res Function(_ChartConfigModel) _then;
+
+  /// Create a copy of ChartConfigModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? active = null,
+    Object? name = null,
+    Object? vizType = freezed,
+    Object? chartType = null,
+  }) {
+    return _then(_ChartConfigModel(
+      active: null == active
+          ? _self.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      vizType: freezed == vizType
+          ? _self.vizType
+          : vizType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      chartType: null == chartType
+          ? _self.chartType
+          : chartType // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+// dart format on

@@ -4,7 +4,7 @@ part 'privacy_notice_model.freezed.dart';
 part 'privacy_notice_model.g.dart';
 
 @freezed
-class PrivacyPolicyModel with _$PrivacyPolicyModel {
+abstract class PrivacyPolicyModel with _$PrivacyPolicyModel {
   const factory PrivacyPolicyModel({
     required String header,
     required String module,
@@ -16,7 +16,7 @@ class PrivacyPolicyModel with _$PrivacyPolicyModel {
 }
 
 @freezed
-class ContentModel with _$ContentModel {
+abstract class ContentModel with _$ContentModel {
   const factory ContentModel({
      String? header,
      List<DescriptionModel>? descriptions,
@@ -26,7 +26,7 @@ class ContentModel with _$ContentModel {
 }
 
 @freezed
-class DescriptionModel with _$DescriptionModel {
+abstract class DescriptionModel with _$DescriptionModel {
   const factory DescriptionModel({
     String? text,
     String? type,
@@ -38,7 +38,7 @@ class DescriptionModel with _$DescriptionModel {
 }
 
 @freezed
-class SubDescriptionModel with _$SubDescriptionModel {
+abstract class SubDescriptionModel with _$SubDescriptionModel {
   const factory SubDescriptionModel({
     String? text,
     String? type,

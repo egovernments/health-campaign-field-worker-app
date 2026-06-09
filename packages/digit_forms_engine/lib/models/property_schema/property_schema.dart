@@ -6,7 +6,7 @@ part 'property_schema.freezed.dart';
 part 'property_schema.g.dart';
 
 @freezed
-class PropertySchema with _$PropertySchema {
+abstract class PropertySchema with _$PropertySchema {
   @JsonSerializable(
     explicitToJson: true,
     includeIfNull: false,
@@ -92,7 +92,7 @@ class PropertySchema with _$PropertySchema {
 }
 
 @freezed
-class ValidationRule with _$ValidationRule {
+abstract class ValidationRule with _$ValidationRule {
   const factory ValidationRule({
     required String type,
     dynamic value,
@@ -104,7 +104,7 @@ class ValidationRule with _$ValidationRule {
 }
 
 @freezed
-class Option with _$Option {
+abstract class Option with _$Option {
   const factory Option({
     required String code,
     required String name,
@@ -114,7 +114,7 @@ class Option with _$Option {
 }
 
 @freezed
-class DisplayBehavior with _$DisplayBehavior {
+abstract class DisplayBehavior with _$DisplayBehavior {
   const factory DisplayBehavior({
     required FormulaBehavior behavior,
     List<String>? oneOf,
@@ -126,7 +126,7 @@ class DisplayBehavior with _$DisplayBehavior {
 }
 
 @freezed
-class NavigateToConfig with _$NavigateToConfig {
+abstract class NavigateToConfig with _$NavigateToConfig {
   const factory NavigateToConfig({
     required String type, // "template" or "form"
     required String name, // route name or form name
@@ -137,7 +137,7 @@ class NavigateToConfig with _$NavigateToConfig {
 }
 
 @freezed
-class VisibilityCondition with _$VisibilityCondition {
+abstract class VisibilityCondition with _$VisibilityCondition {
   const factory VisibilityCondition({
     required List<VisibilityExpression> expression,
   }) = _VisibilityCondition;
@@ -147,7 +147,7 @@ class VisibilityCondition with _$VisibilityCondition {
 }
 
 @freezed
-class VisibilityExpression with _$VisibilityExpression {
+abstract class VisibilityExpression with _$VisibilityExpression {
   const factory VisibilityExpression({
     required String condition,
   }) = _VisibilityExpression;
@@ -157,7 +157,7 @@ class VisibilityExpression with _$VisibilityExpression {
 }
 
 @freezed
-class ConditionalNavigateTo with _$ConditionalNavigateTo {
+abstract class ConditionalNavigateTo with _$ConditionalNavigateTo {
   const factory ConditionalNavigateTo({
     required String condition,
     required NavigateToConfig navigateTo,
@@ -168,7 +168,7 @@ class ConditionalNavigateTo with _$ConditionalNavigateTo {
 }
 
 @freezed
-class AutoFillCondition with _$AutoFillCondition {
+abstract class AutoFillCondition with _$AutoFillCondition {
   const factory AutoFillCondition({
     required String expression,
     required dynamic value, // could be a string, number, template, etc.
@@ -179,7 +179,7 @@ class AutoFillCondition with _$AutoFillCondition {
 }
 
 @freezed
-class ShowAlertPopUp with _$ShowAlertPopUp {
+abstract class ShowAlertPopUp with _$ShowAlertPopUp {
   const factory ShowAlertPopUp({
     required String title,
     String? description, // optional
@@ -193,7 +193,7 @@ class ShowAlertPopUp with _$ShowAlertPopUp {
 }
 
 @freezed
-class ShowSecondaryAlertPopUp with _$ShowSecondaryAlertPopUp {
+abstract class ShowSecondaryAlertPopUp with _$ShowSecondaryAlertPopUp {
   const factory ShowSecondaryAlertPopUp({
     required String title,
     String? description,
@@ -209,7 +209,7 @@ class ShowSecondaryAlertPopUp with _$ShowSecondaryAlertPopUp {
 }
 
 @freezed
-class SecondaryAlertBodyField with _$SecondaryAlertBodyField {
+abstract class SecondaryAlertBodyField with _$SecondaryAlertBodyField {
   const factory SecondaryAlertBodyField({
     required String type,
     required String label,
@@ -223,7 +223,7 @@ class SecondaryAlertBodyField with _$SecondaryAlertBodyField {
 }
 
 @freezed
-class AlertCondition with _$AlertCondition {
+abstract class AlertCondition with _$AlertCondition {
   const factory AlertCondition({
     required String expression, // e.g., condition or "DEFAULT"
     required String value, // e.g., "To Administer"
@@ -234,7 +234,7 @@ class AlertCondition with _$AlertCondition {
 }
 
 @freezed
-class MultiEntityConfig with _$MultiEntityConfig {
+abstract class MultiEntityConfig with _$MultiEntityConfig {
   const factory MultiEntityConfig({
     required String sourcePageKey, // Page containing the multi-select field
     required String sourceFieldKey, // Field name of the multi-select
@@ -245,7 +245,7 @@ class MultiEntityConfig with _$MultiEntityConfig {
 }
 
 @freezed
-class ComparisonConfig with _$ComparisonConfig {
+abstract class ComparisonConfig with _$ComparisonConfig {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory ComparisonConfig({
     required String
@@ -273,7 +273,7 @@ class LabelPlaceHolder with _$LabelPlaceHolder {
 }
 
 @freezed
-class ComparisonFilter with _$ComparisonFilter {
+abstract class ComparisonFilter with _$ComparisonFilter {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory ComparisonFilter({
     required String key, // DB column name (e.g., "senderId")

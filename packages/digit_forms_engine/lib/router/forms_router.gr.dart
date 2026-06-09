@@ -1,3 +1,4 @@
+// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -9,50 +10,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i2;
+import 'package:collection/collection.dart' as _i5;
 import 'package:digit_forms_engine/blocs/app_localization.dart' as _i4;
 import 'package:digit_forms_engine/pages/forms_render.dart' as _i1;
 import 'package:flutter/material.dart' as _i3;
-
-abstract class $FormsRoute extends _i2.AutoRouterModule {
-  @override
-  final Map<String, _i2.PageFactory> pagesMap = {
-    FormsRenderRoute.name: (routeData) {
-      final pathParams = routeData.inheritedPathParams;
-      final queryParams = routeData.queryParams;
-      final args = routeData.argsAs<FormsRenderRouteArgs>(
-          orElse: () => FormsRenderRouteArgs(
-                currentSchemaKey: queryParams.getString(
-                  'currentSchemaKey',
-                  '',
-                ),
-                pageName: pathParams.getString('pageName'),
-                isEdit: queryParams.getBool(
-                  'isEdit',
-                  false,
-                ),
-                isSummary: queryParams.getBool(
-                  'isSummary',
-                  false,
-                ),
-              ));
-      return _i2.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i1.FormsRenderPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          currentSchemaKey: args.currentSchemaKey,
-          pageName: args.pageName,
-          isEdit: args.isEdit,
-          customComponents: args.customComponents,
-          defaultValues: args.defaultValues,
-          navigationParams: args.navigationParams,
-          isSummary: args.isSummary,
-          onSecondaryAction: args.onSecondaryAction,
-        ),
-      );
-    }
-  };
-}
 
 /// generated route for
 /// [_i1.FormsRenderPage]
@@ -94,8 +55,33 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
 
   static const String name = 'FormsRenderRoute';
 
-  static const _i2.PageInfo<FormsRenderRouteArgs> page =
-      _i2.PageInfo<FormsRenderRouteArgs>(name);
+  static _i2.PageInfo page = _i2.PageInfo(
+    name,
+    builder: (data) {
+      final pathParams = data.inheritedPathParams;
+      final queryParams = data.queryParams;
+      final args = data.argsAs<FormsRenderRouteArgs>(
+        orElse: () => FormsRenderRouteArgs(
+          currentSchemaKey: queryParams.getString('currentSchemaKey', ''),
+          pageName: pathParams.getString('pageName'),
+          isEdit: queryParams.getBool('isEdit', false),
+          isSummary: queryParams.getBool('isSummary', false),
+        ),
+      );
+      return _i1.FormsRenderPage(
+        key: args.key,
+        appLocalizations: args.appLocalizations,
+        currentSchemaKey: args.currentSchemaKey,
+        pageName: args.pageName,
+        isEdit: args.isEdit,
+        customComponents: args.customComponents,
+        defaultValues: args.defaultValues,
+        navigationParams: args.navigationParams,
+        isSummary: args.isSummary,
+        onSecondaryAction: args.onSecondaryAction,
+      );
+    },
+  );
 }
 
 class FormsRenderRouteArgs {
@@ -136,4 +122,37 @@ class FormsRenderRouteArgs {
   String toString() {
     return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, currentSchemaKey: $currentSchemaKey, pageName: $pageName, isEdit: $isEdit, customComponents: $customComponents, defaultValues: $defaultValues, navigationParams: $navigationParams, isSummary: $isSummary, onSecondaryAction: $onSecondaryAction}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! FormsRenderRouteArgs) return false;
+    return key == other.key &&
+        appLocalizations == other.appLocalizations &&
+        currentSchemaKey == other.currentSchemaKey &&
+        pageName == other.pageName &&
+        isEdit == other.isEdit &&
+        const _i5.ListEquality().equals(
+          customComponents,
+          other.customComponents,
+        ) &&
+        const _i5.MapEquality().equals(defaultValues, other.defaultValues) &&
+        const _i5.MapEquality().equals(
+          navigationParams,
+          other.navigationParams,
+        ) &&
+        isSummary == other.isSummary;
+  }
+
+  @override
+  int get hashCode =>
+      key.hashCode ^
+      appLocalizations.hashCode ^
+      currentSchemaKey.hashCode ^
+      pageName.hashCode ^
+      isEdit.hashCode ^
+      const _i5.ListEquality().hash(customComponents) ^
+      const _i5.MapEquality().hash(defaultValues) ^
+      const _i5.MapEquality().hash(navigationParams) ^
+      isSummary.hashCode;
 }

@@ -1,6 +1,6 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:collection/collection.dart';
 
 class UserActionOpLogManager extends OpLogManager<UserActionModel> {

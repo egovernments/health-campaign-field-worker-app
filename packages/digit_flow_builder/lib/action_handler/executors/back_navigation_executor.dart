@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../../flow_builder.dart';
-import '../../router/flow_builder_routes.gm.dart';
+import '../../router/flow_builder_routes.dart';
 import '../action_config.dart';
 import 'action_executor.dart';
 

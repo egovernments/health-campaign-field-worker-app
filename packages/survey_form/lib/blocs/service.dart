@@ -83,7 +83,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 }
 
 @freezed
-class ServiceEvent with _$ServiceEvent {
+abstract class ServiceEvent with _$ServiceEvent {
   const factory ServiceEvent.create({required ServiceModel serviceModel}) =
   ServiceCreateEvent;
 
@@ -108,7 +108,7 @@ class ServiceEvent with _$ServiceEvent {
 }
 
 @freezed
-class ServiceState with _$ServiceState {
+abstract class ServiceState with _$ServiceState {
   const factory ServiceState.empty() = ServiceEmptyState;
 
   const factory ServiceState.isloading() = ServiceIsloadingState;

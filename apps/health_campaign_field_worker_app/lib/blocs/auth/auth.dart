@@ -304,7 +304,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 }
 
 @freezed
-class AuthEvent with _$AuthEvent {
+abstract class AuthEvent with _$AuthEvent {
   const factory AuthEvent.login({
     required String userId,
     required String password,
@@ -343,7 +343,7 @@ class AuthEvent with _$AuthEvent {
 }
 
 @freezed
-class AuthState with _$AuthState {
+abstract class AuthState with _$AuthState {
   const factory AuthState.unauthenticated() = AuthUnauthenticatedState;
 
   const factory AuthState.loading() = AuthLoadingState;

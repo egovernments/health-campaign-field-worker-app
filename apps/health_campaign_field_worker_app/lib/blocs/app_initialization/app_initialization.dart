@@ -6,7 +6,7 @@ import 'package:digit_dss/digit_dss.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:recase/recase.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -145,14 +145,14 @@ class AppInitializationBloc
 }
 
 @freezed
-class AppInitializationEvent with _$AppInitializationEvent {
+abstract class AppInitializationEvent with _$AppInitializationEvent {
   const factory AppInitializationEvent.onSetup({
     @Default(3) int retriesLeft,
   }) = AppInitializationSetupEvent;
 }
 
 @freezed
-class AppInitializationState with _$AppInitializationState {
+abstract class AppInitializationState with _$AppInitializationState {
   const AppInitializationState._();
 
   const factory AppInitializationState.uninitialized() = AppUninitialized;

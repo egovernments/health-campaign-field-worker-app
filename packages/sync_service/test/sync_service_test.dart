@@ -5,7 +5,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sync_service/sync_service_lib.dart';
 

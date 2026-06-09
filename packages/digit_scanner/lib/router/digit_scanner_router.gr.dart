@@ -1,3 +1,4 @@
+// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -11,38 +12,11 @@
 import 'dart:async' as _i6;
 
 import 'package:auto_route/auto_route.dart' as _i2;
+import 'package:collection/collection.dart' as _i7;
 import 'package:digit_scanner/blocs/app_localization.dart' as _i4;
 import 'package:digit_scanner/models/scanner_validation.dart' as _i5;
 import 'package:digit_scanner/pages/qr_scanner.dart' as _i1;
 import 'package:flutter/material.dart' as _i3;
-
-abstract class $DigitScannerPackageRoute extends _i2.AutoRouterModule {
-  @override
-  final Map<String, _i2.PageFactory> pagesMap = {
-    DigitScannerRoute.name: (routeData) {
-      final args = routeData.argsAs<DigitScannerRouteArgs>(
-          orElse: () => const DigitScannerRouteArgs());
-      return _i2.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i1.DigitScannerPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          quantity: args.quantity,
-          isGS1code: args.isGS1code,
-          singleValue: args.singleValue,
-          isEditEnabled: args.isEditEnabled,
-          regex: args.regex,
-          validations: args.validations,
-          initialQrCodes: args.initialQrCodes,
-          initialBarcodeData: args.initialBarcodeData,
-          scannerId: args.scannerId,
-          duplicateCheckFn: args.duplicateCheckFn,
-          duplicateCheckMessage: args.duplicateCheckMessage,
-        ),
-      );
-    }
-  };
-}
 
 /// generated route for
 /// [_i1.DigitScannerPage]
@@ -84,8 +58,29 @@ class DigitScannerRoute extends _i2.PageRouteInfo<DigitScannerRouteArgs> {
 
   static const String name = 'DigitScannerRoute';
 
-  static const _i2.PageInfo<DigitScannerRouteArgs> page =
-      _i2.PageInfo<DigitScannerRouteArgs>(name);
+  static _i2.PageInfo page = _i2.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<DigitScannerRouteArgs>(
+        orElse: () => const DigitScannerRouteArgs(),
+      );
+      return _i1.DigitScannerPage(
+        key: args.key,
+        appLocalizations: args.appLocalizations,
+        quantity: args.quantity,
+        isGS1code: args.isGS1code,
+        singleValue: args.singleValue,
+        isEditEnabled: args.isEditEnabled,
+        regex: args.regex,
+        validations: args.validations,
+        initialQrCodes: args.initialQrCodes,
+        initialBarcodeData: args.initialBarcodeData,
+        scannerId: args.scannerId,
+        duplicateCheckFn: args.duplicateCheckFn,
+        duplicateCheckMessage: args.duplicateCheckMessage,
+      );
+    },
+  );
 }
 
 class DigitScannerRouteArgs {
@@ -135,4 +130,37 @@ class DigitScannerRouteArgs {
   String toString() {
     return 'DigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, regex: $regex, validations: $validations, initialQrCodes: $initialQrCodes, initialBarcodeData: $initialBarcodeData, scannerId: $scannerId, duplicateCheckFn: $duplicateCheckFn, duplicateCheckMessage: $duplicateCheckMessage}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! DigitScannerRouteArgs) return false;
+    return key == other.key &&
+        appLocalizations == other.appLocalizations &&
+        quantity == other.quantity &&
+        isGS1code == other.isGS1code &&
+        singleValue == other.singleValue &&
+        isEditEnabled == other.isEditEnabled &&
+        regex == other.regex &&
+        const _i7.ListEquality().equals(validations, other.validations) &&
+        const _i7.ListEquality().equals(initialQrCodes, other.initialQrCodes) &&
+        initialBarcodeData == other.initialBarcodeData &&
+        scannerId == other.scannerId &&
+        duplicateCheckMessage == other.duplicateCheckMessage;
+  }
+
+  @override
+  int get hashCode =>
+      key.hashCode ^
+      appLocalizations.hashCode ^
+      quantity.hashCode ^
+      isGS1code.hashCode ^
+      singleValue.hashCode ^
+      isEditEnabled.hashCode ^
+      regex.hashCode ^
+      const _i7.ListEquality().hash(validations) ^
+      const _i7.ListEquality().hash(initialQrCodes) ^
+      initialBarcodeData.hashCode ^
+      scannerId.hashCode ^
+      duplicateCheckMessage.hashCode;
 }

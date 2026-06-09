@@ -4,7 +4,7 @@ part 'template_config.freezed.dart';
 part 'template_config.g.dart';
 
 @freezed
-class TemplateConfig with _$TemplateConfig {
+abstract class TemplateConfig with _$TemplateConfig {
   const factory TemplateConfig({
     required String type,
     required String label,
@@ -20,7 +20,7 @@ class TemplateConfig with _$TemplateConfig {
 }
 
 @freezed
-class TemplateProperty with _$TemplateProperty {
+abstract class TemplateProperty with _$TemplateProperty {
   const factory TemplateProperty({
     required String type,
     required String format,
@@ -49,7 +49,7 @@ NavigateToConfig? _navigateToConfigOrNull(dynamic value) {
 }
 
 @freezed
-class NavigateToConfig with _$NavigateToConfig {
+abstract class NavigateToConfig with _$NavigateToConfig {
   const factory NavigateToConfig({
     required String type, // "template" or "form"
     required String name, // route name or form name

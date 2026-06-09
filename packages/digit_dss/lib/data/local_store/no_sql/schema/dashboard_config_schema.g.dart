@@ -39,7 +39,7 @@ const DashboardConfigSchemaListSchema = CollectionSchema(
   getId: _dashboardConfigSchemaListGetId,
   getLinks: _dashboardConfigSchemaListGetLinks,
   attach: _dashboardConfigSchemaListAttach,
-  version: '3.1.0+1',
+  version: '3.3.0',
 );
 
 int _dashboardConfigSchemaListEstimateSize(

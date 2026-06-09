@@ -4,7 +4,7 @@ part 'referral_reasons_model.freezed.dart';
 part 'referral_reasons_model.g.dart';
 
 @freezed
-class ReferralReasonsWrapperModel with _$ReferralReasonsWrapperModel {
+abstract class ReferralReasonsWrapperModel with _$ReferralReasonsWrapperModel {
   const factory ReferralReasonsWrapperModel({
     @JsonKey(name: 'referralReasons')
         List<ReferralReasonType>? referralReasonList,
@@ -17,7 +17,7 @@ class ReferralReasonsWrapperModel with _$ReferralReasonsWrapperModel {
 }
 
 @freezed
-class ReferralReasonType with _$ReferralReasonType {
+abstract class ReferralReasonType with _$ReferralReasonType {
   const factory ReferralReasonType({
     required String code,
     required String name,

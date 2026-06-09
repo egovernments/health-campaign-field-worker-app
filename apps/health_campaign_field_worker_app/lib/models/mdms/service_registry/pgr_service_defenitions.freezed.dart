@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,492 +9,828 @@ part of 'pgr_service_defenitions.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-PGRServiceDefinitions _$PGRServiceDefinitionsFromJson(
-    Map<String, dynamic> json) {
-  return _PGRServiceDefinitions.fromJson(json);
-}
 
 /// @nodoc
 mixin _$PGRServiceDefinitions {
-  @JsonKey(name: 'RAINMAKER-PGR')
-  ServiceDefinitionWrapper? get serviceDefinitionWrapper =>
-      throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $PGRServiceDefinitionsCopyWith<PGRServiceDefinitions> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'RAINMAKER-PGR') ServiceDefinitionWrapper? get serviceDefinitionWrapper;
+/// Create a copy of PGRServiceDefinitions
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PGRServiceDefinitionsCopyWith<PGRServiceDefinitions> get copyWith => _$PGRServiceDefinitionsCopyWithImpl<PGRServiceDefinitions>(this as PGRServiceDefinitions, _$identity);
+
+  /// Serializes this PGRServiceDefinitions to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PGRServiceDefinitions&&(identical(other.serviceDefinitionWrapper, serviceDefinitionWrapper) || other.serviceDefinitionWrapper == serviceDefinitionWrapper));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,serviceDefinitionWrapper);
+
+@override
+String toString() {
+  return 'PGRServiceDefinitions(serviceDefinitionWrapper: $serviceDefinitionWrapper)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $PGRServiceDefinitionsCopyWith<$Res> {
-  factory $PGRServiceDefinitionsCopyWith(PGRServiceDefinitions value,
-          $Res Function(PGRServiceDefinitions) then) =
-      _$PGRServiceDefinitionsCopyWithImpl<$Res, PGRServiceDefinitions>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'RAINMAKER-PGR')
-      ServiceDefinitionWrapper? serviceDefinitionWrapper});
+abstract mixin class $PGRServiceDefinitionsCopyWith<$Res>  {
+  factory $PGRServiceDefinitionsCopyWith(PGRServiceDefinitions value, $Res Function(PGRServiceDefinitions) _then) = _$PGRServiceDefinitionsCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'RAINMAKER-PGR') ServiceDefinitionWrapper? serviceDefinitionWrapper
+});
 
-  $ServiceDefinitionWrapperCopyWith<$Res>? get serviceDefinitionWrapper;
+
+$ServiceDefinitionWrapperCopyWith<$Res>? get serviceDefinitionWrapper;
+
 }
-
 /// @nodoc
-class _$PGRServiceDefinitionsCopyWithImpl<$Res,
-        $Val extends PGRServiceDefinitions>
+class _$PGRServiceDefinitionsCopyWithImpl<$Res>
     implements $PGRServiceDefinitionsCopyWith<$Res> {
-  _$PGRServiceDefinitionsCopyWithImpl(this._value, this._then);
+  _$PGRServiceDefinitionsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final PGRServiceDefinitions _self;
+  final $Res Function(PGRServiceDefinitions) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? serviceDefinitionWrapper = freezed,
-  }) {
-    return _then(_value.copyWith(
-      serviceDefinitionWrapper: freezed == serviceDefinitionWrapper
-          ? _value.serviceDefinitionWrapper
-          : serviceDefinitionWrapper // ignore: cast_nullable_to_non_nullable
-              as ServiceDefinitionWrapper?,
-    ) as $Val);
+/// Create a copy of PGRServiceDefinitions
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? serviceDefinitionWrapper = freezed,}) {
+  return _then(_self.copyWith(
+serviceDefinitionWrapper: freezed == serviceDefinitionWrapper ? _self.serviceDefinitionWrapper : serviceDefinitionWrapper // ignore: cast_nullable_to_non_nullable
+as ServiceDefinitionWrapper?,
+  ));
+}
+/// Create a copy of PGRServiceDefinitions
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ServiceDefinitionWrapperCopyWith<$Res>? get serviceDefinitionWrapper {
+    if (_self.serviceDefinitionWrapper == null) {
+    return null;
   }
 
-  @override
-  @pragma('vm:prefer-inline')
-  $ServiceDefinitionWrapperCopyWith<$Res>? get serviceDefinitionWrapper {
-    if (_value.serviceDefinitionWrapper == null) {
-      return null;
-    }
-
-    return $ServiceDefinitionWrapperCopyWith<$Res>(
-        _value.serviceDefinitionWrapper!, (value) {
-      return _then(_value.copyWith(serviceDefinitionWrapper: value) as $Val);
-    });
-  }
+  return $ServiceDefinitionWrapperCopyWith<$Res>(_self.serviceDefinitionWrapper!, (value) {
+    return _then(_self.copyWith(serviceDefinitionWrapper: value));
+  });
+}
 }
 
-/// @nodoc
-abstract class _$$PGRServiceDefinitionsImplCopyWith<$Res>
-    implements $PGRServiceDefinitionsCopyWith<$Res> {
-  factory _$$PGRServiceDefinitionsImplCopyWith(
-          _$PGRServiceDefinitionsImpl value,
-          $Res Function(_$PGRServiceDefinitionsImpl) then) =
-      __$$PGRServiceDefinitionsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'RAINMAKER-PGR')
-      ServiceDefinitionWrapper? serviceDefinitionWrapper});
 
-  @override
-  $ServiceDefinitionWrapperCopyWith<$Res>? get serviceDefinitionWrapper;
+/// Adds pattern-matching-related methods to [PGRServiceDefinitions].
+extension PGRServiceDefinitionsPatterns on PGRServiceDefinitions {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PGRServiceDefinitions value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _PGRServiceDefinitions() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PGRServiceDefinitions value)  $default,){
+final _that = this;
+switch (_that) {
+case _PGRServiceDefinitions():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PGRServiceDefinitions value)?  $default,){
+final _that = this;
+switch (_that) {
+case _PGRServiceDefinitions() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'RAINMAKER-PGR')  ServiceDefinitionWrapper? serviceDefinitionWrapper)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _PGRServiceDefinitions() when $default != null:
+return $default(_that.serviceDefinitionWrapper);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'RAINMAKER-PGR')  ServiceDefinitionWrapper? serviceDefinitionWrapper)  $default,) {final _that = this;
+switch (_that) {
+case _PGRServiceDefinitions():
+return $default(_that.serviceDefinitionWrapper);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'RAINMAKER-PGR')  ServiceDefinitionWrapper? serviceDefinitionWrapper)?  $default,) {final _that = this;
+switch (_that) {
+case _PGRServiceDefinitions() when $default != null:
+return $default(_that.serviceDefinitionWrapper);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-class __$$PGRServiceDefinitionsImplCopyWithImpl<$Res>
-    extends _$PGRServiceDefinitionsCopyWithImpl<$Res,
-        _$PGRServiceDefinitionsImpl>
-    implements _$$PGRServiceDefinitionsImplCopyWith<$Res> {
-  __$$PGRServiceDefinitionsImplCopyWithImpl(_$PGRServiceDefinitionsImpl _value,
-      $Res Function(_$PGRServiceDefinitionsImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? serviceDefinitionWrapper = freezed,
-  }) {
-    return _then(_$PGRServiceDefinitionsImpl(
-      serviceDefinitionWrapper: freezed == serviceDefinitionWrapper
-          ? _value.serviceDefinitionWrapper
-          : serviceDefinitionWrapper // ignore: cast_nullable_to_non_nullable
-              as ServiceDefinitionWrapper?,
-    ));
-  }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$PGRServiceDefinitionsImpl implements _PGRServiceDefinitions {
-  const _$PGRServiceDefinitionsImpl(
-      {@JsonKey(name: 'RAINMAKER-PGR') this.serviceDefinitionWrapper});
 
-  factory _$PGRServiceDefinitionsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PGRServiceDefinitionsImplFromJson(json);
+class _PGRServiceDefinitions implements PGRServiceDefinitions {
+  const _PGRServiceDefinitions({@JsonKey(name: 'RAINMAKER-PGR') this.serviceDefinitionWrapper});
+  factory _PGRServiceDefinitions.fromJson(Map<String, dynamic> json) => _$PGRServiceDefinitionsFromJson(json);
 
-  @override
-  @JsonKey(name: 'RAINMAKER-PGR')
-  final ServiceDefinitionWrapper? serviceDefinitionWrapper;
+@override@JsonKey(name: 'RAINMAKER-PGR') final  ServiceDefinitionWrapper? serviceDefinitionWrapper;
 
-  @override
-  String toString() {
-    return 'PGRServiceDefinitions(serviceDefinitionWrapper: $serviceDefinitionWrapper)';
-  }
+/// Create a copy of PGRServiceDefinitions
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$PGRServiceDefinitionsCopyWith<_PGRServiceDefinitions> get copyWith => __$PGRServiceDefinitionsCopyWithImpl<_PGRServiceDefinitions>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PGRServiceDefinitionsImpl &&
-            (identical(
-                    other.serviceDefinitionWrapper, serviceDefinitionWrapper) ||
-                other.serviceDefinitionWrapper == serviceDefinitionWrapper));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, serviceDefinitionWrapper);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PGRServiceDefinitionsImplCopyWith<_$PGRServiceDefinitionsImpl>
-      get copyWith => __$$PGRServiceDefinitionsImplCopyWithImpl<
-          _$PGRServiceDefinitionsImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$PGRServiceDefinitionsImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$PGRServiceDefinitionsToJson(this, );
 }
 
-abstract class _PGRServiceDefinitions implements PGRServiceDefinitions {
-  const factory _PGRServiceDefinitions(
-          {@JsonKey(name: 'RAINMAKER-PGR')
-          final ServiceDefinitionWrapper? serviceDefinitionWrapper}) =
-      _$PGRServiceDefinitionsImpl;
-
-  factory _PGRServiceDefinitions.fromJson(Map<String, dynamic> json) =
-      _$PGRServiceDefinitionsImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'RAINMAKER-PGR')
-  ServiceDefinitionWrapper? get serviceDefinitionWrapper;
-  @override
-  @JsonKey(ignore: true)
-  _$$PGRServiceDefinitionsImplCopyWith<_$PGRServiceDefinitionsImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PGRServiceDefinitions&&(identical(other.serviceDefinitionWrapper, serviceDefinitionWrapper) || other.serviceDefinitionWrapper == serviceDefinitionWrapper));
 }
 
-ServiceDefinitionWrapper _$ServiceDefinitionWrapperFromJson(
-    Map<String, dynamic> json) {
-  return _ServiceDefinitionWrapper.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,serviceDefinitionWrapper);
+
+@override
+String toString() {
+  return 'PGRServiceDefinitions(serviceDefinitionWrapper: $serviceDefinitionWrapper)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$PGRServiceDefinitionsCopyWith<$Res> implements $PGRServiceDefinitionsCopyWith<$Res> {
+  factory _$PGRServiceDefinitionsCopyWith(_PGRServiceDefinitions value, $Res Function(_PGRServiceDefinitions) _then) = __$PGRServiceDefinitionsCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'RAINMAKER-PGR') ServiceDefinitionWrapper? serviceDefinitionWrapper
+});
+
+
+@override $ServiceDefinitionWrapperCopyWith<$Res>? get serviceDefinitionWrapper;
+
+}
+/// @nodoc
+class __$PGRServiceDefinitionsCopyWithImpl<$Res>
+    implements _$PGRServiceDefinitionsCopyWith<$Res> {
+  __$PGRServiceDefinitionsCopyWithImpl(this._self, this._then);
+
+  final _PGRServiceDefinitions _self;
+  final $Res Function(_PGRServiceDefinitions) _then;
+
+/// Create a copy of PGRServiceDefinitions
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? serviceDefinitionWrapper = freezed,}) {
+  return _then(_PGRServiceDefinitions(
+serviceDefinitionWrapper: freezed == serviceDefinitionWrapper ? _self.serviceDefinitionWrapper : serviceDefinitionWrapper // ignore: cast_nullable_to_non_nullable
+as ServiceDefinitionWrapper?,
+  ));
+}
+
+/// Create a copy of PGRServiceDefinitions
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ServiceDefinitionWrapperCopyWith<$Res>? get serviceDefinitionWrapper {
+    if (_self.serviceDefinitionWrapper == null) {
+    return null;
+  }
+
+  return $ServiceDefinitionWrapperCopyWith<$Res>(_self.serviceDefinitionWrapper!, (value) {
+    return _then(_self.copyWith(serviceDefinitionWrapper: value));
+  });
+}
+}
+
 
 /// @nodoc
 mixin _$ServiceDefinitionWrapper {
-  @JsonKey(name: "ServiceDefs")
-  List<Definition> get definition => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ServiceDefinitionWrapperCopyWith<ServiceDefinitionWrapper> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: "ServiceDefs") List<Definition> get definition;
+/// Create a copy of ServiceDefinitionWrapper
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ServiceDefinitionWrapperCopyWith<ServiceDefinitionWrapper> get copyWith => _$ServiceDefinitionWrapperCopyWithImpl<ServiceDefinitionWrapper>(this as ServiceDefinitionWrapper, _$identity);
+
+  /// Serializes this ServiceDefinitionWrapper to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServiceDefinitionWrapper&&const DeepCollectionEquality().equals(other.definition, definition));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(definition));
+
+@override
+String toString() {
+  return 'ServiceDefinitionWrapper(definition: $definition)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ServiceDefinitionWrapperCopyWith<$Res> {
-  factory $ServiceDefinitionWrapperCopyWith(ServiceDefinitionWrapper value,
-          $Res Function(ServiceDefinitionWrapper) then) =
-      _$ServiceDefinitionWrapperCopyWithImpl<$Res, ServiceDefinitionWrapper>;
-  @useResult
-  $Res call({@JsonKey(name: "ServiceDefs") List<Definition> definition});
-}
+abstract mixin class $ServiceDefinitionWrapperCopyWith<$Res>  {
+  factory $ServiceDefinitionWrapperCopyWith(ServiceDefinitionWrapper value, $Res Function(ServiceDefinitionWrapper) _then) = _$ServiceDefinitionWrapperCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: "ServiceDefs") List<Definition> definition
+});
 
+
+
+
+}
 /// @nodoc
-class _$ServiceDefinitionWrapperCopyWithImpl<$Res,
-        $Val extends ServiceDefinitionWrapper>
+class _$ServiceDefinitionWrapperCopyWithImpl<$Res>
     implements $ServiceDefinitionWrapperCopyWith<$Res> {
-  _$ServiceDefinitionWrapperCopyWithImpl(this._value, this._then);
+  _$ServiceDefinitionWrapperCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ServiceDefinitionWrapper _self;
+  final $Res Function(ServiceDefinitionWrapper) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? definition = null,
-  }) {
-    return _then(_value.copyWith(
-      definition: null == definition
-          ? _value.definition
-          : definition // ignore: cast_nullable_to_non_nullable
-              as List<Definition>,
-    ) as $Val);
-  }
+/// Create a copy of ServiceDefinitionWrapper
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? definition = null,}) {
+  return _then(_self.copyWith(
+definition: null == definition ? _self.definition : definition // ignore: cast_nullable_to_non_nullable
+as List<Definition>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$ServiceDefinitionWrapperImplCopyWith<$Res>
-    implements $ServiceDefinitionWrapperCopyWith<$Res> {
-  factory _$$ServiceDefinitionWrapperImplCopyWith(
-          _$ServiceDefinitionWrapperImpl value,
-          $Res Function(_$ServiceDefinitionWrapperImpl) then) =
-      __$$ServiceDefinitionWrapperImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({@JsonKey(name: "ServiceDefs") List<Definition> definition});
 }
 
-/// @nodoc
-class __$$ServiceDefinitionWrapperImplCopyWithImpl<$Res>
-    extends _$ServiceDefinitionWrapperCopyWithImpl<$Res,
-        _$ServiceDefinitionWrapperImpl>
-    implements _$$ServiceDefinitionWrapperImplCopyWith<$Res> {
-  __$$ServiceDefinitionWrapperImplCopyWithImpl(
-      _$ServiceDefinitionWrapperImpl _value,
-      $Res Function(_$ServiceDefinitionWrapperImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? definition = null,
-  }) {
-    return _then(_$ServiceDefinitionWrapperImpl(
-      definition: null == definition
-          ? _value._definition
-          : definition // ignore: cast_nullable_to_non_nullable
-              as List<Definition>,
-    ));
-  }
+/// Adds pattern-matching-related methods to [ServiceDefinitionWrapper].
+extension ServiceDefinitionWrapperPatterns on ServiceDefinitionWrapper {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ServiceDefinitionWrapper value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ServiceDefinitionWrapper() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ServiceDefinitionWrapper value)  $default,){
+final _that = this;
+switch (_that) {
+case _ServiceDefinitionWrapper():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ServiceDefinitionWrapper value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ServiceDefinitionWrapper() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "ServiceDefs")  List<Definition> definition)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ServiceDefinitionWrapper() when $default != null:
+return $default(_that.definition);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "ServiceDefs")  List<Definition> definition)  $default,) {final _that = this;
+switch (_that) {
+case _ServiceDefinitionWrapper():
+return $default(_that.definition);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "ServiceDefs")  List<Definition> definition)?  $default,) {final _that = this;
+switch (_that) {
+case _ServiceDefinitionWrapper() when $default != null:
+return $default(_that.definition);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$ServiceDefinitionWrapperImpl implements _ServiceDefinitionWrapper {
-  const _$ServiceDefinitionWrapperImpl(
-      {@JsonKey(name: "ServiceDefs")
-      final List<Definition> definition = const []})
-      : _definition = definition;
 
-  factory _$ServiceDefinitionWrapperImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ServiceDefinitionWrapperImplFromJson(json);
+class _ServiceDefinitionWrapper implements ServiceDefinitionWrapper {
+  const _ServiceDefinitionWrapper({@JsonKey(name: "ServiceDefs") final  List<Definition> definition = const []}): _definition = definition;
+  factory _ServiceDefinitionWrapper.fromJson(Map<String, dynamic> json) => _$ServiceDefinitionWrapperFromJson(json);
 
-  final List<Definition> _definition;
-  @override
-  @JsonKey(name: "ServiceDefs")
-  List<Definition> get definition {
-    if (_definition is EqualUnmodifiableListView) return _definition;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_definition);
-  }
-
-  @override
-  String toString() {
-    return 'ServiceDefinitionWrapper(definition: $definition)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ServiceDefinitionWrapperImpl &&
-            const DeepCollectionEquality()
-                .equals(other._definition, _definition));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_definition));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ServiceDefinitionWrapperImplCopyWith<_$ServiceDefinitionWrapperImpl>
-      get copyWith => __$$ServiceDefinitionWrapperImplCopyWithImpl<
-          _$ServiceDefinitionWrapperImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ServiceDefinitionWrapperImplToJson(
-      this,
-    );
-  }
+ final  List<Definition> _definition;
+@override@JsonKey(name: "ServiceDefs") List<Definition> get definition {
+  if (_definition is EqualUnmodifiableListView) return _definition;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_definition);
 }
 
-abstract class _ServiceDefinitionWrapper implements ServiceDefinitionWrapper {
-  const factory _ServiceDefinitionWrapper(
-          {@JsonKey(name: "ServiceDefs") final List<Definition> definition}) =
-      _$ServiceDefinitionWrapperImpl;
 
-  factory _ServiceDefinitionWrapper.fromJson(Map<String, dynamic> json) =
-      _$ServiceDefinitionWrapperImpl.fromJson;
+/// Create a copy of ServiceDefinitionWrapper
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ServiceDefinitionWrapperCopyWith<_ServiceDefinitionWrapper> get copyWith => __$ServiceDefinitionWrapperCopyWithImpl<_ServiceDefinitionWrapper>(this, _$identity);
 
-  @override
-  @JsonKey(name: "ServiceDefs")
-  List<Definition> get definition;
-  @override
-  @JsonKey(ignore: true)
-  _$$ServiceDefinitionWrapperImplCopyWith<_$ServiceDefinitionWrapperImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$ServiceDefinitionWrapperToJson(this, );
 }
 
-Definition _$DefinitionFromJson(Map<String, dynamic> json) {
-  return _Definition.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServiceDefinitionWrapper&&const DeepCollectionEquality().equals(other._definition, _definition));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_definition));
+
+@override
+String toString() {
+  return 'ServiceDefinitionWrapper(definition: $definition)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ServiceDefinitionWrapperCopyWith<$Res> implements $ServiceDefinitionWrapperCopyWith<$Res> {
+  factory _$ServiceDefinitionWrapperCopyWith(_ServiceDefinitionWrapper value, $Res Function(_ServiceDefinitionWrapper) _then) = __$ServiceDefinitionWrapperCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: "ServiceDefs") List<Definition> definition
+});
+
+
+
+
+}
+/// @nodoc
+class __$ServiceDefinitionWrapperCopyWithImpl<$Res>
+    implements _$ServiceDefinitionWrapperCopyWith<$Res> {
+  __$ServiceDefinitionWrapperCopyWithImpl(this._self, this._then);
+
+  final _ServiceDefinitionWrapper _self;
+  final $Res Function(_ServiceDefinitionWrapper) _then;
+
+/// Create a copy of ServiceDefinitionWrapper
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? definition = null,}) {
+  return _then(_ServiceDefinitionWrapper(
+definition: null == definition ? _self._definition : definition // ignore: cast_nullable_to_non_nullable
+as List<Definition>,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$Definition {
-  String get serviceCode => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $DefinitionCopyWith<Definition> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get serviceCode; String get name;
+/// Create a copy of Definition
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DefinitionCopyWith<Definition> get copyWith => _$DefinitionCopyWithImpl<Definition>(this as Definition, _$identity);
+
+  /// Serializes this Definition to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Definition&&(identical(other.serviceCode, serviceCode) || other.serviceCode == serviceCode)&&(identical(other.name, name) || other.name == name));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,serviceCode,name);
+
+@override
+String toString() {
+  return 'Definition(serviceCode: $serviceCode, name: $name)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $DefinitionCopyWith<$Res> {
-  factory $DefinitionCopyWith(
-          Definition value, $Res Function(Definition) then) =
-      _$DefinitionCopyWithImpl<$Res, Definition>;
-  @useResult
-  $Res call({String serviceCode, String name});
-}
+abstract mixin class $DefinitionCopyWith<$Res>  {
+  factory $DefinitionCopyWith(Definition value, $Res Function(Definition) _then) = _$DefinitionCopyWithImpl;
+@useResult
+$Res call({
+ String serviceCode, String name
+});
 
+
+
+
+}
 /// @nodoc
-class _$DefinitionCopyWithImpl<$Res, $Val extends Definition>
+class _$DefinitionCopyWithImpl<$Res>
     implements $DefinitionCopyWith<$Res> {
-  _$DefinitionCopyWithImpl(this._value, this._then);
+  _$DefinitionCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final Definition _self;
+  final $Res Function(Definition) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? serviceCode = null,
-    Object? name = null,
-  }) {
-    return _then(_value.copyWith(
-      serviceCode: null == serviceCode
-          ? _value.serviceCode
-          : serviceCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of Definition
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? serviceCode = null,Object? name = null,}) {
+  return _then(_self.copyWith(
+serviceCode: null == serviceCode ? _self.serviceCode : serviceCode // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$DefinitionImplCopyWith<$Res>
-    implements $DefinitionCopyWith<$Res> {
-  factory _$$DefinitionImplCopyWith(
-          _$DefinitionImpl value, $Res Function(_$DefinitionImpl) then) =
-      __$$DefinitionImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String serviceCode, String name});
 }
 
-/// @nodoc
-class __$$DefinitionImplCopyWithImpl<$Res>
-    extends _$DefinitionCopyWithImpl<$Res, _$DefinitionImpl>
-    implements _$$DefinitionImplCopyWith<$Res> {
-  __$$DefinitionImplCopyWithImpl(
-      _$DefinitionImpl _value, $Res Function(_$DefinitionImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? serviceCode = null,
-    Object? name = null,
-  }) {
-    return _then(_$DefinitionImpl(
-      serviceCode: null == serviceCode
-          ? _value.serviceCode
-          : serviceCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [Definition].
+extension DefinitionPatterns on Definition {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Definition value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Definition() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Definition value)  $default,){
+final _that = this;
+switch (_that) {
+case _Definition():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Definition value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Definition() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String serviceCode,  String name)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Definition() when $default != null:
+return $default(_that.serviceCode,_that.name);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String serviceCode,  String name)  $default,) {final _that = this;
+switch (_that) {
+case _Definition():
+return $default(_that.serviceCode,_that.name);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String serviceCode,  String name)?  $default,) {final _that = this;
+switch (_that) {
+case _Definition() when $default != null:
+return $default(_that.serviceCode,_that.name);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$DefinitionImpl implements _Definition {
-  const _$DefinitionImpl({required this.serviceCode, required this.name});
 
-  factory _$DefinitionImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DefinitionImplFromJson(json);
+class _Definition implements Definition {
+  const _Definition({required this.serviceCode, required this.name});
+  factory _Definition.fromJson(Map<String, dynamic> json) => _$DefinitionFromJson(json);
 
-  @override
-  final String serviceCode;
-  @override
-  final String name;
+@override final  String serviceCode;
+@override final  String name;
 
-  @override
-  String toString() {
-    return 'Definition(serviceCode: $serviceCode, name: $name)';
-  }
+/// Create a copy of Definition
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DefinitionCopyWith<_Definition> get copyWith => __$DefinitionCopyWithImpl<_Definition>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DefinitionImpl &&
-            (identical(other.serviceCode, serviceCode) ||
-                other.serviceCode == serviceCode) &&
-            (identical(other.name, name) || other.name == name));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, serviceCode, name);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DefinitionImplCopyWith<_$DefinitionImpl> get copyWith =>
-      __$$DefinitionImplCopyWithImpl<_$DefinitionImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DefinitionImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$DefinitionToJson(this, );
 }
 
-abstract class _Definition implements Definition {
-  const factory _Definition(
-      {required final String serviceCode,
-      required final String name}) = _$DefinitionImpl;
-
-  factory _Definition.fromJson(Map<String, dynamic> json) =
-      _$DefinitionImpl.fromJson;
-
-  @override
-  String get serviceCode;
-  @override
-  String get name;
-  @override
-  @JsonKey(ignore: true)
-  _$$DefinitionImplCopyWith<_$DefinitionImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Definition&&(identical(other.serviceCode, serviceCode) || other.serviceCode == serviceCode)&&(identical(other.name, name) || other.name == name));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,serviceCode,name);
+
+@override
+String toString() {
+  return 'Definition(serviceCode: $serviceCode, name: $name)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DefinitionCopyWith<$Res> implements $DefinitionCopyWith<$Res> {
+  factory _$DefinitionCopyWith(_Definition value, $Res Function(_Definition) _then) = __$DefinitionCopyWithImpl;
+@override @useResult
+$Res call({
+ String serviceCode, String name
+});
+
+
+
+
+}
+/// @nodoc
+class __$DefinitionCopyWithImpl<$Res>
+    implements _$DefinitionCopyWith<$Res> {
+  __$DefinitionCopyWithImpl(this._self, this._then);
+
+  final _Definition _self;
+  final $Res Function(_Definition) _then;
+
+/// Create a copy of Definition
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? serviceCode = null,Object? name = null,}) {
+  return _then(_Definition(
+serviceCode: null == serviceCode ? _self.serviceCode : serviceCode // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on

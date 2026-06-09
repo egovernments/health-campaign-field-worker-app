@@ -8,3 +8,4 @@ targets:
       auto_route_generator:auto_router_generator:
         generate_for:
           - lib/router/**router.dart
+          - lib/router/**routes.dart

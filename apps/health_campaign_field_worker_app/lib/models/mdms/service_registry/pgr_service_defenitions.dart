@@ -5,7 +5,7 @@ part 'pgr_service_defenitions.freezed.dart';
 part 'pgr_service_defenitions.g.dart';
 
 @freezed
-class PGRServiceDefinitions with _$PGRServiceDefinitions {
+abstract class PGRServiceDefinitions with _$PGRServiceDefinitions {
   const factory PGRServiceDefinitions({
     @JsonKey(name: 'RAINMAKER-PGR')
         final ServiceDefinitionWrapper? serviceDefinitionWrapper,
@@ -16,7 +16,7 @@ class PGRServiceDefinitions with _$PGRServiceDefinitions {
 }
 
 @freezed
-class ServiceDefinitionWrapper with _$ServiceDefinitionWrapper {
+abstract class ServiceDefinitionWrapper with _$ServiceDefinitionWrapper {
   const factory ServiceDefinitionWrapper({
     @JsonKey(name: "ServiceDefs")
     @Default([])
@@ -28,7 +28,7 @@ class ServiceDefinitionWrapper with _$ServiceDefinitionWrapper {
 }
 
 @freezed
-class Definition with _$Definition {
+abstract class Definition with _$Definition {
   const factory Definition({
     required String serviceCode,
     required String name,

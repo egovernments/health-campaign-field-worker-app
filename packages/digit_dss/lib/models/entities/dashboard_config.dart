@@ -4,7 +4,7 @@ part 'dashboard_config.freezed.dart';
 part 'dashboard_config.g.dart';
 
 @freezed
-class DashboardConfigPrimaryWrapper with _$DashboardConfigPrimaryWrapper {
+abstract class DashboardConfigPrimaryWrapper with _$DashboardConfigPrimaryWrapper {
   const factory DashboardConfigPrimaryWrapper({
     @JsonKey(name: 'dashboardConfig')
     @Default([])
@@ -18,7 +18,7 @@ class DashboardConfigPrimaryWrapper with _$DashboardConfigPrimaryWrapper {
 }
 
 @freezed
-class DashboardConfigWrapper with _$DashboardConfigWrapper {
+abstract class DashboardConfigWrapper with _$DashboardConfigWrapper {
   const factory DashboardConfigWrapper({
     @JsonKey(name: 'enableDashboard') required bool enableDashboard,
     @JsonKey(name: 'charts') List<ChartConfigModel>? charts,
@@ -33,7 +33,7 @@ class DashboardConfigWrapper with _$DashboardConfigWrapper {
 }
 
 @freezed
-class ChartConfigModel with _$ChartConfigModel {
+abstract class ChartConfigModel with _$ChartConfigModel {
   const factory ChartConfigModel({
     @JsonKey(name: 'active') required bool active,
     @JsonKey(name: 'name') required String name,

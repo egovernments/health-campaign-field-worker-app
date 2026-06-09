@@ -11,7 +11,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:location/location.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
@@ -65,6 +65,8 @@ class MainApplication extends StatefulWidget {
 
 class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
+  String? _activeRootRouteName;
+
   @override
   void initState() {
     LocalizationParams().setModule('boundary', true);
@@ -415,6 +417,30 @@ class MainApplicationState extends State<MainApplication>
                               final selectedLocale =
                                   AppSharedPreferences().getSelectedLocale ??
                                       firstLanguage;
+                              final isAuthenticated =
+                                  authState is AuthAuthenticatedState;
+                              final rootRouteName = isAuthenticated
+                                  ? AuthenticatedRouteWrapper.name
+                                  : UnauthenticatedRouteWrapper.name;
+                              final rootRoutes = <PageRouteInfo>[
+                                if (isAuthenticated)
+                                  const AuthenticatedRouteWrapper()
+                                else
+                                  const UnauthenticatedRouteWrapper(),
+                              ];
+
+                              if (_activeRootRouteName != rootRouteName) {
+                                _activeRootRouteName = rootRouteName;
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  if (!mounted ||
+                                      _activeRootRouteName != rootRouteName) {
+                                    return;
+                                  }
+
+                                  widget.appRouter.replaceAll(rootRoutes);
+                                });
+                              }
 
                               return MaterialApp.router(
                                 debugShowCheckedModeBanner: false,
@@ -482,19 +508,9 @@ class MainApplicationState extends State<MainApplication>
                                 routeInformationParser:
                                     widget.appRouter.defaultRouteParser(),
                                 scaffoldMessengerKey: scaffoldMessengerKey,
-                                routerDelegate: AutoRouterDelegate.declarative(
-                                  widget.appRouter,
+                                routerDelegate: widget.appRouter.delegate(
                                   navigatorObservers: () =>
                                       [AppRouterObserver()],
-                                  routes: (handler) => authState.maybeWhen(
-                                    orElse: () => [
-                                      const UnauthenticatedRouteWrapper(),
-                                    ],
-                                    authenticated: (_, __, ___, ____, _____) =>
-                                        [
-                                      AuthenticatedRouteWrapper(),
-                                    ],
-                                  ),
                                 ),
                               );
                             },

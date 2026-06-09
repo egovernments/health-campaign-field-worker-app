@@ -7,7 +7,7 @@ import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 class LocationTrackerService {
   // Singleton instance

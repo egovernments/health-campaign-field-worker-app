@@ -4,7 +4,7 @@ part 'auth_model.freezed.dart';
 part 'auth_model.g.dart';
 
 @freezed
-class AuthModel with _$AuthModel {
+abstract class AuthModel with _$AuthModel {
   const factory AuthModel({
     @JsonKey(name: 'access_token') required String accessToken,
     @JsonKey(name: 'token_type') required String tokenType,
@@ -18,7 +18,7 @@ class AuthModel with _$AuthModel {
 }
 
 @freezed
-class ValidateResponseModel with _$ValidateResponseModel {
+abstract class ValidateResponseModel with _$ValidateResponseModel {
   const factory ValidateResponseModel({
     @JsonKey(name: 'isDuplicateLogin') required bool isDuplicateLogin,
     @JsonKey(name: 'existingDeviceToken') required String? existingDeviceToken,
@@ -29,7 +29,7 @@ class ValidateResponseModel with _$ValidateResponseModel {
 }
 
 @freezed
-class LoginModel with _$LoginModel {
+abstract class LoginModel with _$LoginModel {
   const factory LoginModel({
     required String username,
     required String password,
@@ -44,7 +44,7 @@ class LoginModel with _$LoginModel {
 }
 
 @freezed
-class UserRequestModel with _$UserRequestModel {
+abstract class UserRequestModel with _$UserRequestModel {
   const factory UserRequestModel({
     int? id,
     required String uuid,
@@ -65,7 +65,7 @@ class UserRequestModel with _$UserRequestModel {
 }
 
 @freezed
-class UserRoleModel with _$UserRoleModel {
+abstract class UserRoleModel with _$UserRoleModel {
   const factory UserRoleModel({
     @Default('') String? name,
     required String code,

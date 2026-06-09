@@ -50,7 +50,7 @@ class ProjectFacilityBloc
 
 /// `ProjectFacilityEvent` is a freezed union of all possible events that can occur in the `ProjectFacilityBloc`.
 @freezed
-class ProjectFacilityEvent with _$ProjectFacilityEvent {
+abstract class ProjectFacilityEvent with _$ProjectFacilityEvent {
   /// The `ProjectFacilityLoadEvent` event is triggered when project facilities need to be loaded.
   const factory ProjectFacilityEvent.load({
     required ProjectFacilitySearchModel query,
@@ -59,7 +59,7 @@ class ProjectFacilityEvent with _$ProjectFacilityEvent {
 
 /// `ProjectFacilityState` is a freezed union of all possible states that can occur in the `ProjectFacilityBloc`.
 @freezed
-class ProjectFacilityState with _$ProjectFacilityState {
+abstract class ProjectFacilityState with _$ProjectFacilityState {
   /// The `ProjectFacilityEmptyState` state represents the state where no project facilities are loaded.
   const factory ProjectFacilityState.empty() = ProjectFacilityEmptyState;
 

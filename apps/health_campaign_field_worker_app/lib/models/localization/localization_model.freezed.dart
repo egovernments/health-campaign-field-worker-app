@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,356 +9,547 @@ part of 'localization_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-LocalizationModel _$LocalizationModelFromJson(Map<String, dynamic> json) {
-  return _LocalizationModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$LocalizationModel {
-  List<LocalizationMessageModel> get messages =>
-      throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $LocalizationModelCopyWith<LocalizationModel> get copyWith =>
-      throw _privateConstructorUsedError;
+ List<LocalizationMessageModel> get messages;
+/// Create a copy of LocalizationModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LocalizationModelCopyWith<LocalizationModel> get copyWith => _$LocalizationModelCopyWithImpl<LocalizationModel>(this as LocalizationModel, _$identity);
+
+  /// Serializes this LocalizationModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalizationModel&&const DeepCollectionEquality().equals(other.messages, messages));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(messages));
+
+@override
+String toString() {
+  return 'LocalizationModel(messages: $messages)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $LocalizationModelCopyWith<$Res> {
-  factory $LocalizationModelCopyWith(
-          LocalizationModel value, $Res Function(LocalizationModel) then) =
-      _$LocalizationModelCopyWithImpl<$Res, LocalizationModel>;
-  @useResult
-  $Res call({List<LocalizationMessageModel> messages});
-}
+abstract mixin class $LocalizationModelCopyWith<$Res>  {
+  factory $LocalizationModelCopyWith(LocalizationModel value, $Res Function(LocalizationModel) _then) = _$LocalizationModelCopyWithImpl;
+@useResult
+$Res call({
+ List<LocalizationMessageModel> messages
+});
 
+
+
+
+}
 /// @nodoc
-class _$LocalizationModelCopyWithImpl<$Res, $Val extends LocalizationModel>
+class _$LocalizationModelCopyWithImpl<$Res>
     implements $LocalizationModelCopyWith<$Res> {
-  _$LocalizationModelCopyWithImpl(this._value, this._then);
+  _$LocalizationModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final LocalizationModel _self;
+  final $Res Function(LocalizationModel) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? messages = null,
-  }) {
-    return _then(_value.copyWith(
-      messages: null == messages
-          ? _value.messages
-          : messages // ignore: cast_nullable_to_non_nullable
-              as List<LocalizationMessageModel>,
-    ) as $Val);
-  }
+/// Create a copy of LocalizationModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? messages = null,}) {
+  return _then(_self.copyWith(
+messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
+as List<LocalizationMessageModel>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$LocalizationModelImplCopyWith<$Res>
-    implements $LocalizationModelCopyWith<$Res> {
-  factory _$$LocalizationModelImplCopyWith(_$LocalizationModelImpl value,
-          $Res Function(_$LocalizationModelImpl) then) =
-      __$$LocalizationModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({List<LocalizationMessageModel> messages});
 }
 
-/// @nodoc
-class __$$LocalizationModelImplCopyWithImpl<$Res>
-    extends _$LocalizationModelCopyWithImpl<$Res, _$LocalizationModelImpl>
-    implements _$$LocalizationModelImplCopyWith<$Res> {
-  __$$LocalizationModelImplCopyWithImpl(_$LocalizationModelImpl _value,
-      $Res Function(_$LocalizationModelImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? messages = null,
-  }) {
-    return _then(_$LocalizationModelImpl(
-      messages: null == messages
-          ? _value._messages
-          : messages // ignore: cast_nullable_to_non_nullable
-              as List<LocalizationMessageModel>,
-    ));
-  }
+/// Adds pattern-matching-related methods to [LocalizationModel].
+extension LocalizationModelPatterns on LocalizationModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LocalizationModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LocalizationModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LocalizationModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _LocalizationModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LocalizationModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LocalizationModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<LocalizationMessageModel> messages)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LocalizationModel() when $default != null:
+return $default(_that.messages);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<LocalizationMessageModel> messages)  $default,) {final _that = this;
+switch (_that) {
+case _LocalizationModel():
+return $default(_that.messages);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<LocalizationMessageModel> messages)?  $default,) {final _that = this;
+switch (_that) {
+case _LocalizationModel() when $default != null:
+return $default(_that.messages);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$LocalizationModelImpl implements _LocalizationModel {
-  const _$LocalizationModelImpl(
-      {final List<LocalizationMessageModel> messages = const []})
-      : _messages = messages;
+class _LocalizationModel implements LocalizationModel {
+  const _LocalizationModel({final  List<LocalizationMessageModel> messages = const []}): _messages = messages;
+  factory _LocalizationModel.fromJson(Map<String, dynamic> json) => _$LocalizationModelFromJson(json);
 
-  factory _$LocalizationModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$LocalizationModelImplFromJson(json);
-
-  final List<LocalizationMessageModel> _messages;
-  @override
-  @JsonKey()
-  List<LocalizationMessageModel> get messages {
-    if (_messages is EqualUnmodifiableListView) return _messages;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_messages);
-  }
-
-  @override
-  String toString() {
-    return 'LocalizationModel(messages: $messages)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LocalizationModelImpl &&
-            const DeepCollectionEquality().equals(other._messages, _messages));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_messages));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LocalizationModelImplCopyWith<_$LocalizationModelImpl> get copyWith =>
-      __$$LocalizationModelImplCopyWithImpl<_$LocalizationModelImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$LocalizationModelImplToJson(
-      this,
-    );
-  }
+ final  List<LocalizationMessageModel> _messages;
+@override@JsonKey() List<LocalizationMessageModel> get messages {
+  if (_messages is EqualUnmodifiableListView) return _messages;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_messages);
 }
 
-abstract class _LocalizationModel implements LocalizationModel {
-  const factory _LocalizationModel(
-          {final List<LocalizationMessageModel> messages}) =
-      _$LocalizationModelImpl;
 
-  factory _LocalizationModel.fromJson(Map<String, dynamic> json) =
-      _$LocalizationModelImpl.fromJson;
+/// Create a copy of LocalizationModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LocalizationModelCopyWith<_LocalizationModel> get copyWith => __$LocalizationModelCopyWithImpl<_LocalizationModel>(this, _$identity);
 
-  @override
-  List<LocalizationMessageModel> get messages;
-  @override
-  @JsonKey(ignore: true)
-  _$$LocalizationModelImplCopyWith<_$LocalizationModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$LocalizationModelToJson(this, );
 }
 
-LocalizationMessageModel _$LocalizationMessageModelFromJson(
-    Map<String, dynamic> json) {
-  return _LocalizationMessageModel.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LocalizationModel&&const DeepCollectionEquality().equals(other._messages, _messages));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_messages));
+
+@override
+String toString() {
+  return 'LocalizationModel(messages: $messages)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LocalizationModelCopyWith<$Res> implements $LocalizationModelCopyWith<$Res> {
+  factory _$LocalizationModelCopyWith(_LocalizationModel value, $Res Function(_LocalizationModel) _then) = __$LocalizationModelCopyWithImpl;
+@override @useResult
+$Res call({
+ List<LocalizationMessageModel> messages
+});
+
+
+
+
+}
+/// @nodoc
+class __$LocalizationModelCopyWithImpl<$Res>
+    implements _$LocalizationModelCopyWith<$Res> {
+  __$LocalizationModelCopyWithImpl(this._self, this._then);
+
+  final _LocalizationModel _self;
+  final $Res Function(_LocalizationModel) _then;
+
+/// Create a copy of LocalizationModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? messages = null,}) {
+  return _then(_LocalizationModel(
+messages: null == messages ? _self._messages : messages // ignore: cast_nullable_to_non_nullable
+as List<LocalizationMessageModel>,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$LocalizationMessageModel {
-  String get code => throw _privateConstructorUsedError;
-  String get message => throw _privateConstructorUsedError;
-  String get module => throw _privateConstructorUsedError;
-  String get locale => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $LocalizationMessageModelCopyWith<LocalizationMessageModel> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get code; String get message; String get module; String get locale;
+/// Create a copy of LocalizationMessageModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LocalizationMessageModelCopyWith<LocalizationMessageModel> get copyWith => _$LocalizationMessageModelCopyWithImpl<LocalizationMessageModel>(this as LocalizationMessageModel, _$identity);
+
+  /// Serializes this LocalizationMessageModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalizationMessageModel&&(identical(other.code, code) || other.code == code)&&(identical(other.message, message) || other.message == message)&&(identical(other.module, module) || other.module == module)&&(identical(other.locale, locale) || other.locale == locale));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,message,module,locale);
+
+@override
+String toString() {
+  return 'LocalizationMessageModel(code: $code, message: $message, module: $module, locale: $locale)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $LocalizationMessageModelCopyWith<$Res> {
-  factory $LocalizationMessageModelCopyWith(LocalizationMessageModel value,
-          $Res Function(LocalizationMessageModel) then) =
-      _$LocalizationMessageModelCopyWithImpl<$Res, LocalizationMessageModel>;
-  @useResult
-  $Res call({String code, String message, String module, String locale});
-}
+abstract mixin class $LocalizationMessageModelCopyWith<$Res>  {
+  factory $LocalizationMessageModelCopyWith(LocalizationMessageModel value, $Res Function(LocalizationMessageModel) _then) = _$LocalizationMessageModelCopyWithImpl;
+@useResult
+$Res call({
+ String code, String message, String module, String locale
+});
 
+
+
+
+}
 /// @nodoc
-class _$LocalizationMessageModelCopyWithImpl<$Res,
-        $Val extends LocalizationMessageModel>
+class _$LocalizationMessageModelCopyWithImpl<$Res>
     implements $LocalizationMessageModelCopyWith<$Res> {
-  _$LocalizationMessageModelCopyWithImpl(this._value, this._then);
+  _$LocalizationMessageModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final LocalizationMessageModel _self;
+  final $Res Function(LocalizationMessageModel) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? code = null,
-    Object? message = null,
-    Object? module = null,
-    Object? locale = null,
-  }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      module: null == module
-          ? _value.module
-          : module // ignore: cast_nullable_to_non_nullable
-              as String,
-      locale: null == locale
-          ? _value.locale
-          : locale // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of LocalizationMessageModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? message = null,Object? module = null,Object? locale = null,}) {
+  return _then(_self.copyWith(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,module: null == module ? _self.module : module // ignore: cast_nullable_to_non_nullable
+as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$LocalizationMessageModelImplCopyWith<$Res>
-    implements $LocalizationMessageModelCopyWith<$Res> {
-  factory _$$LocalizationMessageModelImplCopyWith(
-          _$LocalizationMessageModelImpl value,
-          $Res Function(_$LocalizationMessageModelImpl) then) =
-      __$$LocalizationMessageModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String code, String message, String module, String locale});
 }
 
-/// @nodoc
-class __$$LocalizationMessageModelImplCopyWithImpl<$Res>
-    extends _$LocalizationMessageModelCopyWithImpl<$Res,
-        _$LocalizationMessageModelImpl>
-    implements _$$LocalizationMessageModelImplCopyWith<$Res> {
-  __$$LocalizationMessageModelImplCopyWithImpl(
-      _$LocalizationMessageModelImpl _value,
-      $Res Function(_$LocalizationMessageModelImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? code = null,
-    Object? message = null,
-    Object? module = null,
-    Object? locale = null,
-  }) {
-    return _then(_$LocalizationMessageModelImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      module: null == module
-          ? _value.module
-          : module // ignore: cast_nullable_to_non_nullable
-              as String,
-      locale: null == locale
-          ? _value.locale
-          : locale // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [LocalizationMessageModel].
+extension LocalizationMessageModelPatterns on LocalizationMessageModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LocalizationMessageModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LocalizationMessageModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LocalizationMessageModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _LocalizationMessageModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LocalizationMessageModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LocalizationMessageModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String message,  String module,  String locale)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LocalizationMessageModel() when $default != null:
+return $default(_that.code,_that.message,_that.module,_that.locale);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String message,  String module,  String locale)  $default,) {final _that = this;
+switch (_that) {
+case _LocalizationMessageModel():
+return $default(_that.code,_that.message,_that.module,_that.locale);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String message,  String module,  String locale)?  $default,) {final _that = this;
+switch (_that) {
+case _LocalizationMessageModel() when $default != null:
+return $default(_that.code,_that.message,_that.module,_that.locale);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-class _$LocalizationMessageModelImpl implements _LocalizationMessageModel {
-  const _$LocalizationMessageModelImpl(
-      {required this.code,
-      required this.message,
-      required this.module,
-      required this.locale});
+class _LocalizationMessageModel implements LocalizationMessageModel {
+  const _LocalizationMessageModel({required this.code, required this.message, required this.module, required this.locale});
+  factory _LocalizationMessageModel.fromJson(Map<String, dynamic> json) => _$LocalizationMessageModelFromJson(json);
 
-  factory _$LocalizationMessageModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$LocalizationMessageModelImplFromJson(json);
+@override final  String code;
+@override final  String message;
+@override final  String module;
+@override final  String locale;
 
-  @override
-  final String code;
-  @override
-  final String message;
-  @override
-  final String module;
-  @override
-  final String locale;
+/// Create a copy of LocalizationMessageModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LocalizationMessageModelCopyWith<_LocalizationMessageModel> get copyWith => __$LocalizationMessageModelCopyWithImpl<_LocalizationMessageModel>(this, _$identity);
 
-  @override
-  String toString() {
-    return 'LocalizationMessageModel(code: $code, message: $message, module: $module, locale: $locale)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LocalizationMessageModelImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.message, message) || other.message == message) &&
-            (identical(other.module, module) || other.module == module) &&
-            (identical(other.locale, locale) || other.locale == locale));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, code, message, module, locale);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LocalizationMessageModelImplCopyWith<_$LocalizationMessageModelImpl>
-      get copyWith => __$$LocalizationMessageModelImplCopyWithImpl<
-          _$LocalizationMessageModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$LocalizationMessageModelImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$LocalizationMessageModelToJson(this, );
 }
 
-abstract class _LocalizationMessageModel implements LocalizationMessageModel {
-  const factory _LocalizationMessageModel(
-      {required final String code,
-      required final String message,
-      required final String module,
-      required final String locale}) = _$LocalizationMessageModelImpl;
-
-  factory _LocalizationMessageModel.fromJson(Map<String, dynamic> json) =
-      _$LocalizationMessageModelImpl.fromJson;
-
-  @override
-  String get code;
-  @override
-  String get message;
-  @override
-  String get module;
-  @override
-  String get locale;
-  @override
-  @JsonKey(ignore: true)
-  _$$LocalizationMessageModelImplCopyWith<_$LocalizationMessageModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LocalizationMessageModel&&(identical(other.code, code) || other.code == code)&&(identical(other.message, message) || other.message == message)&&(identical(other.module, module) || other.module == module)&&(identical(other.locale, locale) || other.locale == locale));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,message,module,locale);
+
+@override
+String toString() {
+  return 'LocalizationMessageModel(code: $code, message: $message, module: $module, locale: $locale)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LocalizationMessageModelCopyWith<$Res> implements $LocalizationMessageModelCopyWith<$Res> {
+  factory _$LocalizationMessageModelCopyWith(_LocalizationMessageModel value, $Res Function(_LocalizationMessageModel) _then) = __$LocalizationMessageModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String code, String message, String module, String locale
+});
+
+
+
+
+}
+/// @nodoc
+class __$LocalizationMessageModelCopyWithImpl<$Res>
+    implements _$LocalizationMessageModelCopyWith<$Res> {
+  __$LocalizationMessageModelCopyWithImpl(this._self, this._then);
+
+  final _LocalizationMessageModel _self;
+  final $Res Function(_LocalizationMessageModel) _then;
+
+/// Create a copy of LocalizationMessageModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? message = null,Object? module = null,Object? locale = null,}) {
+  return _then(_LocalizationMessageModel(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,module: null == module ? _self.module : module // ignore: cast_nullable_to_non_nullable
+as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on

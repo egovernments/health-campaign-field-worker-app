@@ -8,7 +8,7 @@ part 'bandwidth_model.g.dart';
 // The @freezed annotation marks this class as immutable and generates the necessary code
 @freezed
 // BandwidthModel class with a mixin of _$BandwidthModel
-class BandwidthModel with _$BandwidthModel {
+abstract class BandwidthModel with _$BandwidthModel {
   // Factory constructor for creating a new BandwidthModel instance
   // The required keyword means that the parameter is mandatory
   const factory BandwidthModel({

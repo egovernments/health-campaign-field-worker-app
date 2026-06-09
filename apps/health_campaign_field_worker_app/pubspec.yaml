@@ -4,32 +4,32 @@ publish_to: 'none'
 version: 2.1.0
 
 environment:
-  sdk: '>=3.0.0 <=4.0.0'
+  sdk: '>=3.8.0 <=4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  freezed_annotation: ^2.4.1
+  freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
   uuid: ^4.4.0
-  intl: ^0.19.0
+  intl: ^0.20.2
   drift: ^2.18.0
   sqlcipher_flutter_libs: ^0.6.4
   path_provider: ^2.1.3
   path: ^1.9.0
   digit_ui_components:
    path: ../../../digit_eco/digit_components
-  auto_route: ^8.3.0
+  auto_route: ^10.0.1
   flutter_bloc: ^8.1.5
-  collection: ^1.18.0
+  collection: ^1.19.0
   reactive_forms: ^17.0.0
   location: ^6.0.2
   dart_mappable: ^4.2.2
   dio: ^5.4.3+1
   flutter_keyboard_visibility: ^6.0.0
-  isar: ^3.1.0+1
-  isar_flutter_libs: ^3.1.0+1
+  isar_community: ^3.3.0
+  isar_community_flutter_libs: ^3.3.0
   nested: ^1.0.0
   flutter_dotenv: ^5.1.0
   flutter_localizations:
@@ -48,12 +48,14 @@ dependencies:
   flutter_local_notifications: ^17.1.2
   device_info_plus: ^9.1.2
   battery_plus: ^6.0.1
-  workmanager: ^0.5.2
+  workmanager: ^0.9.0+3
   digit_firebase_services: ^0.0.1
   firebase_messaging: ^14.6.5
   package_info_plus: ^8.0.0
   expandable: ^5.0.1
   flutter_svg: ^2.0.10+1
+
+
   digit_showcase:
    path: ../../../digit_eco/digit_showcase
   qr_flutter: ^4.1.0
@@ -74,7 +76,7 @@ dependencies:
   survey_form:
    path: ../../../digit_eco/survey_form
   encrypt: ^5.0.3
-  chopper: ^6.1.1
+  chopper: ^8.0.0
   transit_post:
    path: ../../../digit_eco/transit_post
   flutter_nearby_connections:
@@ -96,11 +98,11 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  freezed: ^2.5.2
+  freezed: ^3.1.0
   build_runner: ^2.4.11
   json_serializable: ^6.8.0
   drift_dev: ^2.18.0
-  auto_route_generator: ^8.0.0
+  auto_route_generator: ^10.0.1
   #bloc_test: ^9.1.0
   mocktail: ^1.0.2
   drift_db_viewer: ^2.1.0
@@ -109,14 +111,15 @@ dev_dependencies:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
       ref: master
       path: ./packages/dart_mappable_builder
-  isar_generator: ^3.1.0+1
+  isar_community_generator: ^3.3.0
   flutter_launcher_icons: ^0.13.1
   hrk_flutter_test_batteries: ^0.8.0
-  chopper_generator: ^6.0.0
+  chopper_generator: ^8.0.0
 
 
 ## melos_managed_dependency_overrides: sync_service
 dependency_overrides:
+  # flutter_plugin_android_lifecycle: ^2.0.28
   flutter_dropzone_platform_interface: 2.0.6
   file_selector_linux: ^0.9.2
   file_selector_platform_interface: ^2.6.2
@@ -150,6 +153,9 @@ dependency_overrides:
 
   digit_crud_bloc:
     path: ../../packages/digit_crud_bloc
+
+  digit_location_tracker:
+    path: ../../packages/digit_location_tracker
 
 
   digit_formula_parser:

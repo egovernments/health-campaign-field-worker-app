@@ -1,12 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 
-import 'digit_scanner_router.gm.dart';
+import 'digit_scanner_router.gr.dart';
 
-@AutoRouterConfig.module()
-class DigitScannerPackageRoute extends $DigitScannerPackageRoute {
+export 'digit_scanner_router.gr.dart';
+
+@AutoRouterConfig()
+class DigitScannerPackageRoute extends RootStackRouter {
+  @override
   RouteType get defaultRouteType => const RouteType.material();
 
-  List<AutoRoute> routes = [
+  @override
+  List<AutoRoute> get routes => [
     AutoRoute(
       page: DigitScannerRoute.page,
       path: 'digit-scanner',

@@ -1,11 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 
-import 'transit_post_router.gm.dart';
+import 'transit_post_router.gr.dart';
 
-@AutoRouterConfig.module()
-class TransitPostRoute extends $TransitPostRoute {
+export 'transit_post_router.gr.dart';
+
+@AutoRouterConfig()
+class TransitPostRoute extends RootStackRouter {
+  @override
   RouteType get defaultRouteType => const RouteType.material();
 
+  @override
   List<AutoRoute> get routes => [
         AutoRoute(
             page: TransitPostWrapperRoute.page,

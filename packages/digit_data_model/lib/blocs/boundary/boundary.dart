@@ -158,7 +158,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
 }
 
 @freezed
-class BoundaryEvent with _$BoundaryEvent {
+abstract class BoundaryEvent with _$BoundaryEvent {
   const factory BoundaryEvent.reset() = BoundaryResetEvent;
 
   const factory BoundaryEvent.search(
@@ -181,7 +181,7 @@ class BoundaryEvent with _$BoundaryEvent {
 }
 
 @freezed
-class BoundaryState with _$BoundaryState {
+abstract class BoundaryState with _$BoundaryState {
   const BoundaryState._();
 
   const factory BoundaryState({

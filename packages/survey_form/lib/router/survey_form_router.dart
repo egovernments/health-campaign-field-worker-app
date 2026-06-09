@@ -1,15 +1,18 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.gr.dart';
+
+export 'package:survey_form/router/survey_form_router.gr.dart';
 
 
 //Used auto_route package to navigate to different pages in survey_form package
 
-@AutoRouterConfig.module()
-class SurveyFormRoute extends $SurveyFormRoute {
-
+@AutoRouterConfig()
+class SurveyFormRoute extends RootStackRouter {
+  @override
   RouteType get defaultRouteType => const RouteType.material();
 
-  List<AutoRoute> routes = [
+  @override
+  List<AutoRoute> get routes => [
     AutoRoute(
         page: SurveyFormWrapperRoute.page,
         path: 'surveyForm',

@@ -7,7 +7,7 @@ part 'request_info_model.freezed.dart';
 part 'request_info_model.g.dart';
 
 @freezed
-class RequestInfoMapperModel with _$RequestInfoMapperModel {
+abstract class RequestInfoMapperModel with _$RequestInfoMapperModel {
   const factory RequestInfoMapperModel({
     final RequestInfoModel? requestInfo,
   }) = _RequestInfoMapperModel;
@@ -17,7 +17,7 @@ class RequestInfoMapperModel with _$RequestInfoMapperModel {
 }
 
 @freezed
-class RequestInfoModel with _$RequestInfoModel {
+abstract class RequestInfoModel with _$RequestInfoModel {
   @JsonSerializable(includeIfNull: false)
   const factory RequestInfoModel({
     final String? apiId,

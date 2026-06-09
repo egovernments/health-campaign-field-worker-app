@@ -17,17 +17,10 @@ const RowVersionListSchema = CollectionSchema(
   name: r'RowVersionList',
   id: 7716197199845281802,
   properties: {
-    r'module': PropertySchema(
-      id: 0,
-      name: r'module',
-      type: IsarType.string,
-    ),
-    r'version': PropertySchema(
-      id: 1,
-      name: r'version',
-      type: IsarType.string,
-    )
+    r'module': PropertySchema(id: 0, name: r'module', type: IsarType.string),
+    r'version': PropertySchema(id: 1, name: r'version', type: IsarType.string),
   },
+
   estimateSize: _rowVersionListEstimateSize,
   serialize: _rowVersionListSerialize,
   deserialize: _rowVersionListDeserialize,
@@ -36,10 +29,11 @@ const RowVersionListSchema = CollectionSchema(
   indexes: {},
   links: {},
   embeddedSchemas: {},
+
   getId: _rowVersionListGetId,
   getLinks: _rowVersionListGetLinks,
   attach: _rowVersionListAttach,
-  version: '3.1.0+1',
+  version: '3.3.0',
 );
 
 int _rowVersionListEstimateSize(
@@ -101,7 +95,10 @@ List<IsarLinkBase<dynamic>> _rowVersionListGetLinks(RowVersionList object) {
 }
 
 void _rowVersionListAttach(
-    IsarCollection<dynamic> col, Id id, RowVersionList object) {
+  IsarCollection<dynamic> col,
+  Id id,
+  RowVersionList object,
+) {
   object.id = id;
 }
 
@@ -117,17 +114,16 @@ extension RowVersionListQueryWhereSort
 extension RowVersionListQueryWhere
     on QueryBuilder<RowVersionList, RowVersionList, QWhereClause> {
   QueryBuilder<RowVersionList, RowVersionList, QAfterWhereClause> idEqualTo(
-      Id id) {
+    Id id,
+  ) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
-      ));
+      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterWhereClause> idNotEqualTo(
-      Id id) {
+    Id id,
+  ) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -150,8 +146,9 @@ extension RowVersionListQueryWhere
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterWhereClause> idGreaterThan(
-      Id id,
-      {bool include = false}) {
+    Id id, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -160,8 +157,9 @@ extension RowVersionListQueryWhere
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterWhereClause> idLessThan(
-      Id id,
-      {bool include = false}) {
+    Id id, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -176,12 +174,14 @@ extension RowVersionListQueryWhere
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
-        includeLower: includeLower,
-        upper: upperId,
-        includeUpper: includeUpper,
-      ));
+      return query.addWhereClause(
+        IdWhereClause.between(
+          lower: lowerId,
+          includeLower: includeLower,
+          upper: upperId,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 }
@@ -189,40 +189,38 @@ extension RowVersionListQueryWhere
 extension RowVersionListQueryFilter
     on QueryBuilder<RowVersionList, RowVersionList, QFilterCondition> {
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition> idEqualTo(
-      Id value) {
+    Id value,
+  ) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'id', value: value),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      idGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
+  idGreaterThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      idLessThan(
-    Id value, {
-    bool include = false,
-  }) {
+  idLessThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
@@ -233,64 +231,69 @@ extension RowVersionListQueryFilter
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'id',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      moduleEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  moduleEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'module',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'module',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      moduleGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'module',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      moduleLessThan(
+  moduleGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'module',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'module',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      moduleBetween(
+  moduleLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'module',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
+  moduleBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -298,135 +301,140 @@ extension RowVersionListQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'module',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'module',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      moduleStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  moduleStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'module',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'module',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      moduleEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  moduleEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'module',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'module',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      moduleContains(String value, {bool caseSensitive = true}) {
+  moduleContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'module',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'module',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      moduleMatches(String pattern, {bool caseSensitive = true}) {
+  moduleMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'module',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'module',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      moduleIsEmpty() {
+  moduleIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'module',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'module', value: ''),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      moduleIsNotEmpty() {
+  moduleIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'module',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'module', value: ''),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      versionEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  versionEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'version',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'version',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      versionGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'version',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      versionLessThan(
+  versionGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'version',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'version',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      versionBetween(
+  versionLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'version',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
+  versionBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -434,84 +442,86 @@ extension RowVersionListQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'version',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'version',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      versionStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  versionStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'version',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'version',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      versionEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  versionEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'version',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'version',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      versionContains(String value, {bool caseSensitive = true}) {
+  versionContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'version',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'version',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      versionMatches(String pattern, {bool caseSensitive = true}) {
+  versionMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'version',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'version',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      versionIsEmpty() {
+  versionIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'version',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'version', value: ''),
+      );
     });
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterFilterCondition>
-      versionIsNotEmpty() {
+  versionIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'version',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'version', value: ''),
+      );
     });
   }
 }
@@ -531,7 +541,7 @@ extension RowVersionListQuerySortBy
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterSortBy>
-      sortByModuleDesc() {
+  sortByModuleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'module', Sort.desc);
     });
@@ -544,7 +554,7 @@ extension RowVersionListQuerySortBy
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterSortBy>
-      sortByVersionDesc() {
+  sortByVersionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'version', Sort.desc);
     });
@@ -572,7 +582,7 @@ extension RowVersionListQuerySortThenBy
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterSortBy>
-      thenByModuleDesc() {
+  thenByModuleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'module', Sort.desc);
     });
@@ -585,7 +595,7 @@ extension RowVersionListQuerySortThenBy
   }
 
   QueryBuilder<RowVersionList, RowVersionList, QAfterSortBy>
-      thenByVersionDesc() {
+  thenByVersionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'version', Sort.desc);
     });
@@ -594,15 +604,17 @@ extension RowVersionListQuerySortThenBy
 
 extension RowVersionListQueryWhereDistinct
     on QueryBuilder<RowVersionList, RowVersionList, QDistinct> {
-  QueryBuilder<RowVersionList, RowVersionList, QDistinct> distinctByModule(
-      {bool caseSensitive = true}) {
+  QueryBuilder<RowVersionList, RowVersionList, QDistinct> distinctByModule({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'module', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<RowVersionList, RowVersionList, QDistinct> distinctByVersion(
-      {bool caseSensitive = true}) {
+  QueryBuilder<RowVersionList, RowVersionList, QDistinct> distinctByVersion({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'version', caseSensitive: caseSensitive);
     });

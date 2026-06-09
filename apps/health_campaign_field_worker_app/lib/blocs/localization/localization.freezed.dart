@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,853 +9,656 @@ part of 'localization.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
 /// @nodoc
 mixin _$LocalizationEvent {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            String module, String tenantId, String locale, String path)
-        onLoadLocalization,
-    required TResult Function(
-            String module, String tenantId, String locale, String path)
-        onRemoteLoadLocalization,
-    required TResult Function(int index, String code) onUpdateLocalizationIndex,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            String module, String tenantId, String locale, String path)?
-        onLoadLocalization,
-    TResult? Function(
-            String module, String tenantId, String locale, String path)?
-        onRemoteLoadLocalization,
-    TResult? Function(int index, String code)? onUpdateLocalizationIndex,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            String module, String tenantId, String locale, String path)?
-        onLoadLocalization,
-    TResult Function(
-            String module, String tenantId, String locale, String path)?
-        onRemoteLoadLocalization,
-    TResult Function(int index, String code)? onUpdateLocalizationIndex,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(OnLoadLocalizationEvent value) onLoadLocalization,
-    required TResult Function(OnRemoteLoadLocalizationEvent value)
-        onRemoteLoadLocalization,
-    required TResult Function(OnUpdateLocalizationIndexEvent value)
-        onUpdateLocalizationIndex,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(OnLoadLocalizationEvent value)? onLoadLocalization,
-    TResult? Function(OnRemoteLoadLocalizationEvent value)?
-        onRemoteLoadLocalization,
-    TResult? Function(OnUpdateLocalizationIndexEvent value)?
-        onUpdateLocalizationIndex,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(OnLoadLocalizationEvent value)? onLoadLocalization,
-    TResult Function(OnRemoteLoadLocalizationEvent value)?
-        onRemoteLoadLocalization,
-    TResult Function(OnUpdateLocalizationIndexEvent value)?
-        onUpdateLocalizationIndex,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalizationEvent);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'LocalizationEvent()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $LocalizationEventCopyWith<$Res> {
-  factory $LocalizationEventCopyWith(
-          LocalizationEvent value, $Res Function(LocalizationEvent) then) =
-      _$LocalizationEventCopyWithImpl<$Res, LocalizationEvent>;
+class $LocalizationEventCopyWith<$Res>  {
+$LocalizationEventCopyWith(LocalizationEvent _, $Res Function(LocalizationEvent) __);
 }
 
-/// @nodoc
-class _$LocalizationEventCopyWithImpl<$Res, $Val extends LocalizationEvent>
-    implements $LocalizationEventCopyWith<$Res> {
-  _$LocalizationEventCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [LocalizationEvent].
+extension LocalizationEventPatterns on LocalizationEvent {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( OnLoadLocalizationEvent value)?  onLoadLocalization,TResult Function( OnRemoteLoadLocalizationEvent value)?  onRemoteLoadLocalization,TResult Function( OnUpdateLocalizationIndexEvent value)?  onUpdateLocalizationIndex,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case OnLoadLocalizationEvent() when onLoadLocalization != null:
+return onLoadLocalization(_that);case OnRemoteLoadLocalizationEvent() when onRemoteLoadLocalization != null:
+return onRemoteLoadLocalization(_that);case OnUpdateLocalizationIndexEvent() when onUpdateLocalizationIndex != null:
+return onUpdateLocalizationIndex(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( OnLoadLocalizationEvent value)  onLoadLocalization,required TResult Function( OnRemoteLoadLocalizationEvent value)  onRemoteLoadLocalization,required TResult Function( OnUpdateLocalizationIndexEvent value)  onUpdateLocalizationIndex,}){
+final _that = this;
+switch (_that) {
+case OnLoadLocalizationEvent():
+return onLoadLocalization(_that);case OnRemoteLoadLocalizationEvent():
+return onRemoteLoadLocalization(_that);case OnUpdateLocalizationIndexEvent():
+return onUpdateLocalizationIndex(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( OnLoadLocalizationEvent value)?  onLoadLocalization,TResult? Function( OnRemoteLoadLocalizationEvent value)?  onRemoteLoadLocalization,TResult? Function( OnUpdateLocalizationIndexEvent value)?  onUpdateLocalizationIndex,}){
+final _that = this;
+switch (_that) {
+case OnLoadLocalizationEvent() when onLoadLocalization != null:
+return onLoadLocalization(_that);case OnRemoteLoadLocalizationEvent() when onRemoteLoadLocalization != null:
+return onRemoteLoadLocalization(_that);case OnUpdateLocalizationIndexEvent() when onUpdateLocalizationIndex != null:
+return onUpdateLocalizationIndex(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String module,  String tenantId,  String locale,  String path)?  onLoadLocalization,TResult Function( String module,  String tenantId,  String locale,  String path)?  onRemoteLoadLocalization,TResult Function( int index,  String code)?  onUpdateLocalizationIndex,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case OnLoadLocalizationEvent() when onLoadLocalization != null:
+return onLoadLocalization(_that.module,_that.tenantId,_that.locale,_that.path);case OnRemoteLoadLocalizationEvent() when onRemoteLoadLocalization != null:
+return onRemoteLoadLocalization(_that.module,_that.tenantId,_that.locale,_that.path);case OnUpdateLocalizationIndexEvent() when onUpdateLocalizationIndex != null:
+return onUpdateLocalizationIndex(_that.index,_that.code);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String module,  String tenantId,  String locale,  String path)  onLoadLocalization,required TResult Function( String module,  String tenantId,  String locale,  String path)  onRemoteLoadLocalization,required TResult Function( int index,  String code)  onUpdateLocalizationIndex,}) {final _that = this;
+switch (_that) {
+case OnLoadLocalizationEvent():
+return onLoadLocalization(_that.module,_that.tenantId,_that.locale,_that.path);case OnRemoteLoadLocalizationEvent():
+return onRemoteLoadLocalization(_that.module,_that.tenantId,_that.locale,_that.path);case OnUpdateLocalizationIndexEvent():
+return onUpdateLocalizationIndex(_that.index,_that.code);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String module,  String tenantId,  String locale,  String path)?  onLoadLocalization,TResult? Function( String module,  String tenantId,  String locale,  String path)?  onRemoteLoadLocalization,TResult? Function( int index,  String code)?  onUpdateLocalizationIndex,}) {final _that = this;
+switch (_that) {
+case OnLoadLocalizationEvent() when onLoadLocalization != null:
+return onLoadLocalization(_that.module,_that.tenantId,_that.locale,_that.path);case OnRemoteLoadLocalizationEvent() when onRemoteLoadLocalization != null:
+return onRemoteLoadLocalization(_that.module,_that.tenantId,_that.locale,_that.path);case OnUpdateLocalizationIndexEvent() when onUpdateLocalizationIndex != null:
+return onUpdateLocalizationIndex(_that.index,_that.code);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$OnLoadLocalizationEventImplCopyWith<$Res> {
-  factory _$$OnLoadLocalizationEventImplCopyWith(
-          _$OnLoadLocalizationEventImpl value,
-          $Res Function(_$OnLoadLocalizationEventImpl) then) =
-      __$$OnLoadLocalizationEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String module, String tenantId, String locale, String path});
-}
-
-/// @nodoc
-class __$$OnLoadLocalizationEventImplCopyWithImpl<$Res>
-    extends _$LocalizationEventCopyWithImpl<$Res, _$OnLoadLocalizationEventImpl>
-    implements _$$OnLoadLocalizationEventImplCopyWith<$Res> {
-  __$$OnLoadLocalizationEventImplCopyWithImpl(
-      _$OnLoadLocalizationEventImpl _value,
-      $Res Function(_$OnLoadLocalizationEventImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? module = null,
-    Object? tenantId = null,
-    Object? locale = null,
-    Object? path = null,
-  }) {
-    return _then(_$OnLoadLocalizationEventImpl(
-      module: null == module
-          ? _value.module
-          : module // ignore: cast_nullable_to_non_nullable
-              as String,
-      tenantId: null == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String,
-      locale: null == locale
-          ? _value.locale
-          : locale // ignore: cast_nullable_to_non_nullable
-              as String,
-      path: null == path
-          ? _value.path
-          : path // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$OnLoadLocalizationEventImpl implements OnLoadLocalizationEvent {
-  const _$OnLoadLocalizationEventImpl(
-      {required this.module,
-      required this.tenantId,
-      required this.locale,
-      required this.path});
-
-  @override
-  final String module;
-  @override
-  final String tenantId;
-  @override
-  final String locale;
-  @override
-  final String path;
-
-  @override
-  String toString() {
-    return 'LocalizationEvent.onLoadLocalization(module: $module, tenantId: $tenantId, locale: $locale, path: $path)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$OnLoadLocalizationEventImpl &&
-            (identical(other.module, module) || other.module == module) &&
-            (identical(other.tenantId, tenantId) ||
-                other.tenantId == tenantId) &&
-            (identical(other.locale, locale) || other.locale == locale) &&
-            (identical(other.path, path) || other.path == path));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, module, tenantId, locale, path);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$OnLoadLocalizationEventImplCopyWith<_$OnLoadLocalizationEventImpl>
-      get copyWith => __$$OnLoadLocalizationEventImplCopyWithImpl<
-          _$OnLoadLocalizationEventImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            String module, String tenantId, String locale, String path)
-        onLoadLocalization,
-    required TResult Function(
-            String module, String tenantId, String locale, String path)
-        onRemoteLoadLocalization,
-    required TResult Function(int index, String code) onUpdateLocalizationIndex,
-  }) {
-    return onLoadLocalization(module, tenantId, locale, path);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            String module, String tenantId, String locale, String path)?
-        onLoadLocalization,
-    TResult? Function(
-            String module, String tenantId, String locale, String path)?
-        onRemoteLoadLocalization,
-    TResult? Function(int index, String code)? onUpdateLocalizationIndex,
-  }) {
-    return onLoadLocalization?.call(module, tenantId, locale, path);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            String module, String tenantId, String locale, String path)?
-        onLoadLocalization,
-    TResult Function(
-            String module, String tenantId, String locale, String path)?
-        onRemoteLoadLocalization,
-    TResult Function(int index, String code)? onUpdateLocalizationIndex,
-    required TResult orElse(),
-  }) {
-    if (onLoadLocalization != null) {
-      return onLoadLocalization(module, tenantId, locale, path);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(OnLoadLocalizationEvent value) onLoadLocalization,
-    required TResult Function(OnRemoteLoadLocalizationEvent value)
-        onRemoteLoadLocalization,
-    required TResult Function(OnUpdateLocalizationIndexEvent value)
-        onUpdateLocalizationIndex,
-  }) {
-    return onLoadLocalization(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(OnLoadLocalizationEvent value)? onLoadLocalization,
-    TResult? Function(OnRemoteLoadLocalizationEvent value)?
-        onRemoteLoadLocalization,
-    TResult? Function(OnUpdateLocalizationIndexEvent value)?
-        onUpdateLocalizationIndex,
-  }) {
-    return onLoadLocalization?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(OnLoadLocalizationEvent value)? onLoadLocalization,
-    TResult Function(OnRemoteLoadLocalizationEvent value)?
-        onRemoteLoadLocalization,
-    TResult Function(OnUpdateLocalizationIndexEvent value)?
-        onUpdateLocalizationIndex,
-    required TResult orElse(),
-  }) {
-    if (onLoadLocalization != null) {
-      return onLoadLocalization(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class OnLoadLocalizationEvent implements LocalizationEvent {
-  const factory OnLoadLocalizationEvent(
-      {required final String module,
-      required final String tenantId,
-      required final String locale,
-      required final String path}) = _$OnLoadLocalizationEventImpl;
-
-  String get module;
-  String get tenantId;
-  String get locale;
-  String get path;
-  @JsonKey(ignore: true)
-  _$$OnLoadLocalizationEventImplCopyWith<_$OnLoadLocalizationEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$OnRemoteLoadLocalizationEventImplCopyWith<$Res> {
-  factory _$$OnRemoteLoadLocalizationEventImplCopyWith(
-          _$OnRemoteLoadLocalizationEventImpl value,
-          $Res Function(_$OnRemoteLoadLocalizationEventImpl) then) =
-      __$$OnRemoteLoadLocalizationEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String module, String tenantId, String locale, String path});
-}
-
-/// @nodoc
-class __$$OnRemoteLoadLocalizationEventImplCopyWithImpl<$Res>
-    extends _$LocalizationEventCopyWithImpl<$Res,
-        _$OnRemoteLoadLocalizationEventImpl>
-    implements _$$OnRemoteLoadLocalizationEventImplCopyWith<$Res> {
-  __$$OnRemoteLoadLocalizationEventImplCopyWithImpl(
-      _$OnRemoteLoadLocalizationEventImpl _value,
-      $Res Function(_$OnRemoteLoadLocalizationEventImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? module = null,
-    Object? tenantId = null,
-    Object? locale = null,
-    Object? path = null,
-  }) {
-    return _then(_$OnRemoteLoadLocalizationEventImpl(
-      module: null == module
-          ? _value.module
-          : module // ignore: cast_nullable_to_non_nullable
-              as String,
-      tenantId: null == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String,
-      locale: null == locale
-          ? _value.locale
-          : locale // ignore: cast_nullable_to_non_nullable
-              as String,
-      path: null == path
-          ? _value.path
-          : path // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$OnRemoteLoadLocalizationEventImpl
-    implements OnRemoteLoadLocalizationEvent {
-  const _$OnRemoteLoadLocalizationEventImpl(
-      {required this.module,
-      required this.tenantId,
-      required this.locale,
-      required this.path});
 
-  @override
-  final String module;
-  @override
-  final String tenantId;
-  @override
-  final String locale;
-  @override
-  final String path;
+class OnLoadLocalizationEvent implements LocalizationEvent {
+  const OnLoadLocalizationEvent({required this.module, required this.tenantId, required this.locale, required this.path});
+  
 
-  @override
-  String toString() {
-    return 'LocalizationEvent.onRemoteLoadLocalization(module: $module, tenantId: $tenantId, locale: $locale, path: $path)';
-  }
+ final  String module;
+ final  String tenantId;
+ final  String locale;
+ final  String path;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$OnRemoteLoadLocalizationEventImpl &&
-            (identical(other.module, module) || other.module == module) &&
-            (identical(other.tenantId, tenantId) ||
-                other.tenantId == tenantId) &&
-            (identical(other.locale, locale) || other.locale == locale) &&
-            (identical(other.path, path) || other.path == path));
-  }
+/// Create a copy of LocalizationEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$OnLoadLocalizationEventCopyWith<OnLoadLocalizationEvent> get copyWith => _$OnLoadLocalizationEventCopyWithImpl<OnLoadLocalizationEvent>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, module, tenantId, locale, path);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$OnRemoteLoadLocalizationEventImplCopyWith<
-          _$OnRemoteLoadLocalizationEventImpl>
-      get copyWith => __$$OnRemoteLoadLocalizationEventImplCopyWithImpl<
-          _$OnRemoteLoadLocalizationEventImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            String module, String tenantId, String locale, String path)
-        onLoadLocalization,
-    required TResult Function(
-            String module, String tenantId, String locale, String path)
-        onRemoteLoadLocalization,
-    required TResult Function(int index, String code) onUpdateLocalizationIndex,
-  }) {
-    return onRemoteLoadLocalization(module, tenantId, locale, path);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            String module, String tenantId, String locale, String path)?
-        onLoadLocalization,
-    TResult? Function(
-            String module, String tenantId, String locale, String path)?
-        onRemoteLoadLocalization,
-    TResult? Function(int index, String code)? onUpdateLocalizationIndex,
-  }) {
-    return onRemoteLoadLocalization?.call(module, tenantId, locale, path);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            String module, String tenantId, String locale, String path)?
-        onLoadLocalization,
-    TResult Function(
-            String module, String tenantId, String locale, String path)?
-        onRemoteLoadLocalization,
-    TResult Function(int index, String code)? onUpdateLocalizationIndex,
-    required TResult orElse(),
-  }) {
-    if (onRemoteLoadLocalization != null) {
-      return onRemoteLoadLocalization(module, tenantId, locale, path);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(OnLoadLocalizationEvent value) onLoadLocalization,
-    required TResult Function(OnRemoteLoadLocalizationEvent value)
-        onRemoteLoadLocalization,
-    required TResult Function(OnUpdateLocalizationIndexEvent value)
-        onUpdateLocalizationIndex,
-  }) {
-    return onRemoteLoadLocalization(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(OnLoadLocalizationEvent value)? onLoadLocalization,
-    TResult? Function(OnRemoteLoadLocalizationEvent value)?
-        onRemoteLoadLocalization,
-    TResult? Function(OnUpdateLocalizationIndexEvent value)?
-        onUpdateLocalizationIndex,
-  }) {
-    return onRemoteLoadLocalization?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(OnLoadLocalizationEvent value)? onLoadLocalization,
-    TResult Function(OnRemoteLoadLocalizationEvent value)?
-        onRemoteLoadLocalization,
-    TResult Function(OnUpdateLocalizationIndexEvent value)?
-        onUpdateLocalizationIndex,
-    required TResult orElse(),
-  }) {
-    if (onRemoteLoadLocalization != null) {
-      return onRemoteLoadLocalization(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OnLoadLocalizationEvent&&(identical(other.module, module) || other.module == module)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.path, path) || other.path == path));
 }
 
-abstract class OnRemoteLoadLocalizationEvent implements LocalizationEvent {
-  const factory OnRemoteLoadLocalizationEvent(
-      {required final String module,
-      required final String tenantId,
-      required final String locale,
-      required final String path}) = _$OnRemoteLoadLocalizationEventImpl;
 
-  String get module;
-  String get tenantId;
-  String get locale;
-  String get path;
-  @JsonKey(ignore: true)
-  _$$OnRemoteLoadLocalizationEventImplCopyWith<
-          _$OnRemoteLoadLocalizationEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+int get hashCode => Object.hash(runtimeType,module,tenantId,locale,path);
+
+@override
+String toString() {
+  return 'LocalizationEvent.onLoadLocalization(module: $module, tenantId: $tenantId, locale: $locale, path: $path)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$OnUpdateLocalizationIndexEventImplCopyWith<$Res> {
-  factory _$$OnUpdateLocalizationIndexEventImplCopyWith(
-          _$OnUpdateLocalizationIndexEventImpl value,
-          $Res Function(_$OnUpdateLocalizationIndexEventImpl) then) =
-      __$$OnUpdateLocalizationIndexEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({int index, String code});
+abstract mixin class $OnLoadLocalizationEventCopyWith<$Res> implements $LocalizationEventCopyWith<$Res> {
+  factory $OnLoadLocalizationEventCopyWith(OnLoadLocalizationEvent value, $Res Function(OnLoadLocalizationEvent) _then) = _$OnLoadLocalizationEventCopyWithImpl;
+@useResult
+$Res call({
+ String module, String tenantId, String locale, String path
+});
+
+
+
+
+}
+/// @nodoc
+class _$OnLoadLocalizationEventCopyWithImpl<$Res>
+    implements $OnLoadLocalizationEventCopyWith<$Res> {
+  _$OnLoadLocalizationEventCopyWithImpl(this._self, this._then);
+
+  final OnLoadLocalizationEvent _self;
+  final $Res Function(OnLoadLocalizationEvent) _then;
+
+/// Create a copy of LocalizationEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? module = null,Object? tenantId = null,Object? locale = null,Object? path = null,}) {
+  return _then(OnLoadLocalizationEvent(
+module: null == module ? _self.module : module // ignore: cast_nullable_to_non_nullable
+as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String,path: null == path ? _self.path : path // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$OnUpdateLocalizationIndexEventImplCopyWithImpl<$Res>
-    extends _$LocalizationEventCopyWithImpl<$Res,
-        _$OnUpdateLocalizationIndexEventImpl>
-    implements _$$OnUpdateLocalizationIndexEventImplCopyWith<$Res> {
-  __$$OnUpdateLocalizationIndexEventImplCopyWithImpl(
-      _$OnUpdateLocalizationIndexEventImpl _value,
-      $Res Function(_$OnUpdateLocalizationIndexEventImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? index = null,
-    Object? code = null,
-  }) {
-    return _then(_$OnUpdateLocalizationIndexEventImpl(
-      index: null == index
-          ? _value.index
-          : index // ignore: cast_nullable_to_non_nullable
-              as int,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$OnUpdateLocalizationIndexEventImpl
-    implements OnUpdateLocalizationIndexEvent {
-  const _$OnUpdateLocalizationIndexEventImpl(
-      {required this.index, required this.code});
 
-  @override
-  final int index;
-  @override
-  final String code;
+class OnRemoteLoadLocalizationEvent implements LocalizationEvent {
+  const OnRemoteLoadLocalizationEvent({required this.module, required this.tenantId, required this.locale, required this.path});
+  
 
-  @override
-  String toString() {
-    return 'LocalizationEvent.onUpdateLocalizationIndex(index: $index, code: $code)';
-  }
+ final  String module;
+ final  String tenantId;
+ final  String locale;
+ final  String path;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$OnUpdateLocalizationIndexEventImpl &&
-            (identical(other.index, index) || other.index == index) &&
-            (identical(other.code, code) || other.code == code));
-  }
+/// Create a copy of LocalizationEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$OnRemoteLoadLocalizationEventCopyWith<OnRemoteLoadLocalizationEvent> get copyWith => _$OnRemoteLoadLocalizationEventCopyWithImpl<OnRemoteLoadLocalizationEvent>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, index, code);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$OnUpdateLocalizationIndexEventImplCopyWith<
-          _$OnUpdateLocalizationIndexEventImpl>
-      get copyWith => __$$OnUpdateLocalizationIndexEventImplCopyWithImpl<
-          _$OnUpdateLocalizationIndexEventImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            String module, String tenantId, String locale, String path)
-        onLoadLocalization,
-    required TResult Function(
-            String module, String tenantId, String locale, String path)
-        onRemoteLoadLocalization,
-    required TResult Function(int index, String code) onUpdateLocalizationIndex,
-  }) {
-    return onUpdateLocalizationIndex(index, code);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            String module, String tenantId, String locale, String path)?
-        onLoadLocalization,
-    TResult? Function(
-            String module, String tenantId, String locale, String path)?
-        onRemoteLoadLocalization,
-    TResult? Function(int index, String code)? onUpdateLocalizationIndex,
-  }) {
-    return onUpdateLocalizationIndex?.call(index, code);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            String module, String tenantId, String locale, String path)?
-        onLoadLocalization,
-    TResult Function(
-            String module, String tenantId, String locale, String path)?
-        onRemoteLoadLocalization,
-    TResult Function(int index, String code)? onUpdateLocalizationIndex,
-    required TResult orElse(),
-  }) {
-    if (onUpdateLocalizationIndex != null) {
-      return onUpdateLocalizationIndex(index, code);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(OnLoadLocalizationEvent value) onLoadLocalization,
-    required TResult Function(OnRemoteLoadLocalizationEvent value)
-        onRemoteLoadLocalization,
-    required TResult Function(OnUpdateLocalizationIndexEvent value)
-        onUpdateLocalizationIndex,
-  }) {
-    return onUpdateLocalizationIndex(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(OnLoadLocalizationEvent value)? onLoadLocalization,
-    TResult? Function(OnRemoteLoadLocalizationEvent value)?
-        onRemoteLoadLocalization,
-    TResult? Function(OnUpdateLocalizationIndexEvent value)?
-        onUpdateLocalizationIndex,
-  }) {
-    return onUpdateLocalizationIndex?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(OnLoadLocalizationEvent value)? onLoadLocalization,
-    TResult Function(OnRemoteLoadLocalizationEvent value)?
-        onRemoteLoadLocalization,
-    TResult Function(OnUpdateLocalizationIndexEvent value)?
-        onUpdateLocalizationIndex,
-    required TResult orElse(),
-  }) {
-    if (onUpdateLocalizationIndex != null) {
-      return onUpdateLocalizationIndex(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OnRemoteLoadLocalizationEvent&&(identical(other.module, module) || other.module == module)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.path, path) || other.path == path));
 }
 
-abstract class OnUpdateLocalizationIndexEvent implements LocalizationEvent {
-  const factory OnUpdateLocalizationIndexEvent(
-      {required final int index,
-      required final String code}) = _$OnUpdateLocalizationIndexEventImpl;
 
-  int get index;
-  String get code;
-  @JsonKey(ignore: true)
-  _$$OnUpdateLocalizationIndexEventImplCopyWith<
-          _$OnUpdateLocalizationIndexEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+int get hashCode => Object.hash(runtimeType,module,tenantId,locale,path);
+
+@override
+String toString() {
+  return 'LocalizationEvent.onRemoteLoadLocalization(module: $module, tenantId: $tenantId, locale: $locale, path: $path)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $OnRemoteLoadLocalizationEventCopyWith<$Res> implements $LocalizationEventCopyWith<$Res> {
+  factory $OnRemoteLoadLocalizationEventCopyWith(OnRemoteLoadLocalizationEvent value, $Res Function(OnRemoteLoadLocalizationEvent) _then) = _$OnRemoteLoadLocalizationEventCopyWithImpl;
+@useResult
+$Res call({
+ String module, String tenantId, String locale, String path
+});
+
+
+
+
+}
+/// @nodoc
+class _$OnRemoteLoadLocalizationEventCopyWithImpl<$Res>
+    implements $OnRemoteLoadLocalizationEventCopyWith<$Res> {
+  _$OnRemoteLoadLocalizationEventCopyWithImpl(this._self, this._then);
+
+  final OnRemoteLoadLocalizationEvent _self;
+  final $Res Function(OnRemoteLoadLocalizationEvent) _then;
+
+/// Create a copy of LocalizationEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? module = null,Object? tenantId = null,Object? locale = null,Object? path = null,}) {
+  return _then(OnRemoteLoadLocalizationEvent(
+module: null == module ? _self.module : module // ignore: cast_nullable_to_non_nullable
+as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String,path: null == path ? _self.path : path // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class OnUpdateLocalizationIndexEvent implements LocalizationEvent {
+  const OnUpdateLocalizationIndexEvent({required this.index, required this.code});
+  
+
+ final  int index;
+ final  String code;
+
+/// Create a copy of LocalizationEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$OnUpdateLocalizationIndexEventCopyWith<OnUpdateLocalizationIndexEvent> get copyWith => _$OnUpdateLocalizationIndexEventCopyWithImpl<OnUpdateLocalizationIndexEvent>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OnUpdateLocalizationIndexEvent&&(identical(other.index, index) || other.index == index)&&(identical(other.code, code) || other.code == code));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,index,code);
+
+@override
+String toString() {
+  return 'LocalizationEvent.onUpdateLocalizationIndex(index: $index, code: $code)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $OnUpdateLocalizationIndexEventCopyWith<$Res> implements $LocalizationEventCopyWith<$Res> {
+  factory $OnUpdateLocalizationIndexEventCopyWith(OnUpdateLocalizationIndexEvent value, $Res Function(OnUpdateLocalizationIndexEvent) _then) = _$OnUpdateLocalizationIndexEventCopyWithImpl;
+@useResult
+$Res call({
+ int index, String code
+});
+
+
+
+
+}
+/// @nodoc
+class _$OnUpdateLocalizationIndexEventCopyWithImpl<$Res>
+    implements $OnUpdateLocalizationIndexEventCopyWith<$Res> {
+  _$OnUpdateLocalizationIndexEventCopyWithImpl(this._self, this._then);
+
+  final OnUpdateLocalizationIndexEvent _self;
+  final $Res Function(OnUpdateLocalizationIndexEvent) _then;
+
+/// Create a copy of LocalizationEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? index = null,Object? code = null,}) {
+  return _then(OnUpdateLocalizationIndexEvent(
+index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
+as int,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
 }
 
 /// @nodoc
 mixin _$LocalizationState {
-  bool get loading => throw _privateConstructorUsedError;
-  int get index => throw _privateConstructorUsedError;
-  bool get isLocalizationLoadCompleted => throw _privateConstructorUsedError;
-  String? get retryModule => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
-  $LocalizationStateCopyWith<LocalizationState> get copyWith =>
-      throw _privateConstructorUsedError;
+ bool get loading; int get index; bool get isLocalizationLoadCompleted; String? get retryModule;
+/// Create a copy of LocalizationState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LocalizationStateCopyWith<LocalizationState> get copyWith => _$LocalizationStateCopyWithImpl<LocalizationState>(this as LocalizationState, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalizationState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.index, index) || other.index == index)&&(identical(other.isLocalizationLoadCompleted, isLocalizationLoadCompleted) || other.isLocalizationLoadCompleted == isLocalizationLoadCompleted)&&(identical(other.retryModule, retryModule) || other.retryModule == retryModule));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,loading,index,isLocalizationLoadCompleted,retryModule);
+
+@override
+String toString() {
+  return 'LocalizationState(loading: $loading, index: $index, isLocalizationLoadCompleted: $isLocalizationLoadCompleted, retryModule: $retryModule)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $LocalizationStateCopyWith<$Res> {
-  factory $LocalizationStateCopyWith(
-          LocalizationState value, $Res Function(LocalizationState) then) =
-      _$LocalizationStateCopyWithImpl<$Res, LocalizationState>;
-  @useResult
-  $Res call(
-      {bool loading,
-      int index,
-      bool isLocalizationLoadCompleted,
-      String? retryModule});
-}
+abstract mixin class $LocalizationStateCopyWith<$Res>  {
+  factory $LocalizationStateCopyWith(LocalizationState value, $Res Function(LocalizationState) _then) = _$LocalizationStateCopyWithImpl;
+@useResult
+$Res call({
+ bool loading, int index, bool isLocalizationLoadCompleted, String? retryModule
+});
 
+
+
+
+}
 /// @nodoc
-class _$LocalizationStateCopyWithImpl<$Res, $Val extends LocalizationState>
+class _$LocalizationStateCopyWithImpl<$Res>
     implements $LocalizationStateCopyWith<$Res> {
-  _$LocalizationStateCopyWithImpl(this._value, this._then);
+  _$LocalizationStateCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final LocalizationState _self;
+  final $Res Function(LocalizationState) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? loading = null,
-    Object? index = null,
-    Object? isLocalizationLoadCompleted = null,
-    Object? retryModule = freezed,
-  }) {
-    return _then(_value.copyWith(
-      loading: null == loading
-          ? _value.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      index: null == index
-          ? _value.index
-          : index // ignore: cast_nullable_to_non_nullable
-              as int,
-      isLocalizationLoadCompleted: null == isLocalizationLoadCompleted
-          ? _value.isLocalizationLoadCompleted
-          : isLocalizationLoadCompleted // ignore: cast_nullable_to_non_nullable
-              as bool,
-      retryModule: freezed == retryModule
-          ? _value.retryModule
-          : retryModule // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
+/// Create a copy of LocalizationState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? index = null,Object? isLocalizationLoadCompleted = null,Object? retryModule = freezed,}) {
+  return _then(_self.copyWith(
+loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
+as bool,index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
+as int,isLocalizationLoadCompleted: null == isLocalizationLoadCompleted ? _self.isLocalizationLoadCompleted : isLocalizationLoadCompleted // ignore: cast_nullable_to_non_nullable
+as bool,retryModule: freezed == retryModule ? _self.retryModule : retryModule // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [LocalizationState].
+extension LocalizationStatePatterns on LocalizationState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LocalizationState value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LocalizationState() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LocalizationState value)  $default,){
+final _that = this;
+switch (_that) {
+case _LocalizationState():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LocalizationState value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LocalizationState() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool loading,  int index,  bool isLocalizationLoadCompleted,  String? retryModule)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LocalizationState() when $default != null:
+return $default(_that.loading,_that.index,_that.isLocalizationLoadCompleted,_that.retryModule);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool loading,  int index,  bool isLocalizationLoadCompleted,  String? retryModule)  $default,) {final _that = this;
+switch (_that) {
+case _LocalizationState():
+return $default(_that.loading,_that.index,_that.isLocalizationLoadCompleted,_that.retryModule);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool loading,  int index,  bool isLocalizationLoadCompleted,  String? retryModule)?  $default,) {final _that = this;
+switch (_that) {
+case _LocalizationState() when $default != null:
+return $default(_that.loading,_that.index,_that.isLocalizationLoadCompleted,_that.retryModule);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
-abstract class _$$LocalizationStateImplCopyWith<$Res>
-    implements $LocalizationStateCopyWith<$Res> {
-  factory _$$LocalizationStateImplCopyWith(_$LocalizationStateImpl value,
-          $Res Function(_$LocalizationStateImpl) then) =
-      __$$LocalizationStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {bool loading,
-      int index,
-      bool isLocalizationLoadCompleted,
-      String? retryModule});
+
+
+class _LocalizationState implements LocalizationState {
+  const _LocalizationState({this.loading = false, this.index = 0, this.isLocalizationLoadCompleted = false, this.retryModule});
+  
+
+@override@JsonKey() final  bool loading;
+@override@JsonKey() final  int index;
+@override@JsonKey() final  bool isLocalizationLoadCompleted;
+@override final  String? retryModule;
+
+/// Create a copy of LocalizationState
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LocalizationStateCopyWith<_LocalizationState> get copyWith => __$LocalizationStateCopyWithImpl<_LocalizationState>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LocalizationState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.index, index) || other.index == index)&&(identical(other.isLocalizationLoadCompleted, isLocalizationLoadCompleted) || other.isLocalizationLoadCompleted == isLocalizationLoadCompleted)&&(identical(other.retryModule, retryModule) || other.retryModule == retryModule));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,loading,index,isLocalizationLoadCompleted,retryModule);
+
+@override
+String toString() {
+  return 'LocalizationState(loading: $loading, index: $index, isLocalizationLoadCompleted: $isLocalizationLoadCompleted, retryModule: $retryModule)';
+}
+
+
 }
 
 /// @nodoc
-class __$$LocalizationStateImplCopyWithImpl<$Res>
-    extends _$LocalizationStateCopyWithImpl<$Res, _$LocalizationStateImpl>
-    implements _$$LocalizationStateImplCopyWith<$Res> {
-  __$$LocalizationStateImplCopyWithImpl(_$LocalizationStateImpl _value,
-      $Res Function(_$LocalizationStateImpl) _then)
-      : super(_value, _then);
+abstract mixin class _$LocalizationStateCopyWith<$Res> implements $LocalizationStateCopyWith<$Res> {
+  factory _$LocalizationStateCopyWith(_LocalizationState value, $Res Function(_LocalizationState) _then) = __$LocalizationStateCopyWithImpl;
+@override @useResult
+$Res call({
+ bool loading, int index, bool isLocalizationLoadCompleted, String? retryModule
+});
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? loading = null,
-    Object? index = null,
-    Object? isLocalizationLoadCompleted = null,
-    Object? retryModule = freezed,
-  }) {
-    return _then(_$LocalizationStateImpl(
-      loading: null == loading
-          ? _value.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      index: null == index
-          ? _value.index
-          : index // ignore: cast_nullable_to_non_nullable
-              as int,
-      isLocalizationLoadCompleted: null == isLocalizationLoadCompleted
-          ? _value.isLocalizationLoadCompleted
-          : isLocalizationLoadCompleted // ignore: cast_nullable_to_non_nullable
-              as bool,
-      retryModule: freezed == retryModule
-          ? _value.retryModule
-          : retryModule // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
+
+
+
 }
-
 /// @nodoc
+class __$LocalizationStateCopyWithImpl<$Res>
+    implements _$LocalizationStateCopyWith<$Res> {
+  __$LocalizationStateCopyWithImpl(this._self, this._then);
 
-class _$LocalizationStateImpl implements _LocalizationState {
-  const _$LocalizationStateImpl(
-      {this.loading = false,
-      this.index = 0,
-      this.isLocalizationLoadCompleted = false,
-      this.retryModule});
+  final _LocalizationState _self;
+  final $Res Function(_LocalizationState) _then;
 
-  @override
-  @JsonKey()
-  final bool loading;
-  @override
-  @JsonKey()
-  final int index;
-  @override
-  @JsonKey()
-  final bool isLocalizationLoadCompleted;
-  @override
-  final String? retryModule;
-
-  @override
-  String toString() {
-    return 'LocalizationState(loading: $loading, index: $index, isLocalizationLoadCompleted: $isLocalizationLoadCompleted, retryModule: $retryModule)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LocalizationStateImpl &&
-            (identical(other.loading, loading) || other.loading == loading) &&
-            (identical(other.index, index) || other.index == index) &&
-            (identical(other.isLocalizationLoadCompleted,
-                    isLocalizationLoadCompleted) ||
-                other.isLocalizationLoadCompleted ==
-                    isLocalizationLoadCompleted) &&
-            (identical(other.retryModule, retryModule) ||
-                other.retryModule == retryModule));
-  }
-
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, loading, index, isLocalizationLoadCompleted, retryModule);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LocalizationStateImplCopyWith<_$LocalizationStateImpl> get copyWith =>
-      __$$LocalizationStateImplCopyWithImpl<_$LocalizationStateImpl>(
-          this, _$identity);
+/// Create a copy of LocalizationState
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? loading = null,Object? index = null,Object? isLocalizationLoadCompleted = null,Object? retryModule = freezed,}) {
+  return _then(_LocalizationState(
+loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
+as bool,index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
+as int,isLocalizationLoadCompleted: null == isLocalizationLoadCompleted ? _self.isLocalizationLoadCompleted : isLocalizationLoadCompleted // ignore: cast_nullable_to_non_nullable
+as bool,retryModule: freezed == retryModule ? _self.retryModule : retryModule // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-abstract class _LocalizationState implements LocalizationState {
-  const factory _LocalizationState(
-      {final bool loading,
-      final int index,
-      final bool isLocalizationLoadCompleted,
-      final String? retryModule}) = _$LocalizationStateImpl;
 
-  @override
-  bool get loading;
-  @override
-  int get index;
-  @override
-  bool get isLocalizationLoadCompleted;
-  @override
-  String? get retryModule;
-  @override
-  @JsonKey(ignore: true)
-  _$$LocalizationStateImplCopyWith<_$LocalizationStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
+
+// dart format on

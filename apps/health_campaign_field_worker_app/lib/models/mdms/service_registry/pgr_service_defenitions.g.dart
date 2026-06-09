@@ -6,43 +6,40 @@ part of 'pgr_service_defenitions.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PGRServiceDefinitionsImpl _$$PGRServiceDefinitionsImplFromJson(
-        Map<String, dynamic> json) =>
-    _$PGRServiceDefinitionsImpl(
-      serviceDefinitionWrapper: json['RAINMAKER-PGR'] == null
-          ? null
-          : ServiceDefinitionWrapper.fromJson(
-              json['RAINMAKER-PGR'] as Map<String, dynamic>),
-    );
+_PGRServiceDefinitions _$PGRServiceDefinitionsFromJson(
+  Map<String, dynamic> json,
+) => _PGRServiceDefinitions(
+  serviceDefinitionWrapper: json['RAINMAKER-PGR'] == null
+      ? null
+      : ServiceDefinitionWrapper.fromJson(
+          json['RAINMAKER-PGR'] as Map<String, dynamic>,
+        ),
+);
 
-Map<String, dynamic> _$$PGRServiceDefinitionsImplToJson(
-        _$PGRServiceDefinitionsImpl instance) =>
-    <String, dynamic>{
-      'RAINMAKER-PGR': instance.serviceDefinitionWrapper,
-    };
+Map<String, dynamic> _$PGRServiceDefinitionsToJson(
+  _PGRServiceDefinitions instance,
+) => <String, dynamic>{'RAINMAKER-PGR': instance.serviceDefinitionWrapper};
 
-_$ServiceDefinitionWrapperImpl _$$ServiceDefinitionWrapperImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ServiceDefinitionWrapperImpl(
-      definition: (json['ServiceDefs'] as List<dynamic>?)
-              ?.map((e) => Definition.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-    );
+_ServiceDefinitionWrapper _$ServiceDefinitionWrapperFromJson(
+  Map<String, dynamic> json,
+) => _ServiceDefinitionWrapper(
+  definition:
+      (json['ServiceDefs'] as List<dynamic>?)
+          ?.map((e) => Definition.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+);
 
-Map<String, dynamic> _$$ServiceDefinitionWrapperImplToJson(
-        _$ServiceDefinitionWrapperImpl instance) =>
-    <String, dynamic>{
-      'ServiceDefs': instance.definition,
-    };
+Map<String, dynamic> _$ServiceDefinitionWrapperToJson(
+  _ServiceDefinitionWrapper instance,
+) => <String, dynamic>{'ServiceDefs': instance.definition};
 
-_$DefinitionImpl _$$DefinitionImplFromJson(Map<String, dynamic> json) =>
-    _$DefinitionImpl(
-      serviceCode: json['serviceCode'] as String,
-      name: json['name'] as String,
-    );
+_Definition _$DefinitionFromJson(Map<String, dynamic> json) => _Definition(
+  serviceCode: json['serviceCode'] as String,
+  name: json['name'] as String,
+);
 
-Map<String, dynamic> _$$DefinitionImplToJson(_$DefinitionImpl instance) =>
+Map<String, dynamic> _$DefinitionToJson(_Definition instance) =>
     <String, dynamic>{
       'serviceCode': instance.serviceCode,
       'name': instance.name,
