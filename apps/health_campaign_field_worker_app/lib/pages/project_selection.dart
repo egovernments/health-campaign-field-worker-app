@@ -17,6 +17,7 @@ import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/runtime_hierarchy.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -239,6 +240,25 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void navigateToBoundary(String boundary) async {
+    // Boundary-hierarchy localization was deferred from app-boot until now
+    // because hierarchyType only becomes known after project selection. The
+    // module key uses the stripped hierarchy (e.g. `CONSOLEHCM`, not
+    // `CONSOLEHCM_NI`) to match the server-side module naming.
+    //
+    // Await the load before continuing so boundary labels are present by the
+    // time the boundary picker renders.
+    final localizationBloc = context.read<LocalizationBloc>();
+    localizationBloc.add(
+      LocalizationEvent.onLoadLocalization(
+        module:
+            'hcm-boundary-${runtimeHierarchyType().toLowerCase()}',
+        tenantId: envConfig.variables.tenantId,
+        locale: AppSharedPreferences().getSelectedLocale!,
+        path: Constants.localizationApiPath,
+      ),
+    );
+    await localizationBloc.stream.firstWhere((s) => !s.loading);
+
     // todo : will change module name later with dynamic keys and add a try catch to throw error if api fails
     await triggerLocalizationIfUpdated(
       context: context,

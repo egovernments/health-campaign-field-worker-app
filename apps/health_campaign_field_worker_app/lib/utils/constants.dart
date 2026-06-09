@@ -407,12 +407,12 @@ class Constants {
 
   void setInitialDataOfPackages() {
     DigitDataModelSingleton().setData(
-        syncDownRetryCount: envConfig.variables.syncDownRetryCount,
-        retryTimeInterval: envConfig.variables.retryTimeInterval,
-        tenantId: envConfig.variables.tenantId,
-        entityMapper: EntityMapper(),
-        errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
-        hierarchyType: envConfig.variables.hierarchyType);
+      syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+      retryTimeInterval: envConfig.variables.retryTimeInterval,
+      tenantId: envConfig.variables.tenantId,
+      entityMapper: EntityMapper(),
+      errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
+    );
     LocationTrackerSingleton()
         .setTenantId(tenantId: envConfig.variables.tenantId);
     TransitPostSingleton().setTenantId(envConfig.variables.tenantId);
