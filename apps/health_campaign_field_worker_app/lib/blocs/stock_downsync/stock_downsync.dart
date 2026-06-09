@@ -26,22 +26,22 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
   final LocalSecureStore localSecureStore;
 
   final LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
-      projectFacilityLocalRepository;
+  projectFacilityLocalRepository;
 
   final LocalRepository<FacilityModel, FacilitySearchModel>
-      facilityLocalRepository;
+  facilityLocalRepository;
 
   final RemoteRepository<StockModel, StockSearchModel> stockRemoteRepository;
 
   final LocalRepository<StockModel, StockSearchModel> stockLocalRepository;
 
   final LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>
-      projectResourceLocalRepository;
+  projectResourceLocalRepository;
 
   final BandwidthCheckRepository bandwidthCheckRepository;
 
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
-      downSyncLocalRepository;
+  downSyncLocalRepository;
 
   final UserActionRemoteRepository userActionRemoteRepository;
 
@@ -61,7 +61,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
     required this.downSyncLocalRepository,
     required this.userActionRemoteRepository,
     required this.userActionLocalRepository,
-  }) : super(const StockDownSyncState._()) {
+  }) : super(const StockDownSyncState.resetState()) {
     on(_handleGetBatchSize);
     on(_handleCheckTotalCount);
     on(_handleDownSyncStock);
@@ -138,10 +138,12 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         event.appConfiguration,
         isDownSync: true,
       );
-      emit(StockDownSyncState.getBatchSize(
-        configuredBatchSize,
-        event.projectModel,
-      ));
+      emit(
+        StockDownSyncState.getBatchSize(
+          configuredBatchSize,
+          event.projectModel,
+        ),
+      );
     } catch (e) {
       emit(const StockDownSyncState.resetState());
       emit(const StockDownSyncState.totalCountCheckFailed());
@@ -164,10 +166,9 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       }
 
       // Check existing downsync data for stock
-      final existingDownSyncData =
-          await downSyncLocalRepository.search(DownsyncSearchModel(
-        locality: _getLocalityKey(event.projectModel.id),
-      ));
+      final existingDownSyncData = await downSyncLocalRepository.search(
+        DownsyncSearchModel(locality: _getLocalityKey(event.projectModel.id)),
+      );
 
       int? lastSyncedTime = existingDownSyncData.isEmpty
           ? null
@@ -177,18 +178,20 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       // lastChangedSince already scopes the query to new/modified records
       final totalCount = await (stockRemoteRepository as StockRemoteRepository)
           .fetchTotalCount(
-        stockSearchModel,
-        offSet: 0,
-        lastSyncedTime: lastSyncedTime,
-        includeOnlyUpdatedByOthers: true,
-      );
+            stockSearchModel,
+            offSet: 0,
+            lastSyncedTime: lastSyncedTime,
+            includeOnlyUpdatedByOthers: true,
+          );
 
-      emit(StockDownSyncState.dataFound(
-        totalCount,
-        event.batchSize,
-        0,
-        lastSyncedTime,
-      ));
+      emit(
+        StockDownSyncState.dataFound(
+          totalCount,
+          event.batchSize,
+          0,
+          lastSyncedTime,
+        ),
+      );
     } catch (e) {
       emit(const StockDownSyncState.resetState());
       emit(const StockDownSyncState.totalCountCheckFailed());
@@ -207,8 +210,9 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       emit(const StockDownSyncState.insufficientStorage());
     } else {
       try {
-        final stockSearchModel =
-            await _buildStockSearchModel(event.projectModel);
+        final stockSearchModel = await _buildStockSearchModel(
+          event.projectModel,
+        );
 
         if (stockSearchModel == null) {
           emit(const StockDownSyncState.failed());
@@ -218,10 +222,9 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         final localityKey = _getLocalityKey(event.projectModel.id);
 
         // Check existing downsync data for stock
-        final existingDownSyncData =
-            await downSyncLocalRepository.search(DownsyncSearchModel(
-          locality: localityKey,
-        ));
+        final existingDownSyncData = await downSyncLocalRepository.search(
+          DownsyncSearchModel(locality: localityKey),
+        );
 
         int? lastSyncedTime = existingDownSyncData.isEmpty
             ? null
@@ -229,13 +232,15 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
 
         // Create initial downsync record if not exists
         if (existingDownSyncData.isEmpty) {
-          await downSyncLocalRepository.create(DownsyncModel(
-            offset: 0,
-            limit: event.batchSize,
-            lastSyncedTime: lastSyncedTime,
-            totalCount: 0,
-            locality: localityKey,
-          ));
+          await downSyncLocalRepository.create(
+            DownsyncModel(
+              offset: 0,
+              limit: event.batchSize,
+              lastSyncedTime: lastSyncedTime,
+              totalCount: 0,
+              locality: localityKey,
+            ),
+          );
         }
 
         int totalCount = event.initialServerCount;
@@ -251,7 +256,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
             offSet: 0,
             limit: event.batchSize,
             lastSyncedTime: lastSyncedTime,
-            includeOnlyUpdatedByOthers:true,
+            includeOnlyUpdatedByOthers: true,
           );
 
           if (stockEntries.isEmpty) break;
@@ -264,13 +269,15 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
           syncedCount += stockEntries.length;
 
           // Update downsync record, keep offset 0, update lastSyncedTime
-          await downSyncLocalRepository.update(DownsyncModel(
-            offset: 0,
-            limit: event.batchSize,
-            lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
-            totalCount: totalCount,
-            locality: localityKey,
-          ));
+          await downSyncLocalRepository.update(
+            DownsyncModel(
+              offset: 0,
+              limit: event.batchSize,
+              lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
+              totalCount: totalCount,
+              locality: localityKey,
+            ),
+          );
 
           emit(StockDownSyncState.inProgress(syncedCount, totalCount));
         }
@@ -298,7 +305,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       final userRoles = userObject?.roles.map((e) => e.code) ?? [];
       final isDistributor =
           userRoles.contains(RolesType.distributor.toValue()) ||
-              userRoles.contains(RolesType.communityDistributor.toValue());
+          userRoles.contains(RolesType.communityDistributor.toValue());
 
       final projectFacilities = await projectFacilityLocalRepository.search(
         ProjectFacilitySearchModel(projectId: [projectId]),
@@ -335,7 +342,8 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
 
       if (facilityIds.isEmpty ||
           productVariantIds.isEmpty ||
-          facilityIds.first.isEmpty) return;
+          facilityIds.first.isEmpty)
+        return;
 
       // Build balance keys for all facility × product variant combinations
       final balanceKeys = <String>[];
@@ -388,7 +396,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       final userRoles = userObject?.roles.map((e) => e.code) ?? [];
       final isDistributor =
           userRoles.contains(RolesType.distributor.toValue()) ||
-              userRoles.contains(RolesType.communityDistributor.toValue());
+          userRoles.contains(RolesType.communityDistributor.toValue());
 
       final projectFacilities = await projectFacilityLocalRepository.search(
         ProjectFacilitySearchModel(projectId: [projectId]),
@@ -405,9 +413,9 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       final facilityIds = isDistributor
           ? {userObject?.uuid ?? ''}
           : currentFacilities
-              .map((e) => e.facilityId)
-              .whereType<String>()
-              .toSet();
+                .map((e) => e.facilityId)
+                .whereType<String>()
+                .toSet();
 
       facilityIds.removeWhere((element) => element.isEmpty);
       if (facilityIds.isEmpty) return;
@@ -454,20 +462,24 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
     if (existing.isEmpty) return;
 
     final balanceAction = existing.first;
-    final balanceFieldIndex = balanceAction.additionalFields?.fields
-            ?.indexWhere((field) => field.key == 'balance') ??
+    final balanceFieldIndex =
+        balanceAction.additionalFields?.fields?.indexWhere(
+          (field) => field.key == 'balance',
+        ) ??
         -1;
 
     if (balanceFieldIndex < 0) return;
 
-    final currentBalance = double.tryParse(
+    final currentBalance =
+        double.tryParse(
           balanceAction.additionalFields?.fields?[balanceFieldIndex].value ??
               '0',
         ) ??
         0;
 
     final updatedFields = List<AdditionalField>.from(
-        balanceAction.additionalFields?.fields ?? []);
+      balanceAction.additionalFields?.fields ?? [],
+    );
     updatedFields[balanceFieldIndex] = AdditionalField(
       'balance',
       (currentBalance + quantity).toString(),
@@ -498,7 +510,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
 }
 
 @freezed
-class StockDownSyncEvent with _$StockDownSyncEvent {
+abstract class StockDownSyncEvent with _$StockDownSyncEvent {
   const factory StockDownSyncEvent.getBatchSize({
     required List<AppConfiguration> appConfiguration,
     required ProjectModel projectModel,
@@ -519,7 +531,7 @@ class StockDownSyncEvent with _$StockDownSyncEvent {
 }
 
 @freezed
-class StockDownSyncState with _$StockDownSyncState {
+abstract class StockDownSyncState with _$StockDownSyncState {
   const StockDownSyncState._();
 
   const factory StockDownSyncState.loading(bool isPop) =
@@ -537,15 +549,11 @@ class StockDownSyncState with _$StockDownSyncState {
     int? lastSyncedTime,
   ) = _StockDownSyncDataFoundState;
 
-  const factory StockDownSyncState.inProgress(
-    int syncedCount,
-    int totalCount,
-  ) = _StockDownSyncInProgressState;
+  const factory StockDownSyncState.inProgress(int syncedCount, int totalCount) =
+      _StockDownSyncInProgressState;
 
-  const factory StockDownSyncState.success(
-    int syncedCount,
-    int totalCount,
-  ) = _StockDownSyncSuccessState;
+  const factory StockDownSyncState.success(int syncedCount, int totalCount) =
+      _StockDownSyncSuccessState;
 
   const factory StockDownSyncState.failed() = _StockDownSyncFailureState;
 

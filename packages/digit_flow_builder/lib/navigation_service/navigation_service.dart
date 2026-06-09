@@ -3,7 +3,7 @@ import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
-import '../router/flow_builder_routes.gm.dart';
+import '../router/flow_builder_routes.dart';
 
 /// Navigation modes for controlling how pages are added/removed from the stack
 enum NavigationMode {

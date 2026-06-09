@@ -7,7 +7,7 @@ part 'schema_object.freezed.dart';
 part 'schema_object.g.dart';
 
 @freezed
-class SchemaObject with _$SchemaObject {
+abstract class SchemaObject with _$SchemaObject {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory SchemaObject({
     required String name,
@@ -24,7 +24,7 @@ class SchemaObject with _$SchemaObject {
 }
 
 @freezed
-class SummaryItem with _$SummaryItem {
+abstract class SummaryItem with _$SummaryItem {
   const factory SummaryItem({
     required String heading,
     String? description,
@@ -36,7 +36,7 @@ class SummaryItem with _$SummaryItem {
 }
 
 @freezed
-class ActionSchema with _$ActionSchema {
+abstract class ActionSchema with _$ActionSchema {
   @JsonSerializable(explicitToJson: true)
   const factory ActionSchema({
     required String name,
@@ -50,7 +50,7 @@ class ActionSchema with _$ActionSchema {
 }
 
 @freezed
-class ActionItemSchema with _$ActionItemSchema {
+abstract class ActionItemSchema with _$ActionItemSchema {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory ActionItemSchema({
     required ActionType type,
@@ -63,7 +63,7 @@ class ActionItemSchema with _$ActionItemSchema {
 }
 
 @freezed
-class UrlSchema with _$UrlSchema {
+abstract class UrlSchema with _$UrlSchema {
   const factory UrlSchema({
     required String method,
     required String urlSchema,
@@ -81,7 +81,7 @@ ShowAlertPopUp? _showAlertOrNull(dynamic value) {
 }
 
 @freezed
-class RoutingSchema with _$RoutingSchema {
+abstract class RoutingSchema with _$RoutingSchema {
   @JsonSerializable(explicitToJson: true)
   const factory RoutingSchema({
     required String destination,

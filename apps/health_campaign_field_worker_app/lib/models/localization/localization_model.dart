@@ -6,7 +6,7 @@ part 'localization_model.freezed.dart';
 part 'localization_model.g.dart';
 
 @freezed
-class LocalizationModel with _$LocalizationModel {
+abstract class LocalizationModel with _$LocalizationModel {
   @JsonSerializable(explicitToJson: true)
   const factory LocalizationModel({
     @Default([]) List<LocalizationMessageModel> messages,
@@ -17,7 +17,7 @@ class LocalizationModel with _$LocalizationModel {
 }
 
 @freezed
-class LocalizationMessageModel with _$LocalizationMessageModel {
+abstract class LocalizationMessageModel with _$LocalizationMessageModel {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory LocalizationMessageModel({
     required String code,

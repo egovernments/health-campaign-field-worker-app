@@ -4,7 +4,7 @@ part 'manual_attendance_reasons_model.freezed.dart';
 part 'manual_attendance_reasons_model.g.dart';
 
 @freezed
-class ManualAttendanceReasonsWrapperModel with _$ManualAttendanceReasonsWrapperModel {
+abstract class ManualAttendanceReasonsWrapperModel with _$ManualAttendanceReasonsWrapperModel {
   const factory ManualAttendanceReasonsWrapperModel({
     @JsonKey(name: 'manualAttendanceReasons')
         List<ManualAttendanceReasonType>? manualAttendanceReasons,
@@ -17,7 +17,7 @@ class ManualAttendanceReasonsWrapperModel with _$ManualAttendanceReasonsWrapperM
 }
 
 @freezed
-class ManualAttendanceReasonType with _$ManualAttendanceReasonType {
+abstract class ManualAttendanceReasonType with _$ManualAttendanceReasonType {
   const factory ManualAttendanceReasonType({
     required String code,
     required String name,

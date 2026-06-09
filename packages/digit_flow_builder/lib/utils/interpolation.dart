@@ -2,7 +2,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/flow_crud_bloc.dart';
-import '../router/flow_builder_routes.gm.dart';
+import '../router/flow_builder_routes.dart';
 import 'function_registry.dart';
 import 'utils.dart';
 

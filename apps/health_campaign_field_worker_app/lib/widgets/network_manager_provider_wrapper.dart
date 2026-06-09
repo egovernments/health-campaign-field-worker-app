@@ -41,7 +41,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';

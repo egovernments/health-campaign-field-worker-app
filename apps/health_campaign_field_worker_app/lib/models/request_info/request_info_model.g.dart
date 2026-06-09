@@ -6,24 +6,20 @@ part of 'request_info_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$RequestInfoMapperModelImpl _$$RequestInfoMapperModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RequestInfoMapperModelImpl(
-      requestInfo: json['requestInfo'] == null
-          ? null
-          : RequestInfoModel.fromJson(
-              json['requestInfo'] as Map<String, dynamic>),
-    );
+_RequestInfoMapperModel _$RequestInfoMapperModelFromJson(
+  Map<String, dynamic> json,
+) => _RequestInfoMapperModel(
+  requestInfo: json['requestInfo'] == null
+      ? null
+      : RequestInfoModel.fromJson(json['requestInfo'] as Map<String, dynamic>),
+);
 
-Map<String, dynamic> _$$RequestInfoMapperModelImplToJson(
-        _$RequestInfoMapperModelImpl instance) =>
-    <String, dynamic>{
-      'requestInfo': instance.requestInfo,
-    };
+Map<String, dynamic> _$RequestInfoMapperModelToJson(
+  _RequestInfoMapperModel instance,
+) => <String, dynamic>{'requestInfo': instance.requestInfo};
 
-_$RequestInfoModelImpl _$$RequestInfoModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RequestInfoModelImpl(
+_RequestInfoModel _$RequestInfoModelFromJson(Map<String, dynamic> json) =>
+    _RequestInfoModel(
       apiId: json['apiId'] as String?,
       ver: json['ver'] as String?,
       ts: json['ts'] as num?,
@@ -38,25 +34,16 @@ _$RequestInfoModelImpl _$$RequestInfoModelImplFromJson(
       tenantId: json['tenantId'] as String?,
     );
 
-Map<String, dynamic> _$$RequestInfoModelImplToJson(
-    _$RequestInfoModelImpl instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('apiId', instance.apiId);
-  writeNotNull('ver', instance.ver);
-  writeNotNull('ts', instance.ts);
-  writeNotNull('action', instance.action);
-  writeNotNull('did', instance.did);
-  writeNotNull('key', instance.key);
-  writeNotNull('msgId', instance.msgId);
-  writeNotNull('authToken', instance.authToken);
-  writeNotNull('userInfo', instance.userInfo);
-  writeNotNull('tenantId', instance.tenantId);
-  return val;
-}
+Map<String, dynamic> _$RequestInfoModelToJson(_RequestInfoModel instance) =>
+    <String, dynamic>{
+      'apiId': ?instance.apiId,
+      'ver': ?instance.ver,
+      'ts': ?instance.ts,
+      'action': ?instance.action,
+      'did': ?instance.did,
+      'key': ?instance.key,
+      'msgId': ?instance.msgId,
+      'authToken': ?instance.authToken,
+      'userInfo': ?instance.userInfo,
+      'tenantId': ?instance.tenantId,
+    };

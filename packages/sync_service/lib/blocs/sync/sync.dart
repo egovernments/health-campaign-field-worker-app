@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:sync_service/utils/utils.dart';
 
 import '../../data/sync_service.dart';
@@ -203,7 +203,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
 
 // This is the `SyncEvent` class which is a freezed union of different types of sync events.
 @freezed
-class SyncEvent with _$SyncEvent {
+abstract class SyncEvent with _$SyncEvent {
   // The `SyncRefreshEvent` represents a refresh event.
   const factory SyncEvent.refresh(String createdBy, [int? count]) =
       SyncRefreshEvent;
@@ -218,7 +218,7 @@ class SyncEvent with _$SyncEvent {
 
 // This is the `SyncState` class which is a freezed union of different types of sync states.
 @freezed
-class SyncState with _$SyncState {
+abstract class SyncState with _$SyncState {
   // The `SyncLoadingState` represents a loading state.
   const factory SyncState.loading() = SyncLoadingState;
 

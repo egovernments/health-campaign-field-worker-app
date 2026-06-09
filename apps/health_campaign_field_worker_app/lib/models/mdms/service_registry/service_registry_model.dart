@@ -6,36 +6,34 @@ part 'service_registry_model.freezed.dart';
 part 'service_registry_model.g.dart';
 
 @freezed
-class ServiceRegistryPrimaryWrapperModel
+abstract class ServiceRegistryPrimaryWrapperModel
     with _$ServiceRegistryPrimaryWrapperModel {
   const factory ServiceRegistryPrimaryWrapperModel({
     @JsonKey(name: 'HCM-SERVICE-REGISTRY')
-        final ServiceRegistrySecondaryWrapperModel? serviceRegistry,
+    final ServiceRegistrySecondaryWrapperModel? serviceRegistry,
   }) = _ServiceRegistryPrimaryWrapperModel;
 
   factory ServiceRegistryPrimaryWrapperModel.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$ServiceRegistryPrimaryWrapperModelFromJson(json);
+  ) => _$ServiceRegistryPrimaryWrapperModelFromJson(json);
 }
 
 @freezed
-class ServiceRegistrySecondaryWrapperModel
+abstract class ServiceRegistrySecondaryWrapperModel
     with _$ServiceRegistrySecondaryWrapperModel {
   const factory ServiceRegistrySecondaryWrapperModel({
     @JsonKey(name: 'serviceRegistry')
     @Default([])
-        List<ServiceRegistryModel> serviceRegistryList,
+    List<ServiceRegistryModel> serviceRegistryList,
   }) = _ServiceRegistrySecondaryWrapperModel;
 
   factory ServiceRegistrySecondaryWrapperModel.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$ServiceRegistrySecondaryWrapperModelFromJson(json);
+  ) => _$ServiceRegistrySecondaryWrapperModelFromJson(json);
 }
 
 @freezed
-class ServiceRegistryModel with _$ServiceRegistryModel {
+abstract class ServiceRegistryModel with _$ServiceRegistryModel {
   const factory ServiceRegistryModel({
     required String service,
     @Default([]) List<ActionsModel> actions,
@@ -46,7 +44,7 @@ class ServiceRegistryModel with _$ServiceRegistryModel {
 }
 
 @freezed
-class ActionsModel with _$ActionsModel {
+abstract class ActionsModel with _$ActionsModel {
   const factory ActionsModel({
     required String action,
     required String entityName,

@@ -272,7 +272,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
 /// These events represent all possible actions that can be performed on forms,
 /// from loading schemas to submitting form data.
 @freezed
-class FormsEvent with _$FormsEvent {
+abstract class FormsEvent with _$FormsEvent {
   /// Load list of schema JSON strings.
   ///
   /// This event parses the provided JSON strings into SchemaObject instances
@@ -337,7 +337,7 @@ class FormsEvent with _$FormsEvent {
 /// from the default state with cached schemas to the submitted state
 /// with collected form data.
 @freezed
-class FormsState with _$FormsState {
+abstract class FormsState with _$FormsState {
   /// Default state with cached schemas.
   ///
   /// This state contains the current form schemas and their data.

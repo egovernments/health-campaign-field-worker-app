@@ -10,7 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 

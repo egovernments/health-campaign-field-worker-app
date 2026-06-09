@@ -17,7 +17,7 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:survey_form/survey_form.dart';

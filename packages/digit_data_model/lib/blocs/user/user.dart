@@ -64,7 +64,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 }
 
 @freezed
-class UserEvent with _$UserEvent {
+abstract class UserEvent with _$UserEvent {
   const factory UserEvent.searchUser({required String uuid}) =
       UserSearchUserEvent;
   const factory UserEvent.updateUser({
@@ -74,7 +74,7 @@ class UserEvent with _$UserEvent {
 }
 
 @freezed
-class UserState with _$UserState {
+abstract class UserState with _$UserState {
   const factory UserState.empty() = UserEmptyState;
   const factory UserState.loading() = UserLoadingState;
   const factory UserState.user({UserModel? userModel}) = UserUserState;

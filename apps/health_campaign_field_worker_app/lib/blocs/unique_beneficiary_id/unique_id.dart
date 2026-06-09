@@ -162,7 +162,7 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
 }
 
 @freezed
-class UniqueIdEvent with _$UniqueIdEvent {
+abstract class UniqueIdEvent with _$UniqueIdEvent {
   const factory UniqueIdEvent.fetchIdCount() = UniqueIdCountEvent;
 
   const factory UniqueIdEvent.fetchUniqueIdsFromServer({bool? reFetch}) =
@@ -172,7 +172,7 @@ class UniqueIdEvent with _$UniqueIdEvent {
 }
 
 @freezed
-class UniqueIdState with _$UniqueIdState {
+abstract class UniqueIdState with _$UniqueIdState {
   const factory UniqueIdState.loading() = LoadingState;
 
   const factory UniqueIdState.fetching(int progress, int totalCount) =

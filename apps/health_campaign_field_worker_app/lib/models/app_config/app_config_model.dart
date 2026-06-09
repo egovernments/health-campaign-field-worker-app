@@ -11,7 +11,7 @@ part 'app_config_model.freezed.dart';
 part 'app_config_model.g.dart';
 
 @freezed
-class MdmsRequestModel with _$MdmsRequestModel {
+abstract class MdmsRequestModel with _$MdmsRequestModel {
   const factory MdmsRequestModel({
     @JsonKey(name: 'MdmsCriteria') required MdmsCriteriaModel mdmsCriteria,
   }) = _MdmsRequestModel;
@@ -21,7 +21,7 @@ class MdmsRequestModel with _$MdmsRequestModel {
 }
 
 @freezed
-class MdmsCriteriaModel with _$MdmsCriteriaModel {
+abstract class MdmsCriteriaModel with _$MdmsCriteriaModel {
   const factory MdmsCriteriaModel({
     required String tenantId,
     required List<MdmsModuleDetailModel> moduleDetails,
@@ -32,7 +32,7 @@ class MdmsCriteriaModel with _$MdmsCriteriaModel {
 }
 
 @freezed
-class MdmsModuleDetailModel with _$MdmsModuleDetailModel {
+abstract class MdmsModuleDetailModel with _$MdmsModuleDetailModel {
   const factory MdmsModuleDetailModel({
     required String moduleName,
     required List<MdmsMasterDetailModel> masterDetails,
@@ -43,7 +43,7 @@ class MdmsModuleDetailModel with _$MdmsModuleDetailModel {
 }
 
 @freezed
-class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
+abstract class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
   const factory MdmsMasterDetailModel(
       String name, {
         String? filter,
@@ -54,7 +54,7 @@ class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
 }
 
 @freezed
-class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
+abstract class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
   const factory AppConfigPrimaryWrapperModel({
     @JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,
     @JsonKey(name: 'common-masters') CommonMastersWrapperModel? commonMasters,
@@ -68,7 +68,7 @@ class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
 }
 
 @freezed
-class HCMWrapperModel with _$HCMWrapperModel {
+abstract class HCMWrapperModel with _$HCMWrapperModel {
   const factory HCMWrapperModel({
     @JsonKey(name: 'APP_CONFIG') required List<AppConfig> appConfig,
     @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
@@ -127,7 +127,7 @@ class HCMWrapperModel with _$HCMWrapperModel {
 }
 
 @freezed
-class AppConfigSecondaryWrapperModel with _$AppConfigSecondaryWrapperModel {
+abstract class AppConfigSecondaryWrapperModel with _$AppConfigSecondaryWrapperModel {
   const factory AppConfigSecondaryWrapperModel({
     @JsonKey(name: 'appConfig') List<AppConfig>? appConfiglist,
   }) = _AppConfigSecondaryWrapperModel;
@@ -139,7 +139,7 @@ class AppConfigSecondaryWrapperModel with _$AppConfigSecondaryWrapperModel {
 }
 
 @freezed
-class CommonMastersWrapperModel with _$CommonMastersWrapperModel {
+abstract class CommonMastersWrapperModel with _$CommonMastersWrapperModel {
   const factory CommonMastersWrapperModel({
     @JsonKey(name: 'GenderType') required List<CommonMasterModel> genderType,
     @JsonKey(name: 'StateInfo') required List<StateInfoModel> stateInfo,
@@ -154,7 +154,7 @@ class CommonMastersWrapperModel with _$CommonMastersWrapperModel {
 }
 
 @freezed
-class CommonMasterModel with _$CommonMasterModel {
+abstract class CommonMasterModel with _$CommonMasterModel {
   const factory CommonMasterModel({
     @JsonKey(name: 'code') required String code,
     @JsonKey(name: 'name') String? name,
@@ -168,7 +168,7 @@ class CommonMasterModel with _$CommonMasterModel {
 }
 
 @freezed
-class StateInfoModel with _$StateInfoModel {
+abstract class StateInfoModel with _$StateInfoModel {
   const factory StateInfoModel({
     @JsonKey(name: 'code') required String code,
     @JsonKey(name: 'languages') required List<Languages> languages,
@@ -182,7 +182,7 @@ class StateInfoModel with _$StateInfoModel {
 }
 
 @freezed
-class RowVersionWrapperModel with _$RowVersionWrapperModel {
+abstract class RowVersionWrapperModel with _$RowVersionWrapperModel {
   const factory RowVersionWrapperModel({
     @JsonKey(name: 'ROW_VERSIONS') List<RowVersions>? rowVersionslist,
   }) = _RowVersionWrapperModel;
@@ -194,7 +194,7 @@ class RowVersionWrapperModel with _$RowVersionWrapperModel {
 }
 
 @freezed
-class AppConfig with _$AppConfig {
+abstract class AppConfig with _$AppConfig {
   factory AppConfig({
     @JsonKey(name: 'NETWORK_DETECTION') required String networkDetection,
     @JsonKey(name: 'PERSISTENCE_MODE') required String persistenceMode,
@@ -211,7 +211,7 @@ class AppConfig with _$AppConfig {
 }
 
 @freezed
-class IdTypeOptions with _$IdTypeOptions {
+abstract class IdTypeOptions with _$IdTypeOptions {
   factory IdTypeOptions({
     required String name,
     required String code,
@@ -222,7 +222,7 @@ class IdTypeOptions with _$IdTypeOptions {
 }
 
 @freezed
-class RelationShipTypeOptions with _$RelationShipTypeOptions {
+abstract class RelationShipTypeOptions with _$RelationShipTypeOptions {
   factory RelationShipTypeOptions({
     required String name,
     required String code,
@@ -234,7 +234,7 @@ class RelationShipTypeOptions with _$RelationShipTypeOptions {
 }
 
 @freezed
-class BandWidthBatchSize with _$BandWidthBatchSize {
+abstract class BandWidthBatchSize with _$BandWidthBatchSize {
   factory BandWidthBatchSize({
     @JsonKey(name: 'MIN_RANGE') required double minRange,
     @JsonKey(name: 'MAX_RANGE') required double maxRange,
@@ -246,7 +246,7 @@ class BandWidthBatchSize with _$BandWidthBatchSize {
 }
 
 @freezed
-class BeneficiaryIdConfig with _$BeneficiaryIdConfig {
+abstract class BeneficiaryIdConfig with _$BeneficiaryIdConfig {
   factory BeneficiaryIdConfig({
     @JsonKey(name: 'MIN_COUNT') required double minCount,
     @JsonKey(name: 'BATCH_SIZE') required int batchSize,
@@ -257,7 +257,7 @@ class BeneficiaryIdConfig with _$BeneficiaryIdConfig {
 }
 
 @freezed
-class DeliveryCommentOptions with _$DeliveryCommentOptions {
+abstract class DeliveryCommentOptions with _$DeliveryCommentOptions {
   factory DeliveryCommentOptions({
     required String name,
     required String code,
@@ -268,7 +268,7 @@ class DeliveryCommentOptions with _$DeliveryCommentOptions {
 }
 
 @freezed
-class DeletionReasonOptions with _$DeletionReasonOptions {
+abstract class DeletionReasonOptions with _$DeletionReasonOptions {
   factory DeletionReasonOptions({
     required String value,
     required String code,
@@ -279,7 +279,7 @@ class DeletionReasonOptions with _$DeletionReasonOptions {
 }
 
 @freezed
-class GenderOptions with _$GenderOptions {
+abstract class GenderOptions with _$GenderOptions {
   factory GenderOptions({
     required String name,
     required String code,
@@ -290,7 +290,7 @@ class GenderOptions with _$GenderOptions {
 }
 
 @freezed
-class BackgroundServiceConfig with _$BackgroundServiceConfig {
+abstract class BackgroundServiceConfig with _$BackgroundServiceConfig {
   factory BackgroundServiceConfig({
     @JsonKey(name: 'BATTERY_PERCENT_CUT_OFF') required int batteryPercentCutOff,
     @JsonKey(name: 'SERVICE_INTERVAL') required int serviceInterval,
@@ -302,7 +302,7 @@ class BackgroundServiceConfig with _$BackgroundServiceConfig {
 }
 
 @freezed
-class BackendInterface with _$BackendInterface {
+abstract class BackendInterface with _$BackendInterface {
   factory BackendInterface({
     @JsonKey(name: 'interfaces') required List<Interfaces> interface,
   }) = _BackendInterface;
@@ -312,7 +312,7 @@ class BackendInterface with _$BackendInterface {
 }
 
 @freezed
-class InterfacesWrapper with _$InterfacesWrapper {
+abstract class InterfacesWrapper with _$InterfacesWrapper {
   factory InterfacesWrapper({
     required List<Interfaces> interface,
   }) = _InterfacesWrapper;
@@ -322,7 +322,7 @@ class InterfacesWrapper with _$InterfacesWrapper {
 }
 
 @freezed
-class Interfaces with _$Interfaces {
+abstract class Interfaces with _$Interfaces {
   factory Interfaces({
     required String type,
     required String name,
@@ -334,7 +334,7 @@ class Interfaces with _$Interfaces {
 }
 
 @freezed
-class Config with _$Config {
+abstract class Config with _$Config {
   factory Config({
     required int localStoreTTL,
   }) = _Config;
@@ -343,7 +343,7 @@ class Config with _$Config {
 }
 
 @freezed
-class Languages with _$Languages {
+abstract class Languages with _$Languages {
   factory Languages({
     required String label,
     required String value,
@@ -355,7 +355,7 @@ class Languages with _$Languages {
 }
 
 @freezed
-class CheckListTypes with _$CheckListTypes {
+abstract class CheckListTypes with _$CheckListTypes {
   factory CheckListTypes({
     required String name,
     required String code,
@@ -366,7 +366,7 @@ class CheckListTypes with _$CheckListTypes {
 }
 
 @freezed
-class CallSupportList with _$CallSupportList {
+abstract class CallSupportList with _$CallSupportList {
   factory CallSupportList({
     required String name,
     required String code,
@@ -377,7 +377,7 @@ class CallSupportList with _$CallSupportList {
 }
 
 @freezed
-class SearchHouseHoldFilters with _$SearchHouseHoldFilters {
+abstract class SearchHouseHoldFilters with _$SearchHouseHoldFilters {
   factory SearchHouseHoldFilters({
     required String name,
     required String code,
@@ -389,7 +389,7 @@ class SearchHouseHoldFilters with _$SearchHouseHoldFilters {
 }
 
 @freezed
-class SearchCLFFilters with _$SearchCLFFilters {
+abstract class SearchCLFFilters with _$SearchCLFFilters {
   factory SearchCLFFilters({
     required String name,
     required String code,
@@ -401,7 +401,7 @@ class SearchCLFFilters with _$SearchCLFFilters {
 }
 
 @freezed
-class TransitPostType with _$TransitPostType {
+abstract class TransitPostType with _$TransitPostType {
   factory TransitPostType({
     required String name,
     required String code,
@@ -413,7 +413,7 @@ class TransitPostType with _$TransitPostType {
 }
 
 @freezed
-class DeviceChangeReasons with _$DeviceChangeReasons {
+abstract class DeviceChangeReasons with _$DeviceChangeReasons {
   factory DeviceChangeReasons({
     required String name,
     required String code,
@@ -425,7 +425,7 @@ class DeviceChangeReasons with _$DeviceChangeReasons {
 
 
 @freezed
-class SingleUserLogin with _$SingleUserLogin {
+abstract class SingleUserLogin with _$SingleUserLogin {
   factory SingleUserLogin({
     required bool enabled,
     required int id,
@@ -436,7 +436,7 @@ class SingleUserLogin with _$SingleUserLogin {
 }
 
 @freezed
-class TransportTypes with _$TransportTypes {
+abstract class TransportTypes with _$TransportTypes {
   factory TransportTypes({
     required String name,
     required String code,
@@ -447,7 +447,7 @@ class TransportTypes with _$TransportTypes {
 }
 
 @freezed
-class RowVersions with _$RowVersions {
+abstract class RowVersions with _$RowVersions {
   factory RowVersions({
     required String module,
     required String version,
@@ -458,7 +458,7 @@ class RowVersions with _$RowVersions {
 }
 
 @freezed
-class FirebaseConfig with _$FirebaseConfig {
+abstract class FirebaseConfig with _$FirebaseConfig {
   factory FirebaseConfig({
     required bool enableCrashlytics,
     required bool enableAnalytics,
@@ -469,7 +469,7 @@ class FirebaseConfig with _$FirebaseConfig {
 }
 
 @freezed
-class BoundaryRelationship with _$BoundaryRelationship {
+abstract class BoundaryRelationship with _$BoundaryRelationship {
   factory BoundaryRelationship({
     required String boundaryType,
     required int order,
@@ -482,7 +482,7 @@ class BoundaryRelationship with _$BoundaryRelationship {
 }
 
 @freezed
-class BoundaryRelationshipRef with _$BoundaryRelationshipRef {
+abstract class BoundaryRelationshipRef with _$BoundaryRelationshipRef {
   factory BoundaryRelationshipRef({
     required String boundaryType,
     required int order,

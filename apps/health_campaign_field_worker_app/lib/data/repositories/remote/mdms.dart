@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:digit_data_model/models/project_type/project_type_model.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../../models/mdms/service_registry/pgr_service_defenitions.dart';

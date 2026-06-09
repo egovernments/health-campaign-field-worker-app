@@ -154,7 +154,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
 }
 
 @freezed
-class LocalizationEvent with _$LocalizationEvent {
+abstract class LocalizationEvent with _$LocalizationEvent {
   const factory LocalizationEvent.onLoadLocalization({
     required String module,
     required String tenantId,
@@ -176,7 +176,7 @@ class LocalizationEvent with _$LocalizationEvent {
 }
 
 @freezed
-class LocalizationState with _$LocalizationState {
+abstract class LocalizationState with _$LocalizationState {
   const factory LocalizationState({
     @Default(false) bool loading,
     @Default(0) int index,

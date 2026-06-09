@@ -4,7 +4,7 @@ part 'project_type_model.freezed.dart';
 part 'project_type_model.g.dart';
 
 @freezed
-class ProjectTypePrimaryWrapper with _$ProjectTypePrimaryWrapper {
+abstract class ProjectTypePrimaryWrapper with _$ProjectTypePrimaryWrapper {
   const factory ProjectTypePrimaryWrapper({
     @JsonKey(name: "HCM-PROJECT-TYPES")
     final ProjectTypesSecondaryModel? projectTypeWrapper,
@@ -15,7 +15,7 @@ class ProjectTypePrimaryWrapper with _$ProjectTypePrimaryWrapper {
 }
 
 @freezed
-class ProjectTypesSecondaryModel with _$ProjectTypesSecondaryModel {
+abstract class ProjectTypesSecondaryModel with _$ProjectTypesSecondaryModel {
   const factory ProjectTypesSecondaryModel({
     @JsonKey(name: 'projectTypes') @Default([]) List<ProjectType> projectTypes,
   }) = _ProjectTypesSecondaryModel;
@@ -25,7 +25,7 @@ class ProjectTypesSecondaryModel with _$ProjectTypesSecondaryModel {
 }
 
 @freezed
-class ProjectType with _$ProjectType {
+abstract class ProjectType with _$ProjectType {
   const factory ProjectType({
     required String id,
     required String code,
@@ -44,7 +44,7 @@ class ProjectType with _$ProjectType {
 }
 
 @freezed
-class Cycle with _$Cycle {
+abstract class Cycle with _$Cycle {
   const factory Cycle({
     String? mandatoryWaitSinceLastCycleInDays,
     int? startDate,
@@ -56,7 +56,7 @@ class Cycle with _$Cycle {
 }
 
 @freezed
-class DeliveryModel with _$DeliveryModel {
+abstract class DeliveryModel with _$DeliveryModel {
   const factory DeliveryModel({
     List<DoseCriteriaModel>? doseCriteria,
     @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
@@ -70,7 +70,7 @@ class DeliveryModel with _$DeliveryModel {
 }
 
 @freezed
-class DoseCriteriaModel with _$DoseCriteriaModel {
+abstract class DoseCriteriaModel with _$DoseCriteriaModel {
   const factory DoseCriteriaModel({
     @JsonKey(name: 'condition') String? condition,
     @JsonKey(name: 'ProductVariants')
@@ -82,7 +82,7 @@ class DoseCriteriaModel with _$DoseCriteriaModel {
 }
 
 @freezed
-class ProductVariantsModel with _$ProductVariantsModel {
+abstract class ProductVariantsModel with _$ProductVariantsModel {
   const factory ProductVariantsModel({
     String? productVariantId,
     int? quantity,

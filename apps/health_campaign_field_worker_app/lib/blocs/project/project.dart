@@ -15,7 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
@@ -1482,7 +1482,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 }
 
 @freezed
-class ProjectEvent with _$ProjectEvent {
+abstract class ProjectEvent with _$ProjectEvent {
   const factory ProjectEvent.initialize() = ProjectInitializeEvent;
 
   const factory ProjectEvent.selectProject(ProjectModel model) =
@@ -1490,7 +1490,7 @@ class ProjectEvent with _$ProjectEvent {
 }
 
 @freezed
-class ProjectState with _$ProjectState {
+abstract class ProjectState with _$ProjectState {
   const ProjectState._();
 
   const factory ProjectState({

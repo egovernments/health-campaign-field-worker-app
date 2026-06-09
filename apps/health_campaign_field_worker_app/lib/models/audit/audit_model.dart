@@ -4,7 +4,7 @@ part 'audit_model.freezed.dart';
 part 'audit_model.g.dart';
 
 @freezed
-class AuditDetailsModel with _$AuditDetailsModel {
+abstract class AuditDetailsModel with _$AuditDetailsModel {
   const factory AuditDetailsModel({
     required String createdBy,
     required int createdTime,

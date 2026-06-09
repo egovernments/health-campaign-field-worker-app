@@ -19,7 +19,7 @@ enum MultiTableFilterLogic {
 }
 
 @freezed
-class GlobalSearchParameters with _$GlobalSearchParameters {
+abstract class GlobalSearchParameters with _$GlobalSearchParameters {
   const factory GlobalSearchParameters({
     required List<SearchFilter> filters,
     required List<String> select,
@@ -48,7 +48,7 @@ class GlobalSearchParameters with _$GlobalSearchParameters {
 }
 
 @freezed
-class SearchFilter with _$SearchFilter {
+abstract class SearchFilter with _$SearchFilter {
   const factory SearchFilter({
     required String field,
     required String operator,
@@ -62,7 +62,7 @@ class SearchFilter with _$SearchFilter {
 }
 
 @freezed
-class LatLng with _$LatLng {
+abstract class LatLng with _$LatLng {
   const factory LatLng({
     required double latitude,
     required double longitude,
@@ -72,7 +72,7 @@ class LatLng with _$LatLng {
 }
 
 @freezed
-class PaginationParams with _$PaginationParams {
+abstract class PaginationParams with _$PaginationParams {
   const factory PaginationParams({
     required int limit,
     required int offset,
@@ -83,7 +83,7 @@ class PaginationParams with _$PaginationParams {
 }
 
 @freezed
-class RelationshipMapping with _$RelationshipMapping {
+abstract class RelationshipMapping with _$RelationshipMapping {
   const factory RelationshipMapping({
     required String from,
     required String to,
@@ -103,7 +103,7 @@ enum NestedMappingType {
 }
 
 @freezed
-class NestedFieldMapping with _$NestedFieldMapping {
+abstract class NestedFieldMapping with _$NestedFieldMapping {
   const factory NestedFieldMapping({
     required String table,
     required String localKey,
@@ -116,7 +116,7 @@ class NestedFieldMapping with _$NestedFieldMapping {
 }
 
 @freezed
-class NestedModelMapping with _$NestedModelMapping {
+abstract class NestedModelMapping with _$NestedModelMapping {
   const factory NestedModelMapping({
     required String rootModel,
     required Map<String, NestedFieldMapping> fields,
@@ -127,7 +127,7 @@ class NestedModelMapping with _$NestedModelMapping {
 }
 
 @freezed
-class SearchOrderBy with _$SearchOrderBy {
+abstract class SearchOrderBy with _$SearchOrderBy {
   const factory SearchOrderBy({
     required String field,
     @Default('DESC') String order, // 'ASC' or 'DESC'

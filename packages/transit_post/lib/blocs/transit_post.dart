@@ -116,7 +116,7 @@ class TransitPostBloc extends Bloc<TransitPostEvent, TransitPostState> {
 }
 
 @freezed
-class TransitPostEvent with _$TransitPostEvent {
+abstract class TransitPostEvent with _$TransitPostEvent {
   const factory TransitPostEvent.handleSelection({
     @Default(0) double latitude,
     @Default(0) double longitude,
@@ -141,7 +141,7 @@ class TransitPostEvent with _$TransitPostEvent {
 }
 
 @freezed
-class TransitPostState with _$TransitPostState {
+abstract class TransitPostState with _$TransitPostState {
   const factory TransitPostState({
     @Default(false) loading,
     @Default(0) double latitude,

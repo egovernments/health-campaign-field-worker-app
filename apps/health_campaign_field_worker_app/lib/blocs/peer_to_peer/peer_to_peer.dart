@@ -367,7 +367,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
 }
 
 @freezed
-class PeerToPeerEvent with _$PeerToPeerEvent {
+abstract class PeerToPeerEvent with _$PeerToPeerEvent {
   const factory PeerToPeerEvent.dataTransfer(
       {required NearbyService nearbyService,
       required String selectedProject,
@@ -382,7 +382,7 @@ class PeerToPeerEvent with _$PeerToPeerEvent {
 }
 
 @freezed
-class PeerToPeerState with _$PeerToPeerState {
+abstract class PeerToPeerState with _$PeerToPeerState {
   const factory PeerToPeerState.initial() = PeerToPeerInitial;
 
   const factory PeerToPeerState.loading() = PeerToPeerLoading;

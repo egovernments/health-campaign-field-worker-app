@@ -18,14 +18,14 @@ typedef HFReferralDownSyncEmitter = Emitter<HFReferralDownSyncState>;
 class HFReferralDownSyncBloc
     extends Bloc<HFReferralDownSyncEvent, HFReferralDownSyncState> {
   final LocalRepository<HFReferralModel, HFReferralSearchModel>
-      hfReferralLocalRepository;
+  hfReferralLocalRepository;
   final RemoteRepository<HFReferralModel, HFReferralSearchModel>
-      hfReferralRemoteRepository;
+  hfReferralRemoteRepository;
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
-      downSyncLocalRepository;
+  downSyncLocalRepository;
   final BandwidthCheckRepository bandwidthCheckRepository;
   final LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
-      projectFacilityLocalRepository;
+  projectFacilityLocalRepository;
 
   HFReferralDownSyncBloc({
     required this.hfReferralLocalRepository,
@@ -33,7 +33,7 @@ class HFReferralDownSyncBloc
     required this.downSyncLocalRepository,
     required this.bandwidthCheckRepository,
     required this.projectFacilityLocalRepository,
-  }) : super(const HFReferralDownSyncState._()) {
+  }) : super(const HFReferralDownSyncState.resetState()) {
     on(_handleStart);
     on(_handleDownload);
     on(_handleDownSyncResetState);
@@ -58,10 +58,9 @@ class HFReferralDownSyncBloc
       final localityKey = _getLocalityKey(event.projectId);
 
       // Check existing downsync progress
-      final existingDownSyncData =
-          await downSyncLocalRepository.search(DownsyncSearchModel(
-        locality: localityKey,
-      ));
+      final existingDownSyncData = await downSyncLocalRepository.search(
+        DownsyncSearchModel(locality: localityKey),
+      );
 
       int? lastSyncedTime = existingDownSyncData.isEmpty
           ? null
@@ -71,12 +70,11 @@ class HFReferralDownSyncBloc
       final totalCount =
           await (hfReferralRemoteRepository as HFReferralRemoteRepository)
               .fetchTotalCount(
-        HFReferralSearchModel(
-          projectId: event.projectId,
-        ), includeOnlyUpdatedByOthers: true,
-        offSet: 0,
-        lastSyncedTime: lastSyncedTime,
-      );
+                HFReferralSearchModel(projectId: event.projectId),
+                includeOnlyUpdatedByOthers: true,
+                offSet: 0,
+                lastSyncedTime: lastSyncedTime,
+              );
 
       // totalCount is already the new count since lastSyncedTime filters to only new records
       if (totalCount > 0) {
@@ -107,10 +105,9 @@ class HFReferralDownSyncBloc
       );
 
       // Check existing downsync progress
-      final existingDownSyncData =
-          await downSyncLocalRepository.search(DownsyncSearchModel(
-        locality: localityKey,
-      ));
+      final existingDownSyncData = await downSyncLocalRepository.search(
+        DownsyncSearchModel(locality: localityKey),
+      );
 
       int? lastSyncedTime = existingDownSyncData.isEmpty
           ? null
@@ -125,13 +122,15 @@ class HFReferralDownSyncBloc
 
       // Create initial downsync record if not exists
       if (existingDownSyncData.isEmpty) {
-        await downSyncLocalRepository.create(DownsyncModel(
-          offset: 0,
-          limit: batchSize,
-          lastSyncedTime: lastSyncedTime,
-          totalCount: 0,
-          locality: localityKey,
-        ));
+        await downSyncLocalRepository.create(
+          DownsyncModel(
+            offset: 0,
+            limit: batchSize,
+            lastSyncedTime: lastSyncedTime,
+            totalCount: 0,
+            locality: localityKey,
+          ),
+        );
       }
 
       int syncedCount = 0;
@@ -141,9 +140,7 @@ class HFReferralDownSyncBloc
       // Download in batches using lastSyncedTime, offset always 0
       while (syncedCount < totalCount) {
         final hfReferrals = await hfReferralRemoteRepository.search(
-          HFReferralSearchModel(
-            projectId: event.projectId
-          ),
+          HFReferralSearchModel(projectId: event.projectId),
           includeOnlyUpdatedByOthers: true,
           offSet: 0,
           limit: batchSize,
@@ -153,13 +150,15 @@ class HFReferralDownSyncBloc
         if (hfReferrals.isEmpty) break;
 
         // Filter out records that already exist locally
-        final incomingClientRefIds =
-            hfReferrals.map((e) => e.clientReferenceId).toList();
+        final incomingClientRefIds = hfReferrals
+            .map((e) => e.clientReferenceId)
+            .toList();
         final existingRecords = await hfReferralLocalRepository.search(
           HFReferralSearchModel(clientReferenceId: incomingClientRefIds),
         );
-        final existingClientRefIds =
-            existingRecords.map((e) => e.clientReferenceId).toSet();
+        final existingClientRefIds = existingRecords
+            .map((e) => e.clientReferenceId)
+            .toSet();
         final newReferrals = hfReferrals
             .where((e) => !existingClientRefIds.contains(e.clientReferenceId))
             .toList();
@@ -171,13 +170,15 @@ class HFReferralDownSyncBloc
         syncedCount += hfReferrals.length;
 
         // Update downsync progress with lastSyncedTime, keep offset 0
-        await downSyncLocalRepository.update(DownsyncModel(
-          offset: 0,
-          limit: batchSize,
-          lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
-          totalCount: totalCount,
-          locality: localityKey,
-        ));
+        await downSyncLocalRepository.update(
+          DownsyncModel(
+            offset: 0,
+            limit: batchSize,
+            lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
+            totalCount: totalCount,
+            locality: localityKey,
+          ),
+        );
 
         emit(HFReferralDownSyncState.inProgress(syncedCount, totalCount));
       }
@@ -190,7 +191,7 @@ class HFReferralDownSyncBloc
 }
 
 @freezed
-class HFReferralDownSyncEvent with _$HFReferralDownSyncEvent {
+abstract class HFReferralDownSyncEvent with _$HFReferralDownSyncEvent {
   const factory HFReferralDownSyncEvent.start({
     required String projectId,
     required List<AppConfiguration> appConfiguration,
@@ -208,7 +209,7 @@ class HFReferralDownSyncEvent with _$HFReferralDownSyncEvent {
 }
 
 @freezed
-class HFReferralDownSyncState with _$HFReferralDownSyncState {
+abstract class HFReferralDownSyncState with _$HFReferralDownSyncState {
   const HFReferralDownSyncState._();
 
   const factory HFReferralDownSyncState.loading() =

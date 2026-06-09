@@ -18,7 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:survey_form/utils/extensions/context_utility.dart';
 
-import '../router/survey_form_router.gm.dart';
+import '../router/survey_form_router.dart';
 import '../utils/constants.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';

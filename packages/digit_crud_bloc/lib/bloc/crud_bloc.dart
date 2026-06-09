@@ -112,7 +112,7 @@ class CrudBloc extends Bloc<CrudEvent, CrudState> {
 }
 
 @freezed
-class CrudEvent with _$CrudEvent {
+abstract class CrudEvent with _$CrudEvent {
   const factory CrudEvent.initialize() = CrudEventInitialize;
   const factory CrudEvent.search(GlobalSearchParameters searchParams) =
       CrudEventSearch;
@@ -125,7 +125,7 @@ class CrudEvent with _$CrudEvent {
 }
 
 @freezed
-class CrudState with _$CrudState {
+abstract class CrudState with _$CrudState {
   const factory CrudState.initial() = CrudStateInitial;
   const factory CrudState.loading() = CrudStateLoading;
   const factory CrudState.loaded(

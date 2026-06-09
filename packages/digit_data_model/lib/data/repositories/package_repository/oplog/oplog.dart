@@ -1,5 +1,5 @@
 import 'package:digit_data_model/data_model.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 import '../../../../models/entities/hf_referral.dart';
 

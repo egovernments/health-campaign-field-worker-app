@@ -353,7 +353,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 
 // Freezed class for defining attendance-related events
 @freezed
-class AttendanceEvents with _$AttendanceEvents {
+abstract class AttendanceEvents with _$AttendanceEvents {
   const factory AttendanceEvents.initial() = InitialAttendance;
 
   const factory AttendanceEvents.fetchNonMobileUsers(
@@ -374,7 +374,7 @@ class AttendanceEvents with _$AttendanceEvents {
 
 // Freezed class for defining attendance-related states
 @freezed
-class AttendanceStates with _$AttendanceStates {
+abstract class AttendanceStates with _$AttendanceStates {
   const factory AttendanceStates.registerLoading() = RegisterLoading;
 
   const factory AttendanceStates.registerLoaded({

@@ -8,7 +8,7 @@ import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';

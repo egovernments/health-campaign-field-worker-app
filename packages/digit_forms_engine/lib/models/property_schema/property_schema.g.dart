@@ -6,8 +6,8 @@ part of 'property_schema.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
-    _$PropertySchemaImpl(
+_PropertySchema _$PropertySchemaFromJson(Map<String, dynamic> json) =>
+    _PropertySchema(
       type: $enumDecode(_$PropertySchemaTypeEnumMap, json['type'],
           unknownValue: PropertySchemaType.string),
       readOnly: json['readOnly'] as bool?,
@@ -71,69 +71,74 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       comparisonConfig: _comparisonConfigOrNull(json['comparisonConfig']),
     );
 
-Map<String, dynamic> _$$PropertySchemaImplToJson(
-    _$PropertySchemaImpl instance) {
-  final val = <String, dynamic>{
-    'type': _$PropertySchemaTypeEnumMap[instance.type]!,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('readOnly', instance.readOnly);
-  writeNotNull('displayOnly', instance.displayOnly);
-  writeNotNull('hidden', instance.hidden);
-  writeNotNull('properties',
-      instance.properties?.map((k, e) => MapEntry(k, e.toJson())));
-  writeNotNull('enums', instance.enums?.map((e) => e.toJson()).toList());
-  writeNotNull('schemaCode', instance.schemaCode);
-  writeNotNull('systemDate', instance.systemDate);
-  writeNotNull('charCount', instance.charCount);
-  writeNotNull('format', _$PropertySchemaFormatEnumMap[instance.format]);
-  writeNotNull('startDate', instance.startDate);
-  writeNotNull('endDate', instance.endDate);
-  writeNotNull('minValue', instance.minValue);
-  writeNotNull('maxValue', instance.maxValue);
-  writeNotNull('minLength', instance.minLength);
-  writeNotNull('maxLength', instance.maxLength);
-  writeNotNull('min', instance.min);
-  writeNotNull('max', instance.max);
-  writeNotNull('helpText', instance.helpText);
-  writeNotNull('tooltip', instance.tooltip);
-  writeNotNull('prefixText', instance.prefixText);
-  writeNotNull('suffixText', instance.suffixText);
-  writeNotNull('innerLabel', instance.innerLabel);
-  writeNotNull('label', instance.label);
-  writeNotNull('isMultiSelect', instance.isMultiSelect);
-  writeNotNull('value', instance.value);
-  writeNotNull('displayBehavior', instance.displayBehavior?.toJson());
-  writeNotNull('conditions', instance.conditions);
-  writeNotNull('order', instance.order);
-  writeNotNull('actionLabel', instance.actionLabel);
-  writeNotNull('description', instance.description);
-  writeNotNull(
-      'validations', instance.validations?.map((e) => e.toJson()).toList());
-  writeNotNull('includeInForm', instance.includeInForm);
-  writeNotNull('includeInSummary', instance.includeInSummary);
-  writeNotNull('navigateTo', instance.navigateTo?.toJson());
-  writeNotNull('visibilityCondition', instance.visibilityCondition?.toJson());
-  writeNotNull('conditionalNavigateTo',
-      instance.conditionalNavigateTo?.map((e) => e.toJson()).toList());
-  writeNotNull('autoFillCondition',
-      instance.autoFillCondition?.map((e) => e.toJson()).toList());
-  writeNotNull('showAlertPopUp', instance.showAlertPopUp?.toJson());
-  writeNotNull(
-      'showSecondaryAlertPopUp', instance.showSecondaryAlertPopUp?.toJson());
-  writeNotNull('multiEntityConfig', instance.multiEntityConfig?.toJson());
-  writeNotNull('preventScreenCapture', instance.preventScreenCapture);
-  writeNotNull('submitCondition', instance.submitCondition?.toJson());
-  writeNotNull('secondaryActionLabel', instance.secondaryActionLabel);
-  writeNotNull('comparisonConfig', instance.comparisonConfig?.toJson());
-  return val;
-}
+Map<String, dynamic> _$PropertySchemaToJson(_PropertySchema instance) =>
+    <String, dynamic>{
+      'type': _$PropertySchemaTypeEnumMap[instance.type]!,
+      if (instance.readOnly case final value?) 'readOnly': value,
+      if (instance.displayOnly case final value?) 'displayOnly': value,
+      if (instance.hidden case final value?) 'hidden': value,
+      if (instance.properties?.map((k, e) => MapEntry(k, e.toJson()))
+          case final value?)
+        'properties': value,
+      if (instance.enums?.map((e) => e.toJson()).toList() case final value?)
+        'enums': value,
+      if (instance.schemaCode case final value?) 'schemaCode': value,
+      if (instance.systemDate case final value?) 'systemDate': value,
+      if (instance.charCount case final value?) 'charCount': value,
+      if (_$PropertySchemaFormatEnumMap[instance.format] case final value?)
+        'format': value,
+      if (instance.startDate case final value?) 'startDate': value,
+      if (instance.endDate case final value?) 'endDate': value,
+      if (instance.minValue case final value?) 'minValue': value,
+      if (instance.maxValue case final value?) 'maxValue': value,
+      if (instance.minLength case final value?) 'minLength': value,
+      if (instance.maxLength case final value?) 'maxLength': value,
+      if (instance.min case final value?) 'min': value,
+      if (instance.max case final value?) 'max': value,
+      if (instance.helpText case final value?) 'helpText': value,
+      if (instance.tooltip case final value?) 'tooltip': value,
+      if (instance.prefixText case final value?) 'prefixText': value,
+      if (instance.suffixText case final value?) 'suffixText': value,
+      if (instance.innerLabel case final value?) 'innerLabel': value,
+      if (instance.label case final value?) 'label': value,
+      if (instance.isMultiSelect case final value?) 'isMultiSelect': value,
+      if (instance.value case final value?) 'value': value,
+      if (instance.displayBehavior?.toJson() case final value?)
+        'displayBehavior': value,
+      if (instance.conditions case final value?) 'conditions': value,
+      if (instance.order case final value?) 'order': value,
+      if (instance.actionLabel case final value?) 'actionLabel': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.validations?.map((e) => e.toJson()).toList()
+          case final value?)
+        'validations': value,
+      if (instance.includeInForm case final value?) 'includeInForm': value,
+      if (instance.includeInSummary case final value?)
+        'includeInSummary': value,
+      if (instance.navigateTo?.toJson() case final value?) 'navigateTo': value,
+      if (instance.visibilityCondition?.toJson() case final value?)
+        'visibilityCondition': value,
+      if (instance.conditionalNavigateTo?.map((e) => e.toJson()).toList()
+          case final value?)
+        'conditionalNavigateTo': value,
+      if (instance.autoFillCondition?.map((e) => e.toJson()).toList()
+          case final value?)
+        'autoFillCondition': value,
+      if (instance.showAlertPopUp?.toJson() case final value?)
+        'showAlertPopUp': value,
+      if (instance.showSecondaryAlertPopUp?.toJson() case final value?)
+        'showSecondaryAlertPopUp': value,
+      if (instance.multiEntityConfig?.toJson() case final value?)
+        'multiEntityConfig': value,
+      if (instance.preventScreenCapture case final value?)
+        'preventScreenCapture': value,
+      if (instance.submitCondition?.toJson() case final value?)
+        'submitCondition': value,
+      if (instance.secondaryActionLabel case final value?)
+        'secondaryActionLabel': value,
+      if (instance.comparisonConfig?.toJson() case final value?)
+        'comparisonConfig': value,
+    };
 
 const _$PropertySchemaTypeEnumMap = {
   PropertySchemaType.object: 'object',
@@ -161,35 +166,32 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.text: 'text',
 };
 
-_$ValidationRuleImpl _$$ValidationRuleImplFromJson(Map<String, dynamic> json) =>
-    _$ValidationRuleImpl(
+_ValidationRule _$ValidationRuleFromJson(Map<String, dynamic> json) =>
+    _ValidationRule(
       type: json['type'] as String,
       value: json['value'],
       message: json['message'] as String?,
     );
 
-Map<String, dynamic> _$$ValidationRuleImplToJson(
-        _$ValidationRuleImpl instance) =>
+Map<String, dynamic> _$ValidationRuleToJson(_ValidationRule instance) =>
     <String, dynamic>{
       'type': instance.type,
       'value': instance.value,
       'message': instance.message,
     };
 
-_$OptionImpl _$$OptionImplFromJson(Map<String, dynamic> json) => _$OptionImpl(
+_Option _$OptionFromJson(Map<String, dynamic> json) => _Option(
       code: json['code'] as String,
       name: json['name'] as String,
     );
 
-Map<String, dynamic> _$$OptionImplToJson(_$OptionImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$OptionToJson(_Option instance) => <String, dynamic>{
       'code': instance.code,
       'name': instance.name,
     };
 
-_$DisplayBehaviorImpl _$$DisplayBehaviorImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DisplayBehaviorImpl(
+_DisplayBehavior _$DisplayBehaviorFromJson(Map<String, dynamic> json) =>
+    _DisplayBehavior(
       behavior: $enumDecode(_$FormulaBehaviorEnumMap, json['behavior']),
       oneOf:
           (json['oneOf'] as List<dynamic>?)?.map((e) => e as String).toList(),
@@ -197,8 +199,7 @@ _$DisplayBehaviorImpl _$$DisplayBehaviorImplFromJson(
           (json['allOf'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$$DisplayBehaviorImplToJson(
-        _$DisplayBehaviorImpl instance) =>
+Map<String, dynamic> _$DisplayBehaviorToJson(_DisplayBehavior instance) =>
     <String, dynamic>{
       'behavior': _$FormulaBehaviorEnumMap[instance.behavior]!,
       'oneOf': instance.oneOf,
@@ -210,77 +211,72 @@ const _$FormulaBehaviorEnumMap = {
   FormulaBehavior.hide: 'hide',
 };
 
-_$NavigateToConfigImpl _$$NavigateToConfigImplFromJson(
-        Map<String, dynamic> json) =>
-    _$NavigateToConfigImpl(
+_NavigateToConfig _$NavigateToConfigFromJson(Map<String, dynamic> json) =>
+    _NavigateToConfig(
       type: json['type'] as String,
       name: json['name'] as String,
     );
 
-Map<String, dynamic> _$$NavigateToConfigImplToJson(
-        _$NavigateToConfigImpl instance) =>
+Map<String, dynamic> _$NavigateToConfigToJson(_NavigateToConfig instance) =>
     <String, dynamic>{
       'type': instance.type,
       'name': instance.name,
     };
 
-_$VisibilityConditionImpl _$$VisibilityConditionImplFromJson(
-        Map<String, dynamic> json) =>
-    _$VisibilityConditionImpl(
+_VisibilityCondition _$VisibilityConditionFromJson(Map<String, dynamic> json) =>
+    _VisibilityCondition(
       expression: (json['expression'] as List<dynamic>)
           .map((e) => VisibilityExpression.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$VisibilityConditionImplToJson(
-        _$VisibilityConditionImpl instance) =>
+Map<String, dynamic> _$VisibilityConditionToJson(
+        _VisibilityCondition instance) =>
     <String, dynamic>{
       'expression': instance.expression,
     };
 
-_$VisibilityExpressionImpl _$$VisibilityExpressionImplFromJson(
+_VisibilityExpression _$VisibilityExpressionFromJson(
         Map<String, dynamic> json) =>
-    _$VisibilityExpressionImpl(
+    _VisibilityExpression(
       condition: json['condition'] as String,
     );
 
-Map<String, dynamic> _$$VisibilityExpressionImplToJson(
-        _$VisibilityExpressionImpl instance) =>
+Map<String, dynamic> _$VisibilityExpressionToJson(
+        _VisibilityExpression instance) =>
     <String, dynamic>{
       'condition': instance.condition,
     };
 
-_$ConditionalNavigateToImpl _$$ConditionalNavigateToImplFromJson(
+_ConditionalNavigateTo _$ConditionalNavigateToFromJson(
         Map<String, dynamic> json) =>
-    _$ConditionalNavigateToImpl(
+    _ConditionalNavigateTo(
       condition: json['condition'] as String,
       navigateTo:
           NavigateToConfig.fromJson(json['navigateTo'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$ConditionalNavigateToImplToJson(
-        _$ConditionalNavigateToImpl instance) =>
+Map<String, dynamic> _$ConditionalNavigateToToJson(
+        _ConditionalNavigateTo instance) =>
     <String, dynamic>{
       'condition': instance.condition,
       'navigateTo': instance.navigateTo,
     };
 
-_$AutoFillConditionImpl _$$AutoFillConditionImplFromJson(
-        Map<String, dynamic> json) =>
-    _$AutoFillConditionImpl(
+_AutoFillCondition _$AutoFillConditionFromJson(Map<String, dynamic> json) =>
+    _AutoFillCondition(
       expression: json['expression'] as String,
       value: json['value'],
     );
 
-Map<String, dynamic> _$$AutoFillConditionImplToJson(
-        _$AutoFillConditionImpl instance) =>
+Map<String, dynamic> _$AutoFillConditionToJson(_AutoFillCondition instance) =>
     <String, dynamic>{
       'expression': instance.expression,
       'value': instance.value,
     };
 
-_$ShowAlertPopUpImpl _$$ShowAlertPopUpImplFromJson(Map<String, dynamic> json) =>
-    _$ShowAlertPopUpImpl(
+_ShowAlertPopUp _$ShowAlertPopUpFromJson(Map<String, dynamic> json) =>
+    _ShowAlertPopUp(
       title: json['title'] as String,
       description: json['description'] as String?,
       primaryActionLabel: json['primaryActionLabel'] as String,
@@ -290,8 +286,7 @@ _$ShowAlertPopUpImpl _$$ShowAlertPopUpImplFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$ShowAlertPopUpImplToJson(
-        _$ShowAlertPopUpImpl instance) =>
+Map<String, dynamic> _$ShowAlertPopUpToJson(_ShowAlertPopUp instance) =>
     <String, dynamic>{
       'title': instance.title,
       'description': instance.description,
@@ -300,9 +295,9 @@ Map<String, dynamic> _$$ShowAlertPopUpImplToJson(
       'conditions': instance.conditions,
     };
 
-_$ShowSecondaryAlertPopUpImpl _$$ShowSecondaryAlertPopUpImplFromJson(
+_ShowSecondaryAlertPopUp _$ShowSecondaryAlertPopUpFromJson(
         Map<String, dynamic> json) =>
-    _$ShowSecondaryAlertPopUpImpl(
+    _ShowSecondaryAlertPopUp(
       title: json['title'] as String,
       description: json['description'] as String?,
       primaryActionLabel: json['primaryActionLabel'] as String,
@@ -316,8 +311,8 @@ _$ShowSecondaryAlertPopUpImpl _$$ShowSecondaryAlertPopUpImplFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$$ShowSecondaryAlertPopUpImplToJson(
-        _$ShowSecondaryAlertPopUpImpl instance) =>
+Map<String, dynamic> _$ShowSecondaryAlertPopUpToJson(
+        _ShowSecondaryAlertPopUp instance) =>
     <String, dynamic>{
       'title': instance.title,
       'description': instance.description,
@@ -327,9 +322,9 @@ Map<String, dynamic> _$$ShowSecondaryAlertPopUpImplToJson(
       'body': instance.body,
     };
 
-_$SecondaryAlertBodyFieldImpl _$$SecondaryAlertBodyFieldImplFromJson(
+_SecondaryAlertBodyField _$SecondaryAlertBodyFieldFromJson(
         Map<String, dynamic> json) =>
-    _$SecondaryAlertBodyFieldImpl(
+    _SecondaryAlertBodyField(
       type: json['type'] as String,
       label: json['label'] as String,
       format: json['format'] as String?,
@@ -337,8 +332,8 @@ _$SecondaryAlertBodyFieldImpl _$$SecondaryAlertBodyFieldImplFromJson(
       mandatory: json['mandatory'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$SecondaryAlertBodyFieldImplToJson(
-        _$SecondaryAlertBodyFieldImpl instance) =>
+Map<String, dynamic> _$SecondaryAlertBodyFieldToJson(
+        _SecondaryAlertBodyField instance) =>
     <String, dynamic>{
       'type': instance.type,
       'label': instance.label,
@@ -347,36 +342,32 @@ Map<String, dynamic> _$$SecondaryAlertBodyFieldImplToJson(
       'mandatory': instance.mandatory,
     };
 
-_$AlertConditionImpl _$$AlertConditionImplFromJson(Map<String, dynamic> json) =>
-    _$AlertConditionImpl(
+_AlertCondition _$AlertConditionFromJson(Map<String, dynamic> json) =>
+    _AlertCondition(
       expression: json['expression'] as String,
       value: json['value'] as String,
     );
 
-Map<String, dynamic> _$$AlertConditionImplToJson(
-        _$AlertConditionImpl instance) =>
+Map<String, dynamic> _$AlertConditionToJson(_AlertCondition instance) =>
     <String, dynamic>{
       'expression': instance.expression,
       'value': instance.value,
     };
 
-_$MultiEntityConfigImpl _$$MultiEntityConfigImplFromJson(
-        Map<String, dynamic> json) =>
-    _$MultiEntityConfigImpl(
+_MultiEntityConfig _$MultiEntityConfigFromJson(Map<String, dynamic> json) =>
+    _MultiEntityConfig(
       sourcePageKey: json['sourcePageKey'] as String,
       sourceFieldKey: json['sourceFieldKey'] as String,
     );
 
-Map<String, dynamic> _$$MultiEntityConfigImplToJson(
-        _$MultiEntityConfigImpl instance) =>
+Map<String, dynamic> _$MultiEntityConfigToJson(_MultiEntityConfig instance) =>
     <String, dynamic>{
       'sourcePageKey': instance.sourcePageKey,
       'sourceFieldKey': instance.sourceFieldKey,
     };
 
-_$ComparisonConfigImpl _$$ComparisonConfigImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ComparisonConfigImpl(
+_ComparisonConfig _$ComparisonConfigFromJson(Map<String, dynamic> json) =>
+    _ComparisonConfig(
       model: json['model'] as String,
       extractKey: json['extractKey'] as String,
       extractFrom: json['extractFrom'] as String? ?? 'additionalFields',
@@ -387,28 +378,17 @@ _$ComparisonConfigImpl _$$ComparisonConfigImplFromJson(
       errorMessage: json['errorMessage'] as String?,
     );
 
-Map<String, dynamic> _$$ComparisonConfigImplToJson(
-    _$ComparisonConfigImpl instance) {
-  final val = <String, dynamic>{
-    'model': instance.model,
-    'extractKey': instance.extractKey,
-    'extractFrom': instance.extractFrom,
-    'filters': instance.filters.map((e) => e.toJson()).toList(),
-  };
+Map<String, dynamic> _$ComparisonConfigToJson(_ComparisonConfig instance) =>
+    <String, dynamic>{
+      'model': instance.model,
+      'extractKey': instance.extractKey,
+      'extractFrom': instance.extractFrom,
+      'filters': instance.filters.map((e) => e.toJson()).toList(),
+      if (instance.errorMessage case final value?) 'errorMessage': value,
+    };
 
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('errorMessage', instance.errorMessage);
-  return val;
-}
-
-_$ComparisonFilterImpl _$$ComparisonFilterImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ComparisonFilterImpl(
+_ComparisonFilter _$ComparisonFilterFromJson(Map<String, dynamic> json) =>
+    _ComparisonFilter(
       key: json['key'] as String,
       value: json['value'] as String,
       operation: json['operation'] as String? ?? 'equals',
@@ -418,21 +398,11 @@ _$ComparisonFilterImpl _$$ComparisonFilterImplFromJson(
       ),
     );
 
-Map<String, dynamic> _$$ComparisonFilterImplToJson(
-    _$ComparisonFilterImpl instance) {
-  final val = <String, dynamic>{
-    'key': instance.key,
-    'value': instance.value,
-    'operation': instance.operation,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('switchOn', instance.switchOn);
-  writeNotNull('cases', instance.cases);
-  return val;
-}
+Map<String, dynamic> _$ComparisonFilterToJson(_ComparisonFilter instance) =>
+    <String, dynamic>{
+      'key': instance.key,
+      'value': instance.value,
+      'operation': instance.operation,
+      if (instance.switchOn case final value?) 'switchOn': value,
+      if (instance.cases case final value?) 'cases': value,
+    };

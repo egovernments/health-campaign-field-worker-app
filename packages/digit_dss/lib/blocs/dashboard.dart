@@ -13,7 +13,7 @@ import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; // Import the flutter_bloc package for state management
 import 'package:freezed_annotation/freezed_annotation.dart'; // Import the freezed_annotation package for code generation
-import 'package:isar/isar.dart'; // Import the isar package for database management
+import 'package:isar_community/isar.dart'; // Import the isar package for database management
 
 part 'dashboard.freezed.dart'; // Generate the part file for freezed annotations
 
@@ -253,7 +253,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
 // Define DashboardEvent with freezed annotations
 @freezed
-class DashboardEvent with _$DashboardEvent {
+abstract class DashboardEvent with _$DashboardEvent {
   const factory DashboardEvent.handleSearch({
     DateTime? selectedDate,
     @Default(false) bool? isNetworkError,
@@ -267,7 +267,7 @@ class DashboardEvent with _$DashboardEvent {
 
 // Define DashboardState with freezed annotations
 @freezed
-class DashboardState with _$DashboardState {
+abstract class DashboardState with _$DashboardState {
   const factory DashboardState.loading() =
       DashboardLoadingState; // Define loading state
   const factory DashboardState.initialState() =

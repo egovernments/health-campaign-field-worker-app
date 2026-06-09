@@ -5,7 +5,7 @@ import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_response.dart
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart'; // Import the dio package for HTTP client functionality
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart'; // Import the isar package for database management
+import 'package:isar_community/isar.dart'; // Import the isar package for database management
 
 import '../../models/entities/dashboard_config.dart';
 import '../../models/entities/dashboard_response_model.dart';

@@ -8,7 +8,7 @@ import 'package:digit_dss/models/entities/dashboard_request.dart';
 import 'package:digit_ui_components/theme/digit_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 import '../models/entities/dss_enums.dart';
 

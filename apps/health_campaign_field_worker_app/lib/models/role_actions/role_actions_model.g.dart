@@ -6,24 +6,24 @@ part of 'role_actions_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$RoleActionsWrapperModelImpl _$$RoleActionsWrapperModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RoleActionsWrapperModelImpl(
-      actions: (json['actions'] as List<dynamic>?)
-              ?.map((e) => RoleActionsModel.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-    );
+_RoleActionsWrapperModel _$RoleActionsWrapperModelFromJson(
+  Map<String, dynamic> json,
+) => _RoleActionsWrapperModel(
+  actions:
+      (json['actions'] as List<dynamic>?)
+          ?.map((e) => RoleActionsModel.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+);
 
-Map<String, dynamic> _$$RoleActionsWrapperModelImplToJson(
-        _$RoleActionsWrapperModelImpl instance) =>
-    <String, dynamic>{
-      'actions': instance.actions.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$RoleActionsWrapperModelToJson(
+  _RoleActionsWrapperModel instance,
+) => <String, dynamic>{
+  'actions': instance.actions.map((e) => e.toJson()).toList(),
+};
 
-_$RoleActionsModelImpl _$$RoleActionsModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RoleActionsModelImpl(
+_RoleActionsModel _$RoleActionsModelFromJson(Map<String, dynamic> json) =>
+    _RoleActionsModel(
       id: (json['id'] as num).toInt(),
       name: json['name'] as String?,
       url: json['url'] as String?,
@@ -44,8 +44,7 @@ _$RoleActionsModelImpl _$$RoleActionsModelImplFromJson(
       rightIcon: json['rightIcon'] as String?,
     );
 
-Map<String, dynamic> _$$RoleActionsModelImplToJson(
-        _$RoleActionsModelImpl instance) =>
+Map<String, dynamic> _$RoleActionsModelToJson(_RoleActionsModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

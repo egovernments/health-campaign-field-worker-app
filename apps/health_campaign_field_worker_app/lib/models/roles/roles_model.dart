@@ -5,7 +5,7 @@ part 'roles_model.freezed.dart';
 part 'roles_model.g.dart';
 
 @freezed
-class RolesWrapperModel with _$RolesWrapperModel {
+abstract class RolesWrapperModel with _$RolesWrapperModel {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory RolesWrapperModel({
     required String tenantId,
@@ -18,7 +18,7 @@ class RolesWrapperModel with _$RolesWrapperModel {
 }
 
 @freezed
-class RolesModel with _$RolesModel {
+abstract class RolesModel with _$RolesModel {
   @JsonSerializable(explicitToJson: true)
   const factory RolesModel({
     required Code code,

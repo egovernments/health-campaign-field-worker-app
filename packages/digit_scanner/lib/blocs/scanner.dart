@@ -113,7 +113,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
 }
 
 @freezed
-class DigitScannerEvent with _$DigitScannerEvent {
+abstract class DigitScannerEvent with _$DigitScannerEvent {
   const factory DigitScannerEvent.handleScanner({
     @Default([]) List<GS1Barcode> barCode,
     @Default([]) List<String> qrCode,
@@ -128,7 +128,7 @@ class DigitScannerEvent with _$DigitScannerEvent {
 }
 
 @freezed
-class DigitScannerState with _$DigitScannerState {
+abstract class DigitScannerState with _$DigitScannerState {
   const factory DigitScannerState({
     @Default([]) List<GS1Barcode> barCodes,
     @Default([]) List<String> qrCodes,

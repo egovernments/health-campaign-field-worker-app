@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,1959 +9,1072 @@ part of 'push_notification.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
 /// @nodoc
-mixin _$PushNotificationEvent {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initialize,
-    required TResult Function(String userId) login,
-    required TResult Function(String apiEndPoint) logout,
-    required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)
-        registerToken,
-    required TResult Function(Map<String, dynamic> data) notificationReceived,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initialize,
-    TResult? Function(String userId)? login,
-    TResult? Function(String apiEndPoint)? logout,
-    TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult? Function(Map<String, dynamic> data)? notificationReceived,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function(String userId)? login,
-    TResult Function(String apiEndPoint)? logout,
-    TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult Function(Map<String, dynamic> data)? notificationReceived,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitializeEvent value) initialize,
-    required TResult Function(PushNotificationLoginEvent value) login,
-    required TResult Function(PushNotificationLogoutEvent value) logout,
-    required TResult Function(PushNotificationTokenRefreshedEvent value)
-        tokenRefreshed,
-    required TResult Function(PushNotificationRegisterTokenEvent value)
-        registerToken,
-    required TResult Function(PushNotificationNotificationReceivedEvent value)
-        notificationReceived,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitializeEvent value)? initialize,
-    TResult? Function(PushNotificationLoginEvent value)? login,
-    TResult? Function(PushNotificationLogoutEvent value)? logout,
-    TResult? Function(PushNotificationTokenRefreshedEvent value)?
-        tokenRefreshed,
-    TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult? Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitializeEvent value)? initialize,
-    TResult Function(PushNotificationLoginEvent value)? login,
-    TResult Function(PushNotificationLogoutEvent value)? logout,
-    TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
-    TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+mixin _$PushNotificationEvent implements DiagnosticableTreeMixin {
+
+
+
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationEvent'))
+    ;
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationEvent);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationEvent()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $PushNotificationEventCopyWith<$Res> {
-  factory $PushNotificationEventCopyWith(PushNotificationEvent value,
-          $Res Function(PushNotificationEvent) then) =
-      _$PushNotificationEventCopyWithImpl<$Res, PushNotificationEvent>;
+class $PushNotificationEventCopyWith<$Res>  {
+$PushNotificationEventCopyWith(PushNotificationEvent _, $Res Function(PushNotificationEvent) __);
 }
 
-/// @nodoc
-class _$PushNotificationEventCopyWithImpl<$Res,
-        $Val extends PushNotificationEvent>
-    implements $PushNotificationEventCopyWith<$Res> {
-  _$PushNotificationEventCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [PushNotificationEvent].
+extension PushNotificationEventPatterns on PushNotificationEvent {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( PushNotificationInitializeEvent value)?  initialize,TResult Function( PushNotificationLoginEvent value)?  login,TResult Function( PushNotificationLogoutEvent value)?  logout,TResult Function( PushNotificationTokenRefreshedEvent value)?  tokenRefreshed,TResult Function( PushNotificationRegisterTokenEvent value)?  registerToken,TResult Function( PushNotificationNotificationReceivedEvent value)?  notificationReceived,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case PushNotificationInitializeEvent() when initialize != null:
+return initialize(_that);case PushNotificationLoginEvent() when login != null:
+return login(_that);case PushNotificationLogoutEvent() when logout != null:
+return logout(_that);case PushNotificationTokenRefreshedEvent() when tokenRefreshed != null:
+return tokenRefreshed(_that);case PushNotificationRegisterTokenEvent() when registerToken != null:
+return registerToken(_that);case PushNotificationNotificationReceivedEvent() when notificationReceived != null:
+return notificationReceived(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( PushNotificationInitializeEvent value)  initialize,required TResult Function( PushNotificationLoginEvent value)  login,required TResult Function( PushNotificationLogoutEvent value)  logout,required TResult Function( PushNotificationTokenRefreshedEvent value)  tokenRefreshed,required TResult Function( PushNotificationRegisterTokenEvent value)  registerToken,required TResult Function( PushNotificationNotificationReceivedEvent value)  notificationReceived,}){
+final _that = this;
+switch (_that) {
+case PushNotificationInitializeEvent():
+return initialize(_that);case PushNotificationLoginEvent():
+return login(_that);case PushNotificationLogoutEvent():
+return logout(_that);case PushNotificationTokenRefreshedEvent():
+return tokenRefreshed(_that);case PushNotificationRegisterTokenEvent():
+return registerToken(_that);case PushNotificationNotificationReceivedEvent():
+return notificationReceived(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( PushNotificationInitializeEvent value)?  initialize,TResult? Function( PushNotificationLoginEvent value)?  login,TResult? Function( PushNotificationLogoutEvent value)?  logout,TResult? Function( PushNotificationTokenRefreshedEvent value)?  tokenRefreshed,TResult? Function( PushNotificationRegisterTokenEvent value)?  registerToken,TResult? Function( PushNotificationNotificationReceivedEvent value)?  notificationReceived,}){
+final _that = this;
+switch (_that) {
+case PushNotificationInitializeEvent() when initialize != null:
+return initialize(_that);case PushNotificationLoginEvent() when login != null:
+return login(_that);case PushNotificationLogoutEvent() when logout != null:
+return logout(_that);case PushNotificationTokenRefreshedEvent() when tokenRefreshed != null:
+return tokenRefreshed(_that);case PushNotificationRegisterTokenEvent() when registerToken != null:
+return registerToken(_that);case PushNotificationNotificationReceivedEvent() when notificationReceived != null:
+return notificationReceived(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initialize,TResult Function( String userId)?  login,TResult Function( String apiEndPoint)?  logout,TResult Function( String token)?  tokenRefreshed,TResult Function( String apiEndPoint,  List<String> facilityIds,  UserRequestModel? userObject)?  registerToken,TResult Function( Map<String, dynamic> data)?  notificationReceived,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case PushNotificationInitializeEvent() when initialize != null:
+return initialize();case PushNotificationLoginEvent() when login != null:
+return login(_that.userId);case PushNotificationLogoutEvent() when logout != null:
+return logout(_that.apiEndPoint);case PushNotificationTokenRefreshedEvent() when tokenRefreshed != null:
+return tokenRefreshed(_that.token);case PushNotificationRegisterTokenEvent() when registerToken != null:
+return registerToken(_that.apiEndPoint,_that.facilityIds,_that.userObject);case PushNotificationNotificationReceivedEvent() when notificationReceived != null:
+return notificationReceived(_that.data);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initialize,required TResult Function( String userId)  login,required TResult Function( String apiEndPoint)  logout,required TResult Function( String token)  tokenRefreshed,required TResult Function( String apiEndPoint,  List<String> facilityIds,  UserRequestModel? userObject)  registerToken,required TResult Function( Map<String, dynamic> data)  notificationReceived,}) {final _that = this;
+switch (_that) {
+case PushNotificationInitializeEvent():
+return initialize();case PushNotificationLoginEvent():
+return login(_that.userId);case PushNotificationLogoutEvent():
+return logout(_that.apiEndPoint);case PushNotificationTokenRefreshedEvent():
+return tokenRefreshed(_that.token);case PushNotificationRegisterTokenEvent():
+return registerToken(_that.apiEndPoint,_that.facilityIds,_that.userObject);case PushNotificationNotificationReceivedEvent():
+return notificationReceived(_that.data);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initialize,TResult? Function( String userId)?  login,TResult? Function( String apiEndPoint)?  logout,TResult? Function( String token)?  tokenRefreshed,TResult? Function( String apiEndPoint,  List<String> facilityIds,  UserRequestModel? userObject)?  registerToken,TResult? Function( Map<String, dynamic> data)?  notificationReceived,}) {final _that = this;
+switch (_that) {
+case PushNotificationInitializeEvent() when initialize != null:
+return initialize();case PushNotificationLoginEvent() when login != null:
+return login(_that.userId);case PushNotificationLogoutEvent() when logout != null:
+return logout(_that.apiEndPoint);case PushNotificationTokenRefreshedEvent() when tokenRefreshed != null:
+return tokenRefreshed(_that.token);case PushNotificationRegisterTokenEvent() when registerToken != null:
+return registerToken(_that.apiEndPoint,_that.facilityIds,_that.userObject);case PushNotificationNotificationReceivedEvent() when notificationReceived != null:
+return notificationReceived(_that.data);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$PushNotificationInitializeEventImplCopyWith<$Res> {
-  factory _$$PushNotificationInitializeEventImplCopyWith(
-          _$PushNotificationInitializeEventImpl value,
-          $Res Function(_$PushNotificationInitializeEventImpl) then) =
-      __$$PushNotificationInitializeEventImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$PushNotificationInitializeEventImplCopyWithImpl<$Res>
-    extends _$PushNotificationEventCopyWithImpl<$Res,
-        _$PushNotificationInitializeEventImpl>
-    implements _$$PushNotificationInitializeEventImplCopyWith<$Res> {
-  __$$PushNotificationInitializeEventImplCopyWithImpl(
-      _$PushNotificationInitializeEventImpl _value,
-      $Res Function(_$PushNotificationInitializeEventImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$PushNotificationInitializeEventImpl
-    with DiagnosticableTreeMixin
-    implements PushNotificationInitializeEvent {
-  const _$PushNotificationInitializeEventImpl();
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationEvent.initialize()';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-        .add(DiagnosticsProperty('type', 'PushNotificationEvent.initialize'));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PushNotificationInitializeEventImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initialize,
-    required TResult Function(String userId) login,
-    required TResult Function(String apiEndPoint) logout,
-    required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)
-        registerToken,
-    required TResult Function(Map<String, dynamic> data) notificationReceived,
-  }) {
-    return initialize();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initialize,
-    TResult? Function(String userId)? login,
-    TResult? Function(String apiEndPoint)? logout,
-    TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult? Function(Map<String, dynamic> data)? notificationReceived,
-  }) {
-    return initialize?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function(String userId)? login,
-    TResult Function(String apiEndPoint)? logout,
-    TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult Function(Map<String, dynamic> data)? notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (initialize != null) {
-      return initialize();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitializeEvent value) initialize,
-    required TResult Function(PushNotificationLoginEvent value) login,
-    required TResult Function(PushNotificationLogoutEvent value) logout,
-    required TResult Function(PushNotificationTokenRefreshedEvent value)
-        tokenRefreshed,
-    required TResult Function(PushNotificationRegisterTokenEvent value)
-        registerToken,
-    required TResult Function(PushNotificationNotificationReceivedEvent value)
-        notificationReceived,
-  }) {
-    return initialize(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitializeEvent value)? initialize,
-    TResult? Function(PushNotificationLoginEvent value)? login,
-    TResult? Function(PushNotificationLogoutEvent value)? logout,
-    TResult? Function(PushNotificationTokenRefreshedEvent value)?
-        tokenRefreshed,
-    TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult? Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-  }) {
-    return initialize?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitializeEvent value)? initialize,
-    TResult Function(PushNotificationLoginEvent value)? login,
-    TResult Function(PushNotificationLogoutEvent value)? logout,
-    TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
-    TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (initialize != null) {
-      return initialize(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class PushNotificationInitializeEvent
-    implements PushNotificationEvent {
-  const factory PushNotificationInitializeEvent() =
-      _$PushNotificationInitializeEventImpl;
-}
-
-/// @nodoc
-abstract class _$$PushNotificationLoginEventImplCopyWith<$Res> {
-  factory _$$PushNotificationLoginEventImplCopyWith(
-          _$PushNotificationLoginEventImpl value,
-          $Res Function(_$PushNotificationLoginEventImpl) then) =
-      __$$PushNotificationLoginEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String userId});
-}
-
-/// @nodoc
-class __$$PushNotificationLoginEventImplCopyWithImpl<$Res>
-    extends _$PushNotificationEventCopyWithImpl<$Res,
-        _$PushNotificationLoginEventImpl>
-    implements _$$PushNotificationLoginEventImplCopyWith<$Res> {
-  __$$PushNotificationLoginEventImplCopyWithImpl(
-      _$PushNotificationLoginEventImpl _value,
-      $Res Function(_$PushNotificationLoginEventImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? userId = null,
-  }) {
-    return _then(_$PushNotificationLoginEventImpl(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$PushNotificationLoginEventImpl
-    with DiagnosticableTreeMixin
-    implements PushNotificationLoginEvent {
-  const _$PushNotificationLoginEventImpl({required this.userId});
 
-  @override
-  final String userId;
+class PushNotificationInitializeEvent with DiagnosticableTreeMixin implements PushNotificationEvent {
+  const PushNotificationInitializeEvent();
+  
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationEvent.login(userId: $userId)';
-  }
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'PushNotificationEvent.login'))
-      ..add(DiagnosticsProperty('userId', userId));
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PushNotificationLoginEventImpl &&
-            (identical(other.userId, userId) || other.userId == userId));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, userId);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PushNotificationLoginEventImplCopyWith<_$PushNotificationLoginEventImpl>
-      get copyWith => __$$PushNotificationLoginEventImplCopyWithImpl<
-          _$PushNotificationLoginEventImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initialize,
-    required TResult Function(String userId) login,
-    required TResult Function(String apiEndPoint) logout,
-    required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)
-        registerToken,
-    required TResult Function(Map<String, dynamic> data) notificationReceived,
-  }) {
-    return login(userId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initialize,
-    TResult? Function(String userId)? login,
-    TResult? Function(String apiEndPoint)? logout,
-    TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult? Function(Map<String, dynamic> data)? notificationReceived,
-  }) {
-    return login?.call(userId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function(String userId)? login,
-    TResult Function(String apiEndPoint)? logout,
-    TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult Function(Map<String, dynamic> data)? notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (login != null) {
-      return login(userId);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitializeEvent value) initialize,
-    required TResult Function(PushNotificationLoginEvent value) login,
-    required TResult Function(PushNotificationLogoutEvent value) logout,
-    required TResult Function(PushNotificationTokenRefreshedEvent value)
-        tokenRefreshed,
-    required TResult Function(PushNotificationRegisterTokenEvent value)
-        registerToken,
-    required TResult Function(PushNotificationNotificationReceivedEvent value)
-        notificationReceived,
-  }) {
-    return login(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitializeEvent value)? initialize,
-    TResult? Function(PushNotificationLoginEvent value)? login,
-    TResult? Function(PushNotificationLogoutEvent value)? logout,
-    TResult? Function(PushNotificationTokenRefreshedEvent value)?
-        tokenRefreshed,
-    TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult? Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-  }) {
-    return login?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitializeEvent value)? initialize,
-    TResult Function(PushNotificationLoginEvent value)? login,
-    TResult Function(PushNotificationLogoutEvent value)? logout,
-    TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
-    TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (login != null) {
-      return login(this);
-    }
-    return orElse();
-  }
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationEvent.initialize'))
+    ;
 }
 
-abstract class PushNotificationLoginEvent implements PushNotificationEvent {
-  const factory PushNotificationLoginEvent({required final String userId}) =
-      _$PushNotificationLoginEventImpl;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationInitializeEvent);
+}
 
-  String get userId;
-  @JsonKey(ignore: true)
-  _$$PushNotificationLoginEventImplCopyWith<_$PushNotificationLoginEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationEvent.initialize()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class PushNotificationLoginEvent with DiagnosticableTreeMixin implements PushNotificationEvent {
+  const PushNotificationLoginEvent({required this.userId});
+  
+
+ final  String userId;
+
+/// Create a copy of PushNotificationEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PushNotificationLoginEventCopyWith<PushNotificationLoginEvent> get copyWith => _$PushNotificationLoginEventCopyWithImpl<PushNotificationLoginEvent>(this, _$identity);
+
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationEvent.login'))
+    ..add(DiagnosticsProperty('userId', userId));
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationLoginEvent&&(identical(other.userId, userId) || other.userId == userId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,userId);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationEvent.login(userId: $userId)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$PushNotificationLogoutEventImplCopyWith<$Res> {
-  factory _$$PushNotificationLogoutEventImplCopyWith(
-          _$PushNotificationLogoutEventImpl value,
-          $Res Function(_$PushNotificationLogoutEventImpl) then) =
-      __$$PushNotificationLogoutEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String apiEndPoint});
+abstract mixin class $PushNotificationLoginEventCopyWith<$Res> implements $PushNotificationEventCopyWith<$Res> {
+  factory $PushNotificationLoginEventCopyWith(PushNotificationLoginEvent value, $Res Function(PushNotificationLoginEvent) _then) = _$PushNotificationLoginEventCopyWithImpl;
+@useResult
+$Res call({
+ String userId
+});
+
+
+
+
+}
+/// @nodoc
+class _$PushNotificationLoginEventCopyWithImpl<$Res>
+    implements $PushNotificationLoginEventCopyWith<$Res> {
+  _$PushNotificationLoginEventCopyWithImpl(this._self, this._then);
+
+  final PushNotificationLoginEvent _self;
+  final $Res Function(PushNotificationLoginEvent) _then;
+
+/// Create a copy of PushNotificationEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? userId = null,}) {
+  return _then(PushNotificationLoginEvent(
+userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$PushNotificationLogoutEventImplCopyWithImpl<$Res>
-    extends _$PushNotificationEventCopyWithImpl<$Res,
-        _$PushNotificationLogoutEventImpl>
-    implements _$$PushNotificationLogoutEventImplCopyWith<$Res> {
-  __$$PushNotificationLogoutEventImplCopyWithImpl(
-      _$PushNotificationLogoutEventImpl _value,
-      $Res Function(_$PushNotificationLogoutEventImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? apiEndPoint = null,
-  }) {
-    return _then(_$PushNotificationLogoutEventImpl(
-      apiEndPoint: null == apiEndPoint
-          ? _value.apiEndPoint
-          : apiEndPoint // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$PushNotificationLogoutEventImpl
-    with DiagnosticableTreeMixin
-    implements PushNotificationLogoutEvent {
-  const _$PushNotificationLogoutEventImpl({required this.apiEndPoint});
 
-  @override
-  final String apiEndPoint;
+class PushNotificationLogoutEvent with DiagnosticableTreeMixin implements PushNotificationEvent {
+  const PushNotificationLogoutEvent({required this.apiEndPoint});
+  
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationEvent.logout(apiEndPoint: $apiEndPoint)';
-  }
+ final  String apiEndPoint;
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'PushNotificationEvent.logout'))
-      ..add(DiagnosticsProperty('apiEndPoint', apiEndPoint));
-  }
+/// Create a copy of PushNotificationEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PushNotificationLogoutEventCopyWith<PushNotificationLogoutEvent> get copyWith => _$PushNotificationLogoutEventCopyWithImpl<PushNotificationLogoutEvent>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PushNotificationLogoutEventImpl &&
-            (identical(other.apiEndPoint, apiEndPoint) ||
-                other.apiEndPoint == apiEndPoint));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, apiEndPoint);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PushNotificationLogoutEventImplCopyWith<_$PushNotificationLogoutEventImpl>
-      get copyWith => __$$PushNotificationLogoutEventImplCopyWithImpl<
-          _$PushNotificationLogoutEventImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initialize,
-    required TResult Function(String userId) login,
-    required TResult Function(String apiEndPoint) logout,
-    required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)
-        registerToken,
-    required TResult Function(Map<String, dynamic> data) notificationReceived,
-  }) {
-    return logout(apiEndPoint);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initialize,
-    TResult? Function(String userId)? login,
-    TResult? Function(String apiEndPoint)? logout,
-    TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult? Function(Map<String, dynamic> data)? notificationReceived,
-  }) {
-    return logout?.call(apiEndPoint);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function(String userId)? login,
-    TResult Function(String apiEndPoint)? logout,
-    TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult Function(Map<String, dynamic> data)? notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (logout != null) {
-      return logout(apiEndPoint);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitializeEvent value) initialize,
-    required TResult Function(PushNotificationLoginEvent value) login,
-    required TResult Function(PushNotificationLogoutEvent value) logout,
-    required TResult Function(PushNotificationTokenRefreshedEvent value)
-        tokenRefreshed,
-    required TResult Function(PushNotificationRegisterTokenEvent value)
-        registerToken,
-    required TResult Function(PushNotificationNotificationReceivedEvent value)
-        notificationReceived,
-  }) {
-    return logout(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitializeEvent value)? initialize,
-    TResult? Function(PushNotificationLoginEvent value)? login,
-    TResult? Function(PushNotificationLogoutEvent value)? logout,
-    TResult? Function(PushNotificationTokenRefreshedEvent value)?
-        tokenRefreshed,
-    TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult? Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-  }) {
-    return logout?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitializeEvent value)? initialize,
-    TResult Function(PushNotificationLoginEvent value)? login,
-    TResult Function(PushNotificationLogoutEvent value)? logout,
-    TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
-    TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (logout != null) {
-      return logout(this);
-    }
-    return orElse();
-  }
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationEvent.logout'))
+    ..add(DiagnosticsProperty('apiEndPoint', apiEndPoint));
 }
 
-abstract class PushNotificationLogoutEvent implements PushNotificationEvent {
-  const factory PushNotificationLogoutEvent(
-      {required final String apiEndPoint}) = _$PushNotificationLogoutEventImpl;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationLogoutEvent&&(identical(other.apiEndPoint, apiEndPoint) || other.apiEndPoint == apiEndPoint));
+}
 
-  String get apiEndPoint;
-  @JsonKey(ignore: true)
-  _$$PushNotificationLogoutEventImplCopyWith<_$PushNotificationLogoutEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+
+@override
+int get hashCode => Object.hash(runtimeType,apiEndPoint);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationEvent.logout(apiEndPoint: $apiEndPoint)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$PushNotificationTokenRefreshedEventImplCopyWith<$Res> {
-  factory _$$PushNotificationTokenRefreshedEventImplCopyWith(
-          _$PushNotificationTokenRefreshedEventImpl value,
-          $Res Function(_$PushNotificationTokenRefreshedEventImpl) then) =
-      __$$PushNotificationTokenRefreshedEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String token});
+abstract mixin class $PushNotificationLogoutEventCopyWith<$Res> implements $PushNotificationEventCopyWith<$Res> {
+  factory $PushNotificationLogoutEventCopyWith(PushNotificationLogoutEvent value, $Res Function(PushNotificationLogoutEvent) _then) = _$PushNotificationLogoutEventCopyWithImpl;
+@useResult
+$Res call({
+ String apiEndPoint
+});
+
+
+
+
+}
+/// @nodoc
+class _$PushNotificationLogoutEventCopyWithImpl<$Res>
+    implements $PushNotificationLogoutEventCopyWith<$Res> {
+  _$PushNotificationLogoutEventCopyWithImpl(this._self, this._then);
+
+  final PushNotificationLogoutEvent _self;
+  final $Res Function(PushNotificationLogoutEvent) _then;
+
+/// Create a copy of PushNotificationEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? apiEndPoint = null,}) {
+  return _then(PushNotificationLogoutEvent(
+apiEndPoint: null == apiEndPoint ? _self.apiEndPoint : apiEndPoint // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$PushNotificationTokenRefreshedEventImplCopyWithImpl<$Res>
-    extends _$PushNotificationEventCopyWithImpl<$Res,
-        _$PushNotificationTokenRefreshedEventImpl>
-    implements _$$PushNotificationTokenRefreshedEventImplCopyWith<$Res> {
-  __$$PushNotificationTokenRefreshedEventImplCopyWithImpl(
-      _$PushNotificationTokenRefreshedEventImpl _value,
-      $Res Function(_$PushNotificationTokenRefreshedEventImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? token = null,
-  }) {
-    return _then(_$PushNotificationTokenRefreshedEventImpl(
-      token: null == token
-          ? _value.token
-          : token // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$PushNotificationTokenRefreshedEventImpl
-    with DiagnosticableTreeMixin
-    implements PushNotificationTokenRefreshedEvent {
-  const _$PushNotificationTokenRefreshedEventImpl({required this.token});
 
-  @override
-  final String token;
+class PushNotificationTokenRefreshedEvent with DiagnosticableTreeMixin implements PushNotificationEvent {
+  const PushNotificationTokenRefreshedEvent({required this.token});
+  
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationEvent.tokenRefreshed(token: $token)';
-  }
+ final  String token;
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'PushNotificationEvent.tokenRefreshed'))
-      ..add(DiagnosticsProperty('token', token));
-  }
+/// Create a copy of PushNotificationEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PushNotificationTokenRefreshedEventCopyWith<PushNotificationTokenRefreshedEvent> get copyWith => _$PushNotificationTokenRefreshedEventCopyWithImpl<PushNotificationTokenRefreshedEvent>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PushNotificationTokenRefreshedEventImpl &&
-            (identical(other.token, token) || other.token == token));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, token);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PushNotificationTokenRefreshedEventImplCopyWith<
-          _$PushNotificationTokenRefreshedEventImpl>
-      get copyWith => __$$PushNotificationTokenRefreshedEventImplCopyWithImpl<
-          _$PushNotificationTokenRefreshedEventImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initialize,
-    required TResult Function(String userId) login,
-    required TResult Function(String apiEndPoint) logout,
-    required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)
-        registerToken,
-    required TResult Function(Map<String, dynamic> data) notificationReceived,
-  }) {
-    return tokenRefreshed(token);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initialize,
-    TResult? Function(String userId)? login,
-    TResult? Function(String apiEndPoint)? logout,
-    TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult? Function(Map<String, dynamic> data)? notificationReceived,
-  }) {
-    return tokenRefreshed?.call(token);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function(String userId)? login,
-    TResult Function(String apiEndPoint)? logout,
-    TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult Function(Map<String, dynamic> data)? notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (tokenRefreshed != null) {
-      return tokenRefreshed(token);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitializeEvent value) initialize,
-    required TResult Function(PushNotificationLoginEvent value) login,
-    required TResult Function(PushNotificationLogoutEvent value) logout,
-    required TResult Function(PushNotificationTokenRefreshedEvent value)
-        tokenRefreshed,
-    required TResult Function(PushNotificationRegisterTokenEvent value)
-        registerToken,
-    required TResult Function(PushNotificationNotificationReceivedEvent value)
-        notificationReceived,
-  }) {
-    return tokenRefreshed(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitializeEvent value)? initialize,
-    TResult? Function(PushNotificationLoginEvent value)? login,
-    TResult? Function(PushNotificationLogoutEvent value)? logout,
-    TResult? Function(PushNotificationTokenRefreshedEvent value)?
-        tokenRefreshed,
-    TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult? Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-  }) {
-    return tokenRefreshed?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitializeEvent value)? initialize,
-    TResult Function(PushNotificationLoginEvent value)? login,
-    TResult Function(PushNotificationLogoutEvent value)? logout,
-    TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
-    TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (tokenRefreshed != null) {
-      return tokenRefreshed(this);
-    }
-    return orElse();
-  }
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationEvent.tokenRefreshed'))
+    ..add(DiagnosticsProperty('token', token));
 }
 
-abstract class PushNotificationTokenRefreshedEvent
-    implements PushNotificationEvent {
-  const factory PushNotificationTokenRefreshedEvent(
-          {required final String token}) =
-      _$PushNotificationTokenRefreshedEventImpl;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationTokenRefreshedEvent&&(identical(other.token, token) || other.token == token));
+}
 
-  String get token;
-  @JsonKey(ignore: true)
-  _$$PushNotificationTokenRefreshedEventImplCopyWith<
-          _$PushNotificationTokenRefreshedEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+
+@override
+int get hashCode => Object.hash(runtimeType,token);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationEvent.tokenRefreshed(token: $token)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$PushNotificationRegisterTokenEventImplCopyWith<$Res> {
-  factory _$$PushNotificationRegisterTokenEventImplCopyWith(
-          _$PushNotificationRegisterTokenEventImpl value,
-          $Res Function(_$PushNotificationRegisterTokenEventImpl) then) =
-      __$$PushNotificationRegisterTokenEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call(
-      {String apiEndPoint,
-      List<String> facilityIds,
-      UserRequestModel? userObject});
+abstract mixin class $PushNotificationTokenRefreshedEventCopyWith<$Res> implements $PushNotificationEventCopyWith<$Res> {
+  factory $PushNotificationTokenRefreshedEventCopyWith(PushNotificationTokenRefreshedEvent value, $Res Function(PushNotificationTokenRefreshedEvent) _then) = _$PushNotificationTokenRefreshedEventCopyWithImpl;
+@useResult
+$Res call({
+ String token
+});
 
-  $UserRequestModelCopyWith<$Res>? get userObject;
+
+
+
+}
+/// @nodoc
+class _$PushNotificationTokenRefreshedEventCopyWithImpl<$Res>
+    implements $PushNotificationTokenRefreshedEventCopyWith<$Res> {
+  _$PushNotificationTokenRefreshedEventCopyWithImpl(this._self, this._then);
+
+  final PushNotificationTokenRefreshedEvent _self;
+  final $Res Function(PushNotificationTokenRefreshedEvent) _then;
+
+/// Create a copy of PushNotificationEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? token = null,}) {
+  return _then(PushNotificationTokenRefreshedEvent(
+token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$PushNotificationRegisterTokenEventImplCopyWithImpl<$Res>
-    extends _$PushNotificationEventCopyWithImpl<$Res,
-        _$PushNotificationRegisterTokenEventImpl>
-    implements _$$PushNotificationRegisterTokenEventImplCopyWith<$Res> {
-  __$$PushNotificationRegisterTokenEventImplCopyWithImpl(
-      _$PushNotificationRegisterTokenEventImpl _value,
-      $Res Function(_$PushNotificationRegisterTokenEventImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? apiEndPoint = null,
-    Object? facilityIds = null,
-    Object? userObject = freezed,
-  }) {
-    return _then(_$PushNotificationRegisterTokenEventImpl(
-      apiEndPoint: null == apiEndPoint
-          ? _value.apiEndPoint
-          : apiEndPoint // ignore: cast_nullable_to_non_nullable
-              as String,
-      facilityIds: null == facilityIds
-          ? _value._facilityIds
-          : facilityIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      userObject: freezed == userObject
-          ? _value.userObject
-          : userObject // ignore: cast_nullable_to_non_nullable
-              as UserRequestModel?,
-    ));
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $UserRequestModelCopyWith<$Res>? get userObject {
-    if (_value.userObject == null) {
-      return null;
-    }
-
-    return $UserRequestModelCopyWith<$Res>(_value.userObject!, (value) {
-      return _then(_value.copyWith(userObject: value));
-    });
-  }
 }
 
 /// @nodoc
 
-class _$PushNotificationRegisterTokenEventImpl
-    with DiagnosticableTreeMixin
-    implements PushNotificationRegisterTokenEvent {
-  const _$PushNotificationRegisterTokenEventImpl(
-      {required this.apiEndPoint,
-      required final List<String> facilityIds,
-      required this.userObject})
-      : _facilityIds = facilityIds;
 
-  @override
-  final String apiEndPoint;
-  final List<String> _facilityIds;
-  @override
-  List<String> get facilityIds {
-    if (_facilityIds is EqualUnmodifiableListView) return _facilityIds;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_facilityIds);
-  }
+class PushNotificationRegisterTokenEvent with DiagnosticableTreeMixin implements PushNotificationEvent {
+  const PushNotificationRegisterTokenEvent({required this.apiEndPoint, required final  List<String> facilityIds, required this.userObject}): _facilityIds = facilityIds;
+  
 
-  @override
-  final UserRequestModel? userObject;
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationEvent.registerToken(apiEndPoint: $apiEndPoint, facilityIds: $facilityIds, userObject: $userObject)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'PushNotificationEvent.registerToken'))
-      ..add(DiagnosticsProperty('apiEndPoint', apiEndPoint))
-      ..add(DiagnosticsProperty('facilityIds', facilityIds))
-      ..add(DiagnosticsProperty('userObject', userObject));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PushNotificationRegisterTokenEventImpl &&
-            (identical(other.apiEndPoint, apiEndPoint) ||
-                other.apiEndPoint == apiEndPoint) &&
-            const DeepCollectionEquality()
-                .equals(other._facilityIds, _facilityIds) &&
-            (identical(other.userObject, userObject) ||
-                other.userObject == userObject));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, apiEndPoint,
-      const DeepCollectionEquality().hash(_facilityIds), userObject);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PushNotificationRegisterTokenEventImplCopyWith<
-          _$PushNotificationRegisterTokenEventImpl>
-      get copyWith => __$$PushNotificationRegisterTokenEventImplCopyWithImpl<
-          _$PushNotificationRegisterTokenEventImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initialize,
-    required TResult Function(String userId) login,
-    required TResult Function(String apiEndPoint) logout,
-    required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)
-        registerToken,
-    required TResult Function(Map<String, dynamic> data) notificationReceived,
-  }) {
-    return registerToken(apiEndPoint, facilityIds, userObject);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initialize,
-    TResult? Function(String userId)? login,
-    TResult? Function(String apiEndPoint)? logout,
-    TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult? Function(Map<String, dynamic> data)? notificationReceived,
-  }) {
-    return registerToken?.call(apiEndPoint, facilityIds, userObject);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function(String userId)? login,
-    TResult Function(String apiEndPoint)? logout,
-    TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult Function(Map<String, dynamic> data)? notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (registerToken != null) {
-      return registerToken(apiEndPoint, facilityIds, userObject);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitializeEvent value) initialize,
-    required TResult Function(PushNotificationLoginEvent value) login,
-    required TResult Function(PushNotificationLogoutEvent value) logout,
-    required TResult Function(PushNotificationTokenRefreshedEvent value)
-        tokenRefreshed,
-    required TResult Function(PushNotificationRegisterTokenEvent value)
-        registerToken,
-    required TResult Function(PushNotificationNotificationReceivedEvent value)
-        notificationReceived,
-  }) {
-    return registerToken(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitializeEvent value)? initialize,
-    TResult? Function(PushNotificationLoginEvent value)? login,
-    TResult? Function(PushNotificationLogoutEvent value)? logout,
-    TResult? Function(PushNotificationTokenRefreshedEvent value)?
-        tokenRefreshed,
-    TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult? Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-  }) {
-    return registerToken?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitializeEvent value)? initialize,
-    TResult Function(PushNotificationLoginEvent value)? login,
-    TResult Function(PushNotificationLogoutEvent value)? logout,
-    TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
-    TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (registerToken != null) {
-      return registerToken(this);
-    }
-    return orElse();
-  }
+ final  String apiEndPoint;
+ final  List<String> _facilityIds;
+ List<String> get facilityIds {
+  if (_facilityIds is EqualUnmodifiableListView) return _facilityIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_facilityIds);
 }
 
-abstract class PushNotificationRegisterTokenEvent
-    implements PushNotificationEvent {
-  const factory PushNotificationRegisterTokenEvent(
-          {required final String apiEndPoint,
-          required final List<String> facilityIds,
-          required final UserRequestModel? userObject}) =
-      _$PushNotificationRegisterTokenEventImpl;
+ final  UserRequestModel? userObject;
 
-  String get apiEndPoint;
-  List<String> get facilityIds;
-  UserRequestModel? get userObject;
-  @JsonKey(ignore: true)
-  _$$PushNotificationRegisterTokenEventImplCopyWith<
-          _$PushNotificationRegisterTokenEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+/// Create a copy of PushNotificationEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PushNotificationRegisterTokenEventCopyWith<PushNotificationRegisterTokenEvent> get copyWith => _$PushNotificationRegisterTokenEventCopyWithImpl<PushNotificationRegisterTokenEvent>(this, _$identity);
+
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationEvent.registerToken'))
+    ..add(DiagnosticsProperty('apiEndPoint', apiEndPoint))..add(DiagnosticsProperty('facilityIds', facilityIds))..add(DiagnosticsProperty('userObject', userObject));
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationRegisterTokenEvent&&(identical(other.apiEndPoint, apiEndPoint) || other.apiEndPoint == apiEndPoint)&&const DeepCollectionEquality().equals(other._facilityIds, _facilityIds)&&(identical(other.userObject, userObject) || other.userObject == userObject));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,apiEndPoint,const DeepCollectionEquality().hash(_facilityIds),userObject);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationEvent.registerToken(apiEndPoint: $apiEndPoint, facilityIds: $facilityIds, userObject: $userObject)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$PushNotificationNotificationReceivedEventImplCopyWith<$Res> {
-  factory _$$PushNotificationNotificationReceivedEventImplCopyWith(
-          _$PushNotificationNotificationReceivedEventImpl value,
-          $Res Function(_$PushNotificationNotificationReceivedEventImpl) then) =
-      __$$PushNotificationNotificationReceivedEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({Map<String, dynamic> data});
+abstract mixin class $PushNotificationRegisterTokenEventCopyWith<$Res> implements $PushNotificationEventCopyWith<$Res> {
+  factory $PushNotificationRegisterTokenEventCopyWith(PushNotificationRegisterTokenEvent value, $Res Function(PushNotificationRegisterTokenEvent) _then) = _$PushNotificationRegisterTokenEventCopyWithImpl;
+@useResult
+$Res call({
+ String apiEndPoint, List<String> facilityIds, UserRequestModel? userObject
+});
+
+
+$UserRequestModelCopyWith<$Res>? get userObject;
+
+}
+/// @nodoc
+class _$PushNotificationRegisterTokenEventCopyWithImpl<$Res>
+    implements $PushNotificationRegisterTokenEventCopyWith<$Res> {
+  _$PushNotificationRegisterTokenEventCopyWithImpl(this._self, this._then);
+
+  final PushNotificationRegisterTokenEvent _self;
+  final $Res Function(PushNotificationRegisterTokenEvent) _then;
+
+/// Create a copy of PushNotificationEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? apiEndPoint = null,Object? facilityIds = null,Object? userObject = freezed,}) {
+  return _then(PushNotificationRegisterTokenEvent(
+apiEndPoint: null == apiEndPoint ? _self.apiEndPoint : apiEndPoint // ignore: cast_nullable_to_non_nullable
+as String,facilityIds: null == facilityIds ? _self._facilityIds : facilityIds // ignore: cast_nullable_to_non_nullable
+as List<String>,userObject: freezed == userObject ? _self.userObject : userObject // ignore: cast_nullable_to_non_nullable
+as UserRequestModel?,
+  ));
 }
 
-/// @nodoc
-class __$$PushNotificationNotificationReceivedEventImplCopyWithImpl<$Res>
-    extends _$PushNotificationEventCopyWithImpl<$Res,
-        _$PushNotificationNotificationReceivedEventImpl>
-    implements _$$PushNotificationNotificationReceivedEventImplCopyWith<$Res> {
-  __$$PushNotificationNotificationReceivedEventImplCopyWithImpl(
-      _$PushNotificationNotificationReceivedEventImpl _value,
-      $Res Function(_$PushNotificationNotificationReceivedEventImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? data = null,
-  }) {
-    return _then(_$PushNotificationNotificationReceivedEventImpl(
-      data: null == data
-          ? _value._data
-          : data // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-    ));
+/// Create a copy of PushNotificationEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserRequestModelCopyWith<$Res>? get userObject {
+    if (_self.userObject == null) {
+    return null;
   }
+
+  return $UserRequestModelCopyWith<$Res>(_self.userObject!, (value) {
+    return _then(_self.copyWith(userObject: value));
+  });
+}
 }
 
 /// @nodoc
 
-class _$PushNotificationNotificationReceivedEventImpl
-    with DiagnosticableTreeMixin
-    implements PushNotificationNotificationReceivedEvent {
-  const _$PushNotificationNotificationReceivedEventImpl(
-      {required final Map<String, dynamic> data})
-      : _data = data;
 
-  final Map<String, dynamic> _data;
-  @override
-  Map<String, dynamic> get data {
-    if (_data is EqualUnmodifiableMapView) return _data;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_data);
-  }
+class PushNotificationNotificationReceivedEvent with DiagnosticableTreeMixin implements PushNotificationEvent {
+  const PushNotificationNotificationReceivedEvent({required final  Map<String, dynamic> data}): _data = data;
+  
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationEvent.notificationReceived(data: $data)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty(
-          'type', 'PushNotificationEvent.notificationReceived'))
-      ..add(DiagnosticsProperty('data', data));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PushNotificationNotificationReceivedEventImpl &&
-            const DeepCollectionEquality().equals(other._data, _data));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_data));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PushNotificationNotificationReceivedEventImplCopyWith<
-          _$PushNotificationNotificationReceivedEventImpl>
-      get copyWith =>
-          __$$PushNotificationNotificationReceivedEventImplCopyWithImpl<
-                  _$PushNotificationNotificationReceivedEventImpl>(
-              this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initialize,
-    required TResult Function(String userId) login,
-    required TResult Function(String apiEndPoint) logout,
-    required TResult Function(String token) tokenRefreshed,
-    required TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)
-        registerToken,
-    required TResult Function(Map<String, dynamic> data) notificationReceived,
-  }) {
-    return notificationReceived(data);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initialize,
-    TResult? Function(String userId)? login,
-    TResult? Function(String apiEndPoint)? logout,
-    TResult? Function(String token)? tokenRefreshed,
-    TResult? Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult? Function(Map<String, dynamic> data)? notificationReceived,
-  }) {
-    return notificationReceived?.call(data);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function(String userId)? login,
-    TResult Function(String apiEndPoint)? logout,
-    TResult Function(String token)? tokenRefreshed,
-    TResult Function(String apiEndPoint, List<String> facilityIds,
-            UserRequestModel? userObject)?
-        registerToken,
-    TResult Function(Map<String, dynamic> data)? notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (notificationReceived != null) {
-      return notificationReceived(data);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitializeEvent value) initialize,
-    required TResult Function(PushNotificationLoginEvent value) login,
-    required TResult Function(PushNotificationLogoutEvent value) logout,
-    required TResult Function(PushNotificationTokenRefreshedEvent value)
-        tokenRefreshed,
-    required TResult Function(PushNotificationRegisterTokenEvent value)
-        registerToken,
-    required TResult Function(PushNotificationNotificationReceivedEvent value)
-        notificationReceived,
-  }) {
-    return notificationReceived(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitializeEvent value)? initialize,
-    TResult? Function(PushNotificationLoginEvent value)? login,
-    TResult? Function(PushNotificationLogoutEvent value)? logout,
-    TResult? Function(PushNotificationTokenRefreshedEvent value)?
-        tokenRefreshed,
-    TResult? Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult? Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-  }) {
-    return notificationReceived?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitializeEvent value)? initialize,
-    TResult Function(PushNotificationLoginEvent value)? login,
-    TResult Function(PushNotificationLogoutEvent value)? logout,
-    TResult Function(PushNotificationTokenRefreshedEvent value)? tokenRefreshed,
-    TResult Function(PushNotificationRegisterTokenEvent value)? registerToken,
-    TResult Function(PushNotificationNotificationReceivedEvent value)?
-        notificationReceived,
-    required TResult orElse(),
-  }) {
-    if (notificationReceived != null) {
-      return notificationReceived(this);
-    }
-    return orElse();
-  }
+ final  Map<String, dynamic> _data;
+ Map<String, dynamic> get data {
+  if (_data is EqualUnmodifiableMapView) return _data;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_data);
 }
 
-abstract class PushNotificationNotificationReceivedEvent
-    implements PushNotificationEvent {
-  const factory PushNotificationNotificationReceivedEvent(
-          {required final Map<String, dynamic> data}) =
-      _$PushNotificationNotificationReceivedEventImpl;
 
-  Map<String, dynamic> get data;
-  @JsonKey(ignore: true)
-  _$$PushNotificationNotificationReceivedEventImplCopyWith<
-          _$PushNotificationNotificationReceivedEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+/// Create a copy of PushNotificationEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PushNotificationNotificationReceivedEventCopyWith<PushNotificationNotificationReceivedEvent> get copyWith => _$PushNotificationNotificationReceivedEventCopyWithImpl<PushNotificationNotificationReceivedEvent>(this, _$identity);
+
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationEvent.notificationReceived'))
+    ..add(DiagnosticsProperty('data', data));
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationNotificationReceivedEvent&&const DeepCollectionEquality().equals(other._data, _data));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data));
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationEvent.notificationReceived(data: $data)';
+}
+
+
 }
 
 /// @nodoc
-mixin _$PushNotificationState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(String? fcmToken) initialized,
-    required TResult Function(Map<String, dynamic> data) notificationTapped,
-    required TResult Function(String error) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function(String? fcmToken)? initialized,
-    TResult? Function(Map<String, dynamic> data)? notificationTapped,
-    TResult? Function(String error)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(String? fcmToken)? initialized,
-    TResult Function(Map<String, dynamic> data)? notificationTapped,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitialState value) initial,
-    required TResult Function(PushNotificationInitializedState value)
-        initialized,
-    required TResult Function(PushNotificationTappedState value)
-        notificationTapped,
-    required TResult Function(PushNotificationErrorState value) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitialState value)? initial,
-    TResult? Function(PushNotificationInitializedState value)? initialized,
-    TResult? Function(PushNotificationTappedState value)? notificationTapped,
-    TResult? Function(PushNotificationErrorState value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitialState value)? initial,
-    TResult Function(PushNotificationInitializedState value)? initialized,
-    TResult Function(PushNotificationTappedState value)? notificationTapped,
-    TResult Function(PushNotificationErrorState value)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+abstract mixin class $PushNotificationNotificationReceivedEventCopyWith<$Res> implements $PushNotificationEventCopyWith<$Res> {
+  factory $PushNotificationNotificationReceivedEventCopyWith(PushNotificationNotificationReceivedEvent value, $Res Function(PushNotificationNotificationReceivedEvent) _then) = _$PushNotificationNotificationReceivedEventCopyWithImpl;
+@useResult
+$Res call({
+ Map<String, dynamic> data
+});
+
+
+
+
+}
+/// @nodoc
+class _$PushNotificationNotificationReceivedEventCopyWithImpl<$Res>
+    implements $PushNotificationNotificationReceivedEventCopyWith<$Res> {
+  _$PushNotificationNotificationReceivedEventCopyWithImpl(this._self, this._then);
+
+  final PushNotificationNotificationReceivedEvent _self;
+  final $Res Function(PushNotificationNotificationReceivedEvent) _then;
+
+/// Create a copy of PushNotificationEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? data = null,}) {
+  return _then(PushNotificationNotificationReceivedEvent(
+data: null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>,
+  ));
+}
+
+
 }
 
 /// @nodoc
-abstract class $PushNotificationStateCopyWith<$Res> {
-  factory $PushNotificationStateCopyWith(PushNotificationState value,
-          $Res Function(PushNotificationState) then) =
-      _$PushNotificationStateCopyWithImpl<$Res, PushNotificationState>;
+mixin _$PushNotificationState implements DiagnosticableTreeMixin {
+
+
+
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationState'))
+    ;
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationState()';
+}
+
+
 }
 
 /// @nodoc
-class _$PushNotificationStateCopyWithImpl<$Res,
-        $Val extends PushNotificationState>
-    implements $PushNotificationStateCopyWith<$Res> {
-  _$PushNotificationStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+class $PushNotificationStateCopyWith<$Res>  {
+$PushNotificationStateCopyWith(PushNotificationState _, $Res Function(PushNotificationState) __);
 }
 
-/// @nodoc
-abstract class _$$PushNotificationInitialStateImplCopyWith<$Res> {
-  factory _$$PushNotificationInitialStateImplCopyWith(
-          _$PushNotificationInitialStateImpl value,
-          $Res Function(_$PushNotificationInitialStateImpl) then) =
-      __$$PushNotificationInitialStateImplCopyWithImpl<$Res>;
+
+/// Adds pattern-matching-related methods to [PushNotificationState].
+extension PushNotificationStatePatterns on PushNotificationState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( PushNotificationInitialState value)?  initial,TResult Function( PushNotificationInitializedState value)?  initialized,TResult Function( PushNotificationTappedState value)?  notificationTapped,TResult Function( PushNotificationErrorState value)?  error,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case PushNotificationInitialState() when initial != null:
+return initial(_that);case PushNotificationInitializedState() when initialized != null:
+return initialized(_that);case PushNotificationTappedState() when notificationTapped != null:
+return notificationTapped(_that);case PushNotificationErrorState() when error != null:
+return error(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( PushNotificationInitialState value)  initial,required TResult Function( PushNotificationInitializedState value)  initialized,required TResult Function( PushNotificationTappedState value)  notificationTapped,required TResult Function( PushNotificationErrorState value)  error,}){
+final _that = this;
+switch (_that) {
+case PushNotificationInitialState():
+return initial(_that);case PushNotificationInitializedState():
+return initialized(_that);case PushNotificationTappedState():
+return notificationTapped(_that);case PushNotificationErrorState():
+return error(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( PushNotificationInitialState value)?  initial,TResult? Function( PushNotificationInitializedState value)?  initialized,TResult? Function( PushNotificationTappedState value)?  notificationTapped,TResult? Function( PushNotificationErrorState value)?  error,}){
+final _that = this;
+switch (_that) {
+case PushNotificationInitialState() when initial != null:
+return initial(_that);case PushNotificationInitializedState() when initialized != null:
+return initialized(_that);case PushNotificationTappedState() when notificationTapped != null:
+return notificationTapped(_that);case PushNotificationErrorState() when error != null:
+return error(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( String? fcmToken)?  initialized,TResult Function( Map<String, dynamic> data)?  notificationTapped,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case PushNotificationInitialState() when initial != null:
+return initial();case PushNotificationInitializedState() when initialized != null:
+return initialized(_that.fcmToken);case PushNotificationTappedState() when notificationTapped != null:
+return notificationTapped(_that.data);case PushNotificationErrorState() when error != null:
+return error(_that.error);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( String? fcmToken)  initialized,required TResult Function( Map<String, dynamic> data)  notificationTapped,required TResult Function( String error)  error,}) {final _that = this;
+switch (_that) {
+case PushNotificationInitialState():
+return initial();case PushNotificationInitializedState():
+return initialized(_that.fcmToken);case PushNotificationTappedState():
+return notificationTapped(_that.data);case PushNotificationErrorState():
+return error(_that.error);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( String? fcmToken)?  initialized,TResult? Function( Map<String, dynamic> data)?  notificationTapped,TResult? Function( String error)?  error,}) {final _that = this;
+switch (_that) {
+case PushNotificationInitialState() when initial != null:
+return initial();case PushNotificationInitializedState() when initialized != null:
+return initialized(_that.fcmToken);case PushNotificationTappedState() when notificationTapped != null:
+return notificationTapped(_that.data);case PushNotificationErrorState() when error != null:
+return error(_that.error);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-class __$$PushNotificationInitialStateImplCopyWithImpl<$Res>
-    extends _$PushNotificationStateCopyWithImpl<$Res,
-        _$PushNotificationInitialStateImpl>
-    implements _$$PushNotificationInitialStateImplCopyWith<$Res> {
-  __$$PushNotificationInitialStateImplCopyWithImpl(
-      _$PushNotificationInitialStateImpl _value,
-      $Res Function(_$PushNotificationInitialStateImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$PushNotificationInitialStateImpl
-    with DiagnosticableTreeMixin
-    implements PushNotificationInitialState {
-  const _$PushNotificationInitialStateImpl();
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationState.initial()';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-        .add(DiagnosticsProperty('type', 'PushNotificationState.initial'));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PushNotificationInitialStateImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(String? fcmToken) initialized,
-    required TResult Function(Map<String, dynamic> data) notificationTapped,
-    required TResult Function(String error) error,
-  }) {
-    return initial();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function(String? fcmToken)? initialized,
-    TResult? Function(Map<String, dynamic> data)? notificationTapped,
-    TResult? Function(String error)? error,
-  }) {
-    return initial?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(String? fcmToken)? initialized,
-    TResult Function(Map<String, dynamic> data)? notificationTapped,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitialState value) initial,
-    required TResult Function(PushNotificationInitializedState value)
-        initialized,
-    required TResult Function(PushNotificationTappedState value)
-        notificationTapped,
-    required TResult Function(PushNotificationErrorState value) error,
-  }) {
-    return initial(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitialState value)? initial,
-    TResult? Function(PushNotificationInitializedState value)? initialized,
-    TResult? Function(PushNotificationTappedState value)? notificationTapped,
-    TResult? Function(PushNotificationErrorState value)? error,
-  }) {
-    return initial?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitialState value)? initial,
-    TResult Function(PushNotificationInitializedState value)? initialized,
-    TResult Function(PushNotificationTappedState value)? notificationTapped,
-    TResult Function(PushNotificationErrorState value)? error,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class PushNotificationInitialState implements PushNotificationState {
-  const factory PushNotificationInitialState() =
-      _$PushNotificationInitialStateImpl;
-}
-
-/// @nodoc
-abstract class _$$PushNotificationInitializedStateImplCopyWith<$Res> {
-  factory _$$PushNotificationInitializedStateImplCopyWith(
-          _$PushNotificationInitializedStateImpl value,
-          $Res Function(_$PushNotificationInitializedStateImpl) then) =
-      __$$PushNotificationInitializedStateImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String? fcmToken});
-}
-
-/// @nodoc
-class __$$PushNotificationInitializedStateImplCopyWithImpl<$Res>
-    extends _$PushNotificationStateCopyWithImpl<$Res,
-        _$PushNotificationInitializedStateImpl>
-    implements _$$PushNotificationInitializedStateImplCopyWith<$Res> {
-  __$$PushNotificationInitializedStateImplCopyWithImpl(
-      _$PushNotificationInitializedStateImpl _value,
-      $Res Function(_$PushNotificationInitializedStateImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? fcmToken = freezed,
-  }) {
-    return _then(_$PushNotificationInitializedStateImpl(
-      fcmToken: freezed == fcmToken
-          ? _value.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$PushNotificationInitializedStateImpl
-    with DiagnosticableTreeMixin
-    implements PushNotificationInitializedState {
-  const _$PushNotificationInitializedStateImpl({this.fcmToken});
 
-  @override
-  final String? fcmToken;
+class PushNotificationInitialState with DiagnosticableTreeMixin implements PushNotificationState {
+  const PushNotificationInitialState();
+  
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationState.initialized(fcmToken: $fcmToken)';
-  }
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'PushNotificationState.initialized'))
-      ..add(DiagnosticsProperty('fcmToken', fcmToken));
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PushNotificationInitializedStateImpl &&
-            (identical(other.fcmToken, fcmToken) ||
-                other.fcmToken == fcmToken));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, fcmToken);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PushNotificationInitializedStateImplCopyWith<
-          _$PushNotificationInitializedStateImpl>
-      get copyWith => __$$PushNotificationInitializedStateImplCopyWithImpl<
-          _$PushNotificationInitializedStateImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(String? fcmToken) initialized,
-    required TResult Function(Map<String, dynamic> data) notificationTapped,
-    required TResult Function(String error) error,
-  }) {
-    return initialized(fcmToken);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function(String? fcmToken)? initialized,
-    TResult? Function(Map<String, dynamic> data)? notificationTapped,
-    TResult? Function(String error)? error,
-  }) {
-    return initialized?.call(fcmToken);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(String? fcmToken)? initialized,
-    TResult Function(Map<String, dynamic> data)? notificationTapped,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (initialized != null) {
-      return initialized(fcmToken);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitialState value) initial,
-    required TResult Function(PushNotificationInitializedState value)
-        initialized,
-    required TResult Function(PushNotificationTappedState value)
-        notificationTapped,
-    required TResult Function(PushNotificationErrorState value) error,
-  }) {
-    return initialized(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitialState value)? initial,
-    TResult? Function(PushNotificationInitializedState value)? initialized,
-    TResult? Function(PushNotificationTappedState value)? notificationTapped,
-    TResult? Function(PushNotificationErrorState value)? error,
-  }) {
-    return initialized?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitialState value)? initial,
-    TResult Function(PushNotificationInitializedState value)? initialized,
-    TResult Function(PushNotificationTappedState value)? notificationTapped,
-    TResult Function(PushNotificationErrorState value)? error,
-    required TResult orElse(),
-  }) {
-    if (initialized != null) {
-      return initialized(this);
-    }
-    return orElse();
-  }
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationState.initial'))
+    ;
 }
 
-abstract class PushNotificationInitializedState
-    implements PushNotificationState {
-  const factory PushNotificationInitializedState({final String? fcmToken}) =
-      _$PushNotificationInitializedStateImpl;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationInitialState);
+}
 
-  String? get fcmToken;
-  @JsonKey(ignore: true)
-  _$$PushNotificationInitializedStateImplCopyWith<
-          _$PushNotificationInitializedStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationState.initial()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class PushNotificationInitializedState with DiagnosticableTreeMixin implements PushNotificationState {
+  const PushNotificationInitializedState({this.fcmToken});
+  
+
+ final  String? fcmToken;
+
+/// Create a copy of PushNotificationState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PushNotificationInitializedStateCopyWith<PushNotificationInitializedState> get copyWith => _$PushNotificationInitializedStateCopyWithImpl<PushNotificationInitializedState>(this, _$identity);
+
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationState.initialized'))
+    ..add(DiagnosticsProperty('fcmToken', fcmToken));
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationInitializedState&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,fcmToken);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationState.initialized(fcmToken: $fcmToken)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$PushNotificationTappedStateImplCopyWith<$Res> {
-  factory _$$PushNotificationTappedStateImplCopyWith(
-          _$PushNotificationTappedStateImpl value,
-          $Res Function(_$PushNotificationTappedStateImpl) then) =
-      __$$PushNotificationTappedStateImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({Map<String, dynamic> data});
+abstract mixin class $PushNotificationInitializedStateCopyWith<$Res> implements $PushNotificationStateCopyWith<$Res> {
+  factory $PushNotificationInitializedStateCopyWith(PushNotificationInitializedState value, $Res Function(PushNotificationInitializedState) _then) = _$PushNotificationInitializedStateCopyWithImpl;
+@useResult
+$Res call({
+ String? fcmToken
+});
+
+
+
+
+}
+/// @nodoc
+class _$PushNotificationInitializedStateCopyWithImpl<$Res>
+    implements $PushNotificationInitializedStateCopyWith<$Res> {
+  _$PushNotificationInitializedStateCopyWithImpl(this._self, this._then);
+
+  final PushNotificationInitializedState _self;
+  final $Res Function(PushNotificationInitializedState) _then;
+
+/// Create a copy of PushNotificationState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? fcmToken = freezed,}) {
+  return _then(PushNotificationInitializedState(
+fcmToken: freezed == fcmToken ? _self.fcmToken : fcmToken // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-class __$$PushNotificationTappedStateImplCopyWithImpl<$Res>
-    extends _$PushNotificationStateCopyWithImpl<$Res,
-        _$PushNotificationTappedStateImpl>
-    implements _$$PushNotificationTappedStateImplCopyWith<$Res> {
-  __$$PushNotificationTappedStateImplCopyWithImpl(
-      _$PushNotificationTappedStateImpl _value,
-      $Res Function(_$PushNotificationTappedStateImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? data = null,
-  }) {
-    return _then(_$PushNotificationTappedStateImpl(
-      data: null == data
-          ? _value._data
-          : data // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$PushNotificationTappedStateImpl
-    with DiagnosticableTreeMixin
-    implements PushNotificationTappedState {
-  const _$PushNotificationTappedStateImpl(
-      {required final Map<String, dynamic> data})
-      : _data = data;
 
-  final Map<String, dynamic> _data;
-  @override
-  Map<String, dynamic> get data {
-    if (_data is EqualUnmodifiableMapView) return _data;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_data);
-  }
+class PushNotificationTappedState with DiagnosticableTreeMixin implements PushNotificationState {
+  const PushNotificationTappedState({required final  Map<String, dynamic> data}): _data = data;
+  
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationState.notificationTapped(data: $data)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty(
-          'type', 'PushNotificationState.notificationTapped'))
-      ..add(DiagnosticsProperty('data', data));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PushNotificationTappedStateImpl &&
-            const DeepCollectionEquality().equals(other._data, _data));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_data));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PushNotificationTappedStateImplCopyWith<_$PushNotificationTappedStateImpl>
-      get copyWith => __$$PushNotificationTappedStateImplCopyWithImpl<
-          _$PushNotificationTappedStateImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(String? fcmToken) initialized,
-    required TResult Function(Map<String, dynamic> data) notificationTapped,
-    required TResult Function(String error) error,
-  }) {
-    return notificationTapped(data);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function(String? fcmToken)? initialized,
-    TResult? Function(Map<String, dynamic> data)? notificationTapped,
-    TResult? Function(String error)? error,
-  }) {
-    return notificationTapped?.call(data);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(String? fcmToken)? initialized,
-    TResult Function(Map<String, dynamic> data)? notificationTapped,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (notificationTapped != null) {
-      return notificationTapped(data);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitialState value) initial,
-    required TResult Function(PushNotificationInitializedState value)
-        initialized,
-    required TResult Function(PushNotificationTappedState value)
-        notificationTapped,
-    required TResult Function(PushNotificationErrorState value) error,
-  }) {
-    return notificationTapped(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitialState value)? initial,
-    TResult? Function(PushNotificationInitializedState value)? initialized,
-    TResult? Function(PushNotificationTappedState value)? notificationTapped,
-    TResult? Function(PushNotificationErrorState value)? error,
-  }) {
-    return notificationTapped?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitialState value)? initial,
-    TResult Function(PushNotificationInitializedState value)? initialized,
-    TResult Function(PushNotificationTappedState value)? notificationTapped,
-    TResult Function(PushNotificationErrorState value)? error,
-    required TResult orElse(),
-  }) {
-    if (notificationTapped != null) {
-      return notificationTapped(this);
-    }
-    return orElse();
-  }
+ final  Map<String, dynamic> _data;
+ Map<String, dynamic> get data {
+  if (_data is EqualUnmodifiableMapView) return _data;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_data);
 }
 
-abstract class PushNotificationTappedState implements PushNotificationState {
-  const factory PushNotificationTappedState(
-          {required final Map<String, dynamic> data}) =
-      _$PushNotificationTappedStateImpl;
 
-  Map<String, dynamic> get data;
-  @JsonKey(ignore: true)
-  _$$PushNotificationTappedStateImplCopyWith<_$PushNotificationTappedStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+/// Create a copy of PushNotificationState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PushNotificationTappedStateCopyWith<PushNotificationTappedState> get copyWith => _$PushNotificationTappedStateCopyWithImpl<PushNotificationTappedState>(this, _$identity);
+
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationState.notificationTapped'))
+    ..add(DiagnosticsProperty('data', data));
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationTappedState&&const DeepCollectionEquality().equals(other._data, _data));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data));
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationState.notificationTapped(data: $data)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$PushNotificationErrorStateImplCopyWith<$Res> {
-  factory _$$PushNotificationErrorStateImplCopyWith(
-          _$PushNotificationErrorStateImpl value,
-          $Res Function(_$PushNotificationErrorStateImpl) then) =
-      __$$PushNotificationErrorStateImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String error});
+abstract mixin class $PushNotificationTappedStateCopyWith<$Res> implements $PushNotificationStateCopyWith<$Res> {
+  factory $PushNotificationTappedStateCopyWith(PushNotificationTappedState value, $Res Function(PushNotificationTappedState) _then) = _$PushNotificationTappedStateCopyWithImpl;
+@useResult
+$Res call({
+ Map<String, dynamic> data
+});
+
+
+
+
+}
+/// @nodoc
+class _$PushNotificationTappedStateCopyWithImpl<$Res>
+    implements $PushNotificationTappedStateCopyWith<$Res> {
+  _$PushNotificationTappedStateCopyWithImpl(this._self, this._then);
+
+  final PushNotificationTappedState _self;
+  final $Res Function(PushNotificationTappedState) _then;
+
+/// Create a copy of PushNotificationState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? data = null,}) {
+  return _then(PushNotificationTappedState(
+data: null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>,
+  ));
 }
 
-/// @nodoc
-class __$$PushNotificationErrorStateImplCopyWithImpl<$Res>
-    extends _$PushNotificationStateCopyWithImpl<$Res,
-        _$PushNotificationErrorStateImpl>
-    implements _$$PushNotificationErrorStateImplCopyWith<$Res> {
-  __$$PushNotificationErrorStateImplCopyWithImpl(
-      _$PushNotificationErrorStateImpl _value,
-      $Res Function(_$PushNotificationErrorStateImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? error = null,
-  }) {
-    return _then(_$PushNotificationErrorStateImpl(
-      error: null == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$PushNotificationErrorStateImpl
-    with DiagnosticableTreeMixin
-    implements PushNotificationErrorState {
-  const _$PushNotificationErrorStateImpl({required this.error});
 
-  @override
-  final String error;
+class PushNotificationErrorState with DiagnosticableTreeMixin implements PushNotificationState {
+  const PushNotificationErrorState({required this.error});
+  
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PushNotificationState.error(error: $error)';
-  }
+ final  String error;
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'PushNotificationState.error'))
-      ..add(DiagnosticsProperty('error', error));
-  }
+/// Create a copy of PushNotificationState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PushNotificationErrorStateCopyWith<PushNotificationErrorState> get copyWith => _$PushNotificationErrorStateCopyWithImpl<PushNotificationErrorState>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PushNotificationErrorStateImpl &&
-            (identical(other.error, error) || other.error == error));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, error);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PushNotificationErrorStateImplCopyWith<_$PushNotificationErrorStateImpl>
-      get copyWith => __$$PushNotificationErrorStateImplCopyWithImpl<
-          _$PushNotificationErrorStateImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(String? fcmToken) initialized,
-    required TResult Function(Map<String, dynamic> data) notificationTapped,
-    required TResult Function(String error) error,
-  }) {
-    return error(this.error);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function(String? fcmToken)? initialized,
-    TResult? Function(Map<String, dynamic> data)? notificationTapped,
-    TResult? Function(String error)? error,
-  }) {
-    return error?.call(this.error);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(String? fcmToken)? initialized,
-    TResult Function(Map<String, dynamic> data)? notificationTapped,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this.error);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(PushNotificationInitialState value) initial,
-    required TResult Function(PushNotificationInitializedState value)
-        initialized,
-    required TResult Function(PushNotificationTappedState value)
-        notificationTapped,
-    required TResult Function(PushNotificationErrorState value) error,
-  }) {
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(PushNotificationInitialState value)? initial,
-    TResult? Function(PushNotificationInitializedState value)? initialized,
-    TResult? Function(PushNotificationTappedState value)? notificationTapped,
-    TResult? Function(PushNotificationErrorState value)? error,
-  }) {
-    return error?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(PushNotificationInitialState value)? initial,
-    TResult Function(PushNotificationInitializedState value)? initialized,
-    TResult Function(PushNotificationTappedState value)? notificationTapped,
-    TResult Function(PushNotificationErrorState value)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'PushNotificationState.error'))
+    ..add(DiagnosticsProperty('error', error));
 }
 
-abstract class PushNotificationErrorState implements PushNotificationState {
-  const factory PushNotificationErrorState({required final String error}) =
-      _$PushNotificationErrorStateImpl;
-
-  String get error;
-  @JsonKey(ignore: true)
-  _$$PushNotificationErrorStateImplCopyWith<_$PushNotificationErrorStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationErrorState&&(identical(other.error, error) || other.error == error));
 }
+
+
+@override
+int get hashCode => Object.hash(runtimeType,error);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'PushNotificationState.error(error: $error)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PushNotificationErrorStateCopyWith<$Res> implements $PushNotificationStateCopyWith<$Res> {
+  factory $PushNotificationErrorStateCopyWith(PushNotificationErrorState value, $Res Function(PushNotificationErrorState) _then) = _$PushNotificationErrorStateCopyWithImpl;
+@useResult
+$Res call({
+ String error
+});
+
+
+
+
+}
+/// @nodoc
+class _$PushNotificationErrorStateCopyWithImpl<$Res>
+    implements $PushNotificationErrorStateCopyWith<$Res> {
+  _$PushNotificationErrorStateCopyWithImpl(this._self, this._then);
+
+  final PushNotificationErrorState _self;
+  final $Res Function(PushNotificationErrorState) _then;
+
+/// Create a copy of PushNotificationState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? error = null,}) {
+  return _then(PushNotificationErrorState(
+error: null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on

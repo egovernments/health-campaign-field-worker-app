@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
