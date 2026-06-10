@@ -13,6 +13,7 @@ import '../../data/repositories/remote/mdms.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../models/role_actions/role_actions_model.dart';
+import '../../utils/constants.dart';
 import '../../utils/environment_config.dart';
 
 // part 'auth.freezed.dart' need to be added to auto generate the files for freezed model
@@ -148,6 +149,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   //_onLogout event logs out the user and deletes the saved user details from local storage
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
+    final accessToken = await localSecureStore.accessToken;
+    if (accessToken != null) {
+      try {
+        await authRepository.logOutUser(
+          logoutPath: Constants.logoutUserPath,
+          queryParameters: {
+            'tenantId': envConfig.variables.tenantId,
+          },
+          body: {
+            'access_token': accessToken,
+            'RequestInfo': {
+              'apiId': RequestInfoData.apiId,
+              'authToken': accessToken,
+              'msgId': '${DateTime.now().millisecondsSinceEpoch}|en_IN',
+              'plainAccessRequest': {},
+            },
+          },
+        );
+      } catch (_) {
+        // Best-effort: proceed with local logout even if server call fails
+      }
+    }
     await localSecureStore.deleteAll();
     await localSecureStore.setBoundaryRefetch(true);
     DigitDataModelSingleton().setHierarchyType(null);
