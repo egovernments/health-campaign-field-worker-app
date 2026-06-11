@@ -2190,19 +2190,9 @@ final dynamic sampleInventoryFlows = {
                 "operation": "equals"
               },
               {
-                "key": "auditCreatedBy",
-                "value": "{{singleton.loggedInUserUuid}}",
-                "operation": "notEquals"
-              },
-              {
                 "key": "productVariantId",
                 "value": "{{fn:getProjectProductVariantIds()}}",
                 "operation": "in"
-              },
-              {
-                "key": "additionalFields",
-                "value": "IN_TRANSIT",
-                "operation": "contains"
               },
             ]
           }
@@ -2213,7 +2203,26 @@ final dynamic sampleInventoryFlows = {
         "groupByType": true,
         "rootEntity": "StockModel",
         "groupBy": "additionalFields.fields.mrnNumber",
-        "filters": [],
+        "filters": [
+          {"field": "transactionType", "equals": "DISPATCHED"},
+          {
+            "field": "additionalFields.fields.status",
+            "equals": "IN_TRANSIT"
+          },
+          {
+            "entity": "StockModel",
+            "condition": {
+              "field": "transactionType",
+              "equals": "RECEIVED"
+            },
+            "join": {
+              "sourceField":
+                  "additionalFields.fields.dispatchClientReferenceId",
+              "targetField": "clientReferenceId"
+            },
+            "notExists": true
+          }
+        ],
         "relations": [
           {"name": "stock", "entity": "StockModel"}
         ],
@@ -2413,12 +2422,28 @@ final dynamic sampleInventoryFlows = {
               },
               {"key": "userFacilityId", "value": "{{fn:getUserFacilityId()}}"},
               {"key": "sku", "value": "{{navigation.sku}}"},
-              {"key": "quantity", "value": "{{navigation.quantity}}"}
+              {"key": "quantity", "value": "{{navigation.quantity}}"},
+              {
+                "key": "dispatchClientReferenceId",
+                "value": "{{navigation.clientReferenceId}}"
+              }
             ],
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Failed to fetch config."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "STOCK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to create receipt."}
               }
             ]
           }
