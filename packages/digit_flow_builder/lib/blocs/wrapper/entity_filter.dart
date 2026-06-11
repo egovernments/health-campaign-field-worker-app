@@ -50,6 +50,7 @@ class EntityFilter {
         final condition = filter['condition'];
         final join = filter['join'];
         final filterEntities = entityMap[entityType] ?? [];
+        final notExists = filter['notExists'] == true;
         bool hasMatchingEntity = false;
 
         for (final entity in filterEntities) {
@@ -71,7 +72,9 @@ class EntityFilter {
           }
           if (hasMatchingEntity) break;
         }
-        if (!hasMatchingEntity) return false;
+        // notExists=false (default): drop root when no matching entity exists
+        // notExists=true:             drop root when a matching entity DOES exist
+        if (notExists ? hasMatchingEntity : !hasMatchingEntity) return false;
       }
     }
     return true;
