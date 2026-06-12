@@ -2175,7 +2175,30 @@ final dynamic sampleInventoryFlows = {
           ]
         }
       ],
-      "footer": [],
+      "footer": [
+        {
+          "format": "button",
+          "label": "INVENTORY_SCAN_STOCK_RECEIPT_HEADING",
+          "visible":
+              "{{fn:hasRole('COMMUNITY_DISTRIBUTOR')}} == true || {{fn:hasRole('DISTRIBUTOR')}} == true",
+          "prefixIcon": "QrCodeScanner",
+          "properties": {
+            "type": "primary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "scanStockReceipt"
+              }
+            }
+          ]
+        }
+      ],
       "initActions": [
         {
           "actionType": "SEARCH_EVENT",
