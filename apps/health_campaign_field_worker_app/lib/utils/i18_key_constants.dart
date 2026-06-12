@@ -387,9 +387,6 @@ class Common {
 
   String get lowRamWarningDesc => 'CORE_COMMON_LOW_RAM_WARNING_DESC';
 
-  String get allowBackgroundActivityDesc =>
-      'PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY';
-
   String get qrInventory => 'QR_INVENTORY';
 
   String get qrAttendance => 'QR_ATTENDANCE';
@@ -406,6 +403,34 @@ class Common {
   String get stockNoDataFoundContent => 'STOCK_NO_DATA_FOUND_CONTENT';
 
   String get coreCommonDownloading => 'CORE_COMMON_DOWNLOADING';
+
+  String get allowAccess => 'CORE_COMMON_ALLOW_ACCESS';
+
+  String get accessRequired => 'CORE_COMMON_ACCESS_REQUIRED';
+
+  String get accessPermissionDialogDesc =>
+      'CORE_COMMON_ACCESS_PERMISSION_DIALOG_DESC';
+
+  String get allowBackgroundActivityDesc =>
+      'PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY';
+
+  String get permissionNotificationDesc =>
+      'CORE_COMMON_PERMISSION_NOTIFICATION_DESC';
+
+  String get permissionLocationDesc => 'CORE_COMMON_PERMISSION_LOCATION_DESC';
+
+  String get permissionBluetoothScanDesc =>
+      'CORE_COMMON_PERMISSION_BLUETOOTHSCAN_DESC';
+
+  String get permissionNearbyWifiDevicesDesc =>
+      'CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES_DESC';
+
+  String get permissionCameraDesc => 'CORE_COMMON_PERMISSION_CAMERA_DESC';
+
+  String get beneficiaryNotFound => 'CORE_COMMON_BENEFICIARY_NOT_FOUND';
+
+  String get beneficiaryNotFoundDesc =>
+      'CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC';
 }
 
 class HomeShowcase {
