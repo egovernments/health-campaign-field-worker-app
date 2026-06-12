@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +52,11 @@ class OpenScannerExecutor extends ActionExecutor {
         ? (int.tryParse(scanLimit) ?? 1)
         : (scanLimit as int? ?? 1);
     final isGS1code = properties['isGS1'] as bool? ?? false;
+    // When true, attempt to JSON-decode the scanned value and spread its
+    // top-level keys into formData/contextData so onSuccess actions can
+    // reference them as `{{key}}` directly. Backward compatible — without
+    // the flag, the scanned value is stored only at `fieldName` as before.
+    final parseJson = properties['parseJson'] == true;
 
     // Get onSuccess and onError actions
     final onSuccessActions = properties['onSuccess'] as List<dynamic>?;
@@ -107,13 +114,38 @@ class OpenScannerExecutor extends ActionExecutor {
       if (scannedValue != null && scannedValue.isNotEmpty) {
         debugPrint('OPEN_SCANNER: Scanned value: $scannedValue');
 
+        // Optionally decode the scanned value as a JSON object so its
+        // top-level keys are spread into formData/contextData.
+        // Failure to parse falls back silently to single-string storage —
+        // callers that depend on the parsed keys should ensure the QR
+        // payload is well-formed JSON on the producer side.
+        Map<String, dynamic> parsedFields = const {};
+        if (parseJson) {
+          try {
+            final decoded = jsonDecode(scannedValue);
+            if (decoded is Map<String, dynamic>) {
+              parsedFields = decoded;
+            } else {
+              debugPrint(
+                  'OPEN_SCANNER: parseJson=true but decoded value is not an object: ${decoded.runtimeType}');
+            }
+          } catch (e) {
+            debugPrint(
+                'OPEN_SCANNER: parseJson=true but JSON decode failed: $e');
+          }
+        }
+
         // Update form data in FlowCrudStateRegistry
         if (compositeKey != null) {
           final currentState = FlowCrudStateRegistry().get(compositeKey);
           final formData = currentState?.formData ?? {};
           final existingStateWrapper = currentState?.stateWrapper;
 
-          final updatedFormData = {...formData, fieldName: scannedValue};
+          final updatedFormData = {
+            ...formData,
+            fieldName: scannedValue,
+            ...parsedFields,
+          };
           final updatedState = (currentState ?? const FlowCrudState()).copyWith(
             formData: updatedFormData,
             stateWrapper: existingStateWrapper, // Preserve stateWrapper
@@ -125,6 +157,7 @@ class OpenScannerExecutor extends ActionExecutor {
           Map<String, dynamic> updatedContext = {
             ...contextData,
             fieldName: scannedValue,
+            ...parsedFields,
             'formData': updatedFormData,
             'stateWrapper': existingStateWrapper,
           };
