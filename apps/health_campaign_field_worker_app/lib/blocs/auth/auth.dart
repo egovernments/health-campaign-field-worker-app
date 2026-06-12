@@ -1,4 +1,3 @@
-@ -1,349 +1,372 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
@@ -158,15 +157,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           queryParameters: {
             'tenantId': envConfig.variables.tenantId,
           },
-          body: {
-            'access_token': accessToken,
-            'RequestInfo': {
-              'apiId': RequestInfoData.apiId,
-              'authToken': accessToken,
-              'msgId': '${DateTime.now().millisecondsSinceEpoch}|en_IN',
-              'plainAccessRequest': {},
-            },
-          },
+          body: {'access_token': accessToken},
         );
       } catch (_) {
         // Best-effort: proceed with local logout even if server call fails
