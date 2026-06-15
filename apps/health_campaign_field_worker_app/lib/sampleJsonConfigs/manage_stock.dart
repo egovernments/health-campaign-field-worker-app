@@ -2156,7 +2156,7 @@ final dynamic sampleInventoryFlows = {
                           {
                             "format": "qr_view",
                             "data":
-                                "{{item.items[0].additionalFields.fields.mrnNumber}}",
+                                "{{fn:stockToScanQr(item.items[0])}}",
                             "size": "medium",
                             "errorCorrectionLevel": "M",
                             "dataModuleColor": "black",
