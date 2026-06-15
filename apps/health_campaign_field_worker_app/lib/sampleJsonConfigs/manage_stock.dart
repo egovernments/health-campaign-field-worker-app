@@ -560,6 +560,27 @@ final dynamic sampleInventoryFlows = {
       "footer": [
         {
           "format": "button",
+          "label": "INVENTORY_SCAN_DECLINE_LABEL",
+          "properties": {
+            "type": "secondary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "incomingTransactions",
+                "navigationMode": "popUntilAndReplace",
+                "popUntilPageName": "incomingTransactions"
+              }
+            }
+          ]
+        },
+        {
+          "format": "button",
           "label": "INVENTORY_SCAN_CONFIRM_RECEIVE_LABEL",
           "visible":
               "{{navigation.receiverId}} == {{fn:getUserFacilityId()}} && {{fn:hasResults('StockModel')}} == false",
