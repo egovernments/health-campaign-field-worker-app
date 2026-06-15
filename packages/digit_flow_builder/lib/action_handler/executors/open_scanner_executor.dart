@@ -115,24 +115,47 @@ class OpenScannerExecutor extends ActionExecutor {
         debugPrint('OPEN_SCANNER: Scanned value: $scannedValue');
 
         // Optionally decode the scanned value as a JSON object so its
-        // top-level keys are spread into formData/contextData.
-        // Failure to parse falls back silently to single-string storage —
-        // callers that depend on the parsed keys should ensure the QR
-        // payload is well-formed JSON on the producer side.
+        // top-level keys are spread into formData/contextData. When the
+        // caller asked for JSON parsing but the payload isn't a valid
+        // JSON object, route to onError instead of running onSuccess
+        // with an empty parsedFields (which would propagate garbage
+        // downstream).
         Map<String, dynamic> parsedFields = const {};
+        bool parseJsonFailed = false;
+        String? parseJsonError;
         if (parseJson) {
           try {
             final decoded = jsonDecode(scannedValue);
             if (decoded is Map<String, dynamic>) {
               parsedFields = decoded;
             } else {
-              debugPrint(
-                  'OPEN_SCANNER: parseJson=true but decoded value is not an object: ${decoded.runtimeType}');
+              parseJsonFailed = true;
+              parseJsonError =
+                  'parseJson expected a JSON object, got ${decoded.runtimeType}';
+              debugPrint('OPEN_SCANNER: $parseJsonError');
             }
           } catch (e) {
-            debugPrint(
-                'OPEN_SCANNER: parseJson=true but JSON decode failed: $e');
+            parseJsonFailed = true;
+            parseJsonError = 'parseJson decode failed: $e';
+            debugPrint('OPEN_SCANNER: $parseJsonError');
           }
+        }
+
+        if (parseJsonFailed) {
+          if (onErrorActions != null && onErrorActions.isNotEmpty) {
+            Map<String, dynamic> errorContext = {
+              ...contextData,
+              'errorType': 'parseError',
+              'errorMessage': parseJsonError ?? 'Invalid QR payload',
+              fieldName: scannedValue,
+            };
+            return await ActionHandler.executeActions(
+              onErrorActions,
+              context,
+              errorContext,
+            );
+          }
+          return contextData;
         }
 
         // Update form data in FlowCrudStateRegistry
