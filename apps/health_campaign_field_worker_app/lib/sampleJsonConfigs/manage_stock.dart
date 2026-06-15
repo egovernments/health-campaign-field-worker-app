@@ -573,7 +573,7 @@ final dynamic sampleInventoryFlows = {
             {
               "actionType": "FETCH_TRANSFORMER_CONFIG",
               "properties": {
-                "configName": "stockReceipt",
+                "configName": "stockScanReceipt",
                 "forceCreate": true,
                 "data": [
                   {"key": "stockEntryType", "value": "RECEIPT"},
@@ -598,6 +598,19 @@ final dynamic sampleInventoryFlows = {
                   },
                   {"key": "sku", "value": "{{navigation.sku}}"},
                   {"key": "quantity", "value": "{{navigation.quantity}}"},
+                  {
+                    "key": "waybillNumber",
+                    "value": "{{navigation.waybillNumber}}"
+                  },
+                  {
+                    "key": "batchNumber",
+                    "value": "{{navigation.batchNumber}}"
+                  },
+                  {
+                    "key": "expiryDate",
+                    "value": "{{navigation.expiryDate}}"
+                  },
+                  {"key": "comments", "value": "{{navigation.comments}}"},
                   {
                     "key": "dispatchClientReferenceId",
                     "value": "{{navigation.clientReferenceId}}"
