@@ -37,9 +37,21 @@ class WrapperBuilder {
 
       if (groupByType) {
         // Return all entities grouped by type
+        final filters = config['filters'] as List<dynamic>?;
+        final hasFilters = filters != null && filters.isNotEmpty;
+
         final Map<String, List<dynamic>> groupedEntities = {};
         for (final type in entityMap.keys) {
-          final typeEntities = entityMap[type]!;
+          List<dynamic> typeEntities = entityMap[type]!;
+
+          // Apply top-level filters to entities of the configured rootEntity
+          // type. Other types pass through untouched so existing configs that
+          // do not declare a rootEntity keep the original behaviour.
+          if (hasFilters && type == rootEntityType) {
+            typeEntities = typeEntities
+                .where((entity) => filter.passesFilters(entity, entityMap, config))
+                .toList();
+          }
 
           // If groupBy field is specified, further group entities by that field
           if (groupByField != null) {
