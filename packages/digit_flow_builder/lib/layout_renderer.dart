@@ -323,6 +323,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                     enableFixedDigitButton: actions.isNotEmpty ? true : false,
                     footer: actions.isNotEmpty
                         ? DigitCard(
+                            spacing: spacer2,
                             children: actions
                                 .map((e) => LayoutMapper.map(
                                       preprocessConfigWithState(e, stateData),
