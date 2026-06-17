@@ -131,15 +131,15 @@ class FlowCrudBloc extends CrudBloc {
     } else if (crudState is CrudStatePersisted) {
       final entities = crudState.entities;
       // final persistedWrapperConfig = flowConfig['wrapperConfig'] as Map<String, dynamic>?;
-      wrapper =
-          //persistedWrapperConfig != null
-          //     ? WrapperBuilder(
-          //         entities,
-          //         persistedWrapperConfig,
-          //         screenKey: screenKey,
-          //       ).build()
-          //     :
-          entities;
+      // Preserve the existing stateWrapper if the screen already has one
+      // (typically a search page with its loaded results). Otherwise this
+      // overwrite would briefly replace e.g. the household-list wrapper with
+      // the just-created entities (e.g. ProjectBeneficiaryModel rows) during
+      // the gap between the CREATE dispatch settling and the post-create
+      // navigation completing — causing empty cards to flash on screen.
+      // Form pages that haven't loaded anything still fall through to the
+      // persisted entities, so their post-submit display path is unchanged.
+      wrapper = existingState?.stateWrapper ?? entities;
       // Preserve existing formData and widgetData when creating new state
       final flowState = FlowCrudState(
         base: crudState,

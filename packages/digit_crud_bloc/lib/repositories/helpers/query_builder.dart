@@ -296,9 +296,14 @@ class QueryBuilder {
 
     Expression<bool>? combined;
     for (final part in parts) {
-      Expression<bool> partClause = columns.first.like('%$part%');
+      // Wrap each LIKE with isNotNull so a NULL column contributes FALSE
+      // to the OR instead of NULL — otherwise FALSE OR NULL = NULL and the
+      // surrounding AND/WHERE drops the row.
+      Expression<bool> partClause =
+          columns.first.isNotNull() & columns.first.like('%$part%');
       for (var i = 1; i < columns.length; i++) {
-        partClause = partClause | columns[i].like('%$part%');
+        partClause =
+            partClause | (columns[i].isNotNull() & columns[i].like('%$part%'));
       }
       combined = combined == null ? partClause : combined & partClause;
     }
@@ -318,7 +323,13 @@ class QueryBuilder {
       case 'notEquals':
         return col.equals(filter.value).not();
       case 'contains':
+        // Prefix match (LIKE 'val%') so a column index on this field can be
+        // used; substring matching defeats the index. Use `matches` when a
+        // genuine substring lookup is needed (e.g. searching inside a JSON
+        // column like additionalFields).
         return (col as Expression<String>).like('${filter.value}%');
+      case 'matches':
+        return (col as Expression<String>).like('%${filter.value}%');
       case 'notContains':
         return col.isNull() |
             (col as Expression<String>).like('%${filter.value}%').not();
@@ -331,9 +342,12 @@ class QueryBuilder {
           final list = _normalizeToList(filter.value);
           if (list.isEmpty) return null;
           if (col is GeneratedColumn<int>) {
-            return col.isIn(list
-                .map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0)
-                .toList());
+            final ints = list
+                .map((v) => v is int ? v : int.tryParse(v.toString()))
+                .whereType<int>()
+                .toList();
+            if (ints.isEmpty) return null;
+            return col.isIn(ints);
           }
           return (col as GeneratedColumn<String>)
               .isIn(list.map((v) => v.toString()).toList());
@@ -343,9 +357,12 @@ class QueryBuilder {
           final list = _normalizeToList(filter.value);
           if (list.isEmpty) return null;
           if (col is GeneratedColumn<int>) {
-            return col.isNotIn(list
-                .map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0)
-                .toList());
+            final ints = list
+                .map((v) => v is int ? v : int.tryParse(v.toString()))
+                .whereType<int>()
+                .toList();
+            if (ints.isEmpty) return null;
+            return col.isNotIn(ints);
           }
           return (col as GeneratedColumn<String>)
               .isNotIn(list.map((v) => v.toString()).toList());
@@ -407,7 +424,10 @@ class QueryBuilder {
   }
 
   static String _snakeToCamel(String input) {
-    final parts = input.split('_');
+    // Drop empty segments so adjacent/leading/trailing underscores don't
+    // RangeError on `p[0]` and don't produce stray capitalizations.
+    final parts = input.split('_').where((p) => p.isNotEmpty).toList();
+    if (parts.isEmpty) return input;
     return parts.first +
         parts.skip(1).map((p) => p[0].toUpperCase() + p.substring(1)).join();
   }
@@ -419,6 +439,7 @@ class QueryBuilder {
         case 'equals':
           return '$column = ?';
         case 'contains':
+        case 'matches':
           return '$column LIKE ?';
         case 'notContains':
           return '($column IS NULL OR $column NOT LIKE ?)';
@@ -446,7 +467,9 @@ class QueryBuilder {
           final columns = filter.field
               .split(',')
               .map((f) => camelToSnake(f.trim()))
+              .where((f) => f.isNotEmpty)
               .toList();
+          if (columns.isEmpty) return '1 = 1';
           return '(${columns.map((c) => '$c = ?').join(' OR ')})';
         case 'containsAll':
           // Every whitespace-separated part of the value must be contained
@@ -457,6 +480,7 @@ class QueryBuilder {
           final cols = filter.field
               .split(',')
               .map((f) => camelToSnake(f.trim()))
+              .where((f) => f.isNotEmpty)
               .toList();
           final parts = filter.value
                   ?.toString()
@@ -466,8 +490,10 @@ class QueryBuilder {
                   .toList() ??
               const <String>[];
           if (parts.isEmpty || cols.isEmpty) return '1 = 1';
-          final partClauses = parts
-              .map((_) => '(${cols.map((c) => '$c LIKE ?').join(' OR ')})');
+          // ($c IS NOT NULL AND $c LIKE ?) so NULL columns contribute FALSE,
+          // not NULL, to the OR — see _buildContainsAllExpression for context.
+          final partClauses = parts.map((_) =>
+              '(${cols.map((c) => '($c IS NOT NULL AND $c LIKE ?)').join(' OR ')})');
           return '(${partClauses.join(' AND ')})';
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
@@ -489,6 +515,9 @@ class QueryBuilder {
         case 'contains':
           args.add(Variable.withString('${filter.value}%'));
           break;
+        case 'matches':
+          args.add(Variable.withString('%${filter.value}%'));
+          break;
         case 'notContains':
           args.add(Variable.withString('%${filter.value}%'));
           break;
@@ -500,8 +529,13 @@ class QueryBuilder {
           }
           break;
         case 'equalsAny':
-          // Add the same value for each column in the OR condition
-          final columnCount = filter.field.split(',').length;
+          // Add the same value for each column in the OR condition.
+          // Empty entries are stripped to match buildWhereClauseRaw.
+          final columnCount = filter.field
+              .split(',')
+              .map((f) => f.trim())
+              .where((f) => f.isNotEmpty)
+              .length;
           for (int i = 0; i < columnCount; i++) {
             args.add(Variable.withString(filter.value.toString()));
           }
@@ -509,7 +543,11 @@ class QueryBuilder {
         case 'containsAll':
           // One '%part%' arg per (part, column) pair, matching the
           // clause structure built in buildWhereClauseRaw.
-          final cols = filter.field.split(',');
+          final cols = filter.field
+              .split(',')
+              .map((f) => f.trim())
+              .where((f) => f.isNotEmpty)
+              .toList();
           final parts = filter.value
                   ?.toString()
                   .trim()
@@ -703,6 +741,10 @@ class QueryBuilder {
           whereClauses
               .add((col as Expression<String>).like('${filter.value}%'));
           break;
+        case 'matches':
+          whereClauses
+              .add((col as Expression<String>).like('%${filter.value}%'));
+          break;
         case 'notContains':
           whereClauses.add(col.isNull() |
               (col as Expression<String>).like('%${filter.value}%').not());
@@ -717,9 +759,11 @@ class QueryBuilder {
           final list = _normalizeToList(filter.value);
           if (list.isEmpty) break; // Empty list = no filter (match all)
           if (col is GeneratedColumn<int>) {
-            whereClauses.add(col.isIn(list
-                .map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0)
-                .toList()));
+            final ints = list
+                .map((v) => v is int ? v : int.tryParse(v.toString()))
+                .whereType<int>()
+                .toList();
+            if (ints.isNotEmpty) whereClauses.add(col.isIn(ints));
           } else if (col is GeneratedColumn<String>) {
             whereClauses.add(col.isIn(list.map((v) => v.toString()).toList()));
           }
@@ -728,9 +772,11 @@ class QueryBuilder {
           final list = _normalizeToList(filter.value);
           if (list.isEmpty) break; // Empty list = no filter (match all)
           if (col is GeneratedColumn<int>) {
-            whereClauses.add(col.isNotIn(list
-                .map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0)
-                .toList()));
+            final ints = list
+                .map((v) => v is int ? v : int.tryParse(v.toString()))
+                .whereType<int>()
+                .toList();
+            if (ints.isNotEmpty) whereClauses.add(col.isNotIn(ints));
           } else if (col is GeneratedColumn<String>) {
             whereClauses
                 .add(col.isNotIn(list.map((v) => v.toString()).toList()));
@@ -747,18 +793,21 @@ class QueryBuilder {
     Expression<int>? countExpr;
     if (isPrimaryTable && onCountFetched != null) {
       if (centerLat != null && centerLon != null && radiusInKm != null) {
-        // Geo path: need lat/lon to apply Haversine filtering in Dart.
-        final whereClause =
-            buildWhereClauseRaw(filters.where((f) => f.root == table).toList());
-        final whereArgs =
-            buildWhereArgs(filters.where((f) => f.root == table).toList());
+        // Geo path: read lat/lon back into Dart for Haversine post-filter,
+        // but route through selectOnly so the full whereClauses (bounding
+        // box + any cross-table extraConstraints) are honored — the previous
+        // raw-SQL path silently dropped extraConstraints from the count.
+        final latCol = dynamicTable.$columns
+            .firstWhere((c) => c.$name == 'latitude') as Expression<double>;
+        final lonCol = dynamicTable.$columns
+            .firstWhere((c) => c.$name == 'longitude') as Expression<double>;
+        final geoQuery = sql.selectOnly(dynamicTable)
+          ..addColumns([latCol, lonCol]);
+        if (whereClauses.isNotEmpty) {
+          geoQuery.where(buildAnd(whereClauses));
+        }
         countFuture = () async {
-          final rawResults = await sql
-              .customSelect(
-                'SELECT latitude, longitude FROM ${camelToSnake(table)} WHERE $whereClause',
-                variables: whereArgs,
-              )
-              .get();
+          final rawResults = await geoQuery.get();
 
           const earthRadius = 6371.0;
           const degToRad = math.pi / 180.0;
@@ -776,20 +825,8 @@ class QueryBuilder {
           }
 
           return rawResults.where((row) {
-            double? lat;
-            double? lon;
-            try {
-              final latVal = row.read<double>('latitude');
-              lat = (latVal is int) ? latVal.toDouble() : latVal as double?;
-            } catch (_) {
-              lat = null;
-            }
-            try {
-              final lonVal = row.read<double>('longitude');
-              lon = (lonVal is int) ? lonVal.toDouble() : lonVal as double?;
-            } catch (_) {
-              lon = null;
-            }
+            final lat = row.read(latCol);
+            final lon = row.read(lonCol);
             if (lat == null || lon == null) return false;
             return haversine(centerLat!, centerLon!, lat, lon) <= radiusInKm!;
           }).length;
