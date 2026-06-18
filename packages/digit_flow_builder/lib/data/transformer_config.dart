@@ -1369,5 +1369,60 @@ final jsonConfig = {
         }
       }
     }
+  },
+  "polioIssuedVials": {
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:LOCATION_CAPTURE",
+          "latitude": "issuedVialDetails.latLng[0]",
+          "longitude": "issuedVialDetails.latLng[1]",
+          "locationAccuracy": "issuedVialDetails.latLng[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "form": "__value:POLIO_STOCK_ISSUED",
+            "settlementType": "__context:settlementType",
+            "totalVialsReceivedForDay": "issuedVialDetails.totalVialsReceivedForDay",
+            "totalMixingSyringes": "issuedVialDetails.totalMixingSyringes",
+            "locality": "__context:selectedBoundaryCode"
+          }
+        }
+      }
+    }
+  },
+  "polioReturnedVials": {
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:LOCATION_CAPTURE",
+          "latitude": "returnedVialDetails.latLng[0]",
+          "longitude": "returnedVialDetails.latLng[1]",
+          "locationAccuracy": "returnedVialDetails.latLng[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "form": "__value:POLIO_STOCK_RETURNED",
+            "settlementType": "__context:settlementType",
+            "unopenedUsableVialsReturned": "returnedVialDetails.unopenedUsableVialsReturned",
+            "unopenedSpoiltVialsReturned": "returnedVialDetails.unopenedSpoiltVialsReturned",
+            "totalReturned": "returnedVialDetails.totalReturned",
+            "locality": "__context:selectedBoundaryCode"
+          }
+        }
+      }
+    }
   }
 };

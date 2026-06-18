@@ -52,6 +52,7 @@ import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
 import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
+import '../sampleJsonConfigs/polio_stock.dart';
 import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/attendance_utils.dart';
@@ -2024,7 +2025,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (schemaJsonRaw != null) {
+                  if (false && schemaJsonRaw != null) {
                     final allSchemas =
                         json.decode(schemaJsonRaw) as Map<String, dynamic>;
                     final data = allSchemas['REGISTRATION'];
@@ -2043,12 +2044,17 @@ class _HomePageState extends LocalizedState<HomePage> {
                           pageName: registrationDeliveryData["initialPage"]),
                     );
                   } else {
+                    final flowData =
+                        (sampleFlows["data"] ?? sampleFlows) as Map;
                     FlowRegistry.setConfig(
-                        sampleFlows["flows"] as List<Map<String, dynamic>>);
+                      (flowData["flows"] as List<dynamic>)
+                          .map((e) => Map<String, dynamic>.from(e as Map))
+                          .toList(),
+                    );
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
                       FlowBuilderHomeRoute(
-                          pageName: sampleFlows["initialPage"]),
+                          pageName: flowData["initialPage"] as String),
                     );
                   }
                 } catch (e) {
@@ -2123,8 +2129,8 @@ class _HomePageState extends LocalizedState<HomePage> {
             await FlowNavigationUtils.navigateToFlowModule(
               context: context,
               config: FlowModuleConfig(
-                schemaKey: 'INVENTORY',
-                sampleFlows: sampleInventoryFlows,
+                schemaKey: 'STOCK',
+                sampleFlows: samplePolioStockDetailsFlows,
                 relationshipMappings: const [
                   RelationshipMapping(
                       from: 'facility',
@@ -2651,8 +2657,8 @@ class _HomePageState extends LocalizedState<HomePage> {
             state.actionsWrapper.actions
                 .map((e) => e.displayName)
                 .toList()
-                .contains(element) ||
-            element == i18.home.db)
+                .contains(element) || 
+            element == i18.home.db || element == i18.home.manageStockLabel)
         .toList();
 
     final showcaseKeys = filteredLabels

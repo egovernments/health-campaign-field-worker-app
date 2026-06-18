@@ -1,7 +1,7 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
-import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
@@ -42,43 +42,29 @@ class ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
   @override
   Widget build(BuildContext context) {
+    final initialSelection =
+        widget.form.control('resourceDelivered.${widget.cardIndex}').value;
+
     return DigitCard(cardType: CardType.secondary, children: [
-      SelectionCard<DeliveryProductVariant>(
-        width: MediaQuery.of(context).size.width * .8,
-        showParentContainer: true,
+      _ProductSelector(
         options: widget.variants ?? [],
+        initialSelection: initialSelection != null ? [initialSelection] : [],
+        valueMapper: (value) => localizations.translate(value.name),
         readOnly: widget.readOnly,
         onSelectionChanged: (selectedOptions) {
           if (selectedOptions.isNotEmpty) {
-            var selectedOption = selectedOptions.first;
+            final selected = selectedOptions.first;
             widget.form.control('resourceDelivered.${widget.cardIndex}').value =
-                selectedOption;
-            // Update quantity to the new product's default quantity
-            widget.form.control('quantityDistributed.${widget.cardIndex}').value =
-                selectedOption.quantity ?? 0;
-            // Notify parent to update maxQuantity
-            widget.onProductChanged?.call(widget.cardIndex, selectedOption);
+                selected;
+            widget.form
+                .control('quantityDistributed.${widget.cardIndex}')
+                .value = selected.quantity ?? 0;
+            widget.onProductChanged?.call(widget.cardIndex, selected);
           } else {
             widget.form.control('resourceDelivered.${widget.cardIndex}').value =
                 null;
           }
         },
-        initialSelection: widget.form
-                    .control('resourceDelivered.${widget.cardIndex}')
-                    .value !=
-                null
-            ? [
-                widget.form
-                    .control('resourceDelivered.${widget.cardIndex}')
-                    .value
-              ]
-            : [],
-        valueMapper: (value) {
-          return localizations.translate(
-            value.name,
-          );
-        },
-        allowMultipleSelection: false,
       ),
       ReactiveWrapperField(
         formControlName: 'quantityDistributed.${widget.cardIndex}',
@@ -161,5 +147,77 @@ class ResourceBeneficiaryCardState
                 : const Offstage(),
       ),
     ]);
+  }
+}
+
+class _ProductSelector extends StatefulWidget {
+  final List<DeliveryProductVariant> options;
+  final List<DeliveryProductVariant> initialSelection;
+  final String Function(DeliveryProductVariant) valueMapper;
+  final void Function(List<DeliveryProductVariant>) onSelectionChanged;
+  final bool readOnly;
+
+  const _ProductSelector({
+    required this.options,
+    required this.initialSelection,
+    required this.valueMapper,
+    required this.onSelectionChanged,
+    required this.readOnly,
+  });
+
+  @override
+  State<_ProductSelector> createState() => _ProductSelectorState();
+}
+
+class _ProductSelectorState extends State<_ProductSelector> {
+  DeliveryProductVariant? _selected;
+
+  @override
+  void initState() {
+    super.initState();
+    _selected =
+        widget.initialSelection.isNotEmpty ? widget.initialSelection.first : null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorTheme.primary.primary1;
+    final textTheme = theme.digitTextTheme(context);
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: widget.options.map((option) {
+        final isSelected = _selected == option;
+        return GestureDetector(
+          onTap: widget.readOnly
+              ? null
+              : () {
+                  setState(() => _selected = option);
+                  widget.onSelectionChanged([option]);
+                },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: isSelected ? primaryColor : Colors.transparent,
+              border: Border.all(
+                color: isSelected ? primaryColor : theme.colorTheme.generic.divider,
+              ),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              widget.valueMapper(option),
+              style: textTheme.bodyS.copyWith(
+                color: isSelected
+                    ? Colors.white
+                    : theme.colorTheme.text.primary,
+              ),
+              softWrap: true,
+            ),
+          ),
+        );
+      }).toList(),
+    );
   }
 }

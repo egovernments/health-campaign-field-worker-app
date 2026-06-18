@@ -223,7 +223,7 @@ class MainApplicationState extends State<MainApplication>
                                   ..add(
                                     LocalizationEvent.onLoadLocalization(
                                       module:
-                                          "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule && Constants.initialLocalizationModules.contains(element.name.toString())).map((e) => e.name.toString()).join(',')}",
+                                          "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule && Constants.initialLocalizationModules.contains(element.name.toString())).map((e) => e.name.toString()).join(',')},hcm-base-stock-polio",
                                       tenantId: envConfig.variables.tenantId,
                                       locale: selectedLocale,
                                       path: Constants.localizationApiPath,

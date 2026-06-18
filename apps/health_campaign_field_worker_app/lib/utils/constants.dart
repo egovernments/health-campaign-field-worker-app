@@ -117,7 +117,8 @@ class Constants {
     'hcm-peer-to-peer',
     'hcm-transit-post',
     'hcm-attendance',
-    'hcm-dashboard'
+    'hcm-dashboard',
+    'hcm-base-stock-polio',
   ];
 
   // Modules to load when inside packages
