@@ -1391,6 +1391,7 @@ final jsonConfig = {
             "settlementType": "__context:settlementType",
             "totalVialsReceivedForDay": "issuedVialDetails.totalVialsReceivedForDay",
             "totalMixingSyringes": "issuedVialDetails.totalMixingSyringes",
+            "totalDiluentsIssued": "issuedVialDetails.totalDiluentsIssued",
             "locality": "__context:selectedBoundaryCode"
           }
         }
@@ -1419,6 +1420,8 @@ final jsonConfig = {
             "unopenedUsableVialsReturned": "returnedVialDetails.unopenedUsableVialsReturned",
             "unopenedSpoiltVialsReturned": "returnedVialDetails.unopenedSpoiltVialsReturned",
             "totalReturned": "returnedVialDetails.totalReturned",
+            "unusedDiluentsReturned": "returnedVialDetails.unusedDiluentsReturned",
+            "spoiledDiluentsReturned": "returnedVialDetails.spoiledDiluentsReturned",
             "locality": "__context:selectedBoundaryCode"
           }
         }
