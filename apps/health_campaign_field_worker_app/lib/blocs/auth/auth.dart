@@ -152,12 +152,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final accessToken = await localSecureStore.accessToken;
     if (accessToken != null) {
       try {
-        await authRepository
-            .logOutUser(logoutPath: Constants.logoutUserPath, queryParameters: {
-          'tenantId': envConfig.variables.tenantId,
-        }, body: {
-          'access_token': accessToken,
-        });
+        await authRepository.logOutUser(
+          logoutPath: Constants.logoutUserPath,
+          queryParameters: {
+            'tenantId': envConfig.variables.tenantId,
+          },
+          body: {'access_token': accessToken},
+        );
       } catch (_) {
         // Best-effort: proceed with local logout even if server call fails
       }

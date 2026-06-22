@@ -88,12 +88,12 @@ class DigitDataModelSingleton {
   /// project is selected (or after restoring a previously selected project on
   /// cold restart). Pass `null` on logout.
   ///
-  /// The trailing `_<COUNTRY>` suffix is stripped on write so every reader
-  /// receives the canonical schema-prefix form
-  /// (e.g. `CONSOLEHCM_NI` → `CONSOLEHCM`). This is the single point of
-  /// normalization for hierarchy values across the codebase.
+  /// Stored verbatim — the hierarchy type from `additionalDetails` is the
+  /// canonical value the boundary service expects (e.g. `TEST_7500`,
+  /// `CONSOLEHCM`). Any `_<COUNTRY>` suffix lives on boundary *codes*
+  /// (`TEST_7500_IN`), not on the hierarchy type itself.
   void setHierarchyType(String? hierarchyType) {
-    _hierarchyType = _stripCountrySuffix(hierarchyType);
+    _hierarchyType = hierarchyType;
   }
 
   // Getters for the environment configuration variables.
@@ -108,16 +108,6 @@ class DigitDataModelSingleton {
   String? get hierarchyType => _hierarchyType;
 
   EntityMapperListener? get entityMapper => _entityListener;
-}
-
-/// Strips the trailing `_<COUNTRY>` suffix from a hierarchy-style value so
-/// every consumer (boundary API, localization module keys, MDMS lookups) sees
-/// the canonical schema-prefix form. `CONSOLEHCM_NI` → `CONSOLEHCM`,
-/// `CONSOLEHCM` → `CONSOLEHCM`, `null`/`''` → unchanged.
-String? _stripCountrySuffix(String? raw) {
-  if (raw == null || raw.isEmpty) return raw;
-  final idx = raw.indexOf('_');
-  return idx == -1 ? raw : raw.substring(0, idx);
 }
 
 /// `PersistenceConfiguration` is an enum that represents the different types of persistence configurations.
