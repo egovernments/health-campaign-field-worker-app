@@ -222,8 +222,19 @@ class MainApplicationState extends State<MainApplication>
                                     widget.sql)
                                   ..add(
                                     LocalizationEvent.onLoadLocalization(
-                                      module:
-                                          "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule && Constants.initialLocalizationModules.contains(element.name.toString())).map((e) => e.name.toString()).join(',')}",
+                                      // Hierarchy-keyed boundary module is
+                                      // deferred to post-project-selection;
+                                      // pre-login load only fetches the
+                                      // non-hierarchy modules.
+                                      module: localizationModulesList.interfaces
+                                          .where((element) =>
+                                              element.type ==
+                                                  Modules.localizationModule &&
+                                              Constants.initialLocalizationModules
+                                                  .contains(
+                                                      element.name.toString()))
+                                          .map((e) => e.name.toString())
+                                          .join(','),
                                       tenantId: envConfig.variables.tenantId,
                                       locale: selectedLocale,
                                       path: Constants.localizationApiPath,

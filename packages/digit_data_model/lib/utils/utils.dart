@@ -65,20 +65,35 @@ class DigitDataModelSingleton {
   EntityMapperListener? _entityListener;
 
   /// Sets the environment configuration variables.
+  ///
+  /// `hierarchyType` is intentionally not part of this init call. Hierarchy is
+  /// per-project runtime state; it is populated by [setHierarchyType] when a
+  /// project is selected (with env fallback inside that flow if the project
+  /// payload omits it). No pre-project-selection code should read it.
   void setData({
     required int syncDownRetryCount,
     required int retryTimeInterval,
     required String tenantId,
     required EntityMapperListener entityMapper,
     required String errorDumpApiPath,
-    required String hierarchyType,
   }) {
     _syncDownRetryCount = syncDownRetryCount;
     _retryTimeInterval = retryTimeInterval;
     _entityListener = entityMapper;
     _tenantId = tenantId;
     _errorDumpApiPath = errorDumpApiPath;
-    _hierarchyType = hierarchyType;
+  }
+
+  /// Sets the active project's hierarchy type. Call from `ProjectBloc` after a
+  /// project is selected (or after restoring a previously selected project on
+  /// cold restart). Pass `null` on logout.
+  ///
+  /// The trailing `_<COUNTRY>` suffix is stripped on write so every reader
+  /// receives the canonical schema-prefix form
+  /// (e.g. `CONSOLEHCM_NI` → `CONSOLEHCM`). This is the single point of
+  /// normalization for hierarchy values across the codebase.
+  void setHierarchyType(String? hierarchyType) {
+    _hierarchyType = _stripCountrySuffix(hierarchyType);
   }
 
   // Getters for the environment configuration variables.
@@ -90,9 +105,19 @@ class DigitDataModelSingleton {
 
   get errorDumpApiPath => _errorDumpApiPath;
 
-  get hierarchyType => _hierarchyType;
+  String? get hierarchyType => _hierarchyType;
 
   EntityMapperListener? get entityMapper => _entityListener;
+}
+
+/// Strips the trailing `_<COUNTRY>` suffix from a hierarchy-style value so
+/// every consumer (boundary API, localization module keys, MDMS lookups) sees
+/// the canonical schema-prefix form. `CONSOLEHCM_NI` → `CONSOLEHCM`,
+/// `CONSOLEHCM` → `CONSOLEHCM`, `null`/`''` → unchanged.
+String? _stripCountrySuffix(String? raw) {
+  if (raw == null || raw.isEmpty) return raw;
+  final idx = raw.indexOf('_');
+  return idx == -1 ? raw : raw.substring(0, idx);
 }
 
 /// `PersistenceConfiguration` is an enum that represents the different types of persistence configurations.

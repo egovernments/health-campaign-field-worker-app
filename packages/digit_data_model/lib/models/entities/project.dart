@@ -184,8 +184,10 @@ class ProjectAdditionalFields extends AdditionalFields
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProjectAdditionalDetails with ProjectAdditionalDetailsMappable {
   final ProjectTypeModel? projectType;
+  final String? hierarchyType;
 
   ProjectAdditionalDetails({
     this.projectType,
+    this.hierarchyType,
   }) : super();
 }

@@ -24,6 +24,7 @@ import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
+import '../utils/runtime_hierarchy.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/localized.dart';
@@ -140,7 +141,7 @@ class _BoundarySelectionPageState
 
                           final labelCodeList = state.selectedBoundaryMap.keys
                               .map((key) =>
-                                  '${envConfig.variables.hierarchyType}_$key')
+                                  '${runtimeHierarchyType()}_$key')
                               .toList();
 
                           final combinedCodes = [
@@ -758,7 +759,7 @@ class _BoundarySelectionPageState
                                             builder: (field) => LabeledField(
                                               capitalizedFirstLetter: false,
                                               label: localizations.translate(
-                                                  '${envConfig.variables.hierarchyType}_$label'),
+                                                  '${runtimeHierarchyType()}_$label'),
                                               isRequired: true,
                                               child: isLastLevel
                                                   ? MultiSelectDropDown(
@@ -1029,7 +1030,7 @@ class _BoundarySelectionPageState
       final finalCodes = state.boundaryList.map((e) => e.code!).toList();
 
       final labelCodeList = state.selectedBoundaryMap.keys
-          .map((key) => '${envConfig.variables.hierarchyType}_$key')
+          .map((key) => '${runtimeHierarchyType()}_$key')
           .toList();
 
       final combinedCodes = [

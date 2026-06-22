@@ -830,16 +830,22 @@ class ProjectAdditionalDetailsMapper
       v.projectType;
   static const Field<ProjectAdditionalDetails, ProjectTypeModel>
       _f$projectType = Field('projectType', _$projectType, opt: true);
+  static String? _$hierarchyType(ProjectAdditionalDetails v) => v.hierarchyType;
+  static const Field<ProjectAdditionalDetails, String> _f$hierarchyType =
+      Field('hierarchyType', _$hierarchyType, opt: true);
 
   @override
   final MappableFields<ProjectAdditionalDetails> fields = const {
     #projectType: _f$projectType,
+    #hierarchyType: _f$hierarchyType,
   };
   @override
   final bool ignoreNull = true;
 
   static ProjectAdditionalDetails _instantiate(DecodingData data) {
-    return ProjectAdditionalDetails(projectType: data.dec(_f$projectType));
+    return ProjectAdditionalDetails(
+        projectType: data.dec(_f$projectType),
+        hierarchyType: data.dec(_f$hierarchyType));
   }
 
   @override
@@ -901,7 +907,7 @@ abstract class ProjectAdditionalDetailsCopyWith<
     $Out> implements ClassCopyWith<$R, $In, $Out> {
   ProjectTypeModelCopyWith<$R, ProjectTypeModel, ProjectTypeModel>?
       get projectType;
-  $R call({ProjectTypeModel? projectType});
+  $R call({ProjectTypeModel? projectType, String? hierarchyType});
   ProjectAdditionalDetailsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -920,11 +926,15 @@ class _ProjectAdditionalDetailsCopyWithImpl<$R, $Out>
       get projectType =>
           $value.projectType?.copyWith.$chain((v) => call(projectType: v));
   @override
-  $R call({Object? projectType = $none}) => $apply(
-      FieldCopyWithData({if (projectType != $none) #projectType: projectType}));
+  $R call({Object? projectType = $none, Object? hierarchyType = $none}) =>
+      $apply(FieldCopyWithData({
+        if (projectType != $none) #projectType: projectType,
+        if (hierarchyType != $none) #hierarchyType: hierarchyType
+      }));
   @override
   ProjectAdditionalDetails $make(CopyWithData data) => ProjectAdditionalDetails(
-      projectType: data.get(#projectType, or: $value.projectType));
+      projectType: data.get(#projectType, or: $value.projectType),
+      hierarchyType: data.get(#hierarchyType, or: $value.hierarchyType));
 
   @override
   ProjectAdditionalDetailsCopyWith<$R2, ProjectAdditionalDetails, $Out2>
