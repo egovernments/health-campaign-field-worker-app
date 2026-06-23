@@ -27,6 +27,9 @@ class SearchExecutor extends ActionExecutor {
     final contexts = contextData['entities'];
     final searchName = data['name'] as String? ?? 'default';
 
+    debugPrint('SearchExecutor: Starting search for "$searchName"');
+    debugPrint('SearchExecutor: contextData keys=${contextData.keys.toList()}');
+
     // Get screen key - try CrudItemContext first (has correct format),
     // then fall back to route args and parentScreenKey (from popup context)
     final crudCtx = CrudItemContext.of(context);
@@ -272,11 +275,16 @@ class SearchExecutor extends ActionExecutor {
     if (filters.isEmpty) {
       debugPrint(
           'SEARCH_EVENT: No filters to apply - all filters were skipped or empty. Returning early.');
+      debugPrint('SEARCH_EVENT: screenKey=$screenKey, compositeKey=$compositeKey');
+      debugPrint('SEARCH_EVENT: mergedNavigation=$mergedNavigation');
       return contextData;
     }
 
     debugPrint(
         'SEARCH_EVENT: Executing with ${filters.length} accumulated filters for $searchName');
+    for (final f in filters) {
+      debugPrint('SEARCH_EVENT: filter - root=${f.root}, field=${f.field}, op=${f.operator}, value=${f.value}');
+    }
 
     final config = FlowRegistry.getByName(screenKey ?? '');
 
@@ -437,6 +445,10 @@ class SearchExecutor extends ActionExecutor {
     final select = (config?['wrapperConfig']?['searchConfig']?['select'] as List?)
             ?.cast<String>() ??
         [];
+
+    debugPrint('SEARCH_EVENT: screenKey=$screenKey, compositeKey=$compositeKey');
+    debugPrint('SEARCH_EVENT: primaryModel=$primaryModel, select=$select');
+    debugPrint('SEARCH_EVENT: config name=${config?['name']}, screenType=${config?['screenType']}');
 
     // If no config available (e.g., on form pages), skip the search
     if (primaryModel == null || select.isEmpty) {

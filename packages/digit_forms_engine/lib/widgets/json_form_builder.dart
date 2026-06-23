@@ -279,7 +279,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         formData: form.rawValue,
         form: form,
         navigationParams: widget.navigationParams,
-      ).toggleControlVisibility(formName, result, widget.schema);
+      ).toggleControlVisibility(formName, result, schema);
 
       return !result;
     }
@@ -689,6 +689,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         final subName = mapEntry.key;
 
         final field = JsonFormBuilder(
+          key: ValueKey(subName),
           pageName: widget.pageName,
           currentSchemaKey: widget.currentSchemaKey,
           formControlName: subName,

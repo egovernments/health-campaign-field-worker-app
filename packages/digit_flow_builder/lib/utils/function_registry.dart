@@ -8,7 +8,37 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../blocs/app_localization.dart';
 import 'interpolation.dart';
+
+/// English month abbreviations indexed by [DateTime.month] (1-based).
+const _englishMonthAbbr = [
+  '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+];
+
+/// Localization keys indexed by [DateTime.month] (1-based).
+const _monthLocalizationKeys = [
+  '', 'HCM_MONTH_JAN', 'HCM_MONTH_FEB', 'HCM_MONTH_MAR',
+  'HCM_MONTH_APR', 'HCM_MONTH_MAY', 'HCM_MONTH_JUN',
+  'HCM_MONTH_JUL', 'HCM_MONTH_AUG', 'HCM_MONTH_SEP',
+  'HCM_MONTH_OCT', 'HCM_MONTH_NOV', 'HCM_MONTH_DEC',
+];
+
+/// Replaces the English month abbreviation in [formatted] with the
+/// localized month name looked up via [FlowBuilderLocalization].
+String _localizeFormattedDate(String formatted, DateTime date) {
+  final month = date.month;
+  if (month < 1 || month > 12) return formatted;
+
+  final key = _monthLocalizationKeys[month];
+  final localized = FlowBuilderLocalization.translateStatic(key);
+  // If the key came back unchanged, no translation is available - return as-is.
+  if (localized == key) return formatted;
+
+  final english = _englishMonthAbbr[month];
+  return formatted.replaceFirst(english, localized);
+}
 
 class TaskStatus {
   static const String administrationSuccess = 'ADMINISTRATION_SUCCESS';
@@ -19,6 +49,7 @@ class TaskStatus {
   static const String beneficiaryMigrated = 'BENEFICIARY_MIGRATED';
   static const String beneficiaryAbsent = 'BENEFICIARY_ABSENT';
   static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
+  static const String administrationFailed = 'ADMINISTRATION_FAILED';
   static const String visited = 'VISITED';
 }
 
@@ -199,6 +230,18 @@ bool _hasLogWithType(attendanceLog, DateTime date, String type) {
 /// This function should be called at application startup to populate the
 /// registry with all necessary business logic functions.
 void initializeFunctionRegistry() {
+  /// Registers a function to add two numeric values.
+  ///
+  /// - **Function Name**: `'add'`
+  /// - **Arguments**: Two numeric values to add together.
+  /// - **Returns**: The sum as an integer.
+  FunctionRegistry.register('add', (args, stateData) {
+    if (args.length < 2) return 0;
+    final a = int.tryParse(args[0]?.toString() ?? '') ?? 0;
+    final b = int.tryParse(args[1]?.toString() ?? '') ?? 0;
+    return a + b;
+  });
+
   /// Registers a function to calculate age from a date of birth.
   ///
   /// - **Function Name**: `'calculateAge'`
@@ -255,12 +298,16 @@ void initializeFunctionRegistry() {
       case 'date':
         final date = parseDate(rawValue);
         if (date == null) return '--';
-        return DateFormat(format ?? "dd MMM yyyy").format(date);
+        final formattedDate =
+            DateFormat(format ?? "dd MMM yyyy").format(date);
+        return _localizeFormattedDate(formattedDate, date);
 
       case 'datetime':
         final date = parseDate(rawValue);
         if (date == null) return '--';
-        return DateFormat(format ?? "dd MMM yyyy HH:mm").format(date);
+        final formattedDateTime =
+            DateFormat(format ?? "dd MMM yyyy HH:mm").format(date);
+        return _localizeFormattedDate(formattedDateTime, date);
 
       case 'ageinmonths':
         DateTime? birthDate;
@@ -339,6 +386,39 @@ void initializeFunctionRegistry() {
     final projectType = FlowBuilderSingleton().projectType;
     if (projectType == null) return false;
 
+// --- Resolve validMinAge / validMaxAge, fallback to doseCriteria condition ---
+    int? minAge = projectType.validMinAge;
+    int? maxAge = projectType.validMaxAge;
+    if (minAge == null || maxAge == null) {
+      for (final cycle in projectType.cycles ?? []) {
+        if ((cycle.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+            (cycle.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch) {
+          for (final delivery in cycle.deliveries ?? []) {
+            for (final dc in delivery.doseCriteria ?? []) {
+              final condition = dc.condition ?? '';
+              final match =
+                  RegExp(r'(\d+)<=ageandage<=(\d+)').firstMatch(condition);
+              if (match != null) {
+                final parsedMin = int.tryParse(match.group(1) ?? '');
+                final parsedMax = int.tryParse(match.group(2) ?? '');
+                if (parsedMin != null) {
+                  minAge = (minAge == null || parsedMin < minAge!)
+                      ? parsedMin
+                      : minAge;
+                }
+                if (parsedMax != null) {
+                  maxAge = (maxAge == null || parsedMax > maxAge!)
+                      ? parsedMax
+                      : maxAge;
+                }
+              }
+            }
+          }
+          break;
+        }
+      }
+    }
+
 // --- Tasks & SideEffects come from stateData ---
     final tasks = args.length > 1 ? args[1] : [];
     final sideEffects = (stateData.modelMap['sideEffects'] as List?) ?? [];
@@ -355,17 +435,19 @@ void initializeFunctionRegistry() {
         break;
       }
     }
-    if (currentCycle == null) return false;
+    if (currentCycle == null) {
+      return false;
+    }
 
 // --- Check age eligibility ---
-    int validMinAge = projectType.validMinAge ?? 3;
-    int validMaxAge = projectType.validMaxAge ?? 59;
+    final isWithinAge = minAge != null &&
+        maxAge != null &&
+        totalAgeMonths >= minAge &&
+        totalAgeMonths <= maxAge;
 
-    final isWithinAge =
-        totalAgeMonths >= validMinAge && totalAgeMonths <= validMaxAge;
-    totalAgeMonths <= validMaxAge;
-
-    if (!isWithinAge) return false;
+    if (!isWithinAge) {
+      return false;
+    }
 
 // --- Eligibility logic ---
     bool recordedSideEffect = false;
@@ -393,10 +475,14 @@ void initializeFunctionRegistry() {
         }
 
         // BENEFICIARY_DIED returns false immediately regardless of cycle
-        if (task['status'] == TaskStatus.beneficiaryDied) return false;
+        if (task['status'] == TaskStatus.beneficiaryDied) {
+          return false;
+        }
 
         // INELIGIBLE status returns false immediately if no cycle filtering is needed
-        if (task['status'] == TaskStatus.ineligible) return false;
+        if (task['status'] == TaskStatus.ineligible) {
+          return false;
+        }
 
         // For other ineligible statuses, only check tasks matching the current cycle
         if (currentRunningCycle != null) {
@@ -419,7 +505,9 @@ void initializeFunctionRegistry() {
         if (task['status'] == TaskStatus.ineligible ||
             task['status'] == TaskStatus.beneficiaryMigrated ||
             task['status'] == TaskStatus.beneficiaryAbsent ||
-            task['status'] == TaskStatus.beneficiaryRefused) return false;
+            task['status'] == TaskStatus.beneficiaryRefused) {
+          return false;
+        }
       }
     }
 
@@ -436,20 +524,22 @@ void initializeFunctionRegistry() {
           (lastTaskTime >= (currentCycle['startDate'] ?? 0) &&
               lastTaskTime <= (currentCycle['endDate'] ?? 0));
 
-      final isWithinAge =
-          totalAgeMonths >= validMinAge && totalAgeMonths <= validMaxAge;
-      totalAgeMonths <= validMaxAge;
+      final isWithinAge2 = minAge != null &&
+          maxAge != null &&
+          totalAgeMonths >= minAge &&
+          totalAgeMonths <= maxAge;
 
-      if (!isWithinAge) return false;
+      if (!isWithinAge2) {
+        return false;
+      }
 
       final checkStatusFn = FunctionRegistry.get('checkStatus');
       final statusOk = checkStatusFn?.call([], stateData) as bool? ?? false;
 
       return recordedSideEffect && !statusOk ? false : true;
     } else {
-      if (projectType.validMaxAge != null && projectType.validMinAge != null) {
-        return totalAgeMonths >= projectType.validMinAge! &&
-            totalAgeMonths <= projectType.validMaxAge!;
+      if (minAge != null && maxAge != null) {
+        return totalAgeMonths >= minAge && totalAgeMonths <= maxAge;
       }
       return true;
     }
@@ -659,6 +749,14 @@ void initializeFunctionRegistry() {
       final lastTaskStatus = lastTask['status']?.toString().toUpperCase();
       final isDelivered = lastTaskStatus == 'DELIVERED';
 
+      // If ADMINISTRATION_FAILED task exists for current cycle, treat as done
+      // (Unable To Deliver was recorded - no more delivery needed this cycle)
+      if (lastTaskStatus == TaskStatus.administrationFailed &&
+          lastCycle != null &&
+          lastCycle == selectedCycle.id) {
+        return true;
+      }
+
       // If last dose equals total deliveries in cycle AND cycle matches AND status is NOT delivered
       // -> return true (last dose attempted but not delivered)
       if (lastDose != null &&
@@ -666,7 +764,7 @@ void initializeFunctionRegistry() {
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
           (lastTaskStatus == 'ADMINISTRATION_SUCCESS' ||
-              lastTaskStatus == 'DELIVERED')) {
+              lastTaskStatus == 'DELIVERED' || lastTaskStatus == 'VISITED')) {
         return true;
       }
 
@@ -686,6 +784,136 @@ void initializeFunctionRegistry() {
 
     // No tasks exist -> return false (doses pending)
     return false;
+  });
+
+  /// Checks if an ADMINISTRATION_FAILED (Unable To Deliver) task exists
+  /// for the current running cycle.
+  ///
+  /// - **Function Name**: `'hasUnableToDeliverForCurrentCycle'`
+  /// - **Arguments**: A list where the first element is the tasks list.
+  /// - **Returns**: `true` if a task with ADMINISTRATION_FAILED status exists
+  ///   for the current cycle, `false` otherwise.
+  FunctionRegistry.register("hasUnableToDeliverForCurrentCycle",
+      (args, stateData) {
+    List<Map<String, dynamic>>? tasks;
+    if (args.isNotEmpty && args.first != null) {
+      if (args.first is List) {
+        final rawList = args.first as List;
+        tasks = rawList.map((item) {
+          if (item is Map<String, dynamic>) return item;
+          if (item is Map) return Map<String, dynamic>.from(item);
+          try {
+            return (item as dynamic).toMap() as Map<String, dynamic>;
+          } catch (_) {
+            return <String, dynamic>{};
+          }
+        }).toList();
+      }
+    }
+
+    if (tasks == null || tasks.isEmpty) return false;
+
+    final projectType = FlowBuilderSingleton().projectType;
+    final selectedCycle = projectType?.cycles?.firstWhereOrNull(
+      (e) =>
+          (e.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+          (e.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch,
+    );
+
+    if (selectedCycle == null) return false;
+
+    // Filter tasks for current cycle
+    final currentCycleTasks = tasks.where((task) {
+      final additionalFields = task['additionalFields'];
+      final fields = additionalFields?['fields'] as List?;
+      if (fields == null) return false;
+
+      for (final field in fields) {
+        if (field is Map && field['key'] == 'cycleIndex') {
+          final cycleIndex = int.tryParse(field['value']?.toString() ?? '');
+          if (cycleIndex == selectedCycle.id) return true;
+        }
+      }
+      return false;
+    }).toList();
+
+    if (currentCycleTasks.isEmpty) return false;
+
+    // Sort by createdTime (latest first)
+    currentCycleTasks.sort((a, b) {
+      final aTime = a['clientAuditDetails']?['createdTime'] ?? 0;
+      final bTime = b['clientAuditDetails']?['createdTime'] ?? 0;
+      return (bTime as num).compareTo(aTime as num);
+    });
+
+    // Check if the latest task has ADMINISTRATION_FAILED status
+    final latestTask = currentCycleTasks.first;
+    final status = latestTask['status']?.toString().toUpperCase();
+    return status == TaskStatus.administrationFailed;
+  });
+
+  /// Checks if a VISITED (Redose) task exists for the current running cycle.
+  ///
+  /// - **Function Name**: `'hasRedoseForCurrentCycle'`
+  /// - **Arguments**: A list where the first element is the tasks list.
+  /// - **Returns**: `true` if a task with VISITED status exists
+  ///   for the current cycle, `false` otherwise.
+  FunctionRegistry.register("hasRedoseForCurrentCycle", (args, stateData) {
+    List<Map<String, dynamic>>? tasks;
+    if (args.isNotEmpty && args.first != null) {
+      if (args.first is List) {
+        final rawList = args.first as List;
+        tasks = rawList.map((item) {
+          if (item is Map<String, dynamic>) return item;
+          if (item is Map) return Map<String, dynamic>.from(item);
+          try {
+            return (item as dynamic).toMap() as Map<String, dynamic>;
+          } catch (_) {
+            return <String, dynamic>{};
+          }
+        }).toList();
+      }
+    }
+
+    if (tasks == null || tasks.isEmpty) return false;
+
+    final projectType = FlowBuilderSingleton().projectType;
+    final selectedCycle = projectType?.cycles?.firstWhereOrNull(
+      (e) =>
+          (e.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+          (e.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch,
+    );
+
+    if (selectedCycle == null) return false;
+
+    // Filter tasks for current cycle
+    final currentCycleTasks = tasks.where((task) {
+      final additionalFields = task['additionalFields'];
+      final fields = additionalFields?['fields'] as List?;
+      if (fields == null) return false;
+
+      for (final field in fields) {
+        if (field is Map && field['key'] == 'cycleIndex') {
+          final cycleIndex = int.tryParse(field['value']?.toString() ?? '');
+          if (cycleIndex == selectedCycle.id) return true;
+        }
+      }
+      return false;
+    }).toList();
+
+    if (currentCycleTasks.isEmpty) return false;
+
+    // Sort by createdTime (latest first)
+    currentCycleTasks.sort((a, b) {
+      final aTime = a['clientAuditDetails']?['createdTime'] ?? 0;
+      final bTime = b['clientAuditDetails']?['createdTime'] ?? 0;
+      return (bTime as num).compareTo(aTime as num);
+    });
+
+    // Check if the latest task has VISITED status
+    final latestTask = currentCycleTasks.first;
+    final status = latestTask['status']?.toString().toUpperCase();
+    return status == TaskStatus.visited;
   });
 
   /// Registers a function to check the status of tasks.
@@ -1178,7 +1406,8 @@ void initializeFunctionRegistry() {
                   : int.tryParse(createdTime.toString()) ?? 0;
               if (timestamp > 0) {
                 final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-                return DateFormat(dateFormat).format(date);
+                final formatted = DateFormat(dateFormat).format(date);
+                return _localizeFormattedDate(formatted, date);
               }
             } catch (_) {
               return '';
@@ -1230,9 +1459,10 @@ void initializeFunctionRegistry() {
           if (taskMap != null) {
             final status = taskMap['status']?.toString().toUpperCase().trim();
 
-            // Disable if any task status is success
+            // Disable if any task status is success or failed (unable to deliver)
             if (status == TaskStatus.administrationSuccess ||
-                status == TaskStatus.delivered) {
+                status == TaskStatus.delivered ||
+                status == TaskStatus.administrationFailed) {
               return true;
             }
 
@@ -1673,4 +1903,250 @@ void initializeFunctionRegistry() {
 
     return wrapperData['latestBeneficiaryId'] as String?;
   });
+
+  /// Checks if the individual is a guest member.
+  ///
+  /// - **Function Name**: `'isGuestMember'`
+  /// - **Arguments**: First argument is the individual list.
+  /// - **Returns**: `true` if isGuestMember is true in additionalFields, `false` otherwise.
+  FunctionRegistry.register('isGuestMember', (args, stateData) {
+    if (args.isEmpty || args.first == null) return false;
+
+    final individuals = args.first;
+    dynamic individual;
+    if (individuals is List && individuals.isNotEmpty) {
+      individual = individuals.first;
+    } else {
+      individual = individuals;
+    }
+
+    Map<String, dynamic>? indMap;
+    if (individual is Map<String, dynamic>) {
+      indMap = individual;
+    } else {
+      try {
+        indMap = (individual as dynamic).toMap() as Map<String, dynamic>;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    final additionalFields = indMap['additionalFields'];
+    if (additionalFields is Map && additionalFields['fields'] is List) {
+      for (final field in additionalFields['fields']) {
+        final key = field is Map ? field['key'] : null;
+        final value = field is Map ? field['value'] : null;
+        if (key == 'isGuestMember') {
+          if (value is bool) return value;
+          return value?.toString().toLowerCase() == 'true';
+        }
+      }
+    }
+
+    return false;
+  });
+
+  /// Checks if the household has reached its member limit.
+  ///
+  /// - **Function Name**: `'hasReachedMemberLimit'`
+  /// - **Arguments**:
+  ///   - First argument: household data (with additionalFields containing memberCount)
+  ///   - Second argument: members list (list of individuals registered for the household)
+  /// - **Returns**: `true` if the number of registered members >= memberCount, `false` otherwise.
+  FunctionRegistry.register('hasReachedMemberLimit', (args, stateData) {
+    if (args.isEmpty || args.length < 2) return false;
+
+    try {
+      // Get household data
+      final householdData = args[0];
+      Map<String, dynamic>? householdMap;
+
+      if (householdData is Map<String, dynamic>) {
+        householdMap = householdData;
+      } else if (householdData is List && householdData.isNotEmpty) {
+        final firstItem = householdData.first;
+        if (firstItem is Map<String, dynamic>) {
+          householdMap = firstItem;
+        } else {
+          try {
+            householdMap =
+                (firstItem as dynamic).toMap() as Map<String, dynamic>;
+          } catch (_) {
+            return false;
+          }
+        }
+      } else {
+        try {
+          householdMap =
+              (householdData as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      // Get memberCount from additionalFields
+      int memberCount = 0;
+      final additionalFields = householdMap['additionalFields'];
+      if (additionalFields is Map && additionalFields['fields'] is List) {
+        for (final field in additionalFields['fields']) {
+          final key = field is Map ? field['key'] : null;
+          final value = field is Map ? field['value'] : null;
+          if (key == 'memberCount') {
+            if (value is int) {
+              memberCount = value;
+            } else if (value is String) {
+              memberCount = int.tryParse(value) ?? 0;
+            } else if (value is double) {
+              memberCount = value.toInt();
+            }
+            break;
+          }
+        }
+      }
+
+      // Get current count of members
+      final membersData = args[1];
+      int currentMemberCount = 0;
+
+      if (membersData is List) {
+        currentMemberCount = membersData.length;
+      } else if (membersData is Map) {
+        currentMemberCount = membersData['length'] ?? membersData['count'] ?? 0;
+      }
+
+      // Return true if we've reached or exceeded the limit
+      return currentMemberCount >= memberCount;
+    } catch (_) {
+      return false;
+    }
+  });
+
+  /// Computes the maximum number of vials that can be returned for the day.
+  ///
+  /// - **Function Name**: `'computeMaxReturnable'`
+  /// - **Arguments**: None. Reads UserAction records directly from
+  ///   `FlowCrudStateRegistry().get('vialDetailsMenu')`.
+  /// - **Returns**: `(sumReceived - sumAlreadyReturned)` clamped to >= 0.
+  FunctionRegistry.register('computeMaxReturnable', (args, stateData) {
+    try {
+      final currentBoundaryCode = FlowBuilderSingleton().boundary?.code;
+
+      List<Map<String, dynamic>> records = [];
+
+      final registryState =
+          FlowCrudStateRegistry().get('vialDetailsMenu');
+      final stateWrapper = registryState?.stateWrapper;
+
+      if (stateWrapper != null) {
+        for (final item in stateWrapper) {
+          try {
+            if (item is Map) {
+              final entity = item['UserActionModel'];
+              if (entity != null) {
+                final entityMap =
+                    (entity as dynamic).toMap() as Map<String, dynamic>;
+                records.add(entityMap);
+              } else {
+                final map = item is Map<String, dynamic>
+                    ? item
+                    : Map<String, dynamic>.from(item);
+                if (map.containsKey('action')) {
+                  records.add(map);
+                }
+              }
+            } else {
+              records
+                  .add((item as dynamic).toMap() as Map<String, dynamic>);
+            }
+          } catch (_) {
+            // skip un-convertible items
+          }
+        }
+      }
+
+      final now = DateTime.now();
+      final todayStart =
+          DateTime(now.year, now.month, now.day).millisecondsSinceEpoch;
+
+      String? getAdditionalFieldString(
+          Map<String, dynamic> record, String key) {
+        final additionalFields = record['additionalFields'];
+        if (additionalFields is Map && additionalFields['fields'] is List) {
+          for (final field in additionalFields['fields']) {
+            if (field is Map && field['key'] == key) {
+              return field['value']?.toString();
+            }
+          }
+        }
+        return null;
+      }
+
+      num getAdditionalFieldNum(Map<String, dynamic> record, String key) {
+        final additionalFields = record['additionalFields'];
+        if (additionalFields is Map && additionalFields['fields'] is List) {
+          for (final field in additionalFields['fields']) {
+            if (field is Map && field['key'] == key) {
+              final v = field['value'];
+              if (v is num) return v;
+              if (v is String) return num.tryParse(v) ?? 0;
+            }
+          }
+        }
+        return 0;
+      }
+
+      int? getCreatedTime(Map<String, dynamic> record) {
+        int? t;
+        if (record['clientAuditDetails'] is Map) {
+          t = _parseToInt(
+              (record['clientAuditDetails'] as Map)['createdTime']);
+        }
+        t ??= record['auditDetails'] is Map
+            ? _parseToInt((record['auditDetails'] as Map)['createdTime'])
+            : null;
+        t ??= _parseToInt(record['clientCreatedTime']);
+        return t;
+      }
+
+      num totalReceived = 0;
+      num alreadyReturned = 0;
+
+      for (final record in records) {
+        final action = (record['action'] ?? '').toString();
+
+        if (action != 'LOCATION_CAPTURE') continue;
+
+        if (currentBoundaryCode != null && currentBoundaryCode.isNotEmpty) {
+          final locality = getAdditionalFieldString(record, 'locality');
+          if (locality != currentBoundaryCode) continue;
+        }
+
+        final createdTime = getCreatedTime(record);
+        if (createdTime == null || createdTime < todayStart) continue;
+
+        final formValue = getAdditionalFieldString(record, 'form');
+
+        if (formValue == 'POLIO_STOCK_ISSUED') {
+          totalReceived +=
+              getAdditionalFieldNum(record, 'totalVialsReceivedForDay');
+        } else if (formValue == 'POLIO_STOCK_RETURNED') {
+          alreadyReturned +=
+              getAdditionalFieldNum(record, 'totalReturned');
+        }
+      }
+
+      final result = (totalReceived - alreadyReturned).toInt();
+      return result < 0 ? 0 : result;
+    } catch (_) {
+      return 0;
+    }
+  });
+}
+
+/// Helper to parse a value to int (handles int, double, String).
+int? _parseToInt(dynamic value) {
+  if (value is int) return value;
+  if (value is double) return value.toInt();
+  if (value is String) return int.tryParse(value);
+  return null;
 }

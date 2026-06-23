@@ -6,6 +6,7 @@ import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/attendee.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 
 class EntityModelJsonMapper extends DynamicEntityModelListener {
   @override
@@ -49,5 +50,7 @@ class EntityModelJsonMapper extends DynamicEntityModelListener {
             AttendeeModelMapper.fromJson(jsonEncode(json)),
         'AttendanceLogModel': (json) =>
             AttendanceLogModelMapper.fromJson(jsonEncode(json)),
+        'UserActionModel': (json) =>
+            UserActionModelMapper.fromJson(jsonEncode(json)),
       };
 }

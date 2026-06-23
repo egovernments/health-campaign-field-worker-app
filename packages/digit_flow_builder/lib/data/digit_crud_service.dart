@@ -4,6 +4,7 @@ import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/attendee.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_flow_builder/utils/context_utility.dart';
 import 'package:flutter/material.dart';
 
@@ -59,6 +60,9 @@ class DigitCrudService extends CrudService {
     } else if (entity is AttendanceLogModel) {
       return context
           .repository<AttendanceLogModel, AttendanceLogSearchModel>(context);
+    } else if (entity is UserActionModel) {
+      return context
+          .repository<UserActionModel, UserActionSearchModel>(context);
     } else {
       return context.repository<EntityModel, EntitySearchModel>(context);
     }
@@ -126,6 +130,8 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return AttendanceLogModelMapper.fromMap(normalizedMapAttendance);
       case 'name':
         return NameModelMapper.fromMap(normalizedMap);
+      case 'userAction':
+        return UserActionModelMapper.fromMap(normalizedMap);
       default:
         return EntityModelMapper.fromMap(normalizedMap);
     }

@@ -92,29 +92,30 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     final schemaJsonRaw = prefs.getString('app_config_schemas');
 
     try {
-      if (schemaJsonRaw != null) {
-        final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
-        final data = allSchemas['PERMISSIONHANDLER'];
-        if (data?['data']?['disabled'] == true) {
-          _isDisabled = true;
-          if (mounted) {
-            context.router.replace(BoundarySelectionRoute());
-          }
-          return; // Skip loading config when disabled
-        } else {
-          final registrationDeliveryData = data?['data'];
-          final flowsData =
-              (registrationDeliveryData['flows'] as List<dynamic>?)
-                      ?.map((e) => Map<String, dynamic>.from(e as Map))
-                      .toList() ??
-                  [];
-          if (flowsData.isNotEmpty) {
-            screenConfig = flowsData[0];
-            bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
-            footerConfig = screenConfig?['footer'] as List<dynamic>? ?? [];
-          }
-        }
-      } else {
+      // if (schemaJsonRaw != null) {
+      //   final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
+      //   final data = allSchemas['PERMISSIONHANDLER'];
+      //   if (data?['data']?['disabled'] == true) {
+      //     _isDisabled = true;
+      //     if (mounted) {
+      //       context.router.replace(BoundarySelectionRoute());
+      //     }
+      //     return; // Skip loading config when disabled
+      //   } else {
+      //     final registrationDeliveryData = data?['data'];
+      //     final flowsData =
+      //         (registrationDeliveryData['flows'] as List<dynamic>?)
+      //                 ?.map((e) => Map<String, dynamic>.from(e as Map))
+      //                 .toList() ??
+      //             [];
+      //     if (flowsData.isNotEmpty) {
+      //       screenConfig = flowsData[0];
+      //       bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+      //       footerConfig = screenConfig?['footer'] as List<dynamic>? ?? [];
+      //     }
+      //   }
+      // } else {
+
         if (permission_handler_config?['disabled'] == true) {
           _isDisabled = true;
           if (mounted) {
@@ -129,7 +130,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
             footerConfig = screenConfig?['footer'] as List<dynamic>? ?? [];
           }
         }
-      }
+      // }
     } catch (e) {
       debugPrint('config error $e');
     }

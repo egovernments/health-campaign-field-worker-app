@@ -103,6 +103,16 @@ class NavigationExecutor extends ActionExecutor {
 
     // Clear target screen's FlowCrudState before navigation
     // This ensures the new page instance starts fresh without old state
+    debugPrint('NAVIGATION_EXECUTOR: Clearing state for targetCompositeKey=$targetCompositeKey');
+    debugPrint('NAVIGATION_EXECUTOR: targetPageName=$targetPageName, targetType=$targetType, targetScreenKey=$targetScreenKey');
+    debugPrint('NAVIGATION_EXECUTOR: navigationMode=$navigationMode, popUntilPageName=$popUntilPageName');
+    debugPrint('NAVIGATION_EXECUTOR: resolved navigation data:');
+    final navDataForLog = navigationProperties['data'] as List<dynamic>?;
+    if (navDataForLog != null) {
+      for (final entry in navDataForLog) {
+        debugPrint('NAVIGATION_EXECUTOR:   ${entry['key']} = ${entry['value']}');
+      }
+    }
     FlowCrudStateRegistry().clear(targetCompositeKey);
 
     NavigationRegistry.navigateTo(navigationProperties);
@@ -137,7 +147,7 @@ class NavigationExecutor extends ActionExecutor {
               (entities is List
                   ? entities.whereType<EntityModel>().toList()
                   : <EntityModel>[]),
-              config!['wrapperConfig'],
+              Map<String, dynamic>.from(config!['wrapperConfig'] as Map),
               screenKey: targetCompositeKey,
             ).build();
             final flowState = const FlowCrudState().copyWith(
@@ -178,7 +188,7 @@ class NavigationExecutor extends ActionExecutor {
           // For create mode, build wrapper from entities as before
           final wrapper = WrapperBuilder(
             entities,
-            config?['wrapperConfig'],
+            Map<String, dynamic>.from(config?['wrapperConfig'] as Map),
             screenKey: targetCompositeKey,
           ).build();
           final flowState = const FlowCrudState().copyWith(

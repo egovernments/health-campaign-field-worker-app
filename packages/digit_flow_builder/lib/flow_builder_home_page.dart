@@ -47,6 +47,8 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
       widget.pageName,
     );
     _compositeKey = createCompositeKey(widget.pageName, _instanceId);
+    debugPrint('FlowBuilderHomePage: INIT pageName=${widget.pageName}, instanceId=$_instanceId, compositeKey=$_compositeKey');
+    debugPrint('FlowBuilderHomePage: navigationParams=${widget.navigationParams}');
 
     // For TEMPLATE screens, register with ScreenProtectionManager
     // FORM screens are handled by FormsRenderPage
@@ -79,6 +81,7 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
 
   @override
   void dispose() {
+    debugPrint('FlowBuilderHomePage: DISPOSE pageName=${widget.pageName}, compositeKey=$_compositeKey');
     // For TEMPLATE screens, unregister from ScreenProtectionManager
     if (!_isForm) {
       ScreenProtectionManager().unregisterPage(widget.pageName);

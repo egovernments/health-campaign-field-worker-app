@@ -9,16 +9,16 @@ final dynamic sampleFlows = {
       "body": [
         {
           "type": "template",
-          "label": "DELIVERY_SUCCESSFUL_PANEL_CARD_HEADING",
+          "label": "HCM_DELIVERY_SUCCESS_HEADING",
           "format": "panelCard",
-          "heading": "DELIVERY_SUCCESSFUL_PANEL_CARD_HEADING",
+          "heading": "HCM_DELIVERY_SUCCESS_HEADING",
           "fieldName": "successCard",
           "mandatory": true,
           "properties": {"type": "success"},
-          "description": "DELIVERY_SUCCESSFUL_PANEL_CARD_DESC",
+          "description": "HCM_DELIVERY_SUCCESS_DESCRIPTION",
           "primaryAction": {
             "type": "template",
-            "label": "VIEW_HOUSEHOLD_DETAILS",
+            "label": "HCM_DELIVERY_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
             "format": "button",
             "hidden": false,
             "onAction": [
@@ -42,7 +42,7 @@ final dynamic sampleFlows = {
           },
           "secondaryAction": {
             "type": "template",
-            "label": "GO_BACK",
+            "label": "HCM_DELIVERY_SUCCESS_GO_BACK_BUTTON",
             "format": "button",
             "hidden": false,
             "onAction": [
@@ -55,8 +55,8 @@ final dynamic sampleFlows = {
             "mandatory": true,
             "properties": {"type": "secondary"}
           },
-          "primaryActionLabel": "VIEW_HOUSEHOLD_DETAILS",
-          "secondaryActionLabel": "GO_BACK"
+          "primaryActionLabel": "HCM_DELIVERY_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
+          "secondaryActionLabel": "HCM_DELIVERY_SUCCESS_GO_BACK_BUTTON"
         }
       ],
       "name": "deliverySuccess",
@@ -65,7 +65,7 @@ final dynamic sampleFlows = {
       "header": [
         {
           "type": "template",
-          "label": "DELIVERY_BACK",
+          "label": "HCM_COMMON_BACK_LABEL",
           "format": "backLink",
           "onAction": [
             {
@@ -96,131 +96,29 @@ final dynamic sampleFlows = {
       "body": [
         {
           "type": "template",
-          "label": "REDOSE_SUCCESSFUL_PANEL_CARD_HEADING",
-          "format": "panelCard",
-          "heading": "REDOSE_SUCCESSFUL_PANEL_CARD_HEADING",
-          "fieldName": "successCard",
-          "mandatory": true,
-          "properties": {"type": "success"},
-          "description": "REDOSE_SUCCESSFUL_PANEL_CARD_DESC",
-          "primaryAction": {
-            "type": "template",
-            "label": "VIEW_HOUSEHOLD_DETAILS",
-            "format": "button",
-            "hidden": false,
-            "onAction": [
-              {
-                "actionType": "NAVIGATION",
-                "properties": {
-                  "data": [
-                    {
-                      "key": "HouseholdClientReferenceId",
-                      "value": "{{navigation.HouseholdClientReferenceId}}"
-                    }
-                  ],
-                  "name": "householdOverview",
-                  "type": "TEMPLATE"
-                }
-              }
-            ],
-            "fieldName": "viewHouseholdButton",
-            "mandatory": true,
-            "properties": {"type": "primary"}
-          },
-          "secondaryAction": {
-            "type": "template",
-            "label": "GO_BACK",
-            "format": "button",
-            "hidden": false,
-            "onAction": [
-              {
-                "actionType": "NAVIGATION",
-                "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
-              }
-            ],
-            "fieldName": "goBack",
-            "mandatory": true,
-            "properties": {"type": "secondary"}
-          },
-          "primaryActionLabel": "VIEW_HOUSEHOLD_DETAILS",
-          "secondaryActionLabel": "GO_BACK"
-        }
-      ],
-      "name": "redoseSuccess",
-      "order": 13,
-      "footer": [],
-      "header": [
-        {
-          "type": "template",
-          "label": "REDOSE_BACK",
-          "format": "backLink",
-          "onAction": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "data": [
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{navigation.HouseholdClientReferenceId}}"
-                  }
-                ],
-                "name": "searchBeneficiary",
-                "type": "TEMPLATE"
-              }
-            }
-          ],
-          "fieldName": "redoseBack",
-          "mandatory": true
-        }
-      ],
-      "category": "REDOSE",
-      "navigateTo": null,
-      "screenType": "TEMPLATE",
-      "submitCondition": null,
-      "preventScreenCapture": false
-    },
-    {
-      "body": [
-        {
-          "type": "template",
           "format": "card",
           "children": [
             {
               "data": [
                 {
-                  "key": "NAME_OF_INDIVIDUAL",
+                  "key": "HCM_BENEFICIARY_NAME_LABEL",
                   "value":
-                  "{{contextData.0.individuals.IndividualModel.name.givenName}}"
+                      "{{contextData.0.individuals.IndividualModel.name.givenName}}"
                 },
                 {
-                  "key": "ID_TYPE",
+                  "key": "HCM_BENEFICIARY_AGE_LABEL",
                   "value":
-                  "{{contextData.0.individuals.IndividualModel.identifiers.0.identifierType}}"
+                      "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, 'age')}}"
                 },
                 {
-                  "key": "ID_NUMBER",
+                  "key": "HCM_BENEFICIARY_GENDER_LABEL",
                   "value":
-                  "{{contextData.0.individuals.IndividualModel.identifiers.0.identifierId}}"
+                      "{{contextData.0.individuals.IndividualModel.gender}}"
                 },
                 {
-                  "key": "AGE",
+                  "key": "HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
                   "value":
-                  "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, 'age')}}"
-                },
-                {
-                  "key": "GENDER",
-                  "value":
-                  "{{contextData.0.individuals.IndividualModel.gender}}"
-                },
-                {
-                  "key": "MOBILE_NUMBER",
-                  "value":
-                  "{{contextData.0.individuals.IndividualModel.mobileNumber}}"
-                },
-                {
-                  "key": "DATE_OF_REGISTRATION",
-                  "value":
-                  "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, 'date', dd MMM yyyy)}}"
+                      "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, 'date', dd MMM yyyy)}}"
                 }
               ],
               "type": "template",
@@ -242,35 +140,33 @@ final dynamic sampleFlows = {
                 "source": "contextData.targetCycle.deliveries",
                 "columns": [
                   {
-                    "header": "DOSE",
+                    "header": "HCM_DELIVERY_TABLE_DELIVERY_NO_HEADER",
                     "isActive": true,
-                    "cellValue": "REGISTRATION_CURRENT_DOSE {{item.id}}"
+                    "cellValue": "HCM_DELIVERY_DOSE_LABEL {{item.id}}"
                   },
                   {
-                    "header": "DELIVERY_STATUS",
+                    "header": "HCM_DELIVERY_TABLE_STATUS_HEADER",
                     "isActive": true,
                     "cellValue": {
-                      "@default": "REGISTRATION_CURRENT_DOSE_STATUS_PENDING",
+                      "@default": "HCM_DELIVERY_STATUS_TO_BE_ADMINISTERED",
                       "@condition": [
                         {
                           "when":
-                          "{{fn:isDoseCompleted(item.id, contextData.0.currentRunningCycle)}} == true",
-                          "value":
-                          "REGISTRATION_CURRENT_DOSE_STATUS_ADMINISTERED"
+                              "{{fn:isDoseCompleted(item.id, contextData.0.currentRunningCycle)}} == true",
+                          "value": "HCM_DELIVERY_STATUS_ADMINISTERED"
                         },
                         {
                           "when": "{{item.id}} == {{contextData.0.nextDoseId}}",
-                          "value":
-                          "REGISTRATION_CURRENT_DOSE_STATUS_TOBE_ADMINISTERED"
+                          "value": "HCM_DELIVERY_STATUS_TO_BE_ADMINISTERED"
                         }
                       ]
                     }
                   },
                   {
-                    "header": "COMPLETED_ON",
+                    "header": "HCM_DELIVERY_TABLE_COMPLETED_ON_HEADER",
                     "isActive": true,
                     "cellValue":
-                    "{{fn:getTaskCompletionDate(item.id, contextData.0.currentRunningCycle)}}"
+                        "{{fn:getTaskCompletionDate(item.id, contextData.0.currentRunningCycle)}}"
                   }
                 ]
               },
@@ -291,7 +187,7 @@ final dynamic sampleFlows = {
                     "children": [
                       {
                         "type": "template",
-                        "value": "REGISTRATION_PAST_CYCLE {{item.id}}",
+                        "value": "Cycle {{item.id}}",
                         "format": "textTemplate",
                         "fieldName": "cycleNumber",
                         "properties": {"style": "headingS"}
@@ -301,31 +197,30 @@ final dynamic sampleFlows = {
                           "rows": "{{deliveries}}",
                           "columns": [
                             {
-                              "header": "DOSE",
+                              "header": "HCM_DELIVERY_TABLE_DELIVERY_NO_HEADER",
                               "isActive": true,
-                              "cellValue": "REGISTRATION_PAST_DOSE {{item.id}}"
+                              "cellValue": "HCM_DELIVERY_DOSE_LABEL {{item.id}}"
                             },
                             {
-                              "header": "DELIVERY_STATUS",
+                              "header": "HCM_DELIVERY_TABLE_STATUS_HEADER",
                               "isActive": true,
                               "cellValue": {
-                                "@default":
-                                "REGISTRATION_PAST_DOSE_STATUS_PENDING",
+                                "@default": "HCM_DELIVERY_STATUS_PENDING",
                                 "@condition": [
                                   {
                                     "when":
-                                    "{{fn:isDoseCompleted(item.id, currentItem.id)}} == true",
-                                    "value":
-                                    "REGISTRATION_PAST_DOSE_STATUS_ADMINISTERED"
+                                        "{{fn:isDoseCompleted(item.id, currentItem.id)}} == true",
+                                    "value": "HCM_DELIVERY_STATUS_ADMINISTERED"
                                   }
                                 ]
                               }
                             },
                             {
-                              "header": "COMPLETED_ON",
+                              "header":
+                                  "HCM_DELIVERY_TABLE_COMPLETED_ON_HEADER",
                               "isActive": true,
                               "cellValue":
-                              "{{fn:getTaskCompletionDate(item.id, currentItem.id)}}"
+                                  "{{fn:getTaskCompletionDate(item.id, currentItem.id)}}"
                             }
                           ]
                         },
@@ -357,10 +252,10 @@ final dynamic sampleFlows = {
       "footer": [
         {
           "type": "template",
-          "label": "RECORD_CYCLE_DOSE",
+          "label": "HCM_DELIVERY_RECORD_DELIVERY_BUTTON",
           "format": "button",
           "visible":
-          "{{fn:canRecordDelivery(contextData.0.nextCycleId)}}==true",
+              "{{fn:canRecordDelivery(contextData.0.nextCycleId)}}==true",
           "disabled": "{{eligibleProductVariants}} == null",
           "onAction": [
             {
@@ -383,7 +278,7 @@ final dynamic sampleFlows = {
                   {
                     "key": "deliveryStrategy",
                     "value":
-                    "{{contextData.0.currentDelivery.0.deliveryStrategy}}"
+                        "{{contextData.0.currentDelivery.0.deliveryStrategy}}"
                   },
                   {
                     "key": "totalDosesInCycle",
@@ -392,6 +287,10 @@ final dynamic sampleFlows = {
                   {
                     "key": "futureDoses",
                     "value": "{{contextData.0.futureDeliveries}}"
+                  },
+                  {
+                    "key": "eligibleProductVariants",
+                    "value": "{{contextData.0.eligibleProductVariants}}"
                   }
                 ],
                 "name": "DELIVERY",
@@ -411,7 +310,7 @@ final dynamic sampleFlows = {
       ],
       "header": [
         {
-          "label": "BENEFICIARY_BACK",
+          "label": "HCM_COMMON_BACK_LABEL",
           "format": "backLink",
           "onAction": [
             {
@@ -421,11 +320,11 @@ final dynamic sampleFlows = {
           ]
         }
       ],
-      "heading": "BENEFICIARY_DETAILS_HEADING",
+      "heading": "HCM_DELIVERY_BENEFICIARY_DETAILS_HEADING",
       "category": "DELIVERY",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "BENEFICIARY_DETAILS_DESC",
+      "description": "HCM_DELIVERY_BENEFICIARY_DETAILS_DESCRIPTION",
       "initActions": [
         {
           "actionType": "SEARCH_EVENT",
@@ -531,7 +430,7 @@ final dynamic sampleFlows = {
           },
           "deliveryLength": {
             "from":
-            "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
             "order": 3,
             "where": {
               "left": "{{id}}",
@@ -553,7 +452,7 @@ final dynamic sampleFlows = {
           },
           "currentRunningCycle": {
             "from":
-            "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
             "order": 1,
             "where": [
               {"left": "{{startDate}}", "right": "{{now}}", "operator": "lt"},
@@ -627,7 +526,7 @@ final dynamic sampleFlows = {
         "computedList": {
           "pastCycles": {
             "from":
-            "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
             "order": 6,
             "where": {
               "left": "{{item.id}}",
@@ -646,7 +545,7 @@ final dynamic sampleFlows = {
           },
           "targetCycle": {
             "from":
-            "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
             "order": 1,
             "where": {
               "left": "{{id}}",
@@ -709,102 +608,6 @@ final dynamic sampleFlows = {
       "body": [
         {
           "type": "template",
-          "label": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
-          "format": "panelCard",
-          "heading": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
-          "fieldName": "successCard",
-          "mandatory": true,
-          "properties": {"type": "success"},
-          "description": "ID-{{navigation.selectedIndividualIdentifierId}}",
-          "primaryAction": {
-            "type": "template",
-            "label": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
-            "format": "button",
-            "hidden": false,
-            "onAction": [
-              {
-                "actionType": "NAVIGATION",
-                "properties": {
-                  "data": [
-                    {
-                      "key": "selectedIndividualClientReferenceId",
-                      "value":
-                      "{{navigation.selectedIndividualClientReferenceId}}"
-                    },
-                    {
-                      "key": "selectedIndividualIdentifierId",
-                      "value": "{{navigation.selectedIndividualIdentifierId}}"
-                    },
-                    {
-                      "key": "HouseholdClientReferenceId",
-                      "value": "{{ navigation.HouseholdClientReferenceId }}"
-                    }
-                  ],
-                  "name": "householdOverview",
-                  "type": "TEMPLATE"
-                }
-              }
-            ],
-            "fieldName": "viewHouseholdButton",
-            "mandatory": true,
-            "properties": {"type": "primary"}
-          },
-          "secondaryAction": {
-            "type": "template",
-            "label": "GO_BACK",
-            "format": "button",
-            "hidden": false,
-            "onAction": [
-              {
-                "actionType": "NAVIGATION",
-                "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
-              }
-            ],
-            "fieldName": "goBack",
-            "mandatory": true,
-            "properties": {"type": "secondary"}
-          },
-          "primaryActionLabel": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
-          "secondaryActionLabel": "GO_BACK"
-        }
-      ],
-      "name": "referralSuccess",
-      "order": 7,
-      "footer": [],
-      "header": [
-        {
-          "type": "template",
-          "label": "REFERRAL_BACK",
-          "format": "backLink",
-          "onAction": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "data": [
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{navigation.clientReferenceId}}"
-                  }
-                ],
-                "name": "searchBeneficiary",
-                "type": "TEMPLATE"
-              }
-            }
-          ],
-          "fieldName": "referralBack",
-          "mandatory": true
-        }
-      ],
-      "category": "HFREFERRAL",
-      "navigateTo": null,
-      "screenType": "TEMPLATE",
-      "submitCondition": null,
-      "preventScreenCapture": false
-    },
-    {
-      "body": [
-        {
-          "type": "template",
           "format": "card",
           "children": [
             {
@@ -812,14 +615,18 @@ final dynamic sampleFlows = {
               "children": [
                 {
                   "type": "template",
-                  "label": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
+                  "label": "HCM_HOUSEHOLD_OVERVIEW_EDIT_HOUSEHOLD_BUTTON",
                   "format": "button",
+                  "prefixIcon": "Edit",
                   "onAction": [
                     {
                       "actionType": "REVERSE_TRANSFORM",
                       "properties": {
                         "configName": "beneficiaryRegistration",
-                        "entityTypes": ["HouseholdModel"]
+                        "entityTypes": [
+                          "HouseholdModel",
+                          "ProjectBeneficiaryModel"
+                        ]
                       }
                     },
                     {
@@ -852,21 +659,21 @@ final dynamic sampleFlows = {
             {
               "data": [
                 {
-                  "key": "HOUSEHOLD_HEAD_NAME",
+                  "key": "HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
                   "value":
-                  "{{contextData.0.headIndividual.IndividualModel.name.givenName}}",
+                      "{{contextData.0.headIndividual.IndividualModel.name.givenName}}",
                   "isActive": true
                 },
                 {
-                  "key": "HOUSEHOLD_LOCALITY",
+                  "key": "HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
                   "value":
-                  "{{contextData.0.household.HouseholdModel.address.locality.code}}",
+                      "{{contextData.0.household.HouseholdModel.address.locality.code}}",
                   "isActive": true
                 },
                 {
-                  "key": "MEMBER_COUNT",
+                  "key": "HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
                   "value":
-                  "{{contextData.0.household.HouseholdModel.memberCount}}",
+                      "{{contextData.0.household.HouseholdModel.additionalFields.fields.memberCount}}",
                   "isActive": true
                 }
               ],
@@ -885,6 +692,7 @@ final dynamic sampleFlows = {
                     "format": "row",
                     "children": [
                       {
+                        "flex": 1,
                         "type": "template",
                         "value": "{{ item.individual.0.name.givenName }}",
                         "format": "textTemplate",
@@ -892,10 +700,13 @@ final dynamic sampleFlows = {
                       },
                       {
                         "type": "template",
-                        "label": "REGISTRATION_EDIT_INDIVIDUAL_BUTTON_LABEL",
+                        "label":
+                            "HCM_HOUSEHOLD_OVERVIEW_EDIT_INDIVIDUAL_BUTTON",
                         "format": "button",
+                        "prefixIcon": "Edit",
+                        "visible": "{{fn:isHead(item.member)}}==false",
                         "disabled":
-                        "{{fn:disableEdit(item.task, item.hFReferral)}}==true",
+                            "{{fn:disableEdit(item.task, item.hFReferral)}}==true",
                         "onAction": [
                           {
                             "actionType": "REVERSE_TRANSFORM",
@@ -924,9 +735,14 @@ final dynamic sampleFlows = {
                                 {
                                   "key": "HouseholdClientReferenceId",
                                   "value":
-                                  "{{item.member.0.householdClientReferenceId}}"
+                                      "{{item.member.0.householdClientReferenceId}}"
                                 },
-                                {"key": "isEdit", "value": "true"}
+                                {"key": "isEdit", "value": "true"},
+                                {
+                                  "key": "headMobileNumber",
+                                  "value":
+                                      "{{contextData.0.headIndividual.IndividualModel.mobileNumber}}"
+                                }
                               ],
                               "name": "ADD_MEMBER",
                               "type": "FORM"
@@ -953,236 +769,323 @@ final dynamic sampleFlows = {
                   {
                     "type": "template",
                     "value":
-                    "{{item.individual.0.gender }} | {{fn:formatDate(item.individual.0.dateOfBirth, 'age')}}",
+                        "{{item.individual.0.gender }} | {{fn:formatDate(item.individual.0.dateOfBirth, 'age')}}",
                     "format": "textTemplate",
                     "fieldName": "genderAge",
                     "properties": {"bottomGap": 16}
                   },
                   {
                     "type": "template",
-                    "label": "NOT_ELIGIBLE",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_HEAD_TAG",
+                    "format": "tag",
+                    "visible": "{{fn:isHead(item.member)}}==true",
+                    "fieldName": "headOfHouseholdTag",
+                    "properties": {"tagType": "info", "bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_GUEST_TAG",
+                    "format": "tag",
+                    "visible": "{{fn:isGuestMember(item.individual)}}==true",
+                    "fieldName": "guestTag",
+                    "properties": {"tagType": "info", "bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_NOT_ELIGIBLE_TAG",
                     "format": "tag",
                     "visible":
-                    "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==false && {{fn:isHead(item.member)}}==false",
                     "fieldName": "notEligible",
                     "properties": {"tagType": "error"}
                   },
                   {
                     "type": "template",
-                    "label": "BENEFICIARY_REFERRED",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_BENEFICIARY_REFERRED_TAG",
                     "format": "tag",
                     "visible":
-                    "{{fn:hasReferralForCurrentCycle(item.hFReferral)}}==true",
+                        "{{fn:hasReferralForCurrentCycle(item.hFReferral)}}==true && {{fn:isHead(item.member)}}==false",
                     "fieldName": "beneficiaryReferred",
                     "properties": {"tagType": "error"}
                   },
                   {
                     "type": "template",
-                    "label": "ADMINISTERED_SUCCESS",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTERED_SUCCESS_TAG",
                     "format": "tag",
                     "visible":
-                    "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
                     "fieldName": "administrationSuccess",
                     "properties": {"tagType": "success", "bottomGap": 16}
                   },
                   {
                     "type": "template",
-                    "label": "REDOSE_COMPLETED",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTRATION_FAILED_TAG",
                     "format": "tag",
                     "visible":
-                        "{{fn:isRedoseCompleted(item.task)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
-                    "fieldName": "redoseCompleted",
+                        "{{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                    "fieldName": "administrationFailed",
+                    "properties": {"tagType": "error", "bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_RE_VACCINATED_TAG",
+                    "format": "tag",
+                    "visible":
+                        "{{fn:hasRedoseForCurrentCycle(item.task)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                    "fieldName": "reVaccinatedTag",
                     "properties": {"tagType": "success", "bottomGap": 16}
                   },
                   {
                     "type": "template",
-                    "label": "NOT_VISITED",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_NOT_VISITED_TAG",
                     "format": "tag",
                     "visible":
-                    "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
-
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false",
                     "fieldName": "notVisited",
                     "properties": {"tagType": "info", "bottomGap": 16}
                   },
                   {
                     "type": "template",
-                    "label": "DELIVERY",
-                    "format": "button",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_ACTION_BUTTON",
+                    "format": "actionPopup",
                     "visible":
-                    "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
-                    "onAction": [
-                      {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "data": [
-                            {
-                              "key": "selectedIndividualClientReferenceId",
-                              "value": "{{item.individual.0.clientReferenceId}}"
-                            },
-                            {
-                              "key": "selectedIndividualIdentifierId",
-                              "value":
-                              "{{item.individual.0.identifiers.0.identifierId}}"
-                            },
-                            {
-                              "key": "HouseholdClientReferenceId",
-                              "value":
-                              "{{item.member.0.householdClientReferenceId}}"
-                            },
-                            {
-                              "key": "ProjectBeneficiaryClientReferenceId",
-                              "value":
-                              "{{item.projectBeneficiary.0.clientReferenceId}}"
-                            },
-                            {
-                              "key": "selectedIndividualName",
-                              "value": "{{item.individual.0.name.givenName}}"
-                            },
-                            {
-                              "key": "selectedIndividualGender",
-                              "value": "{{item.individual.0.gender}}"
-                            },
-                            {
-                              "key": "selectedIndividualAgeInMonths",
-                              "value":
-                              "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
-                            },
-                            {
-                              "key": "cycleIndex",
-                              "value": "{{contextData.0.currentRunningCycle}}"
-                            }
-                          ],
-                          "name": "CHECKLIST",
-                          "type": "FORM"
-                        }
-                      }
-                    ],
-                    "fieldName": "deliveryButton",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false",
+                    "fieldName": "actionButton",
                     "mandatory": true,
                     "properties": {
                       "size": "medium",
                       "type": "primary",
+                      "bottomGap": 16,
+                      "popupConfig": {
+                        "body": [
+                          {
+                            "type": "template",
+                            "label":
+                                "HCM_HOUSEHOLD_OVERVIEW_GO_FOR_VACCINATE_LABEL",
+                            "format": "button",
+                            "onAction": [
+                              {"actionType": "CLOSE_POPUP"},
+                              {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key":
+                                          "selectedIndividualClientReferenceId",
+                                      "value":
+                                          "{{item.individual.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "selectedIndividualIdentifierId",
+                                      "value":
+                                          "{{item.individual.0.identifiers.0.identifierId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value":
+                                          "{{item.member.0.householdClientReferenceId}}"
+                                    },
+                                    {
+                                      "key":
+                                          "ProjectBeneficiaryClientReferenceId",
+                                      "value":
+                                          "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "selectedIndividualName",
+                                      "value":
+                                          "{{item.individual.0.name.givenName}}"
+                                    },
+                                    {
+                                      "key": "selectedIndividualGender",
+                                      "value": "{{item.individual.0.gender}}"
+                                    },
+                                    {
+                                      "key": "selectedIndividualAgeInMonths",
+                                      "value":
+                                          "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                                    },
+                                    {
+                                      "key": "cycleIndex",
+                                      "value":
+                                          "{{contextData.0.currentRunningCycle}}"
+                                    }
+                                  ],
+                                  "name": "beneficiaryDetails",
+                                  "type": "TEMPLATE"
+                                }
+                              }
+                            ],
+                            "fieldName": "goForVaccinateButton",
+                            "properties": {
+                              "size": "medium",
+                              "type": "secondary",
+                              "bottomGap": 8,
+                              "mainAxisSize": "max"
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "label":
+                                "HCM_HOUSEHOLD_OVERVIEW_VACCINATED_ELSEWHERE_LABEL",
+                            "format": "button",
+                            "onAction": [
+                              {"actionType": "CLOSE_POPUP"},
+                              {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key":
+                                          "selectedIndividualClientReferenceId",
+                                      "value":
+                                          "{{item.individual.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value":
+                                          "{{item.member.0.householdClientReferenceId}}"
+                                    },
+                                    {
+                                      "key":
+                                          "ProjectBeneficiaryClientReferenceId",
+                                      "value":
+                                          "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "selectedIndividualAgeInMonths",
+                                      "value":
+                                          "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                                    },
+                                    {
+                                      "key": "cycleIndex",
+                                      "value":
+                                          "{{contextData.0.currentRunningCycle}}"
+                                    },
+                                    {"key": "doseIndex", "value": "1"},
+                                    {
+                                      "key": "eligibleProductVariants",
+                                      "value":
+                                          "{{contextData.0.eligibleProductVariants}}"
+                                    }
+                                  ],
+                                  "name": "VACCINATED_ELSEWHERE",
+                                  "type": "FORM"
+                                }
+                              }
+                            ],
+                            "fieldName": "vaccinatedElsewhereButton",
+                            "properties": {
+                              "size": "medium",
+                              "type": "secondary",
+                              "bottomGap": 8,
+                              "mainAxisSize": "max"
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "label":
+                                "HCM_HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
+                            "format": "button",
+                            "onAction": [
+                              {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key":
+                                          "selectedIndividualClientReferenceId",
+                                      "value":
+                                          "{{item.individual.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value":
+                                          "{{item.member.0.householdClientReferenceId}}"
+                                    },
+                                    {
+                                      "key":
+                                          "ProjectBeneficiaryClientReferenceId",
+                                      "value":
+                                          "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "cycleIndex",
+                                      "value":
+                                          "{{contextData.0.currentRunningCycle}}"
+                                    },
+                                    {"key": "doseIndex", "value": "1"}
+                                  ],
+                                  "name": "UNABLETODELIVER",
+                                  "type": "FORM"
+                                }
+                              }
+                            ],
+                            "fieldName": "unableToDeliverButton",
+                            "properties": {
+                              "size": "medium",
+                              "type": "secondary",
+                              "mainAxisSize": "max"
+                            }
+                          }
+                        ],
+                        "title": "",
+                        "showCloseButton": true,
+                        "barrierDismissible": true
+                      },
                       "mainAxisSize": "max",
-                      "mainAxisAlignment": "center",
-                      "bottomGap": 16
+                      "mainAxisAlignment": "center"
                     }
                   },
                   {
                     "type": "template",
-                    "label": "HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
+                    "label": "HCM_REDOSE_BUTTON",
                     "format": "button",
                     "visible":
-                    "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0 && {{fn:isRegisteredBeforeCurrentCycle(item.individual.0.clientCreatedTime)}} == true",
+                        "{{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
                         "properties": {
                           "data": [
                             {
-                              "key": "selectedIndividualClientReferenceId",
-                              "value": "{{item.individual.0.clientReferenceId}}"
+                              "key": "ProjectBeneficiaryClientReferenceId",
+                              "value":
+                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
                             },
                             {
                               "key": "HouseholdClientReferenceId",
                               "value":
-                              "{{item.member.0.householdClientReferenceId}}"
-                            },
-                            {
-                              "key": "ProjectBeneficiaryClientReferenceId",
-                              "value":
-                              "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                  "{{item.member.0.householdClientReferenceId}}"
                             },
                             {
                               "key": "cycleIndex",
                               "value": "{{contextData.0.currentRunningCycle}}"
-                            }
+                            },
+                            {"key": "doseIndex", "value": "1"}
                           ],
-                          "name": "UNABLETODELIVER",
+                          "name": "REDOSE",
                           "type": "FORM"
                         }
                       }
                     ],
-                    "fieldName": "unableToDeliverButton",
+                    "fieldName": "redoseButton",
                     "mandatory": true,
                     "properties": {
                       "size": "medium",
                       "type": "secondary",
+                      "bottomGap": 16,
                       "mainAxisSize": "max",
-                      "mainAxisAlignment": "center",
-                      "bottomGap": 16
+                      "mainAxisAlignment": "center"
                     }
                   },
                   {
                     "icon": "add",
                     "type": "template",
-                    "label": "REGISTRATION_VIEW_DETAILS",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_VIEW_DETAILS_BUTTON",
                     "format": "button",
                     "visible":
-                    "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
-                    "onAction": [
-                      {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "data": [
-                            {
-                              "key": "selectedIndividualClientReferenceId",
-                              "value": "{{item.individual.0.clientReferenceId}}"
-                            },
-                            {
-                              "key": "selectedIndividualIdentifierId",
-                              "value":
-                              "{{item.individual.0.identifiers.0.identifierId}}"
-                            },
-                            {
-                              "key": "HouseholdClientReferenceId",
-                              "value":
-                              "{{item.member.0.householdClientReferenceId}}"
-                            },
-                            {
-                              "key": "ProjectBeneficiaryClientReferenceId",
-                              "value":
-                              "{{item.projectBeneficiary.0.clientReferenceId}}"
-                            },
-                            {
-                              "key": "selectedIndividualName",
-                              "value": "{{item.individual.0.name.givenName}}"
-                            },
-                            {
-                              "key": "selectedIndividualGender",
-                              "value": "{{item.individual.0.gender}}"
-                            },
-                            {
-                              "key": "selectedIndividualAgeInMonths",
-                              "value":
-                              "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
-                            },
-                            {
-                              "key": "cycleIndex",
-                              "value": "{{contextData.0.currentRunningCycle}}"
-                            }
-                          ],
-                          "name": "beneficiaryDetails",
-                          "type": "TEMPLATE"
-                        }
-                      }
-                    ],
-                    "fieldName": "viewDetails",
-                    "properties": {
-                      "size": "medium",
-                      "type": "secondary",
-                      "mainAxisSize": "max",
-                      "mainAxisAlignment": "center",
-                      "bottomGap": 16
-                    }
-                  },
-                  {
-                    "type": "template",
-                    "label": "REDOSE_ADMINISTRATION",
-                    "format": "button",
-                    "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
-                    "disabled":
-                        "{{fn:isRedoseWindowExpired(item.task)}}==true || {{fn:isRedoseCompleted(item.task)}}==true",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1223,27 +1126,21 @@ final dynamic sampleFlows = {
                             {
                               "key": "cycleIndex",
                               "value": "{{contextData.0.currentRunningCycle}}"
-                            },
-                            {
-                              "key": "lastDeliveredTaskClientReferenceId",
-                              "value": "{{item.task.last.clientReferenceId}}"
                             }
                           ],
-                          "name": "REDOSE",
-                          "type": "FORM"
+                          "name": "beneficiaryDetails",
+                          "type": "TEMPLATE"
                         }
                       }
                     ],
-                    "fieldName": "redoseButton",
-                    "mandatory": true,
+                    "fieldName": "viewDetails",
                     "properties": {
                       "size": "medium",
-                      "type": "primary",
+                      "type": "secondary",
                       "mainAxisSize": "max",
-                      "mainAxisAlignment": "center",
-                      "bottomGap": 16
+                      "mainAxisAlignment": "center"
                     }
-                  },
+                  }
                 ],
                 "fieldName": "memberCard",
                 "properties": {
@@ -1260,9 +1157,11 @@ final dynamic sampleFlows = {
             },
             {
               "type": "template",
-              "label": "ADD_MEMBER",
+              "label": "HCM_HOUSEHOLD_OVERVIEW_ADD_MEMBERS_BUTTON",
               "format": "button",
-              "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
+              "prefixIcon": "PersonAdd",
+              "disabled":
+                  "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==true",
               "onAction": [
                 {
                   "actionType": "NAVIGATION",
@@ -1270,104 +1169,29 @@ final dynamic sampleFlows = {
                     "data": [
                       {
                         "key": "HouseholdClientReferenceId",
-                        "value":"{{contextData.0.household.HouseholdModel.clientReferenceId}}"
+                        "value":
+                            "{{contextData.0.household.HouseholdModel.clientReferenceId}}"
                       },
-                      {"key": "UNIQUE_BENEFICIARY_ID", "value": "{{latestBeneficiaryId}}"}
+                      {
+                        "key": "headMobileNumber",
+                        "value":
+                            "{{contextData.0.headIndividual.IndividualModel.mobileNumber}}"
+                      }
                     ],
                     "name": "ADD_MEMBER",
                     "type": "FORM"
                   }
                 }
               ],
-              "fieldName": "member",
+              "fieldName": "addMember",
               "properties": {
-                "prefixIcon": "AddIcon",
+                "icon": "AddIcon",
                 "size": "medium",
                 "type": "tertiary",
                 "mainAxisSize": "min",
                 "mainAxisAlignment": "center"
               }
-            },
-            {
-              "icon": "AddIcon",
-              "type": "template",
-              "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-              "label": "ADD_MEMBER",
-              "format": "actionPopup",
-              "fieldName": "beneficiaryIdMinCheck",
-              "properties": {
-                "prefixIcon": "AddIcon",
-                "size": "medium",
-                "type": "tertiary",
-                "popupConfig": {
-                  "body": [],
-                  "type": "alert",
-                  "title": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
-                  "description": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
-                  "footerActions": [
-                    {
-                      "type": "template",
-                      "label": "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
-                      "format": "button",
-                      "onAction": [
-                        {
-                          "actionType": "CLOSE_POPUP",
-                          "properties": {"parentScreenKey": "searchBeneficiary"}
-                        },
-                        {
-                          "actionType": "NAVIGATION",
-                          "properties": {
-                            "data": [
-                              {
-                                "key": "HouseholdClientReferenceId",
-                                "value":
-                                "{{contextData.0.household.HouseholdModel.clientReferenceId}}"
-                              },
-                              {"key": "UNIQUE_BENEFICIARY_ID", "value": "{{latestBeneficiaryId}}"}
-                            ],
-                            "name": "ADD_MEMBER",
-                            "type": "FORM"
-                          }
-                        }
-                      ],
-                      "fieldName": "clearFilter",
-                      "properties": {
-                        "size": "large",
-                        "type": "secondary",
-                        "mainAxisSize": "max"
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "label":
-                      "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
-                      "format": "button",
-                      "onAction": [
-                        {
-                          "actionType": "CLOSE_POPUP",
-                          "properties": {"parentScreenKey": "searchBeneficiary"}
-                        },
-                        {
-                          "actionType": "NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC",
-                          "properties": {}
-                        }
-                      ],
-                      "fieldName": "saveFilter",
-                      "properties": {
-                        "size": "large",
-                        "type": "primary",
-                        "mainAxisSize": "max"
-                      }
-                    }
-                  ],
-                  "showCloseButton": true,
-                  "barrierDismissible": true
-                },
-                "mainAxisSize": "min",
-                "mainAxisAlignment": "center"
-              },
-              "schemaCode": null,
-            },
+            }
           ],
           "properties": {"type": "primary", "cardType": "primary"},
           "schemaCode": null
@@ -1375,28 +1199,35 @@ final dynamic sampleFlows = {
       ],
       "name": "householdOverview",
       "order": 3,
+      "canPop": false,
       "footer": [],
       "header": [
         {
-          "label": "HOUSEHOLD_BACK",
+          "label": "HCM_COMMON_BACK_LABEL",
           "format": "backLink",
           "onAction": [
             {
               "actionType": "NAVIGATION",
               "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
             }
-          ]
+          ],
+          "popupConfig": {
+            "title": "HCM_MEMBER_COUNT_MISMATCH_WARNING_TITLE",
+            "condition":
+                "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==false",
+            "titleIcon": "Warning",
+            "cancelLabel": "HCM_COMMON_CANCEL_LABEL",
+            "description": "HCM_MEMBER_COUNT_MISMATCH_WARNING_DESCRIPTION",
+            "confirmLabel": "HCM_COMMON_CONTINUE_LABEL"
+          }
         }
       ],
-      "heading": "REGISTRATION_HOUSEHOLD_OVERVIEW_HEADING",
+      "heading": "HCM_HOUSEHOLD_OVERVIEW_HEADING",
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
+      "description": "HCM_HOUSEHOLD_OVERVIEW_DESCRIPTION",
       "initActions": [
-        {
-          "actionType": "LOAD_UNIQUE_ID_POOL"
-        },
         {
           "actionType": "SEARCH_EVENT",
           "properties": {
@@ -1414,6 +1245,50 @@ final dynamic sampleFlows = {
       ],
       "wrapperConfig": {
         "filters": [],
+        "computed": {
+          "currentRunningCycle": {
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 1,
+            "where": [
+              {"left": "{{startDate}}", "right": "{{now}}", "operator": "lt"},
+              {"left": "{{endDate}}", "right": "{{now}}", "operator": "gt"}
+            ],
+            "select": "{{id}}",
+            "default": -1,
+            "takeFirst": true
+          }
+        },
+        "computedList": {
+          "targetCycle": {
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 1,
+            "where": {
+              "left": "{{id}}",
+              "right": "{{currentRunningCycle}}",
+              "operator": "equals"
+            },
+            "fallback": null,
+            "takeLast": true
+          },
+          "currentDelivery": {
+            "from": "{{targetCycle.0.deliveries}}",
+            "order": 2,
+            "where": {
+              "left": "{{id}}",
+              "right": 1,
+              "operator": "equals"
+            },
+            "fallback": null,
+            "takeLast": true
+          },
+          "eligibleProductVariants": {
+            "from": "{{currentDelivery.0.doseCriteria}}",
+            "order": 3,
+            "fallback": []
+          }
+        },
         "relations": [
           {
             "name": "household",
@@ -1476,6 +1351,7 @@ final dynamic sampleFlows = {
               },
               {
                 "name": "task",
+                "sort": {"field": "clientModifiedTime", "order": "desc"},
                 "match": {
                   "field": "projectBeneficiaryClientReferenceId",
                   "equalsFrom": "projectBeneficiary.clientReferenceId"
@@ -1493,20 +1369,6 @@ final dynamic sampleFlows = {
             ]
           }
         ],
-        "computed": {
-          "currentRunningCycle": {
-            "from":
-            "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-            "order": 1,
-            "where": [
-              {"left": "{{startDate}}", "right": "{{now}}", "operator": "lt"},
-              {"left": "{{endDate}}", "right": "{{now}}", "operator": "gt"}
-            ],
-            "select": "{{id}}",
-            "default": -1,
-            "takeFirst": true
-          }
-        },
         "rootEntity": "HouseholdModel",
         "wrapperName": "HouseholdWrapper",
         "searchConfig": {
@@ -1516,6 +1378,7 @@ final dynamic sampleFlows = {
             "householdMember",
             "projectBeneficiary",
             "task",
+            "latestTask",
             "hFReferral"
           ],
           "primary": "household"
@@ -1525,216 +1388,17 @@ final dynamic sampleFlows = {
       "preventScreenCapture": false
     },
     {
-      "name": "UNABLETODELIVER",
-      "order": 11,
-      "pages": [
-        {
-          "body": null,
-          "flow": "UNABLETODELIVER",
-          "page": "unableToDeliver",
-          "type": "object",
-          "label": "UNABLETODELIVERY_FLOW_LABEL",
-          "order": 2,
-          "footer": [
-            {
-              "label": "UNABLETODELIVERY_FLOW_HEADING",
-              "format": "button",
-              "onAction": [
-                {
-                  "actionType": "NAVIGATION",
-                  "properties": {
-                    "name": "household-overview",
-                    "type": "template"
-                  }
-                }
-              ],
-              "properties": {
-                "size": "large",
-                "type": "primary",
-                "mainAxisSize": "max",
-                "mainAxisAlignment": "center"
-              }
-            }
-          ],
-          "module": "REGISTRATION",
-          "heading": "UNABLETODELIVERY_FLOW_SCREEN_HEADING",
-          "summary": false,
-          "version": 1,
-          "navigateTo": {"name": "household-overview", "type": "template"},
-          "properties": [
-            {
-              "type": "string",
-              "label": "UNABLETODELIVERY_FLOW_reason_LABEL",
-              "order": 1,
-              "value": "",
-              "format": "radio",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "reason",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": true,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                  "UNABLETODELIVERY_FLOW_reason_REQUIRED_ERROR_MESSAGE"
-                }
-              ],
-              "enums": [
-                {"code": "BENEFICIARY_DIED", "name": "BENEFICIARY_DIED"},
-                {
-                  "code": "BENEFICIARY_MIGRATED",
-                  "name": "BENEFICIARY_MIGRATED"
-                },
-                {"code": "BENEFICIARY_ABSENT", "name": "BENEFICIARY_ABSENT"},
-                {"code": "BENEFICIARY_REFUSED", "name": "BENEFICIARY_REFUSED"}
-              ],
-              "errorMessage": ""
-            },
-            {
-              "type": "string",
-              "label": "UNABLETODELIVERY_FLOW_comment_LABEL",
-              "order": 2,
-              "value": "",
-              "format": "textArea",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "comment",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": true,
-              "validations": [],
-              "errorMessage": ""
-            }
-          ],
-          "showAlertPopUp": {
-            "title": "UNABLETODELIVER_FLOW_ALERT_TITLE",
-            "conditions": [
-              {
-                "value": "BENEFICIARY_DIED_STATUS",
-                "expression": "unableToDeliver.reason == BENEFICIARY_DIED"
-              },
-              {
-                "value": "BENEFICIARY_MIGRATED_STATUS",
-                "expression": "unableToDeliver.reason == BENEFICIARY_MIGRATED"
-              },
-              {
-                "value": "BENEFICIARY_ABSENT_STATUS",
-                "expression": "unableToDeliver.reason == BENEFICIARY_ABSENT"
-              },
-              {"value": "BENEFICIARY_REFUSED_STATUS", "expression": "DEFAULT"}
-            ],
-            "description": "UNABLETODELIVER_FLOWT_ALERT_DESCRIPTION",
-            "primaryActionLabel": "UNABLETODELIVER_FLOW_ACTION_SUBMIT",
-            "secondaryActionLabel": "UNABLETODELIVER_FLOW_ACTION_CANCEL"
-          },
-          "actionLabel": "UNABLETODELIVERY_FLOW_ACTION_LABEL",
-          "description": "UNABLETODELIVERY_FLOW_DESCRIPTION",
-          "showTabView": false,
-          "submitCondition": null,
-          "preventScreenCapture": false,
-          "conditionalNavigateTo": null
-        }
-      ],
-      "summary": false,
-      "version": 1,
-      "disabled": false,
-      "onAction": [
-        {
-          "actionType": "FETCH_TRANSFORMER_CONFIG",
-          "properties": {
-            "data": [
-              {
-                "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-              },
-              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"}
-            ],
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
-              }
-            ],
-            "configName": "unableToDeliverConfig"
-          }
-        },
-        {
-          "actionType": "CREATE_EVENT",
-          "properties": {
-            "entity": "TASK",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create household."}
-              }
-            ]
-          }
-        },
-        {
-          "actionType": "NAVIGATION",
-          "properties": {
-            "data": [
-              {
-                "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-              },
-              {
-                "key": "HouseholdClientReferenceId",
-                "value": "{{navigation.HouseholdClientReferenceId}}"
-              }
-            ],
-            "name": "householdOverview",
-            "type": "TEMPLATE",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
-              }
-            ],
-            "navigationMode": "popUntilAndPush",
-            "popUntilPageName": "searchBeneficiary"
-          }
-        }
-      ],
-      "isSelected": true,
-      "screenType": "FORM",
-      "initActions": [],
-      "wrapperConfig": {},
-      "scrollListener": {}
-    },
-    {
       "body": [
         {
           "type": "template",
-          "label": "PROXIMITY_SEARCH_REGISTRATION",
+          "label": "HCM_SEARCH_NEARBY_HOUSEHOLDS_LABEL",
           "format": "proximitySearch",
           "onAction": [
             {
               "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
               "properties": {
                 "data": [
-                  {"key": "", "value": 5, "operation": "within"},
-                  {
-                    "key": "localityBoundaryCode",
-                    "root": "address",
-                    "value": "{{singleton.boundary.code}}",
-                    "operation": "equals"
-                  }
+                  {"key": "", "value": 5, "operation": "within"}
                 ],
                 "name": "address",
                 "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
@@ -1754,80 +1418,21 @@ final dynamic sampleFlows = {
         },
         {
           "type": "template",
-          "label": "ID_SEARCH_REGISTRATION",
-          "format": "switch",
-          "onAction": [
-            {
-              "actionType": "CLEAR_STATE",
-              "properties": {
-                "widgetKeys": ["searchBar"],
-                "filterKeys": ["givenName", "identifierId"],
-                "triggerSearch": true
-              }
-            }
-          ],
-          "fieldName": "idSearch",
-          "mandatory": true,
-          "schemaCode": null,
-          "validations": []
-        },
-        {
-          "type": "template",
-          "label": "NAME_OF_INDIVIDUAL",
+          "label": "HCM_SEARCH_NAME_LABEL",
           "format": "searchBar",
           "onAction": [
             {
-              "actions": [
-                {
-                  "actionType": "SEARCH_EVENT",
-                  "properties": {
-                    "data": [
-                      {
-                        "key": "identifierId",
-                        "value": "field.value",
-                        "operation": "contains"
-                      },
-                      {
-                        "key": "localityBoundaryCode",
-                        "root": "address",
-                        "value": "{{singleton.boundary.code}}",
-                        "operation": "equals"
-                      }
-                    ],
-                    "name": "identifier",
-                    "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "data": [
+                  {
+                    "key": "givenName",
+                    "value": "field.value",
+                    "operation": "contains"
                   }
-                }
-              ],
-              "condition": {
-                "expression": "{{idSearch}}==true"
-              }
-            },
-            {
-              "actions": [
-                {
-                  "actionType": "SEARCH_EVENT",
-                  "properties": {
-                    "data": [
-                      {
-                        "key": "givenName",
-                        "value": "field.value",
-                        "operation": "contains"
-                      },
-                      {
-                        "key": "localityBoundaryCode",
-                        "root": "address",
-                        "value": "{{singleton.boundary.code}}",
-                        "operation": "equals"
-                      }
-                    ],
-                    "name": "name",
-                    "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
-                  }
-                }
-              ],
-              "condition": {
-                "expression": "DEFAULT"
+                ],
+                "name": "name",
+                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
               }
             }
           ],
@@ -1841,7 +1446,7 @@ final dynamic sampleFlows = {
         {
           "icon": "FilterAlt",
           "type": "template",
-          "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_LABEL",
+          "label": "HCM_SEARCH_FILTER_LABEL",
           "format": "actionPopup",
           "fieldName": "filterPopUp",
           "properties": {
@@ -1856,33 +1461,33 @@ final dynamic sampleFlows = {
                   "enums": [
                     {
                       "code": "ADMINISTRATION_SUCCESS",
-                      "name": "REGISTRATION_ADMINISTRATION_SUCCESS"
+                      "name": "HCM_SEARCH_FILTER_ADMINISTRATION_SUCCESS"
                     },
-                    {
-                      "code": "BENEFICIARY_REFERRED",
-                      "name": "REGISTRATION_BENEFICIARY_REFERRED"
-                    },
-                    {"code": "INELIGIBLE", "name": "REGISTRATION_INELIGIBLE"},
                     {
                       "code": "CLOSED_HOUSEHOLD",
-                      "name": "REGISTRATION_CLOSED_HOUSEHOLD"
+                      "name": "HCM_SEARCH_FILTER_MISSED_CHILDREN"
                     },
                     {
                       "code": "NOT_ADMINISTERED",
-                      "name": "REGISTRATION_NOT_ADMINISTERED"
-                    }
+                      "name": "HCM_SEARCH_FILTER_NOT_ADMINISTERED"
+                    },
+                    {
+                      "code": "ADMINISTRATION_FAILED",
+                      "name": "HCM_SEARCH_FILTER_ADMINISTRATION_FAILED"
+                    },
+                    {"code": "VISITED", "name": "HCM_SEARCH_FILTER_REVISITED"}
                   ],
                   "format": "selectionCard",
                   "fieldName": "selectedStatus"
                 }
               ],
               "type": "default",
-              "title": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_TITLE_LABEL",
+              "title": "HCM_SEARCH_FILTER_LABEL",
               "titleIcon": "FilterAlt",
               "footerActions": [
                 {
                   "type": "template",
-                  "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_CLEAR_LABEL",
+                  "label": "HCM_SEARCH_FILTER_CLEAR_ALL_BUTTON",
                   "format": "button",
                   "onAction": [
                     {
@@ -1892,7 +1497,8 @@ final dynamic sampleFlows = {
                         "filterKeys": [
                           "status",
                           "projectBeneficiary",
-                          "projectId"
+                          "projectId",
+                          "clientReferenceId"
                         ],
                         "widgetKeys": ["selectedStatus"],
                         "triggerSearch": true
@@ -1908,8 +1514,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "template",
-                  "label":
-                  "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL",
+                  "label": "HCM_SEARCH_FILTER_APPLY_BUTTON",
                   "format": "button",
                   "onAction": [
                     {
@@ -1919,13 +1524,13 @@ final dynamic sampleFlows = {
                     {
                       "actionType": "CLEAR_STATE",
                       "properties": {
-                        "name": "task",
+                        "name": "latestTask",
                         "filterKeys": [
                           "status",
                           "projectBeneficiary",
-                          "projectId"
-                        ],
-                        "triggerSearch": false
+                          "projectId",
+                          "clientReferenceId"
+                        ]
                       }
                     },
                     {
@@ -1936,14 +1541,30 @@ final dynamic sampleFlows = {
                             "data": [
                               {
                                 "key": "status",
+                                "scope": "latest",
+                                "value": ["ADMINISTRATION_SUCCESS", "VISITED"],
+                                "operation": "in"
+                              }
+                            ],
+                            "name": "task"
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == ADMINISTRATION_SUCCESS"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "data": [
+                              {
+                                "key": "status",
+                                "scope": "latest",
                                 "value": "{{selectedStatus}}",
                                 "operation": "in"
-                              },
-                              {
-                                "key": "localityBoundaryCode",
-                                "root": "address",
-                                "value": "{{singleton.boundary.code}}",
-                                "operation": "equals"
                               }
                             ],
                             "name": "task"
@@ -1952,7 +1573,7 @@ final dynamic sampleFlows = {
                       ],
                       "condition": {
                         "expression":
-                        "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE"
+                            "selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE || selectedStatus == VISITED"
                       }
                     },
                     {
@@ -1965,12 +1586,6 @@ final dynamic sampleFlows = {
                                 "key": "projectId",
                                 "value": "{{singleton.selectedProject.id}}",
                                 "operation": "notEqual"
-                              },
-                              {
-                                "key": "localityBoundaryCode",
-                                "root": "address",
-                                "value": "{{singleton.boundary.code}}",
-                                "operation": "equals"
                               }
                             ],
                             "name": "projectBeneficiary"
@@ -1989,29 +1604,16 @@ final dynamic sampleFlows = {
                             "data": [
                               {
                                 "key": "projectId",
-                                "root": "projectBeneficiary",
+                                "root": "hFReferral",
                                 "value": "{{singleton.selectedProject.id}}",
-                                "operation": "notEqual"
-                              },
-                              {
-                                "key": "status",
-                                "root": "task",
-                                "value": "NOT_ADMINISTERED",
-                                "operation": "equals"
-                              },
-                              {
-                                "key": "localityBoundaryCode",
-                                "root": "address",
-                                "value": "{{singleton.boundary.code}}",
                                 "operation": "equals"
                               }
-                            ],
-                            "filterLogic": "or"
+                            ]
                           }
                         }
                       ],
                       "condition": {
-                        "expression": "selectedStatus == NOT_ADMINISTERED"
+                        "expression": "selectedStatus == BENEFICIARY_REFERRED"
                       }
                     },
                     {
@@ -2021,23 +1623,24 @@ final dynamic sampleFlows = {
                           "properties": {
                             "data": [
                               {
-                                "key": "projectId",
-                                "root": "hFReferral",
-                                "value": "{{singleton.selectedProject.id}}",
-                                "operation": "equals"
-                              },
-                              {
-                                "key": "localityBoundaryCode",
-                                "root": "address",
-                                "value": "{{singleton.boundary.code}}",
-                                "operation": "equals"
+                                "key": "status",
+                                "root": "task",
+                                "value": {
+                                  "scope": "projectBeneficiary",
+                                  "values": [
+                                    "ADMINISTRATION_SUCCESS",
+                                    "VISITED"
+                                  ]
+                                },
+                                "operation": "notExists"
                               }
-                            ]
+                            ],
+                            "name": "task"
                           }
                         }
                       ],
                       "condition": {
-                        "expression": "selectedStatus == BENEFICIARY_REFERRED"
+                        "expression": "selectedStatus == NOT_ADMINISTERED"
                       }
                     }
                   ],
@@ -2059,14 +1662,6 @@ final dynamic sampleFlows = {
           "suffixIcon": "FilterAlt"
         },
         {
-         "type": "template",
-         "label": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
-         "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-         "format": "noResultCard",
-         "fieldName": "beneficiaryNotFound",
-         "showOnEmptySearch": true
-        },
-        {
           "data": "members",
           "type": "template",
           "child": {
@@ -2078,6 +1673,7 @@ final dynamic sampleFlows = {
                 "format": "row",
                 "children": [
                   {
+                    "flex": 1,
                     "type": "template",
                     "value": "{{ item.headIndividual.0.name.givenName }}",
                     "format": "textTemplate",
@@ -2085,7 +1681,7 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
-                    "label": "OPEN",
+                    "label": "HCM_SEARCH_OPEN_BUTTON",
                     "format": "button",
                     "onAction": [
                       {
@@ -2097,7 +1693,7 @@ final dynamic sampleFlows = {
                                 {
                                   "key": "HouseholdClientReferenceId",
                                   "value":
-                                  "{{ item.HouseholdModel.clientReferenceId }}"
+                                      "{{ item.HouseholdModel.clientReferenceId }}"
                                 }
                               ],
                               "name": "householdOverview",
@@ -2107,7 +1703,7 @@ final dynamic sampleFlows = {
                         ],
                         "condition": {
                           "expression":
-                          "{{item.tasks.0.status}} != CLOSED_HOUSEHOLD"
+                              "{{item.tasks.0.status}} != CLOSED_HOUSEHOLD"
                         }
                       },
                       {
@@ -2129,7 +1725,7 @@ final dynamic sampleFlows = {
                                 {
                                   "key": "HouseholdClientReferenceId",
                                   "value":
-                                  "{{ item.HouseholdModel.clientReferenceId }}"
+                                      "{{ item.HouseholdModel.clientReferenceId }}"
                                 },
                                 {"key": "isEdit", "value": "true"},
                                 {"key": "isClosedHousehold", "value": "true"}
@@ -2141,7 +1737,7 @@ final dynamic sampleFlows = {
                         ],
                         "condition": {
                           "expression":
-                          "{{item.tasks.0.status}} == CLOSED_HOUSEHOLD"
+                              "{{item.tasks.0.status}} == CLOSED_HOUSEHOLD"
                         }
                       }
                     ],
@@ -2161,19 +1757,19 @@ final dynamic sampleFlows = {
                   "source": "individuals",
                   "columns": [
                     {
-                      "header": "BENEFICIARY",
+                      "header": "HCM_SEARCH_TABLE_BENEFICIARY_HEADER",
                       "hidden": false,
                       "isActive": true,
                       "cellValue": "{{item.name.givenName}}"
                     },
                     {
-                      "header": "AGE_OF_BENEFICIARY",
+                      "header": "HCM_SEARCH_TABLE_AGE_HEADER",
                       "hidden": false,
                       "isActive": true,
                       "cellValue": "{{fn:formatDate(item.dateOfBirth, 'age')}}"
                     },
                     {
-                      "header": "GENDER",
+                      "header": "HCM_SEARCH_TABLE_GENDER_HEADER",
                       "hidden": false,
                       "isActive": true,
                       "cellValue": "{{item.gender}}"
@@ -2194,103 +1790,19 @@ final dynamic sampleFlows = {
           "schemaCode": null
         }
       ],
-      "initActions": [
-        {
-          "actionType": "LOAD_UNIQUE_ID_POOL"
-        }
-      ],
       "name": "searchBeneficiary",
       "order": 1,
       "footer": [
         {
-          "icon": "FilterAlt",
           "type": "template",
-          "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-          "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_LABEL",
-          "format": "actionPopup",
-          "fieldName": "beneficiaryIdMinCheck",
-          "properties": {
-            "size": "large",
-            "type": "primary",
-            "popupConfig": {
-              "body": [],
-              "type": "alert",
-              "title": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
-              "description": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
-              "footerActions": [
-                {
-                  "type": "template",
-                  "label": "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
-                  "format": "button",
-                  "onAction": [
-                    {
-                      "actionType": "CLOSE_POPUP",
-                      "properties": {"parentScreenKey": "searchBeneficiary"}
-                    },
-                    {
-                      "actionType": "NAVIGATION",
-                      "properties": {
-                        "data": [
-                          {"key": "nameOfIndividual", "value": "{{searchBar}}"},
-                          {"key": "UNIQUE_BENEFICIARY_ID", "value": "{{latestBeneficiaryId}}"},
-                          {"key": "uniqueBeneficiaryIdModel", "value": "{{latestBeneficiaryIdModel}}"}
-                        ],
-                        "name": "HOUSEHOLD",
-                        "type": "FORM"
-                      }
-                    }
-                  ],
-                  "fieldName": "clearFilter",
-                  "properties": {
-                    "size": "large",
-                    "type": "secondary",
-                    "mainAxisSize": "max"
-                  }
-                },
-                {
-                  "type": "template",
-                  "label":
-                  "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
-                  "format": "button",
-                  "onAction": [
-                    {
-                      "actionType": "CLOSE_POPUP",
-                      "properties": {"parentScreenKey": "searchBeneficiary"}
-                    },
-                    {
-                      "actionType": "NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC",
-                      "properties": {}
-                    }
-                  ],
-                  "fieldName": "saveFilter",
-                  "properties": {
-                    "size": "large",
-                    "type": "primary",
-                    "mainAxisSize": "max"
-                  }
-                }
-              ],
-              "showCloseButton": true,
-              "barrierDismissible": true
-            },
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "schemaCode": null,
-        },
-        {
-          "type": "template",
-          "label": "REGISTER_BENEFICIARY",
+          "label": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
           "format": "button",
-          "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
           "onAction": [
             {
               "actionType": "NAVIGATION",
               "properties": {
                 "data": [
-                  {"key": "nameOfIndividual", "value": "{{searchBar}}"},
-                  {"key": "UNIQUE_BENEFICIARY_ID", "value": "{{latestBeneficiaryId}}"},
-                  {"key": "uniqueBeneficiaryIdModel", "value": "{{latestBeneficiaryIdModel}}"}
+                  {"key": "nameOfIndividual", "value": "{{searchBar}}"}
                 ],
                 "name": "HOUSEHOLD",
                 "type": "FORM"
@@ -2309,8 +1821,9 @@ final dynamic sampleFlows = {
         {
           "type": "template",
           "isGS1": false,
-          "label": "SCAN_BENEFICIARY",
+          "label": "HCM_SEARCH_SCAN_BENEFICIARY_BUTTON",
           "format": "qrScanner",
+          "hidden": true,
           "onAction": [
             {
               "actionType": "OPEN_SCANNER",
@@ -2326,12 +1839,6 @@ final dynamic sampleFlows = {
                         {
                           "key": "tag",
                           "value": "{{beneficiaryTag}}",
-                          "operation": "equals"
-                        },
-                        {
-                          "key": "localityBoundaryCode",
-                          "root": "address",
-                          "value": "{{singleton.boundary.code}}",
                           "operation": "equals"
                         }
                       ],
@@ -2360,7 +1867,7 @@ final dynamic sampleFlows = {
             {
               "type": "scanLimit",
               "value": 1,
-              "message": "SCANLIMIT_ERROR_MESSAGE"
+              "message": "SCAN_LIMIT_ERROR_LABEL"
             },
             {"type": "isGS1", "value": false}
           ],
@@ -2369,7 +1876,7 @@ final dynamic sampleFlows = {
       ],
       "header": [
         {
-          "label": "BACK",
+          "label": "HCM_COMMON_BACK_LABEL",
           "format": "backLink",
           "onAction": [
             {
@@ -2379,11 +1886,11 @@ final dynamic sampleFlows = {
           ]
         }
       ],
-      "heading": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
+      "heading": "HCM_SEARCH_BENEFICIARY_HEADING",
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "REGISTRATION_SEARCH_BENEFICIARY_DESC",
+      "description": "HCM_SEARCH_BENEFICIARY_DESCRIPTION",
       "wrapperConfig": {
         "filters": [],
         "relations": [
@@ -2466,7 +1973,21 @@ final dynamic sampleFlows = {
             "task"
           ],
           "primary": "household",
-          "pagination": {"limit": 5, "maxItems": 15}
+          "pagination": {"limit": 5, "maxItems": 15},
+          "baseFilters": [
+            {
+              "key": "localityBoundaryCode",
+              "root": "address",
+              "value": "{{singleton.boundary.code}}",
+              "operation": "equals"
+            },
+            {
+              "key": "projectId",
+              "root": "projectBeneficiary",
+              "value": "{{singleton.selectedProject.id}}",
+              "operation": "equals"
+            }
+          ]
         }
       },
       "scrollListener": {
@@ -2500,14 +2021,14 @@ final dynamic sampleFlows = {
         {
           "body": null,
           "flow": "DELIVERY",
-          "page": "DeliveryChecklist",
+          "page": "DeliveryDetails",
           "type": "object",
-          "label": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_HEADING",
-          "order": 2,
+          "label": "HCM_DELIVERY_DETAILS_HEADING",
+          "order": 1,
           "footer": [
             {
-              "label":
-              "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SUBMIT_LABEL",
+              "type": "template",
+              "label": "HCM_DELIVERY_SAVE_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -2518,6 +2039,7 @@ final dynamic sampleFlows = {
                   }
                 }
               ],
+              "fieldName": "deliverySaveButton",
               "properties": {
                 "size": "large",
                 "type": "primary",
@@ -2527,8 +2049,7 @@ final dynamic sampleFlows = {
             }
           ],
           "module": "REGISTRATION",
-          "heading":
-          "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_HEADING",
+          "heading": "HCM_DELIVERY_DETAILS_HEADING",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -2539,7 +2060,7 @@ final dynamic sampleFlows = {
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
                   },
                   {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
                   {"key": "doseIndex", "value": "{{navigation.doseIndex}}"},
@@ -2551,7 +2072,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
                 "configName": "delivery"
@@ -2564,7 +2085,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create household."}
+                    "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
                   }
                 ]
               }
@@ -2578,7 +2099,7 @@ final dynamic sampleFlows = {
                       {
                         "key": "ProjectBeneficiaryClientReferenceId",
                         "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                            "{{navigation.ProjectBeneficiaryClientReferenceId}}"
                       },
                       {
                         "key": "cycleIndex",
@@ -2597,7 +2118,7 @@ final dynamic sampleFlows = {
                       {
                         "actionType": "SHOW_TOAST",
                         "properties": {
-                          "message": "Failed to fetch config for bulk delivery."
+                          "message": "HCM_ERROR_FETCH_BULK_DELIVERY_CONFIG"
                         }
                       }
                     ],
@@ -2611,9 +2132,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {
-                          "message": "Failed to create bulk tasks."
-                        }
+                        "properties": {"message": "HCM_ERROR_CREATE_BULK_TASKS"}
                       }
                     ]
                   }
@@ -2628,7 +2147,7 @@ final dynamic sampleFlows = {
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
                   },
                   {
                     "key": "HouseholdClientReferenceId",
@@ -2640,7 +2159,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -2654,234 +2173,8 @@ final dynamic sampleFlows = {
           },
           "properties": [
             {
-              "type": "boolean",
-              "label": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_GIVE_TABLET",
-              "order": 1,
-              "value": "",
-              "format": "checkbox",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "ACTION1",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": true,
-              "validations": [],
-              "errorMessage": ""
-            },
-            {
-              "type": "boolean",
-              "label": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_WRITE_CODE",
-              "order": 1,
-              "value": "",
-              "format": "checkbox",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "ACTION2",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": true,
-              "validations": [],
-              "errorMessage": ""
-            },
-            {
-              "type": "boolean",
-              "label": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_SPAQ",
-              "order": 1,
-              "value": "",
-              "format": "checkbox",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "ACTION3",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": true,
-              "validations": [],
-              "errorMessage": ""
-            }
-          ],
-          "actionLabel":
-          "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SUBMIT_LABEL",
-          "description":
-          "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_DESCRIPTION",
-          "showTabView": false,
-          "submitCondition": null,
-          "preventScreenCapture": false,
-          "conditionalNavigateTo": null
-        },
-        {
-          "body": null,
-          "flow": "DELIVERY",
-          "page": "DeliveryDetails",
-          "type": "object",
-          "label": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
-          "order": 1,
-          "footer": [
-            {
-              "label":
-              "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
-              "format": "button",
-              "onAction": [
-                {
-                  "actionType": "NAVIGATION",
-                  "properties": {
-                    "name": "DeliveryChecklist",
-                    "type": "template"
-                  }
-                }
-              ],
-              "properties": {
-                "size": "large",
-                "type": "primary",
-                "mainAxisSize": "max",
-                "mainAxisAlignment": "center"
-              }
-            }
-          ],
-          "module": "REGISTRATION",
-          "heading": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
-          "summary": false,
-          "version": 1,
-          "onAction": [
-            {
-              "actionType": "FETCH_TRANSFORMER_CONFIG",
-              "properties": {
-                "data": [
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  },
-                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
-                  {"key": "doseIndex", "value": "{{navigation.doseIndex}}"},
-                  {
-                    "key": "deliveryStrategy",
-                    "value": "{{navigation.deliveryStrategy}}"
-                  }
-                ],
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
-                  }
-                ],
-                "configName": "delivery"
-              }
-            },
-            {
-              "actionType": "CREATE_EVENT",
-              "properties": {
-                "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create household."}
-                  }
-                ]
-              }
-            },
-            {
-              "actions": [
-                {
-                  "actionType": "FETCH_TRANSFORMER_CONFIG",
-                  "properties": {
-                    "data": [
-                      {
-                        "key": "ProjectBeneficiaryClientReferenceId",
-                        "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                      },
-                      {
-                        "key": "cycleIndex",
-                        "value": "{{navigation.cycleIndex}}"
-                      },
-                      {
-                        "key": "deliveryStrategy",
-                        "value": "{{navigation.deliveryStrategy}}"
-                      },
-                      {
-                        "key": "futureDoses",
-                        "value": "{{navigation.futureDoses}}"
-                      }
-                    ],
-                    "onError": [
-                      {
-                        "actionType": "SHOW_TOAST",
-                        "properties": {
-                          "message": "Failed to fetch config for bulk delivery."
-                        }
-                      }
-                    ],
-                    "configName": "indirectBulkDelivery"
-                  }
-                },
-                {
-                  "actionType": "CREATE_EVENT",
-                  "properties": {
-                    "entity": "TaskModel",
-                    "onError": [
-                      {
-                        "actionType": "SHOW_TOAST",
-                        "properties": {
-                          "message": "Failed to create bulk tasks."
-                        }
-                      }
-                    ]
-                  }
-                }
-              ],
-              "condition": {"expression": "doseIndex == 1"}
-            },
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "data": [
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  },
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{navigation.HouseholdClientReferenceId}}"
-                  }
-                ],
-                "name": "deliverySuccess",
-                "type": "TEMPLATE",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
-                  }
-                ],
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "householdOverview"
-              }
-            }
-          ],
-          "navigateTo": {"name": "DeliveryChecklist", "type": "template"},
-          "properties": [
-            {
               "type": "string",
-              "label":
-              "APPONE_REGISTRATION_DELIVERYDETAILS_label_dateOfDelivery",
+              "label": "HCM_DELIVERY_DATE_LABEL",
               "order": 1,
               "value": "",
               "format": "date",
@@ -2911,7 +2204,7 @@ final dynamic sampleFlows = {
                 {"code": "AQ1", "name": "AQ1"},
                 {"code": "AQ2", "name": "AQ2"}
               ],
-              "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_resource",
+              "label": "HCM_DELIVERY_RESOURCE_LABEL",
               "order": 2,
               "value": "",
               "format": "custom",
@@ -2920,7 +2213,7 @@ final dynamic sampleFlows = {
               "tooltip": "",
               "helpText": "",
               "infoText": "",
-              "readOnly": false,
+              "readOnly": true,
               "required": true,
               "fieldName": "resourceCard",
               "mandatory": true,
@@ -2932,7 +2225,7 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "REGISTRATION_RESOURCE_CARD_SELECTION_REQUIRED"
+                  "message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
                 }
               ],
               "errorMessage": "",
@@ -2945,14 +2238,17 @@ final dynamic sampleFlows = {
                 {"code": "AQ2", "name": "AQ2"}
               ],
               "includeInSummary": true,
-              "required.message":
-              "REGISTRATION_RESOURCE_CARD_SELECTION_REQUIRED"
+              "required.message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
             },
             {
               "type": "string",
-              "enums": null,
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_deliveryComments",
+              "enums": [
+                {
+                  "code": "SUCCESSFUL_DELIVERY",
+                  "name": "HCM_DELIVERY_COMMENT_SUCCESSFUL"
+                }
+              ],
+              "label": "HCM_DELIVERY_COMMENTS_LABEL",
               "order": 3,
               "value": "",
               "format": "dropdown",
@@ -2966,7 +2262,6 @@ final dynamic sampleFlows = {
               "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
-              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
@@ -2976,11 +2271,11 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_scanner",
+              "label": "HCM_DELIVERY_SCAN_LABEL",
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -2995,15 +2290,80 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
+              "includeInForm": false,
+              "isMultiSelect": false,
+              "includeInSummary": false
+            },
+            {
+              "type": "string",
+              "label": "HCM_DELIVERY_LAT_LONG_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "latLng",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "",
               "includeInForm": true,
               "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "HCM_COMMON_YES"},
+                {"code": "NO", "name": "HCM_COMMON_NO"}
+              ],
+              "label": "HCM_DELIVERY_RECEIVED_OPV_BEFORE_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "receivedOPVBefore",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
               "includeInSummary": true
             }
           ],
-          "actionLabel":
-          "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
-          "description":
-          "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
+          "actionLabel": "HCM_DELIVERY_SAVE_BUTTON",
+          "description": "HCM_DELIVERY_DETAILS_DESCRIPTION",
           "showTabView": false,
           "submitCondition": null,
           "preventScreenCapture": false
@@ -3032,7 +2392,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
               }
             ],
             "configName": "delivery"
@@ -3045,7 +2405,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create household."}
+                "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
               }
             ]
           }
@@ -3059,7 +2419,7 @@ final dynamic sampleFlows = {
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
                   },
                   {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
                   {
@@ -3072,7 +2432,7 @@ final dynamic sampleFlows = {
                   {
                     "actionType": "SHOW_TOAST",
                     "properties": {
-                      "message": "Failed to fetch config for bulk delivery."
+                      "message": "HCM_ERROR_FETCH_BULK_DELIVERY_CONFIG"
                     }
                   }
                 ],
@@ -3086,7 +2446,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create bulk tasks."}
+                    "properties": {"message": "HCM_ERROR_CREATE_BULK_TASKS"}
                   }
                 ]
               }
@@ -3112,1068 +2472,12 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
+                "properties": {"message": "HCM_ERROR_NAVIGATION"}
               }
             ],
             "navigationMode": "popUntilAndPush",
             "popUntilPageName": "householdOverview"
           }
-        }
-      ],
-      "isSelected": true,
-      "screenType": "FORM",
-      "initActions": [],
-      "wrapperConfig": {},
-      "scrollListener": {}
-    },
-    {
-      "name": "REDOSE",
-      "order": 12,
-      "pages": [
-        {
-          "body": null,
-          "flow": "REDOSE",
-          "page": "RedoseDetails",
-          "type": "object",
-          "label": "REDOSE_DETAILS_SCREEN_HEADING",
-          "order": 1,
-          "footer": [
-            {
-              "label": "REDOSE_SUBMIT_BUTTON_LABEL",
-              "format": "button",
-              "onAction": [
-                {
-                  "actionType": "NAVIGATION",
-                  "properties": {
-                    "name": "household-acknowledgement",
-                    "type": "template"
-                  }
-                }
-              ],
-              "properties": {
-                "size": "large",
-                "type": "primary",
-                "mainAxisSize": "max",
-                "mainAxisAlignment": "center"
-              }
-            }
-          ],
-          "module": "REGISTRATION",
-          "heading": "REDOSE_DETAILS_SCREEN_HEADING",
-          "summary": false,
-          "version": 1,
-          "onAction": [
-            {
-              "actionType": "FETCH_TRANSFORMER_CONFIG",
-              "properties": {
-                "data": [
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  },
-                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
-                  {
-                    "key": "lastDeliveredTaskClientReferenceId",
-                    "value": "{{navigation.lastDeliveredTaskClientReferenceId}}"
-                  }
-                ],
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch redose config."}
-                  }
-                ],
-                "configName": "redose"
-              }
-            },
-            {
-              "actionType": "CREATE_EVENT",
-              "properties": {
-                "entity": "TASK",
-                "status": "VISITED",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create redose task."}
-                  }
-                ]
-              }
-            },
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "data": [
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  },
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{navigation.HouseholdClientReferenceId}}"
-                  }
-                ],
-                "name": "redoseSuccess",
-                "type": "TEMPLATE",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
-                  }
-                ],
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "householdOverview"
-              }
-            }
-          ],
-          "navigateTo": null,
-          "properties": [
-            {
-              "type": "string",
-              "label": "REDOSE_DATE_OF_ADMINISTRATION",
-              "order": 1,
-              "value": "",
-              "format": "date",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": true,
-              "fieldName": "dateOfRedose",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": true,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": true
-            },
-            {
-              "type": "dynamic",
-              "enums": [
-                {"code": "SP1", "name": "SP1"},
-                {"code": "SP2", "name": "SP2"},
-                {"code": "AQ1", "name": "AQ1"},
-                {"code": "AQ2", "name": "AQ2"}
-              ],
-              "label": "REDOSE_RESOURCE_DELIVERED",
-              "order": 2,
-              "value": "",
-              "format": "custom",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "resourceCard",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "dropDownOptions": [
-                {"code": "SP1", "name": "SP1"},
-                {"code": "SP2", "name": "SP2"},
-                {"code": "AQ1", "name": "AQ1"},
-                {"code": "AQ2", "name": "AQ2"}
-              ],
-              "includeInSummary": true
-            },
-            {
-              "type": "string",
-              "label": "REDOSE_REASON",
-              "order": 3,
-              "value": "",
-              "format": "dropdown",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "reasonForRedose",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "enums": [
-                {"code": "VOMITTING", "name": "REDOSE_REASON_VOMITTING"},
-                {"code": "OTHERS", "name": "REDOSE_REASON_OTHERS"}
-              ],
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "REDOSE_REASON_REQUIRED"
-                }
-              ],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": true
-            },
-            {
-              "type": "string",
-              "label": "REDOSE_COMMENTS",
-              "order": 4,
-              "value": "",
-              "format": "textArea",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "redoseComments",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": true,
-              "visibilityCondition": {
-                "expression": [
-                  {"condition": "RedoseDetails.reasonForRedose==OTHERS"}
-                ]
-              }
-            }
-          ],
-          "actionLabel": "REDOSE_SUBMIT_BUTTON_LABEL",
-          "description": "REDOSE_DETAILS_SCREEN_DESCRIPTION",
-          "showTabView": false,
-          "submitCondition": null,
-          "preventScreenCapture": false,
-          "conditionalNavigateTo": null
-        }
-      ],
-      "summary": false,
-      "version": 1,
-      "category": "REDOSE",
-      "disabled": false,
-      "onAction": [
-        {
-          "actionType": "FETCH_TRANSFORMER_CONFIG",
-          "properties": {
-            "data": [
-              {
-                "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-              },
-              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
-              {
-                "key": "lastDeliveredTaskClientReferenceId",
-                "value": "{{navigation.lastDeliveredTaskClientReferenceId}}"
-              }
-            ],
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch redose config."}
-              }
-            ],
-            "configName": "redose"
-          }
-        },
-        {
-          "actionType": "CREATE_EVENT",
-          "properties": {
-            "entity": "TASK",
-            "status": "VISITED",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create redose task."}
-              }
-            ]
-          }
-        },
-        {
-          "actionType": "NAVIGATION",
-          "properties": {
-            "data": [
-              {
-                "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-              },
-              {
-                "key": "HouseholdClientReferenceId",
-                "value": "{{navigation.HouseholdClientReferenceId}}"
-              }
-            ],
-            "name": "redoseSuccess",
-            "type": "TEMPLATE",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
-              }
-            ],
-            "navigationMode": "popUntilAndPush",
-            "popUntilPageName": "householdOverview"
-          }
-        }
-      ],
-      "isSelected": true,
-      "screenType": "FORM",
-      "initActions": [],
-      "wrapperConfig": {},
-      "scrollListener": {}
-    },
-    {
-      "name": "CHECKLIST",
-      "order": 5,
-      "pages": [
-        {
-          "body": null,
-          "flow": "CHECKLIST",
-          "page": "eligibilityChecklist",
-          "type": "object",
-          "label": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_HEADING",
-          "order": 1,
-          "footer": [
-            {
-              "label":
-              "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
-              "format": "button",
-              "onAction": [
-                {
-                  "actionType": "NAVIGATION",
-                  "properties": {
-                    "name": "household-acknowledgement",
-                    "type": "template"
-                  }
-                }
-              ],
-              "properties": {
-                "size": "large",
-                "type": "primary",
-                "mainAxisSize": "max",
-                "mainAxisAlignment": "center"
-              }
-            }
-          ],
-          "module": "REGISTRATION",
-          "heading": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_HEADING",
-          "summary": false,
-          "version": 1,
-          "onAction": [
-            {
-              "actions": [
-                {
-                  "actionType": "NAVIGATION",
-                  "properties": {
-                    "data": [
-                      {
-                        "key": "selectedIndividualClientReferenceId",
-                        "value":
-                        "{{navigation.selectedIndividualClientReferenceId}}"
-                      },
-                      {
-                        "key": "selectedIndividualIdentifierId",
-                        "value": "{{navigation.selectedIndividualIdentifierId}}"
-                      },
-                      {
-                        "key": "HouseholdClientReferenceId",
-                        "value": "{{ navigation.HouseholdClientReferenceId }}"
-                      },
-                      {
-                        "key": "ProjectBeneficiaryClientReferenceId",
-                        "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                      }
-                    ],
-                    "name": "beneficiaryDetails",
-                    "type": "TEMPLATE",
-                    "onError": [
-                      {
-                        "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
-                      }
-                    ],
-                    "navigationMode": "popUntilAndPush",
-                    "popUntilPageName": "householdOverview"
-                  }
-                }
-              ],
-              "condition": {
-                "expression":
-                "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==NO"
-              }
-            },
-            {
-              "actions": [
-                {
-                  "actionType": "NAVIGATION",
-                  "properties": {
-                    "data": [
-                      {
-                        "key": "selectedIndividualClientReferenceId",
-                        "value":
-                        "{{navigation.selectedIndividualClientReferenceId}}"
-                      },
-                      {
-                        "key": "selectedIndividualIdentifierId",
-                        "value": "{{navigation.selectedIndividualIdentifierId}}"
-                      },
-                      {
-                        "key": "HouseholdClientReferenceId",
-                        "value": "{{ navigation.HouseholdClientReferenceId }}"
-                      },
-                      {
-                        "key": "ProjectBeneficiaryClientReferenceId",
-                        "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                      },
-                      {
-                        "key": "selectedIndividualName",
-                        "value": "{{navigation.selectedIndividualName}}"
-                      },
-                      {
-                        "key": "selectedIndividualGender",
-                        "value": "{{navigation.selectedIndividualGender}}"
-                      },
-                      {
-                        "key": "selectedIndividualAgeInMonths",
-                        "value": "{{navigation.selectedIndividualAgeInMonths}}"
-                      },
-                      {
-                        "key": "cycleIndex",
-                        "value": "{{navigation.cycleIndex}}"
-                      }
-                    ],
-                    "name": "REFER_BENEFICIARY",
-                    "type": "FORM",
-                    "onError": [
-                      {
-                        "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
-                      }
-                    ],
-                    "navigationMode": "popUntilAndPush",
-                    "popUntilPageName": "householdOverview"
-                  }
-                }
-              ],
-              "condition": {
-                "expression":
-                "eligibilityChecklist.ec1==YES && eligibilityChecklist.ec3==YES && eligibilityChecklist.ec4==YES"
-              }
-            },
-            {
-              "actions": [
-                {
-                  "actionType": "FETCH_TRANSFORMER_CONFIG",
-                  "properties": {
-                    "data": [
-                      {
-                        "key": "selectedIndividualClientReferenceId",
-                        "value":
-                        "{{navigation.selectedIndividualClientReferenceId}}"
-                      },
-                      {
-                        "key": "selectedIndividualIdentifierId",
-                        "value": "{{navigation.selectedIndividualIdentifierId}}"
-                      },
-                      {
-                        "key": "HouseholdClientReferenceId",
-                        "value": "{{ navigation.HouseholdClientReferenceId }}"
-                      },
-                      {
-                        "key": "ProjectBeneficiaryClientReferenceId",
-                        "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                      }
-                    ],
-                    "onError": [
-                      {
-                        "actionType": "SHOW_TOAST",
-                        "properties": {
-                          "message": "Failed to fetch ineligible config."
-                        }
-                      }
-                    ],
-                    "configName": "ineligibleConfig"
-                  }
-                },
-                {
-                  "actionType": "CREATE_EVENT",
-                  "properties": {
-                    "entity": "TASK",
-                    "onError": [
-                      {
-                        "actionType": "SHOW_TOAST",
-                        "properties": {
-                          "message": "Failed to create task records."
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "actionType": "NAVIGATION",
-                  "properties": {
-                    "data": [
-                      {
-                        "key": "selectedIndividualClientReferenceId",
-                        "value":
-                        "{{navigation.selectedIndividualClientReferenceId}}"
-                      },
-                      {
-                        "key": "selectedIndividualIdentifierId",
-                        "value": "{{navigation.selectedIndividualIdentifierId}}"
-                      },
-                      {
-                        "key": "HouseholdClientReferenceId",
-                        "value": "{{ navigation.HouseholdClientReferenceId }}"
-                      },
-                      {
-                        "key": "ProjectBeneficiaryClientReferenceId",
-                        "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                      }
-                    ],
-                    "name": "householdOverview",
-                    "type": "TEMPLATE",
-                    "onError": [
-                      {
-                        "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation to flow failed."}
-                      }
-                    ],
-                    "navigationMode": "popUntilAndPush",
-                    "popUntilPageName": "householdOverview"
-                  }
-                }
-              ],
-              "condition": {
-                "expression":
-                "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==YES"
-              }
-            },
-            {
-              "actions": [
-                {
-                  "actionType": "NAVIGATION",
-                  "properties": {
-                    "data": [
-                      {
-                        "key": "selectedIndividualClientReferenceId",
-                        "value":
-                        "{{navigation.selectedIndividualClientReferenceId}}"
-                      },
-                      {
-                        "key": "selectedIndividualIdentifierId",
-                        "value": "{{navigation.selectedIndividualIdentifierId}}"
-                      },
-                      {
-                        "key": "HouseholdClientReferenceId",
-                        "value": "{{ navigation.HouseholdClientReferenceId }}"
-                      },
-                      {
-                        "key": "ProjectBeneficiaryClientReferenceId",
-                        "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                      },
-                      {
-                        "key": "selectedIndividualName",
-                        "value": "{{navigation.selectedIndividualName}}"
-                      },
-                      {
-                        "key": "selectedIndividualGender",
-                        "value": "{{navigation.selectedIndividualGender}}"
-                      },
-                      {
-                        "key": "selectedIndividualAgeInMonths",
-                        "value": "{{navigation.selectedIndividualAgeInMonths}}"
-                      },
-                      {
-                        "key": "cycleIndex",
-                        "value": "{{navigation.cycleIndex}}"
-                      }
-                    ],
-                    "name": "REFER_BENEFICIARY",
-                    "type": "FORM",
-                    "onError": [
-                      {
-                        "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
-                      }
-                    ],
-                    "navigationMode": "popUntilAndPush",
-                    "popUntilPageName": "householdOverview"
-                  }
-                }
-              ],
-              "condition": {"expression": "DEFAULT"}
-            }
-          ],
-          "navigateTo": {
-            "name": "household-acknowledgement",
-            "type": "template"
-          },
-          "properties": [
-            {
-              "type": "string",
-              "enums": [
-                {"code": "YES", "name": "QUESTION_1_YES"},
-                {"code": "NO", "name": "QUESTION_1_NO"}
-              ],
-              "label": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL",
-              "order": 1,
-              "value": "",
-              "format": "radio",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "ec1",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": true,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                  "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL_REQUIRED_MESSAGE"
-                }
-              ],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "dropDownOptions": [
-                {"code": "YES", "name": "QUESTION_1_YES"},
-                {"code": "NO", "name": "QUESTION_1_NO"}
-              ],
-              "includeInSummary": true,
-              "required.message":
-              "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL_REQUIRED_MESSAGE"
-            },
-            {
-              "type": "string",
-              "enums": [
-                {"code": "YES", "name": "QUESTION_2_YES"},
-                {"code": "NO", "name": "QUESTION_2_NO"}
-              ],
-              "label": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL",
-              "order": 2,
-              "value": "",
-              "format": "radio",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "ec2",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": true,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                  "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL_REQUIRED_MESSAGE"
-                }
-              ],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "dropDownOptions": [
-                {"code": "YES", "name": "QUESTION_2_YES"},
-                {"code": "NO", "name": "QUESTION_2_NO"}
-              ],
-              "includeInSummary": true,
-              "required.message":
-              "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL_REQUIRED_MESSAGE",
-              "visibilityCondition": {
-                "expression": [
-                  {"condition": "eligibilityChecklist.ec1==YES"}
-                ]
-              }
-            },
-            {
-              "type": "string",
-              "enums": [
-                {"code": "YES", "name": "QUESTION_3_YES"},
-                {"code": "NO", "name": "QUESTION_3_NO"}
-              ],
-              "label": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL",
-              "order": 3,
-              "value": "",
-              "format": "radio",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "ec3",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": true,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                  "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL_REQUIRED_MESSAGE"
-                }
-              ],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "dropDownOptions": [
-                {"code": "YES", "name": "QUESTION_3_YES"},
-                {"code": "NO", "name": "QUESTION_3_NO"}
-              ],
-              "includeInSummary": true,
-              "required.message":
-              "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL_REQUIRED_MESSAGE"
-            },
-            {
-              "type": "string",
-              "enums": [
-                {"code": "YES", "name": "QUESTION_4_YES"},
-                {"code": "NO", "name": "QUESTION_4_NO"}
-              ],
-              "label": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL",
-              "order": 3,
-              "value": "",
-              "format": "radio",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "ec4",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": true,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                  "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL_REQUIRED_MESSAGE"
-                }
-              ],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "dropDownOptions": [
-                {"code": "YES", "name": "QUESTION_4_YES"},
-                {"code": "NO", "name": "QUESTION_4_NO"}
-              ],
-              "includeInSummary": true,
-              "required.message":
-              "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL_REQUIRED_MESSAGE"
-            }
-          ],
-          "actionLabel":
-          "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
-          "description": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_DESCRIPTION",
-          "showTabView": false,
-          "showAlertPopUp": {
-            "title": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
-            "conditions": [
-              {
-                "value": "To Administer",
-                "expression":
-                "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==NO"
-              },
-              {
-                "value": "Ineligible flow",
-                "expression":
-                "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==YES"
-              },
-              {"value": "referral flow", "expression": "DEFAULT"}
-            ],
-            "description": "APPONE_ELIGIBILITYCHECKLIST_ALERT_DESCRIPTION",
-            "primaryActionLabel": "ACTION_SUBMIT",
-            "secondaryActionLabel": "ACTION_CANCEL"
-          },
-          "submitCondition": null,
-          "preventScreenCapture": false
-        }
-      ],
-      "summary": false,
-      "version": 3,
-      "category": "DELIVERY",
-      "disabled": false,
-      "onAction": [
-        {
-          "actions": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "data": [
-                  {
-                    "key": "selectedIndividualClientReferenceId",
-                    "value":
-                    "{{navigation.selectedIndividualClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualIdentifierId",
-                    "value": "{{navigation.selectedIndividualIdentifierId}}"
-                  },
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{ navigation.HouseholdClientReferenceId }}"
-                  },
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  }
-                ],
-                "name": "beneficiaryDetails",
-                "type": "TEMPLATE",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
-                  }
-                ],
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "householdOverview"
-              }
-            }
-          ],
-          "condition": {
-            "expression":
-            "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==NO"
-          }
-        },
-        {
-          "actions": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "data": [
-                  {
-                    "key": "selectedIndividualClientReferenceId",
-                    "value":
-                    "{{navigation.selectedIndividualClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualIdentifierId",
-                    "value": "{{navigation.selectedIndividualIdentifierId}}"
-                  },
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{ navigation.HouseholdClientReferenceId }}"
-                  },
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualName",
-                    "value": "{{navigation.selectedIndividualName}}"
-                  },
-                  {
-                    "key": "selectedIndividualGender",
-                    "value": "{{navigation.selectedIndividualGender}}"
-                  },
-                  {
-                    "key": "selectedIndividualAgeInMonths",
-                    "value": "{{navigation.selectedIndividualAgeInMonths}}"
-                  },
-                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"}
-                ],
-                "name": "REFER_BENEFICIARY",
-                "type": "FORM",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
-                  }
-                ],
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "householdOverview"
-              }
-            }
-          ],
-          "condition": {
-            "expression":
-            "eligibilityChecklist.ec1==YES && eligibilityChecklist.ec3==YES && eligibilityChecklist.ec4==YES"
-          }
-        },
-        {
-          "actions": [
-            {
-              "actionType": "FETCH_TRANSFORMER_CONFIG",
-              "properties": {
-                "data": [
-                  {
-                    "key": "selectedIndividualClientReferenceId",
-                    "value":
-                    "{{navigation.selectedIndividualClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualIdentifierId",
-                    "value": "{{navigation.selectedIndividualIdentifierId}}"
-                  },
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{ navigation.HouseholdClientReferenceId }}"
-                  },
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  }
-                ],
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {
-                      "message": "Failed to fetch ineligible config."
-                    }
-                  }
-                ],
-                "configName": "ineligibleConfig"
-              }
-            },
-            {
-              "actionType": "CREATE_EVENT",
-              "properties": {
-                "entity": "TASK",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create task records."}
-                  }
-                ]
-              }
-            },
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "data": [
-                  {
-                    "key": "selectedIndividualClientReferenceId",
-                    "value":
-                    "{{navigation.selectedIndividualClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualIdentifierId",
-                    "value": "{{navigation.selectedIndividualIdentifierId}}"
-                  },
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{ navigation.HouseholdClientReferenceId }}"
-                  },
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  }
-                ],
-                "name": "householdOverview",
-                "type": "TEMPLATE",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation to flow failed."}
-                  }
-                ],
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "householdOverview"
-              }
-            }
-          ],
-          "condition": {
-            "expression":
-            "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==YES"
-          }
-        },
-        {
-          "actions": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "data": [
-                  {
-                    "key": "selectedIndividualClientReferenceId",
-                    "value":
-                    "{{navigation.selectedIndividualClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualIdentifierId",
-                    "value": "{{navigation.selectedIndividualIdentifierId}}"
-                  },
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{ navigation.HouseholdClientReferenceId }}"
-                  },
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualName",
-                    "value": "{{navigation.selectedIndividualName}}"
-                  },
-                  {
-                    "key": "selectedIndividualGender",
-                    "value": "{{navigation.selectedIndividualGender}}"
-                  },
-                  {
-                    "key": "selectedIndividualAgeInMonths",
-                    "value": "{{navigation.selectedIndividualAgeInMonths}}"
-                  },
-                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"}
-                ],
-                "name": "REFER_BENEFICIARY",
-                "type": "FORM",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
-                  }
-                ],
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "householdOverview"
-              }
-            }
-          ],
-          "condition": {"expression": "DEFAULT"}
         }
       ],
       "isSelected": true,
@@ -4191,13 +2495,12 @@ final dynamic sampleFlows = {
           "flow": "ADD_MEMBER",
           "page": "beneficiaryDetails",
           "type": "object",
-          "label":
-          "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING_addmember",
+          "label": "HCM_ADD_MEMBER_HEADING",
           "order": 4,
           "footer": [
             {
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_addmember",
+              "type": "template",
+              "label": "HCM_ADD_MEMBER_SAVE_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -4214,6 +2517,7 @@ final dynamic sampleFlows = {
                   }
                 }
               ],
+              "fieldName": "addMemberSaveButton",
               "properties": {
                 "size": "large",
                 "type": "primary",
@@ -4223,8 +2527,7 @@ final dynamic sampleFlows = {
             }
           ],
           "module": "REGISTRATION",
-          "heading":
-          "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING_addmember",
+          "heading": "HCM_ADD_MEMBER_HEADING",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -4235,12 +2538,16 @@ final dynamic sampleFlows = {
                   {
                     "key": "HouseholdClientReferenceId",
                     "value": "{{navigation.HouseholdClientReferenceId}}"
+                  },
+                  {
+                    "key": "headMobileNumber",
+                    "value": "{{navigation.headMobileNumber}}"
                   }
                 ],
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
                 "configName": "individualRegistration"
@@ -4282,7 +2589,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -4303,16 +2610,14 @@ final dynamic sampleFlows = {
           "properties": [
             {
               "type": "string",
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_addmember",
+              "label": "HCM_REGISTRATION_FIRST_NAME_LABEL",
               "order": 1,
               "value": "",
               "format": "text",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText_addmember",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -4325,38 +2630,37 @@ final dynamic sampleFlows = {
               "lengthRange": {
                 "maxLength": "200",
                 "minLength": "2",
-                "errorMessage":
-                "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message_addmember"
+                "errorMessage": "HCM_VALIDATION_SIZE_2_TO_200"
               },
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message_addmember"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 },
                 {
                   "type": "minLength",
                   "value": "2",
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message_addmember"
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
                 },
                 {
                   "type": "maxLength",
                   "value": "200",
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message_addmember"
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message_addmember"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "string",
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_addmember",
+              "label": "HCM_REGISTRATION_FAMILY_NAME_LABEL",
               "order": 2,
               "value": "",
               "format": "text",
@@ -4375,95 +2679,104 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "lengthRange": {
                 "minLength": "2",
-                "errorMessage":
-                "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message_addmember"
+                "errorMessage": "HCM_VALIDATION_MIN_2_CHARS"
               },
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message_addmember"
+                  "message": "HCM_VALIDATION_REQUIRED"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 },
                 {
                   "type": "minLength",
                   "value": "2",
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message_addmember"
+                  "message": "HCM_VALIDATION_MIN_2_CHARS"
                 }
               ],
               "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "boolean",
+              "label": "HCM_REGISTRATION_IS_GUEST_LABEL",
+              "order": 3,
+              "value": false,
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": false,
+              "fieldName": "isGuestMember",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "HCM_REGISTRATION_IS_GUEST_LABEL",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
               "isMultiSelect": false,
-              "required.message":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message_addmember"
+              "additionalFields": true
             },
             {
               "type": "string",
               "enums": [
-                {"code": "DEFAULT", "name": "DEFAULT"},
-                {
-                  "code": "UNIQUE_BENEFICIARY_ID",
-                  "name": "UNIQUE_BENEFICIARY_ID"
-                }
+                {"code": "DEFAULT", "name": "Default"}
               ],
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers_addmember",
-              "order": 3,
-              "value": "",
+              "label": "HCM_REGISTRATION_ID_POPULATOR_LABEL",
+              "order": 4,
+              "value": "DEFAULT",
               "format": "idPopulator",
-              "hidden": false,
+              "hidden": true,
               "isMdms": true,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "required": true,
+              "required": false,
               "fieldName": "identifiers",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
-              "includeInForm": true,
               "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message_addmember"
-                }
-              ],
+              "validations": [],
               "errorMessage": "",
+              "includeInForm": true,
               "isMultiSelect": false,
               "dropDownOptions": [
-                {"code": "DEFAULT", "name": "DEFAULT"},
+                {"code": "DEFAULT", "name": "Default"},
                 {
                   "code": "UNIQUE_BENEFICIARY_ID",
-                  "name": "UNIQUE_BENEFICIARY_ID"
+                  "name": "Unique Beneficiary ID"
                 },
-                {"code": "OTHER", "name": "OTHER"}
+                {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
               ],
-              "required.message":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message_addmember"
+              "required.message": "HCM_ID_REQUIRED_FIELD"
             },
             {
               "type": "string",
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_addmember",
-              "order": 4,
+              "label": "HCM_REGISTRATION_DOB_LABEL",
+              "order": 5,
               "value": "",
               "format": "dob",
               "hidden": false,
               "isMdms": false,
-              "tooltip":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip_addmember",
+              "tooltip": "HCM_REGISTRATION_DOB_TOOLTIP",
               "ageRange": {
                 "maxAge": 1800,
-                "minAge": 3,
-                "errorMessage": "AGE_VALIDATION_ADDMEMBER"
+                "minAge": 0,
+                "errorMessage": "HCM_ADDMEMBER_VALIDATION_INVALID_AGE"
               },
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText_addmember",
+              "helpText": "HCM_REGISTRATION_DOB_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -4477,34 +2790,31 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory_message_addmember"
+                  "message": "HCM_VALIDATION_REQUIRED"
                 },
                 {
                   "type": "minAge",
-                  "value": 3,
-                  "message": "AGE_VALIDATION_ADDMEMBER"
+                  "value": 0,
+                  "message": "HCM_VALIDATION_INVALID_AGE"
                 },
                 {
                   "type": "maxAge",
                   "value": 1800,
-                  "message": "AGE_VALIDATION_ADDMEMBER"
+                  "message": "HCM_VALIDATION_INVALID_AGE"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory_message_addmember"
+              "required.message": "HCM_VALIDATION_REQUIRED"
             },
             {
               "type": "string",
               "enums": [
-                {"code": "MALE", "name": "MALE"},
-                {"code": "FEMALE", "name": "FEMALE"}
+                {"code": "MALE", "name": "HCM_COMMON_MALE"},
+                {"code": "FEMALE", "name": "HCM_COMMON_FEMALE"}
               ],
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender_addmember",
-              "order": 5,
+              "label": "HCM_REGISTRATION_GENDER_LABEL",
+              "order": 6,
               "value": "",
               "format": "select",
               "hidden": false,
@@ -4518,79 +2828,30 @@ final dynamic sampleFlows = {
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
-              "schemaCode": "common-masters.GenderType",
+              "schemaCode": null,
               "systemDate": false,
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "GENDER_MANDATORY_MESSAGE_ADDMEMBER"
+                  "message": "HCM_VALIDATION_GENDER_REQUIRED"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
               "dropDownOptions": [
-                {"code": "MALE", "name": "MALE"},
-                {"code": "FEMALE", "name": "FEMALE"}
+                {"code": "MALE", "name": "HCM_COMMON_MALE"},
+                {"code": "FEMALE", "name": "HCM_COMMON_FEMALE"}
               ],
-              "required.message": "GENDER_MANDATORY_MESSAGE_ADDMEMBER"
+              "required.message": "HCM_VALIDATION_GENDER_REQUIRED"
             },
             {
               "type": "string",
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_addmember",
-              "order": 6,
-              "value": "",
-              "format": "mobileNumber",
-              "hidden": false,
-              "isMdms": false,
-              "pattern": "^\\d+",
-              "tooltip":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip_addmember",
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText_addmember",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "phone",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "lengthRange": {
-                "maxLength": 10,
-                "minLength": 10,
-                "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR_ADDMEMBER"
-              },
-              "validations": [
-                {
-                  "type": "pattern",
-                  "value": "^\\d+",
-                  "message": "MB_ONLY_NUMBERS"
-                },
-                {
-                  "type": "minLength",
-                  "value": 10,
-                  "message": "MOBILE_LENGTH_10_DIGIT_ERROR_ADDMEMBER"
-                },
-                {
-                  "type": "maxLength",
-                  "value": 10,
-                  "message": "MOBILE_LENGTH_10_DIGIT_ERROR_ADDMEMBER"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "pattern.message": "MB_ONLY_NUMBERS"
-            },
-            {
-              "type": "string",
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner_addmember",
-              "order": 7,
+              "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
+              "order": 8,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -4599,27 +2860,19 @@ final dynamic sampleFlows = {
               "fieldName": "scanner",
               "mandatory": false,
               "showLabel": false,
-              "comparisonConfig": {
-                "model": "projectBeneficiary",
-                "extractKey": "tag",
-                "extractFrom": "column",
-                "filters": [],
-                "errorMessage": "BENEFICIARY_TAG_ALREADY_ASSIGNED"
-              },
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
+              "includeInForm": false,
               "isMultiSelect": false,
-              "includeInSummary": true
+              "includeInSummary": false
             }
           ],
-          "actionLabel":
-          "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_addmember",
-          "description":
-          "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
+          "actionLabel": "HCM_ADD_MEMBER_SAVE_BUTTON",
+          "description": "HCM_ADD_MEMBER_DESCRIPTION",
           "showTabView": false,
           "submitCondition": null,
           "preventScreenCapture": false,
@@ -4638,12 +2891,16 @@ final dynamic sampleFlows = {
               {
                 "key": "HouseholdClientReferenceId",
                 "value": "{{navigation.HouseholdClientReferenceId}}"
+              },
+              {
+                "key": "headMobileNumber",
+                "value": "{{navigation.headMobileNumber}}"
               }
             ],
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
               }
             ],
             "configName": "individualRegistration"
@@ -4662,18 +2919,6 @@ final dynamic sampleFlows = {
         },
         {
           "actions": [
-            {
-              "actionType": "UPDATE_IDENTIFIER_STATUS",
-              "properties": {
-                "identifierType": "UNIQUE_BENEFICIARY_ID",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to update beneficiary id status."}
-                  }
-                ]
-              }
-            },
             {
               "actionType": "CREATE_EVENT",
               "properties": {"entity": "INDIVIDUAL, PROJECTBENEFICIARY, MEMBER"}
@@ -4695,7 +2940,7 @@ final dynamic sampleFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
+                "properties": {"message": "HCM_ERROR_NAVIGATION"}
               }
             ],
             "navigationMode": "popUntilAndPush",
@@ -4792,467 +3037,6 @@ final dynamic sampleFlows = {
       "scrollListener": {}
     },
     {
-      "name": "REFER_BENEFICIARY",
-      "order": 6,
-      "pages": [
-        {
-          "body": null,
-          "flow": "REFER_BENEFICIARY",
-          "page": "referBeneficiary",
-          "type": "object",
-          "label": "REFER_BENEFICIARY_SCREEN_HEADING",
-          "order": 1,
-          "footer": [
-            {
-              "label": "REFER_BENEFICIARY_SUBMIT_BUTTON",
-              "format": "button",
-              "onAction": [
-                {
-                  "actionType": "NAVIGATION",
-                  "properties": {"name": "acknowledgement", "type": "screen"}
-                }
-              ],
-              "properties": {
-                "size": "large",
-                "type": "primary",
-                "mainAxisSize": "max",
-                "mainAxisAlignment": "center"
-              }
-            }
-          ],
-          "module": "REGISTRATION",
-          "heading": "REFER_BENEFICIARY_SCREEN_HEADING",
-          "summary": false,
-          "version": 1,
-          "onAction": [
-            {
-              "actionType": "FETCH_TRANSFORMER_CONFIG",
-              "properties": {
-                "data": [
-                  {
-                    "key": "selectedIndividualClientReferenceId",
-                    "value":
-                    "{{navigation.selectedIndividualClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualIdentifierId",
-                    "value": "{{navigation.selectedIndividualIdentifierId}}"
-                  },
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{ navigation.HouseholdClientReferenceId }}"
-                  },
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualName",
-                    "value": "{{navigation.selectedIndividualName}}"
-                  },
-                  {
-                    "key": "selectedIndividualGender",
-                    "value": "{{navigation.selectedIndividualGender}}"
-                  },
-                  {
-                    "key": "selectedIndividualAgeInMonths",
-                    "value": "{{navigation.selectedIndividualAgeInMonths}}"
-                  },
-                  {
-                    "key": "cycleIndex",
-                    "value": "{{fn:getCurrentCycleIndex()}}"
-                  }
-                ],
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
-                  }
-                ],
-                "configName": "referralBeneficaryCreate"
-              }
-            },
-            {
-              "actionType": "CREATE_EVENT",
-              "properties": {
-                "data": [
-                  {
-                    "key": "selectedIndividualClientReferenceId",
-                    "value":
-                    "{{navigation.selectedIndividualClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualIdentifierId",
-                    "value": "{{navigation.selectedIndividualIdentifierId}}"
-                  },
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{ navigation.HouseholdClientReferenceId }}"
-                  },
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualName",
-                    "value": "{{navigation.selectedIndividualName}}"
-                  },
-                  {
-                    "key": "selectedIndividualGender",
-                    "value": "{{navigation.selectedIndividualGender}}"
-                  },
-                  {
-                    "key": "selectedIndividualAgeInMonths",
-                    "value": "{{navigation.selectedIndividualAgeInMonths}}"
-                  },
-                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"}
-                ],
-                "entity": "HFREFERRAL",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create stock."}
-                  }
-                ]
-              }
-            },
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "data": [
-                  {
-                    "key": "selectedIndividualClientReferenceId",
-                    "value":
-                    "{{navigation.selectedIndividualClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualIdentifierId",
-                    "value": "{{navigation.selectedIndividualIdentifierId}}"
-                  },
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{ navigation.HouseholdClientReferenceId }}"
-                  },
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                    "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  },
-                  {
-                    "key": "selectedIndividualName",
-                    "value": "{{navigation.selectedIndividualName}}"
-                  },
-                  {
-                    "key": "selectedIndividualGender",
-                    "value": "{{navigation.selectedIndividualGender}}"
-                  },
-                  {
-                    "key": "selectedIndividualAgeInMonths",
-                    "value": "{{navigation.selectedIndividualAgeInMonths}}"
-                  },
-                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"}
-                ],
-                "name": "referralSuccess",
-                "type": "TEMPLATE",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
-                  }
-                ],
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "searchBeneficiary"
-              }
-            }
-          ],
-          "navigateTo": {"name": "acknowledgement", "type": "screen"},
-          "properties": [
-            {
-              "type": "string",
-              "label": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-              "order": 1,
-              "value": "",
-              "format": "locality",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": true,
-              "required": true,
-              "fieldName": "administrativeArea",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
-                }
-              ],
-              "errorMessage": "",
-              "required.message":
-              "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
-            },
-            {
-              "type": "string",
-              "label": "REFER_BENEFICIARY_LABEL_REFERRED_BY",
-              "order": 2,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": true,
-              "required": true,
-              "fieldName": "referredBy",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "REFER_BENEFICIARY_REFERRED_BY_REQUIRED"
-                }
-              ],
-              "errorMessage": "",
-              "required.message": "REFER_BENEFICIARY_REFERRED_BY_REQUIRED",
-              "autoFillCondition": [
-                {"value": "{{loggedInUserUuid}}", "expression": "true==true"}
-              ]
-            },
-            {
-              "type": "dynamic",
-              "enums": null,
-              "label": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
-              "order": 3,
-              "value": "",
-              "format": "custom",
-              "hidden": false,
-              "isMdms": true,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "healthFacility",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
-                }
-              ],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "required.message":
-              "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
-            },
-            {
-              "type": "string",
-              "enums": [
-                {"code": "FEVER", "name": "FEVER"}
-              ],
-              "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
-              "order": 4,
-              "value": "",
-              "format": "radio",
-              "hidden": false,
-              "isMdms": true,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "referralReason",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": "HCM.REFERRAL_REASONS",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                  "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "required.message":
-              "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR"
-            }
-          ],
-          "actionLabel": "REFER_BENEFICIARY_SUBMIT_BUTTON",
-          "description": "REFER_BENEFICIARY_SCREEN_DESCRIPTION",
-          "showTabView": false,
-          "submitCondition": null,
-          "preventScreenCapture": false,
-          "conditionalNavigateTo": null
-        }
-      ],
-      "summary": false,
-      "version": 3,
-      "category": "HFREFERRAL",
-      "disabled": false,
-      "onAction": [
-        {
-          "actionType": "FETCH_TRANSFORMER_CONFIG",
-          "properties": {
-            "data": [
-              {
-                "key": "selectedIndividualClientReferenceId",
-                "value": "{{navigation.selectedIndividualClientReferenceId}}"
-              },
-              {
-                "key": "selectedIndividualIdentifierId",
-                "value": "{{navigation.selectedIndividualIdentifierId}}"
-              },
-              {
-                "key": "HouseholdClientReferenceId",
-                "value": "{{ navigation.HouseholdClientReferenceId }}"
-              },
-              {
-                "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-              },
-              {
-                "key": "selectedIndividualName",
-                "value": "{{navigation.selectedIndividualName}}"
-              },
-              {
-                "key": "selectedIndividualGender",
-                "value": "{{navigation.selectedIndividualGender}}"
-              },
-              {
-                "key": "selectedIndividualAgeInMonths",
-                "value": "{{navigation.selectedIndividualAgeInMonths}}"
-              },
-              {"key": "cycleIndex", "value": "{{fn:getCurrentCycleIndex()}}"}
-            ],
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
-              }
-            ],
-            "configName": "referralBeneficaryCreate"
-          }
-        },
-        {
-          "actionType": "CREATE_EVENT",
-          "properties": {
-            "data": [
-              {
-                "key": "selectedIndividualClientReferenceId",
-                "value": "{{navigation.selectedIndividualClientReferenceId}}"
-              },
-              {
-                "key": "selectedIndividualIdentifierId",
-                "value": "{{navigation.selectedIndividualIdentifierId}}"
-              },
-              {
-                "key": "HouseholdClientReferenceId",
-                "value": "{{ navigation.HouseholdClientReferenceId }}"
-              },
-              {
-                "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-              },
-              {
-                "key": "selectedIndividualName",
-                "value": "{{navigation.selectedIndividualName}}"
-              },
-              {
-                "key": "selectedIndividualGender",
-                "value": "{{navigation.selectedIndividualGender}}"
-              },
-              {
-                "key": "selectedIndividualAgeInMonths",
-                "value": "{{navigation.selectedIndividualAgeInMonths}}"
-              },
-              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"}
-            ],
-            "entity": "HFREFERRAL",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create stock."}
-              }
-            ]
-          }
-        },
-        {
-          "actionType": "NAVIGATION",
-          "properties": {
-            "data": [
-              {
-                "key": "selectedIndividualClientReferenceId",
-                "value": "{{navigation.selectedIndividualClientReferenceId}}"
-              },
-              {
-                "key": "selectedIndividualIdentifierId",
-                "value": "{{navigation.selectedIndividualIdentifierId}}"
-              },
-              {
-                "key": "HouseholdClientReferenceId",
-                "value": "{{ navigation.HouseholdClientReferenceId }}"
-              },
-              {
-                "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-              },
-              {
-                "key": "selectedIndividualName",
-                "value": "{{navigation.selectedIndividualName}}"
-              },
-              {
-                "key": "selectedIndividualGender",
-                "value": "{{navigation.selectedIndividualGender}}"
-              },
-              {
-                "key": "selectedIndividualAgeInMonths",
-                "value": "{{navigation.selectedIndividualAgeInMonths}}"
-              },
-              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"}
-            ],
-            "name": "referralSuccess",
-            "type": "TEMPLATE",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
-              }
-            ],
-            "navigationMode": "popUntilAndPush",
-            "popUntilPageName": "searchBeneficiary"
-          }
-        }
-      ],
-      "isSelected": true,
-      "screenType": "FORM",
-      "initActions": [],
-      "wrapperConfig": {},
-      "scrollListener": {}
-    },
-    {
       "name": "HOUSEHOLD",
       "order": 2,
       "pages": [
@@ -5261,12 +3045,12 @@ final dynamic sampleFlows = {
           "flow": "HOUSEHOLD",
           "page": "beneficiaryDetails",
           "type": "object",
-          "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
+          "label": "HCM_REGISTRATION_HOUSEHOLD_HEAD_DETAILS_HEADING",
           "order": 4,
           "footer": [
             {
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
+              "type": "template",
+              "label": "HCM_REGISTRATION_SAVE_BENEFICIARY_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -5283,6 +3067,7 @@ final dynamic sampleFlows = {
                   }
                 }
               ],
+              "fieldName": "saveBeneficiaryButton",
               "properties": {
                 "size": "large",
                 "type": "primary",
@@ -5292,7 +3077,7 @@ final dynamic sampleFlows = {
             }
           ],
           "module": "REGISTRATION",
-          "heading": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
+          "heading": "HCM_REGISTRATION_HOUSEHOLD_HEAD_DETAILS_HEADING",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -5304,7 +3089,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -5321,7 +3106,7 @@ final dynamic sampleFlows = {
                       {
                         "actionType": "SHOW_TOAST",
                         "properties": {
-                          "message": "Failed to update closed household."
+                          "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
                         }
                       }
                     ]
@@ -5334,7 +3119,7 @@ final dynamic sampleFlows = {
                       {
                         "key": "HouseholdClientReferenceId",
                         "value":
-                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                       }
                     ],
                     "name": "householdOverview",
@@ -5342,7 +3127,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -5363,7 +3148,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -5376,7 +3161,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to update household."}
+                        "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -5388,7 +3173,7 @@ final dynamic sampleFlows = {
                       {
                         "key": "HouseholdClientReferenceId",
                         "value":
-                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                       }
                     ],
                     "name": "householdOverview",
@@ -5396,7 +3181,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -5414,7 +3199,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -5424,11 +3209,11 @@ final dynamic sampleFlows = {
                   "actionType": "CREATE_EVENT",
                   "properties": {
                     "entity":
-                    "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                        "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to create household."}
+                        "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -5440,7 +3225,7 @@ final dynamic sampleFlows = {
                       {
                         "key": "HouseholdClientReferenceId",
                         "value":
-                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                       }
                     ],
                     "name": "householdOverview",
@@ -5448,7 +3233,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -5472,16 +3257,14 @@ final dynamic sampleFlows = {
           "properties": [
             {
               "type": "string",
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
+              "label": "HCM_REGISTRATION_FIRST_NAME_LABEL",
               "order": 1,
               "value": "",
               "format": "text",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -5494,38 +3277,37 @@ final dynamic sampleFlows = {
               "lengthRange": {
                 "maxLength": "200",
                 "minLength": "2",
-                "errorMessage":
-                "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message"
+                "errorMessage": "HCM_VALIDATION_SIZE_2_TO_200"
               },
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 },
                 {
                   "type": "minLength",
                   "value": "2",
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message"
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
                 },
                 {
                   "type": "maxLength",
                   "value": "200",
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message"
+                  "message": "HCM_VALIDATION_SIZE_2_TO_200"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "string",
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname",
+              "label": "HCM_REGISTRATION_FAMILY_NAME_LABEL",
               "order": 2,
               "value": "",
               "format": "text",
@@ -5544,34 +3326,33 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "lengthRange": {
                 "minLength": "2",
-                "errorMessage":
-                "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message"
+                "errorMessage": "HCM_VALIDATION_MIN_2_CHARS_NEEDED"
               },
               "validations": [
                 {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message"
-                },
-                {
                   "type": "minLength",
                   "value": "2",
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message"
+                  "message": "HCM_VALIDATION_MIN_2_CHARS_NEEDED"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+                },
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 }
               ],
               "errorMessage": "",
-              "isMultiSelect": false,
-              "required.message":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message"
+              "isMultiSelect": false
             },
             {
               "type": "boolean",
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
+              "label": "HCM_REGISTRATION_IS_HEAD_LABEL",
               "order": 3,
-              "value": "",
+              "value": true,
               "format": "checkbox",
               "hidden": false,
               "isMdms": false,
@@ -5591,69 +3372,57 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_mandatory_message"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_mandatory_message"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "string",
               "enums": [
-                {"code": "DEFAULT", "name": "DEFAULT"},
-                {"code": "UNIQUE_BENEFICIARY_ID", "name": "UNIQUE_BENEFICIARY_ID"}
+                {"code": "DEFAULT", "name": "Default"}
               ],
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
+              "label": "HCM_REGISTRATION_ID_POPULATOR_LABEL",
               "order": 4,
-              "value": "",
+              "value": "DEFAULT",
               "format": "idPopulator",
-              "hidden": false,
+              "hidden": true,
               "isMdms": true,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "required": true,
+              "required": false,
               "fieldName": "identifiers",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message"
-                }
-              ],
+              "validations": [],
               "errorMessage": "",
+              "includeInForm": true,
               "isMultiSelect": false,
               "required.message":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message"
+                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message"
             },
             {
               "type": "string",
-              "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker",
+              "label": "HCM_REGISTRATION_DOB_LABEL",
               "order": 5,
               "value": "",
               "format": "dob",
               "hidden": false,
               "isMdms": false,
-              "tooltip":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip",
+              "tooltip": "HCM_REGISTRATION_DOB_TOOLTIP",
               "ageRange": {
                 "maxAge": 1800,
-                "minAge": 3,
-                "errorMessage": "AGE_VALIDATION"
+                "minAge": 216,
+                "errorMessage": "HCM_VALIDATION_AGE_18_PLUS"
               },
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText",
+              "helpText": "HCM_REGISTRATION_DOB_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -5667,24 +3436,30 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory_message"
+                  "message": "HCM_VALIDATION_REQUIRED"
                 },
-                {"type": "minAge", "value": 3, "message": "AGE_VALIDATION"},
-                {"type": "maxAge", "value": 1800, "message": "AGE_VALIDATION"}
+                {
+                  "type": "minAge",
+                  "value": 216,
+                  "message": "HCM_VALIDATION_AGE_18_PLUS"
+                },
+                {
+                  "type": "maxAge",
+                  "value": 1800,
+                  "message": "HCM_VALIDATION_INVALID_AGE"
+                }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory_message"
+              "required.message": "HCM_VALIDATION_REQUIRED"
             },
             {
               "type": "string",
               "enums": [
-                {"code": "MALE", "name": "MALE"},
-                {"code": "FEMALE", "name": "FEMALE"}
+                {"code": "MALE", "name": "HCM_COMMON_MALE"},
+                {"code": "FEMALE", "name": "HCM_COMMON_FEMALE"}
               ],
-              "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender",
+              "label": "HCM_REGISTRATION_GENDER_LABEL",
               "order": 6,
               "value": "",
               "format": "select",
@@ -5699,32 +3474,30 @@ final dynamic sampleFlows = {
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
-              "schemaCode": "common-masters.GenderType",
+              "schemaCode": null,
               "systemDate": false,
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "GENDER_MANDATORY_MESSAGE"
+                  "message": "HCM_VALIDATION_GENDER_REQUIRED"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message": "GENDER_MANDATORY_MESSAGE"
+              "required.message": "HCM_VALIDATION_GENDER_REQUIRED"
             },
             {
               "type": "string",
-              "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
+              "label": "HCM_REGISTRATION_MOBILE_LABEL",
               "order": 7,
               "value": "",
               "format": "mobileNumber",
               "hidden": false,
               "isMdms": false,
-              "pattern": "^\\d+",
-              "tooltip":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",
+              "pattern": "^\\d+\$",
+              "tooltip": "HCM_REGISTRATION_MOBILE_TOOLTIP",
+              "helpText": "HCM_REGISTRATION_MOBILE_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "phone",
@@ -5736,36 +3509,36 @@ final dynamic sampleFlows = {
               "lengthRange": {
                 "maxLength": 10,
                 "minLength": 10,
-                "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                "errorMessage": "HCM_VALIDATION_MOBILE_10_DIGITS"
               },
               "validations": [
                 {
                   "type": "pattern",
-                  "value": "^\\d+",
-                  "message": "MB_ONLY_NUMBER"
+                  "value": "^[1-9]\\d*\$",
+                  "message": "HCM_VALIDATION_MOBILE_NO_LEADING_ZERO"
                 },
                 {
                   "type": "minLength",
-                  "value": 10,
-                  "message": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                  "value": 8,
+                  "message": "HCM_VALIDATION_MOBILE_8_DIGITS"
                 },
                 {
                   "type": "maxLength",
-                  "value": 10,
-                  "message": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                  "value": 8,
+                  "message": "HCM_VALIDATION_MOBILE_8_DIGITS"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "pattern.message": "MB_ONLY_NUMBER"
+              "pattern.message": "HCM_VALIDATION_ONLY_NUMBERS"
             },
             {
               "type": "string",
-              "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner",
+              "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
               "order": 8,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -5780,21 +3553,13 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
+              "includeInForm": false,
               "isMultiSelect": false,
-              "comparisonConfig": {
-                "model": "projectBeneficiary",
-                "extractKey": "tag",
-                "extractFrom": "column",
-                "filters": [],
-                "errorMessage": "BENEFICIARY_TAG_ALREADY_ASSIGNED"
-              },
-              "includeInSummary": true
+              "includeInSummary": false
             }
           ],
-          "actionLabel":
-          "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
-          "description":
-          "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
+          "actionLabel": "HCM_REGISTRATION_SAVE_BENEFICIARY_BUTTON",
+          "description": "HCM_REGISTRATION_BENEFICIARY_DETAILS_DESCRIPTION",
           "showTabView": false,
           "submitCondition": null,
           "preventScreenCapture": false,
@@ -5805,12 +3570,12 @@ final dynamic sampleFlows = {
           "flow": "HOUSEHOLD",
           "page": "householdDetails",
           "type": "object",
-          "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
+          "label": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_HEADING",
           "order": 3,
           "footer": [
             {
-              "label":
-              "APPONE_REGISTRATION_HOUSEHOLDDETAILS_ACTION_BUTTON_LABEL_1",
+              "type": "template",
+              "label": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -5818,6 +3583,7 @@ final dynamic sampleFlows = {
                   "properties": {"name": "beneficiaryDetails", "type": "form"}
                 }
               ],
+              "fieldName": "saveHouseholdButton",
               "properties": {
                 "size": "large",
                 "type": "primary",
@@ -5827,7 +3593,7 @@ final dynamic sampleFlows = {
             }
           ],
           "module": "REGISTRATION",
-          "heading": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
+          "heading": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_HEADING",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -5839,7 +3605,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -5856,7 +3622,7 @@ final dynamic sampleFlows = {
                       {
                         "actionType": "SHOW_TOAST",
                         "properties": {
-                          "message": "Failed to update closed household."
+                          "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
                         }
                       }
                     ]
@@ -5869,7 +3635,7 @@ final dynamic sampleFlows = {
                       {
                         "key": "HouseholdClientReferenceId",
                         "value":
-                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                       }
                     ],
                     "name": "householdOverview",
@@ -5877,7 +3643,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -5898,7 +3664,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -5911,7 +3677,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to update household."}
+                        "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -5923,7 +3689,7 @@ final dynamic sampleFlows = {
                       {
                         "key": "HouseholdClientReferenceId",
                         "value":
-                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                       }
                     ],
                     "name": "householdOverview",
@@ -5931,7 +3697,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -5949,7 +3715,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -5959,11 +3725,11 @@ final dynamic sampleFlows = {
                   "actionType": "CREATE_EVENT",
                   "properties": {
                     "entity":
-                    "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                        "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to create household."}
+                        "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -5975,7 +3741,7 @@ final dynamic sampleFlows = {
                       {
                         "key": "HouseholdClientReferenceId",
                         "value":
-                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                       }
                     ],
                     "name": "householdOverview",
@@ -5983,7 +3749,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -5998,8 +3764,7 @@ final dynamic sampleFlows = {
           "properties": [
             {
               "type": "string",
-              "label":
-              "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration",
+              "label": "HCM_REGISTRATION_DATE_LABEL",
               "order": 1,
               "value": "",
               "format": "date",
@@ -6020,23 +3785,24 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_mandatory_message"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message":
-              "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_mandatory_message"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "integer",
-              "label":
-              "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount",
+              "label": "HCM_REGISTRATION_CHILDREN_COUNT_LABEL",
               "order": 2,
-              "value": "0",
+              "range": {
+                "min": "1",
+                "errorMessage": "HCM_VALIDATION_MIN_CHILDREN_1"
+              },
+              "value": "1",
               "format": "numeric",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -6048,88 +3814,46 @@ final dynamic sampleFlows = {
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label":
-              "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_pregnantWomenCount",
-              "order": 3,
-              "value": "0",
-              "format": "numeric",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "pregnantWomenCount",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount",
-              "order": 4,
-              "range": {
-                "max": "10",
-                "min": "1",
-                "errorMessage":
-                "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_max_message"
-              },
-              "value": "1",
-              "format": "numeric",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "memberCount",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
               "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_mandatory_message"
-                },
                 {
                   "type": "min",
                   "value": "1",
-                  "message":
-                  "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_max_message"
-                },
-                {
-                  "type": "max",
-                  "value": "10",
-                  "message":
-                  "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_max_message"
+                  "message": "HCM_VALIDATION_MIN_CHILDREN_1"
                 }
               ],
               "errorMessage": "",
-              "isMultiSelect": false,
-              "required.message":
-              "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_mandatory_message"
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "HCM_REGISTRATION_MEMBER_COUNT_LABEL",
+              "order": 3,
+              "range": {
+                "min": "1",
+                "errorMessage": "HCM_VALIDATION_MIN_MEMBERS_1"
+              },
+              "value": "2",
+              "format": "numeric",
+              "hidden": false,
+              "fieldName": "memberCount",
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": "1",
+                  "message": "HCM_VALIDATION_MIN_MEMBERS_1"
+                },
+                {
+                  "type": "max",
+                  "value": "500",
+                  "message": "HCM_VALIDATION_MAX_MEMBERS_500"
+                }
+              ],
+              "includeInForm": true
             }
           ],
-          "actionLabel":
-          "APPONE_REGISTRATION_HOUSEHOLDDETAILS_ACTION_BUTTON_LABEL_1",
-          "description":
-          "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
+          "actionLabel": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
+          "description": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_DESCRIPTION",
           "showTabView": false,
           "submitCondition": {
             "expression": [
@@ -6143,12 +3867,12 @@ final dynamic sampleFlows = {
           "flow": "HOUSEHOLD",
           "page": "beneficiaryLocation",
           "type": "object",
-          "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
+          "label": "HCM_REGISTRATION_BENEFICIARY_LOCATION_HEADING",
           "order": 1,
           "footer": [
             {
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
+              "type": "template",
+              "label": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
               "format": "button",
               "onAction": [
                 {
@@ -6156,6 +3880,7 @@ final dynamic sampleFlows = {
                   "properties": {"name": "householdDetails", "type": "form"}
                 }
               ],
+              "fieldName": "saveLocationButton",
               "properties": {
                 "size": "large",
                 "type": "primary",
@@ -6165,7 +3890,7 @@ final dynamic sampleFlows = {
             }
           ],
           "module": "REGISTRATION",
-          "heading": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
+          "heading": "HCM_REGISTRATION_BENEFICIARY_LOCATION_HEADING",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -6177,7 +3902,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -6194,7 +3919,7 @@ final dynamic sampleFlows = {
                       {
                         "actionType": "SHOW_TOAST",
                         "properties": {
-                          "message": "Failed to update closed household."
+                          "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
                         }
                       }
                     ]
@@ -6207,7 +3932,7 @@ final dynamic sampleFlows = {
                       {
                         "key": "HouseholdClientReferenceId",
                         "value":
-                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                       }
                     ],
                     "name": "householdOverview",
@@ -6215,7 +3940,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -6236,7 +3961,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -6249,7 +3974,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to update household."}
+                        "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -6261,7 +3986,7 @@ final dynamic sampleFlows = {
                       {
                         "key": "HouseholdClientReferenceId",
                         "value":
-                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                       }
                     ],
                     "name": "householdOverview",
@@ -6269,7 +3994,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -6287,7 +4012,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -6297,11 +4022,11 @@ final dynamic sampleFlows = {
                   "actionType": "CREATE_EVENT",
                   "properties": {
                     "entity":
-                    "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                        "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to create household."}
+                        "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
                       }
                     ]
                   }
@@ -6313,7 +4038,7 @@ final dynamic sampleFlows = {
                       {
                         "key": "HouseholdClientReferenceId",
                         "value":
-                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                            "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                       }
                     ],
                     "name": "householdOverview",
@@ -6321,7 +4046,7 @@ final dynamic sampleFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {"message": "HCM_ERROR_NAVIGATION"}
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -6336,16 +4061,14 @@ final dynamic sampleFlows = {
           "properties": [
             {
               "type": "string",
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea",
+              "label": "HCM_REGISTRATION_ADMIN_AREA_LABEL",
               "order": 1,
               "value": "",
               "format": "locality",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_helpText",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -6359,26 +4082,23 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_mandatory_message"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message":
-              "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_mandatory_message"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "string",
-              "label": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong",
-              "order": 2,
+              "label": "HCM_REGISTRATION_LAT_LONG_LABEL",
+              "order": 3,
               "value": "",
               "format": "latLng",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "required": true,
@@ -6392,27 +4112,23 @@ final dynamic sampleFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                  "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_mandatory_message"
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "required.message":
-              "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_mandatory_message"
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             },
             {
               "type": "string",
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1",
-              "order": 3,
+              "label": "HCM_REGISTRATION_ADDRESS_LINE1_LABEL",
+              "order": 4,
               "value": "",
               "format": "text",
               "hidden": true,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_helpText",
+              "helpText": "HCM_REGISTRATION_ADDRESS_LINE1_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "addressLine1",
@@ -6424,14 +4140,19 @@ final dynamic sampleFlows = {
               "lengthRange": {
                 "minLength": "2",
                 "errorMessage":
-                "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message"
+                    "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message"
               },
               "validations": [
                 {
                   "type": "minLength",
                   "value": "2",
                   "message":
-                  "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message"
+                      "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                 }
               ],
               "errorMessage": "",
@@ -6439,16 +4160,14 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2",
-              "order": 4,
+              "label": "HCM_REGISTRATION_ADDRESS_LINE2_LABEL",
+              "order": 5,
               "value": "",
               "format": "text",
               "hidden": true,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_helpText",
+              "helpText": "HCM_REGISTRATION_ADDRESS_LINE2_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "addressLine2",
@@ -6460,14 +4179,19 @@ final dynamic sampleFlows = {
               "lengthRange": {
                 "minLength": "2",
                 "errorMessage":
-                "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message"
+                    "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message"
               },
               "validations": [
                 {
                   "type": "minLength",
                   "value": "2",
                   "message":
-                  "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message"
+                      "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                 }
               ],
               "errorMessage": "",
@@ -6475,15 +4199,14 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark",
-              "order": 5,
+              "label": "HCM_REGISTRATION_LANDMARK_LABEL",
+              "order": 6,
               "value": "",
               "format": "text",
               "hidden": true,
               "isMdms": false,
               "tooltip": "",
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_helpText",
+              "helpText": "HCM_REGISTRATION_LANDMARK_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "landmark",
@@ -6495,14 +4218,19 @@ final dynamic sampleFlows = {
               "lengthRange": {
                 "minLength": "2",
                 "errorMessage":
-                "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message"
+                    "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message"
               },
               "validations": [
                 {
                   "type": "minLength",
                   "value": "2",
                   "message":
-                  "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message"
+                      "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                 }
               ],
               "errorMessage": "",
@@ -6510,16 +4238,15 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode",
-              "order": 6,
+              "label": "HCM_REGISTRATION_PINCODE_LABEL",
+              "order": 7,
               "value": "",
               "format": "text",
               "hidden": true,
               "isMdms": false,
-              "pattern": "^\\d+",
+              "pattern": "^\\d+\$",
               "tooltip": "",
-              "helpText":
-              "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
+              "helpText": "HCM_REGISTRATION_PINCODE_HELPTEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "pincode",
@@ -6531,25 +4258,27 @@ final dynamic sampleFlows = {
               "validations": [
                 {
                   "type": "pattern",
-                  "value": "^\\d+",
-                  "message": "PINCODE_ONLY_NUMBERS"
+                  "value": "^\\d+\$",
+                  "message": "HCM_VALIDATION_ONLY_NUMBERS"
                 }
               ],
               "errorMessage": "",
-              "pattern.message": "PINCODE_ONLY_NUMBERS"
+              "pattern.message": "HCM_VALIDATION_ONLY_NUMBERS"
             },
             {
               "type": "string",
               "enums": [
-                {"code": "PERMANENT", "name": "BENEFICIARYLOCATION_PERMANENT"},
+                {
+                  "code": "PERMANENT",
+                  "name": "HCM_REGISTRATION_ADDRESS_PERMANENT"
+                },
                 {
                   "code": "CORRESPONDENCE",
-                  "name": "BENEFICIARYLOCATION_CORRESPONDENCE"
+                  "name": "HCM_REGISTRATION_ADDRESS_CORRESPONDENCE"
                 },
-                {"code": "OTHER", "name": "BENEFICIARYLOCATION_OTHER"}
+                {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
               ],
-              "label":
-              "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_typeOfAddress",
+              "label": "HCM_REGISTRATION_ADDRESS_TYPE_LABEL",
               "order": 7,
               "value": "PERMANENT",
               "format": "dropdown",
@@ -6570,20 +4299,21 @@ final dynamic sampleFlows = {
               "includeInForm": true,
               "isMultiSelect": false,
               "dropDownOptions": [
-                {"code": "PERMANENT", "name": "BENEFICIARYLOCATION_PERMANENT"},
+                {
+                  "code": "PERMANENT",
+                  "name": "HCM_REGISTRATION_ADDRESS_PERMANENT"
+                },
                 {
                   "code": "CORRESPONDENCE",
-                  "name": "BENEFICIARYLOCATION_CORRESPONDENCE"
+                  "name": "HCM_REGISTRATION_ADDRESS_CORRESPONDENCE"
                 },
-                {"code": "OTHER", "name": "BENEFICIARYLOCATION_OTHER"}
+                {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
               ],
               "includeInSummary": false
             }
           ],
-          "actionLabel":
-          "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
-          "description":
-          "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION",
+          "actionLabel": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
+          "description": "HCM_REGISTRATION_LOCATION_DESCRIPTION",
           "showTabView": false,
           "submitCondition": null,
           "preventScreenCapture": false
@@ -6602,7 +4332,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
                 "configName": "beneficiaryRegistration"
@@ -6619,7 +4349,7 @@ final dynamic sampleFlows = {
                   {
                     "actionType": "SHOW_TOAST",
                     "properties": {
-                      "message": "Failed to update closed household."
+                      "message": "HCM_ERROR_UPDATE_MISSED_CHILDREN"
                     }
                   }
                 ]
@@ -6632,7 +4362,7 @@ final dynamic sampleFlows = {
                   {
                     "key": "HouseholdClientReferenceId",
                     "value":
-                    "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                   }
                 ],
                 "name": "householdOverview",
@@ -6640,7 +4370,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -6654,18 +4384,6 @@ final dynamic sampleFlows = {
           }
         },
         {
-          "actionType": "UPDATE_STOCK_BALANCE",
-          "properties": {
-            "entity": "TASK",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to update stock balance."}
-              }
-            ]
-          }
-        },
-        {
           "actions": [
             {
               "actionType": "FETCH_TRANSFORMER_CONFIG",
@@ -6673,7 +4391,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
                 "configName": "beneficiaryRegistration"
@@ -6686,7 +4404,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to update household."}
+                    "properties": {"message": "HCM_ERROR_UPDATE_HOUSEHOLD"}
                   }
                 ]
               }
@@ -6698,7 +4416,7 @@ final dynamic sampleFlows = {
                   {
                     "key": "HouseholdClientReferenceId",
                     "value":
-                    "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                   }
                 ],
                 "name": "householdOverview",
@@ -6706,7 +4424,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -6724,22 +4442,10 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
                   }
                 ],
                 "configName": "beneficiaryRegistration"
-              }
-            },
-            {
-              "actionType": "UPDATE_IDENTIFIER_STATUS",
-              "properties": {
-                "identifierType": "UNIQUE_BENEFICIARY_ID",
-                "onError": [
-                  {
-                    "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to update beneficiary id status."}
-                  }
-                ]
               }
             },
             {
@@ -6749,7 +4455,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create household."}
+                    "properties": {"message": "HCM_ERROR_CREATE_HOUSEHOLD"}
                   }
                 ]
               }
@@ -6761,7 +4467,7 @@ final dynamic sampleFlows = {
                   {
                     "key": "HouseholdClientReferenceId",
                     "value":
-                    "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                        "{{contextData.entities.HouseholdModel.clientReferenceId}}"
                   }
                 ],
                 "name": "householdOverview",
@@ -6769,7 +4475,7 @@ final dynamic sampleFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {"message": "HCM_ERROR_NAVIGATION"}
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -6866,6 +4572,951 @@ final dynamic sampleFlows = {
           "primary": "household"
         }
       },
+      "scrollListener": {}
+    },
+    {
+      "name": "UNABLETODELIVER",
+      "order": 12,
+      "pages": [
+        {
+          "body": null,
+          "flow": "UNABLETODELIVER",
+          "page": "unableToDeliver",
+          "type": "object",
+          "label": "UNABLETODELIVERY_FLOW_LABEL",
+          "order": 2,
+          "footer": [
+            {
+              "label": "UNABLETODELIVERY_FLOW_HEADING",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "name": "householdOverview",
+                    "type": "template"
+                  }
+                }
+              ],
+              "fieldName": "unableToDeliverSubmitButton",
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "UNABLETODELIVERY_FLOW_SCREEN_HEADING",
+          "summary": false,
+          "version": 1,
+          "navigateTo": {"name": "household-overview", "type": "template"},
+          "properties": [
+            {
+              "type": "string",
+              "label": "APPONE_UNABLETODELIVER_LATLNG_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "latLng",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "REFUSED", "name": "UNABLETODELIVER_REFUSED"},
+                {"code": "ABSENCE", "name": "UNABLETODELIVER_ABSENCE"}
+              ],
+              "label": "UNABLETODELIVERY_FLOW_reason_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reason",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "UNABLETODELIVERY_FLOW_reason_REQUIRED_ERROR_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "additionalFields": true
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "UNABLETODELIVER_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "UNABLETODELIVER_ENUM_VACCINE_NOT_SAFE"
+                },
+                {
+                  "code": "NO_FELT_NEED",
+                  "name": "UNABLETODELIVER_ENUM_NO_FELT_NEED"
+                },
+                {
+                  "code": "TOO_MANY_ROUNDS",
+                  "name": "UNABLETODELIVER_ENUM_TOO_MANY_ROUNDS"
+                },
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "UNABLETODELIVER_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {
+                  "code": "CHILD_SICK",
+                  "name": "UNABLETODELIVER_ENUM_CHILD_SICK"
+                },
+                {
+                  "code": "COVID_RELATED",
+                  "name": "UNABLETODELIVER_ENUM_COVID_RELATED"
+                },
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "UNABLETODELIVER_ENUM_AFRICA_POLIO_FREE"
+                },
+                {
+                  "code": "NOPV_CONCERNS",
+                  "name": "UNABLETODELIVER_ENUM_NOPV_CONCERNS"
+                },
+                {"code": "OTHERS", "name": "UNABLETODELIVER_ENUM_OTHERS"}
+              ],
+              "label": "UNABLETODELIVER_REFUSAL_REASON_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "UNABLETODELIVER_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "unableToDeliver.reason=='REFUSED'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "UNABLETODELIVER_OTHER_REFUSAL_REASON_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "UNABLETODELIVER_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "unableToDeliver.refusalReason=='OTHERS'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "AT_FARM", "name": "UNABLETODELIVER_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "UNABLETODELIVER_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "UNABLETODELIVER_ENUM_AT_SCHOOL"},
+                {
+                  "code": "IN_PLAYGROUND",
+                  "name": "UNABLETODELIVER_ENUM_IN_PLAYGROUND"
+                },
+                {"code": "TRAVELLED", "name": "UNABLETODELIVER_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "UNABLETODELIVER_ENUM_OTHER"}
+              ],
+              "label": "UNABLETODELIVER_ABSENCE_REASON_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "UNABLETODELIVER_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "unableToDeliver.reason=='ABSENCE'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "UNABLETODELIVER_OTHER_ABSENCE_REASON_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "UNABLETODELIVER_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "unableToDeliver.absenceReason=='OTHER'"
+                  }
+                ]
+              }
+            }
+          ],
+          "actionLabel": "UNABLETODELIVERY_FLOW_ACTION_LABEL",
+          "description": "UNABLETODELIVERY_FLOW_DESCRIPTION",
+          "showTabView": false,
+          "showAlertPopUp": {
+            "title": "UNABLETODELIVER_FLOW_ALERT_TITLE",
+            "conditions": [
+              {
+                "value": "INELIGIBLE",
+                "expression": "unableToDeliver.reason == FEVER_INELIGIBLE"
+              },
+              {"value": "AEFI", "expression": "DEFAULT"}
+            ],
+            "description": "UNABLETODELIVER_FLOWT_ALERT_DESCRIPTION",
+            "primaryActionLabel": "UNABLETODELIVER_FLOW_ACTION_SUBMIT",
+            "secondaryActionLabel": "UNABLETODELIVER_FLOW_ACTION_CANCEL"
+          },
+          "submitCondition": null,
+          "preventScreenCapture": false,
+          "conditionalNavigateTo": null
+        }
+      ],
+      "summary": false,
+      "version": 1,
+      "category": "DELIVERY",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"}
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch config."}
+              }
+            ],
+            "configName": "unableToDeliverConfig"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "TASK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to create household."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {
+                "key": "HouseholdClientReferenceId",
+                "value": "{{navigation.HouseholdClientReferenceId}}"
+              }
+            ],
+            "name": "householdOverview",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Navigation failed."}
+              }
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "searchBeneficiary"
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {},
+      "scrollListener": {}
+    },
+    {
+      "name": "VACCINATED_ELSEWHERE",
+      "order": 12,
+      "pages": [
+        {
+          "body": null,
+          "flow": "VACCINATED_ELSEWHERE",
+          "page": "vaccinatedElsewhere",
+          "type": "object",
+          "label": "VACCINATED_ELSEWHERE_FLOW_LABEL",
+          "order": 1,
+          "footer": [
+            {
+              "label": "VACCINATED_ELSEWHERE_FLOW_SUBMIT_BUTTON",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "name": "householdOverview",
+                    "type": "template"
+                  }
+                }
+              ],
+              "fieldName": "vaccinatedElsewhereSubmitButton",
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "VACCINATED_ELSEWHERE_FLOW_HEADING",
+          "summary": false,
+          "version": 1,
+          "navigateTo": {"name": "household-overview", "type": "template"},
+          "properties": [
+            {
+              "type": "dynamic",
+              "enums": [
+                {"code": "SP1", "name": "SP1"},
+                {"code": "SP2", "name": "SP2"},
+                {"code": "AQ1", "name": "AQ1"},
+                {"code": "AQ2", "name": "AQ2"}
+              ],
+              "label": "HCM_DELIVERY_RESOURCE_LABEL",
+              "order": 0,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "required": true,
+              "fieldName": "resourceCard",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "SP1", "name": "SP1"},
+                {"code": "SP2", "name": "SP2"},
+                {"code": "AQ1", "name": "AQ1"},
+                {"code": "AQ2", "name": "AQ2"}
+              ],
+              "includeInSummary": true,
+              "required.message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
+            },
+            {
+              "type": "string",
+              "label": "VACCINATED_ELSEWHERE_LATLNG_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "latLng",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "label": "UNABLETODELIVER_SITE_NAME_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "siteName",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "additionalFields": true
+            },
+            {
+              "type": "string",
+              "label": "UNABLETODELIVER_REGION_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "region",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "additionalFields": true
+            }
+          ],
+          "actionLabel": "VACCINATED_ELSEWHERE_FLOW_ACTION_LABEL",
+          "description": "VACCINATED_ELSEWHERE_FLOW_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false,
+          "conditionalNavigateTo": null
+        }
+      ],
+      "summary": false,
+      "version": 1,
+      "category": "DELIVERY",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"}
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch config."}
+              }
+            ],
+            "configName": "vaccinatedElsewhere"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "TASK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to create task."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {
+                "key": "HouseholdClientReferenceId",
+                "value": "{{navigation.HouseholdClientReferenceId}}"
+              }
+            ],
+            "name": "householdOverview",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Navigation failed."}
+              }
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "searchBeneficiary"
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {},
+      "scrollListener": {}
+    },
+    {
+      "name": "REDOSE",
+      "order": 13,
+      "pages": [
+        {
+          "body": null,
+          "flow": "REDOSE",
+          "page": "RedoseDetails",
+          "type": "object",
+          "label": "HCM_REDOSE_DETAILS_HEADING",
+          "order": 1,
+          "footer": [
+            {
+              "type": "template",
+              "label": "HCM_REDOSE_SAVE_BUTTON",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "name": "household-acknowledgement",
+                    "type": "template"
+                  }
+                }
+              ],
+              "fieldName": "redoseSaveButton",
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "REGISTRATION",
+          "heading": "HCM_REDOSE_DETAILS_HEADING",
+          "summary": false,
+          "version": 1,
+          "navigateTo": {
+            "name": "household-acknowledgement",
+            "type": "template"
+          },
+          "properties": [
+            {
+              "type": "string",
+              "label": "HCM_REDOSE_DATE_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "dateOfRegistration",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": true,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            {
+              "type": "dynamic",
+              "enums": [
+                {"code": "SP1", "name": "SP1"},
+                {"code": "SP2", "name": "SP2"},
+                {"code": "AQ1", "name": "AQ1"},
+                {"code": "AQ2", "name": "AQ2"}
+              ],
+              "label": "HCM_REDOSE_RESOURCE_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "required": true,
+              "fieldName": "resourceCard",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_REDOSE_RESOURCE_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "SP1", "name": "SP1"},
+                {"code": "SP2", "name": "SP2"},
+                {"code": "AQ1", "name": "AQ1"},
+                {"code": "AQ2", "name": "AQ2"}
+              ],
+              "includeInSummary": true,
+              "required.message": "HCM_REDOSE_RESOURCE_REQUIRED_MESSAGE"
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "SUCCESSFUL_DELIVERY",
+                  "name": "HCM_REDOSE_COMMENT_SUCCESSFUL"
+                }
+              ],
+              "label": "HCM_REDOSE_COMMENTS_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "isMdms": true,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "deliveryComment",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "label": "HCM_REDOSE_SCAN_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "scanner",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "scanner",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": false,
+              "isMultiSelect": false,
+              "includeInSummary": false
+            },
+            {
+              "type": "string",
+              "label": "HCM_REDOSE_LAT_LONG_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "latLng",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "HCM_COMMON_YES"},
+                {"code": "NO", "name": "HCM_COMMON_NO"}
+              ],
+              "label": "HCM_REDOSE_RECEIVED_OPV_BEFORE_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "receivedOPVBefore",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true
+            }
+          ],
+          "actionLabel": "HCM_REDOSE_SAVE_BUTTON",
+          "description": "HCM_REDOSE_DETAILS_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false
+        }
+      ],
+      "summary": false,
+      "version": 3,
+      "category": "REDOSE",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"},
+              {
+                "key": "deliveryStrategy",
+                "value": "{{navigation.deliveryStrategy}}"
+              }
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
+              }
+            ],
+            "configName": "redose"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "TASK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "HCM_ERROR_CREATE_TASK"}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {
+                "key": "HouseholdClientReferenceId",
+                "value": "{{navigation.HouseholdClientReferenceId}}"
+              }
+            ],
+            "name": "deliverySuccess",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "HCM_ERROR_NAVIGATION"}
+              }
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "householdOverview"
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {},
       "scrollListener": {}
     }
   ],

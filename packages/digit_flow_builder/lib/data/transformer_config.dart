@@ -569,7 +569,7 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
-          "status": "unableToDeliver.reason",
+          "status": "__value:ADMINISTRATION_FAILED",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "tenantId": "__context:tenantId",
@@ -583,9 +583,9 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "unableToDeliver.latLng[0]",
-            "longitude": "unableToDeliver.latLng[1]",
-            "locationAccuracy": "unableToDeliver.latLng[2]",
+            "latitude": "address.latLng[0]",
+            "longitude": "address.latLng[1]",
+            "locationAccuracy": "address.latLng[1]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -610,9 +610,18 @@ final jsonConfig = {
             "auditDetails": "__generate:audit"
           },
           "additionalFields": {
+            "taskType": "__value:UNABLE_TO_DELIVER",
+            "reason": "unableToDeliver.reason",
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
-            "comment": "unableToDeliver.comment"
+            "settlementType": "__context:settlementType",
+            "comment": "unableToDeliver.comment",
+            "latitude": "DeliveryDetails.latLng[0]",
+            "longitude": "DeliveryDetails.latLng[1]",
+            "locationAccuracy": "DeliveryDetails.latLng[2]",
+            "lat": "DeliveryDetails.latLng[0]",
+            "lng": "DeliveryDetails.latLng[1]",
+            "locality": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -1342,6 +1351,188 @@ final jsonConfig = {
           "additionalDetails": "attendanceLogs.additionalFields",
           "clientAuditDetails": "attendanceLogs.clientAudit",
           "auditDetails": "attendanceLogs.audit"
+        }
+      }
+    }
+  },
+  "vaccinatedElsewhere": {
+    "fallbackModel": "TaskModel",
+    "models": {
+      "TaskModel": {
+        "mappings": {
+          "id": "taskDetails.id",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
+          "projectBeneficiaryClientReferenceId":
+              "__context:ProjectBeneficiaryClientReferenceId",
+          "createdBy": "__context:userId",
+          "status": "__value:ADMINISTRATION_SUCCESS",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "resources": "list:TaskResourceModel",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "plannedStartDate": "taskDetails.plannedStartDate",
+          "plannedEndDate": "taskDetails.plannedEndDate",
+          "actualStartDate": "taskDetails.actualStartDate",
+          "actualEndDate": "taskDetails.actualEndDate",
+          "createdDate": "__generate:timestamp",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "address.latLng[0]",
+            "longitude": "address.latLng[1]",
+            "locationAccuracy": "address.latLng[1]",
+            "addressLine1": "address.addressLine1",
+            "addressLine2": "address.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "type": "__value:PERMANENT",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion"
+            },
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "additionalFields": {
+            "taskType": "__value:VACCINATED_ELSEWHERE",
+            "doseIndex": "__context:doseIndex",
+            "cycleIndex": "__context:cycleIndex",
+            "settlementType": "__context:settlementType",
+            "siteName": "vaccinatedElsewhere.siteName",
+            "region": "vaccinatedElsewhere.region",
+            "latitude": "vaccinatedElsewhere.latLng[0]",
+            "longitude": "vaccinatedElsewhere.latLng[1]",
+            "locationAccuracy": "vaccinatedElsewhere.latLng[2]",
+            "lat": "vaccinatedElsewhere.latLng[0]",
+            "lng": "vaccinatedElsewhere.latLng[1]",
+            "locality": "__context:selectedBoundaryCode"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        },
+        "listMappings": {
+          "TaskResourceModel": {
+            "listSource": "vaccinatedElsewhere.resourceCard",
+            "mappings": {
+              "id": "id",
+              "clientReferenceId": "__generate:uuid",
+              "taskId": "taskId",
+              "productVariantId":
+                  "vaccinatedElsewhere.resourceCard.resourceDelivered.productId",
+              "quantity": "vaccinatedElsewhere.resourceCard.quantityDistributed",
+              "isDelivered": "__value:true",
+              "deliveryComment": "vaccinatedElsewhere.deliveryComment",
+              "nonRecoverableError": "error.nonRecoverable",
+              "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit",
+            }
+          }
+        }
+      }
+    }
+  },
+  "polioStockDetails": {
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:LOCATION_CAPTURE",
+          "latitude": "vialDetails.latLng[0]",
+          "longitude": "vialDetails.latLng[1]",
+          "locationAccuracy": "vialDetails.latLng[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "form": "__value:POLIO_STOCK",
+            "settlementType": "__context:settlementType",
+            "batchLotNumber": "vialDetails.batchLotNumber",
+            "returnedUsable": "vialDetails.returnedUsable",
+            "returnedUnusable": "vialDetails.returnedUnusable",
+            "additionalReceived": "vialDetails.additionalReceived",
+            "locality": "__context:selectedBoundaryCode"
+          }
+        }
+      }
+    }
+  },
+  "polioIssuedVials": {
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:LOCATION_CAPTURE",
+          "latitude": "issuedVialDetails.latLng[0]",
+          "longitude": "issuedVialDetails.latLng[1]",
+          "locationAccuracy": "issuedVialDetails.latLng[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "form": "__value:POLIO_STOCK_ISSUED",
+            "settlementType": "__context:settlementType",
+            "batchLotNumber": "issuedVialDetails.batchLotNumber",
+            "unopenedVialsReceived": "issuedVialDetails.unopenedVialsReceived",
+            "additionalUnopenedVialsReceived": "issuedVialDetails.additionalUnopenedVialsReceived",
+            "totalVialsReceivedForDay": "issuedVialDetails.totalVialsReceivedForDay",
+            "locality": "__context:selectedBoundaryCode"
+          }
+        }
+      }
+    }
+  },
+  "polioReturnedVials": {
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:LOCATION_CAPTURE",
+          "latitude": "returnedVialDetails.latLng[0]",
+          "longitude": "returnedVialDetails.latLng[1]",
+          "locationAccuracy": "returnedVialDetails.latLng[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "form": "__value:POLIO_STOCK_RETURNED",
+            "settlementType": "__context:settlementType",
+            "batchLotNumber": "returnedVialDetails.batchLotNumber",
+            "unopenedUsableVialsReturned": "returnedVialDetails.unopenedUsableVialsReturned",
+            "unopenedUsableVialsRetrieved": "returnedVialDetails.unopenedUsableVialsRetrieved",
+            "unopenedSpoiltVialsReturned": "returnedVialDetails.unopenedSpoiltVialsReturned",
+            "openedVialsReturned": "returnedVialDetails.openedVialsReturned",
+            "totalReturned": "returnedVialDetails.totalReturned",
+            "locality": "__context:selectedBoundaryCode"
+          }
         }
       }
     }

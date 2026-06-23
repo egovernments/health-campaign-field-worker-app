@@ -57,6 +57,12 @@ class FlowCrudBloc extends CrudBloc {
     }
 
     if (crudState is CrudStateLoaded) {
+      debugPrint('FlowCrudBloc: CrudStateLoaded for screenKey=$screenKey, compositeKey=$compositeKey');
+      debugPrint('FlowCrudBloc: results keys=${crudState.results.keys.toList()}');
+      for (final entry in crudState.results.entries) {
+        debugPrint('FlowCrudBloc:   ${entry.key}: ${entry.value.length} entities');
+      }
+
       // Consume scroll direction and pagination info when we have loaded data
       // This prevents intermediate states (Loading) from consuming the flags
       final scrollDirection = FlowCrudStateRegistry()
@@ -70,8 +76,10 @@ class FlowCrudBloc extends CrudBloc {
 
       final newEntities =
           crudState.results.values.expand((list) => list).toList();
+      debugPrint('FlowCrudBloc: total newEntities=${newEntities.length}');
       final wrapperConfig =
           flowConfig['wrapperConfig'] as Map<String, dynamic>?;
+      debugPrint('FlowCrudBloc: wrapperConfig null=${wrapperConfig == null}, rootEntity=${wrapperConfig?['rootEntity']}');
       final newWrapper = wrapperConfig != null
           ? WrapperBuilder(
               newEntities,
@@ -79,6 +87,7 @@ class FlowCrudBloc extends CrudBloc {
               screenKey: screenKey,
             ).build()
           : newEntities;
+      debugPrint('FlowCrudBloc: newWrapper length=${newWrapper.length}');
       if (scrollDirection != null && existingState?.stateWrapper != null) {
         // Bidirectional pagination mode
         wrapper = _handleBidirectionalPagination(
