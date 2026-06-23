@@ -35,11 +35,6 @@ class WrapperBuilder {
       final groupByType = config['groupByType'] == true;
       final groupByField = config['groupBy'] as String?;
 
-      debugPrint('WrapperBuilder: screenKey=$screenKey, rootEntity=$rootEntityType, totalEntities=${entities.length}');
-      for (final entry in entityMap.entries) {
-        debugPrint('WrapperBuilder: entityMap[${entry.key}] = ${entry.value.length} entities');
-      }
-
       if (groupByType) {
         // Return all entities grouped by type
         final Map<String, List<dynamic>> groupedEntities = {};
@@ -59,11 +54,9 @@ class WrapperBuilder {
 
       // Fallback: old behavior, return flat list for rootEntity
       final roots = entityMap[rootEntityType] ?? [];
-      debugPrint('WrapperBuilder: found ${roots.length} root entities of type $rootEntityType');
 
       for (final root in roots) {
         if (!filter.passesFilters(root, entityMap, config)) {
-          debugPrint('WrapperBuilder: root entity filtered out by passesFilters');
           continue;
         }
 
@@ -102,15 +95,10 @@ class WrapperBuilder {
         wrappers.add(wrapperData);
       }
     } catch (e, st) {
-      debugPrint('WrapperBuilder.build error: $e\n$st');
+      // Error building wrapper
     } finally {
       // Clear cache after build to free memory
       EnhancedEntityFieldAccessor.clearCache();
-    }
-
-    debugPrint('WrapperBuilder: final wrappers count=${wrappers.length}');
-    if (wrappers.isNotEmpty && wrappers.first is Map) {
-      debugPrint('WrapperBuilder: first wrapper keys=${(wrappers.first as Map).keys.toList()}');
     }
 
     return wrappers;
