@@ -640,94 +640,139 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
               logOutDigitButtonLabel: AppLocalizations.of(context)
                   .translate(i18.common.coreCommonLogout),
               onLogOut: () async {
-                final isConnected = await getIsConnected();
-                if (context.mounted) {
-                  if (isConnected) {
-                    await showCustomPopup(
-                      context: context,
-                      builder: (ctx) => Popup(
-                        title: AppLocalizations.of(context).translate(
-                          i18.common.coreCommonWarning,
-                        ),
-                        description: AppLocalizations.of(context).translate(
-                          i18.common.logOutWarningMsg,
-                        ),
-                        onOutsideTap: () {
-                          Navigator.of(ctx).pop();
-                        },
-                        type: PopUpType.simple,
-                        actions: [
-                          DigitButton(
-                              label: AppLocalizations.of(context).translate(
-                                i18.common.coreCommonOk,
-                              ),
-                              onPressed: () async {
-                                final isar = context.read<Isar>();
-                                final serviceRegistry = await isar
-                                    .serviceRegistrys
-                                    .where()
-                                    .findAll();
-                                final apiEndPoint = Constants.getNotificationEndPoint(
-                                  serviceRegistry: serviceRegistry,
-                                  service: 'NOTIFICATION',
-                                  action: ApiOperation.unRegister.toValue(),
-                                  entityName: 'NotificationToken',
-                                );
+                Future<void> proceedLogout() async {
+                  final isConnected = await getIsConnected();
+                  if (context.mounted) {
+                    if (isConnected) {
+                      await showCustomPopup(
+                        context: context,
+                        builder: (ctx) => Popup(
+                          title: AppLocalizations.of(context).translate(
+                            i18.common.coreCommonWarning,
+                          ),
+                          description: AppLocalizations.of(context).translate(
+                            i18.common.logOutWarningMsg,
+                          ),
+                          onOutsideTap: () {
+                            Navigator.of(ctx).pop();
+                          },
+                          type: PopUpType.simple,
+                          actions: [
+                            DigitButton(
+                                label: AppLocalizations.of(context).translate(
+                                  i18.common.coreCommonOk,
+                                ),
+                                onPressed: () async {
+                                  final isar = context.read<Isar>();
+                                  final serviceRegistry = await isar
+                                      .serviceRegistrys
+                                      .where()
+                                      .findAll();
+                                  final apiEndPoint = Constants.getNotificationEndPoint(
+                                    serviceRegistry: serviceRegistry,
+                                    service: 'NOTIFICATION',
+                                    action: ApiOperation.unRegister.toValue(),
+                                    entityName: 'NotificationToken',
+                                  );
 
-                                if (context.mounted) {
-                                  context.read<PushNotificationBloc>().add(
-                                        PushNotificationEvent.logout(
-                                          apiEndPoint: apiEndPoint,
-                                        ),
-                                      );
-                                  context
-                                      .read<BoundaryBloc>()
-                                      .add(const BoundaryResetEvent());
-                                  context.read<LocalizationBloc>().add(
-                                        LocalizationEvent.onLoadLocalization(
-                                          module: Constants
-                                              .homeLocalizationModules
-                                              .join(','),
-                                          tenantId:
-                                              envConfig.variables.tenantId,
-                                          locale: AppSharedPreferences()
-                                                  .getSelectedLocale ??
-                                              '',
-                                          path: Constants.localizationApiPath,
-                                        ),
-                                      );
-                                  context
-                                      .read<AuthBloc>()
-                                      .add(const AuthLogoutEvent());
-                                }
-                              },
-                              type: DigitButtonType.secondary,
-                              size: DigitButtonSize.large),
-                          DigitButton(
-                              label: AppLocalizations.of(context).translate(
-                                i18.common.coreCommonNo,
-                              ),
-                              onPressed: () {
-                                Navigator.of(
-                                  context,
-                                  rootNavigator: true,
-                                ).pop(true);
-                              },
-                              type: DigitButtonType.primary,
-                              size: DigitButtonSize.large)
-                        ],
-                      ),
-                    );
-                  } else {
-                    Toast.showToast(
-                      context,
-                      message: AppLocalizations.of(context).translate(
-                        i18.login.noInternetError,
-                      ),
-                      type: ToastType.error,
-                    );
+                                  if (context.mounted) {
+                                    context.read<PushNotificationBloc>().add(
+                                          PushNotificationEvent.logout(
+                                            apiEndPoint: apiEndPoint,
+                                          ),
+                                        );
+                                    context
+                                        .read<BoundaryBloc>()
+                                        .add(const BoundaryResetEvent());
+                                    context.read<LocalizationBloc>().add(
+                                          LocalizationEvent.onLoadLocalization(
+                                            module: Constants
+                                                .homeLocalizationModules
+                                                .join(','),
+                                            tenantId:
+                                                envConfig.variables.tenantId,
+                                            locale: AppSharedPreferences()
+                                                    .getSelectedLocale ??
+                                                '',
+                                            path: Constants.localizationApiPath,
+                                          ),
+                                        );
+                                    context
+                                        .read<AuthBloc>()
+                                        .add(const AuthLogoutEvent());
+                                  }
+                                },
+                                type: DigitButtonType.secondary,
+                                size: DigitButtonSize.large),
+                            DigitButton(
+                                label: AppLocalizations.of(context).translate(
+                                  i18.common.coreCommonNo,
+                                ),
+                                onPressed: () {
+                                  Navigator.of(
+                                    context,
+                                    rootNavigator: true,
+                                  ).pop(true);
+                                },
+                                type: DigitButtonType.primary,
+                                size: DigitButtonSize.large)
+                          ],
+                        ),
+                      );
+                    } else {
+                      Toast.showToast(
+                        context,
+                        message: AppLocalizations.of(context).translate(
+                          i18.login.noInternetError,
+                        ),
+                        type: ToastType.error,
+                      );
+                    }
                   }
                 }
+
+                final isar = context.read<Isar>();
+                final userId = context.loggedInUserUuid;
+                final pendingCount = await isar.opLogs
+                    .filter()
+                    .createdByEqualTo(userId)
+                    .syncedUpEqualTo(false)
+                    .count();
+
+                if (!context.mounted) return;
+
+                if (pendingCount > 0) {
+                  DigitSyncDialog.show(
+                    context,
+                    type: DialogType.inProgress,
+                    label: AppLocalizations.of(context).translate(
+                      i18.syncDialog.pendingSyncLabel,
+                    ),
+                    primaryAction: DigitDialogActions(
+                      label: AppLocalizations.of(context).translate(
+                        i18.home.syncDataLabel,
+                      ),
+                      action: (ctx) {
+                        Navigator.pop(ctx);
+                        performBackgroundService(
+                          context: context,
+                          stopService: false,
+                          isBackground: false,
+                        );
+                      },
+                    ),
+                    secondaryAction: DigitDialogActions(
+                      label: AppLocalizations.of(context).translate(
+                        i18.common.corecommonclose,
+                      ),
+                      action: (ctx) => Navigator.pop(ctx),
+                    ),
+                    barrierDismissible: false,
+                  );
+                  return;
+                }
+
+                await proceedLogout();
               },
               footer: PoweredByDigit(
                 version: Constants().version,

@@ -1,9 +1,14 @@
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/back_button_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
+
+import '../../utils/utils.dart';
 
 import '../../blocs/auth/auth.dart';
 import '../../blocs/localization/app_localization.dart';
@@ -68,8 +73,50 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                   Flexible(
                     child: DigitButton(
                       capitalizeLetters: false,
-                      onPressed: () {
-                        context.read<AuthBloc>().add(const AuthLogoutEvent());
+                      onPressed: () async {
+                        final isar = context.read<Isar>();
+                        final userId = context.loggedInUserUuid;
+                        final pendingCount = await isar.opLogs
+                            .filter()
+                            .createdByEqualTo(userId)
+                            .syncedUpEqualTo(false)
+                            .count();
+
+                        if (!context.mounted) return;
+
+                        if (pendingCount > 0) {
+                          DigitSyncDialog.show(
+                            context,
+                            type: DialogType.inProgress,
+                            label: AppLocalizations.of(context).translate(
+                              i18.syncDialog.pendingSyncLabel,
+                            ),
+                            primaryAction: DigitDialogActions(
+                              label: AppLocalizations.of(context).translate(
+                                i18.home.syncDataLabel,
+                              ),
+                              action: (ctx) {
+                                Navigator.pop(ctx);
+                                performBackgroundService(
+                                  context: context,
+                                  stopService: false,
+                                  isBackground: false,
+                                );
+                              },
+                            ),
+                            secondaryAction: DigitDialogActions(
+                              label: AppLocalizations.of(context).translate(
+                                i18.common.corecommonclose,
+                              ),
+                              action: (ctx) => Navigator.pop(ctx),
+                            ),
+                            barrierDismissible: false,
+                          );
+                        } else {
+                          context
+                              .read<AuthBloc>()
+                              .add(const AuthLogoutEvent());
+                        }
                       },
                       prefixIcon: Icons.logout_outlined,
                       label: AppLocalizations.of(context).translate(
