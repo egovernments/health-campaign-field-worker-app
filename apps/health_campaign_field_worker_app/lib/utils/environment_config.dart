@@ -101,8 +101,8 @@ class Variables {
   );
 
   static const _mdmsApi = EnvEntry(
-    'MDMS_API_PATH', //override mdms path to 'egov-mdms-service/v1/_search' for unified-uat in .env
-    'mdms-v2/v1/_search',
+    'MDMS_API_PATH',
+    'egov-mdms-service/v2/_search',
   );
 
   static const _tenantId = EnvEntry(

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -159,8 +158,7 @@ class AppInitializationBloc
           isar,
         );
         try {
-          final dashboardConfigWrapper =
-              await dashboardRemoteRepository.searchDashboardConfig(
+          final dashboardMdmsRes = await mdmsRepository.searchMDMS(
             envConfig.variables.mdmsApiPath,
             MdmsRequestModel(
               mdmsCriteria: MdmsCriteriaModel(
@@ -178,19 +176,18 @@ class AppInitializationBloc
               ),
             ).toJson(),
           );
-          if (dashboardConfigWrapper.isNotEmpty) {
+          final hcmModule =
+              dashboardMdmsRes?[ModuleEnums.hcm.toValue().toString()];
+          if (hcmModule != null) {
             final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
-                    jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                        [ModuleEnums.hcm.toValue().toString()])
-                .dashboardConfigWrapper;
+              Map<String, dynamic>.from(hcmModule),
+            ).dashboardConfigWrapper;
 
             if (dashboardConfigs.isNotEmpty) {
               await dashboardRemoteRepository.writeToDashboardConfigDB(
-                  DashboardConfigPrimaryWrapper.fromJson(
-                          jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                              [ModuleEnums.hcm.toValue().toString()])
-                      .dashboardConfigWrapper,
-                  isar);
+                dashboardConfigs,
+                isar,
+              );
             }
           }
         } catch (e) {
