@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:isar/isar.dart';
 import 'app.dart';
+import 'app_security.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/secure_store/secure_store.dart';
@@ -39,7 +40,10 @@ void main() async {
   }
 
   await envConfig.initialize();
+  AppSecurity.instance.setSecurityLevel = AppSecurityLevel.high;
   WidgetsBinding.instance.addObserver(AppLifecycleObserver());
+  await DioClient()
+      .enableSSLPinning(); // Enable SSL pinning (comment out to disable)
   _dio = DioClient().dio;
 
   DigitUi.instance.initThemeComponents();

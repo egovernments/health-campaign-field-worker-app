@@ -13,6 +13,13 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
@@ -52,10 +59,31 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Enable code obfuscation with R8 and updated ProGuard rules
+            minifyEnabled true
+            shrinkResources true
+            // proguard-android-optimize.txt enables R8 full mode: better obfuscation + dead-code removal
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            // Signing configuration
+            signingConfig signingConfigs.release
+        }
+        
+        debug {
+            // Disable obfuscation for debug builds to speed up development
+            minifyEnabled false
+            shrinkResources false
             signingConfig signingConfigs.debug
         }
     }

@@ -29,6 +29,7 @@ import 'blocs/auth/auth.dart';
 import 'blocs/error/error.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'blocs/root_detection/root_detection.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/remote_client.dart';
@@ -91,12 +92,25 @@ class MainApplicationState extends State<MainApplication>
           ),
         ),
       ],
-      child: BlocProvider(
-        create: (context) => AppInitializationBloc(
-          isar: widget.isar,
-          mdmsRepository: MdmsRepository(widget.client),
-          dashboardRemoteRepository: DashboardRemoteRepository(widget.client),
-        )..add(const AppInitializationSetupEvent()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AppInitializationBloc(
+              isar: widget.isar,
+              mdmsRepository: MdmsRepository(widget.client),
+              dashboardRemoteRepository:
+                  DashboardRemoteRepository(widget.client),
+            )..add(const AppInitializationSetupEvent()),
+          ),
+          // BlocProvider(
+          //   create: (_) {
+          //     return RootDetectionBloc()
+          //       ..add(const RootDetectionEvent.startPeriodicChecks(
+          //         interval: Duration(minutes: 5),
+          //       ));
+          //   },
+          // ),
+        ],
         child: NetworkManagerProviderWrapper(
           isar: widget.isar,
           configuration: const NetworkManagerConfiguration(
@@ -191,7 +205,7 @@ class MainApplicationState extends State<MainApplication>
                                 ..add(
                                   LocalizationEvent.onLoadLocalization(
                                     module:
-                                        "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                                        "hcm-boundary-//${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                                     tenantId: appConfig.tenantId.toString(),
                                     locale: firstLanguage,
                                     path: Constants.localizationApiPath,
@@ -349,86 +363,85 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (_) => ErrorBloc(),
-                    ),
+                        ),
                       ],
                       child: BlocBuilder<ErrorBloc, ErrorState>(
-                        builder: (context, errorState) {
+                          builder: (context, errorState) {
+                        return BlocBuilder<LocalizationBloc, LocalizationState>(
+                          builder: (context, langState) {
+                            final selectedLocale =
+                                AppSharedPreferences().getSelectedLocale ??
+                                    firstLanguage;
 
-                          return BlocBuilder<LocalizationBloc, LocalizationState>(
-                            builder: (context, langState) {
-                              final selectedLocale =
-                                  AppSharedPreferences().getSelectedLocale ??
-                                      firstLanguage;
+                            return MaterialApp.router(
+                              debugShowCheckedModeBanner: false,
+                              builder: (context, child) {
+                                final env = envConfig.variables.envType;
+                                if (env == EnvType.prod) {
+                                  return child ?? const SizedBox.shrink();
+                                }
 
-                              return MaterialApp.router(
-                                debugShowCheckedModeBanner: false,
-                                builder: (context, child) {
+                                return Banner(
+                                  message: envConfig.variables.envType.name,
+                                  location: BannerLocation.topEnd,
+                                  color: () {
+                                    switch (envConfig.variables.envType) {
+                                      case EnvType.uat || EnvType.demo:
+                                        return Colors.green;
+                                      case EnvType.qa:
+                                        return Colors.pink;
+                                      default:
+                                        return Colors.red;
+                                    }
+                                  }(),
+                                  child: child,
+                                );
+                              },
+                              supportedLocales: languages != null
+                                  ? languages.map((e) {
+                                      final results = e.value.split('_');
 
-                                  final env = envConfig.variables.envType;
-                                  if (env == EnvType.prod) {
-                                    return child ?? const SizedBox.shrink();
-                                  }
-
-                                  return Banner(
-                                    message: envConfig.variables.envType.name,
-                                    location: BannerLocation.topEnd,
-                                    color: () {
-                                      switch (envConfig.variables.envType) {
-                                        case EnvType.uat || EnvType.demo:
-                                          return Colors.green;
-                                        case EnvType.qa:
-                                          return Colors.pink;
-                                        default:
-                                          return Colors.red;
-                                      }
-                                    }(),
-                                    child: child,
-                                  );
-                                },
-                                supportedLocales: languages != null
-                                    ? languages.map((e) {
-                                        final results = e.value.split('_');
-
-                                        return results.isNotEmpty
-                                            ? Locale(results.first, results.last)
-                                            : firstLanguage;
-                                      })
-                                    : [firstLanguage],
-                                localizationsDelegates: getAppLocalizationDelegates(
-                                  sql: widget.sql,
-                                  appConfig: appConfig,
-                                  selectedLocale: Locale(
-                                    selectedLocale!.split("_").first,
-                                    selectedLocale.split("_").last,
-                                  ),
+                                      return results.isNotEmpty
+                                          ? Locale(results.first, results.last)
+                                          : firstLanguage;
+                                    })
+                                  : [firstLanguage],
+                              localizationsDelegates:
+                                  getAppLocalizationDelegates(
+                                sql: widget.sql,
+                                appConfig: appConfig,
+                                selectedLocale: Locale(
+                                  selectedLocale!.split("_").first,
+                                  selectedLocale.split("_").last,
                                 ),
-                                locale: languages != null
-                                    ? Locale(
-                                        selectedLocale!.split("_").first,
-                                        selectedLocale.split("_").last,
-                                      )
-                                    : firstLanguage,
-                                theme: DigitExtendedTheme.instance.getLightTheme(),
-                                routeInformationParser:
-                                    widget.appRouter.defaultRouteParser(),
-                                scaffoldMessengerKey: scaffoldMessengerKey,
-                                routerDelegate: AutoRouterDelegate.declarative(
-                                  widget.appRouter,
-                                  navigatorObservers: () => [AppRouterObserver()],
-                                  routes: (handler) => authState.maybeWhen(
-                                    orElse: () => [
-                                      const UnauthenticatedRouteWrapper(),
-                                    ],
-                                    authenticated: (_, __, ___, ____, _____) => [
-                                      AuthenticatedRouteWrapper(),
-                                    ],
-                                  ),
+                              ),
+                              locale: languages != null
+                                  ? Locale(
+                                      selectedLocale!.split("_").first,
+                                      selectedLocale.split("_").last,
+                                    )
+                                  : firstLanguage,
+                              theme:
+                                  DigitExtendedTheme.instance.getLightTheme(),
+                              routeInformationParser:
+                                  widget.appRouter.defaultRouteParser(),
+                              scaffoldMessengerKey: scaffoldMessengerKey,
+                              routerDelegate: AutoRouterDelegate.declarative(
+                                widget.appRouter,
+                                navigatorObservers: () => [AppRouterObserver()],
+                                routes: (handler) => authState.maybeWhen(
+                                  orElse: () => [
+                                    const UnauthenticatedRouteWrapper(),
+                                  ],
+                                  authenticated: (_, __, ___, ____, _____) => [
+                                    AuthenticatedRouteWrapper(),
+                                  ],
                                 ),
-                              );
-                            },
-                          );
-                        }
-                      ),
+                              ),
+                            );
+                          },
+                        );
+                      }),
                     );
                   },
                 );

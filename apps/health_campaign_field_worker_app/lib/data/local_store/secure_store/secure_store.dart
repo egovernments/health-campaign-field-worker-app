@@ -20,7 +20,12 @@ class LocalSecureStore {
   static const manualSyncKey = 'manualSyncKey';
   static const selectedProjectTypeKey = 'selectedProjectType';
 
-  final storage = const FlutterSecureStorage();
+  // SECURITY: Use EncryptedSharedPreferences (Android Keystore-backed AES-256)
+  // explicitly. Without this option some older flutter_secure_storage versions
+  // fall back to a less-secure KeyStore-only mechanism.
+  final storage = const FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+  );
 
   static LocalSecureStore get instance => _instance;
   static final LocalSecureStore _instance = LocalSecureStore._();

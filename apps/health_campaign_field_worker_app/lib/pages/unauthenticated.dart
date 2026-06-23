@@ -8,7 +8,8 @@ class UnauthenticatedPageWrapper extends StatelessWidget {
   const UnauthenticatedPageWrapper({super.key});
 
   @override
-  Widget build(BuildContext context) => ErrorBoundary(builder: (context, error) {
-    return error != null ? const ErrorScreen() : const AutoRouter();
-  });
+  Widget build(BuildContext context) =>
+      ErrorBoundary(builder: (context, error) {
+        return error != null ? const ErrorScreen() : const AutoRouter();
+      });
 }
