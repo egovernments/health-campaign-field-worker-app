@@ -24,6 +24,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/download_progress/download_progress_content.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -357,21 +358,11 @@ void showDownloadDialog(
               final progress = data?.progress ?? 0;
               final totalCount = data?.totalCount ?? model.totalCount ?? 0;
               final syncedCount = data?.syncedCount ?? 0;
-              final boundaryName = data?.boundaryName ?? '';
-              final currentIndex = data?.currentIndex ?? 0;
-              final totalBoundaries = data?.totalBoundaries ?? 1;
 
-              return ProgressIndicatorContainer(
-                label: boundaryName.isNotEmpty
-                    ? '$boundaryName (${currentIndex + 1}/$totalBoundaries)'
-                    : '',
-                prefixLabel: '$syncedCount',
-                suffixLabel: '$totalCount',
-                value: progress,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).colorTheme.primary.primary1,
-                ),
-                subLabel: model.title,
+              return DownloadProgressContent(
+                title: model.title,
+                progress: progress,
+                countLabel: '$syncedCount/$totalCount',
               );
             },
           ),
@@ -404,15 +395,10 @@ void showHFReferralProgressDialog(
           final totalCount = data?.totalCount ?? 0;
           final syncedCount = data?.syncedCount ?? 0;
 
-          return ProgressIndicatorContainer(
-            label: '',
-            prefixLabel: '$syncedCount',
-            suffixLabel: '$totalCount',
-            value: progress,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).colorTheme.primary.primary1,
-            ),
-            subLabel: title,
+          return DownloadProgressContent(
+            title: title,
+            progress: progress,
+            countLabel: '$syncedCount/$totalCount',
           );
         },
       ),

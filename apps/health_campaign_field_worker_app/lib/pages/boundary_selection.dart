@@ -27,6 +27,7 @@ import '../utils/environment_config.dart';
 import '../utils/runtime_hierarchy.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
+import '../widgets/download_progress/download_spinner_content.dart';
 import '../widgets/localized.dart';
 
 @RoutePage()
@@ -194,14 +195,21 @@ class _BoundarySelectionPageState
                                             (route) => route is! PopupRoute,
                                           ),
                                         },
-                                      DigitSyncDialog.show(
-                                        context,
-                                        type: DialogType.inProgress,
-                                        label: localizations.translate(
-                                          i18.beneficiaryDetails
-                                              .dataDownloadInProgress,
-                                        ),
+                                      showCustomPopup(
+                                        context: context,
                                         barrierDismissible: false,
+                                        builder: (ctx) => Popup(
+                                          type: PopUpType.simple,
+                                          title: "",
+                                          additionalWidgets: [
+                                            DownloadSpinnerContent(
+                                              title: localizations.translate(
+                                                i18.beneficiaryDetails
+                                                    .dataDownloadInProgress,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     },
                                     getBatchSize: (

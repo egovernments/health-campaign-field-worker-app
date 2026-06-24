@@ -48,6 +48,7 @@ import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
+import '../widgets/download_progress/download_spinner_content.dart';
 import '../widgets/error_screen.dart';
 import 'error_boundary.dart';
 
@@ -335,14 +336,21 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                             hfDownSyncState.maybeWhen(
                               orElse: () {},
                               loading: () {
-                                DigitSyncDialog.show(
-                                  context,
-                                  type: DialogType.inProgress,
-                                  label: localizations.translate(
-                                    i18.beneficiaryDetails
-                                        .dataDownloadInProgress,
-                                  ),
+                                showCustomPopup(
+                                  context: context,
                                   barrierDismissible: false,
+                                  builder: (ctx) => Popup(
+                                    type: PopUpType.simple,
+                                    title: "",
+                                    additionalWidgets: [
+                                      DownloadSpinnerContent(
+                                        title: localizations.translate(
+                                          i18.beneficiaryDetails
+                                              .dataDownloadInProgress,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 );
                               },
                               dataFound: (newCount, serverTotalCount) {

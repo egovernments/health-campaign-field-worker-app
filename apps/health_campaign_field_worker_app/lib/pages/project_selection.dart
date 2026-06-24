@@ -6,6 +6,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 
@@ -19,6 +20,7 @@ import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/runtime_hierarchy.dart';
 import '../utils/utils.dart';
+import '../widgets/download_progress/download_spinner_content.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -138,11 +140,16 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 syncDialogRoute = DialogRoute(
                   context: context,
                   barrierDismissible: false,
-                  builder: (context) => DigitSyncDialogContent(
-                    type: DialogType.inProgress,
-                    label: localizations.translate(
-                      i18.projectSelection.syncInProgressTitleText,
-                    ),
+                  builder: (context) => Popup(
+                    type: PopUpType.simple,
+                    title: "",
+                    additionalWidgets: [
+                      DownloadSpinnerContent(
+                        title: localizations.translate(
+                          i18.projectSelection.syncInProgressTitleText,
+                        ),
+                      ),
+                    ],
                   ),
                 );
 
