@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/project_type/project_type_model.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
@@ -18,18 +19,112 @@ import '../../local_store/no_sql/schema/service_registry.dart';
 class MdmsRepository {
   final Dio _client;
 
+  static const int _v2SearchLimit = 2000;
+
   const MdmsRepository(this._client);
+
+  /// Translates a v1-style MDMS request body (`MdmsCriteria.moduleDetails`)
+  /// into MDMS v2 `_search` calls — one per `module.master` schemaCode —
+  /// and reassembles the flat v2 `mdms` list back into the nested
+  /// `MdmsRes` shape (`{module: {master: [data]}}`) that all existing
+  /// consumers of this repository parse.
+  Future<Map<String, dynamic>> _searchMdmsResV2(
+    String apiEndPoint,
+    Map<String, dynamic> body,
+  ) async {
+    // Normalize: freezed `toJson` may keep nested models as objects.
+    final Map<String, dynamic> normalizedBody =
+        json.decode(json.encode(body)) as Map<String, dynamic>;
+    final criteria =
+        normalizedBody['MdmsCriteria'] as Map<String, dynamic>? ?? {};
+    final tenantId = criteria['tenantId'];
+    final moduleDetails = criteria['moduleDetails'] as List? ?? [];
+
+    final Map<String, dynamic> mdmsRes = {};
+
+    for (final module in moduleDetails) {
+      final moduleName = module['moduleName'] as String;
+      final masterDetails = module['masterDetails'] as List? ?? [];
+
+      for (final master in masterDetails) {
+        final masterName = master['name'] as String;
+
+        final response = await _client.post(apiEndPoint, data: {
+          'MdmsCriteria': {
+            'tenantId': tenantId,
+            'schemaCode': '$moduleName.$masterName',
+            'limit': _v2SearchLimit,
+          },
+        });
+
+        final responseData = response.data is String
+            ? json.decode(response.data as String)
+            : response.data;
+        final mdmsList = responseData is List
+            ? responseData
+            : (responseData?['mdms'] as List? ?? []);
+
+        List<dynamic> dataList = mdmsList
+            .where((e) => e is Map && e['isActive'] != false)
+            .map((e) => e['data'])
+            .toList();
+
+        final filter = master['filter'] as String?;
+        if (filter != null && filter.trim().isNotEmpty) {
+          dataList = _applyV1Filter(dataList, filter);
+        }
+
+        if (dataList.isEmpty) {
+          // No records for this schemaCode on the v2 server — usually a
+          // master that is not registered or whose name/casing differs.
+          // Surfaced here so the missing schemaCode is obvious in the logs.
+          AppLogger.instance.error(
+            title: 'MDMS v2',
+            message: 'Empty result for schemaCode "$moduleName.$masterName"',
+          );
+        }
+
+        final moduleMap = mdmsRes.putIfAbsent(
+          moduleName,
+          () => <String, dynamic>{},
+        ) as Map<String, dynamic>;
+        moduleMap[masterName] = dataList;
+      }
+    }
+
+    return mdmsRes;
+  }
+
+  /// Applies a v1 JSONPath-style filter like
+  /// `[?(@.project=='X' && @.isSelected==true)]` client-side, since
+  /// MDMS v2 does not accept JSONPath filters in the search criteria.
+  /// Supports `&&`-combined equality conditions only.
+  List<dynamic> _applyV1Filter(List<dynamic> data, String filter) {
+    final conditions =
+        RegExp(r"@\.(\w+)\s*==\s*(?:'([^']*)'|(true|false)|([\d.]+))")
+            .allMatches(filter)
+            .toList();
+    if (conditions.isEmpty) return data;
+
+    return data.where((item) {
+      if (item is! Map) return false;
+      for (final m in conditions) {
+        final key = m.group(1);
+        final expected = m.group(2) ?? m.group(3) ?? m.group(4);
+        if (item[key]?.toString() != expected) return false;
+      }
+      return true;
+    }).toList();
+  }
 
   Future<ServiceRegistryPrimaryWrapperModel> searchServiceRegistry(
     String apiEndPoint,
     Map<String, dynamic> body,
   ) async {
     try {
-      final response = await _client.post(apiEndPoint, data: body);
+      final mdmsRes = await _searchMdmsResV2(apiEndPoint, body);
 
-      return ServiceRegistryPrimaryWrapperModel.fromJson(
-        json.decode(response.toString())['MdmsRes'],
-      );
+      return ServiceRegistryPrimaryWrapperModel.fromJson(mdmsRes);
     } catch (_) {
       rethrow;
     }
@@ -74,11 +169,13 @@ class MdmsRepository {
     Map body,
   ) async {
     try {
-      final response = await _client.post(apiEndPoint, data: body);
-
-      final appCon = app_configuration.AppConfigPrimaryWrapperModel.fromJson(
-        json.decode(response.toString())['MdmsRes'],
+      final mdmsRes = await _searchMdmsResV2(
+        apiEndPoint,
+        Map<String, dynamic>.from(body),
       );
+
+      final appCon =
+          app_configuration.AppConfigPrimaryWrapperModel.fromJson(mdmsRes);
 
       return appCon;
     } on DioError catch (e) {
@@ -96,11 +193,9 @@ class MdmsRepository {
     Map<String, dynamic> body,
   ) async {
     try {
-      final response = await _client.post(apiEndPoint, data: body);
+      final mdmsRes = await _searchMdmsResV2(apiEndPoint, body);
 
-      return PGRServiceDefinitions.fromJson(
-        json.decode(response.toString())['MdmsRes'],
-      );
+      return PGRServiceDefinitions.fromJson(mdmsRes);
     } on DioError catch (e) {
       AppLogger.instance.error(
         title: 'MDMS Repository',
@@ -116,11 +211,9 @@ class MdmsRepository {
     Map<String, dynamic> body,
   ) async {
     try {
-      final response = await _client.post(apiEndPoint, data: body);
+      final mdmsRes = await _searchMdmsResV2(apiEndPoint, body);
 
-      return ProjectTypePrimaryWrapper.fromJson(
-        json.decode(response.toString())['MdmsRes'],
-      );
+      return ProjectTypePrimaryWrapper.fromJson(mdmsRes);
     } catch (_) {
       rethrow;
     }
@@ -131,9 +224,7 @@ class MdmsRepository {
     Map<String, dynamic> body,
   ) async {
     try {
-      final response = await _client.post(apiEndPoint, data: body);
-
-      return response.data?['MdmsRes'];
+      return await _searchMdmsResV2(apiEndPoint, body);
     } on DioError catch (e) {
       AppLogger.instance.error(
         title: 'MDMS Repository',
@@ -163,18 +254,20 @@ class MdmsRepository {
     }
 
     final element = result.hcmWrapperModel;
-    final appConfig = result.hcmWrapperModel?.appConfig.first;
+    final appConfig = result.hcmWrapperModel?.appConfig.firstOrNull;
     final commonMasters = result.commonMasters;
     final backgroundServiceConfig = BackgroundServiceConfig()
-      ..apiConcurrency = element?.backgroundServiceConfig?.first.apiConcurrency
+      ..apiConcurrency =
+          element?.backgroundServiceConfig?.firstOrNull?.apiConcurrency
       ..batteryPercentCutOff =
-          element?.backgroundServiceConfig?.first.batteryPercentCutOff
+          element?.backgroundServiceConfig?.firstOrNull?.batteryPercentCutOff
       ..serviceInterval =
-          element?.backgroundServiceConfig?.first.serviceInterval;
+          element?.backgroundServiceConfig?.firstOrNull?.serviceInterval;
 
     final firebaseConfig = FirebaseConfig()
-      ..enableAnalytics = element?.firebaseConfig?.first.enableAnalytics
-      ..enableCrashlytics = element?.firebaseConfig?.first.enableCrashlytics;
+      ..enableAnalytics = element?.firebaseConfig?.firstOrNull?.enableAnalytics
+      ..enableCrashlytics =
+          element?.firebaseConfig?.firstOrNull?.enableCrashlytics;
 
     appConfiguration
       ..networkDetection = appConfig?.networkDetection
@@ -193,7 +286,7 @@ class MdmsRepository {
       ..firebaseConfig = firebaseConfig;
 
     final List<Languages>? languageList =
-        commonMasters?.stateInfo.first.languages.map((element) {
+        commonMasters?.stateInfo.firstOrNull?.languages.map((element) {
       final languages = Languages()
         ..label = element.label
         ..value = element.value;
@@ -269,10 +362,10 @@ class MdmsRepository {
     final privacyPolicyConfig = commonMasters?.privacyPolicyConfig;
 
     final privacyPolicy = PrivacyPolicy()
-      ..header = privacyPolicyConfig?.first.header ?? ''
-      ..module = privacyPolicyConfig?.first.module ?? ''
-      ..active = privacyPolicyConfig?.first.active
-      ..contents = (privacyPolicyConfig?.first.contents ?? []).map((cont) {
+      ..header = privacyPolicyConfig?.firstOrNull?.header ?? ''
+      ..module = privacyPolicyConfig?.firstOrNull?.module ?? ''
+      ..active = privacyPolicyConfig?.firstOrNull?.active
+      ..contents = (privacyPolicyConfig?.firstOrNull?.contents ?? []).map((cont) {
         final content = Content()
           ..header = cont.header
           ..descriptions = (cont.descriptions ?? []).map((d) {
@@ -359,7 +452,7 @@ class MdmsRepository {
     }).toList();
 
     final List<Interfaces>? interfaceList =
-        element?.backendInterface.first.interface.map((e) {
+        element?.backendInterface.firstOrNull?.interface.map((e) {
       final config = Config()..localStoreTTL = e.config.localStoreTTL;
 
       final interfaces = Interfaces()
