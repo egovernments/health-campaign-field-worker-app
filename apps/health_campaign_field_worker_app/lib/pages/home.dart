@@ -1450,13 +1450,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 primaryButtonLabel: localizations.translate(
                   initialServerCount > 0
                       ? i18.common.coreCommonDownload
-                      : i18.acknowledgementSuccess.goToHome,
+                      : i18.common.proceed,
                 ),
-                secondaryButtonLabel: initialServerCount > 0
-                    ? localizations.translate(
-                        i18.common.coreCommonGoback,
-                      )
-                    : null,
+                secondaryButtonLabel: localizations.translate(
+                  i18.common.coreCommonGoback,
+                ),
               ),
               dialogType: DigitProgressDialogType.dataFound,
               isPop: true,

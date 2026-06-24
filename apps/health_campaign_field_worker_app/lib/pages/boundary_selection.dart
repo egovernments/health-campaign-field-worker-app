@@ -282,15 +282,14 @@ class _BoundarySelectionPageState
                                               localizations.translate(
                                             initialServerCount > 0
                                                 ? i18.common.coreCommonDownload
-                                                : i18.common.coreCommonGoback,
+                                                : i18.common.proceed,
                                           ),
                                           secondaryButtonLabel:
                                               localizations.translate(
                                             initialServerCount > 0
                                                 ? i18.beneficiaryDetails
                                                     .proceedWithoutDownloading
-                                                : i18.acknowledgementSuccess
-                                                    .goToHome,
+                                                : i18.common.coreCommonGoback,
                                           ),
                                         ),
                                         dialogType:

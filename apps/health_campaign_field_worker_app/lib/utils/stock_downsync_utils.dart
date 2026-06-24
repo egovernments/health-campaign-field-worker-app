@@ -70,38 +70,103 @@ void showStockDownloadDialog(
         ),
       );
     case DigitProgressDialogType.dataFound:
-    case DigitProgressDialogType.insufficientStorage:
+      if ((model.totalCount ?? 0) == 0) {
+        showCustomPopup(
+          context: context,
+          builder: (ctx) => Popup(
+            type: PopUpType.alert,
+            title: model.title,
+            description: model.content,
+            titleIcon: Icon(
+              Icons.warning_amber_rounded,
+              size: 60.0,
+              color: Theme.of(context).colorTheme.alert.error,
+            ),
+            actions: [
+              DigitButton(
+                label: model.primaryButtonLabel ?? '',
+                capitalizeLetters: false,
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.router.replaceAll([HomeRoute()]);
+                },
+              ),
+              DigitButton(
+                label: model.secondaryButtonLabel ?? '',
+                capitalizeLetters: false,
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.read<StockDownSyncBloc>().add(
+                        const StockDownSyncResetStateEvent(),
+                      );
+                },
+              ),
+            ],
+          ),
+        );
+        return;
+      }
       showCustomPopup(
         context: context,
         builder: (ctx) => Popup(
           title: model.title,
           titleIcon: Icon(
-            dialogType == DigitProgressDialogType.insufficientStorage
-                ? Icons.warning
-                : Icons.info_outline_rounded,
-            color: dialogType == DigitProgressDialogType.insufficientStorage
-                ? Theme.of(context).colorTheme.alert.error
-                : Theme.of(context).colorTheme.text.primary,
+            Icons.info_outline_rounded,
+            color: Theme.of(context).colorTheme.text.primary,
           ),
           description: model.content,
           actions: [
             DigitButton(
               label: model.primaryButtonLabel ?? '',
               onPressed: () {
-                if ((model.totalCount ?? 0) > 0) {
-                  context.read<StockDownSyncBloc>().add(
-                        StockDownSyncDownloadEvent(
-                          projectModel: model.projectModel,
-                          batchSize: model.batchSize ?? 1,
-                          initialServerCount: model.totalCount ?? 0,
-                        ),
-                      );
-                } else {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  context.read<StockDownSyncBloc>().add(
-                        const StockDownSyncResetStateEvent(),
-                      );
-                }
+                context.read<StockDownSyncBloc>().add(
+                      StockDownSyncDownloadEvent(
+                        projectModel: model.projectModel,
+                        batchSize: model.batchSize ?? 1,
+                        initialServerCount: model.totalCount ?? 0,
+                      ),
+                    );
+              },
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.medium,
+            ),
+            if (model.secondaryButtonLabel != null)
+              DigitButton(
+                label: model.secondaryButtonLabel ?? '',
+                onPressed: () {
+                  if (context.mounted) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.replaceAll([HomeRoute()]);
+                  }
+                },
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.medium,
+              ),
+          ],
+        ),
+      );
+    case DigitProgressDialogType.insufficientStorage:
+      showCustomPopup(
+        context: context,
+        builder: (ctx) => Popup(
+          title: model.title,
+          titleIcon: Icon(
+            Icons.warning,
+            color: Theme.of(context).colorTheme.alert.error,
+          ),
+          description: model.content,
+          actions: [
+            DigitButton(
+              label: model.primaryButtonLabel ?? '',
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.replaceAll([HomeRoute()]);
               },
               type: DigitButtonType.primary,
               size: DigitButtonSize.medium,

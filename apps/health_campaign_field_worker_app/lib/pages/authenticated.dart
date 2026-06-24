@@ -356,38 +356,30 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                               dataFound: (newCount, serverTotalCount) {
                                 Navigator.of(context, rootNavigator: true)
                                     .popUntil((route) => route is! PopupRoute);
-                                showCustomPopup(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (ctx) => Popup(
-                                    title: localizations.translate(
-                                      newCount > 0
-                                          ? i18.beneficiaryDetails.dataFound
-                                          : i18.beneficiaryDetails.noDataFound,
-                                    ),
-                                    titleIcon: Icon(
-                                      Icons.info_outline_rounded,
-                                      color: Theme.of(context)
-                                          .colorTheme
-                                          .text
-                                          .primary,
-                                    ),
-                                    description: localizations.translate(
-                                      newCount > 0
-                                          ? i18.beneficiaryDetails
-                                              .dataFoundContent
-                                          : i18.beneficiaryDetails
-                                              .noDataFoundContent,
-                                    ),
-                                    actions: [
-                                      DigitButton(
-                                        label: localizations.translate(
-                                          newCount > 0
-                                              ? i18.common.coreCommonDownload
-                                              : i18.common.coreCommonGoback,
-                                        ),
-                                        onPressed: () {
-                                          if (newCount > 0) {
+                                if (newCount > 0)
+                                  showCustomPopup(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (ctx) => Popup(
+                                      title: localizations.translate(
+                                        i18.beneficiaryDetails.dataFound,
+                                      ),
+                                      titleIcon: Icon(
+                                        Icons.info_outline_rounded,
+                                        color: Theme.of(context)
+                                            .colorTheme
+                                            .text
+                                            .primary,
+                                      ),
+                                      description: localizations.translate(
+                                        i18.beneficiaryDetails.dataFoundContent,
+                                      ),
+                                      actions: [
+                                        DigitButton(
+                                          label: localizations.translate(
+                                            i18.common.coreCommonDownload,
+                                          ),
+                                          onPressed: () {
                                             context
                                                 .read<HFReferralDownSyncBloc>()
                                                 .add(
@@ -402,18 +394,10 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                         serverTotalCount,
                                                   ),
                                                 );
-                                          } else {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop();
-                                            context.router
-                                                .replaceAll([HomeRoute()]);
-                                          }
-                                        },
-                                        type: DigitButtonType.primary,
-                                        size: DigitButtonSize.medium,
-                                      ),
-                                      if (newCount > 0)
+                                          },
+                                          type: DigitButtonType.primary,
+                                          size: DigitButtonSize.medium,
+                                        ),
                                         DigitButton(
                                           label: localizations.translate(
                                             i18.beneficiaryDetails
@@ -429,9 +413,68 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                           type: DigitButtonType.secondary,
                                           size: DigitButtonSize.medium,
                                         ),
-                                    ],
-                                  ),
-                                );
+                                      ],
+                                    ),
+                                  );
+                                if (newCount == 0)
+                                  showCustomPopup(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (ctx) => Popup(
+                                      type: PopUpType.alert,
+                                      title: localizations.translate(
+                                        i18.beneficiaryDetails.noDataFound,
+                                      ),
+                                      description: localizations.translate(
+                                        i18.beneficiaryDetails.noDataFoundContent,
+                                      ),
+                                      titleIcon: Icon(
+                                        Icons.warning_amber_rounded,
+                                        size: 60.0,
+                                        color: Theme.of(context)
+                                            .colorTheme
+                                            .alert
+                                            .error,
+                                      ),
+                                      actions: [
+                                        DigitButton(
+                                          label: localizations.translate(
+                                            i18.common.proceed,
+                                          ),
+                                          capitalizeLetters: false,
+                                          type: DigitButtonType.primary,
+                                          size: DigitButtonSize.large,
+                                          mainAxisSize: MainAxisSize.max,
+                                          onPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
+                                            context.router
+                                                .replaceAll([HomeRoute()]);
+                                          },
+                                        ),
+                                        DigitButton(
+                                          label: localizations.translate(
+                                            i18.common.coreCommonGoback,
+                                          ),
+                                          capitalizeLetters: false,
+                                          type: DigitButtonType.secondary,
+                                          size: DigitButtonSize.large,
+                                          mainAxisSize: MainAxisSize.max,
+                                          onPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
+                                            context
+                                                .read<HFReferralDownSyncBloc>()
+                                                .add(
+                                                  const HFReferralDownSyncResetStateEvent(),
+                                                );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
                               },
                               inProgress: (syncedCount, totalCount) {
                                 final progressData = HFReferralProgressData(

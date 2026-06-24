@@ -226,6 +226,8 @@ const databaseError = DatabaseError();
 class Common {
   const Common();
 
+  String get proceed => 'PROCEED_BUTTON';
+
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get permissionContinue => 'PERMISSION_CONTINUE';
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
