@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:sync_service/sync_service_lib.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/back_button_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
@@ -85,32 +89,71 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                         if (!context.mounted) return;
 
                         if (pendingCount > 0) {
-                          DigitSyncDialog.show(
-                            context,
-                            type: DialogType.inProgress,
-                            label: AppLocalizations.of(context).translate(
-                              i18.syncDialog.pendingSyncLabel,
-                            ),
-                            primaryAction: DigitDialogActions(
-                              label: AppLocalizations.of(context).translate(
-                                i18.home.syncDataLabel,
+                          await showCustomPopup(
+                            context: context,
+                            builder: (ctx) => Popup(
+                              title: AppLocalizations.of(context).translate(
+                                i18.syncDialog.pendingSyncLabel,
                               ),
-                              action: (ctx) {
-                                Navigator.pop(ctx);
-                                performBackgroundService(
-                                  context: context,
-                                  stopService: false,
-                                  isBackground: false,
-                                );
-                              },
-                            ),
-                            secondaryAction: DigitDialogActions(
-                              label: AppLocalizations.of(context).translate(
-                                i18.common.corecommonclose,
+                              description: AppLocalizations.of(context)
+                                  .translate(
+                                i18.syncDialog.pendingSyncLogoutDescription,
                               ),
-                              action: (ctx) => Navigator.pop(ctx),
+                              onOutsideTap: () =>
+                                  Navigator.of(ctx).pop(),
+                              type: PopUpType.alert,
+                              actions: [
+                                DigitButton(
+                                  label: AppLocalizations.of(context)
+                                      .translate(
+                                    i18.common.corecommonclose,
+                                  ),
+                                  onPressed: () => Navigator.of(
+                                    ctx,
+                                    rootNavigator: true,
+                                  ).pop(),
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
+                                ),
+                                DigitButton(
+                                  label: AppLocalizations.of(context)
+                                      .translate(
+                                    i18.common.coreCommonSync,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(
+                                      ctx,
+                                      rootNavigator: true,
+                                    ).pop();
+                                    StreamSubscription<SyncState>? syncSub;
+                                    syncSub = context
+                                        .read<SyncBloc>()
+                                        .stream
+                                        .listen((state) {
+                                      state.maybeWhen(
+                                        completedSync: () {
+                                          syncSub?.cancel();
+                                          if (context.mounted) {
+                                            context.read<AuthBloc>().add(
+                                                  const AuthLogoutEvent(),
+                                                );
+                                          }
+                                        },
+                                        failedSync: (_) => syncSub?.cancel(),
+                                        failedUpSync: (_) => syncSub?.cancel(),
+                                        failedDownSync: (_) =>
+                                            syncSub?.cancel(),
+                                        nothingPending: () => syncSub?.cancel(),
+                                        orElse: () {},
+                                      );
+                                    });
+                                    attemptSyncUp(context);
+                                  },
+                                  type: DigitButtonType.primary,
+                                  size: DigitButtonSize.large,
+                                ),
+                              ],
                             ),
-                            barrierDismissible: false,
                           );
                         } else {
                           context

@@ -68,6 +68,8 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
 
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
   bool _isOfflineDialogShowing = false;
+  bool _pendingSyncLogout = false;
+  BuildContext? _syncBlocContext;
 
   @override
   void initState() {
@@ -519,8 +521,24 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                             );
                           },
                         ),
+                        BlocListener<SyncBloc, SyncState>(
+                          listener: (context, state) {
+                            state.maybeWhen(
+                              completedSync: () {
+                                if (_pendingSyncLogout) {
+                                  _pendingSyncLogout = false;
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(const AuthLogoutEvent());
+                                }
+                              },
+                              orElse: () {},
+                            );
+                          },
+                        ),
                       ],
                       child: ErrorBoundary(builder: (context, error) {
+                        _syncBlocContext = context;
                         return error != null
                             ? const ErrorScreen()
                             : AutoRouter(
@@ -742,32 +760,46 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                 if (!context.mounted) return;
 
                 if (pendingCount > 0) {
-                  DigitSyncDialog.show(
-                    context,
-                    type: DialogType.inProgress,
-                    label: AppLocalizations.of(context).translate(
-                      i18.syncDialog.pendingSyncLabel,
-                    ),
-                    primaryAction: DigitDialogActions(
-                      label: AppLocalizations.of(context).translate(
-                        i18.home.syncDataLabel,
+                  await showCustomPopup(
+                    context: context,
+                    builder: (ctx) => Popup(
+                      title: AppLocalizations.of(context).translate(
+                        i18.syncDialog.pendingSyncLabel,
                       ),
-                      action: (ctx) {
-                        Navigator.pop(ctx);
-                        performBackgroundService(
-                          context: context,
-                          stopService: false,
-                          isBackground: false,
-                        );
-                      },
-                    ),
-                    secondaryAction: DigitDialogActions(
-                      label: AppLocalizations.of(context).translate(
-                        i18.common.corecommonclose,
+                      description: AppLocalizations.of(context).translate(
+                        i18.syncDialog.pendingSyncLogoutDescription,
                       ),
-                      action: (ctx) => Navigator.pop(ctx),
+                      onOutsideTap: () => Navigator.of(ctx).pop(),
+                      type: PopUpType.alert,
+                      actions: [
+                        DigitButton(
+                          label: AppLocalizations.of(context).translate(
+                            i18.common.corecommonclose,
+                          ),
+                          onPressed: () => Navigator.of(
+                            ctx,
+                            rootNavigator: true,
+                          ).pop(),
+                          type: DigitButtonType.secondary,
+                          size: DigitButtonSize.large,
+                        ),
+                        DigitButton(
+                          label: AppLocalizations.of(context).translate(
+                            i18.common.coreCommonSync,
+                          ),
+                          onPressed: () {
+                            Navigator.of(ctx, rootNavigator: true).pop();
+                            final bodyCtx = _syncBlocContext;
+                            if (bodyCtx != null && bodyCtx.mounted) {
+                              _pendingSyncLogout = true;
+                              attemptSyncUp(bodyCtx);
+                            }
+                          },
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.large,
+                        ),
+                      ],
                     ),
-                    barrierDismissible: false,
                   );
                   return;
                 }
