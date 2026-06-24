@@ -431,6 +431,11 @@ class Common {
 
   String get beneficiaryNotFoundDesc =>
       'CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC';
+
+  String get exitApp => 'EXIT_APP';
+
+  String get rootedDeviceDetectedTitle => 'ROOTED_DEVICE_DETECTED_TITLE';
+  String get rootedDeviceDetectedMessage => 'ROOTED_DEVICE_DETECTED_MESSAGE';
 }
 
 class HomeShowcase {

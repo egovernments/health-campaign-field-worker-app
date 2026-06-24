@@ -14,8 +14,6 @@ import 'package:isar/isar.dart';
 import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'app.dart';
 import 'app_security.dart';
 import 'blocs/app_bloc_observer.dart';
@@ -23,7 +21,6 @@ import 'notification_service.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/secure_store/secure_store.dart';
 import 'data/remote_client.dart';
-import 'notification_service.dart';
 import 'pages/error_boundary.dart';
 import 'router/app_router.dart';
 import 'utils/background_service.dart';
@@ -40,7 +37,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   DartPluginRegistrant.ensureInitialized();
-  AppSecurity.instance.setSecurityLevel = AppSecurityLevel.high;
 
   await initializeAllMappers();
   final info = await PackageInfo.fromPlatform();
@@ -55,6 +51,7 @@ void main() async {
   }
 
   await envConfig.initialize();
+  AppSecurity.instance.setSecurityLevel = AppSecurityLevel.high;
 
   // Security checks - enforce exit only in production environment
   if (!kDebugMode) {
@@ -71,6 +68,7 @@ void main() async {
     }
   }
   WidgetsBinding.instance.addObserver(AppLifecycleObserver());
+  await DioClient().enableSSLPinning();
   _dio = DioClient().dio;
 
   DigitUi.instance.initThemeComponents();

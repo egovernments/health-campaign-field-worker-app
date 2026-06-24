@@ -49,6 +49,7 @@ import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/error_screen.dart';
+import '../widgets/root_detection_wrapper.dart';
 import 'error_boundary.dart';
 
 @RoutePage()
@@ -136,9 +137,10 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ShowcaseWidget(
-      enableAutoScroll: true,
-      builder: Builder(
+    return RootDetectionWrapper(
+      child: ShowcaseWidget(
+        enableAutoScroll: true,
+        builder: Builder(
         builder: (context) {
           return StreamBuilder<bool>(
             stream: _drawerVisibilityController.stream,
@@ -552,6 +554,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
             },
           );
         },
+      ),
       ),
     );
   }

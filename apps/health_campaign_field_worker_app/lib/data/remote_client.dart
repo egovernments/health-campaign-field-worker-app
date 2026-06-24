@@ -1,5 +1,10 @@
 // Importing necessary packages and files
+import 'dart:io';
+
 import "package:dio/dio.dart"; // Dio package for HTTP requests
+import 'package:dio/io.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import '../app_security.dart';
 import '../utils/environment_config.dart'; // Custom utility file for environment configurations
