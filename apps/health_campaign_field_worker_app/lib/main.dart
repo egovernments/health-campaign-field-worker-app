@@ -51,7 +51,7 @@ void main() async {
   }
 
   await envConfig.initialize();
-  AppSecurity.instance.setSecurityLevel = AppSecurityLevel.high;
+  AppSecurity.instance.setSecurityLevel = AppSecurityLevel.low;
 
   // Security checks - enforce exit only in production environment
   if (!kDebugMode) {

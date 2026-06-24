@@ -569,7 +569,7 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
-          "status": "__value:ADMINISTRATION_FAILED",
+          "status": "unableToDeliver.reason",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "tenantId": "__context:tenantId",
@@ -1433,7 +1433,8 @@ final jsonConfig = {
               "taskId": "taskId",
               "productVariantId":
                   "vaccinatedElsewhere.resourceCard.resourceDelivered.productId",
-              "quantity": "vaccinatedElsewhere.resourceCard.quantityDistributed",
+              "quantity":
+                  "vaccinatedElsewhere.resourceCard.quantityDistributed",
               "isDelivered": "__value:true",
               "deliveryComment": "vaccinatedElsewhere.deliveryComment",
               "nonRecoverableError": "error.nonRecoverable",
@@ -1498,8 +1499,10 @@ final jsonConfig = {
             "settlementType": "__context:settlementType",
             "batchLotNumber": "issuedVialDetails.batchLotNumber",
             "unopenedVialsReceived": "issuedVialDetails.unopenedVialsReceived",
-            "additionalUnopenedVialsReceived": "issuedVialDetails.additionalUnopenedVialsReceived",
-            "totalVialsReceivedForDay": "issuedVialDetails.totalVialsReceivedForDay",
+            "additionalUnopenedVialsReceived":
+                "issuedVialDetails.additionalUnopenedVialsReceived",
+            "totalVialsReceivedForDay":
+                "issuedVialDetails.totalVialsReceivedForDay",
             "locality": "__context:selectedBoundaryCode"
           }
         }
@@ -1526,9 +1529,12 @@ final jsonConfig = {
             "form": "__value:POLIO_STOCK_RETURNED",
             "settlementType": "__context:settlementType",
             "batchLotNumber": "returnedVialDetails.batchLotNumber",
-            "unopenedUsableVialsReturned": "returnedVialDetails.unopenedUsableVialsReturned",
-            "unopenedUsableVialsRetrieved": "returnedVialDetails.unopenedUsableVialsRetrieved",
-            "unopenedSpoiltVialsReturned": "returnedVialDetails.unopenedSpoiltVialsReturned",
+            "unopenedUsableVialsReturned":
+                "returnedVialDetails.unopenedUsableVialsReturned",
+            "unopenedUsableVialsRetrieved":
+                "returnedVialDetails.unopenedUsableVialsRetrieved",
+            "unopenedSpoiltVialsReturned":
+                "returnedVialDetails.unopenedSpoiltVialsReturned",
             "openedVialsReturned": "returnedVialDetails.openedVialsReturned",
             "totalReturned": "returnedVialDetails.totalReturned",
             "locality": "__context:selectedBoundaryCode"

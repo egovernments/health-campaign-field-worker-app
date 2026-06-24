@@ -13,16 +13,36 @@ import 'interpolation.dart';
 
 /// English month abbreviations indexed by [DateTime.month] (1-based).
 const _englishMonthAbbr = [
-  '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  '',
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ];
 
 /// Localization keys indexed by [DateTime.month] (1-based).
 const _monthLocalizationKeys = [
-  '', 'HCM_MONTH_JAN', 'HCM_MONTH_FEB', 'HCM_MONTH_MAR',
-  'HCM_MONTH_APR', 'HCM_MONTH_MAY', 'HCM_MONTH_JUN',
-  'HCM_MONTH_JUL', 'HCM_MONTH_AUG', 'HCM_MONTH_SEP',
-  'HCM_MONTH_OCT', 'HCM_MONTH_NOV', 'HCM_MONTH_DEC',
+  '',
+  'HCM_MONTH_JAN',
+  'HCM_MONTH_FEB',
+  'HCM_MONTH_MAR',
+  'HCM_MONTH_APR',
+  'HCM_MONTH_MAY',
+  'HCM_MONTH_JUN',
+  'HCM_MONTH_JUL',
+  'HCM_MONTH_AUG',
+  'HCM_MONTH_SEP',
+  'HCM_MONTH_OCT',
+  'HCM_MONTH_NOV',
+  'HCM_MONTH_DEC',
 ];
 
 /// Replaces the English month abbreviation in [formatted] with the
@@ -298,8 +318,7 @@ void initializeFunctionRegistry() {
       case 'date':
         final date = parseDate(rawValue);
         if (date == null) return '--';
-        final formattedDate =
-            DateFormat(format ?? "dd MMM yyyy").format(date);
+        final formattedDate = DateFormat(format ?? "dd MMM yyyy").format(date);
         return _localizeFormattedDate(formattedDate, date);
 
       case 'datetime':
@@ -505,7 +524,8 @@ void initializeFunctionRegistry() {
         if (task['status'] == TaskStatus.ineligible ||
             task['status'] == TaskStatus.beneficiaryMigrated ||
             task['status'] == TaskStatus.beneficiaryAbsent ||
-            task['status'] == TaskStatus.beneficiaryRefused) {
+            task['status'] == TaskStatus.beneficiaryRefused ||
+            task['status'] == TaskStatus.administrationFailed) {
           return false;
         }
       }
@@ -764,7 +784,8 @@ void initializeFunctionRegistry() {
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
           (lastTaskStatus == 'ADMINISTRATION_SUCCESS' ||
-              lastTaskStatus == 'DELIVERED' || lastTaskStatus == 'VISITED')) {
+              lastTaskStatus == 'DELIVERED' ||
+              lastTaskStatus == 'VISITED')) {
         return true;
       }
 
@@ -2033,8 +2054,7 @@ void initializeFunctionRegistry() {
 
       List<Map<String, dynamic>> records = [];
 
-      final registryState =
-          FlowCrudStateRegistry().get('vialDetailsMenu');
+      final registryState = FlowCrudStateRegistry().get('vialDetailsMenu');
       final stateWrapper = registryState?.stateWrapper;
 
       if (stateWrapper != null) {
@@ -2055,8 +2075,7 @@ void initializeFunctionRegistry() {
                 }
               }
             } else {
-              records
-                  .add((item as dynamic).toMap() as Map<String, dynamic>);
+              records.add((item as dynamic).toMap() as Map<String, dynamic>);
             }
           } catch (_) {
             // skip un-convertible items
@@ -2098,8 +2117,7 @@ void initializeFunctionRegistry() {
       int? getCreatedTime(Map<String, dynamic> record) {
         int? t;
         if (record['clientAuditDetails'] is Map) {
-          t = _parseToInt(
-              (record['clientAuditDetails'] as Map)['createdTime']);
+          t = _parseToInt((record['clientAuditDetails'] as Map)['createdTime']);
         }
         t ??= record['auditDetails'] is Map
             ? _parseToInt((record['auditDetails'] as Map)['createdTime'])
@@ -2130,8 +2148,7 @@ void initializeFunctionRegistry() {
           totalReceived +=
               getAdditionalFieldNum(record, 'totalVialsReceivedForDay');
         } else if (formValue == 'POLIO_STOCK_RETURNED') {
-          alreadyReturned +=
-              getAdditionalFieldNum(record, 'totalReturned');
+          alreadyReturned += getAdditionalFieldNum(record, 'totalReturned');
         }
       }
 

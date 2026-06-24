@@ -963,10 +963,10 @@ final dynamic sampleSMCFlows = {
                   },
                   {
                     "type": "template",
-                    "label": "NOT_ELIGIBLE",
+                    "label": "{{fn:getInEligibleStatus(item.task)}}",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                     "fieldName": "notEligible",
                     "properties": {"tagType": "error"}
                   },
@@ -1074,7 +1074,7 @@ final dynamic sampleSMCFlows = {
                     "label": "HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0 && {{fn:isRegisteredBeforeCurrentCycle(item.individual.0.clientCreatedTime)}} == true",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1111,7 +1111,8 @@ final dynamic sampleSMCFlows = {
                       "type": "secondary",
                       "bottomGap": 16,
                       "mainAxisSize": "max",
-                      "mainAxisAlignment": "center"
+                      "mainAxisAlignment": "center",
+                      "bottomGap": 16
                     }
                   },
                   {
@@ -1183,8 +1184,7 @@ final dynamic sampleSMCFlows = {
                     "format": "button",
                     "visible":
                         "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false",
-                    "disabled":
-                        "{{fn:isRedoseWindowExpired(item.task)}}==true",
+                    "disabled": "{{fn:isRedoseWindowExpired(item.task)}}==true",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1317,8 +1317,7 @@ final dynamic sampleSMCFlows = {
                     },
                     {
                       "type": "template",
-                      "label":
-                          "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
+                      "label": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
                       "format": "button",
                       "onAction": [
                         {
@@ -2200,9 +2199,98 @@ final dynamic sampleSMCFlows = {
       "order": 1,
       "footer": [
         {
+          "icon": "FilterAlt",
+          "type": "template",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
+          "visible":
+              "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
+          "label": "REGISTER_BENEFICIARY",
+          "format": "actionPopup",
+          "fieldName": "beneficiaryIdMinCheck",
+          "properties": {
+            "size": "large",
+            "type": "primary",
+            "popupConfig": {
+              "body": [],
+              "type": "alert",
+              "title":
+                  "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
+              "description":
+                  "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
+              "footerActions": [
+                {
+                  "type": "template",
+                  "label":
+                      "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {"parentScreenKey": "searchBeneficiary"}
+                    },
+                    {
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "data": [
+                          {"key": "nameOfIndividual", "value": "{{searchBar}}"},
+                          {
+                            "key": "UNIQUE_BENEFICIARY_ID",
+                            "value": "{{latestBeneficiaryId}}"
+                          },
+                          {
+                            "key": "uniqueBeneficiaryIdModel",
+                            "value": "{{latestBeneficiaryIdModel}}"
+                          }
+                        ],
+                        "name": "HOUSEHOLD",
+                        "type": "FORM"
+                      }
+                    }
+                  ],
+                  "fieldName": "clearFilter",
+                  "properties": {
+                    "size": "large",
+                    "type": "secondary",
+                    "mainAxisSize": "max"
+                  }
+                },
+                {
+                  "type": "template",
+                  "label": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {"parentScreenKey": "searchBeneficiary"}
+                    },
+                    {
+                      "actionType": "NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC",
+                      "properties": {}
+                    }
+                  ],
+                  "fieldName": "saveFilter",
+                  "properties": {
+                    "size": "large",
+                    "type": "primary",
+                    "mainAxisSize": "max"
+                  }
+                }
+              ],
+              "showCloseButton": true,
+              "barrierDismissible": true
+            },
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "schemaCode": null
+        },
+        {
           "type": "template",
           "label": "REGISTER_BENEFICIARY",
           "format": "button",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
+          "visible":
+              "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -4284,50 +4372,6 @@ final dynamic sampleSMCFlows = {
             },
             {
               "type": "string",
-              "label":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_addmember",
-              "order": 2,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "familyname",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "lengthRange": {
-                "minLength": "2",
-                "errorMessage":
-                    "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message_addmember"
-              },
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                      "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message_addmember"
-                },
-                {
-                  "type": "minLength",
-                  "value": "2",
-                  "message":
-                      "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message_addmember"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "required.message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message_addmember"
-            },
-            {
-              "type": "string",
               "enums": [
                 {"code": "DEFAULT", "name": "DEFAULT"},
                 {
@@ -5452,50 +5496,6 @@ final dynamic sampleSMCFlows = {
               "isMultiSelect": false,
               "required.message":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message"
-            },
-            {
-              "type": "string",
-              "label":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname",
-              "order": 2,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "familyname",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "lengthRange": {
-                "minLength": "2",
-                "errorMessage":
-                    "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message"
-              },
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                      "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message"
-                },
-                {
-                  "type": "minLength",
-                  "value": "2",
-                  "message":
-                      "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "required.message":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message"
             },
             {
               "type": "boolean",
