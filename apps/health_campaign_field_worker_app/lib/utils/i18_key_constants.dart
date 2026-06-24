@@ -232,6 +232,8 @@ class Common {
   String get permissionContinue => 'PERMISSION_CONTINUE';
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
   String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
+  String get logoutConfirmationHeading => 'HCM_LOGOUT_CONFIRMATION_HEADING';
+  String get logoutConfirmationDescription => 'HCM_LOGOUT_CONFIRMATION_DESCRIPTION';
 
   String get coreCommonOr => 'CORE_COMMON_OR';
   String get commentKey => 'COMMENT_KEY';

@@ -698,19 +698,20 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                       context: context,
                       builder: (ctx) => Popup(
                         title: AppLocalizations.of(context).translate(
-                          i18.common.coreCommonWarning,
+                          i18.common.logoutConfirmationHeading,
                         ),
                         description: AppLocalizations.of(context).translate(
-                          i18.common.logOutWarningMsg,
+                          i18.common.logoutConfirmationDescription,
                         ),
                         onOutsideTap: () {
                           Navigator.of(ctx).pop();
                         },
-                        type: PopUpType.simple,
+                        type: PopUpType.alert,
+                        inlineActions: true,
                         actions: [
                           DigitButton(
                               label: AppLocalizations.of(context).translate(
-                                i18.common.coreCommonOk,
+                                i18.common.coreCommonLogout,
                               ),
                               onPressed: () async {
                                 final isar = context.read<Isar>();
@@ -752,11 +753,11 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                       .add(const AuthLogoutEvent());
                                 }
                               },
-                              type: DigitButtonType.secondary,
+                              type: DigitButtonType.primary,
                               size: DigitButtonSize.large),
                           DigitButton(
                               label: AppLocalizations.of(context).translate(
-                                i18.common.coreCommonNo,
+                                i18.common.coreCommonCancel,
                               ),
                               onPressed: () {
                                 Navigator.of(
@@ -764,7 +765,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                   rootNavigator: true,
                                 ).pop(true);
                               },
-                              type: DigitButtonType.primary,
+                              type: DigitButtonType.secondary,
                               size: DigitButtonSize.large)
                         ],
                       ),
