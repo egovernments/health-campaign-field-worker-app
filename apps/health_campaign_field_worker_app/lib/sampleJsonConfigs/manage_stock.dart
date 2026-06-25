@@ -2071,7 +2071,7 @@ final dynamic sampleInventoryFlows = {
             "name": "stock",
             "data": [
               {
-                "key": "clientCreatedBy,clientModifiedBy",
+                "key": "clientCreatedBy",
                 "value": "{{singleton.loggedInUserUuid}}",
                 "operation": "equalsAny"
               },
