@@ -210,9 +210,6 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
             element.type == Modules.localizationModule &&
             Constants.homeLocalizationModules.contains(element.name.toString()))
         .map((e) => e.name.toString())
-        .followedBy([
-          'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()}'
-        ])
         .join(',');
 
     // Cache localization messages for ALL locales directly to DB.

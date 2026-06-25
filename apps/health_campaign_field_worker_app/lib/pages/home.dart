@@ -62,6 +62,7 @@ import '../utils/date_util_attendance.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
+import '../utils/runtime_hierarchy.dart';
 import '../utils/function_registries.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
@@ -2052,14 +2053,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                           pageName: registrationDeliveryData["initialPage"]),
                     );
                   } else {
-
-                  FlowRegistry.setConfig(
-                      sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
-                  NavigationRegistry.setupNavigation(ctx);
-                  ctx.router.push(
-                    FlowBuilderHomeRoute(
-                        pageName: sampleSMCFlows["initialPage"]),
-                  );
+                    FlowRegistry.setConfig(
+                        sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
+                    NavigationRegistry.setupNavigation(ctx);
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: sampleSMCFlows["initialPage"]),
+                    );
                   }
                 } catch (e) {
                   debugPrint('error $e');
@@ -2800,7 +2800,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
                     module: module != null && module.isNotEmpty
-                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary,hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()}"
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary,hcm-boundary-${runtimeHierarchyType().toLowerCase()}"
                         : localizationModulesList?.interfaces
                                 .where(
                                     (e) => e.type == Modules.localizationModule)
