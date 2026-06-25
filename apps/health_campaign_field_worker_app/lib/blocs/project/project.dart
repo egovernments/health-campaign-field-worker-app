@@ -363,7 +363,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     // Cold-restart restore: rehydrate the runtime hierarchy from the persisted
     // selected project before any boundary / MDMS work runs.
     if (selectedProject != null) {
-      final restoredHierarchy = selectedProject.additionalDetails?.hierarchyType;
+      final restoredHierarchy =
+          selectedProject.additionalDetails?.hierarchyType;
       DigitDataModelSingleton().setHierarchyType(
         (restoredHierarchy != null && restoredHierarchy.isNotEmpty)
             ? restoredHierarchy
@@ -390,7 +391,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _loadProjectFacilities(ProjectModel project) async {
-
     final userObject = await localSecureStore.userRequestModel;
     final assignedBoundaryType = project.address?.boundaryType;
     List<String>? boundaryTypes;
@@ -450,10 +450,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       if (apiEndPoint.isNotEmpty) {
         context.read<PushNotificationBloc>().add(
               PushNotificationEvent.registerToken(
-                apiEndPoint: apiEndPoint,
-                facilityIds: currentFacilityIds,
-                userObject: userObject
-              ),
+                  apiEndPoint: apiEndPoint,
+                  facilityIds: currentFacilityIds,
+                  userObject: userObject),
             );
       }
     }
@@ -569,7 +568,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   role.code ==
                       RolesType.distributor
                           .toValue() || // NOTE: Distributor also fetches registers for getting his team members (Non-Mobile users)
-                  role.code == RolesType.teamSupervisor.toValue(),
+                  role.code == RolesType.teamSupervisor.toValue() ||
+                  role.code == RolesType.warehouseManager.toValue(),
             )
             .toList()
             .isNotEmpty) {
@@ -580,7 +580,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .where(
                 (role) =>
                     role.code == RolesType.districtSupervisor.toValue() ||
-                    role.code == RolesType.teamSupervisor.toValue(),
+                    role.code == RolesType.teamSupervisor.toValue() ||
+                    role.code == RolesType.warehouseManager.toValue(),
               )
               .toList()
               .isNotEmpty) {
