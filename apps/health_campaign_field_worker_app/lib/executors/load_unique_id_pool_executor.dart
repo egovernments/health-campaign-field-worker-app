@@ -8,6 +8,8 @@ import 'package:digit_flow_builder/widget_registry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../utils/utils.dart';
+
 class LoadUniqueIdPoolExecutor extends ActionExecutor {
   @override
   bool canHandle(String actionType) => actionType == 'LOAD_UNIQUE_ID_POOL';
@@ -30,6 +32,7 @@ class LoadUniqueIdPoolExecutor extends ActionExecutor {
 
       final searchResult = repository.search(UniqueIdPoolSearchModel(
         status: IdStatus.unAssigned.toValue(),
+        userUuid: context.loggedInUserUuid,
       ));
 
       List<UniqueIdPoolModel> availableIds;
