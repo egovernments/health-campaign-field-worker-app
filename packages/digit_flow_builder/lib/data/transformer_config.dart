@@ -800,7 +800,53 @@ final jsonConfig = {
             "mrnNumber": "__context:mrnNumber",
             "stockEntryType": "__context:stockEntryType",
             "primaryRole": "__context:primaryRole",
-            "secondaryRole": "__context:secondaryRole"
+            "secondaryRole": "__context:secondaryRole",
+            "dispatchClientReferenceId": "__context:dispatchClientReferenceId"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "__value:DATETIME.NOW"
+        }
+      },
+    }
+  },
+  // Variant of `stockReceipt` for the CDD scan path: every input is sourced
+  // from `__context:` instead of `stockReceiptDetails.*` form values. The
+  // scan flow has no intermediate form, so batchNumber/expiryDate/comments/
+  // waybillNumber arrive as navigation params on the confirm screen and are
+  // passed through FETCH_TRANSFORMER_CONFIG.data into the context map.
+  "stockScanReceipt": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "__context:userFacilityId",
+          "productVariantId": "__context:productVariantId",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "__context:quantity",
+          "waybillNumber": "__context:waybillNumber",
+          "transactionType": "__context:transactionType",
+          "transactionReason": "__value:RECEIVED",
+          "campaignNumber": "__context:selectedProject.referenceID",
+          "senderId": "__context:senderFacilityId",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "__context:userFacilityId",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "sku": "__context:sku",
+            "batchNumber": "__context:batchNumber",
+            "expiryDate": "__context:expiryDate",
+            "comments": "__context:comments",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "primaryRole": "__context:primaryRole",
+            "secondaryRole": "__context:secondaryRole",
+            "dispatchClientReferenceId": "__context:dispatchClientReferenceId"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",

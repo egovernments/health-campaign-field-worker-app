@@ -397,7 +397,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     // Cold-restart restore: rehydrate the runtime hierarchy from the persisted
     // selected project before any boundary / MDMS work runs.
     if (selectedProject != null) {
-      final restoredHierarchy = selectedProject.additionalDetails?.hierarchyType;
+      final restoredHierarchy =
+          selectedProject.additionalDetails?.hierarchyType;
       DigitDataModelSingleton().setHierarchyType(
         (restoredHierarchy != null && restoredHierarchy.isNotEmpty)
             ? restoredHierarchy
@@ -424,7 +425,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _loadProjectFacilities(ProjectModel project) async {
-
     final userObject = await localSecureStore.userRequestModel;
     final assignedBoundaryType = project.address?.boundaryType;
     List<String>? boundaryTypes;
@@ -484,10 +484,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       if (apiEndPoint.isNotEmpty) {
         context.read<PushNotificationBloc>().add(
               PushNotificationEvent.registerToken(
-                apiEndPoint: apiEndPoint,
-                facilityIds: currentFacilityIds,
-                userObject: userObject
-              ),
+                  apiEndPoint: apiEndPoint,
+                  facilityIds: currentFacilityIds,
+                  userObject: userObject),
             );
       }
     }
@@ -603,7 +602,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   role.code ==
                       RolesType.distributor
                           .toValue() || // NOTE: Distributor also fetches registers for getting his team members (Non-Mobile users)
-                  role.code == RolesType.teamSupervisor.toValue(),
+                  role.code == RolesType.teamSupervisor.toValue() ||
+                  role.code == RolesType.warehouseManager.toValue(),
             )
             .toList()
             .isNotEmpty) {
@@ -614,7 +614,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .where(
                 (role) =>
                     role.code == RolesType.districtSupervisor.toValue() ||
-                    role.code == RolesType.teamSupervisor.toValue(),
+                    role.code == RolesType.teamSupervisor.toValue() ||
+                    role.code == RolesType.warehouseManager.toValue(),
               )
               .toList()
               .isNotEmpty) {
@@ -1161,17 +1162,22 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           productVariantIds.isEmpty ||
           facilityIds.first.isEmpty) return;
 
-      // Build balance keys for all facility × product variant combinations
-      final balanceKeys = <String>[];
+      // Build balance keys for all facility × product variant combinations.
+      // Includes both the new campaign-suffixed shape and the legacy shape so
+      // pre-upgrade balance rows on the server are not missed.
+      final balanceKeys = <String>{};
       for (final facilityId in facilityIds) {
         for (final productVariantId in productVariantIds) {
-          balanceKeys.add(generateBalanceKey(facilityId, productVariantId));
+          balanceKeys
+              .add(generateBalanceKey(facilityId, productVariantId));
+          balanceKeys
+              .add(legacyBalanceKey(facilityId, productVariantId));
         }
       }
 
       // Fetch from server
       final remoteBalances = await userActionRemoteRepository.search(
-        UserActionSearchModel(clientReferenceId: balanceKeys),
+        UserActionSearchModel(clientReferenceId: balanceKeys.toList()),
       );
 
       if (remoteBalances.isEmpty) return;

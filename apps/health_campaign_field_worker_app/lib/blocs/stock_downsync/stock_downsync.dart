@@ -337,17 +337,22 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
           productVariantIds.isEmpty ||
           facilityIds.first.isEmpty) return;
 
-      // Build balance keys for all facility × product variant combinations
-      final balanceKeys = <String>[];
+      // Build balance keys for all facility × product variant combinations.
+      // Includes both the new campaign-suffixed shape and the legacy shape so
+      // pre-upgrade balance rows on the server are not missed.
+      final balanceKeys = <String>{};
       for (final facilityId in facilityIds) {
         for (final productVariantId in productVariantIds) {
-          balanceKeys.add(generateBalanceKey(facilityId, productVariantId));
+          balanceKeys
+              .add(generateBalanceKey(facilityId, productVariantId));
+          balanceKeys
+              .add(legacyBalanceKey(facilityId, productVariantId));
         }
       }
 
       // Fetch from server
       final remoteBalances = await userActionRemoteRepository.search(
-        UserActionSearchModel(clientReferenceId: balanceKeys),
+        UserActionSearchModel(clientReferenceId: balanceKeys.toList()),
       );
 
       if (remoteBalances.isEmpty) return;
@@ -412,6 +417,10 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       facilityIds.removeWhere((element) => element.isEmpty);
       if (facilityIds.isEmpty) return;
 
+      // Accumulator keyed by "<senderId>|<productVariantId>" so the increase
+      // path can look up both the new and legacy balance row shapes from the
+      // same (facility, productVariant) pair. The `|` separator is safe
+      // because neither id contains it.
       final rejectedDeltas = <String, double>{};
 
       for (final stock in stockEntries) {
@@ -431,25 +440,44 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         final quantity = double.tryParse(stock.quantity ?? '0') ?? 0;
         if (quantity <= 0) continue;
 
-        final balanceKey = generateBalanceKey(senderId, productVariantId);
-        rejectedDeltas[balanceKey] =
-            (rejectedDeltas[balanceKey] ?? 0) + quantity;
+        final pairKey = '$senderId|$productVariantId';
+        rejectedDeltas[pairKey] = (rejectedDeltas[pairKey] ?? 0) + quantity;
       }
 
       for (final entry in rejectedDeltas.entries) {
-        await _increaseBalance(entry.key, entry.value);
+        final parts = entry.key.split('|');
+        await _increaseBalance(parts[0], parts[1], entry.value);
       }
     } catch (e) {
       debugPrint('Rejected stock balance reconciliation error: $e');
     }
   }
 
-  Future<void> _increaseBalance(String balanceKey, double quantity) async {
+  /// Applies a positive delta to the (facility, productVariant) balance row.
+  /// Looks up the new campaign-suffixed key first; if no row exists, falls
+  /// back to the legacy key shape so a downsync that lands before the user
+  /// has triggered the copy-on-first-touch migration still updates the
+  /// correct row.
+  Future<void> _increaseBalance(
+    String facilityId,
+    String productVariantId,
+    double quantity,
+  ) async {
     if (quantity <= 0) return;
 
-    final existing = await userActionLocalRepository.search(
-      UserActionSearchModel(clientReferenceId: [balanceKey]),
+    final newKey = generateBalanceKey(facilityId, productVariantId);
+    var existing = await userActionLocalRepository.search(
+      UserActionSearchModel(clientReferenceId: [newKey]),
     );
+
+    if (existing.isEmpty) {
+      final oldKey = legacyBalanceKey(facilityId, productVariantId);
+      if (oldKey != newKey) {
+        existing = await userActionLocalRepository.search(
+          UserActionSearchModel(clientReferenceId: [oldKey]),
+        );
+      }
+    }
 
     if (existing.isEmpty) return;
 

@@ -1,8 +1,39 @@
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
+
+/// Returns the campaign-number suffix appended to balance keys, derived from
+/// the active project's `referenceID`. The suffix is the segment after the
+/// last `-` (e.g. `CMP-2025-08-04-004846` → `004846`); when no `-` is
+/// present, the trailing 6 chars are used. Returns an empty string when no
+/// project is selected.
+String _activeCampaignSuffix() {
+  final ref = FlowBuilderSingleton().selectedProject?.referenceID;
+  if (ref == null || ref.isEmpty) return '';
+  final idx = ref.lastIndexOf('-');
+  if (idx >= 0 && idx < ref.length - 1) return ref.substring(idx + 1);
+  return ref.length <= 6 ? ref : ref.substring(ref.length - 6);
+}
 
 /// Generates a balance key for UserAction STOCK_BALANCE records.
-/// Uses format: bal_{facilityId}{productVariantId}
-String generateBalanceKey(String facilityId, String productVariantId) =>
+///
+/// Current shape: `bal_{facilityId}{productVariantId}_{campaignSuffix}`.
+/// Legacy shape (pre-campaign-suffix): `bal_{facilityId}{productVariantId}`.
+///
+/// Call sites that write balances use this function via copy-on-first-touch
+/// migration: if no row exists for the new key but a row exists under
+/// [legacyBalanceKey], the legacy balance value is carried into the new row
+/// on the first write under the new key. Reads that need to support both
+/// shapes should query both keys.
+String generateBalanceKey(String facilityId, String productVariantId) {
+  final suffix = _activeCampaignSuffix();
+  final base = 'bal_$facilityId$productVariantId';
+  return suffix.isEmpty ? base : '${base}_$suffix';
+}
+
+/// Pre-campaign-suffix shape of the balance key. Retained for the
+/// copy-on-first-touch migration in stock balance writers and dual-key
+/// search in batch readers.
+String legacyBalanceKey(String facilityId, String productVariantId) =>
     'bal_$facilityId$productVariantId';
 
 class StockCalculationUtils {
@@ -12,6 +43,20 @@ class StockCalculationUtils {
     for (final field in fields) {
       if (field.key == key) {
         return field.value?.toString().toUpperCase() ?? '';
+      }
+    }
+    return '';
+  }
+
+  /// Case-preserving variant of [_getAdditionalFieldValue]. Use for values that
+  /// are identifiers (e.g. `dispatchClientReferenceId`) where uppercasing
+  /// would corrupt the data.
+  static String _getAdditionalFieldRawValue(StockModel stock, String key) {
+    final fields = stock.additionalFields?.fields;
+    if (fields == null) return '';
+    for (final field in fields) {
+      if (field.key == key) {
+        return field.value?.toString() ?? '';
       }
     }
     return '';
@@ -33,6 +78,25 @@ class StockCalculationUtils {
       if (stock.productVariantId != productId) return false;
       return stock.receiverId == facilityId || stock.senderId == facilityId;
     }).toList();
+
+    // Set of inbound DISPATCHED clientReferenceIds that have already been
+    // "claimed" by a local RECEIVED row carrying
+    // additionalFields.dispatchClientReferenceId. Used below to skip the
+    // legacy `DISPATCHED + status=ACCEPTED` branch so it doesn't double-count
+    // alongside the new RECEIVED row produced by the two-write Accept flow
+    // and the CDD scan flow.
+    //
+    // Rollout bridge — remove when every campaign's `manage_stock` config has
+    // been rotated to include the `CREATE_EVENT` on Accept (so every Accept
+    // produces a receiver-owned RECEIVED row). At that point the legacy
+    // `isReceiver + DISPATCHED + status=ACCEPTED` branches below and this
+    // set can be deleted together, leaving the pure
+    // "sum receiver-owned RECEIVED" rule from `stock-receive-flow.html`.
+    final dispatchRefsClaimedByReceived = filteredStock
+        .where((s) => (s.transactionType?.toUpperCase() ?? '') == 'RECEIVED')
+        .map((s) => _getAdditionalFieldRawValue(s, 'dispatchClientReferenceId'))
+        .where((v) => v.isNotEmpty)
+        .toSet();
 
     double stockReceived = 0;
     double stockIssued = 0;
@@ -63,6 +127,8 @@ class StockCalculationUtils {
           stockEntryType: stockEntryType,
           quantity: quantity,
           status: status,
+          alreadyClaimedByReceived: dispatchRefsClaimedByReceived
+              .contains(stock.clientReferenceId),
           stockReceived: (v) => stockReceived += v,
           stockReturned: (v) => stockReturned += v,
           stockExcess: (v) => stockExcess += v,
@@ -100,7 +166,13 @@ class StockCalculationUtils {
         stockDamaged += quantity;
       } else if (isReceiver &&
           transactionType == 'DISPATCHED' &&
-          status == 'ACCEPTED') {
+          status == 'ACCEPTED' &&
+          !dispatchRefsClaimedByReceived.contains(stock.clientReferenceId)) {
+        // Legacy path: count the inbound DISPATCHED-status-ACCEPTED row only
+        // when no local RECEIVED row has already claimed it via
+        // additionalFields.dispatchClientReferenceId. New two-write Accept and
+        // CDD scan flows produce that RECEIVED row, which is summed via the
+        // `RECEIVED` branch above — the skip here prevents double-counting.
         stockReceived += quantity;
       }
     }
@@ -131,6 +203,7 @@ class StockCalculationUtils {
     required String stockEntryType,
     required double quantity,
     required String status,
+    required bool alreadyClaimedByReceived,
     required void Function(double) stockReceived,
     required void Function(double) stockReturned,
     required void Function(double) stockExcess,
@@ -151,7 +224,9 @@ class StockCalculationUtils {
     } else if (transactionType == 'DISPATCHED') {
       if (stockEntryType == 'RETURNED') {
         stockReturned(quantity);
-      } else if (status == 'ACCEPTED') {
+      } else if (status == 'ACCEPTED' && !alreadyClaimedByReceived) {
+        // Legacy receiver-balance path; skipped when a local RECEIVED row has
+        // already claimed this inbound via dispatchClientReferenceId.
         stockReceived(quantity);
       } else if (stockEntryType == 'LOSS') {
         stockLost(quantity);

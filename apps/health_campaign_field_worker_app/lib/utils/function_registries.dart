@@ -463,6 +463,68 @@ class FunctionRegistries {
       }
       return '';
     });
+
+    // Encodes a stock item into the JSON payload the CDD-side scan flow
+    // expects on parseJson. Single source of truth for the QR contract:
+    // keys here MUST match the navigation params consumed by
+    // stockScanConfirm in manage_stock.dart and the __context: mappings
+    // of the stockScanReceipt transformer in transformer_config.dart.
+    // jsonEncode handles quote/backslash escaping so free-text fields
+    // (e.g. comments) can't produce malformed QR payloads.
+    FunctionRegistry.register('stockToScanQr', (args, stateData) {
+      if (args.isEmpty || args.first == null) return '';
+
+      Map<String, dynamic>? itemMap;
+      final item = args.first;
+      if (item is Map<String, dynamic>) {
+        itemMap = item;
+      } else if (item is Map) {
+        itemMap = Map<String, dynamic>.from(item);
+      } else {
+        try {
+          itemMap = (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          try {
+            itemMap = (item as dynamic).toJson() as Map<String, dynamic>;
+          } catch (_) {
+            return '';
+          }
+        }
+      }
+      if (itemMap == null) return '';
+
+      String getAdditionalField(String key) {
+        final additionalFields = itemMap?['additionalFields'];
+        List? fields;
+        if (additionalFields is Map) {
+          fields = additionalFields['fields'] as List?;
+        } else if (additionalFields is List) {
+          fields = additionalFields;
+        }
+        if (fields == null) return '';
+        for (final field in fields) {
+          if (field is Map && field['key'] == key) {
+            return field['value']?.toString() ?? '';
+          }
+        }
+        return '';
+      }
+
+      final payload = <String, dynamic>{
+        'clientReferenceId': itemMap['clientReferenceId']?.toString() ?? '',
+        'senderId': itemMap['senderId']?.toString() ?? '',
+        'receiverId': itemMap['receiverId']?.toString() ?? '',
+        'productVariantId': itemMap['productVariantId']?.toString() ?? '',
+        'quantity': itemMap['quantity']?.toString() ?? '',
+        'waybillNumber': itemMap['waybillNumber']?.toString() ?? '',
+        'sku': getAdditionalField('sku'),
+        'batchNumber': getAdditionalField('batchNumber'),
+        'expiryDate': getAdditionalField('expiryDate'),
+        'comments': getAdditionalField('comments'),
+      };
+
+      return jsonEncode(payload);
+    });
   }
 
   void _registerViewTransactionFunctions() {
