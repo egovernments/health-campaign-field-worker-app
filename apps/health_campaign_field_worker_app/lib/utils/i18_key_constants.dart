@@ -293,6 +293,8 @@ class Common {
 
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
 
+  String get coreCommonSync => 'CORE_COMMON_SYNC';
+
   String get coreCommonSyncProgress => 'CORE_COMMON_SYNC_PROGRESS';
 
   String get coreCommonDataSynced => 'CORE_COMMON_DATA_SYNCED';
@@ -1201,6 +1203,8 @@ class SyncDialog {
   String get pendingSyncLabel => 'PENDING_SYNC_LABEL';
 
   String get pendingSyncContent => 'PENDING_SYNC_CONTENT';
+
+  String get pendingSyncLogoutDescription => 'PENDING_SYNC_LOGOUT_DESCRIPTION';
 
   String get noInternetConnection => 'SYNC_DIALOG_NO_INTERNET_CONNECTION';
 

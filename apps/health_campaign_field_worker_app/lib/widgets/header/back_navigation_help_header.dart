@@ -1,9 +1,18 @@
+import 'dart:async';
+
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:sync_service/sync_service_lib.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/back_button_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
+
+import '../../utils/utils.dart';
 
 import '../../blocs/auth/auth.dart';
 import '../../blocs/localization/app_localization.dart';
@@ -68,8 +77,89 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                   Flexible(
                     child: DigitButton(
                       capitalizeLetters: false,
-                      onPressed: () {
-                        context.read<AuthBloc>().add(const AuthLogoutEvent());
+                      onPressed: () async {
+                        final isar = context.read<Isar>();
+                        final userId = context.loggedInUserUuid;
+                        final pendingCount = await isar.opLogs
+                            .filter()
+                            .createdByEqualTo(userId)
+                            .syncedUpEqualTo(false)
+                            .count();
+
+                        if (!context.mounted) return;
+
+                        if (pendingCount > 0) {
+                          await showCustomPopup(
+                            context: context,
+                            builder: (ctx) => Popup(
+                              title: AppLocalizations.of(context).translate(
+                                i18.syncDialog.pendingSyncLabel,
+                              ),
+                              description: AppLocalizations.of(context)
+                                  .translate(
+                                i18.syncDialog.pendingSyncLogoutDescription,
+                              ),
+                              onOutsideTap: () =>
+                                  Navigator.of(ctx).pop(),
+                              type: PopUpType.alert,
+                              actions: [
+                                DigitButton(
+                                  label: AppLocalizations.of(context)
+                                      .translate(
+                                    i18.common.corecommonclose,
+                                  ),
+                                  onPressed: () => Navigator.of(
+                                    ctx,
+                                    rootNavigator: true,
+                                  ).pop(),
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
+                                ),
+                                DigitButton(
+                                  label: AppLocalizations.of(context)
+                                      .translate(
+                                    i18.common.coreCommonSync,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(
+                                      ctx,
+                                      rootNavigator: true,
+                                    ).pop();
+                                    StreamSubscription<SyncState>? syncSub;
+                                    syncSub = context
+                                        .read<SyncBloc>()
+                                        .stream
+                                        .listen((state) {
+                                      state.maybeWhen(
+                                        completedSync: () {
+                                          syncSub?.cancel();
+                                          if (context.mounted) {
+                                            context.read<AuthBloc>().add(
+                                                  const AuthLogoutEvent(),
+                                                );
+                                          }
+                                        },
+                                        failedSync: (_) => syncSub?.cancel(),
+                                        failedUpSync: (_) => syncSub?.cancel(),
+                                        failedDownSync: (_) =>
+                                            syncSub?.cancel(),
+                                        nothingPending: () => syncSub?.cancel(),
+                                        orElse: () {},
+                                      );
+                                    });
+                                    attemptSyncUp(context);
+                                  },
+                                  type: DigitButtonType.primary,
+                                  size: DigitButtonSize.large,
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          context
+                              .read<AuthBloc>()
+                              .add(const AuthLogoutEvent());
+                        }
                       },
                       prefixIcon: Icons.logout_outlined,
                       label: AppLocalizations.of(context).translate(
