@@ -96,14 +96,10 @@ class FlowCrudBloc extends CrudBloc {
             List<dynamic>.from(existingState!.stateWrapper!);
         existingWrapper.addAll(newWrapper);
         wrapper = existingWrapper;
-        debugPrint(
-            'FlowCrudBloc: Legacy appended ${newWrapper.length} items, total=${wrapper.length}');
       } else if ((scrollDirection != null || legacyAppendMode) &&
           newEntities.isEmpty) {
         // Scroll/append mode but no new entities - preserve existing data
         wrapper = existingState?.stateWrapper;
-        debugPrint(
-            'FlowCrudBloc: No new data, preserving ${wrapper?.length ?? 0} existing items');
 
         // Update SearchStateManager to mark no more data in this direction
         _updateNoMoreData(scrollDirection);
@@ -187,12 +183,9 @@ class FlowCrudBloc extends CrudBloc {
       // Trim entities (not wrapper items) if exceeds max
       if (totalBeforeTrim > maxItems) {
         result = _trimGroupedWrappers(result, maxItems, direction);
-        debugPrint(
-            'FlowCrudBloc: Trimmed grouped wrapper from $totalBeforeTrim to $maxItems entities');
+
       }
 
-      debugPrint(
-          'FlowCrudBloc: Merged grouped wrapper ($direction), totalEntities=$totalBeforeTrim, afterTrim=${_countGroupedEntities(result)}');
     } else if (direction == 'down') {
       // Append new items to the end
       result = List<dynamic>.from(existingWrapper);
@@ -203,11 +196,7 @@ class FlowCrudBloc extends CrudBloc {
       if (result.length > maxItems) {
         final trimCount = result.length - maxItems;
         result = result.sublist(trimCount);
-        debugPrint('FlowCrudBloc: Trimmed $trimCount items from start');
       }
-
-      debugPrint(
-          'FlowCrudBloc: Appended ${newWrapper.length} items (down), totalBeforeTrim=$totalBeforeTrim, afterTrim=${result.length}');
     } else if (direction == 'up') {
       // Prepend new items to the start
       result = List<dynamic>.from(newWrapper);
@@ -218,11 +207,7 @@ class FlowCrudBloc extends CrudBloc {
       if (result.length > maxItems) {
         final trimCount = result.length - maxItems;
         result = result.sublist(0, result.length - trimCount);
-        debugPrint('FlowCrudBloc: Trimmed $trimCount items from end');
       }
-
-      debugPrint(
-          'FlowCrudBloc: Prepended ${newWrapper.length} items (up), totalBeforeTrim=$totalBeforeTrim, afterTrim=${result.length}');
     } else {
       // Unknown direction, just use new wrapper
       result = newWrapper;
@@ -233,9 +218,6 @@ class FlowCrudBloc extends CrudBloc {
     // For groupByType, use rawEntityCount since wrapper items != entity count.
     // For non-grouped, use newWrapper.length (original behavior) to avoid side effects.
     final loadedCount = isGroupedByType ? rawEntityCount : newWrapper.length;
-    debugPrint(
-        'FlowCrudBloc: Calling _updatePaginationWindow - direction=$direction, '
-        'loadedCount=$loadedCount, isGrouped=$isGroupedByType, totalBeforeTrim=$totalBeforeTrim');
     _updatePaginationWindow(
         direction, loadedCount, totalBeforeTrim, paginationInfo);
 
@@ -358,9 +340,6 @@ class FlowCrudBloc extends CrudBloc {
       int loadedCount, Map<String, int>? paginationInfo) {
     final limit = paginationInfo?['limit'];
 
-    debugPrint('FlowCrudBloc: _updatePaginationWindowInitial called - '
-        'compositeKey=$compositeKey, loadedCount=$loadedCount, limit=$limit');
-
     if (limit != null) {
       SearchStateManager().onDataLoadedByCompositeKey(
         compositeKey,
@@ -369,11 +348,6 @@ class FlowCrudBloc extends CrudBloc {
         loadedCount: loadedCount,
         totalInWindow: loadedCount,
       );
-      debugPrint(
-          'FlowCrudBloc: Updated pagination window - endOffset should now be $loadedCount');
-    } else {
-      debugPrint(
-          'FlowCrudBloc: Skipped pagination window update - limit is null (paginationInfo=$paginationInfo)');
     }
   }
 
@@ -400,8 +374,6 @@ class FlowCrudBloc extends CrudBloc {
     // Dispose using composite key - each page instance has its own state
     FlowCrudStateRegistry().disposeByCompositeKey(compositeKey);
     SearchStateManager().disposeByCompositeKey(compositeKey);
-
-    debugPrint('FlowCrudBloc: Disposed state for $compositeKey');
     return super.close();
   }
 }
@@ -436,8 +408,6 @@ class FlowCrudStateRegistry {
   /// Register instanceId for a screen key
   void registerInstance(String key, String instanceId) {
     _instanceIds[key] = instanceId;
-    debugPrint(
-        'FlowCrudStateRegistry: Registered instanceId $instanceId for $key');
   }
 
   /// Get the current instanceId for a screen key
@@ -452,8 +422,6 @@ class FlowCrudStateRegistry {
   /// Returns true if disposed, false if skipped
   bool disposeIfOwner(String key, String instanceId) {
     if (_instanceIds[key] != instanceId) {
-      debugPrint(
-          'FlowCrudStateRegistry: Skipped dispose for $key - instanceId $instanceId is not current owner (current: ${_instanceIds[key]})');
       return false;
     }
     // Use composite key for actual disposal
@@ -472,7 +440,6 @@ class FlowCrudStateRegistry {
     _navParams.remove(compositeKey);
     _scrollDirection.remove(compositeKey);
     _paginationInfo.remove(compositeKey);
-    debugPrint('FlowCrudStateRegistry: Disposed compositeKey $compositeKey');
   }
 
   /// Dispose state directly using a composite key (pageName::instanceId)
@@ -524,16 +491,12 @@ class FlowCrudStateRegistry {
   /// Set scroll direction using composite key directly
   void setScrollDirectionByCompositeKey(String compositeKey, String direction) {
     _scrollDirection[compositeKey] = direction;
-    debugPrint(
-        'FlowCrudStateRegistry: Set scrollDirection=$direction for $compositeKey');
   }
 
   /// Set pagination info using composite key directly
   void setPaginationInfoByCompositeKey(String compositeKey,
       {required int limit, required int maxItems}) {
     _paginationInfo[compositeKey] = {'limit': limit, 'maxItems': maxItems};
-    debugPrint(
-        'FlowCrudStateRegistry: Set paginationInfo limit=$limit, maxItems=$maxItems for $compositeKey');
   }
 
   /// Update navigation params using composite key directly
@@ -553,8 +516,6 @@ class FlowCrudStateRegistry {
   void setAppendMode(String key, bool append) {
     final compositeKey = _currentCompositeKey(key) ?? key;
     _appendMode[compositeKey] = append;
-    debugPrint(
-        'FlowCrudStateRegistry: Set appendMode=$append for $compositeKey');
   }
 
   /// Get and consume append mode (called during state update) - DEPRECATED
@@ -569,8 +530,6 @@ class FlowCrudStateRegistry {
   void setScrollDirection(String key, String direction) {
     final compositeKey = _currentCompositeKey(key) ?? key;
     _scrollDirection[compositeKey] = direction;
-    debugPrint(
-        'FlowCrudStateRegistry: Set scrollDirection=$direction for $compositeKey');
   }
 
   /// Get and consume scroll direction (called during state update)
@@ -587,8 +546,6 @@ class FlowCrudStateRegistry {
       {required int limit, required int maxItems}) {
     final compositeKey = _currentCompositeKey(key) ?? key;
     _paginationInfo[compositeKey] = {'limit': limit, 'maxItems': maxItems};
-    debugPrint(
-        'FlowCrudStateRegistry: Set paginationInfo limit=$limit, maxItems=$maxItems for $compositeKey');
   }
 
   /// Get and consume pagination info

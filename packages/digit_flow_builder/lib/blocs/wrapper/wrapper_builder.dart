@@ -56,7 +56,9 @@ class WrapperBuilder {
       final roots = entityMap[rootEntityType] ?? [];
 
       for (final root in roots) {
-        if (!filter.passesFilters(root, entityMap, config)) continue;
+        if (!filter.passesFilters(root, entityMap, config)) {
+          continue;
+        }
 
         final wrapperData = <String, dynamic>{rootEntityType: root};
 
@@ -93,13 +95,11 @@ class WrapperBuilder {
         wrappers.add(wrapperData);
       }
     } catch (e, st) {
-      debugPrint('WrapperBuilder.build error: $e\n$st');
+      // Error building wrapper
     } finally {
       // Clear cache after build to free memory
       EnhancedEntityFieldAccessor.clearCache();
     }
-
-    debugPrint(wrappers.toString());
 
     return wrappers;
   }

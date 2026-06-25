@@ -13,11 +13,11 @@ import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
 import 'package:digit_flow_builder/data/digit_crud_service.dart';
-import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:digit_flow_builder/widgets/flow_widget_interface.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -52,13 +52,17 @@ import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
 import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
-import '../sampleJsonConfigs/registration_flows.dart';
+import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
+import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
+import '../sampleJsonConfigs/polio_stock_details.dart';
+import '../sampleJsonConfigs/registrtaion_smc_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/attendance_utils.dart';
 import '../utils/date_util_attendance.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
+import '../utils/runtime_hierarchy.dart';
 import '../utils/function_registries.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
@@ -156,14 +160,15 @@ class _HomePageState extends LocalizedState<HomePage> {
           // DELIVERY flow
           return ResourceCard(
             stateData: beneficiaryDetails,
-            pageSchema: 'DELIVERY',
+            pageSchema: stateAccessor.currentPageName ?? 'DELIVERY',
           );
         }
 
-        // REDOSE flow - compute product variants same as DELIVERY
+        // REDOSE / VACCINATED_ELSEWHERE flow - compute product variants
         // Use navigation params to filter by age condition
+        final currentPage = stateAccessor.currentPageName ?? 'REDOSE';
         final navParams =
-            FlowCrudStateRegistry().getNavigationParams('REDOSE');
+            FlowCrudStateRegistry().getNavigationParams(currentPage);
         final cycleIndex = navParams?['cycleIndex'];
         final ageStr = navParams?['selectedIndividualAgeInMonths'];
         final age = int.tryParse(ageStr?.toString() ?? '');
@@ -194,7 +199,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   matchingCriteria.add(dc.toMap());
                 }
               } catch (e) {
-                debugPrint('REDOSE condition eval error: $e');
+                debugPrint('$currentPage condition eval error: $e');
               }
             } else {
               // No condition - include by default
@@ -203,15 +208,15 @@ class _HomePageState extends LocalizedState<HomePage> {
           }
         }
 
-        final redoseState = FlowCrudState(
+        final computedState = FlowCrudState(
           stateWrapper: [
             {'eligibleProductVariants': matchingCriteria}
           ],
         );
 
         return ResourceCard(
-          stateData: redoseState,
-          pageSchema: 'REDOSE',
+          stateData: computedState,
+          pageSchema: currentPage,
         );
       },
     );
@@ -1822,6 +1827,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       return null;
     }
 
+    final isPolio =
+        context.selectedProject.projectType?.toUpperCase().contains('POLIO') ==
+            true;
+
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
       i18.home.fileComplaint:
@@ -1899,8 +1908,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
-          icon: Icons.all_inbox,
-          label: i18.home.beneficiaryLabel,
+          icon: isPolio ? Icons.vaccines : Icons.all_inbox,
+          label: isPolio
+              ? i18.home.polioRegistrationLabel
+              : i18.home.beneficiaryLabel,
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) async {
@@ -1955,7 +1966,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                           to: 'hFReferral',
                           localKey: 'identifierId',
                           foreignKey: 'beneficiaryId'),
-                      // Conditional mapping
                       if (FlowBuilderSingleton().beneficiaryType ==
                           BeneficiaryType.household)
                         const RelationshipMapping(
@@ -2044,11 +2054,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                     );
                   } else {
                     FlowRegistry.setConfig(
-                        sampleFlows["flows"] as List<Map<String, dynamic>>);
+                        sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
                       FlowBuilderHomeRoute(
-                          pageName: sampleFlows["initialPage"]),
+                          pageName: sampleSMCFlows["initialPage"]),
                     );
                   }
                 } catch (e) {
@@ -2080,11 +2090,13 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
         child: HomeItemCard(
-          icon: Icons.home,
-          enableCustomIcon: true,
+          icon: isPolio ? Icons.child_care : Icons.home,
+          enableCustomIcon: !isPolio,
           customIconSize: 40,
-          customIcon: Constants.closedHouseholdSvg,
-          label: i18.home.closedHouseHoldLabel,
+          customIcon: isPolio ? "" : Constants.closedHouseholdSvg,
+          label: isPolio
+              ? i18.home.polioMissedChildrenLabel
+              : i18.home.closedHouseHoldLabel,
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) async {
@@ -2105,133 +2117,210 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+
+      // --- Polio LQA Data Collection ---
+      if (isPolio)
+        i18.home.polioLqaDataCollectionLabel:
+            homeShowcaseData.polioLqaDataCollection.buildWith(
+          child: HomeItemCard(
+            icon: Icons.checklist,
+            label: i18.home.polioLqaDataCollectionLabel,
+            onPressed: () async {
+              context.router.push(CurrentBoundaryRoute(
+                onBoundarySelected: (ctx) async {
+                  final moduleName =
+                      'hcm-lqa-${context.selectedProject.referenceID}';
+                  triggerLocalization(module: moduleName);
+                  isTriggerLocalisation = false;
+
+                  await FlowNavigationUtils.navigateToFlowModule(
+                    context: ctx,
+                    config: FlowModuleConfig(
+                      schemaKey: 'LQA',
+                      sampleFlows: samplePolioLqaDataCollectionFlows,
+                    ),
+                  );
+                },
+              ));
+            },
+          ),
+        ),
+
+      // --- Polio Inside Monitoring ---
+      if (isPolio)
+        i18.home.polioInsideMonitoringLabel:
+            homeShowcaseData.polioInsideMonitoring.buildWith(
+          child: HomeItemCard(
+            icon: Icons.home_work,
+            label: i18.home.polioInsideMonitoringLabel,
+            onPressed: () async {
+              context.router.push(CurrentBoundaryRoute(
+                onBoundarySelected: (ctx) async {
+                  final moduleName =
+                      'hcm-insidemonitoring-${context.selectedProject.referenceID}';
+                  triggerLocalization(module: moduleName);
+                  isTriggerLocalisation = false;
+
+                  await FlowNavigationUtils.navigateToFlowModule(
+                    context: ctx,
+                    config: FlowModuleConfig(
+                      schemaKey: 'INSIDEMONITORING',
+                      sampleFlows: samplePolioInsideHouseholdMonitoringFlows,
+                    ),
+                  );
+                },
+              ));
+            },
+          ),
+        ),
+
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.buildWith(
         child: HomeItemCard(
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
           onPressed: () async {
-            FlowBuilderSingleton().setBoundary(
-                boundary: BoundaryModel(
-                    code: LeastLevelBoundarySingleton().boundary?.first));
+            if (isPolio) {
+              await context.router.push(CurrentBoundaryRoute(
+                onBoundarySelected: (ctx) async {
+                  final moduleName =
+                      'hcm-stock-${context.selectedProject.referenceID}';
+                  triggerLocalization(module: moduleName);
+                  isTriggerLocalisation = false;
 
-            final moduleName =
-                'hcm-inventory-${context.selectedProject.referenceID}';
-            triggerLocalization(module: moduleName);
-            isTriggerLocalisation = false;
+                  await FlowNavigationUtils.navigateToFlowModule(
+                    context: ctx,
+                    config: FlowModuleConfig(
+                      schemaKey: 'STOCK',
+                      sampleFlows: samplePolioStockDetailsFlows,
+                    ),
+                  );
+                },
+              ));
+            } else {
+              FlowBuilderSingleton().setBoundary(
+                  boundary: BoundaryModel(
+                      code: LeastLevelBoundarySingleton().boundary?.first));
 
-            await FlowNavigationUtils.navigateToFlowModule(
-              context: context,
-              config: FlowModuleConfig(
-                schemaKey: 'INVENTORY',
-                sampleFlows: sampleInventoryFlows,
-                relationshipMappings: const [
-                  RelationshipMapping(
-                      from: 'facility',
-                      to: 'projectFacility',
-                      localKey: 'id',
-                      foreignKey: 'facilityId'),
-                  RelationshipMapping(
-                      from: 'projectResource',
-                      to: 'projectFacility',
-                      localKey: 'projectId',
-                      foreignKey: 'projectId'),
-                  RelationshipMapping(
-                      from: 'productVariant',
-                      to: 'projectResource',
-                      localKey: 'id',
-                      foreignKey: 'resource'),
-                ],
-                nestedModelMappings: const [
-                  NestedModelMapping(
-                    rootModel: 'projectFacility',
-                    fields: {
-                      'facility': NestedFieldMapping(
-                        table: 'facility',
-                        localKey: 'facilityId',
-                        foreignKey: 'id',
-                        type: NestedMappingType.one,
-                      ),
-                      'projectResources': NestedFieldMapping(
-                        table: 'projectResource',
+              final moduleName =
+                  'hcm-inventory-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
+              isTriggerLocalisation = false;
+
+              await FlowNavigationUtils.navigateToFlowModule(
+                context: context,
+                config: FlowModuleConfig(
+                  schemaKey: 'INVENTORY',
+                  sampleFlows: sampleInventoryFlows,
+                  relationshipMappings: const [
+                    RelationshipMapping(
+                        from: 'facility',
+                        to: 'projectFacility',
+                        localKey: 'id',
+                        foreignKey: 'facilityId'),
+                    RelationshipMapping(
+                        from: 'projectResource',
+                        to: 'projectFacility',
                         localKey: 'projectId',
-                        foreignKey: 'projectId',
-                        type: NestedMappingType.many,
-                      ),
-                    },
-                  ),
-                ],
-              ),
-            );
+                        foreignKey: 'projectId'),
+                    RelationshipMapping(
+                        from: 'productVariant',
+                        to: 'projectResource',
+                        localKey: 'id',
+                        foreignKey: 'resource'),
+                  ],
+                  nestedModelMappings: const [
+                    NestedModelMapping(
+                      rootModel: 'projectFacility',
+                      fields: {
+                        'facility': NestedFieldMapping(
+                          table: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id',
+                          type: NestedMappingType.one,
+                        ),
+                        'projectResources': NestedFieldMapping(
+                          table: 'projectResource',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }
           },
         ),
       ),
-      i18.home.stockReconciliationLabel:
-          homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
-        child: HomeItemCard(
-          icon: Icons.menu_book,
-          label: i18.home.stockReconciliationLabel,
-          onPressed: () async {
-            FlowBuilderSingleton().setBoundary(
-                boundary: BoundaryModel(
-                    code: LeastLevelBoundarySingleton().boundary?.first));
+      if (!isPolio)
+        i18.home.stockReconciliationLabel:
+            homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
+          child: HomeItemCard(
+            icon: Icons.menu_book,
+            label: i18.home.stockReconciliationLabel,
+            onPressed: () async {
+              FlowBuilderSingleton().setBoundary(
+                  boundary: BoundaryModel(
+                      code: LeastLevelBoundarySingleton().boundary?.first));
 
-            final moduleName =
-                'hcm-stockreconciliation-${context.selectedProject.referenceID}';
-            triggerLocalization(module: moduleName);
-            isTriggerLocalisation = false;
+              final moduleName =
+                  'hcm-stockreconciliation-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
+              isTriggerLocalisation = false;
 
-            await FlowNavigationUtils.navigateToFlowModule(
-              context: context,
-              config: FlowModuleConfig(
-                schemaKey: 'STOCKRECONCILIATION',
-                sampleFlows: stockReconciliationFlows,
-                relationshipMappings: const [
-                  RelationshipMapping(
-                      from: 'facility',
-                      to: 'projectFacility',
-                      localKey: 'id',
-                      foreignKey: 'facilityId'),
-                  RelationshipMapping(
-                      from: 'projectResource',
-                      to: 'projectFacility',
-                      localKey: 'projectId',
-                      foreignKey: 'projectId'),
-                  RelationshipMapping(
-                      from: 'productVariant',
-                      to: 'projectResource',
-                      localKey: 'id',
-                      foreignKey: 'resource'),
-                  RelationshipMapping(
-                      from: 'stock',
-                      to: 'facility',
-                      localKey: 'facilityId',
-                      foreignKey: 'id'),
-                ],
-                nestedModelMappings: const [
-                  NestedModelMapping(
-                    rootModel: 'projectFacility',
-                    fields: {
-                      'facility': NestedFieldMapping(
-                        table: 'facility',
-                        localKey: 'facilityId',
-                        foreignKey: 'id',
-                        type: NestedMappingType.one,
-                      ),
-                      'projectResources': NestedFieldMapping(
-                        table: 'projectResource',
+              await FlowNavigationUtils.navigateToFlowModule(
+                context: context,
+                config: FlowModuleConfig(
+                  schemaKey: 'STOCKRECONCILIATION',
+                  sampleFlows: stockReconciliationFlows,
+                  relationshipMappings: const [
+                    RelationshipMapping(
+                        from: 'facility',
+                        to: 'projectFacility',
+                        localKey: 'id',
+                        foreignKey: 'facilityId'),
+                    RelationshipMapping(
+                        from: 'projectResource',
+                        to: 'projectFacility',
                         localKey: 'projectId',
-                        foreignKey: 'projectId',
-                        type: NestedMappingType.many,
-                      ),
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
+                        foreignKey: 'projectId'),
+                    RelationshipMapping(
+                        from: 'productVariant',
+                        to: 'projectResource',
+                        localKey: 'id',
+                        foreignKey: 'resource'),
+                    RelationshipMapping(
+                        from: 'stock',
+                        to: 'facility',
+                        localKey: 'facilityId',
+                        foreignKey: 'id'),
+                  ],
+                  nestedModelMappings: const [
+                    NestedModelMapping(
+                      rootModel: 'projectFacility',
+                      fields: {
+                        'facility': NestedFieldMapping(
+                          table: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id',
+                          type: NestedMappingType.one,
+                        ),
+                        'projectResources': NestedFieldMapping(
+                          table: 'projectResource',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
-      ),
       i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
@@ -2336,76 +2425,77 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
-        child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.viewReportsLabel,
-          onPressed: () async {
-            FlowBuilderSingleton().setBoundary(
-                boundary: BoundaryModel(
-                    code: LeastLevelBoundarySingleton().boundary?.first));
+      if (!isPolio)
+        i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
+          child: HomeItemCard(
+            icon: Icons.announcement,
+            label: i18.home.viewReportsLabel,
+            onPressed: () async {
+              FlowBuilderSingleton().setBoundary(
+                  boundary: BoundaryModel(
+                      code: LeastLevelBoundarySingleton().boundary?.first));
 
-            final moduleName =
-                'hcm-stockreports-${context.selectedProject.referenceID}';
-            triggerLocalization(module: moduleName);
-            isTriggerLocalisation = false;
+              final moduleName =
+                  'hcm-stockreports-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
+              isTriggerLocalisation = false;
 
-            await FlowNavigationUtils.navigateToFlowModule(
-              context: context,
-              config: FlowModuleConfig(
-                schemaKey: 'STOCKREPORTS',
-                sampleFlows: inventoryReportFlows,
-                relationshipMappings: const [
-                  RelationshipMapping(
-                      from: 'facility',
-                      to: 'projectFacility',
-                      localKey: 'id',
-                      foreignKey: 'facilityId'),
-                  RelationshipMapping(
-                      from: 'projectResource',
-                      to: 'projectFacility',
-                      localKey: 'projectId',
-                      foreignKey: 'projectId'),
-                  RelationshipMapping(
-                      from: 'productVariant',
-                      to: 'projectResource',
-                      localKey: 'id',
-                      foreignKey: 'resource'),
-                  RelationshipMapping(
-                      from: 'stockReconciliation',
-                      to: 'facility',
-                      localKey: 'facilityId',
-                      foreignKey: 'id'),
-                  RelationshipMapping(
-                      from: 'stockReconciliation',
-                      to: 'productVariant',
-                      localKey: 'productVariantId',
-                      foreignKey: 'id'),
-                ],
-                nestedModelMappings: const [
-                  NestedModelMapping(
-                    rootModel: 'projectFacility',
-                    fields: {
-                      'facility': NestedFieldMapping(
-                        table: 'facility',
-                        localKey: 'facilityId',
-                        foreignKey: 'id',
-                        type: NestedMappingType.one,
-                      ),
-                      'projectResources': NestedFieldMapping(
-                        table: 'projectResource',
+              await FlowNavigationUtils.navigateToFlowModule(
+                context: context,
+                config: FlowModuleConfig(
+                  schemaKey: 'STOCKREPORTS',
+                  sampleFlows: inventoryReportFlows,
+                  relationshipMappings: const [
+                    RelationshipMapping(
+                        from: 'facility',
+                        to: 'projectFacility',
+                        localKey: 'id',
+                        foreignKey: 'facilityId'),
+                    RelationshipMapping(
+                        from: 'projectResource',
+                        to: 'projectFacility',
                         localKey: 'projectId',
-                        foreignKey: 'projectId',
-                        type: NestedMappingType.many,
-                      ),
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
+                        foreignKey: 'projectId'),
+                    RelationshipMapping(
+                        from: 'productVariant',
+                        to: 'projectResource',
+                        localKey: 'id',
+                        foreignKey: 'resource'),
+                    RelationshipMapping(
+                        from: 'stockReconciliation',
+                        to: 'facility',
+                        localKey: 'facilityId',
+                        foreignKey: 'id'),
+                    RelationshipMapping(
+                        from: 'stockReconciliation',
+                        to: 'productVariant',
+                        localKey: 'productVariantId',
+                        foreignKey: 'id'),
+                  ],
+                  nestedModelMappings: const [
+                    NestedModelMapping(
+                      rootModel: 'projectFacility',
+                      fields: {
+                        'facility': NestedFieldMapping(
+                          table: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id',
+                          type: NestedMappingType.one,
+                        ),
+                        'projectResources': NestedFieldMapping(
+                          table: 'projectResource',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
-      ),
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
         child: HomeItemCard(
@@ -2589,7 +2679,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           context.router.push(const TransitPostWrapperRoute());
         },
       )),
-
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -2613,11 +2702,18 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.polioRegistrationLabel:
+          homeShowcaseData.polioRegistration.showcaseKey,
+      i18.home.polioMissedChildrenLabel:
+          homeShowcaseData.polioMissedChildren.showcaseKey,
+      i18.home.polioLqaDataCollectionLabel:
+          homeShowcaseData.polioLqaDataCollection.showcaseKey,
+      i18.home.polioInsideMonitoringLabel:
+          homeShowcaseData.polioInsideMonitoring.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
-      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId
-          .showcaseKey,
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.showcaseKey,
@@ -2629,6 +2725,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       // i18.home.clfLabel, // TODO: Uncomment when CLF is implemented
       i18.home.transitPostLabel,
       i18.home.closedHouseHoldLabel,
+      i18.home.polioLqaDataCollectionLabel,
+      i18.home.polioInsideMonitoringLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.mySurveyForm,
@@ -2638,8 +2736,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
       i18.home.dashboard,
-      i18.home
-          .beneficiaryIdLabel,
+      i18.home.beneficiaryIdLabel,
       i18.home.faceRegistrationLabel,
       i18.home.dataShare,
       i18.home.stockSyncDataLabel,
@@ -2656,7 +2753,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db)
+        .where((f) => f != i18.home.db && homeItemsShowcaseMap.containsKey(f))
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
@@ -2664,8 +2761,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       filteredLabels.remove(i18.home.db);
     }
 
-    final List<Widget> widgetList =
-        filteredLabels.map((label) => homeItemsMap[label]!).toList();
+    final List<Widget> widgetList = filteredLabels
+        .where((label) => homeItemsMap.containsKey(label))
+        .map((label) => homeItemsMap[label]!)
+        .toList();
 
     return _HomeItemDataModel(
       widgetList,
@@ -2701,7 +2800,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
                     module: module != null && module.isNotEmpty
-                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary"
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary,hcm-boundary-${runtimeHierarchyType().toLowerCase()}"
                         : localizationModulesList?.interfaces
                                 .where(
                                     (e) => e.type == Modules.localizationModule)

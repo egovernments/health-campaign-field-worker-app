@@ -149,11 +149,9 @@ class ConditionalEvaluator {
 
       final result = parser.parse;
 
-      final boolResult = result["isSuccess"] == true && result["value"] == true;
-
-      return boolResult;
+      return result["isSuccess"] == true && result["value"] == true;
     } catch (e) {
-      print('❌ Error evaluating expression "$expression": $e');
+      print('Error evaluating expression "$expression": $e');
       return false;
     }
   }

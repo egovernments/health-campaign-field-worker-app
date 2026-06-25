@@ -183,13 +183,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               await Future.delayed(
                                   const Duration(milliseconds: 200));
 
-                              // 1. Get visible keys only (skip hidden fields and fields with visibility conditions)
+                              // 1. Get visible keys only for validation (skip hidden fields and fields with visibility conditions)
+                              // Note: hidden+includeInForm fields are excluded from validation here
+                              // but are still captured by JsonForms.getFormValues() for data submission
                               final currentKeys = schema.properties?.entries
                                       .where((entry) {
                                         final isStaticHidden =
                                             isHidden(entry.value);
-                                        final includeInForm =
-                                            entry.value.includeInForm == true;
 
                                         // Check if field is hidden by visibility condition
                                         final hasDynamicVisibility =
@@ -227,7 +227,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                                         final isVisible = !isStaticHidden &&
                                             !isDynamicallyHidden;
-                                        return isVisible || includeInForm;
+                                        return isVisible;
                                       })
                                       .map((entry) => entry.key)
                                       // Filter out keys that don't have a corresponding form control

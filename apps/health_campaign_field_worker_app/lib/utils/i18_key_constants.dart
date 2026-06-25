@@ -431,6 +431,11 @@ class Common {
 
   String get beneficiaryNotFoundDesc =>
       'CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC';
+
+  String get exitApp => 'EXIT_APP';
+
+  String get rootedDeviceDetectedTitle => 'ROOTED_DEVICE_DETECTED_TITLE';
+  String get rootedDeviceDetectedMessage => 'ROOTED_DEVICE_DETECTED_MESSAGE';
 }
 
 class HomeShowcase {
@@ -908,6 +913,18 @@ class Home {
   String get stockBalanceLabel => 'HOME_STOCK_BALANCE_LABEL';
 
   String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
+
+  String get polioRegistrationLabel => 'HOME_POLIO_REGISTRATION_LABEL';
+
+  String get polioMissedChildrenLabel => 'HOME_POLIO_MISSED_CHILDREN_LABEL';
+
+  String get polioStockDetailsLabel => 'HOME_POLIO_STOCK_DETAILS_LABEL';
+
+  String get polioLqaDataCollectionLabel =>
+      'HOME_POLIO_LQA_DATA_COLLECTION_LABEL';
+
+  String get polioInsideMonitoringLabel =>
+      'HOME_POLIO_INSIDE_MONITORING_LABEL';
 
   String get coreCommonNoInternet => 'CORE_COMMON_NO_INTERNET';
 
