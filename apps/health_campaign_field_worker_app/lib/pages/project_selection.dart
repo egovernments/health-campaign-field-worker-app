@@ -330,6 +330,34 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         }
       }));
 
+      // Cache boundary localizations for ALL locales. Deferred from app-boot
+      // because hierarchyType only becomes known after project selection.
+      final boundaryModule =
+          'hcm-boundary-${runtimeHierarchyType().toLowerCase()}';
+      await Future.wait(languages.map((language) async {
+        try {
+          final localResults =
+              await LocalizationLocalRepository().fetchLocalization(
+            sql: locBloc.sql,
+            locale: language.value,
+            module: boundaryModule,
+          );
+          if (localResults.isEmpty) {
+            final results =
+                await locBloc.localizationRepository.loadLocalization(
+              path: Constants.localizationApiPath,
+              locale: language.value,
+              module: boundaryModule,
+              tenantId: envConfig.variables.tenantId,
+            );
+            await LocalizationLocalRepository().create(results, locBloc.sql);
+          }
+        } catch (e) {
+          debugPrint(
+              'error caching boundary localization for ${language.value}: $e');
+        }
+      }));
+
       // Now load the selected locale's permission handler strings via the bloc.
       locBloc.add(LocalizationEvent.onLoadLocalization(
         module: permHandlerModule,
