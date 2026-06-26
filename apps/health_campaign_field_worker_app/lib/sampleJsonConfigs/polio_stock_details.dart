@@ -34,7 +34,7 @@ final dynamic samplePolioStockDetailsFlows = {
                 "data": [
                   {
                     "key": "maxReturnable",
-                    "value": "{{fn:computeMaxReturnable()}}"
+                    "value": "{{fn:computeMaxReturnable(5)}}"
                   }
                 ],
                 "name": "returnedVials",

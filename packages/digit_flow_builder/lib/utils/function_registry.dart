@@ -1879,7 +1879,12 @@ void initializeFunctionRegistry() {
   /// Computes the maximum number of vials that can be returned for the day.
   ///
   /// - **Function Name**: `'computeMaxReturnable'`
-  /// - **Arguments**: None. Reads UserAction records directly from
+  /// - **Arguments**: Optional `[dailyReturnCap]`.
+  ///   When provided (e.g. `{{fn:computeMaxReturnable(5)}}`), enforces a
+  ///   daily return cap — the total returned across all records in a day
+  ///   cannot exceed this value. When omitted, no daily cap is applied
+  ///   (only the issued-minus-returned limit applies).
+  ///   Reads UserAction records from
   ///   `FlowCrudStateRegistry().get('vialDetailsMenu')`.
   /// - **Logic**:
   ///   All records filtered by: `action` == `"LOCATION_CAPTURE"`,
@@ -1889,10 +1894,23 @@ void initializeFunctionRegistry() {
   ///     sum `totalVialsReceivedForDay`
   ///   - RETURNED records (`additionalFields.form` == `"POLIO_STOCK_RETURNED"`):
   ///     sum `totalReturned`
-  /// - **Returns**: `(sumReceived - sumAlreadyReturned)` clamped to >= 0.
+  /// - **Returns**: If dailyReturnCap is provided,
+  ///   `min(sumReceived - sumAlreadyReturned, dailyReturnCap - sumAlreadyReturned)`
+  ///   clamped to >= 0. Otherwise `(sumReceived - sumAlreadyReturned)` clamped to >= 0.
   ///   Returns `0` when no issued records are found (cannot return what wasn't received).
   FunctionRegistry.register('computeMaxReturnable', (args, stateData) {
     try {
+      // Optional daily return cap from config: {{fn:computeMaxReturnable(5)}}
+      int? dailyReturnCap;
+      if (args.isNotEmpty && args[0] != null) {
+        final capValue = args[0];
+        if (capValue is num) {
+          dailyReturnCap = capValue.toInt();
+        } else if (capValue is String) {
+          dailyReturnCap = int.tryParse(capValue);
+        }
+      }
+
       final currentBoundaryCode = FlowBuilderSingleton().boundary?.code;
 
       // Get UserAction records directly from FlowCrudStateRegistry.
@@ -2019,9 +2037,24 @@ void initializeFunctionRegistry() {
         }
       }
 
-      final result = (totalReceived - alreadyReturned).toInt();
-      debugPrint(
-          'computeMaxReturnable: received=$totalReceived, alreadyReturned=$alreadyReturned, maxReturnable=$result');
+      // Cap 1: cannot return more than what was issued minus already returned
+      final availableFromIssued = (totalReceived - alreadyReturned).toInt();
+
+      int result;
+      if (dailyReturnCap != null) {
+        // Cap 2: daily return limit from config across all records for the day
+        final remainingDailyCap = (dailyReturnCap - alreadyReturned).toInt();
+        // Use the stricter (lower) of the two caps
+        result = availableFromIssued < remainingDailyCap
+            ? availableFromIssued
+            : remainingDailyCap;
+        debugPrint(
+            'computeMaxReturnable: received=$totalReceived, alreadyReturned=$alreadyReturned, availableFromIssued=$availableFromIssued, dailyCap=$dailyReturnCap, remainingDailyCap=$remainingDailyCap, maxReturnable=$result');
+      } else {
+        result = availableFromIssued;
+        debugPrint(
+            'computeMaxReturnable: received=$totalReceived, alreadyReturned=$alreadyReturned, maxReturnable=$result');
+      }
       return result < 0 ? 0 : result;
     } catch (e) {
       debugPrint('Error in computeMaxReturnable: $e');
