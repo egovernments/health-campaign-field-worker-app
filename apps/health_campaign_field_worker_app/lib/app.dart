@@ -368,7 +368,8 @@ class MainApplicationState extends State<MainApplication>
                               debugShowCheckedModeBanner: false,
                               builder: (context, child) {
                                 final env = envConfig.variables.envType;
-                                if (env == EnvType.prod) {
+                                if (env == EnvType.prod ||
+                                    env == EnvType.demo) {
                                   return child ?? const SizedBox.shrink();
                                 }
 
