@@ -1,3 +1,4 @@
+import 'package:digit_ui_components/theme/radius.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 
@@ -27,12 +28,20 @@ class CardWidget extends ResolvedFlowWidget {
     final double? spacing =
         spacingValue is num ? spacingValue.toDouble() : null;
 
+    final String cardTypeStr =
+        json['properties']?['type']?.toString() ?? 'primary';
+    // Secondary cards use radius1 (4px) to match the SelectionCard container.
+    // Primary cards fall back to DigitCard's own default (radius4 = 12px).
+    final BorderRadius? borderRadius = cardTypeStr == 'secondary'
+        ? BorderRadius.circular(radius1)
+        : null;
+
     return DigitCard(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.zero,
       spacing: spacing,
-      cardType: WidgetParsers.parseCardType(
-          json['properties']?['type']?.toString() ?? 'primary'),
+      borderRadius: borderRadius,
+      cardType: WidgetParsers.parseCardType(cardTypeStr),
       onPressed: () {
         if (json['onAction'] != null) {
           final actionsList =

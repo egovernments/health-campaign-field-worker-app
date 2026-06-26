@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../utils/flow_widget_state.dart';
 import '../localization_context.dart';
 import '../resolved_flow_widget.dart';
 
@@ -19,20 +20,29 @@ class ProximitySearchWidget extends ResolvedFlowWidget {
     void Function(ActionConfig) onAction,
     ResolvedWidgetContext resolved,
   ) {
-    return _ProximitySearchStateful(
-      json: json,
-      onAction: onAction,
-    );
+    return WidgetStateContext.reactive(context, (ctx, state) {
+      final fieldKey = json['fieldName'] as String? ?? 'proximitySearch';
+      return _ProximitySearchStateful(
+        json: json,
+        onAction: onAction,
+        externalValue: state.widgetData[fieldKey] as bool? ?? false,
+        onUpdateWidgetData: state.updateWidgetData,
+      );
+    });
   }
 }
 
 class _ProximitySearchStateful extends StatefulWidget {
   final Map<String, dynamic> json;
   final void Function(ActionConfig) onAction;
+  final bool externalValue;
+  final void Function(String key, dynamic value) onUpdateWidgetData;
 
   const _ProximitySearchStateful({
     required this.json,
     required this.onAction,
+    required this.externalValue,
+    required this.onUpdateWidgetData,
   });
 
   @override
@@ -61,6 +71,15 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
   }
 
   @override
+  void didUpdateWidget(_ProximitySearchStateful oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Respond to external reset — e.g. Clear button cleared widgetData
+    if (!widget.externalValue && oldWidget.externalValue && _value) {
+      setState(() => _value = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final localization = LocalizationContext.maybeOf(context);
 
@@ -85,7 +104,9 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
           value: _value,
           onChanged: (newValue) {
             setState(() => _value = newValue);
-
+            final fieldKey =
+                widget.json['fieldName'] as String? ?? 'proximitySearch';
+            widget.onUpdateWidgetData(fieldKey, newValue);
             _triggerActions(newValue);
           },
         );
