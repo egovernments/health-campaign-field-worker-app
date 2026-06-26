@@ -205,6 +205,26 @@ class FunctionRegistries {
   }
 
   void _registerFacilityFunctions() {
+    // Returns 'STAFF' when getUserFacilityId() returns the user's UUID
+    // (distributor / CDD path — there's no actual facility, the userUuid
+    // stands in for one) and 'WAREHOUSE' otherwise. Use this for the
+    // receiverType / senderType field on Stock records so server-side
+    // type validation matches the id that's being sent.
+    FunctionRegistry.register('getUserFacilityType', (args, stateData) {
+      final isDistributor = context.loggedInUserRoles.any(
+        (role) =>
+            role.code == RolesType.distributor.toValue() ||
+            role.code == RolesType.communityDistributor.toValue(),
+      );
+      final isWareHouseMgr = context.loggedInUserRoles.any(
+        (role) => role.code == RolesType.warehouseManager.toValue(),
+      );
+      if (isDistributor && !isWareHouseMgr) {
+        return 'STAFF';
+      }
+      return 'WAREHOUSE';
+    });
+
     FunctionRegistry.register('getUserFacilityId', (args, stateData) {
       final isDistributor = context.loggedInUserRoles
           .where((role) => role.code == RolesType.distributor.toValue())
@@ -493,7 +513,12 @@ class FunctionRegistries {
       }
       if (itemMap == null) return '';
 
-      String getAdditionalField(String key) {
+      // Returns null when the additionalField is absent OR present-but-empty
+      // so the encoded QR payload carries `null` instead of `""` for missing
+      // optional fields (waybillNumber, batchNumber, expiryDate, comments).
+      // Downstream validators reject empty strings on optional fields but
+      // accept null/missing.
+      String? getAdditionalField(String key) {
         final additionalFields = itemMap?['additionalFields'];
         List? fields;
         if (additionalFields is Map) {
@@ -501,22 +526,31 @@ class FunctionRegistries {
         } else if (additionalFields is List) {
           fields = additionalFields;
         }
-        if (fields == null) return '';
+        if (fields == null) return null;
         for (final field in fields) {
           if (field is Map && field['key'] == key) {
-            return field['value']?.toString() ?? '';
+            final v = field['value']?.toString();
+            return (v == null || v.isEmpty) ? null : v;
           }
         }
-        return '';
+        return null;
       }
 
+      String? blankToNull(String? v) =>
+          (v == null || v.isEmpty) ? null : v;
+
       final payload = <String, dynamic>{
+        // Identity fields stay as required strings — these are always set on
+        // a dispatched StockModel and the receiver side asserts on them.
         'clientReferenceId': itemMap['clientReferenceId']?.toString() ?? '',
         'senderId': itemMap['senderId']?.toString() ?? '',
         'receiverId': itemMap['receiverId']?.toString() ?? '',
         'productVariantId': itemMap['productVariantId']?.toString() ?? '',
         'quantity': itemMap['quantity']?.toString() ?? '',
-        'waybillNumber': itemMap['waybillNumber']?.toString() ?? '',
+        // Optional fields: null when blank so jsonEncode emits `null` rather
+        // than `""`. The labelPairList widget renders null as `--`, and
+        // CREATE_EVENT validators treat null as missing instead of invalid.
+        'waybillNumber': blankToNull(itemMap['waybillNumber']?.toString()),
         'sku': getAdditionalField('sku'),
         'batchNumber': getAdditionalField('batchNumber'),
         'expiryDate': getAdditionalField('expiryDate'),

@@ -1,31 +1,99 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 
-/// Returns the campaign-number suffix appended to balance keys, derived from
-/// the active project's `referenceID`. The suffix is the segment after the
-/// last `-` (e.g. `CMP-2025-08-04-004846` → `004846`); when no `-` is
-/// present, the trailing 6 chars are used. Returns an empty string when no
-/// project is selected.
-String _activeCampaignSuffix() {
-  final ref = FlowBuilderSingleton().selectedProject?.referenceID;
-  if (ref == null || ref.isEmpty) return '';
-  final idx = ref.lastIndexOf('-');
-  if (idx >= 0 && idx < ref.length - 1) return ref.substring(idx + 1);
-  return ref.length <= 6 ? ref : ref.substring(ref.length - 6);
+/// Derives the campaign-suffix segment from a project `referenceID`.
+/// Returns text after the last `-` (e.g. `CMP-2025-08-04-004846` → `004846`);
+/// when no `-` is present, the trailing 6 chars are used. Returns an empty
+/// string for null/empty input.
+String _campaignSuffixFromReferenceID(String? referenceID) {
+  if (referenceID == null || referenceID.isEmpty) return '';
+  final idx = referenceID.lastIndexOf('-');
+  if (idx >= 0 && idx < referenceID.length - 1) {
+    return referenceID.substring(idx + 1);
+  }
+  return referenceID.length <= 6
+      ? referenceID
+      : referenceID.substring(referenceID.length - 6);
+}
+
+/// Suffix derived from `FlowBuilderSingleton().selectedProject`. Returns an
+/// empty string when no project is selected — callers that run before the
+/// singleton is populated (e.g. `downSyncStockBalances` during project bloc
+/// startup) should pass `projectReferenceID` to [generateBalanceKey]
+/// explicitly instead of relying on this fallback.
+String _activeCampaignSuffix() => _campaignSuffixFromReferenceID(
+      FlowBuilderSingleton().selectedProject?.referenceID,
+    );
+
+/// True when [s] is a canonical 36-char UUID (`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`).
+/// Used to decide whether to compact the facility segment of the balance key —
+/// distributors / community distributors carry their userUuid as facilityId, and
+/// the full UUID combined with a productVariantId + campaign suffix overflows
+/// the server's 64-char clientReferenceId limit. Non-UUID facilities (e.g.
+/// `F-2026-06-15-233125`) already fit, so we leave them alone.
+bool _isCanonicalUuid(String s) {
+  if (s.length != 36) return false;
+  return s[8] == '-' && s[13] == '-' && s[18] == '-' && s[23] == '-';
+}
+
+/// Compacts a UUID-shaped facilityId to 16 hex chars by keeping the first 4
+/// and last 12 hex chars (hyphens dropped). Non-UUID input is returned
+/// unchanged. Designed to keep keys short enough to fit under the 64-char
+/// server limit even when facilityId is a distributor's userUuid.
+///
+/// Math: 48 bits of entropy from the last 12 chars alone makes intra-project
+/// collisions vanishingly unlikely; the extra 4 chars at the front are kept
+/// for visual disambiguation in logs/admin tools, not statistical safety.
+String _compactFacilityToken(String facilityId) {
+  if (!_isCanonicalUuid(facilityId)) return facilityId;
+  final hex = facilityId.replaceAll('-', ''); // 32 hex chars
+  return '${hex.substring(0, 4)}${hex.substring(hex.length - 12)}';
 }
 
 /// Generates a balance key for UserAction STOCK_BALANCE records.
 ///
-/// Current shape: `bal_{facilityId}{productVariantId}_{campaignSuffix}`.
-/// Legacy shape (pre-campaign-suffix): `bal_{facilityId}{productVariantId}`.
+/// Active shape (current): `bal_{compactFacility}{productVariantId}_{campaignSuffix}`
+/// where `compactFacility` is [_compactFacilityToken] applied to [facilityId].
 ///
-/// Call sites that write balances use this function via copy-on-first-touch
-/// migration: if no row exists for the new key but a row exists under
-/// [legacyBalanceKey], the legacy balance value is carried into the new row
-/// on the first write under the new key. Reads that need to support both
-/// shapes should query both keys.
-String generateBalanceKey(String facilityId, String productVariantId) {
-  final suffix = _activeCampaignSuffix();
+/// Intermediate shape (post-suffix, pre-compaction):
+/// `bal_{facilityId}{productVariantId}_{campaignSuffix}` — produced by
+/// [readableBalanceKey], retained for migration of devices that wrote balances
+/// after the campaign-suffix change but before the compaction change.
+///
+/// Legacy shape (pre-suffix): `bal_{facilityId}{productVariantId}` — produced
+/// by [legacyBalanceKey].
+///
+/// Pass [projectReferenceID] when calling outside an action-handler context —
+/// e.g. during downsync — where `FlowBuilderSingleton().selectedProject`
+/// may not yet be populated. When omitted, the active singleton project is
+/// used (sufficient inside post-login executors).
+///
+/// Migration: writers should use this active shape; readers that need to find
+/// older local rows should also try [readableBalanceKey] and [legacyBalanceKey]
+/// in that order before treating a balance as missing.
+String generateBalanceKey(
+  String facilityId,
+  String productVariantId, {
+  String? projectReferenceID,
+}) {
+  final suffix = projectReferenceID != null
+      ? _campaignSuffixFromReferenceID(projectReferenceID)
+      : _activeCampaignSuffix();
+  final base = 'bal_${_compactFacilityToken(facilityId)}$productVariantId';
+  return suffix.isEmpty ? base : '${base}_$suffix';
+}
+
+/// Intermediate shape that includes the campaign suffix but keeps the full
+/// (uncompacted) facilityId. Used to migrate devices that wrote balances
+/// after commit 751bec251 but before facility compaction landed.
+String readableBalanceKey(
+  String facilityId,
+  String productVariantId, {
+  String? projectReferenceID,
+}) {
+  final suffix = projectReferenceID != null
+      ? _campaignSuffixFromReferenceID(projectReferenceID)
+      : _activeCampaignSuffix();
   final base = 'bal_$facilityId$productVariantId';
   return suffix.isEmpty ? base : '${base}_$suffix';
 }

@@ -788,7 +788,10 @@ final jsonConfig = {
           "senderId": "__context:senderFacilityId",
           "senderType": "__value:WAREHOUSE",
           "receiverId": "__context:userFacilityId",
-          "receiverType": "__value:WAREHOUSE",
+          // See stockScanReceipt for the same rationale: when userFacilityId
+          // is a userUuid (distributor / CDD), receiverType must be STAFF.
+          // Value sourced from getUserFacilityType() via the action chain.
+          "receiverType": "__context:userFacilityType",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
@@ -833,7 +836,12 @@ final jsonConfig = {
           "senderId": "__context:senderFacilityId",
           "senderType": "__value:WAREHOUSE",
           "receiverId": "__context:userFacilityId",
-          "receiverType": "__value:WAREHOUSE",
+          // receiverType tracks whichever id `userFacilityId` actually
+          // carries: for warehouse managers it's a facility ID (→ WAREHOUSE),
+          // for distributors / CDDs it's their userUuid (→ STAFF).
+          // The value is computed by getUserFacilityType() and passed in via
+          // FETCH_TRANSFORMER_CONFIG.data on the stockScanConfirm screen.
+          "receiverType": "__context:userFacilityType",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
@@ -870,8 +878,14 @@ final jsonConfig = {
           "waybillNumber": "stockReceiptDetails.wayBillNumber",
           "transactionType": "__value:DISPATCHED",
           "transactionReason": "__value:null",
+          // In a reject/return, the current user is the sender (they're
+          // returning the stock). For distributors / CDDs that sender id is
+          // a userUuid — senderType must be STAFF; for warehouse managers
+          // it's a facility id — senderType stays WAREHOUSE. The value is
+          // sourced from getUserFacilityType() via the action chain that
+          // invokes this transformer.
           "senderId": "__context:senderFacilityId",
-          "senderType": "__value:WAREHOUSE",
+          "senderType": "__context:userFacilityType",
           "receiverId": "__context:receiverFacilityId",
           "receiverType": "__value:WAREHOUSE",
           "nonRecoverableError": "errors.nonRecoverable",

@@ -243,46 +243,64 @@ class StockBalanceExecutor extends ActionExecutor {
   }
 
   /// Looks up an existing STOCK_BALANCE UserAction for (facility, product)
-  /// supporting copy-on-first-touch migration from the pre-campaign-suffix
-  /// key shape.
+  /// supporting copy-on-first-touch migration from older key shapes.
   ///
-  ///   - When a row exists under the new key, [_BalanceLookup.existing] is
-  ///     set and [_BalanceLookup.legacySeed] is null — normal update path.
-  ///   - When no row exists under the new key but one exists under the
-  ///     legacy key, [_BalanceLookup.legacySeed] carries that row's balance
-  ///     value so the first write under the new key inherits it. The legacy
-  ///     row is left in place (orphaned, harmless).
-  ///   - When neither exists, both fields are null — fresh balance starts
-  ///     at 0.
+  /// Migration order (most-recent first):
+  ///   1. Active compact key (`bal_<compactFacility><product>_<suffix>`).
+  ///      When found, [_BalanceLookup.existing] is set — normal update path.
+  ///   2. Readable key (`bal_<fullFacility><product>_<suffix>`). For
+  ///      distributors this only existed locally — server rejected it as
+  ///      >64 chars. When found, its balance value flows into
+  ///      [_BalanceLookup.legacySeed] for the first write under the new key.
+  ///   3. Legacy key (`bal_<fullFacility><product>`, no suffix). Same
+  ///      handling as readable.
+  ///   4. Nothing — both fields null; the executor's seed-from-StockCalc
+  ///      branch produces the initial balance.
   Future<_BalanceLookup> _findOrSeedBalance(
     UserActionLocalRepository repo,
     String facilityId,
     String productVariantId,
   ) async {
-    final newKey = generateBalanceKey(facilityId, productVariantId);
-    final newResults = await repo.search(
-      UserActionSearchModel(clientReferenceId: [newKey]),
-    );
-    if (newResults.isNotEmpty) {
-      return _BalanceLookup(existing: newResults.first);
+    Future<UserActionModel?> findByKey(String key) async {
+      final results = await repo.search(
+        UserActionSearchModel(clientReferenceId: [key]),
+      );
+      return results.isEmpty ? null : results.first;
     }
 
-    final oldKey = legacyBalanceKey(facilityId, productVariantId);
-    if (oldKey == newKey) return const _BalanceLookup();
+    final compactKey = generateBalanceKey(facilityId, productVariantId);
+    final compactRow = await findByKey(compactKey);
+    if (compactRow != null) return _BalanceLookup(existing: compactRow);
 
-    final oldResults = await repo.search(
-      UserActionSearchModel(clientReferenceId: [oldKey]),
-    );
-    if (oldResults.isEmpty) return const _BalanceLookup();
+    // Migration: probe readable shape (pre-compaction, post-suffix). Only
+    // meaningful when facilityId is a UUID — otherwise compactKey ==
+    // readableKey and we'd be re-issuing the same query.
+    final readableKey = readableBalanceKey(facilityId, productVariantId);
+    if (readableKey != compactKey) {
+      final readableRow = await findByKey(readableKey);
+      if (readableRow != null) {
+        final balance = _extractBalance(readableRow);
+        return _BalanceLookup(legacySeed: balance);
+      }
+    }
 
-    final legacyBalance = double.tryParse(
-          oldResults.first.additionalFields?.fields
+    final legacyKey = legacyBalanceKey(facilityId, productVariantId);
+    if (legacyKey == compactKey || legacyKey == readableKey) {
+      return const _BalanceLookup();
+    }
+    final legacyRow = await findByKey(legacyKey);
+    if (legacyRow == null) return const _BalanceLookup();
+    return _BalanceLookup(legacySeed: _extractBalance(legacyRow));
+  }
+
+  double _extractBalance(UserActionModel row) {
+    return double.tryParse(
+          row.additionalFields?.fields
                   ?.firstWhereOrNull((f) => f.key == 'balance')
                   ?.value ??
               '0',
         ) ??
         0.0;
-    return _BalanceLookup(legacySeed: legacyBalance);
   }
 
   Future<void> _handleTaskEntity(
@@ -396,6 +414,18 @@ class StockBalanceExecutor extends ActionExecutor {
     } else if (legacySeed != null) {
       // Copy-on-first-touch migration from the pre-campaign-suffix key shape.
       currentBalance = legacySeed;
+    } else {
+      // No prior STOCK_BALANCE UserAction row exists. Seeding to 0 would
+      // ignore previously downsynced stock and produce a negative balance
+      // on the first delivery. Delivery TaskModel rows do not show up in
+      // StockCalculationUtils, so this baseline is pre-delivery — the
+      // `- deliveredQuantity` below correctly deducts on top.
+      currentBalance = await _computeBalanceFromLocalStocks(
+        context: context,
+        facilityId: facilityId,
+        productVariantId: productVariantId,
+        isDistributor: isDistributor,
+      );
     }
 
     // deliveredQuantity can be positive (delivery) or negative (return)
@@ -452,6 +482,43 @@ class StockBalanceExecutor extends ActionExecutor {
     );
   }
 
+  /// Calculates stockInHand for (facility × product) from local StockModel
+  /// rows. Used to seed the first STOCK_BALANCE UserAction write when no
+  /// prior balance row (new or legacy-key) exists locally — so previously
+  /// downsynced stock is not silently treated as zero.
+  Future<double> _computeBalanceFromLocalStocks({
+    required BuildContext context,
+    required String facilityId,
+    required String productVariantId,
+    required bool isDistributor,
+  }) async {
+    final stockRepo =
+        context.read<LocalRepository<StockModel, StockSearchModel>>();
+
+    final receivedStocks = await stockRepo.search(
+      StockSearchModel(receiverId: facilityId),
+    );
+    final sentStocks = await stockRepo.search(
+      StockSearchModel(senderId: facilityId),
+    );
+
+    final allStocksMap = <String, StockModel>{};
+    for (final s in receivedStocks) {
+      allStocksMap[s.clientReferenceId] = s;
+    }
+    for (final s in sentStocks) {
+      allStocksMap[s.clientReferenceId] = s;
+    }
+
+    return StockCalculationUtils.getStockBalance(
+      stockList: allStocksMap.values.toList(),
+      facilityId: facilityId,
+      productId: productVariantId,
+      loggedInUserUuid: _getLoggedInUserUuid(context),
+      isDistributor: isDistributor,
+    );
+  }
+
   Future<void> _updateStockBalanceFromStock({
     required BuildContext context,
     required UserActionLocalRepository userActionRepo,
@@ -473,20 +540,33 @@ class StockBalanceExecutor extends ActionExecutor {
     final existing = lookup.existing;
     final legacySeed = lookup.legacySeed;
 
-    // Always use the UserAction balance as the authoritative source
     double currentBalance = 0.0;
+    double newBalance;
     if (existing != null) {
       final existingBalanceField = existing.additionalFields?.fields
           ?.firstWhereOrNull((f) => f.key == 'balance');
       currentBalance =
           double.tryParse(existingBalanceField?.value ?? '0') ?? 0.0;
+      newBalance = currentBalance + quantityDelta;
     } else if (legacySeed != null) {
       // Copy-on-first-touch migration from the pre-campaign-suffix key shape.
       currentBalance = legacySeed;
+      newBalance = currentBalance + quantityDelta;
+    } else {
+      // No prior STOCK_BALANCE UserAction row exists for this
+      // facility × product. Seeding to 0 and applying the delta would
+      // ignore previously downsynced stock and produce a negative balance
+      // for a sender's first dispatch (since delta = -quantity). The local
+      // StockModel rows already include the just-written transaction, so
+      // calculate stockInHand from them and use it as the authoritative
+      // new balance — applying the delta on top would double-count.
+      newBalance = await _computeBalanceFromLocalStocks(
+        context: context,
+        facilityId: facilityId,
+        productVariantId: productVariantId,
+        isDistributor: isDistributor,
+      );
     }
-
-    // Apply the transaction delta to the current balance
-    final newBalance = currentBalance + quantityDelta;
 
     final now = DateTime.now().millisecondsSinceEpoch;
 

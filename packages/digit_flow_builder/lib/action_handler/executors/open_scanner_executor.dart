@@ -127,7 +127,17 @@ class OpenScannerExecutor extends ActionExecutor {
           try {
             final decoded = jsonDecode(scannedValue);
             if (decoded is Map<String, dynamic>) {
-              parsedFields = decoded;
+              // Normalize blank string values to null. QR payloads from
+              // older encoders (or any producer that stringifies missing
+              // optional fields) carry `""` which downstream validators
+              // reject — JSON-conventional semantics treat empty == absent.
+              parsedFields = {
+                for (final entry in decoded.entries)
+                  entry.key:
+                      (entry.value is String && (entry.value as String).isEmpty)
+                          ? null
+                          : entry.value,
+              };
             } else {
               parseJsonFailed = true;
               parseJsonError =
