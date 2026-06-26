@@ -358,10 +358,69 @@ final dynamic sampleSMCFlows = {
         {
           "type": "template",
           "label": "RECORD_CYCLE_DOSE",
+          "format": "actionPopup",
+          "fieldName": "insufficientStockPopUp",
+          "visible":
+          "{{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == false",
+          "properties": {
+            "icon": "Warning",
+            "size": "large",
+            "type": "primary",
+            "suffixIcon": null,
+            "popupConfig": {
+              "body": [
+                {
+                  "type": "template",
+                  "value": "{{fn:getInsufficientStockMessage()}}",
+                  "format": "textTemplate",
+                  "fieldName": "insufficientStockMessageText",
+                  "properties": {
+                    "separatedBy": "::",
+                    "replaceAll": [
+                      {"searchValue": "::", "replaceValue": "\n"}
+                    ]
+                  }
+                }
+              ],
+              "type": "default",
+              "title": "INSUFFICIENT_STOCK_TITLE",
+              "titleIcon": "Warning",
+              "footerActions": [
+                {
+                  "type": "template",
+                  "label": "GO_BACK",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {"parentScreenKey": "beneficiaryDetails"}
+                    }
+                  ],
+                  "fieldName": "closePopUp",
+                  "properties": {
+                    "size": "large",
+                    "type": "primary",
+                    "mainAxisSize": "max"
+                  }
+                }
+              ],
+              "showCloseButton": true,
+              "barrierDismissible": true
+            },
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "schemaCode": null,
+          "suffixIcon": null
+        },
+        {
+          "type": "template",
+          "label": "RECORD_CYCLE_DOSE",
           "format": "button",
           "visible":
-              "{{fn:canRecordDelivery(contextData.0.nextCycleId)}}==true",
-          "disabled": "{{eligibleProductVariants}} == null",
+          "{{fn:canRecordDelivery(contextData.0.nextCycleId)}}==true && {{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == true",
+          "disabled":
+          "{{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == false",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -369,12 +428,32 @@ final dynamic sampleSMCFlows = {
                 "data": [
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                        "{{contextData.0.projectBeneficiaries.0.clientReferenceId}}"
+                    "value": "{{contextData.0.projectBeneficiaries.0.clientReferenceId}}"
                   },
                   {
                     "key": "HouseholdClientReferenceId",
                     "value": "{{contextData.0.household.0.clientReferenceId}}"
+                  },
+                  {
+                    "key": "memberCount",
+                    "value": "{{household.0.memberCount}}"
+                  },
+                  {
+                    "key": "individualClientReferenceId",
+                    "value":
+                    "{{navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "beneficiaryId",
+                    "value": "{{navigation.selectedIndividualIdentifierId}}"
+                  },
+                  {"key": "childName", "value": "{{navigation.childName}}"},
+                  {"key": "ageInMonths", "value": "{{navigation.ageInMonths}}"},
+                  {"key": "gender", "value": "{{navigation.gender}}"},
+                  {"key": "headName", "value": "{{navigation.headName}}"},
+                  {
+                    "key": "headMobileNumber",
+                    "value": "{{navigation.headMobileNumber}}"
                   },
                   {
                     "key": "cycleIndex",
@@ -384,7 +463,7 @@ final dynamic sampleSMCFlows = {
                   {
                     "key": "deliveryStrategy",
                     "value":
-                        "{{contextData.0.currentDelivery.0.deliveryStrategy}}"
+                    "{{contextData.0.currentDelivery.0.deliveryStrategy}}"
                   },
                   {
                     "key": "totalDosesInCycle",
@@ -4888,7 +4967,7 @@ final dynamic sampleSMCFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create stock."}
+                    "properties": {"message": "Failed to create HFReferral."}
                   }
                 ]
               }
@@ -5169,7 +5248,7 @@ final dynamic sampleSMCFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create stock."}
+                "properties": {"message": "Failed to create HFReferral."}
               }
             ]
           }
