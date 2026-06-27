@@ -411,7 +411,7 @@ final dynamic sampleInventoryFlows = {
               {
                 "key": "additionalFields",
                 "value": "{{navigation.clientReferenceId}}",
-                "operation": "contains"
+                "operation": "matches"
               }
             ]
           }
@@ -2160,7 +2160,7 @@ final dynamic sampleInventoryFlows = {
               {
                 "key": "additionalFields",
                 "value": "{{navigation.selectedStock}}",
-                "operation": "contains"
+                "operation": "matches"
               }
             ]
           }
