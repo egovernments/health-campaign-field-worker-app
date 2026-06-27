@@ -23,8 +23,10 @@ class NoResultCardWidget extends ResolvedFlowWidget {
 
     if (compositeKey == null) {
       return NoResultCard(
-        label: resolved.resolveText(json['label']),
-        description: resolved.resolveText(json['description']),
+        label: resolved.resolveTextWithArgs(
+            json['label'], json['labelArgs']),
+        description: resolved.resolveTextWithArgs(
+            json['description'], json['descriptionArgs']),
       );
     }
 
@@ -43,8 +45,10 @@ class NoResultCardWidget extends ResolvedFlowWidget {
         }
 
         return NoResultCard(
-          label: resolved.resolveText(json['label']),
-          description: resolved.resolveText(json['description']),
+          label: resolved.resolveTextWithArgs(
+              json['label'], json['labelArgs']),
+          description: resolved.resolveTextWithArgs(
+              json['description'], json['descriptionArgs']),
         );
       },
     );
