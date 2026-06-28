@@ -2109,6 +2109,7 @@ final dynamic sampleSMCFlows = {
                                 "operation": "equals"
                               }
                             ],
+                            "name": "task",
                             "filterLogic": "or"
                           }
                         }
@@ -2135,7 +2136,8 @@ final dynamic sampleSMCFlows = {
                                 "value": "{{singleton.boundary.code}}",
                                 "operation": "equals"
                               }
-                            ]
+                            ],
+                            "name": "task"
                           }
                         }
                       ],
