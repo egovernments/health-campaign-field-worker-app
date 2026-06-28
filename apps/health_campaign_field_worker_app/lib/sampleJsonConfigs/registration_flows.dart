@@ -1374,6 +1374,7 @@ final dynamic sampleFlows = {
       "screenType": "TEMPLATE",
       "description": "HCM_HOUSEHOLD_OVERVIEW_DESCRIPTION",
       "initActions": [
+        {"actionType": "LOAD_UNIQUE_ID_POOL"},
         {
           "actionType": "SEARCH_EVENT",
           "properties": {
@@ -2187,6 +2188,9 @@ final dynamic sampleFlows = {
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "description": "HCM_SEARCH_BENEFICIARY_DESCRIPTION",
+      "initActions": [
+        {"actionType": "LOAD_UNIQUE_ID_POOL"}
+      ],
       "wrapperConfig": {
         "filters": [],
         "relations": [
