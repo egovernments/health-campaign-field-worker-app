@@ -2017,8 +2017,9 @@ final dynamic sampleInventoryFlows = {
                 },
                 "children": [
                   {
+                    "fieldName": "mrnTag",
                     "format": "tag",
-                    "type": "",
+                    "type": "template",
                     "label": "MRN {{item.groupKey}}"
                   },
                   {

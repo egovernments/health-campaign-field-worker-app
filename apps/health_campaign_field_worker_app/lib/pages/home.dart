@@ -1382,6 +1382,9 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (state is! AuthAuthenticatedState) {
       return Container();
     }
+    final isPolio =
+        context.selectedProject.projectType?.toUpperCase().contains('POLIO') ==
+            true;
     final roles = state.userModel.roles.map((e) {
       return e.code;
     });
@@ -1605,10 +1608,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                     showcaseFor: showcaseKeys.toSet().toList(),
                   ),
                 ),
-                // Show stock balance card for users with stock management access
-                if (state.actionsWrapper.actions
-                    .map((e) => e.displayName)
-                    .contains(i18.home.manageStockLabel))
+                // Show stock balance card for users with stock management access (not for Polio)
+                if (!isPolio &&
+                    state.actionsWrapper.actions
+                        .map((e) => e.displayName)
+                        .contains(i18.home.manageStockLabel))
                   const StockBalanceCard(),
                 skipProgressBar
                     ? const SizedBox.shrink()
