@@ -1207,8 +1207,98 @@ final dynamic sampleFlows = {
             },
             {
               "type": "template",
+              "label": "DOWNLOAD_BENEFICIARY_IDS",
+              "format": "actionPopup",
+              "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
+              "disabled": "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==true",
+              "fieldName": "beneficiaryIdMinCheck",
+              "properties": {
+                "size": "medium",
+                "type": "tertiary",
+                "prefixIcon": "Download",
+                "popupConfig": {
+                  "body": [],
+                  "type": "alert",
+                  "title": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
+                  "description": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
+                  "footerActions": [
+                    {
+                      "type": "template",
+                      "label": "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
+                      "format": "button",
+                      "onAction": [
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {
+                            "parentScreenKey": "searchBeneficiary"
+                          }
+                        },
+                        {
+                          "actionType": "NAVIGATION",
+                          "properties": {
+                            "data": [
+                              {
+                                "key": "HouseholdClientReferenceId",
+                                "value": "{{contextData.0.household.HouseholdModel.clientReferenceId}}"
+                              },
+                              {
+                                "key": "headMobileNumber",
+                                "value": "{{contextData.0.headIndividual.IndividualModel.mobileNumber}}"
+                              },
+                              {
+                                "key": "UNIQUE_BENEFICIARY_ID",
+                                "value": "{{latestBeneficiaryId}}"
+                              }
+                            ],
+                            "name": "ADD_MEMBER",
+                            "type": "FORM"
+                          }
+                        }
+                      ],
+                      "fieldName": "clearFilter",
+                      "properties": {
+                        "size": "large",
+                        "type": "secondary",
+                        "mainAxisSize": "max"
+                      }
+                    },
+                    {
+                      "type": "template",
+                      "label": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
+                      "format": "button",
+                      "onAction": [
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {
+                            "parentScreenKey": "searchBeneficiary"
+                          }
+                        },
+                        {
+                          "actionType": "NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC",
+                          "properties": {}
+                        }
+                      ],
+                      "fieldName": "saveFilter",
+                      "properties": {
+                        "size": "large",
+                        "type": "primary",
+                        "mainAxisSize": "max"
+                      }
+                    }
+                  ],
+                  "showCloseButton": true,
+                  "barrierDismissible": true
+                },
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "center"
+              },
+              "schemaCode": null
+            },
+            {
+              "type": "template",
               "label": "HCM_HOUSEHOLD_OVERVIEW_ADD_MEMBERS_BUTTON",
               "format": "button",
+              "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
               "disabled": "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==true",
               "onAction": [
                 {
@@ -1222,6 +1312,10 @@ final dynamic sampleFlows = {
                       {
                         "key": "headMobileNumber",
                         "value": "{{contextData.0.headIndividual.IndividualModel.mobileNumber}}"
+                      },
+                      {
+                        "key": "UNIQUE_BENEFICIARY_ID",
+                        "value": "{{latestBeneficiaryId}}"
                       }
                     ],
                     "name": "ADD_MEMBER",
@@ -1229,12 +1323,11 @@ final dynamic sampleFlows = {
                   }
                 }
               ],
-              "fieldName": "addMember",
-              "prefixIcon": "PersonAdd",
+              "fieldName": "addMemberButton",
               "properties": {
-                "icon": "AddIcon",
                 "size": "medium",
                 "type": "tertiary",
+                "prefixIcon": "PersonAdd",
                 "mainAxisSize": "min",
                 "mainAxisAlignment": "center"
               }
@@ -1888,9 +1981,101 @@ final dynamic sampleFlows = {
       "order": 1,
       "footer": [
         {
+          "icon": "FilterAlt",
+          "type": "template",
+          "label": "DOWNLOAD_BENEFICIARY_IDS",
+          "format": "actionPopup",
+          "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
+          "fieldName": "beneficiaryIdMinCheck",
+          "properties": {
+            "icon": "FilterAlt",
+            "size": "large",
+            "type": "primary",
+            "popupConfig": {
+              "body": [],
+              "type": "alert",
+              "title": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
+              "description": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
+              "footerActions": [
+                {
+                  "type": "template",
+                  "label": "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {
+                        "parentScreenKey": "searchBeneficiary"
+                      }
+                    },
+                    {
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "data": [
+                          {
+                            "key": "nameOfIndividual",
+                            "value": "{{searchBar}}"
+                          },
+                          {
+                            "key": "UNIQUE_BENEFICIARY_ID",
+                            "value": "{{latestBeneficiaryId}}"
+                          },
+                          {
+                            "key": "uniqueBeneficiaryIdModel",
+                            "value": "{{latestBeneficiaryIdModel}}"
+                          }
+                        ],
+                        "name": "HOUSEHOLD",
+                        "type": "FORM"
+                      }
+                    }
+                  ],
+                  "fieldName": "clearFilter2",
+                  "properties": {
+                    "size": "large",
+                    "type": "secondary",
+                    "mainAxisSize": "max"
+                  }
+                },
+                {
+                  "type": "template",
+                  "label": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {
+                        "parentScreenKey": "searchBeneficiary"
+                      }
+                    },
+                    {
+                      "actionType": "NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC",
+                      "properties": {}
+                    }
+                  ],
+                  "fieldName": "saveFilter2",
+                  "properties": {
+                    "size": "large",
+                    "type": "primary",
+                    "mainAxisSize": "max"
+                  }
+                }
+              ],
+              "showCloseButton": true,
+              "barrierDismissible": true
+            },
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "schemaCode": null
+        },
+        {
           "type": "template",
           "label": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
           "format": "button",
+          "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -1899,6 +2084,14 @@ final dynamic sampleFlows = {
                   {
                     "key": "nameOfIndividual",
                     "value": "{{searchBar}}"
+                  },
+                  {
+                    "key": "UNIQUE_BENEFICIARY_ID",
+                    "value": "{{latestBeneficiaryId}}"
+                  },
+                  {
+                    "key": "uniqueBeneficiaryIdModel",
+                    "value": "{{latestBeneficiaryIdModel}}"
                   }
                 ],
                 "name": "HOUSEHOLD",
@@ -2751,6 +2944,20 @@ final dynamic sampleFlows = {
             {
               "actions": [
                 {
+                  "actionType": "UPDATE_IDENTIFIER_STATUS",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "Failed to update beneficiary id status."
+                        }
+                      }
+                    ],
+                    "identifierType": "UNIQUE_BENEFICIARY_ID"
+                  }
+                },
+                {
                   "actionType": "CREATE_EVENT",
                   "properties": {
                     "entity": "INDIVIDUAL, PROJECTBENEFICIARY, MEMBER"
@@ -2828,7 +3035,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
                   "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 },
                 {
@@ -2877,7 +3084,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
                   "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 },
                 {
@@ -2919,45 +3126,55 @@ final dynamic sampleFlows = {
               "enums": [
                 {
                   "code": "DEFAULT",
-                  "name": "Default"
+                  "name": "DEFAULT"
+                },
+                {
+                  "code": "UNIQUE_BENEFICIARY_ID",
+                  "name": "UNIQUE_BENEFICIARY_ID"
                 }
               ],
               "label": "HCM_REGISTRATION_ID_POPULATOR_LABEL",
               "order": 4,
-              "value": "DEFAULT",
+              "value": "",
               "format": "idPopulator",
-              "hidden": true,
+              "hidden": false,
               "isMdms": true,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "required": false,
+              "required": true,
               "fieldName": "identifiers",
-              "mandatory": false,
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
               "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message_addmember"
+                }
+              ],
+              "errorMessage": "REGISTRATION_ADD_MEMBER_identifiers_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "dropDownOptions": [
                 {
                   "code": "DEFAULT",
-                  "name": "Default"
+                  "name": "DEFAULT"
                 },
                 {
                   "code": "UNIQUE_BENEFICIARY_ID",
-                  "name": "REGISTRATION_ENUM_UNIQUE_BENEFICIARY_ID"
+                  "name": "UNIQUE_BENEFICIARY_ID"
                 },
                 {
                   "code": "OTHER",
-                  "name": "HCM_COMMON_OTHER"
+                  "name": "OTHER"
                 }
               ],
-              "required.message": "HCM_ID_REQUIRED_FIELD"
+              "required.message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message_addmember"
             },
             {
               "type": "string",
@@ -3133,6 +3350,20 @@ final dynamic sampleFlows = {
         },
         {
           "actions": [
+            {
+              "actionType": "UPDATE_IDENTIFIER_STATUS",
+              "properties": {
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "Failed to update beneficiary id status."
+                    }
+                  }
+                ],
+                "identifierType": "UNIQUE_BENEFICIARY_ID"
+              }
+            },
             {
               "actionType": "CREATE_EVENT",
               "properties": {
@@ -3445,6 +3676,20 @@ final dynamic sampleFlows = {
                   }
                 },
                 {
+                  "actionType": "UPDATE_IDENTIFIER_STATUS",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "Failed to update beneficiary id status."
+                        }
+                      }
+                    ],
+                    "identifierType": "UNIQUE_BENEFICIARY_ID"
+                  }
+                },
+                {
                   "actionType": "CREATE_EVENT",
                   "properties": {
                     "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
@@ -3530,7 +3775,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
                   "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 },
                 {
@@ -3579,7 +3824,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
                   "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 },
                 {
@@ -3627,29 +3872,38 @@ final dynamic sampleFlows = {
               "enums": [
                 {
                   "code": "DEFAULT",
-                  "name": "Default"
+                  "name": "DEFAULT"
+                },
+                {
+                  "code": "UNIQUE_BENEFICIARY_ID",
+                  "name": "UNIQUE_BENEFICIARY_ID"
                 }
               ],
               "label": "HCM_REGISTRATION_ID_POPULATOR_LABEL",
               "order": 4,
-              "value": "DEFAULT",
+              "value": "",
               "format": "idPopulator",
-              "hidden": true,
+              "hidden": false,
               "isMdms": true,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "required": false,
+              "required": true,
               "fieldName": "identifiers",
-              "mandatory": false,
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
               "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message"
+                }
+              ],
+              "errorMessage": "REGISTRATION_HOUSEHOLD_identifiers_ERROR",
               "isMultiSelect": false,
               "required.message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message"
             },
@@ -3746,7 +4000,7 @@ final dynamic sampleFlows = {
               "format": "mobileNumber",
               "hidden": false,
               "isMdms": false,
-              "pattern": "^\\d+$",
+              "pattern": "^\\d+\$",
               "tooltip": "HCM_REGISTRATION_MOBILE_TOOLTIP",
               "helpText": "HCM_REGISTRATION_MOBILE_HELPTEXT",
               "infoText": "",
@@ -3765,7 +4019,7 @@ final dynamic sampleFlows = {
               "validations": [
                 {
                   "type": "pattern",
-                  "value": "^[1-9]\\d*$",
+                  "value": "^[1-9]\\d*\$",
                   "message": "HCM_VALIDATION_MOBILE_NO_LEADING_ZERO"
                 },
                 {
@@ -3989,6 +4243,20 @@ final dynamic sampleFlows = {
                       }
                     ],
                     "configName": "beneficiaryRegistration"
+                  }
+                },
+                {
+                  "actionType": "UPDATE_IDENTIFIER_STATUS",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "Failed to update beneficiary id status."
+                        }
+                      }
+                    ],
+                    "identifierType": "UNIQUE_BENEFICIARY_ID"
                   }
                 },
                 {
@@ -4317,6 +4585,20 @@ final dynamic sampleFlows = {
                   }
                 },
                 {
+                  "actionType": "UPDATE_IDENTIFIER_STATUS",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "Failed to update beneficiary id status."
+                        }
+                      }
+                    ],
+                    "identifierType": "UNIQUE_BENEFICIARY_ID"
+                  }
+                },
+                {
                   "actionType": "CREATE_EVENT",
                   "properties": {
                     "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
@@ -4454,7 +4736,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
                   "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                 }
               ],
@@ -4491,7 +4773,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
                   "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                 }
               ],
@@ -4528,7 +4810,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
                   "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                 }
               ],
@@ -4543,7 +4825,7 @@ final dynamic sampleFlows = {
               "format": "text",
               "hidden": true,
               "isMdms": false,
-              "pattern": "^\\d+$",
+              "pattern": "^\\d+\$",
               "tooltip": "",
               "helpText": "HCM_REGISTRATION_PINCODE_HELPTEXT",
               "infoText": "",
@@ -4557,7 +4839,7 @@ final dynamic sampleFlows = {
               "validations": [
                 {
                   "type": "pattern",
-                  "value": "^\\d+$",
+                  "value": "^\\d+\$",
                   "message": "HCM_VALIDATION_ONLY_NUMBERS"
                 }
               ],
@@ -4767,6 +5049,20 @@ final dynamic sampleFlows = {
                   }
                 ],
                 "configName": "beneficiaryRegistration"
+              }
+            },
+            {
+              "actionType": "UPDATE_IDENTIFIER_STATUS",
+              "properties": {
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "Failed to update beneficiary id status."
+                    }
+                  }
+                ],
+                "identifierType": "UNIQUE_BENEFICIARY_ID"
               }
             },
             {
@@ -5488,7 +5784,7 @@ final dynamic sampleFlows = {
               "validations": [
                 {
                   "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
                   "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 }
               ],
@@ -5517,7 +5813,7 @@ final dynamic sampleFlows = {
               "validations": [
                 {
                   "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
                   "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                 }
               ],
