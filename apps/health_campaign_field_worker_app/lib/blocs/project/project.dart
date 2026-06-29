@@ -338,23 +338,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       } catch (_) {}
     }
 
-    // Filter to only active projects (today between startDate and endDate)
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    projects.removeWhere((p) {
-      if (p.startDateTime != null) {
-        final start = DateTime(
-            p.startDateTime!.year, p.startDateTime!.month, p.startDateTime!.day);
-        if (today.isBefore(start)) return true;
-      }
-      if (p.endDateTime != null) {
-        final end = DateTime(
-            p.endDateTime!.year, p.endDateTime!.month, p.endDateTime!.day);
-        if (today.isAfter(end)) return true;
-      }
-      return false;
-    });
-
     emit(ProjectState(
       projects: projects,
       loading: false,
@@ -374,24 +357,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
 
     projects.removeDuplicates((element) => element.id);
-
-    // Filter to only active projects (today between startDate and endDate)
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    projects.removeWhere((p) {
-      if (p.startDateTime != null) {
-        final start = DateTime(
-            p.startDateTime!.year, p.startDateTime!.month, p.startDateTime!.day);
-        if (today.isBefore(start)) return true;
-      }
-      if (p.endDateTime != null) {
-        final end = DateTime(
-            p.endDateTime!.year, p.endDateTime!.month, p.endDateTime!.day);
-        if (today.isAfter(end)) return true;
-      }
-      return false;
-    });
-
     final selectedProject = await localSecureStore.selectedProject;
 
     // Cold-restart restore: rehydrate the runtime hierarchy from the persisted
@@ -1188,8 +1153,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             productVariantId,
             projectReferenceID: projectReferenceID,
           ));
-          balanceKeys
-              .add(legacyBalanceKey(facilityId, productVariantId));
+          balanceKeys.add(legacyBalanceKey(facilityId, productVariantId));
         }
       }
 

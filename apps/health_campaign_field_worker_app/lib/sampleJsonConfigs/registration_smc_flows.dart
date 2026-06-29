@@ -1437,14 +1437,6 @@ final dynamic sampleSMCFlows = {
               "format": "button",
               "visible":
                   "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
-              "fieldName": "addMemberButton",
-              "properties": {
-                "size": "medium",
-                "type": "tertiary",
-                "prefixIcon": "PersonAdd",
-                "mainAxisSize": "min",
-                "mainAxisAlignment": "center"
-              },
               "onAction": [
                 {
                   "actionType": "NAVIGATION",
@@ -1464,7 +1456,15 @@ final dynamic sampleSMCFlows = {
                     "type": "FORM"
                   }
                 }
-              ]
+              ],
+              "fieldName": "addMemberButton",
+              "properties": {
+                "size": "medium",
+                "type": "tertiary",
+                "prefixIcon": "PersonAdd",
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "center"
+              }
             }
           ],
           "fieldName": "card",
@@ -1843,7 +1843,7 @@ final dynamic sampleSMCFlows = {
               }
             }
           ],
-          "fieldName": "proximitySearch",
+          "fieldName": "proximitySearchRegistration",
           "mandatory": true,
           "schemaCode": null,
           "validations": [
@@ -1899,7 +1899,7 @@ final dynamic sampleSMCFlows = {
               }
             }
           ],
-          "fieldName": "searchBar",
+          "fieldName": "searchByName",
           "mandatory": true,
           "debounceMs": 300,
           "validations": [
@@ -2109,7 +2109,6 @@ final dynamic sampleSMCFlows = {
                                 "operation": "equals"
                               }
                             ],
-                            "name": "task",
                             "filterLogic": "or"
                           }
                         }
@@ -2136,8 +2135,7 @@ final dynamic sampleSMCFlows = {
                                 "value": "{{singleton.boundary.code}}",
                                 "operation": "equals"
                               }
-                            ],
-                            "name": "task"
+                            ]
                           }
                         }
                       ],
@@ -2495,7 +2493,7 @@ final dynamic sampleSMCFlows = {
               }
             }
           ],
-          "fieldName": "qrScanner",
+          "fieldName": "scanBeneficiary",
           "scanLimit": 1,
           "showLabel": false,
           "properties": {
@@ -2615,8 +2613,7 @@ final dynamic sampleSMCFlows = {
             "individual",
             "householdMember",
             "projectBeneficiary",
-            "task",
-            "hFReferral"
+            "task"
           ],
           "primary": "household",
           "pagination": {"limit": 5, "maxItems": 15}
@@ -2715,11 +2712,22 @@ final dynamic sampleSMCFlows = {
             {
               "actionType": "CREATE_EVENT",
               "properties": {
-                "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create household."}
+                    "properties": {"message": "Failed to create delivery task."}
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "UPDATE_STOCK_BALANCE",
+              "properties": {
+                "entity": "TaskModel",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to update stock balance."}
                   }
                 ]
               }
@@ -2768,6 +2776,20 @@ final dynamic sampleSMCFlows = {
                         "actionType": "SHOW_TOAST",
                         "properties": {
                           "message": "Failed to create bulk tasks."
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "UPDATE_STOCK_BALANCE",
+                  "properties": {
+                    "entity": "TaskModel",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "Failed to update stock balance."
                         }
                       }
                     ]
@@ -2947,11 +2969,22 @@ final dynamic sampleSMCFlows = {
             {
               "actionType": "CREATE_EVENT",
               "properties": {
-                "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to create household."}
+                    "properties": {"message": "Failed to create delivery task."}
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "UPDATE_STOCK_BALANCE",
+              "properties": {
+                "entity": "TaskModel",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to update stock balance."}
                   }
                 ]
               }
@@ -3000,6 +3033,20 @@ final dynamic sampleSMCFlows = {
                         "actionType": "SHOW_TOAST",
                         "properties": {
                           "message": "Failed to create bulk tasks."
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionType": "UPDATE_STOCK_BALANCE",
+                  "properties": {
+                    "entity": "TaskModel",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "Failed to update stock balance."
                         }
                       }
                     ]
@@ -3132,31 +3179,6 @@ final dynamic sampleSMCFlows = {
               "includeInForm": true,
               "isMultiSelect": false,
               "includeInSummary": true
-            },
-            {
-              "type": "string",
-              "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_scanner",
-              "order": 4,
-              "value": "",
-              "format": "scanner",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "scanner",
-              "mandatory": false,
-              "showLabel": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": true
             }
           ],
           "actionLabel":
@@ -3200,11 +3222,22 @@ final dynamic sampleSMCFlows = {
         {
           "actionType": "CREATE_EVENT",
           "properties": {
-            "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create household."}
+                "properties": {"message": "Failed to create delivery task."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "UPDATE_STOCK_BALANCE",
+          "properties": {
+            "entity": "TaskModel",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to update stock balance."}
               }
             ]
           }
@@ -3246,6 +3279,18 @@ final dynamic sampleSMCFlows = {
                   {
                     "actionType": "SHOW_TOAST",
                     "properties": {"message": "Failed to create bulk tasks."}
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "UPDATE_STOCK_BALANCE",
+              "properties": {
+                "entity": "TaskModel",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to update stock balance."}
                   }
                 ]
               }
@@ -3357,6 +3402,18 @@ final dynamic sampleSMCFlows = {
                   {
                     "actionType": "SHOW_TOAST",
                     "properties": {"message": "Failed to create redose task."}
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "UPDATE_STOCK_BALANCE",
+              "properties": {
+                "entity": "TASK",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to update stock balance."}
                   }
                 ]
               }

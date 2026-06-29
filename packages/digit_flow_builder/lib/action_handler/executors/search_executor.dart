@@ -84,8 +84,15 @@ class SearchExecutor extends ActionExecutor {
 
     // Build context data that includes entities, form values, widgetData, and navigation params
     // widgetData is included at root level so templates like {{selectedStatus}} resolve directly
-    final resolveContext = {
-      if (contexts != null) ...contexts,
+    //
+    // `contextData['entities']` may be either a `Map<String, dynamic>` (model
+    // map keyed by entity name) or a `List<EntityModel>` (raw entity list
+    // from CRUD blocs). Only spread when it's a Map; for lists, expose the
+    // list under a named key so resolvers using `{{entities.0.field}}` style
+    // paths still work without crashing the map-literal spread.
+    final resolveContext = <String, dynamic>{
+      if (contexts is Map<String, dynamic>) ...contexts,
+      if (contexts is List) 'entities': contexts,
       ...formData,
       ...widgetData, // Include widgetData at root for direct access
       'widgetData': widgetData, // Also include with prefix for explicit access
@@ -259,8 +266,14 @@ class SearchExecutor extends ActionExecutor {
       ));
     }
 
-    // Early return if no filters are applicable
-    if (filters.isEmpty) {
+    // Early return only when the config declared NO filter entries at all.
+    // If entries existed in `data.data` but every applyIf returned false
+    // (e.g. complaints filter with ASSIGN_TO_ALL and no complaintType /
+    // locality picked), the user intent is "load everything" — so fall
+    // through to the search with an empty filter set instead of leaving
+    // the screen stuck on the prior result (or blank, if CLEAR_STATE just
+    // dropped the wrapper).
+    if (filters.isEmpty && filtersList.isEmpty) {
       return contextData;
     }
 

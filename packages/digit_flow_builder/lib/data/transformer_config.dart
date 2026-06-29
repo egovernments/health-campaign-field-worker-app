@@ -484,11 +484,19 @@ final jsonConfig = {
         },
         "listMappings": {
           "TaskResourceModel": {
-            "listSource": "__listItem:doseCriteria[0].ProductVariants",
+            // Bulk future-dose tasks inherit the product the worker
+            // selected in DeliveryDetails for dose-1 (so the age-matched
+            // SPAQ variant carries forward), but the quantity stays fixed
+            // at 1 — each future dose is a single tablet regardless of
+            // the dose-1 form qty. Previous mapping used
+            // __listItem:doseCriteria[0].ProductVariants which always
+            // picked the 3-11 month bucket and debited the wrong stock.
+            "listSource": "DeliveryDetails.resourceCard",
             "mappings": {
               "clientReferenceId": "__generate:uuid",
               "taskId": "taskId",
-              "productVariantId": "productVariantId",
+              "productVariantId":
+                  "DeliveryDetails.resourceCard.resourceDelivered.productId",
               "quantity": "__value:1",
               "isDelivered": "__value:true",
               "deliveryComment": "DeliveryDetails.deliveryComment",
@@ -918,6 +926,10 @@ final jsonConfig = {
               "__switch:__context:receiverPartyType:{STAFF:warehouseDetails.teamCode,default:warehouseDetails.facilityToWhich}",
           "receiverType":
               "__switch:__context:receiverPartyType:{STAFF:__value:STAFF,default:__value:WAREHOUSE}",
+          // Sender-side boundary code stamped on the dispatched row.
+          // Consumed by the CDD-side QR encoder (stockToScanQr) and the
+          // boundary mismatch check on the receive screen.
+          "boundaryCode": "__context:boundary.code",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
           "campaignNumber": "__context:selectedProject.referenceID",
@@ -968,6 +980,10 @@ final jsonConfig = {
           // is a userUuid (distributor / CDD), receiverType must be STAFF.
           // Value sourced from getUserFacilityType() via the action chain.
           "receiverType": "__context:userFacilityType",
+          // Boundary code of the receiver — keeps RECEIVED rows
+          // boundary-scoped for downstream queries and matches the value
+          // the scan-side path stamps on its RECEIVED rows.
+          "boundaryCode": "__context:boundary.code",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
@@ -1018,6 +1034,11 @@ final jsonConfig = {
           // The value is computed by getUserFacilityType() and passed in via
           // FETCH_TRANSFORMER_CONFIG.data on the stockScanConfirm screen.
           "receiverType": "__context:userFacilityType",
+          // Boundary code threaded from the scanned QR via stockScanConfirm.
+          // Persisted on the RECEIVED row so the new owner's stock stays
+          // boundary-scoped — same value the receive-side mismatch check
+          // verifies against getUserBoundaryCode() before allowing Confirm.
+          "boundaryCode": "__context:boundaryCode",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
@@ -1519,8 +1540,11 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
-            // Explicit field mappings matching ReferralReconEnums/ReferralReconAdditionalFields
-            "boundaryCode": "facilityDetails.administrativeArea",
+            // Explicit field mappings matching ReferralReconEnums/ReferralReconAdditionalFields.
+            // boundaryCode reads the raw code from app context, not the
+            // form's administrativeArea field (which is the localized
+            // display name set by screen_builder defaultValues).
+            "boundaryCode": "__context:boundary.code",
             "referredBy": "__context:userUUID",
             "referralComments": "referBeneficiary.referralComments",
             "nameOfReferral": "__context:selectedIndividualName",

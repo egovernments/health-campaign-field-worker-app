@@ -103,13 +103,13 @@ final dynamic sampleComplaintFlows = {
                                 "key": "serviceRequestId",
                                 "root": "pgrService",
                                 "value": "{{complaintNumber}}",
-                                "operation": "contains"
+                                "operation": "matches"
                               },
                               {
                                 "key": "mobileNumber",
                                 "root": "pgrComplainant",
                                 "value": "{{mobileNumber}}",
-                                "operation": "contains"
+                                "operation": "matches"
                               }
                             ],
                             "name": "pgrService"
@@ -157,8 +157,21 @@ final dynamic sampleComplaintFlows = {
                           "assignTo",
                           "complaintType",
                           "locality"
+                        ]
+                      }
+                    },
+                    {
+                      "actionType": "SEARCH_EVENT",
+                      "properties": {
+                        "data": [
+                          {
+                            "key": "tenantId",
+                            "value": "{{singleton.selectedProject.tenantId}}",
+                            "operation": "equals"
+                          }
                         ],
-                        "triggerSearch": true
+                        "name": "pgrService",
+                        "type": "SEARCH_EVENT"
                       }
                     }
                   ],
@@ -217,8 +230,22 @@ final dynamic sampleComplaintFlows = {
                               "assignTo",
                               "complaintType",
                               "locality"
+                            ]
+                          }
+                        },
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "data": [
+                              {
+                                "key": "tenantId",
+                                "value":
+                                    "{{singleton.selectedProject.tenantId}}",
+                                "operation": "equals"
+                              }
                             ],
-                            "triggerSearch": true
+                            "name": "pgrService",
+                            "type": "SEARCH_EVENT"
                           }
                         }
                       ],
@@ -258,13 +285,13 @@ final dynamic sampleComplaintFlows = {
                                 "root": "pgrComplainant",
                                 "value": "{{singleton.loggedInUser.name}}",
                                 "applyIf": "{{ assignTo }} == ASSIGN_TO_ME",
-                                "operation": "equals"
+                                "operation": "matches"
                               },
                               {
                                 "key": "serviceCode",
                                 "value": "{{complaintType }}",
                                 "applyIf": "{{complaintType }} !=null && {{complaintType }} !=null",
-                                "operation": "equals"
+                                "operation": "matches"
                               },
                               {
                                 "key": "localityBoundaryCode",

@@ -440,6 +440,14 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "infoCard",
+          "visible":
+              "{{fn:isEmpty(navigation.boundaryCode)}} == false && {{fn:isEmpty(fn:getUserBoundaryCode())}} == false && {{navigation.boundaryCode}} != {{fn:getUserBoundaryCode()}}",
+          "type": "error",
+          "label": "INVENTORY_SCAN_BOUNDARY_MISMATCH_LABEL",
+          "description": "INVENTORY_SCAN_BOUNDARY_MISMATCH_DESCRIPTION"
+        },
+        {
+          "format": "infoCard",
           "visible": "{{fn:hasResults('StockModel')}} == true",
           "type": "warning",
           "label": "INVENTORY_SCAN_ALREADY_RECEIVED_LABEL",
@@ -482,7 +490,7 @@ final dynamic sampleInventoryFlows = {
           "format": "button",
           "label": "INVENTORY_SCAN_CONFIRM_RECEIVE_LABEL",
           "hidden":
-              "{{fn:isEmpty(navigation.receiverId)}} == false && {{navigation.receiverId}} != {{fn:getUserFacilityId()}} || {{fn:hasResults('StockModel')}} == true",
+              "{{fn:isEmpty(navigation.receiverId)}} == false && {{navigation.receiverId}} != {{fn:getUserFacilityId()}} || {{fn:hasResults('StockModel')}} == true || ({{fn:isEmpty(navigation.boundaryCode)}} == false && {{fn:isEmpty(fn:getUserBoundaryCode())}} == false && {{navigation.boundaryCode}} != {{fn:getUserBoundaryCode()}})",
           "properties": {
             "type": "primary",
             "size": "large",
@@ -532,6 +540,10 @@ final dynamic sampleInventoryFlows = {
                   {
                     "key": "dispatchClientReferenceId",
                     "value": "{{navigation.clientReferenceId}}"
+                  },
+                  {
+                    "key": "boundaryCode",
+                    "value": "{{navigation.boundaryCode}}"
                   }
                 ],
                 "onError": [
@@ -2296,6 +2308,7 @@ final dynamic sampleInventoryFlows = {
                         },
                         {"key": "senderId", "value": "{{senderId}}"},
                         {"key": "receiverId", "value": "{{receiverId}}"},
+                        {"key": "boundaryCode", "value": "{{boundaryCode}}"},
                         {
                           "key": "productVariantId",
                           "value": "{{productVariantId}}"

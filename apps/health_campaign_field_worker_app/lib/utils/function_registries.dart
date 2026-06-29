@@ -416,10 +416,30 @@ class FunctionRegistries {
   }
 
   void _registerStockFunctions() {
+    // Stock sufficiency check covering the full cycle:
+    //   args[0] eligibleProductVariants — current dose's product variants
+    //           (each entry has a ProductVariants list with productVariantId,
+    //           name, quantity).
+    //   args[1] futureDoses (optional) — list of future-dose entries; each
+    //           contributes its `doseCriteria[0].ProductVariants[*].quantity`
+    //           to the cycle-wide required total. Pass to gate the cycle
+    //           entry point (recordCycle button) so the worker can't start
+    //           an indirect cycle when stock for later doses won't fit.
+    //   args[2] resourceCard (optional) — the user's per-product entries
+    //           from ProductSelectionCard (`resourceDelivered.productId` +
+    //           `quantityDistributed`). When present, OVERRIDES the
+    //           current-dose config quantity with the user's value so the
+    //           pre-submit check reflects what will actually be debited.
+    // Cumulative required per productVariantId is compared against
+    // StockBalanceCache; insufficient products are reported via the same
+    // INSUFFICIENT_STOCK contract `getInsufficientStockMessage` consumes.
     FunctionRegistry.register('hasStockForDelivery', (args, stateData) {
       if (args.isEmpty) return true;
-      final eligibleProducts = args.first;
+      final eligibleProducts = args[0];
       if (eligibleProducts == null) return true;
+      final futureDoses = args.length > 1 ? args[1] : null;
+      final resourceCard = args.length > 2 ? args[2] : null;
+
       List<dynamic> productList = [];
       if (eligibleProducts is List) {
         productList = eligibleProducts;
@@ -429,30 +449,84 @@ class FunctionRegistries {
       if (productList.isEmpty) return true;
       final cache = StockBalanceCache.instance;
       if (cache.facilityId.isEmpty) return true;
-      final List<Map<String, dynamic>> insufficientProducts = [];
-      for (final product in productList) {
-        if (product is! Map) continue;
-        final productVariantsList = product['ProductVariants'];
-        if (productVariantsList is! List) continue;
-        for (final variant in productVariantsList) {
-          if (variant is! Map) continue;
-          final productId = variant['productVariantId']?.toString();
-          final productName =
-              variant['name']?.toString() ?? productId ?? 'Unknown';
-          if (productId == null || productId.isEmpty) continue;
-          final quantity =
-              double.tryParse(variant['quantity']?.toString() ?? '1') ?? 1.0;
-          final key = productId;
-          final balance = cache.cache[key] ?? 0.0;
-          if (balance < quantity) {
-            insufficientProducts.add({
-              'name': productName,
-              'required': quantity,
-              'available': balance,
-            });
+
+      // User-modified quantities keyed by productVariantId. Empty when the
+      // caller doesn't pass resourceCard (e.g. pre-DeliveryDetails gate).
+      final Map<String, double> userQty = {};
+      if (resourceCard is List) {
+        for (final entry in resourceCard) {
+          if (entry is! Map) continue;
+          final rd = entry['resourceDelivered'];
+          final productId = (rd is Map ? rd['productId'] : null)?.toString();
+          final qty =
+              double.tryParse(entry['quantityDistributed']?.toString() ?? '');
+          if (productId != null && productId.isNotEmpty && qty != null) {
+            userQty[productId] = qty;
           }
         }
       }
+
+      final Map<String, double> requiredQty = {};
+      final Map<String, String> productNames = {};
+
+      // Current dose contribution: prefer the user's entered qty when
+      // available, else fall back to the doseCriteria default.
+      for (final product in productList) {
+        if (product is! Map) continue;
+        final variants = product['ProductVariants'];
+        if (variants is! List) continue;
+        for (final variant in variants) {
+          if (variant is! Map) continue;
+          final productId = variant['productVariantId']?.toString();
+          if (productId == null || productId.isEmpty) continue;
+          final name = variant['name']?.toString() ?? productId;
+          final configQty =
+              double.tryParse(variant['quantity']?.toString() ?? '1') ?? 1.0;
+          final qty = userQty[productId] ?? configQty;
+          requiredQty[productId] = (requiredQty[productId] ?? 0.0) + qty;
+          productNames[productId] = name;
+        }
+      }
+
+      // Future-dose contribution: each indirect dose adds its own
+      // doseCriteria[0].ProductVariants[*].quantity. User's dose-1 edit
+      // does NOT propagate forward — matches indirectBulkDelivery semantics
+      // (bulk task qty comes from each future dose's own doseCriteria).
+      if (futureDoses is List) {
+        for (final dose in futureDoses) {
+          if (dose is! Map) continue;
+          final doseCriteria = dose['doseCriteria'];
+          if (doseCriteria is! List || doseCriteria.isEmpty) continue;
+          final criteriaZero = doseCriteria[0];
+          if (criteriaZero is! Map) continue;
+          final variants = criteriaZero['ProductVariants'];
+          if (variants is! List) continue;
+          for (final variant in variants) {
+            if (variant is! Map) continue;
+            final productId = variant['productVariantId']?.toString();
+            if (productId == null || productId.isEmpty) continue;
+            final name = variant['name']?.toString() ?? productId;
+            final configQty =
+                double.tryParse(variant['quantity']?.toString() ?? '1') ?? 1.0;
+            requiredQty[productId] =
+                (requiredQty[productId] ?? 0.0) + configQty;
+            productNames[productId] = productNames[productId] ?? name;
+          }
+        }
+      }
+
+      final List<Map<String, dynamic>> insufficientProducts = [];
+      requiredQty.forEach((productId, required) {
+        final balance = cache.cache[productId] ?? 0.0;
+        if (balance < required) {
+          insufficientProducts.add({
+            'name': productNames[productId] ?? productId,
+            'required': required,
+            'available': balance,
+          });
+        }
+      });
+
       if (insufficientProducts.isEmpty) {
         cache.setStockCheckResult(null);
         return true;
@@ -547,6 +621,10 @@ class FunctionRegistries {
         'receiverId': itemMap['receiverId']?.toString() ?? '',
         'productVariantId': itemMap['productVariantId']?.toString() ?? '',
         'quantity': itemMap['quantity']?.toString() ?? '',
+        // Boundary code of the dispatched row — receiver side compares this
+        // to the scanning user's leaf boundary code (getUserBoundaryCode)
+        // to block cross-boundary scans.
+        'boundaryCode': blankToNull(itemMap['boundaryCode']?.toString()),
         // Optional fields: null when blank so jsonEncode emits `null` rather
         // than `""`. The labelPairList widget renders null as `--`, and
         // CREATE_EVENT validators treat null as missing instead of invalid.
@@ -558,6 +636,15 @@ class FunctionRegistries {
       };
 
       return jsonEncode(payload);
+    });
+
+    // Leaf-most selected boundary code for the current user. Used by the
+    // stockScanConfirm screen to verify a CDD is scanning stock dispatched
+    // to their own boundary. Returns '' when no boundary is selected so the
+    // config-side isEmpty guard suppresses the mismatch infoCard rather than
+    // false-positive on missing data.
+    FunctionRegistry.register('getUserBoundaryCode', (args, stateData) {
+      return context.boundaryOrNull?.code ?? '';
     });
   }
 
