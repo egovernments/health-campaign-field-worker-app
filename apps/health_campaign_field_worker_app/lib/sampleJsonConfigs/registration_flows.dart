@@ -5580,7 +5580,7 @@ final dynamic sampleFlows = {
                 }
               }
             ],
-            "configName": "unableToDeliverConfig"
+            "configName": "polioUnableToDeliverConfig"
           }
         },
         {

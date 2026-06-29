@@ -2615,7 +2615,8 @@ final dynamic sampleSMCFlows = {
             "individual",
             "householdMember",
             "projectBeneficiary",
-            "task"
+            "task",
+            "hFReferral"
           ],
           "primary": "household",
           "pagination": {"limit": 5, "maxItems": 15}
