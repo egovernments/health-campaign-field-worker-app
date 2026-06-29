@@ -12,6 +12,36 @@ import '../utils/utils.dart';
 import 'flow_widget_interface.dart';
 import 'localization_context.dart';
 
+/// Substitutes 1-indexed placeholders (`{1}`, `{2}`, ...) in [text] with
+/// resolved values from [args].
+///
+/// Each arg template is resolved via [interpolateWithCrudStates] when it
+/// contains `{{` placeholders and [stateData] is available; otherwise the
+/// raw string value is used.
+String substituteArgs(
+  String text,
+  List<dynamic> args,
+  CrudStateData? stateData,
+  Map<String, dynamic>? itemData,
+) {
+  String result = text;
+  for (int i = 0; i < args.length; i++) {
+    final argTemplate = args[i]?.toString() ?? '';
+    String resolvedArg;
+    if (stateData != null && argTemplate.contains('{{')) {
+      resolvedArg = interpolateWithCrudStates(
+        template: argTemplate,
+        stateData: stateData,
+        item: itemData,
+      );
+    } else {
+      resolvedArg = argTemplate;
+    }
+    result = result.replaceAll('{${i + 1}}', resolvedArg);
+  }
+  return result;
+}
+
 /// Pre-resolved context available to all widgets that extend [ResolvedFlowWidget].
 ///
 /// Contains the resolved state, localization, visibility/disabled status,
@@ -73,6 +103,17 @@ class ResolvedWidgetContext {
       return resolved;
     }
     return resolveText(template);
+  }
+
+  /// Resolves a template as a localization key, then substitutes 1-indexed
+  /// placeholders (`{1}`, `{2}`, ...) with resolved [args] values.
+  ///
+  /// Use this for widgets that re-resolve labels directly from `json['label']`
+  /// instead of using `resolved.resolvedLabel` (e.g., tag, noResultCard, date).
+  String resolveTextWithArgs(String? template, List<dynamic>? args) {
+    final text = resolveTextWithCrudStates(template);
+    if (args == null || args.isEmpty) return text;
+    return substituteArgs(text, args, stateData, state.itemData);
   }
 
   /// Resolves a value (preserving its actual type: int, bool, List, etc.).
@@ -368,6 +409,17 @@ abstract class ResolvedFlowWidget implements FlowWidget {
       }
     }
 
+    // Substitute labelArgs placeholders ({1}, {2}, ...) in the resolved label
+    final labelArgs = json['labelArgs'] as List<dynamic>?;
+    if (resolvedLabel != null && labelArgs != null && labelArgs.isNotEmpty) {
+      resolvedLabel = substituteArgs(
+        resolvedLabel,
+        labelArgs,
+        state.stateData,
+        state.itemData,
+      );
+    }
+
     final descriptionText = json['description'] as String?;
     String? resolvedDescription;
     if (descriptionText != null && descriptionText.isNotEmpty) {
@@ -379,6 +431,19 @@ abstract class ResolvedFlowWidget implements FlowWidget {
             stateData: state.stateData,
           ) ??
           descriptionText;
+    }
+
+    // Substitute descriptionArgs placeholders ({1}, {2}, ...) in the resolved description
+    final descriptionArgs = json['descriptionArgs'] as List<dynamic>?;
+    if (resolvedDescription != null &&
+        descriptionArgs != null &&
+        descriptionArgs.isNotEmpty) {
+      resolvedDescription = substituteArgs(
+        resolvedDescription,
+        descriptionArgs,
+        state.stateData,
+        state.itemData,
+      );
     }
 
     final resolved = ResolvedWidgetContext(

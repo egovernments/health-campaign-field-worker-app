@@ -97,7 +97,7 @@ class DateWidget extends ResolvedFlowWidget {
         children: [
           if (label != null) ...[
             Text(
-              resolved.resolveText(label),
+              resolved.resolveTextWithArgs(label, json['labelArgs']),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),

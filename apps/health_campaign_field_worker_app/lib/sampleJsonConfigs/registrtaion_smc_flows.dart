@@ -334,6 +334,7 @@ final dynamic sampleSMCFlows = {
                         "fieldName": "pastCycleTable"
                       }
                     ],
+                    "fieldName": "card2",
                     "properties": {"type": "secondary"}
                   },
                   "format": "listView",
@@ -343,11 +344,13 @@ final dynamic sampleSMCFlows = {
                   "properties": {"spacing": "spacer4"}
                 }
               ],
+              "fieldName": "expandable",
               "expandLabel": "REGISTRATION_VIEW_PAST_CYCLES",
               "collapseLabel": "REGISTRATION_HIDE_PAST_CYCLES",
               "controlsField": "pastCycles"
             }
           ],
+          "fieldName": "card",
           "properties": {"type": "primary"},
           "schemaCode": null
         }
@@ -359,9 +362,9 @@ final dynamic sampleSMCFlows = {
           "type": "template",
           "label": "RECORD_CYCLE_DOSE",
           "format": "actionPopup",
-          "fieldName": "insufficientStockPopUp",
           "visible":
               "{{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == false",
+          "fieldName": "insufficientStockPopUp",
           "properties": {
             "icon": "Warning",
             "size": "large",
@@ -375,10 +378,10 @@ final dynamic sampleSMCFlows = {
                   "format": "textTemplate",
                   "fieldName": "insufficientStockMessageText",
                   "properties": {
-                    "separatedBy": "::",
                     "replaceAll": [
                       {"searchValue": "::", "replaceValue": "\n"}
-                    ]
+                    ],
+                    "separatedBy": "::"
                   }
                 }
               ],
@@ -796,7 +799,7 @@ final dynamic sampleSMCFlows = {
           "fieldName": "successCard",
           "mandatory": true,
           "properties": {"type": "success"},
-          "description": "ID-{{navigation.selectedIndividualIdentifierId}}",
+          "description": "REGISTRATION_ID_DESCRIPTION",
           "primaryAction": {
             "type": "template",
             "label": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
@@ -830,6 +833,7 @@ final dynamic sampleSMCFlows = {
             "mandatory": true,
             "properties": {"type": "primary"}
           },
+          "descriptionArgs": ["{{navigation.selectedIndividualIdentifierId}}"],
           "secondaryAction": {
             "type": "template",
             "label": "GO_BACK",
@@ -889,13 +893,13 @@ final dynamic sampleSMCFlows = {
           "format": "card",
           "children": [
             {
+              "type": "template",
               "format": "row",
               "children": [
                 {
                   "type": "template",
                   "label": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
                   "format": "button",
-                  "prefixIcon": "Edit",
                   "onAction": [
                     {
                       "actionType": "REVERSE_TRANSFORM",
@@ -920,6 +924,7 @@ final dynamic sampleSMCFlows = {
                     }
                   ],
                   "fieldName": "householdEditButton",
+                  "prefixIcon": "Edit",
                   "properties": {
                     "icon": "Edit",
                     "size": "large",
@@ -929,6 +934,7 @@ final dynamic sampleSMCFlows = {
                   }
                 }
               ],
+              "fieldName": "row",
               "properties": {"mainAxisAlignment": "end"}
             },
             {
@@ -976,7 +982,6 @@ final dynamic sampleSMCFlows = {
                         "type": "template",
                         "label": "REGISTRATION_EDIT_INDIVIDUAL_BUTTON_LABEL",
                         "format": "button",
-                        "prefixIcon": "Edit",
                         "disabled":
                             "{{fn:disableEdit(item.task, item.hFReferral)}}==true",
                         "onAction": [
@@ -1017,6 +1022,7 @@ final dynamic sampleSMCFlows = {
                           }
                         ],
                         "fieldName": "editIndividualButton",
+                        "prefixIcon": "Edit",
                         "properties": {
                           "icon": "Edit",
                           "size": "large",
@@ -1191,8 +1197,7 @@ final dynamic sampleSMCFlows = {
                       "type": "secondary",
                       "bottomGap": 16,
                       "mainAxisSize": "max",
-                      "mainAxisAlignment": "center",
-                      "bottomGap": 16
+                      "mainAxisAlignment": "center"
                     }
                   },
                   {
@@ -1251,6 +1256,7 @@ final dynamic sampleSMCFlows = {
                     ],
                     "fieldName": "viewDetails",
                     "properties": {
+                      "icon": "add",
                       "size": "medium",
                       "type": "secondary",
                       "bottomGap": 16,
@@ -1424,8 +1430,44 @@ final dynamic sampleSMCFlows = {
                 "mainAxisAlignment": "center"
               },
               "schemaCode": null
+            },
+            {
+              "type": "template",
+              "label": "ADD_MEMBER",
+              "format": "button",
+              "visible":
+                  "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
+              "fieldName": "addMemberButton",
+              "properties": {
+                "size": "medium",
+                "type": "tertiary",
+                "prefixIcon": "PersonAdd",
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "center"
+              },
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value":
+                            "{{contextData.0.household.HouseholdModel.clientReferenceId}}"
+                      },
+                      {
+                        "key": "UNIQUE_BENEFICIARY_ID",
+                        "value": "{{latestBeneficiaryId}}"
+                      }
+                    ],
+                    "name": "ADD_MEMBER",
+                    "type": "FORM"
+                  }
+                }
+              ]
             }
           ],
+          "fieldName": "card",
           "properties": {"type": "primary", "cardType": "primary"},
           "schemaCode": null
         }
@@ -1652,7 +1694,7 @@ final dynamic sampleSMCFlows = {
                       "UNABLETODELIVERY_FLOW_reason_REQUIRED_ERROR_MESSAGE"
                 }
               ],
-              "errorMessage": ""
+              "errorMessage": "REGISTRATION_UNABLETODELIVER_reason_ERROR"
             },
             {
               "type": "string",
@@ -1707,6 +1749,7 @@ final dynamic sampleSMCFlows = {
       ],
       "summary": false,
       "version": 1,
+      "category": "REGISTRATION",
       "disabled": false,
       "onAction": [
         {
@@ -1722,7 +1765,9 @@ final dynamic sampleSMCFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {
+                  "message": "REGISTRATION_UNABLETODELIVER_MESSAGE"
+                }
               }
             ],
             "configName": "unableToDeliverConfig"
@@ -1758,7 +1803,9 @@ final dynamic sampleSMCFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
+                "properties": {
+                  "message": "REGISTRATION_HOUSEHOLDOVERVIEW_MESSAGE"
+                }
               }
             ],
             "navigationMode": "popUntilAndPush",
@@ -1828,7 +1875,7 @@ final dynamic sampleSMCFlows = {
         },
         {
           "type": "template",
-          "label": "NAME_OF_INDIVIDUAL",
+          "label": "SEARCH_BY_NAME",
           "format": "searchBar",
           "onAction": [
             {
@@ -1862,7 +1909,7 @@ final dynamic sampleSMCFlows = {
         },
         {
           "type": "template",
-          "label": "ID_OF_INDIVIDUAL",
+          "label": "SEARCH_BY_ID",
           "format": "searchBar",
           "visible": "{{idSearch}} == true",
           "onAction": [
@@ -2062,6 +2109,7 @@ final dynamic sampleSMCFlows = {
                                 "operation": "equals"
                               }
                             ],
+                            "name": "task",
                             "filterLogic": "or"
                           }
                         }
@@ -2088,7 +2136,8 @@ final dynamic sampleSMCFlows = {
                                 "value": "{{singleton.boundary.code}}",
                                 "operation": "equals"
                               }
-                            ]
+                            ],
+                            "name": "task"
                           }
                         }
                       ],
@@ -2286,13 +2335,14 @@ final dynamic sampleSMCFlows = {
         {
           "icon": "FilterAlt",
           "type": "template",
-          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
+          "label": "DOWNLOAD_BENEFICIARY_IDS",
+          "format": "actionPopup",
           "visible":
               "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-          "label": "REGISTER_BENEFICIARY",
-          "format": "actionPopup",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "fieldName": "beneficiaryIdMinCheck",
           "properties": {
+            "icon": "FilterAlt",
             "size": "large",
             "type": "primary",
             "popupConfig": {
@@ -2332,7 +2382,7 @@ final dynamic sampleSMCFlows = {
                       }
                     }
                   ],
-                  "fieldName": "clearFilter",
+                  "fieldName": "clearFilter2",
                   "properties": {
                     "size": "large",
                     "type": "secondary",
@@ -2353,7 +2403,7 @@ final dynamic sampleSMCFlows = {
                       "properties": {}
                     }
                   ],
-                  "fieldName": "saveFilter",
+                  "fieldName": "saveFilter2",
                   "properties": {
                     "size": "large",
                     "type": "primary",
@@ -2373,9 +2423,9 @@ final dynamic sampleSMCFlows = {
           "type": "template",
           "label": "REGISTER_BENEFICIARY",
           "format": "button",
-          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "visible":
               "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -2565,7 +2615,8 @@ final dynamic sampleSMCFlows = {
             "individual",
             "householdMember",
             "projectBeneficiary",
-            "task"
+            "task",
+            "hFReferral"
           ],
           "primary": "household",
           "pagination": {"limit": 5, "maxItems": 15}
@@ -2653,7 +2704,9 @@ final dynamic sampleSMCFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {
+                      "message": "REGISTRATION_DELIVERYCHECKLIST_MESSAGE"
+                    }
                   }
                 ],
                 "configName": "delivery"
@@ -2742,7 +2795,9 @@ final dynamic sampleSMCFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {
+                      "message": "REGISTRATION_DELIVERYSUCCESS_MESSAGE"
+                    }
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -2881,7 +2936,9 @@ final dynamic sampleSMCFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {
+                      "message": "REGISTRATION_DELIVERYDETAILS_MESSAGE"
+                    }
                   }
                 ],
                 "configName": "delivery"
@@ -3037,7 +3094,7 @@ final dynamic sampleSMCFlows = {
                   "message": "REGISTRATION_RESOURCE_CARD_SELECTION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_DELIVERY_resourceCard_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "dropDownOptions": [
@@ -3134,7 +3191,7 @@ final dynamic sampleSMCFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {"message": "REGISTRATION_DELIVERY_MESSAGE"}
               }
             ],
             "configName": "delivery"
@@ -3283,7 +3340,9 @@ final dynamic sampleSMCFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch redose config."}
+                    "properties": {
+                      "message": "REGISTRATION_REDOSEDETAILS_MESSAGE"
+                    }
                   }
                 ],
                 "configName": "redose"
@@ -3321,7 +3380,9 @@ final dynamic sampleSMCFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {
+                      "message": "REGISTRATION_REDOSESUCCESS_MESSAGE"
+                    }
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -3421,7 +3482,7 @@ final dynamic sampleSMCFlows = {
                   "message": "REDOSE_REASON_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_REDOSE_reasonForRedose_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "includeInSummary": true
@@ -3486,7 +3547,7 @@ final dynamic sampleSMCFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch redose config."}
+                "properties": {"message": "REGISTRATION_REDOSE_MESSAGE"}
               }
             ],
             "configName": "redose"
@@ -3605,7 +3666,9 @@ final dynamic sampleSMCFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {
+                          "message": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE"
+                        }
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -3664,7 +3727,9 @@ final dynamic sampleSMCFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Navigation failed."}
+                        "properties": {
+                          "message": "REGISTRATION_REFER_BENEFICIARY_MESSAGE"
+                        }
                       }
                     ],
                     "navigationMode": "popUntilAndPush",
@@ -3706,7 +3771,7 @@ final dynamic sampleSMCFlows = {
                       {
                         "actionType": "SHOW_TOAST",
                         "properties": {
-                          "message": "Failed to fetch ineligible config."
+                          "message": "REGISTRATION_ELIGIBILITYCHECKLIST_MESSAGE"
                         }
                       }
                     ],
@@ -3861,7 +3926,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL_REQUIRED_MESSAGE"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_CHECKLIST_ec1_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "dropDownOptions": [
@@ -3903,7 +3968,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL_REQUIRED_MESSAGE"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_CHECKLIST_ec2_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "dropDownOptions": [
@@ -3950,7 +4015,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL_REQUIRED_MESSAGE"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_CHECKLIST_ec3_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "dropDownOptions": [
@@ -3992,7 +4057,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL_REQUIRED_MESSAGE"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_CHECKLIST_ec4_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "dropDownOptions": [
@@ -4163,9 +4228,7 @@ final dynamic sampleSMCFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {
-                      "message": "Failed to fetch ineligible config."
-                    }
+                    "properties": {"message": "REGISTRATION_CHECKLIST_MESSAGE"}
                   }
                 ],
                 "configName": "ineligibleConfig"
@@ -4450,7 +4513,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message_addmember"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_ADD_MEMBER_nameOfIndividual_ERROR",
               "isMultiSelect": false,
               "required.message":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message_addmember"
@@ -4490,7 +4553,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message_addmember"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_ADD_MEMBER_identifiers_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "dropDownOptions": [
@@ -4549,7 +4612,7 @@ final dynamic sampleSMCFlows = {
                   "message": "AGE_VALIDATION_ADDMEMBER"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_ADD_MEMBER_dobPicker_ERROR",
               "isMultiSelect": false,
               "required.message":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory_message_addmember"
@@ -4585,7 +4648,7 @@ final dynamic sampleSMCFlows = {
                   "message": "GENDER_MANDATORY_MESSAGE_ADDMEMBER"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_ADD_MEMBER_gender_ERROR",
               "isMultiSelect": false,
               "dropDownOptions": [
                 {"code": "MALE", "name": "MALE"},
@@ -4637,7 +4700,7 @@ final dynamic sampleSMCFlows = {
                   "message": "MOBILE_LENGTH_10_DIGIT_ERROR_ADDMEMBER"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_ADD_MEMBER_phone_ERROR",
               "isMultiSelect": false,
               "pattern.message": "MB_ONLY_NUMBERS"
             },
@@ -4701,7 +4764,7 @@ final dynamic sampleSMCFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {"message": "REGISTRATION_ADD_MEMBER_MESSAGE"}
               }
             ],
             "configName": "individualRegistration"
@@ -4927,7 +4990,9 @@ final dynamic sampleSMCFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {
+                      "message": "REGISTRATION_REFERBENEFICIARY_MESSAGE"
+                    }
                   }
                 ],
                 "configName": "referralBeneficaryCreate"
@@ -5019,7 +5084,9 @@ final dynamic sampleSMCFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Navigation failed."}
+                    "properties": {
+                      "message": "REGISTRATION_REFERRALSUCCESS_MESSAGE"
+                    }
                   }
                 ],
                 "navigationMode": "popUntilAndPush",
@@ -5055,7 +5122,8 @@ final dynamic sampleSMCFlows = {
                   "message": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "REGISTRATION_REFER_BENEFICIARY_administrativeArea_ERROR",
               "required.message":
                   "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
             },
@@ -5085,7 +5153,7 @@ final dynamic sampleSMCFlows = {
                   "message": "REFER_BENEFICIARY_REFERRED_BY_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_REFER_BENEFICIARY_referredBy_ERROR",
               "required.message": "REFER_BENEFICIARY_REFERRED_BY_REQUIRED",
               "autoFillCondition": [
                 {"value": "{{loggedInUserUuid}}", "expression": "true==true"}
@@ -5118,7 +5186,8 @@ final dynamic sampleSMCFlows = {
                   "message": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "REGISTRATION_REFER_BENEFICIARY_healthFacility_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "required.message":
@@ -5154,7 +5223,8 @@ final dynamic sampleSMCFlows = {
                       "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "REGISTRATION_REFER_BENEFICIARY_referralReason_ERROR",
               "isMultiSelect": false,
               "required.message":
                   "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR"
@@ -5577,7 +5647,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_nameOfIndividual_ERROR",
               "isMultiSelect": false,
               "required.message":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message"
@@ -5611,7 +5681,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_mandatory_message"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_isHeadOfFamily_ERROR",
               "isMultiSelect": false,
               "required.message":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_mandatory_message"
@@ -5651,7 +5721,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_identifiers_ERROR",
               "isMultiSelect": false,
               "required.message":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message"
@@ -5692,7 +5762,7 @@ final dynamic sampleSMCFlows = {
                 {"type": "minAge", "value": 3, "message": "AGE_VALIDATION"},
                 {"type": "maxAge", "value": 1800, "message": "AGE_VALIDATION"}
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_dobPicker_ERROR",
               "isMultiSelect": false,
               "required.message":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory_message"
@@ -5727,7 +5797,7 @@ final dynamic sampleSMCFlows = {
                   "message": "GENDER_MANDATORY_MESSAGE"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_gender_ERROR",
               "isMultiSelect": false,
               "required.message": "GENDER_MANDATORY_MESSAGE"
             },
@@ -5774,7 +5844,7 @@ final dynamic sampleSMCFlows = {
                   "message": "MOBILE_LENGTH_10_DIGIT_ERROR"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_phone_ERROR",
               "isMultiSelect": false,
               "pattern.message": "MB_ONLY_NUMBER"
             },
@@ -5858,7 +5928,9 @@ final dynamic sampleSMCFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {
+                          "message": "REGISTRATION_HOUSEHOLDDETAILS_MESSAGE"
+                        }
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -6043,7 +6115,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_mandatory_message"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_dateOfRegistration_ERROR",
               "isMultiSelect": false,
               "required.message":
                   "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_mandatory_message"
@@ -6139,7 +6211,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_max_message"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_memberCount_ERROR",
               "isMultiSelect": false,
               "required.message":
                   "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_mandatory_message"
@@ -6196,7 +6268,9 @@ final dynamic sampleSMCFlows = {
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
-                        "properties": {"message": "Failed to fetch config."}
+                        "properties": {
+                          "message": "REGISTRATION_BENEFICIARYLOCATION_MESSAGE"
+                        }
                       }
                     ],
                     "configName": "beneficiaryRegistration"
@@ -6382,7 +6456,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_mandatory_message"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_administrativeArea_ERROR",
               "isMultiSelect": false,
               "required.message":
                   "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_mandatory_message"
@@ -6415,7 +6489,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_mandatory_message"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_latLng_ERROR",
               "isMultiSelect": false,
               "required.message":
                   "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_mandatory_message"
@@ -6453,7 +6527,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_addressLine1_ERROR",
               "isMultiSelect": false
             },
             {
@@ -6489,7 +6563,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_addressLine2_ERROR",
               "isMultiSelect": false
             },
             {
@@ -6524,7 +6598,7 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_landmark_ERROR",
               "isMultiSelect": false
             },
             {
@@ -6554,7 +6628,7 @@ final dynamic sampleSMCFlows = {
                   "message": "PINCODE_ONLY_NUMBERS"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "REGISTRATION_HOUSEHOLD_pincode_ERROR",
               "pattern.message": "PINCODE_ONLY_NUMBERS"
             },
             {
@@ -6621,7 +6695,7 @@ final dynamic sampleSMCFlows = {
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
-                    "properties": {"message": "Failed to fetch config."}
+                    "properties": {"message": "REGISTRATION_HOUSEHOLD_MESSAGE"}
                   }
                 ],
                 "configName": "beneficiaryRegistration"

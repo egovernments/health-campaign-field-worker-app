@@ -873,6 +873,46 @@ void initializeFunctionRegistry() {
     return status == TaskStatus.administrationFailed;
   });
 
+  /// Polio-specific eligibility check that treats ADMINISTRATION_FAILED
+  /// (unable-to-deliver) as still eligible for redose/revaccination.
+  ///
+  /// - **Function Name**: `'checkPolioEligibility'`
+  /// - **Arguments**: Same as `checkEligibilityForAgeAndSideEffect`
+  ///   (dob, tasks, currentRunningCycle).
+  /// - **Returns**: `true` if the standard check passes, OR if the standard
+  ///   check fails due to ADMINISTRATION_FAILED (unable-to-deliver),
+  ///   including after a subsequent redose (VISITED) has been recorded.
+  FunctionRegistry.register('checkPolioEligibility', (args, stateData) {
+    final standardFn =
+        FunctionRegistry.get('checkEligibilityForAgeAndSideEffect');
+    final result = standardFn?.call(args, stateData);
+    if (result == true) return true;
+
+    // If standard check returned false, check if it's due to
+    // ADMINISTRATION_FAILED. For Polio, unable-to-deliver should not
+    // make a beneficiary ineligible — they are still eligible for redose.
+    if (args.length > 1) {
+      final unableToDeliverFn =
+          FunctionRegistry.get('hasUnableToDeliverForCurrentCycle');
+      if (unableToDeliverFn != null) {
+        final isUnableToDeliver =
+            unableToDeliverFn.call([args[1]], stateData);
+        if (isUnableToDeliver == true) return true;
+      }
+
+      // Also handle the state after redose following unable-to-deliver.
+      // The latest task is now VISITED (redose), but the ADMINISTRATION_FAILED
+      // task still exists in history causing the standard check to fail.
+      final redoseFn = FunctionRegistry.get('hasRedoseForCurrentCycle');
+      if (redoseFn != null) {
+        final hasRedose = redoseFn.call([args[1]], stateData);
+        if (hasRedose == true) return true;
+      }
+    }
+
+    return false;
+  });
+
   /// Checks if a VISITED (Redose) task exists for the current running cycle.
   ///
   /// - **Function Name**: `'hasRedoseForCurrentCycle'`

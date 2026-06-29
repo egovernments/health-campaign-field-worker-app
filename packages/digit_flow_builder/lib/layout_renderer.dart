@@ -308,6 +308,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                         stateData,
                                         context,
                                         screenKey: screenKey,
+                                        compositeKey: compositeKey,
                                         (action) {
                                           ActionHandler.execute(
                                               action, context, {
@@ -330,6 +331,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                       stateData,
                                       context,
                                       screenKey: screenKey,
+                                      compositeKey: compositeKey,
                                       (action) {
                                         ActionHandler.execute(action, context, {
                                           'wrappers': const [],

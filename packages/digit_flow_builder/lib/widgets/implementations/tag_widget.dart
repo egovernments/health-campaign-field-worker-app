@@ -18,7 +18,8 @@ class TagWidget extends ResolvedFlowWidget {
   ) {
     // Label is already resolved by the base class
     final properties = json['properties'] as Map<String, dynamic>?;
-    final resolveValue = resolved.resolveText(json['label']);
+    final resolveValue =
+        resolved.resolveTextWithArgs(json['label'], json['labelArgs']);
 
     return WidgetParsers.wrapWithBottomGap(
       Tag(

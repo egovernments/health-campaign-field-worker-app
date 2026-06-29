@@ -47,10 +47,13 @@ final jsonConfig = {
           "householdType": "__context:householdType",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
-            "memberCount": "householdDetails.memberCount"
+            "memberCount": "householdDetails.memberCount",
+            "locality": "__context:selectedBoundaryCode",
+            "localityCode": "__context:selectedBoundaryCode"
           }
         }
       },
@@ -262,12 +265,15 @@ final jsonConfig = {
           "householdType": "__context:householdType",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
             "memberCount": "householdDetails.memberCount",
             "caregiverConsent": "caregiverConsent.consentToParticipate",
-            "negativeConsentReason": "caregiverConsent.negativeConsentReason"
+            "negativeConsentReason": "caregiverConsent.negativeConsentReason",
+            "locality": "__context:selectedBoundaryCode",
+            "localityCode": "__context:selectedBoundaryCode"
           }
         }
       }
@@ -465,10 +471,13 @@ final jsonConfig = {
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit"
           },
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "doseIndex": "__listItem:id",
             "cycleIndex": "__context:cycleIndex",
-            "deliveryStrategy": "__listItem:deliveryStrategy"
+            "deliveryStrategy": "__listItem:deliveryStrategy",
+            "locality": "__context:selectedBoundaryCode",
+            "localityCode": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -548,10 +557,13 @@ final jsonConfig = {
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit"
           },
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
-            "deliveryStrategy": "__context:deliveryStrategy"
+            "deliveryStrategy": "__context:deliveryStrategy",
+            "locality": "__context:selectedBoundaryCode",
+            "localityCode": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -631,9 +643,12 @@ final jsonConfig = {
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit"
           },
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "doseIndex": "__context:doseIndex",
-            "cycleIndex": "__context:cycleIndex"
+            "cycleIndex": "__context:cycleIndex",
+            "locality": "__context:selectedBoundaryCode",
+            "localityCode": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -692,6 +707,7 @@ final jsonConfig = {
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit"
           },
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "taskType": "__value:UNABLE_TO_DELIVER",
             "reason": "unableToDeliver.reason",
@@ -704,7 +720,81 @@ final jsonConfig = {
             "locationAccuracy": "DeliveryDetails.latLng[2]",
             "lat": "DeliveryDetails.latLng[0]",
             "lng": "DeliveryDetails.latLng[1]",
-            "locality": "__context:selectedBoundaryCode"
+            "locality": "__context:selectedBoundaryCode",
+            "localityCode": "__context:selectedBoundaryCode"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        }
+      }
+    }
+  },
+  "polioUnableToDeliverConfig": {
+    "fallbackModel": "TaskModel",
+    "models": {
+      "TaskModel": {
+        "mappings": {
+          "id": "taskDetails.id",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
+          "projectBeneficiaryClientReferenceId":
+              "__context:ProjectBeneficiaryClientReferenceId",
+          "createdBy": "__context:userId",
+          "status": "__value:ADMINISTRATION_FAILED",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "plannedStartDate": "taskDetails.plannedStartDate",
+          "plannedEndDate": "taskDetails.plannedEndDate",
+          "actualStartDate": "taskDetails.actualStartDate",
+          "actualEndDate": "taskDetails.actualEndDate",
+          "createdDate": "__generate:timestamp",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "address.latLng[0]",
+            "longitude": "address.latLng[1]",
+            "locationAccuracy": "address.latLng[1]",
+            "addressLine1": "address.addressLine1",
+            "addressLine2": "address.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "type": "__value:PERMANENT",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion"
+            },
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "localityCode": "__context:selectedBoundaryCode",
+          "additionalFields": {
+            "taskType": "__value:UNABLE_TO_DELIVER",
+            "reason": "unableToDeliver.reason",
+            "doseIndex": "__context:doseIndex",
+            "cycleIndex": "__context:cycleIndex",
+            "settlementType": "__context:settlementType",
+            "comment": "unableToDeliver.comment",
+            "latitude": "DeliveryDetails.latLng[0]",
+            "longitude": "DeliveryDetails.latLng[1]",
+            "locationAccuracy": "DeliveryDetails.latLng[2]",
+            "lat": "DeliveryDetails.latLng[0]",
+            "lng": "DeliveryDetails.latLng[1]",
+            "locality": "__context:selectedBoundaryCode",
+            "localityCode": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -764,12 +854,15 @@ final jsonConfig = {
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit"
           },
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
             "reasonForRedose": "RedoseDetails.reasonForRedose",
             "redoseComments": "RedoseDetails.redoseComments",
-            "taskType": "__value:REDOSE"
+            "taskType": "__value:REDOSE",
+            "locality": "__context:selectedBoundaryCode",
+            "localityCode": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -1131,7 +1224,7 @@ final jsonConfig = {
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
-          "memberCount": "__value: 1",
+          "memberCount": "__value: 2",
           "latitude": "closeHouseholdDetails.latLng[0]",
           "longitude": "closeHouseholdDetails.latLng[1]",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -1172,6 +1265,12 @@ final jsonConfig = {
           "householdType": "__context:householdType",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
+          "localityCode": "__context:selectedBoundaryCode",
+          "additionalFields": {
+            "memberCount": "__value: 2",
+            "locality": "__context:selectedBoundaryCode",
+            "localityCode": "__context:selectedBoundaryCode"
+          }
         }
       },
       "IndividualModel": {
@@ -1350,7 +1449,8 @@ final jsonConfig = {
           },
           "additionalFields": "additionalInfo.fields",
           "clientAuditDetails": "__generate:clientAudit",
-          "auditDetails": "__generate:audit"
+          "auditDetails": "__generate:audit",
+          "localityCode": "__context:selectedBoundaryCode"
         }
       }
     }
@@ -1550,6 +1650,7 @@ final jsonConfig = {
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit"
           },
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "taskType": "__value:VACCINATED_ELSEWHERE",
             "doseIndex": "__context:doseIndex",
@@ -1562,7 +1663,8 @@ final jsonConfig = {
             "locationAccuracy": "vaccinatedElsewhere.latLng[2]",
             "lat": "vaccinatedElsewhere.latLng[0]",
             "lng": "vaccinatedElsewhere.latLng[1]",
-            "locality": "__context:selectedBoundaryCode"
+            "locality": "__context:selectedBoundaryCode",
+            "localityCode": "__context:selectedBoundaryCode"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"

@@ -23,7 +23,7 @@ class SearchBarWidget extends ResolvedFlowWidget {
     final localization = LocalizationContext.maybeOf(context);
     final hintText = json['label'] ?? '';
     final localizedHint = localization?.translate(hintText) ?? hintText;
-    final fieldName = (json['fieldName'] ?? 'searchBar') as String;
+    final fieldName = (json['format'] ?? 'searchBar') as String;
     final compositeKey = resolved.compositeKey ?? resolved.screenKey;
 
     final validations = json['validations'] as List<dynamic>? ?? [];
