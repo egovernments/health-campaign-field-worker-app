@@ -388,44 +388,54 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                   widget.config['description'], screenKey),
                             ),
                             const SizedBox(height: spacer4),
-                            ...body
-                                .asMap()
-                                .entries
-                                .map<MapEntry<bool, CrudItemContext>>((entry) {
-                              final e = entry.value;
-                              final processed =
-                                  preprocessConfigWithState(e, stateData);
-                              final isVisible = _checkWidgetVisibility(
-                                  processed, stateData, screenKey);
+                            // Build body widgets with trailing spacers, then
+                            // drop the last spacer ONLY when the visible list
+                            // is non-empty. The previous unconditional
+                            // ..removeLast() RangeError'd whenever every body
+                            // entry evaluated hidden (a common case for
+                            // role-gated screens).
+                            ...(() {
+                              final widgets = body
+                                  .asMap()
+                                  .entries
+                                  .map<MapEntry<bool, CrudItemContext>>(
+                                      (entry) {
+                                final e = entry.value;
+                                final processed =
+                                    preprocessConfigWithState(e, stateData);
+                                final isVisible = _checkWidgetVisibility(
+                                    processed, stateData, screenKey);
 
-                              return MapEntry(
-                                isVisible,
-                                CrudItemContext(
-                                  stateData: stateData,
-                                  screenKey: screenKey,
-                                  compositeKey: compositeKey,
-                                  child: LayoutMapper.map(
-                                    processed,
-                                    stateData,
-                                    context,
-                                    (action) {
-                                      ActionHandler.execute(action, context, {
-                                        'wrappers': const [],
-                                        '_compositeKey': compositeKey,
-                                      });
-                                    },
+                                return MapEntry(
+                                  isVisible,
+                                  CrudItemContext(
+                                    stateData: stateData,
+                                    screenKey: screenKey,
                                     compositeKey: compositeKey,
+                                    child: LayoutMapper.map(
+                                      processed,
+                                      stateData,
+                                      context,
+                                      (action) {
+                                        ActionHandler.execute(action, context, {
+                                          'wrappers': const [],
+                                          '_compositeKey': compositeKey,
+                                        });
+                                      },
+                                      compositeKey: compositeKey,
+                                    ),
                                   ),
-                                ),
-                              );
-                            }).expand((entry) {
-                              if (!entry.key) return <Widget>[];
-                              return <Widget>[
-                                entry.value,
-                                const SizedBox(height: spacer4),
-                              ];
-                            }).toList()
-                              ..removeLast(),
+                                );
+                              }).expand((entry) {
+                                if (!entry.key) return <Widget>[];
+                                return <Widget>[
+                                  entry.value,
+                                  const SizedBox(height: spacer4),
+                                ];
+                              }).toList();
+                              if (widgets.isNotEmpty) widgets.removeLast();
+                              return widgets;
+                            })(),
                             // Scroll loading indicator at bottom of content
                             if (_showLoadingIndicator && isLoading)
                               Padding(
@@ -572,20 +582,29 @@ class LayoutMapper {
         CrudItemContext.of(context)?.compositeKey ??
         effectiveScreenKey;
 
+    // When there is no key to listen to (popups/dialogs that pass neither
+    // compositeKey nor screenKey), don't register a ValueNotifier under "" —
+    // disposeByCompositeKey is keyed by composite, so an empty-string entry
+    // would never be cleaned up and would accumulate one leaked notifier per
+    // such render.
+    final Widget child = (effectiveCompositeKey == null ||
+            effectiveCompositeKey.isEmpty)
+        ? WidgetRegistry.build(json, context, onAction)
+        : ValueListenableBuilder(
+            valueListenable:
+                FlowCrudStateRegistry().listen(effectiveCompositeKey),
+            builder: (context, _, __) {
+              return WidgetRegistry.build(json, context, onAction);
+            },
+          );
+
     return CrudItemContext(
       stateData: stateData,
       listIndex: listIndex,
       item: item,
       screenKey: effectiveScreenKey,
       compositeKey: effectiveCompositeKey,
-      child: ValueListenableBuilder(
-        valueListenable: FlowCrudStateRegistry().listen(
-          effectiveCompositeKey ?? "",
-        ),
-        builder: (context, _, __) {
-          return WidgetRegistry.build(json, context, onAction);
-        },
-      ),
+      child: child,
     );
   }
 }
