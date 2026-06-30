@@ -1809,7 +1809,8 @@
                     "type": "template",
                     "value": "{{ item.headIndividual.0.name.givenName }}",
                     "format": "textTemplate",
-                    "fieldName": "headOfHousehold"
+                    "fieldName": "headOfHousehold",
+                    "properties": {"style": "headingM", "color": "textSecondary"}
                   },
                   {
                     "type": "template",
@@ -1874,7 +1875,7 @@
                       }
                     ],
                     "fieldName": "openMemberCard",
-                    "properties": {"size": "medium", "type": "secondary"}
+                    "properties": {"size": "small", "type": "secondary"}
                   }
                 ],
                 "fieldName": "detailsRow",

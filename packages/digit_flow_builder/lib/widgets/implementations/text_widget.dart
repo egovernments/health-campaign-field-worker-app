@@ -80,8 +80,10 @@ class TextWidget extends ResolvedFlowWidget {
         return theme.colorScheme.surface;
       case 'onSurface':
         return theme.colorScheme.onSurface;
+      case 'textSecondary':
+        return theme.colorTheme.text.secondary;
       default:
-        return null; // Could add support for custom colors here
+        return null;
     }
   }
 
