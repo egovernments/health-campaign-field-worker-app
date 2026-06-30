@@ -162,12 +162,17 @@ class UserActionOpLogManager extends OpLogManager<UserActionModel> {
       (element) => element.clientReferenceId,
     );
 
+    // Entries are sorted by createdAt ascending above, so .last is the most
+    // recently written op for a given clientReferenceId. STOCK_BALANCE rows
+    // reuse a stable balance-key clientReferenceId across corrections —
+    // keeping .first would ship the oldest (stale) balance every sync until
+    // the server acked it, dropping every newer correction in between.
     final entriesForUpSync = groupedEntries.entries
         .map<OpLog?>((entry) {
           if (entry.key == null) return null;
           if (entry.value.isEmpty) return null;
 
-          return entry.value.first;
+          return entry.value.last;
         })
         .whereNotNull()
         .toList();
