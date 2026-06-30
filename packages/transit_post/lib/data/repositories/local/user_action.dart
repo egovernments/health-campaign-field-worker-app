@@ -110,6 +110,10 @@ class UserActionLocalRepository
         conditions.add(sql.userAction.clientCreatedBy.equalsNullable(userId));
       }
 
+      // Filter only TRANSIT_POST records by checking additionalFields JSON
+      conditions.add(sql.userAction.additionalFields
+          .like('%"key":"transactionType","value":"TRANSIT_POST"%'));
+
       if (query?.auditDetails?.createdTime != null) {
         DateTime createdDate;
 

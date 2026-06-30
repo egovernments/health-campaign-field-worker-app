@@ -389,21 +389,29 @@ void initializeFunctionRegistry() {
   /// 3. If the `checkStatus` function allows for a new task to be created.
   FunctionRegistry.register('checkEligibilityForAgeAndSideEffect',
       (args, stateData) {
-    if (args.isEmpty) return false;
+    if (args.isEmpty) {
+      return false;
+    }
 
 // --- Resolve DOB ---
     final dobString = args.first?.toString() ?? '';
-    if (dobString.isEmpty) return false;
+    if (dobString.isEmpty) {
+      return false;
+    }
 
     final dob = DigitDateUtils.getFormattedDateToDateTime(dobString);
-    if (dob == null) return false;
+    if (dob == null) {
+      return false;
+    }
 
     final age = DigitDateUtils.calculateAge(dob);
     final totalAgeMonths = age.years * 12 + age.months;
 
 // --- ProjectType comes from FlowBuilderSingleton ---
     final projectType = FlowBuilderSingleton().projectType;
-    if (projectType == null) return false;
+    if (projectType == null) {
+      return false;
+    }
 
 // --- Resolve validMinAge / validMaxAge, fallback to doseCriteria condition ---
     int? minAge = projectType.validMinAge;
@@ -886,7 +894,9 @@ void initializeFunctionRegistry() {
     final standardFn =
         FunctionRegistry.get('checkEligibilityForAgeAndSideEffect');
     final result = standardFn?.call(args, stateData);
-    if (result == true) return true;
+    if (result == true) {
+      return true;
+    }
 
     // If standard check returned false, check if it's due to
     // ADMINISTRATION_FAILED. For Polio, unable-to-deliver should not

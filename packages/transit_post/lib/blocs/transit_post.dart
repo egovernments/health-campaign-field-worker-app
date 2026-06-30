@@ -66,52 +66,52 @@ class TransitPostBloc extends Bloc<TransitPostEvent, TransitPostState> {
     TransitPostDeliveryEvent event,
     TransitPostEmitter emit,
   ) async {
-    try {
-      await userActionLocalRepository.create(UserActionModel(
-          latitude: event.latitude,
-          longitude: event.longitude,
-          locationAccuracy: event.locationAccuracy,
-          tenantId: TransitPostSingleton().tenantId,
-          clientReferenceId: IdGen.instance.identifier,
-          isSync: false,
-          timestamp: DateTime.now().millisecondsSinceEpoch,
-          projectId: TransitPostSingleton().projectId!,
-          boundaryCode: TransitPostSingleton().boundary!.code!,
-          action: 'OTHER',
-          rowVersion: 1,
-          clientAuditDetails: ClientAuditDetails(
-            createdBy: TransitPostSingleton().loggedInUserUuid!,
-            createdTime: DateTime.now().millisecondsSinceEpoch,
-            lastModifiedBy: TransitPostSingleton().loggedInUserUuid,
-            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+    await userActionLocalRepository.create(UserActionModel(
+        latitude: event.latitude,
+        longitude: event.longitude,
+        locationAccuracy: event.locationAccuracy,
+        tenantId: TransitPostSingleton().tenantId,
+        clientReferenceId: IdGen.instance.identifier,
+        isSync: false,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        projectId: TransitPostSingleton().projectId ?? '',
+        boundaryCode: TransitPostSingleton().boundary?.code ?? '',
+        action: 'OTHER',
+        rowVersion: 1,
+        clientAuditDetails: ClientAuditDetails(
+          createdBy: TransitPostSingleton().loggedInUserUuid!,
+          createdTime: DateTime.now().millisecondsSinceEpoch,
+          lastModifiedBy: TransitPostSingleton().loggedInUserUuid,
+          lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+        ),
+        auditDetails: AuditDetails(
+          createdBy: TransitPostSingleton().loggedInUserUuid!,
+          createdTime: DateTime.now().millisecondsSinceEpoch,
+          lastModifiedBy: TransitPostSingleton().loggedInUserUuid,
+          lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+        ),
+        additionalFields: UserActionAdditionalFields(version: 1, fields: [
+          const AdditionalField(
+            'transactionType',
+            'TRANSIT_POST',
           ),
-          auditDetails: AuditDetails(
-            createdBy: TransitPostSingleton().loggedInUserUuid!,
-            createdTime: DateTime.now().millisecondsSinceEpoch,
-            lastModifiedBy: TransitPostSingleton().loggedInUserUuid,
-            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+          AdditionalField(
+            'transitPostType',
+            state.transitPostType,
           ),
-          additionalFields: UserActionAdditionalFields(version: 1, fields: [
-            AdditionalField(
-              'transitPostType',
-              state.transitPostType,
-            ),
-            AdditionalField(
-              'transitPostName',
-              state.transitPostName,
-            ),
-            AdditionalField(
-              'scannedResource',
-              event.scannedResource,
-            ),
-          ])));
-      emit(state.copyWith(
-        curCount: state.curCount != null ? state.curCount! + 1 : 1,
-        totalCount: state.totalCount != null ? state.totalCount! + 1 : 1,
-      ));
-    } catch (e) {
-      rethrow;
-    }
+          AdditionalField(
+            'transitPostName',
+            state.transitPostName,
+          ),
+          AdditionalField(
+            'scannedResource',
+            event.scannedResource,
+          ),
+        ])));
+    emit(state.copyWith(
+      curCount: state.curCount != null ? state.curCount! + 1 : 1,
+      totalCount: state.totalCount != null ? state.totalCount! + 1 : 1,
+    ));
   }
 }
 

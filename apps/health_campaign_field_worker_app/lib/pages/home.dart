@@ -55,17 +55,17 @@ import '../sampleJsonConfigs/manage_stock.dart';
 import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
-import '../sampleJsonConfigs/registration_smc_flows.dart';
+import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/attendance_utils.dart';
 import '../utils/date_util_attendance.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
-import '../utils/runtime_hierarchy.dart';
 import '../utils/function_registries.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
+import '../utils/runtime_hierarchy.dart';
 import '../utils/stock_downsync_utils.dart';
 import '../utils/utils.dart';
 import '../widgets/attendance/attendance_qr_scanner_button.dart';
@@ -2058,11 +2058,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                     );
                   } else {
                     FlowRegistry.setConfig(
-                        sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
+                        sampleFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
                       FlowBuilderHomeRoute(
-                          pageName: sampleSMCFlows["initialPage"]),
+                          pageName: sampleFlows["initialPage"]),
                     );
                   }
                 } catch (e) {
@@ -2674,7 +2674,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
           child: HomeItemCard(
-        icon: Icons.vaccines_outlined,
+        icon: Icons.local_shipping_outlined,
         label: i18.home.transitPostLabel,
         onPressed: () {
           const module = "hcm-transit-post";
@@ -2753,7 +2753,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            (isPolio && element == i18.home.transitPostLabel))
+        .where(
+            (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -2844,6 +2847,10 @@ void setPackagesSingleton(BuildContext context) {
           minAge: context.selectedProjectType?.validMinAge,
           maxAge: context.selectedProjectType?.validMaxAge,
         );
+        final selectedBoundary = context.boundaryOrNull;
+        if (selectedBoundary != null) {
+          TransitPostSingleton().setBoundary(boundary: selectedBoundary);
+        }
         FlowBuilderSingleton().setInitialData(
           beneficiaryIdMinCount:
               appConfiguration.beneficiaryIdConfig?.first.minCount.toInt(),
