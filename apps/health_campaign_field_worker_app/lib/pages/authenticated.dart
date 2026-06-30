@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -604,7 +605,19 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                       context.router.push(UserQRDetailsRoute());
                     },
                     child: QrImageView(
-                      data: context.loggedInUserUuid,
+                      // CDD identity QR carries both userId and the CDD's
+                      // leaf boundary so the warehouse manager's dispatch
+                      // scan can populate the receiver-side form. JSON keys
+                      // are deliberately named after the warehouseDetails
+                      // form field names (teamCode, administrativeArea) so
+                      // JsonSchemaScannerBuilder's spread-by-form-control
+                      // step lands them automatically — no transformer
+                      // changes and no new form fields needed.
+                      data: jsonEncode({
+                        'userId': context.loggedInUserUuid,
+                        'administrativeArea':
+                            context.boundaryOrNull?.code ?? '',
+                      }),
                       version: QrVersions.auto,
                       size: 150.0,
                     ),

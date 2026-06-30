@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
@@ -164,7 +166,17 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                       width: 2,
                     )),
                 child: QrImageView(
-                  data: context.loggedInUserUuid,
+                  // Same payload as the drawer QR. JSON keys match the
+                  // warehouseDetails form field names (teamCode,
+                  // administrativeArea) so the JsonSchemaScannerBuilder
+                  // spread-by-form-control routes them directly into the
+                  // dispatch form. See authenticated.dart for the full
+                  // rationale.
+                  data: jsonEncode({
+                    'userId': context.loggedInUserUuid,
+                    'administrativeArea':
+                        context.boundaryOrNull?.code ?? '',
+                  }),
                   version: QrVersions.auto,
                   size: MediaQuery.of(context).size.width / 1.25,
                 ),

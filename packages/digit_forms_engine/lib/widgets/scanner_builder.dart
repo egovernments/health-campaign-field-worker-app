@@ -30,6 +30,47 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
         .toList();
   }
 
+  /// Attempts to parse a scanned QR string as the CDD-identity JSON payload
+  /// (`{"userId": "<uuid>", "boundaryCode": "<code>", ...}`). Returns the
+  /// decoded map only when the payload is a JSON object that carries a
+  /// non-empty string `userId`; otherwise returns null. The strict shape
+  /// gate keeps every existing scanner consumer (bare-UUID scans, GS1
+  /// barcodes, voucher codes, encrypted attendance QR payloads, etc.)
+  /// flowing through the original raw-text code path with zero behavior
+  /// change.
+  static Map<String, dynamic>? _tryParseIdentityPayload(String raw) {
+    if (raw.isEmpty) return null;
+    if (!raw.trimLeft().startsWith('{')) return null;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return null;
+      final userId = decoded['userId'];
+      if (userId is! String || userId.isEmpty) return null;
+      return Map<String, dynamic>.from(decoded);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Writes the parsed JSON payload's `userId` into the current form
+  /// control and spreads any additional top-level string keys into
+  /// matching sibling form controls when they exist. Sibling writes
+  /// silently no-op for controls that aren't declared in the schema —
+  /// that's the opt-in mechanism: only the warehouseDetails dispatch
+  /// form declares `boundaryCode` and so only it picks up the validation
+  /// value.
+  void _applyIdentityPayload(FormGroup form, Map<String, dynamic> payload) {
+    form.control(formControlName).value = payload['userId'];
+    for (final entry in payload.entries) {
+      if (entry.key == 'userId') continue;
+      final value = entry.value;
+      if (value is! String || value.isEmpty) continue;
+      if (form.contains(entry.key)) {
+        form.control(entry.key).value = value;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = FormLocalization.of(context);
@@ -48,7 +89,15 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
       }, listener: (context, state) {
         if (state.qrCodes.isNotEmpty) {
           // Join multiple QR codes with comma separator
-          form.control(formControlName).value = state.qrCodes.join(', ');
+          final joined = state.qrCodes.join(', ');
+          final identityPayload = state.qrCodes.length == 1
+              ? _tryParseIdentityPayload(state.qrCodes.first)
+              : null;
+          if (identityPayload != null) {
+            _applyIdentityPayload(form, identityPayload);
+          } else {
+            form.control(formControlName).value = joined;
+          }
         } else if (state.barCodes.isNotEmpty) {
           // Serialize barcodes dynamically using only non-empty fields
           form.control(formControlName).value =
@@ -66,10 +115,23 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
         // Sync form value with state when returning from scanner page
         // The listener may miss state changes that happen during navigation
         if (isThisScanner && state.qrCodes.isNotEmpty) {
-          final stateValue = state.qrCodes.join(', ');
+          // Mirror the listener: if a single-QR scan parses as the CDD
+          // identity payload, the canonical form value is the userId, not
+          // the raw JSON — comparing against joined raw would always show
+          // a mismatch and re-overwrite the parsed userId with the JSON
+          // blob.
+          final identityPayload = state.qrCodes.length == 1
+              ? _tryParseIdentityPayload(state.qrCodes.first)
+              : null;
+          final stateValue =
+              identityPayload != null ? identityPayload['userId'] as String : state.qrCodes.join(', ');
           if (formValue != stateValue) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              form.control(formControlName).value = stateValue;
+              if (identityPayload != null) {
+                _applyIdentityPayload(form, identityPayload);
+              } else {
+                form.control(formControlName).value = stateValue;
+              }
             });
           }
         } else if (isThisScanner && state.barCodes.isNotEmpty) {
