@@ -532,9 +532,28 @@ class _HomePageState extends LocalizedState<HomePage> {
     FunctionRegistry.register('todayAttendeesList', (args, stateData) {
       final widgetData = args.isNotEmpty && args[0] != null ? args[0] : null;
       List items = args.length > 1 && args[1] != null ? args[1] : [];
-      final attendanceLogs = args.length > 2 && args[2] != null ? args[2] : [];
-      final attendanceRegisterModel =
-          args.length > 3 && args[3] != null ? args[3] : null;
+
+      // The third slot is documented as a list of AttendanceLogModel, but
+      // the existing config at attendance_flows.dart:678 passes the whole
+      // AttendanceRegisterModel here (logs live on its `attendanceLog`
+      // field). Unwrap when needed so `.where(...)` below doesn't crash
+      // on a non-iterable register instance, and reuse the register as
+      // the 4-arg fallback for AttendanceUtils.attendanceTime.
+      final rawThirdArg = args.length > 2 && args[2] != null ? args[2] : null;
+      final rawFourthArg = args.length > 3 && args[3] != null ? args[3] : null;
+
+      dynamic attendanceLogs = const [];
+      dynamic attendanceRegisterModel = rawFourthArg;
+
+      if (rawThirdArg is Iterable) {
+        attendanceLogs = rawThirdArg;
+      } else if (rawThirdArg != null) {
+        try {
+          final nested = (rawThirdArg as dynamic).attendanceLog;
+          if (nested is Iterable) attendanceLogs = nested;
+        } catch (_) {}
+        attendanceRegisterModel ??= rawThirdArg;
+      }
 
       final selectedDate = widgetData?['selectedDate'] as int?;
       final isMorning = widgetData?['sessionToggle'] as bool? ?? true;
