@@ -51,7 +51,12 @@ void main() async {
   }
 
   await envConfig.initialize();
-  AppSecurity.instance.setSecurityLevel = AppSecurityLevel.low;
+  // Drive security gates from envType rather than a hard-coded constant so
+  // VAPT mitigations (root detection, removed debugPrints, future SSL
+  // pinning) actually engage in prod/UAT while dev workflow stays usable.
+  AppSecurity.instance.setSecurityLevel = _securityLevelForEnv(
+    envConfig.variables.envType,
+  );
 
   // Security checks - enforce exit only in production environment
   if (!kDebugMode) {
@@ -113,6 +118,19 @@ void main() async {
   ));
 
 
+}
+
+AppSecurityLevel _securityLevelForEnv(EnvType env) {
+  switch (env) {
+    case EnvType.prod:
+      return AppSecurityLevel.high;
+    case EnvType.uat:
+    case EnvType.demo:
+      return AppSecurityLevel.medium;
+    case EnvType.dev:
+    case EnvType.qa:
+      return AppSecurityLevel.low;
+  }
 }
 
 class AppLifecycleObserver extends WidgetsBindingObserver {
