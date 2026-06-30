@@ -43,6 +43,8 @@ class WidgetParsers {
         return TagType.success;
       case 'error':
         return TagType.error;
+      case 'warning':
+        return TagType.warning;
       default:
         return TagType.monochrome;
     }

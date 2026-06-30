@@ -22,6 +22,7 @@ class TagWidget extends ResolvedFlowWidget {
 
     return WidgetParsers.wrapWithBottomGap(
       Tag(
+        isIcon: true,
         isStroke: true,
         label: resolveValue,
         type: WidgetParsers.parseTagType(properties?['tagType']),

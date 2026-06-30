@@ -965,7 +965,7 @@
                     "visible":
                     "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false",
                     "fieldName": "notEligible",
-                    "properties": {"tagType": "error"}
+                    "properties": {"tagType": "warning"}
                   },
                   {
                     "type": "template",
