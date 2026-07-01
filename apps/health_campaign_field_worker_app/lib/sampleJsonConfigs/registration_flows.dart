@@ -1721,7 +1721,7 @@
       "body": [
         {
           "type": "template",
-          "label": "NAME_OF_INDIVIDUAL",
+          "label": "SEARCH_BENEFICIARY_NAME_HINT",
           "format": "searchBar",
           "onAction": [
             {
