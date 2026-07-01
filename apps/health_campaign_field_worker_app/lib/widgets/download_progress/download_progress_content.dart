@@ -14,11 +14,15 @@ class DownloadProgressContent extends StatelessWidget {
   /// Pre-formatted count string, e.g. "150/1000"
   final String countLabel;
 
+  /// Whether to show the linear progress bar below the title.
+  final bool showProgressBar;
+
   const DownloadProgressContent({
     super.key,
     required this.title,
     required this.progress,
     required this.countLabel,
+    this.showProgressBar = true,
   });
 
   @override
@@ -49,12 +53,13 @@ class DownloadProgressContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: spacer2 * 2),
-        LinearProgressIndicator(
-          value: progress,
-          minHeight: spacer1,
-          color: Theme.of(context).colorTheme.alert.success,
-          borderRadius: const BorderRadius.all(Radius.circular(spacer2)),
-        ),
+        if (showProgressBar)
+          LinearProgressIndicator(
+            value: progress,
+            minHeight: spacer1,
+            color: Theme.of(context).colorTheme.alert.success,
+            borderRadius: const BorderRadius.all(Radius.circular(spacer2)),
+          ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

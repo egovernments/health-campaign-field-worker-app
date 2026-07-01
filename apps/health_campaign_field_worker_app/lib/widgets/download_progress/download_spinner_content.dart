@@ -29,12 +29,6 @@ class DownloadSpinnerContent extends StatelessWidget {
                 ),
           ),
         ),
-        const SizedBox(height: spacer2 * 2),
-        LinearProgressIndicator(
-          minHeight: spacer1,
-          color: Theme.of(context).colorTheme.alert.success,
-          borderRadius: const BorderRadius.all(Radius.circular(spacer2)),
-        ),
       ],
     );
   }

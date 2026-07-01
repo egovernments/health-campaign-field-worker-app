@@ -203,6 +203,7 @@ void showStockDownloadDialog(
                   title: model.title,
                   progress: progress,
                   countLabel: '$currentCount/${model.suffixLabel}',
+                  showProgressBar: false,
                 );
               },
             ),

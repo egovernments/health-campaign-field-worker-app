@@ -432,6 +432,7 @@ void showDownloadDialog(
                 title: model.title,
                 progress: progress,
                 countLabel: '$syncedCount/$totalCount',
+                showProgressBar: false,
               );
             },
           ),
@@ -468,6 +469,7 @@ void showHFReferralProgressDialog(
             title: title,
             progress: progress,
             countLabel: '$syncedCount/$totalCount',
+            showProgressBar: false,
           );
         },
       ),
