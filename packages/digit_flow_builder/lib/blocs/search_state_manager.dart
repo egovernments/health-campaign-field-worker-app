@@ -314,8 +314,13 @@ class SearchStateManager {
         final filters = entry.value['filters'] as List? ?? [];
         for (final filter in filters) {
           if (filter is Map && filter['key'] != null) {
-            // Deduplicate by filter key - later entries override earlier ones
-            filtersByKey[filter['key'].toString()] = filter;
+            // Deduplicate by filter key + operation — allows multiple filters
+            // on the same column with different operations (e.g. 'in' and
+            // 'notExists') to coexist while still deduplicating identical
+            // filters coming from different searchNames.
+            final dedupKey =
+                '${filter['key']}::${filter['operation'] ?? 'equals'}';
+            filtersByKey[dedupKey] = filter;
           }
         }
       }
