@@ -27,7 +27,15 @@ class SearchEntityRepository extends LocalRepository {
   /// One-shot diagnostic: log indexes on suspect tables and the SQLite
   /// query plan for a representative IN-lookup. Confirms whether the
   /// expected indexes exist and whether SQLite is actually using them.
+  ///
+  /// Gated behind kDebugMode because in release builds it would still run
+  /// two synchronous SQL queries plus ~25 sequential debugPrint syscalls
+  /// on the first search of a session — enough to produce a visible UI
+  /// stall on slower devices. Everything the caller cares about (whether
+  /// indexes exist, whether SQLite uses them) is a dev-time question that
+  /// doesn't need to fire in production.
   Future<void> _logIndexDiagnostics() async {
+    if (!kDebugMode) return;
     if (_indexDiagLogged) return;
     _indexDiagLogged = true;
     try {
@@ -40,11 +48,16 @@ class SearchEntityRepository extends LocalRepository {
             "ORDER BY tbl_name, name",
           )
           .get();
-      debugPrint('[IndexDiag] indexes found:');
+      // Coalesce the per-row prints into a single buffer so we make one
+      // debugPrint call instead of N+1. debugPrint on Android is a logcat
+      // syscall; batching cuts the syscall overhead materially even in
+      // debug mode.
+      final buf = StringBuffer('[IndexDiag] indexes found:\n');
       for (final row in idx) {
-        debugPrint(
-            '[IndexDiag]   ${row.read<String>("tbl_name")}.${row.read<String>("name")}');
+        buf.writeln(
+            '  ${row.read<String>("tbl_name")}.${row.read<String>("name")}');
       }
+      debugPrint(buf.toString());
 
       final plan = await sql
           .customSelect(
@@ -53,10 +66,11 @@ class SearchEntityRepository extends LocalRepository {
             "WHERE individual_client_reference_id = 'PROBE_VALUE_SHOULD_NOT_EXIST'",
           )
           .get();
-      debugPrint('[IndexDiag] plan for identifier lookup:');
+      final planBuf = StringBuffer('[IndexDiag] plan for identifier lookup:\n');
       for (final row in plan) {
-        debugPrint('[IndexDiag]   ${row.data}');
+        planBuf.writeln('  ${row.data}');
       }
+      debugPrint(planBuf.toString());
     } catch (e) {
       debugPrint('[IndexDiag] failed: $e');
     }
@@ -170,7 +184,11 @@ class SearchEntityRepository extends LocalRepository {
     required PaginationParams? pagination,
     required SearchOrderBy? orderBy,
   }) async {
-    await _logIndexDiagnostics();
+    // Fire-and-forget — running two SQL queries + prints in front of the
+    // real search adds tens of ms of blocking on the first tap of a
+    // session (the diagnostic guard ensures it only runs once anyway).
+    // Detach with unawaited so the actual search proceeds immediately.
+    unawaited(_logIndexDiagnostics());
     final overallSw = Stopwatch()..start();
     final queriedModels = <String>{};
     final modelToResults = <String, List<Map<String, dynamic>>>{};
