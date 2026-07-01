@@ -97,6 +97,7 @@ class UserActionLocalRepository
   FutureOr<int> fetchCount(
     String? userId, {
     UserActionSearchModel? query,
+    String? additionalFieldsFilter,
   }) async {
     return retryLocalCallOperation<int>(() async {
       final selectQuery = sql.selectOnly(sql.userAction)
@@ -110,9 +111,10 @@ class UserActionLocalRepository
         conditions.add(sql.userAction.clientCreatedBy.equalsNullable(userId));
       }
 
-      // Filter only TRANSIT_POST records by checking additionalFields JSON
-      conditions.add(sql.userAction.additionalFields
-          .like('%"key":"transactionType","value":"TRANSIT_POST"%'));
+      if (additionalFieldsFilter != null) {
+        conditions.add(sql.userAction.additionalFields
+            .like('%$additionalFieldsFilter%'));
+      }
 
       if (query?.auditDetails?.createdTime != null) {
         DateTime createdDate;

@@ -40,16 +40,21 @@ class TransitPostBloc extends Bloc<TransitPostEvent, TransitPostState> {
     ));
   }
 
+  static const _transitPostFilter =
+      '"key":"transactionType","value":"TRANSIT_POST"';
+
   FutureOr<void> _handleDeliveryCount(
     TransitPostDeliveryCountEvent event,
     TransitPostEmitter emit,
   ) async {
     emit(state.copyWith(loading: true));
-    final totalCount = await userActionLocalRepository
-        .fetchCount(TransitPostSingleton().loggedInUserUuid);
+    final totalCount = await userActionLocalRepository.fetchCount(
+        TransitPostSingleton().loggedInUserUuid,
+        additionalFieldsFilter: _transitPostFilter);
 
     final curCount = await userActionLocalRepository.fetchCount(
         TransitPostSingleton().loggedInUserUuid,
+        additionalFieldsFilter: _transitPostFilter,
         query: UserActionSearchModel(
             auditDetails: AuditDetails(
                 createdBy: TransitPostSingleton().loggedInUserUuid!,
