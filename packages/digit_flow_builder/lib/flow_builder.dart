@@ -17,8 +17,18 @@ export 'widgets/localization_context.dart';
 
 class FlowRegistry {
   static final Map<String, Map<String, dynamic>> _flowMap = {};
+  // Identity of the most recently applied flows list. Callers that pass a
+  // compile-time-constant sample-flows list (the common case for the
+  // home-card path) hand us the same List reference on every card tap;
+  // re-iterating and re-inserting 50+ Map entries costs ~50ms per tap
+  // that adds nothing new to the registry. Compare by identity so callers
+  // passing a freshly decoded list (e.g. from json.decode of server config)
+  // still get updated correctly — those lists always have a new identity.
+  static List<Map<String, dynamic>>? _lastFlowsRef;
 
   static void setConfig(List<Map<String, dynamic>> flows) {
+    if (identical(flows, _lastFlowsRef)) return;
+    _lastFlowsRef = flows;
     for (final flow in flows) {
       final name = flow['name'] ?? flow['pageName'];
       if (name != null) _flowMap[name] = flow;
