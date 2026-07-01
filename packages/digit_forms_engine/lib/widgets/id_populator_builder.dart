@@ -58,6 +58,25 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
     /// Populate from defaultValues using formControlName key (first priority)
     final defaultValue = defaultValues[formControlName];
 
+    // Parse the original edit-flow combined value once so that
+    // onSelect can restore the beneficiary's existing ID number when the
+    // user toggles idType away and then back to whatever type it was
+    // originally saved with. Without this, switching to DEFAULT and back
+    // leaves the ID number field empty because the availableIDs map
+    // typically doesn't re-include the type currently on the record.
+    String? originalEditIdType;
+    String? originalEditIdNumber;
+    final originalCombinedForEdit = defaultValue;
+    if (originalCombinedForEdit is String &&
+        originalCombinedForEdit.contains(',')) {
+      final origParts = originalCombinedForEdit.split(',');
+      if (origParts.length >= 2) {
+        originalEditIdType = origParts[0].trim();
+        originalEditIdNumber = origParts.sublist(1).join(',').trim();
+        if (originalEditIdNumber.isEmpty) originalEditIdNumber = null;
+      }
+    }
+
     // Check if this field has a direct value from navigationParams
     // (e.g., UNIQUE_BENEFICIARY_ID from navigation data)
     String? navParamValue;
@@ -172,17 +191,34 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
               onSelect: (value) {
                 form.control(formControlName).markAsTouched();
 
+                // Restore priority when the user picks a type:
+                //   1. The beneficiary's original ID for this type (edit
+                //      flow) — so toggling type away and back doesn't
+                //      wipe an ID the record already carries.
+                //   2. An availableIDs / navigationParams entry for this
+                //      type (e.g. a freshly-allocated pool ID).
+                //   3. Blank the number field.
+                String? restoredNumber;
+                if (originalEditIdType == value.code &&
+                    originalEditIdNumber != null) {
+                  restoredNumber = originalEditIdNumber;
+                } else {
+                  final navigationParams =
+                      context.read<Map<String, dynamic>?>();
+                  final autoIdentifier = identifiers?[value.code] ??
+                      navigationParams?[value.code];
+                  if (autoIdentifier is String && autoIdentifier.isNotEmpty) {
+                    restoredNumber = autoIdentifier;
+                  }
+                }
 
-                final navigationParams = context.read<Map<String, dynamic>?>();
-                final defaultIdentifier = identifiers?[value.code] ?? navigationParams?[value.code];
-
-                if (defaultIdentifier != null && defaultIdentifier is String) {
+                if (restoredNumber != null) {
                   form.control(idTypeKey).value = value.code;
-                  form.control(idKey).value = defaultIdentifier;
+                  form.control(idKey).value = restoredNumber;
                   form.control(idAutoFilledKey).value = true;
 
                   form.control(formControlName).value =
-                      '${value.code}, $defaultIdentifier';
+                      '${value.code}, $restoredNumber';
                 } else {
                   form.control(idTypeKey).value = value.code;
                   form.control(idKey).value = null;
