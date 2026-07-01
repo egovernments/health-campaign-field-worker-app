@@ -821,6 +821,17 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
+                    "label": "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}}",
+                    "format": "tag",
+                    "visible": "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}} != ''",
+                    "fieldName": "uniqueBeneficiaryIdTag",
+                    "properties": {
+                      "tagType": "info",
+                      "bottomGap": 16
+                    }
+                  },
+                  {
+                    "type": "template",
                     "label": "HCM_HOUSEHOLD_OVERVIEW_HEAD_TAG",
                     "format": "tag",
                     "visible": "{{fn:isHead(item.member)}}==true",
@@ -1959,6 +1970,12 @@ final dynamic sampleFlows = {
                       "hidden": false,
                       "isActive": true,
                       "cellValue": "{{item.gender}}"
+                    },
+                    {
+                      "header": "HCM_SEARCH_TABLE_UNIQUE_BENEFICIARY_ID_HEADER",
+                      "hidden": false,
+                      "isActive": true,
+                      "cellValue": "{{fn:getUniqueBeneficiaryId(item.identifiers.0)}}"
                     }
                   ]
                 },

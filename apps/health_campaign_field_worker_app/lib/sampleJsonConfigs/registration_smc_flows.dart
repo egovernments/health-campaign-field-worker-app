@@ -1049,6 +1049,16 @@ final dynamic sampleSMCFlows = {
                   },
                   {
                     "type": "template",
+                    "label":
+                        "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}}",
+                    "format": "tag",
+                    "visible":
+                        "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}} != ''",
+                    "fieldName": "uniqueBeneficiaryIdTag",
+                    "properties": {"tagType": "info", "bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
                     "label": "{{fn:getInEligibleStatus(item.task)}}",
                     "format": "tag",
                     "visible":
@@ -2310,6 +2320,13 @@ final dynamic sampleSMCFlows = {
                       "hidden": false,
                       "isActive": true,
                       "cellValue": "{{item.gender}}"
+                    },
+                    {
+                      "header": "UNIQUE_BENEFICIARY_ID",
+                      "hidden": false,
+                      "isActive": true,
+                      "cellValue":
+                          "{{fn:getUniqueBeneficiaryId(item.identifiers.0)}}"
                     }
                   ]
                 },

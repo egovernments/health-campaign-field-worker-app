@@ -895,8 +895,7 @@ void initializeFunctionRegistry() {
       final unableToDeliverFn =
           FunctionRegistry.get('hasUnableToDeliverForCurrentCycle');
       if (unableToDeliverFn != null) {
-        final isUnableToDeliver =
-            unableToDeliverFn.call([args[1]], stateData);
+        final isUnableToDeliver = unableToDeliverFn.call([args[1]], stateData);
         if (isUnableToDeliver == true) return true;
       }
 
@@ -1691,6 +1690,19 @@ void initializeFunctionRegistry() {
     }
 
     return false;
+  });
+
+  // Returns the identifier value when the identifier's type is
+  // UNIQUE_BENEFICIARY_ID; otherwise returns an empty string. Lets
+  // config-driven table cells show the unique ID inline without needing a
+  // per-cell visibility toggle — rows for individuals without a
+  // UNIQUE_BENEFICIARY_ID render an empty cell instead of a random ID.
+  FunctionRegistry.register("getUniqueBeneficiaryId", (args, stateData) {
+    final identifier = args.isNotEmpty ? args.first : null;
+    if (identifier is! Map) return '--';
+    if (identifier["identifierType"] != 'UNIQUE_BENEFICIARY_ID') return '--';
+    final value = identifier["identifierId"];
+    return value?.toString() ?? '--';
   });
 
   FunctionRegistry.register("canRecordDelivery", (args, stateData) {
