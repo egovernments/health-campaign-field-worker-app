@@ -706,7 +706,11 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                         onOutsideTap: () {
                           Navigator.of(ctx).pop();
                         },
-                        type: PopUpType.alert,
+                        type: PopUpType.simple,
+                        titleIcon: Icon(
+                          Icons.info,
+                          color: Theme.of(context).colorTheme.alert.info,
+                        ),
                         inlineActions: true,
                         actions: [
                           DigitButton(
