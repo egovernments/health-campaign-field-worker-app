@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
@@ -416,30 +417,39 @@ void initializeFunctionRegistry() {
 // --- Resolve validMinAge / validMaxAge, fallback to doseCriteria condition ---
     int? minAge = projectType.validMinAge;
     int? maxAge = projectType.validMaxAge;
+    // When explicit age bounds are not configured, evaluate each
+    // doseCriteria condition individually against the beneficiary's age.
+    // Beneficiary passes the age gate if ANY condition matches.
+    bool? ageEligibleByCondition;
     if (minAge == null || maxAge == null) {
+      ageEligibleByCondition = false;
       for (final cycle in projectType.cycles ?? []) {
         if ((cycle.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
             (cycle.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch) {
           for (final delivery in cycle.deliveries ?? []) {
             for (final dc in delivery.doseCriteria ?? []) {
               final condition = dc.condition ?? '';
-              final match =
-                  RegExp(r'(\d+)<=ageandage<=(\d+)').firstMatch(condition);
-              if (match != null) {
-                final parsedMin = int.tryParse(match.group(1) ?? '');
-                final parsedMax = int.tryParse(match.group(2) ?? '');
-                if (parsedMin != null) {
-                  minAge = (minAge == null || parsedMin < minAge!)
-                      ? parsedMin
-                      : minAge;
+              if (condition.isEmpty) {
+                ageEligibleByCondition = true;
+                break;
+              }
+              try {
+                final sanitizedCondition = condition
+                    .replaceAll(' and ', ' && ')
+                    .replaceAll('and', '&&');
+                final parser = FormulaParser(
+                    sanitizedCondition, {'age': totalAgeMonths});
+                final result = parser.parse;
+                if (result['isSuccess'] == true &&
+                    result['value'] == true) {
+                  ageEligibleByCondition = true;
+                  break;
                 }
-                if (parsedMax != null) {
-                  maxAge = (maxAge == null || parsedMax > maxAge!)
-                      ? parsedMax
-                      : maxAge;
-                }
+              } catch (e) {
+                debugPrint('Age condition evaluation error: $e');
               }
             }
+            if (ageEligibleByCondition == true) break;
           }
           break;
         }
@@ -467,10 +477,9 @@ void initializeFunctionRegistry() {
     }
 
 // --- Check age eligibility ---
-    final isWithinAge = minAge != null &&
-        maxAge != null &&
-        totalAgeMonths >= minAge &&
-        totalAgeMonths <= maxAge;
+    final isWithinAge = (minAge != null && maxAge != null)
+        ? (totalAgeMonths >= minAge && totalAgeMonths <= maxAge)
+        : (ageEligibleByCondition ?? false);
 
     if (!isWithinAge) {
       return false;
@@ -552,10 +561,9 @@ void initializeFunctionRegistry() {
           (lastTaskTime >= (currentCycle['startDate'] ?? 0) &&
               lastTaskTime <= (currentCycle['endDate'] ?? 0));
 
-      final isWithinAge2 = minAge != null &&
-          maxAge != null &&
-          totalAgeMonths >= minAge &&
-          totalAgeMonths <= maxAge;
+      final isWithinAge2 = (minAge != null && maxAge != null)
+          ? (totalAgeMonths >= minAge && totalAgeMonths <= maxAge)
+          : (ageEligibleByCondition ?? false);
 
       if (!isWithinAge2) {
         return false;
@@ -569,7 +577,7 @@ void initializeFunctionRegistry() {
       if (minAge != null && maxAge != null) {
         return totalAgeMonths >= minAge && totalAgeMonths <= maxAge;
       }
-      return true;
+      return ageEligibleByCondition ?? true;
     }
   });
 
