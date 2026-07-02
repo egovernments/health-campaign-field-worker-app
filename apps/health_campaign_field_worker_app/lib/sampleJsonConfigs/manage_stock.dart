@@ -441,7 +441,7 @@ final dynamic sampleInventoryFlows = {
         {
           "format": "infoCard",
           "visible":
-              "{{fn:isEmpty(navigation.boundaryCode)}} == false && {{fn:isEmpty(fn:getUserBoundaryCode())}} == false && {{navigation.boundaryCode}} != {{fn:getUserBoundaryCode()}}",
+              "{{fn:isEmpty(navigation.boundaryCode)}} == false && {{fn:isScanBoundaryOutOfScope(navigation.boundaryCode)}} == true",
           "type": "error",
           "label": "INVENTORY_SCAN_BOUNDARY_MISMATCH_LABEL",
           "description": "INVENTORY_SCAN_BOUNDARY_MISMATCH_DESCRIPTION"
@@ -490,7 +490,7 @@ final dynamic sampleInventoryFlows = {
           "format": "button",
           "label": "INVENTORY_SCAN_CONFIRM_RECEIVE_LABEL",
           "hidden":
-              "{{fn:isEmpty(navigation.receiverId)}} == false && {{navigation.receiverId}} != {{fn:getUserFacilityId()}} || {{fn:hasResults('StockModel')}} == true || ({{fn:isEmpty(navigation.boundaryCode)}} == false && {{fn:isEmpty(fn:getUserBoundaryCode())}} == false && {{navigation.boundaryCode}} != {{fn:getUserBoundaryCode()}})",
+              "{{fn:isEmpty(navigation.receiverId)}} == false && {{navigation.receiverId}} != {{fn:getUserFacilityId()}} || {{fn:hasResults('StockModel')}} == true || ({{fn:isEmpty(navigation.boundaryCode)}} == false && {{fn:isScanBoundaryOutOfScope(navigation.boundaryCode)}} == true)",
           "properties": {
             "type": "primary",
             "size": "large",

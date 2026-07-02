@@ -166,16 +166,15 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                       width: 2,
                     )),
                 child: QrImageView(
-                  // Same payload as the drawer QR. JSON keys match the
-                  // warehouseDetails form field names (teamCode,
-                  // administrativeArea) so the JsonSchemaScannerBuilder
-                  // spread-by-form-control routes them directly into the
-                  // dispatch form. See authenticated.dart for the full
-                  // rationale.
+                  // Same payload as the drawer QR — userId is used to
+                  // populate the warehouseDetails teamCode form field,
+                  // boundaryCode is used purely for reject-at-scan
+                  // validation against the warehouse manager's leaf
+                  // boundary (ScannerComparisonRegistry provider). See
+                  // authenticated.dart for the full rationale.
                   data: jsonEncode({
                     'userId': context.loggedInUserUuid,
-                    'administrativeArea':
-                        context.boundaryOrNull?.code ?? '',
+                    'boundaryCode': context.boundaryOrNull?.code ?? '',
                   }),
                   version: QrVersions.auto,
                   size: MediaQuery.of(context).size.width / 1.25,

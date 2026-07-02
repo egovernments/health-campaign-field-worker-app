@@ -1037,7 +1037,8 @@ final jsonConfig = {
           // Boundary code threaded from the scanned QR via stockScanConfirm.
           // Persisted on the RECEIVED row so the new owner's stock stays
           // boundary-scoped — same value the receive-side mismatch check
-          // verifies against getUserBoundaryCode() before allowing Confirm.
+          // (`fn:isScanBoundaryOutOfScope`) verifies against the user's
+          // mapped boundary list before allowing Confirm.
           "boundaryCode": "__context:boundaryCode",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
