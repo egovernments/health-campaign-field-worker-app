@@ -13,6 +13,7 @@ import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';

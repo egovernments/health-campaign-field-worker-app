@@ -3837,6 +3837,7 @@
               "includeInSummary": true,
               "required.message":
               "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL_REQUIRED_MESSAGE",
+              "conditions": {"wrapInCard": true},
               "visibilityCondition": {
                 "expression": [
                   {"condition": "eligibilityChecklist.ec1==YES"}

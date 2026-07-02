@@ -697,13 +697,22 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           navigationParams: widget.navigationParams,
         );
 
+        final bool wrapInCard = subSchema.conditions?['wrapInCard'] == true;
+        final Widget fieldWidget = wrapInCard
+            ? DigitCard(
+                cardType: CardType.secondary,
+                width: double.infinity,
+                children: [field],
+              )
+            : field;
+
         final isLast = index == visibleEntries.length - 1;
 
         return isLast
-            ? field
+            ? fieldWidget
             : Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
-                child: field,
+                child: fieldWidget,
               );
       }).toList(),
     );
