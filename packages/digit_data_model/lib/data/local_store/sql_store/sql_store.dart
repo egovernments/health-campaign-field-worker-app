@@ -389,9 +389,50 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
                 print("Failed to create task indexes in v11 migration: $e");
               }
             }
+            // Drift only emits @TableIndex statements on fresh schema
+            // creation. Existing users upgrading from v6..v10 reach v11
+            // without the name/individual/household search indexes that
+            // newly-installed users get for free — leaving the search-path
+            // perf work in f15d81697 ineffective for the upgrade path.
+            // Issue the same indexes here so upgraders catch up.
+            try {
+              await _createNameAndEntityClientRefIndexes();
+              await customStatement('ANALYZE');
+            } catch (e) {
+              if (kDebugMode) {
+                print(
+                    "Failed to create name/individual/household search indexes in v11 migration: $e");
+              }
+            }
           }
         },
       );
+
+  /// Indexes that were originally declared via `@TableIndex` on the
+  /// Name, Individual, and Household tables. Idempotent — safe to call on
+  /// both fresh-installs (no-op via IF NOT EXISTS) and upgrades.
+  Future<void> _createNameAndEntityClientRefIndexes() async {
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS name_givenname
+      ON name (given_name);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS name_familyname
+      ON name (family_name);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS name_individualclientref
+      ON name (individual_client_reference_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS individual_clientref
+      ON individual (client_reference_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS household_self_clientref
+      ON household (client_reference_id);
+    ''');
+  }
 
   /// Flag to track if SQLCipher library has been initialized
   static bool _sqlCipherInitialized = false;
@@ -428,8 +469,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
         setup: (database) {
           // If an encryption key is provided, set it using SQLCipher's PRAGMA key
           if (encryptionKey != null && encryptionKey.isNotEmpty) {
-            // Use SQLCipher encryption with the provided key
-            database.execute("PRAGMA key = '$encryptionKey';");
+            database.execute(_sqlCipherKeyPragma(encryptionKey));
           }
           // Enable WAL mode for concurrent reads/writes across isolates
           database.execute('PRAGMA journal_mode = WAL;');
@@ -514,7 +554,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       sqlite3.Database? testEncDb;
       try {
         testEncDb = sqlite3.sqlite3.open(dbFile.path);
-        testEncDb.execute("PRAGMA key = '$encryptionKey';");
+        testEncDb.execute(_sqlCipherKeyPragma(encryptionKey));
         // Verify we can read with this key
         testEncDb.execute('SELECT count(*) FROM sqlite_master;');
         testEncDb.dispose();
@@ -548,9 +588,15 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
         await tempEncryptedFile.delete();
       }
 
-      // Use SQLCipher's ATTACH with KEY to create encrypted copy
+      // Use SQLCipher's ATTACH with KEY to create encrypted copy.
+      // The key is passed as a SQLCipher hex-blob literal (x'..') and the
+      // input is pre-asserted hex-only by _assertHexKey, so the value can
+      // never break out of the literal regardless of caller input. The path
+      // is sourced from getApplicationDocumentsDirectory() — internal app
+      // sandbox, not user input.
+      _assertHexKey(encryptionKey);
       plainDb.execute(
-          "ATTACH DATABASE '${tempEncryptedFile.path}' AS encrypted KEY '$encryptionKey';");
+          "ATTACH DATABASE '${tempEncryptedFile.path}' AS encrypted KEY \"x'$encryptionKey'\";");
       plainDb.execute("SELECT sqlcipher_export('encrypted');");
 
       // Explicitly set the schema version in the encrypted database
@@ -605,4 +651,23 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       return false;
     }
   }
+}
+
+final RegExp _hexKeyPattern = RegExp(r'^[0-9a-fA-F]+$');
+
+// Throws if [key] contains anything but hex chars — defends every PRAGMA key
+// / KEY-clause callsite against caller-controlled input ever reaching raw SQL.
+void _assertHexKey(String key) {
+  if (key.isEmpty || !_hexKeyPattern.hasMatch(key)) {
+    throw ArgumentError(
+        'SQLCipher key must be a non-empty hex string; refusing to interpolate');
+  }
+}
+
+// Builds a SQLCipher `PRAGMA key = "x'<hex>'"` statement. The hex-blob form is
+// SQLCipher's recommended way to pass a raw key and removes any quote-escape
+// surface area for the key value itself.
+String _sqlCipherKeyPragma(String hexKey) {
+  _assertHexKey(hexKey);
+  return 'PRAGMA key = "x\'$hexKey\'";';
 }

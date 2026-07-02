@@ -103,6 +103,14 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
 
   @override
   Widget build(BuildContext context) {
+    // Schema typo or a hidden field with includeInForm:false would leave the
+    // FormGroup without this control; every form.control(formControlName)
+    // below would then throw FormControlNotFoundException mid-listener. Render
+    // nothing in that case so a bad config degrades gracefully instead of
+    // crashing the page.
+    if (!form.contains(formControlName)) {
+      return const SizedBox.shrink();
+    }
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
     return ReactiveWrapperField(

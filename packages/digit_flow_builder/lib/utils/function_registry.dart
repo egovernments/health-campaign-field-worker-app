@@ -119,9 +119,20 @@ class FunctionRegistry {
   /// - `stateData`: The form's state data.
   ///
   /// Returns the result of the function call, which can be of any type.
+  /// In debug builds, calling an unregistered function trips an assert and
+  /// emits a debugPrint so config typos surface as a loud failure rather
+  /// than silently rendering as an empty string.
   static dynamic call(
       String name, List<dynamic> args, CrudStateData stateData) {
     final fn = get(name);
+    assert(() {
+      if (fn == null) {
+        debugPrint(
+            'FunctionRegistry: no function registered for "$name" — '
+            'check the config or the registration call. Returning null.');
+      }
+      return true;
+    }());
     return fn?.call(args, stateData);
   }
 

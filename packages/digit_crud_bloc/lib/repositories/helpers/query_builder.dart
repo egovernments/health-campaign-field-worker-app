@@ -316,7 +316,8 @@ class QueryBuilder {
   /// Converts a SearchFilter to a Drift `Expression<bool>` for the given
   /// column. Mirrors the operator set handled by `queryRawTable`.
   /// Returns null when the filter resolves to "match everything" (e.g.
-  /// `in []`).
+  /// `notIn []`). For unambiguous match-none cases (e.g. `in []`) returns
+  /// `Constant(false)` so the WHERE clause excludes every row.
   static Expression<bool>? _filterToExpression(
       GeneratedColumn<Object> col, SearchFilter filter) {
     switch (filter.operator) {
@@ -342,14 +343,19 @@ class QueryBuilder {
         return col.isNull();
       case 'in':
         {
+          // `in []` is unambiguous: nothing in the set can match, so the
+          // predicate is false. Previously this returned null and collapsed
+          // to "no filter", matching every row — a config that filtered
+          // by an empty server-fetched ID set silently returned everything.
           final list = _normalizeToList(filter.value);
-          if (list.isEmpty) return null;
+          if (list.isEmpty) return const Constant<bool>(false);
           if (col is GeneratedColumn<int>) {
             final ints = list
                 .map((v) => v is int ? v : int.tryParse(v.toString()))
                 .whereType<int>()
                 .toList();
-            if (ints.isEmpty) return null;
+            // All inputs unparseable as int → no int row can match.
+            if (ints.isEmpty) return const Constant<bool>(false);
             return col.isIn(ints);
           }
           return (col as GeneratedColumn<String>)
@@ -357,6 +363,7 @@ class QueryBuilder {
         }
       case 'notIn':
         {
+          // `notIn []` excludes nothing → predicate is true → no filter.
           final list = _normalizeToList(filter.value);
           if (list.isEmpty) return null;
           if (col is GeneratedColumn<int>) {
@@ -364,6 +371,8 @@ class QueryBuilder {
                 .map((v) => v is int ? v : int.tryParse(v.toString()))
                 .whereType<int>()
                 .toList();
+            // All inputs unparseable as int → exclusion set effectively
+            // empty for this column → match-all.
             if (ints.isEmpty) return null;
             return col.isNotIn(ints);
           }
@@ -804,20 +813,30 @@ class QueryBuilder {
           break;
         case 'in':
           final list = _normalizeToList(filter.value);
-          if (list.isEmpty) break; // Empty list = no filter (match all)
+          // `in []` is match-none, not match-all. Push a false predicate so
+          // the surrounding AND collapses the result set to empty.
+          if (list.isEmpty) {
+            whereClauses.add(const Constant<bool>(false));
+            break;
+          }
           if (col is GeneratedColumn<int>) {
             final ints = list
                 .map((v) => v is int ? v : int.tryParse(v.toString()))
                 .whereType<int>()
                 .toList();
-            if (ints.isNotEmpty) whereClauses.add(col.isIn(ints));
+            if (ints.isEmpty) {
+              whereClauses.add(const Constant<bool>(false));
+            } else {
+              whereClauses.add(col.isIn(ints));
+            }
           } else if (col is GeneratedColumn<String>) {
             whereClauses.add(col.isIn(list.map((v) => v.toString()).toList()));
           }
           break;
         case 'notIn':
           final list = _normalizeToList(filter.value);
-          if (list.isEmpty) break; // Empty list = no filter (match all)
+          // `notIn []` excludes nothing → match-all → drop the clause.
+          if (list.isEmpty) break;
           if (col is GeneratedColumn<int>) {
             final ints = list
                 .map((v) => v is int ? v : int.tryParse(v.toString()))

@@ -41,6 +41,7 @@ import '../blocs/push_notification/push_notification.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/remote_client.dart';
+import '../data/repositories/local/localization.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/downsync/downsync.dart';
 import '../models/entities/notification_data.dart';
@@ -50,6 +51,7 @@ import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/runtime_hierarchy.dart';
 import '../utils/utils.dart';
 import '../widgets/error_screen.dart';
 import '../widgets/root_detection_wrapper.dart';
@@ -817,6 +819,38 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     });
   }
 
+  /// Fetches and caches the boundary localization for [locale] if it isn't
+  /// already in the local store. Mirrors the cache loop in
+  /// `project_selection.dart` but runs at language-switch time so a previously
+  /// failed seed for this locale doesn't leave boundary labels blank. Any
+  /// failure here is non-fatal — the language switch always proceeds.
+  Future<void> _ensureBoundaryLocalizationCached(
+    BuildContext context,
+    String locale,
+  ) async {
+    final locBloc = context.read<LocalizationBloc>();
+    final boundaryModule =
+        'hcm-boundary-${runtimeHierarchyType().toLowerCase()}';
+    try {
+      final localResults = await LocalizationLocalRepository().fetchLocalization(
+        sql: locBloc.sql,
+        locale: locale,
+        module: boundaryModule,
+      );
+      if (localResults.isNotEmpty) return;
+      final results = await locBloc.localizationRepository.loadLocalization(
+        path: Constants.localizationApiPath,
+        locale: locale,
+        module: boundaryModule,
+        tenantId: envConfig.variables.tenantId,
+      );
+      await LocalizationLocalRepository().create(results, locBloc.sql);
+    } catch (e) {
+      debugPrint(
+          'error caching boundary localization for $locale on language switch: $e');
+    }
+  }
+
   List<SidebarItem>? buildLanguage(
       BackendInterface localizationModulesList,
       List<Languages>? languages,
@@ -899,6 +933,18 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                 //       locale: e.value.toString(),
                 //       path: Constants.localizationApiPath,
                 //     ));
+
+                // Boundary localizations are seeded for every locale during
+                // project_selection, but that seed loop swallows per-locale
+                // failures (debugPrint only). When it failed for the locale
+                // the user is now switching to, boundary labels would render
+                // as raw codes because OnUpdateLocalizationIndexEvent only
+                // reloads what's already cached. Try a best-effort fetch for
+                // the new locale's boundary module before switching the
+                // index; failures are non-fatal — language switch proceeds.
+                await _ensureBoundaryLocalizationCached(
+                    context, e.value.toString());
+                if (!context.mounted) return;
 
                 context.read<LocalizationBloc>().add(
                       OnUpdateLocalizationIndexEvent(

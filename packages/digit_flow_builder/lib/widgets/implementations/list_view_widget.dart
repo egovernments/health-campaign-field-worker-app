@@ -40,6 +40,14 @@ class ListViewWidget extends ResolvedFlowWidget {
       return const SizedBox.shrink();
     }
 
+    // listView without CrudStateData context can't preprocess child configs.
+    // Bail out gracefully instead of null-asserting on stateData and crashing
+    // the page — surfaces a config error visibly as "no list" rather than as
+    // a top-level error overlay.
+    if (stateData == null) {
+      return const SizedBox.shrink();
+    }
+
     // Read spacing property (e.g., "spacer4")
     final properties = json['properties'] as Map<String, dynamic>?;
     final spacingKey = properties?['spacing']?.toString();
@@ -64,7 +72,7 @@ class ListViewWidget extends ResolvedFlowWidget {
       final childJson = Map<String, dynamic>.from(json['child'] as Map);
       final processedChild = preprocessConfigWithState(
         childJson,
-        stateData!,
+        stateData,
         listIndex: index,
         item: safeItem,
       );
