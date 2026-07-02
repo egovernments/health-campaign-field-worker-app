@@ -3641,6 +3641,22 @@ final dynamic sampleSMCFlows = {
           }
         },
         {
+          // Redose consumes another vial from stock (same pattern as the
+          // DELIVERY flow at line ~2741). Without this the balance stays at
+          // the pre-redose value even though the task+resource carry
+          // isDelivered=true, so StockBalanceExecutor never gets to deduct.
+          "actionType": "UPDATE_STOCK_BALANCE",
+          "properties": {
+            "entity": "TaskModel",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to update stock balance."}
+              }
+            ]
+          }
+        },
+        {
           "actionType": "NAVIGATION",
           "properties": {
             "data": [
