@@ -435,6 +435,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         );
 
       case PropertySchemaFormat.radio:
+        final boldLabel = widget.schema.conditions?['boldLabel'] == true;
         return JsonSchemaRadioBuilder(
           form: form,
           formControlName: widget.formControlName,
@@ -442,6 +443,12 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           label: translateIfPresent(widget.schema.label, localizations),
           enums: widget.schema.enums ?? [],
+          labelStyle: boldLabel
+              ? Theme.of(context).digitTextTheme(context).label.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).colorTheme.text.primary,
+                  )
+              : null,
         );
 
       case PropertySchemaFormat.custom:

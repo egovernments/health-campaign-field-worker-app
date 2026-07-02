@@ -3794,7 +3794,8 @@
               ],
               "includeInSummary": true,
               "required.message":
-              "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL_REQUIRED_MESSAGE"
+              "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL_REQUIRED_MESSAGE",
+              "conditions": {"boldLabel": true}
             },
             {
               "type": "string",
@@ -3837,7 +3838,7 @@
               "includeInSummary": true,
               "required.message":
               "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL_REQUIRED_MESSAGE",
-              "conditions": {"wrapInCard": true},
+              "conditions": {"wrapInCard": true, "boldLabel": true},
               "visibilityCondition": {
                 "expression": [
                   {"condition": "eligibilityChecklist.ec1==YES"}
@@ -3884,7 +3885,8 @@
               ],
               "includeInSummary": true,
               "required.message":
-              "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL_REQUIRED_MESSAGE"
+              "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL_REQUIRED_MESSAGE",
+              "conditions": {"boldLabel": true}
             },
             {
               "type": "string",
@@ -3926,7 +3928,8 @@
               ],
               "includeInSummary": true,
               "required.message":
-              "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL_REQUIRED_MESSAGE"
+              "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL_REQUIRED_MESSAGE",
+              "conditions": {"boldLabel": true}
             }
           ],
           "actionLabel":
