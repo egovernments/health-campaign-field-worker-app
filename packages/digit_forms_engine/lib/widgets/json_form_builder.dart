@@ -678,6 +678,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       return !_shouldHideField(form, subSchema, entry.key);
     }).toList();
 
+    final bool showDividers = widget.schema.conditions?['showDividers'] == true;
+    final dividerColor =
+        Theme.of(context).colorTheme.generic.divider;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -707,6 +711,21 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
             : field;
 
         final isLast = index == visibleEntries.length - 1;
+
+        if (showDividers && !isLast) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: spacer4),
+                child: fieldWidget,
+              ),
+              Divider(height: 1, thickness: 1, color: dividerColor),
+              const SizedBox(height: spacer4),
+            ],
+          );
+        }
 
         return isLast
             ? fieldWidget

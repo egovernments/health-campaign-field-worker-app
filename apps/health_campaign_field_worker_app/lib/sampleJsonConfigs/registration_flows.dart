@@ -3932,6 +3932,7 @@
           "actionLabel":
           "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
           "description": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_DESCRIPTION",
+          "conditions": {"showDividers": true},
           "showTabView": false,
           "showAlertPopUp": {
             "title": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
