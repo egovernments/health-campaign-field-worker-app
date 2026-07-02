@@ -68,5 +68,11 @@ enum MasterEnums {
   @MappableValue("SINGLE_USER_LOGIN")
   singleUserLogin,
   @MappableValue("BOUNDARY_RELATIONSHIP")
-  boundaryRelationShip
+  boundaryRelationShip,
+  @MappableValue("serviceRegistry")
+  serviceRegistryMaster,
+  @MappableValue("projectTypes")
+  projectTypes,
+  @MappableValue("FormConfig")
+  formConfig
 }

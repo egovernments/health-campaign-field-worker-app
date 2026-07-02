@@ -8,6 +8,8 @@ import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
+import '../../../models/entities/mdms_master_enums.dart';
+import '../../../models/entities/mdms_module_enums.dart';
 import '../../../models/mdms/service_registry/pgr_service_defenitions.dart';
 import '../../../models/mdms/service_registry/service_registry_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
@@ -19,112 +21,60 @@ import '../../local_store/no_sql/schema/service_registry.dart';
 class MdmsRepository {
   final Dio _client;
 
-  static const int _v2SearchLimit = 2000;
-
   const MdmsRepository(this._client);
 
-  /// Translates a v1-style MDMS request body (`MdmsCriteria.moduleDetails`)
-  /// into MDMS v2 `_search` calls — one per `module.master` schemaCode —
-  /// and reassembles the flat v2 `mdms` list back into the nested
-  /// `MdmsRes` shape (`{module: {master: [data]}}`) that all existing
-  /// consumers of this repository parse.
-  Future<Map<String, dynamic>> _searchMdmsResV2(
-    String apiEndPoint,
-    Map<String, dynamic> body,
-  ) async {
-    // Normalize: freezed `toJson` may keep nested models as objects.
-    final Map<String, dynamic> normalizedBody =
-        json.decode(json.encode(body)) as Map<String, dynamic>;
-    final criteria =
-        normalizedBody['MdmsCriteria'] as Map<String, dynamic>? ?? {};
-    final tenantId = criteria['tenantId'];
-    final moduleDetails = criteria['moduleDetails'] as List? ?? [];
+  /// Core v2 search method. Makes a single POST call to the MDMS v2
+  /// `_search` endpoint and returns the list of `data` objects from the
+  /// response `mdms` array (only active records).
+  Future<List<dynamic>> _searchV2(
+    String apiEndPoint, {
+    required String tenantId,
+    required String schemaCode,
+    Map<String, dynamic>? filters,
+    int limit = 5000,
+  }) async {
+    final response = await _client.post(apiEndPoint, data: {
+      'MdmsCriteria': {
+        'tenantId': tenantId,
+        'schemaCode': schemaCode,
+        if (filters != null) 'filters': filters,
+        'limit': limit,
+        'isActive': true,
+      },
+    });
 
-    final Map<String, dynamic> mdmsRes = {};
+    final responseData = response.data is String
+        ? json.decode(response.data as String)
+        : response.data;
+    final mdmsList = responseData is List
+        ? responseData
+        : (responseData?['mdms'] as List? ?? []);
 
-    for (final module in moduleDetails) {
-      final moduleName = module['moduleName'] as String;
-      final masterDetails = module['masterDetails'] as List? ?? [];
-
-      for (final master in masterDetails) {
-        final masterName = master['name'] as String;
-
-        final response = await _client.post(apiEndPoint, data: {
-          'MdmsCriteria': {
-            'tenantId': tenantId,
-            'schemaCode': '$moduleName.$masterName',
-            'limit': _v2SearchLimit,
-          },
-        });
-
-        final responseData = response.data is String
-            ? json.decode(response.data as String)
-            : response.data;
-        final mdmsList = responseData is List
-            ? responseData
-            : (responseData?['mdms'] as List? ?? []);
-
-        List<dynamic> dataList = mdmsList
-            .where((e) => e is Map && e['isActive'] != false)
-            .map((e) => e['data'])
-            .toList();
-
-        final filter = master['filter'] as String?;
-        if (filter != null && filter.trim().isNotEmpty) {
-          dataList = _applyV1Filter(dataList, filter);
-        }
-
-        if (dataList.isEmpty) {
-          // No records for this schemaCode on the v2 server — usually a
-          // master that is not registered or whose name/casing differs.
-          // Surfaced here so the missing schemaCode is obvious in the logs.
-          AppLogger.instance.error(
-            title: 'MDMS v2',
-            message: 'Empty result for schemaCode "$moduleName.$masterName"',
-          );
-        }
-
-        final moduleMap = mdmsRes.putIfAbsent(
-          moduleName,
-          () => <String, dynamic>{},
-        ) as Map<String, dynamic>;
-        moduleMap[masterName] = dataList;
-      }
-    }
-
-    return mdmsRes;
-  }
-
-  /// Applies a v1 JSONPath-style filter like
-  /// `[?(@.project=='X' && @.isSelected==true)]` client-side, since
-  /// MDMS v2 does not accept JSONPath filters in the search criteria.
-  /// Supports `&&`-combined equality conditions only.
-  List<dynamic> _applyV1Filter(List<dynamic> data, String filter) {
-    final conditions =
-        RegExp(r"@\.(\w+)\s*==\s*(?:'([^']*)'|(true|false)|([\d.]+))")
-            .allMatches(filter)
-            .toList();
-    if (conditions.isEmpty) return data;
-
-    return data.where((item) {
-      if (item is! Map) return false;
-      for (final m in conditions) {
-        final key = m.group(1);
-        final expected = m.group(2) ?? m.group(3) ?? m.group(4);
-        if (item[key]?.toString() != expected) return false;
-      }
-      return true;
-    }).toList();
+    return mdmsList
+        .where((e) => e is Map && e['isActive'] != false)
+        .map((e) => e['data'])
+        .toList();
   }
 
   Future<ServiceRegistryPrimaryWrapperModel> searchServiceRegistry(
     String apiEndPoint,
-    Map<String, dynamic> body,
+    String tenantId,
   ) async {
     try {
-      final mdmsRes = await _searchMdmsResV2(apiEndPoint, body);
+      final module = ModuleEnums.serviceRegistry.toValue();
+      final master = MasterEnums.serviceRegistryMaster.toValue();
 
-      return ServiceRegistryPrimaryWrapperModel.fromJson(mdmsRes);
+      final dataList = await _searchV2(
+        apiEndPoint,
+        tenantId: tenantId,
+        schemaCode: '$module.$master',
+      );
+
+      return ServiceRegistryPrimaryWrapperModel.fromJson({
+        module: {
+          master: dataList,
+        },
+      });
     } catch (_) {
       rethrow;
     }
@@ -164,20 +114,72 @@ class MdmsRepository {
     });
   }
 
+  /// Fetches app configuration by making individual v2 calls per schemaCode
+  /// and assembling the nested map that AppConfigPrimaryWrapperModel expects.
   Future<app_configuration.AppConfigPrimaryWrapperModel> searchAppConfig(
     String apiEndPoint,
-    Map body,
+    String tenantId,
   ) async {
     try {
-      final mdmsRes = await _searchMdmsResV2(
-        apiEndPoint,
-        Map<String, dynamic>.from(body),
-      );
+      // Define all module.master pairs needed for app config using enums
+      final schemaCodes = <String, List<String>>{
+        ModuleEnums.hcm.toValue(): [
+          MasterEnums.appConfig.toValue(),
+          MasterEnums.symptomTypes.toValue(),
+          MasterEnums.referralReasons.toValue(),
+          MasterEnums.manualAttendanceReasons.toValue(),
+          MasterEnums.houseStructureTypes.toValue(),
+          MasterEnums.refusalReasons.toValue(),
+          MasterEnums.bandWidthBatchSize.toValue(),
+          MasterEnums.beneficiaryIdConfig.toValue(),
+          MasterEnums.downSyncBandwidthBatchSize.toValue(),
+          MasterEnums.hhDelReasons.toValue(),
+          MasterEnums.hhMemberDelReasons.toValue(),
+          MasterEnums.backgroundServiceConfig.toValue(),
+          MasterEnums.checklistTypes.toValue(),
+          MasterEnums.idTypes.toValue(),
+          MasterEnums.relationShipTypeOptions.toValue(),
+          MasterEnums.deliveryComments.toValue(),
+          MasterEnums.backendInterface.toValue(),
+          MasterEnums.callSupport.toValue(),
+          MasterEnums.transportTypes.toValue(),
+          MasterEnums.firebaseConfig.toValue(),
+          MasterEnums.searchHouseHoldFilters.toValue(),
+          MasterEnums.transitPostType.toValue(),
+          MasterEnums.searchCLFFilters.toValue(),
+          MasterEnums.boundaryRelationShip.toValue(),
+          MasterEnums.deviceChangeReasons.toValue(),
+          MasterEnums.singleUserLogin.toValue(),
+        ],
+        ModuleEnums.commonMasters.toValue(): [
+          MasterEnums.stateInfo.toValue(),
+          MasterEnums.genderType.toValue(),
+          MasterEnums.privacyPolicy.toValue(),
+        ],
+        ModuleEnums.moduleVersion.toValue(): [
+          MasterEnums.rowVersion.toValue(),
+        ],
+      };
 
-      final appCon =
-          app_configuration.AppConfigPrimaryWrapperModel.fromJson(mdmsRes);
+      final Map<String, dynamic> mdmsRes = {};
 
-      return appCon;
+      for (final entry in schemaCodes.entries) {
+        final moduleName = entry.key;
+        final moduleMap =
+            mdmsRes.putIfAbsent(moduleName, () => <String, dynamic>{})
+                as Map<String, dynamic>;
+
+        for (final masterName in entry.value) {
+          final dataList = await _searchV2(
+            apiEndPoint,
+            tenantId: tenantId,
+            schemaCode: '$moduleName.$masterName',
+          );
+          moduleMap[masterName] = dataList;
+        }
+      }
+
+      return app_configuration.AppConfigPrimaryWrapperModel.fromJson(mdmsRes);
     } on DioError catch (e) {
       AppLogger.instance.error(
         title: 'MDMS Repository',
@@ -190,12 +192,23 @@ class MdmsRepository {
 
   Future<PGRServiceDefinitions> searchPGRServiceDefinitions(
     String apiEndPoint,
-    Map<String, dynamic> body,
+    String tenantId,
   ) async {
     try {
-      final mdmsRes = await _searchMdmsResV2(apiEndPoint, body);
+      final module = ModuleEnums.rainmakerPgr.toValue();
+      final master = MasterEnums.serviceDefinitions.toValue();
 
-      return PGRServiceDefinitions.fromJson(mdmsRes);
+      final dataList = await _searchV2(
+        apiEndPoint,
+        tenantId: tenantId,
+        schemaCode: '$module.$master',
+      );
+
+      return PGRServiceDefinitions.fromJson({
+        module: {
+          master: dataList,
+        },
+      });
     } on DioError catch (e) {
       AppLogger.instance.error(
         title: 'MDMS Repository',
@@ -208,23 +221,76 @@ class MdmsRepository {
 
   Future<ProjectTypePrimaryWrapper> searchProjectType(
     String apiEndPoint,
-    Map<String, dynamic> body,
+    String tenantId,
   ) async {
     try {
-      final mdmsRes = await _searchMdmsResV2(apiEndPoint, body);
+      final module = ModuleEnums.hcmProjectTypes.toValue();
+      final master = MasterEnums.projectTypes.toValue();
 
-      return ProjectTypePrimaryWrapper.fromJson(mdmsRes);
+      final dataList = await _searchV2(
+        apiEndPoint,
+        tenantId: tenantId,
+        schemaCode: '$module.$master',
+      );
+
+      return ProjectTypePrimaryWrapper.fromJson({
+        module: {
+          master: dataList,
+        },
+      });
     } catch (_) {
       rethrow;
     }
   }
 
-  Future<dynamic> searchMDMS(
+  /// Generic v2 search that returns `List<dynamic>` of data objects directly.
+  /// Used for FormConfig, dashboard config, enum values, and other ad-hoc
+  /// MDMS lookups.
+  Future<List<dynamic>> searchMDMS(
+    String apiEndPoint, {
+    required String tenantId,
+    required String schemaCode,
+    Map<String, dynamic>? filters,
+    int limit = 5000,
+  }) async {
+    try {
+      return await _searchV2(
+        apiEndPoint,
+        tenantId: tenantId,
+        schemaCode: schemaCode,
+        filters: filters,
+        limit: limit,
+      );
+    } on DioError catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: '$e',
+        stackTrace: e.stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  /// Fetches row versions only (subset of app config).
+  Future<app_configuration.AppConfigPrimaryWrapperModel> searchRowVersions(
     String apiEndPoint,
-    Map<String, dynamic> body,
+    String tenantId,
   ) async {
     try {
-      return await _searchMdmsResV2(apiEndPoint, body);
+      final module = ModuleEnums.moduleVersion.toValue();
+      final master = MasterEnums.rowVersion.toValue();
+
+      final dataList = await _searchV2(
+        apiEndPoint,
+        tenantId: tenantId,
+        schemaCode: '$module.$master',
+      );
+
+      return app_configuration.AppConfigPrimaryWrapperModel.fromJson({
+        module: {
+          master: dataList,
+        },
+      });
     } on DioError catch (e) {
       AppLogger.instance.error(
         title: 'MDMS Repository',
