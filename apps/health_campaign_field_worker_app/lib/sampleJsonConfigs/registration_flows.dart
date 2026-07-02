@@ -1281,24 +1281,26 @@
               ],
               "fieldName": "member",
               "properties": {
-                "prefixIcon": "AddIcon",
+                "prefixIcon": "AddCircle",
                 "size": "medium",
                 "type": "tertiary",
+                "align": "center",
                 "mainAxisSize": "min",
                 "mainAxisAlignment": "center"
               }
             },
             {
-              "icon": "AddIcon",
+              "icon": "AddCircle",
               "type": "template",
               "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
               "label": "ADD_MEMBER",
               "format": "actionPopup",
               "fieldName": "beneficiaryIdMinCheck",
               "properties": {
-                "prefixIcon": "AddIcon",
+                "prefixIcon": "AddCircle",
                 "size": "medium",
                 "type": "tertiary",
+                "align": "center",
                 "popupConfig": {
                   "body": [],
                   "type": "alert",

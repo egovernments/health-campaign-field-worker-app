@@ -24,9 +24,10 @@ class ButtonWidget extends ResolvedFlowWidget {
     String? height = props['height'];
     String? radius = props['radius'];
 
-    return WidgetParsers.wrapWithBottomGap(
-      DigitButton(
-        crossAxisAlignment: CrossAxisAlignment.center,
+    final bool alignCenter = props['align'] == 'center';
+
+    final button = DigitButton(
+      crossAxisAlignment: CrossAxisAlignment.center,
         capitalizeLetters: false,
         label: resolved.resolvedLabel ?? '',
         isDisabled: resolved.isDisabled,
@@ -68,13 +69,16 @@ class ButtonWidget extends ResolvedFlowWidget {
         mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment:
             WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
-        suffixIcon: json['suffixIcon'] != null
-            ? DigitIconMapping.getIcon(json['suffixIcon'])
+        suffixIcon: props['suffixIcon'] != null
+            ? DigitIconMapping.getIcon(props['suffixIcon'])
             : null,
-        prefixIcon: json['prefixIcon'] != null
-            ? DigitIconMapping.getIcon(json['prefixIcon'])
+        prefixIcon: props['prefixIcon'] != null
+            ? DigitIconMapping.getIcon(props['prefixIcon'])
             : null,
-      ),
+    );
+
+    return WidgetParsers.wrapWithBottomGap(
+      alignCenter ? Center(child: button) : button,
       props,
     );
   }

@@ -38,8 +38,9 @@ class ActionPopupWidget extends ResolvedFlowWidget {
     DigitButtonSize size = WidgetParsers.parseButtonSize(props['size']);
     String? height = props['height'];
     String? radius = props['radius'];
+    final bool alignCenter = props['align'] == 'center';
 
-    return DigitButton(
+    final button = DigitButton(
       isDisabled: resolved.isDisabled,
       capitalizeLetters: false,
       mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
@@ -106,6 +107,8 @@ class ActionPopupWidget extends ResolvedFlowWidget {
           ? DigitIconMapping.getIcon(props['prefixIcon'])
           : null,
     );
+
+    return alignCenter ? Center(child: button) : button;
   }
 
   /// Show the action popup based on configuration
