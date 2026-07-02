@@ -264,19 +264,46 @@ class MultiTableFilterResolver {
     // Fallback: one subquery per related table (current behaviour).
     final exprs = <Expression<bool>>[];
     for (final pair in pathFilterPairs) {
-      final expr = QueryBuilder.buildPrimaryKeySubqueryExpression(
-        sql: _sql,
-        path: pair.path,
-        filtersOnFirstTable: pair.filters,
-        primaryKeyColumn: primaryKeyColumn,
-      );
-      exprs.add(expr);
+      // Separate notExists filters from regular ones. notExists filters
+      // produce a NOT IN subquery (find primary records that have NO related
+      // record matching the inner condition).
+      final notExistsFilters =
+          pair.filters.where((f) => f.operator == 'notExists').toList();
+      final regularFilters =
+          pair.filters.where((f) => f.operator != 'notExists').toList();
 
-      _log(
-        'Built subquery constraint: $primaryTable.$primaryKeyField IN '
-        '(SELECT ... FROM ${pair.path.first.from} -> ${pair.path.last.from}) with '
-        '${pair.filters.length} filter(s).',
-      );
+      if (regularFilters.isNotEmpty) {
+        final expr = QueryBuilder.buildPrimaryKeySubqueryExpression(
+          sql: _sql,
+          path: pair.path,
+          filtersOnFirstTable: regularFilters,
+          primaryKeyColumn: primaryKeyColumn,
+        );
+        exprs.add(expr);
+
+        _log(
+          'Built subquery constraint: $primaryTable.$primaryKeyField IN '
+          '(SELECT ... FROM ${pair.path.first.from} -> ${pair.path.last.from}) with '
+          '${regularFilters.length} filter(s).',
+        );
+      }
+
+      if (notExistsFilters.isNotEmpty) {
+        final expr = QueryBuilder.buildPrimaryKeySubqueryExpression(
+          sql: _sql,
+          path: pair.path,
+          filtersOnFirstTable: notExistsFilters,
+          primaryKeyColumn: primaryKeyColumn,
+          negate: true,
+        );
+        exprs.add(expr);
+
+        _log(
+          'Built NOT IN subquery constraint: $primaryTable.$primaryKeyField NOT IN '
+          '(SELECT ... FROM ${pair.path.first.from} -> ${pair.path.last.from}) with '
+          '${notExistsFilters.length} notExists filter(s).',
+        );
+      }
     }
 
     return (

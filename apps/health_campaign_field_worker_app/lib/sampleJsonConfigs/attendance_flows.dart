@@ -41,7 +41,10 @@ final dynamic attendanceFlows = {
                 "operation": "equals"
               },
               {
+                // referenceId lives on attendanceRegister, not on attendee;
+                // resolver walks the registerId FK to filter attendees.
                 "key": "referenceId",
+                "root": "attendanceRegister",
                 "value": "{{singleton.selectedProject.id}}",
                 "operation": "equals"
               }
@@ -60,7 +63,9 @@ final dynamic attendanceFlows = {
                 "operation": "equals"
               },
               {
+                // Same as attendee: referenceId is on the register only.
                 "key": "referenceId",
+                "root": "attendanceRegister",
                 "value": "{{singleton.selectedProject.id}}",
                 "operation": "equals"
               },

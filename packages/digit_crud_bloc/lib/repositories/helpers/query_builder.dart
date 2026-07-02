@@ -42,6 +42,7 @@ class QueryBuilder {
     required List<RelationshipMapping> path,
     required List<SearchFilter> filtersOnFirstTable,
     required GeneratedColumn<Object> primaryKeyColumn,
+    bool negate = false,
   }) {
     if (path.isEmpty) {
       throw ArgumentError('Relationship path must not be empty');
@@ -97,8 +98,10 @@ class QueryBuilder {
       if (expr != null) subquery.where(expr);
     }
 
-    // primaryKey IN (subquery)
-    return (primaryKeyColumn as Expression<String>).isInQuery(subquery);
+    // primaryKey IN (subquery) or NOT IN (subquery) when negated
+    final inExpr =
+        (primaryKeyColumn as Expression<String>).isInQuery(subquery);
+    return negate ? inExpr.not() : inExpr;
   }
 
   /// Builds a single `primary_pk IN (SELECT pivot_fk FROM pivot
@@ -376,6 +379,30 @@ class QueryBuilder {
           return (col as GeneratedColumn<String>)
               .isNotIn(list.map((v) => v.toString()).toList());
         }
+      case 'notExists':
+        {
+          // notExists: extract inner values and build IN expression.
+          // The subquery-level negation (NOT IN) is handled by
+          // buildPrimaryKeySubqueryExpression with negate=true.
+          dynamic innerValues;
+          if (filter.value is Map) {
+            innerValues = (filter.value as Map)['values'] ?? filter.value;
+          } else {
+            innerValues = filter.value;
+          }
+          final list = _normalizeToList(innerValues);
+          if (list.isEmpty) return null;
+          if (col is GeneratedColumn<int>) {
+            final ints = list
+                .map((v) => v is int ? v : int.tryParse(v.toString()))
+                .whereType<int>()
+                .toList();
+            if (ints.isEmpty) return null;
+            return col.isIn(ints);
+          }
+          return (col as GeneratedColumn<String>)
+              .isIn(list.map((v) => v.toString()).toList());
+        }
       default:
         throw Exception('Unsupported operator in subquery: ${filter.operator}');
     }
@@ -504,6 +531,16 @@ class QueryBuilder {
           final partClauses = parts.map((_) =>
               '(${cols.map((c) => '($c IS NOT NULL AND $c LIKE ?)').join(' OR ')})');
           return '(${partClauses.join(' AND ')})';
+        case 'notExists':
+          // notExists uses the inner values list for an IN clause.
+          // Subquery-level negation (NOT IN) is handled separately.
+          dynamic innerVal = filter.value;
+          if (innerVal is Map) {
+            innerVal = innerVal['values'] ?? innerVal;
+          }
+          final nValues = _normalizeToList(innerVal);
+          if (nValues.isEmpty) return '1 = 1';
+          return '$column IN (${List.filled(nValues.length, '?').join(', ')})';
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
       }
@@ -573,6 +610,16 @@ class QueryBuilder {
         case 'isNotNull':
         case 'isNull':
         case 'within':
+          break;
+        case 'notExists':
+          dynamic innerVal = filter.value;
+          if (innerVal is Map) {
+            innerVal = innerVal['values'] ?? innerVal;
+          }
+          final nList = _normalizeToList(innerVal);
+          if (nList.isNotEmpty) {
+            args.addAll(nList.map((v) => Variable.withString(v.toString())));
+          }
           break;
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
@@ -799,6 +846,26 @@ class QueryBuilder {
           } else if (col is GeneratedColumn<String>) {
             whereClauses
                 .add(col.isNotIn(list.map((v) => v.toString()).toList()));
+          }
+          break;
+        case 'notExists':
+          // notExists: extract inner values and build IN clause.
+          // Subquery-level negation is handled by buildPrimaryKeySubqueryExpression.
+          dynamic innerVal = filter.value;
+          if (innerVal is Map) {
+            innerVal = innerVal['values'] ?? innerVal;
+          }
+          final neList = _normalizeToList(innerVal);
+          if (neList.isEmpty) break;
+          if (col is GeneratedColumn<int>) {
+            final ints = neList
+                .map((v) => v is int ? v : int.tryParse(v.toString()))
+                .whereType<int>()
+                .toList();
+            if (ints.isNotEmpty) whereClauses.add(col.isIn(ints));
+          } else if (col is GeneratedColumn<String>) {
+            whereClauses
+                .add(col.isIn(neList.map((v) => v.toString()).toList()));
           }
           break;
         default:

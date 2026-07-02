@@ -88,6 +88,16 @@ class MainApplicationState extends State<MainApplication>
       'LOAD_UNIQUE_ID_POOL',
       LoadUniqueIdPoolExecutor(),
     );
+
+    // NB: the identityPayloadValidator for
+    // JsonSchemaScannerBuilder's reject-at-scan is registered from
+    // AuthenticatedPageWrapper.initState — the check needs access to
+    // the logged-in user's mapped boundaries (BoundaryBloc.state.boundaryList),
+    // which don't exist until after login. Registering here in
+    // MainApplicationState.initState would either (a) read null, or
+    // (b) pin to FlowBuilderSingleton().boundary which is just the
+    // currently-selected leaf in the UI, not the user's actual
+    // jurisdiction.
   }
 
   @override

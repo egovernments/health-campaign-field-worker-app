@@ -8,6 +8,7 @@ import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/entities/roles_type.dart';
 import 'extensions/extensions.dart';
@@ -621,9 +622,9 @@ class FunctionRegistries {
         'receiverId': itemMap['receiverId']?.toString() ?? '',
         'productVariantId': itemMap['productVariantId']?.toString() ?? '',
         'quantity': itemMap['quantity']?.toString() ?? '',
-        // Boundary code of the dispatched row — receiver side compares this
-        // to the scanning user's leaf boundary code (getUserBoundaryCode)
-        // to block cross-boundary scans.
+        // Boundary code of the dispatched row — receiver side runs
+        // `fn:isScanBoundaryOutOfScope` against this to block scans from
+        // outside the scanning user's mapped boundary hierarchy.
         'boundaryCode': blankToNull(itemMap['boundaryCode']?.toString()),
         // Optional fields: null when blank so jsonEncode emits `null` rather
         // than `""`. The labelPairList widget renders null as `--`, and
@@ -638,13 +639,41 @@ class FunctionRegistries {
       return jsonEncode(payload);
     });
 
-    // Leaf-most selected boundary code for the current user. Used by the
-    // stockScanConfirm screen to verify a CDD is scanning stock dispatched
-    // to their own boundary. Returns '' when no boundary is selected so the
-    // config-side isEmpty guard suppresses the mismatch infoCard rather than
-    // false-positive on missing data.
-    FunctionRegistry.register('getUserBoundaryCode', (args, stateData) {
-      return context.boundaryOrNull?.code ?? '';
+    // True when the scanned boundaryCode (from a dispatched stock QR) is
+    // neither equal to nor a descendant of any of the current user's
+    // mapped boundaries. Mirrors the reject-at-scan check the WM side
+    // uses (`ScannerComparisonRegistry.identityPayloadValidator` in
+    // AuthenticatedPageWrapper) so the receive-side gate uses the same
+    // ancestor/descendant semantics — a strict-equality check would
+    // false-positive whenever the WM dispatches from a level above the
+    // CDD's leaf.
+    //
+    // Empty guards mirror the config-side isEmpty pattern: return false
+    // when the input is missing or when BoundaryBloc hasn't hydrated the
+    // user's mapped list yet, so a legitimate scan isn't blocked by
+    // half-loaded state.
+    FunctionRegistry.register('isScanBoundaryOutOfScope', (args, stateData) {
+      if (args.isEmpty || args.first == null) return false;
+      final scannedBoundary = args.first.toString();
+      if (scannedBoundary.isEmpty) return false;
+
+      final BoundaryBloc boundaryBloc;
+      try {
+        boundaryBloc = context.read<BoundaryBloc>();
+      } catch (_) {
+        return false;
+      }
+      final mappedCodes = boundaryBloc.state.boundaryList
+          .map((b) => b.code)
+          .whereType<String>()
+          .where((c) => c.isNotEmpty)
+          .toSet();
+      if (mappedCodes.isEmpty) return false;
+
+      final withinScope = mappedCodes.any((code) =>
+          scannedBoundary == code ||
+          scannedBoundary.startsWith('${code}_'));
+      return !withinScope;
     });
   }
 

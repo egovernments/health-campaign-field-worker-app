@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
@@ -164,7 +166,16 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                       width: 2,
                     )),
                 child: QrImageView(
-                  data: context.loggedInUserUuid,
+                  // Same payload as the drawer QR — userId is used to
+                  // populate the warehouseDetails teamCode form field,
+                  // boundaryCode is used purely for reject-at-scan
+                  // validation against the warehouse manager's leaf
+                  // boundary (ScannerComparisonRegistry provider). See
+                  // authenticated.dart for the full rationale.
+                  data: jsonEncode({
+                    'userId': context.loggedInUserUuid,
+                    'boundaryCode': context.boundaryOrNull?.code ?? '',
+                  }),
                   version: QrVersions.auto,
                   size: MediaQuery.of(context).size.width / 1.25,
                 ),

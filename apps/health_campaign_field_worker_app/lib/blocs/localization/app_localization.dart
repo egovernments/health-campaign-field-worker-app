@@ -18,6 +18,14 @@ class AppLocalizations {
 
   static final List<Localization> _localizedStrings = <Localization>[];
 
+  // O(1) code → message lookup rebuilt on every load(). translate() used
+  // to indexWhere across _localizedStrings which is O(N) per call — for a
+  // screen rendering hundreds of translated widgets and a table of ~3k+
+  // localization rows that's the dominant mount cost on heavy flows like
+  // searchBeneficiary. Keep _localizedStrings around for existing external
+  // reads (e.g. debugging), but the fast path routes through this map.
+  static final Map<String, String> _messagesByCode = <String, String>{};
+
   static LocalizationsDelegate<AppLocalizations> getDelegate(
           AppConfiguration config, LocalSqlDataStore sql) =>
       AppLocalizationsDelegate(config, sql);
@@ -26,22 +34,21 @@ class AppLocalizations {
     final listOfLocalizations =
         await LocalizationLocalRepository().returnLocalizationFromSQL(sql);
 
-    _localizedStrings.clear();
+    _localizedStrings
+      ..clear()
+      ..addAll(listOfLocalizations);
 
-    _localizedStrings.addAll(listOfLocalizations);
+    _messagesByCode
+      ..clear()
+      ..addEntries(
+        listOfLocalizations.map((l) => MapEntry(l.code, l.message)),
+      );
 
-    return _localizedStrings.isNotEmpty ? true : false;
+    return _localizedStrings.isNotEmpty;
   }
 
   String translate(String localizedValues) {
-    if (_localizedStrings.isEmpty) {
-      return localizedValues;
-    } else {
-      final index = _localizedStrings.indexWhere(
-        (medium) => medium.code == localizedValues,
-      );
-
-      return index != -1 ? _localizedStrings[index].message : localizedValues;
-    }
+    if (_messagesByCode.isEmpty) return localizedValues;
+    return _messagesByCode[localizedValues] ?? localizedValues;
   }
 }

@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
+import 'package:digit_forms_engine/forms_engine.dart'
+    show ScannerComparisonRegistry;
 import 'package:digit_showcase/showcase_widget.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
@@ -77,14 +80,63 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     super.initState();
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_handleConnectivityChange);
+    _registerScannerIdentityValidator();
   }
 
   @override
   void dispose() {
+    // Drop the closure so a stale BoundaryBloc reference doesn't survive
+    // logout → re-login (in which case a fresh AuthenticatedPageWrapper
+    // will register a new one).
+    ScannerComparisonRegistry().identityPayloadValidator = null;
     _connectivitySubscription.cancel();
     _drawerVisibilityController.close();
     _hfReferralProgress.close();
     super.dispose();
+  }
+
+  /// Registers the reject-at-scan payload check for
+  /// [JsonSchemaScannerBuilder]. Placed here (not in MainApplicationState)
+  /// because the check needs the logged-in user's *mapped* boundary
+  /// jurisdiction — not whichever leaf they've navigated to in the UI —
+  /// and BoundaryBloc is only populated after login. Runs on this
+  /// wrapper's mount, which happens post-auth.
+  ///
+  /// Match semantics: the scanned boundary is accepted when it equals
+  /// any of the current user's mapped boundary codes OR sits underneath
+  /// one of them in the hierarchy (prefix match with `_` as the segment
+  /// separator). This handles the common case where a warehouse manager
+  /// is mapped at a district/cluster level while CDDs sit at leaf
+  /// clinics/villages beneath it.
+  void _registerScannerIdentityValidator() {
+    final boundaryBloc = context.read<BoundaryBloc>();
+    ScannerComparisonRegistry().identityPayloadValidator = (payload) {
+      final scannedBoundary = payload['boundaryCode']?.toString();
+      if (scannedBoundary == null || scannedBoundary.isEmpty) {
+        // Legacy CDD build with no boundary in the QR — skip the check
+        // rather than false-positive.
+        return null;
+      }
+
+      final mappedCodes = boundaryBloc.state.boundaryList
+          .map((b) => b.code)
+          .whereType<String>()
+          .where((c) => c.isNotEmpty)
+          .toSet();
+      if (mappedCodes.isEmpty) {
+        // Boundary bloc hasn't loaded any mapped boundaries — don't
+        // false-positive on legitimate scans while the app is still
+        // hydrating.
+        return null;
+      }
+
+      final match = mappedCodes.any((code) =>
+          scannedBoundary == code ||
+          scannedBoundary.startsWith('${code}_'));
+      if (match) return null;
+
+      return 'Scanned user is not in your assigned boundary. Rescan a user in your area.';
+    };
   }
 
   void _handleConnectivityChange(List<ConnectivityResult> result) {
@@ -143,420 +195,433 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
       child: ShowcaseWidget(
         enableAutoScroll: true,
         builder: Builder(
-        builder: (context) {
-          return StreamBuilder<bool>(
-            stream: _drawerVisibilityController.stream,
-            builder: (context, snapshot) {
-              final showDrawer = snapshot.data ?? false;
+          builder: (context) {
+            return StreamBuilder<bool>(
+              stream: _drawerVisibilityController.stream,
+              builder: (context, snapshot) {
+                final showDrawer = snapshot.data ?? false;
 
-              return Portal(
-                child: Scaffold(
-                  backgroundColor: theme.colorTheme.generic.background,
-                  appBar: AppBar(
-                    backgroundColor: theme.colorTheme.primary.primary2,
-                    foregroundColor: theme.colorTheme.paper.primary,
-                    actions: null,
-                  ),
-                  drawer: showDrawer ? drawerWidget(context) : null,
-                  body: MultiBlocProvider(
-                    providers: [
-                      // INFO : Need to add bloc of package Here
-                      BlocProvider(
-                        create: (context) {
-                          final userId = context.loggedInUserUuid;
+                return Portal(
+                  child: Scaffold(
+                    backgroundColor: theme.colorTheme.generic.background,
+                    appBar: AppBar(
+                      backgroundColor: theme.colorTheme.primary.primary2,
+                      foregroundColor: theme.colorTheme.paper.primary,
+                      actions: null,
+                    ),
+                    drawer: showDrawer ? drawerWidget(context) : null,
+                    body: MultiBlocProvider(
+                      providers: [
+                        // INFO : Need to add bloc of package Here
+                        BlocProvider(
+                          create: (context) {
+                            final userId = context.loggedInUserUuid;
 
-                          final isar = context.read<Isar>();
-                          final bloc = SyncBloc(
-                            isar: isar,
-                            syncService: SyncService(),
-                          );
+                            final isar = context.read<Isar>();
+                            final bloc = SyncBloc(
+                              isar: isar,
+                              syncService: SyncService(),
+                            );
 
-                          if (!bloc.isClosed) {
-                            bloc.add(SyncRefreshEvent(userId));
-                          }
-                          /* Every time when the user changes the screen
-     this will refresh the data of sync count */
-                          isar.opLogs
-                              .filter()
-                              .createdByEqualTo(userId)
-                              .syncedUpEqualTo(false)
-                              .watch()
-                              .listen(
-                            (event) {
-                              if (!bloc.isClosed) {
-                                triggerSyncRefreshEvent(bloc, userId, event);
-                              }
-                            },
-                          );
-
-                          isar.opLogs
-                              .filter()
-                              .createdByEqualTo(userId)
-                              .syncedUpEqualTo(true)
-                              .syncedDownEqualTo(false)
-                              .watch()
-                              .listen(
-                            (event) {
-                              if (!bloc.isClosed) {
-                                triggerSyncRefreshEvent(bloc, userId, event);
-                              }
-                            },
-                          );
-
-                          return bloc;
-                        },
-                      ),
-                      BlocProvider(
-                        create: (_) => LocationBloc(location: Location())
-                          ..add(const LoadLocationEvent()),
-                      ),
-                      BlocProvider(
-                        create: (ctx) => BeneficiaryDownSyncBloc(
-                          bandwidthCheckRepository: BandwidthCheckRepository(
-                            DioClient().dio,
-                            bandwidthPath:
-                                envConfig.variables.checkBandwidthApiPath,
-                          ),
-                          individualLocalRepository: ctx.read<
-                              LocalRepository<IndividualModel,
-                                  IndividualSearchModel>>(),
-                          downSyncRemoteRepository: ctx.read<
-                              RemoteRepository<DownsyncModel,
-                                  DownsyncSearchModel>>(),
-                          downSyncLocalRepository: ctx.read<
-                              LocalRepository<DownsyncModel,
-                                  DownsyncSearchModel>>(),
-                          householdLocalRepository: ctx.read<
-                              LocalRepository<HouseholdModel,
-                                  HouseholdSearchModel>>(),
-                          householdMemberLocalRepository: ctx.read<
-                              LocalRepository<HouseholdMemberModel,
-                                  HouseholdMemberSearchModel>>(),
-                          projectBeneficiaryLocalRepository: ctx.read<
-                              LocalRepository<ProjectBeneficiaryModel,
-                                  ProjectBeneficiarySearchModel>>(),
-                          taskLocalRepository: ctx.read<
-                              LocalRepository<TaskModel, TaskSearchModel>>(),
-                          sideEffectLocalRepository: ctx.read<
-                              LocalRepository<SideEffectModel,
-                                  SideEffectSearchModel>>(),
-                          referralLocalRepository: ctx.read<
-                              LocalRepository<ReferralModel,
-                                  ReferralSearchModel>>(),
-                          hfReferralLocalRepository: ctx.read<
-                              LocalRepository<HFReferralModel,
-                                  HFReferralSearchModel>>(),
-                          serviceLocalRepository: ctx.read<
-                              LocalRepository<ServiceModel,
-                                  ServiceSearchModel>>(),
-                        ),
-                      ),
-                      BlocProvider(
-                        create: (ctx) => StockDownSyncBloc(
-                          localSecureStore: LocalSecureStore.instance,
-                          bandwidthCheckRepository: BandwidthCheckRepository(
-                            DioClient().dio,
-                            bandwidthPath:
-                                envConfig.variables.checkBandwidthApiPath,
-                          ),
-                          projectFacilityLocalRepository: ctx.read<
-                              LocalRepository<ProjectFacilityModel,
-                                  ProjectFacilitySearchModel>>(),
-                          facilityLocalRepository: ctx.read<
-                              LocalRepository<FacilityModel,
-                                  FacilitySearchModel>>(),
-                          stockRemoteRepository: ctx.read<
-                              RemoteRepository<StockModel, StockSearchModel>>(),
-                          stockLocalRepository: ctx.read<
-                              LocalRepository<StockModel, StockSearchModel>>(),
-                          projectResourceLocalRepository: ctx.read<
-                              LocalRepository<ProjectResourceModel,
-                                  ProjectResourceSearchModel>>(),
-                          downSyncLocalRepository: ctx.read<
-                              LocalRepository<DownsyncModel,
-                                  DownsyncSearchModel>>(),
-                          userActionRemoteRepository:
-                              ctx.read<UserActionRemoteRepository>(),
-                          userActionLocalRepository:
-                              ctx.read<UserActionLocalRepository>(),
-                        ),
-                      ),
-                      BlocProvider(
-                        create: (ctx) => HFReferralDownSyncBloc(
-                          bandwidthCheckRepository: BandwidthCheckRepository(
-                            DioClient().dio,
-                            bandwidthPath:
-                                envConfig.variables.checkBandwidthApiPath,
-                          ),
-                          hfReferralLocalRepository: ctx.read<
-                              LocalRepository<HFReferralModel,
-                                  HFReferralSearchModel>>(),
-                          hfReferralRemoteRepository: ctx.read<
-                              RemoteRepository<HFReferralModel,
-                                  HFReferralSearchModel>>(),
-                          downSyncLocalRepository: ctx.read<
-                              LocalRepository<DownsyncModel,
-                                  DownsyncSearchModel>>(),
-                          projectFacilityLocalRepository: ctx.read<
-                              LocalRepository<ProjectFacilityModel,
-                                  ProjectFacilitySearchModel>>(),
-                        ),
-                      ),
-                      BlocProvider(
-                        create: (_) => ServiceBloc(
-                          const ServiceEmptyState(),
-                          serviceDataRepository: context
-                              .repository<ServiceModel, ServiceSearchModel>(),
-                        ),
-                      ),
-                      BlocProvider(
-                        create: (_) => FormsBloc(),
-                      ),
-                    ],
-                    child: MultiBlocListener(
-                      listeners: [
-                        BlocListener<PushNotificationBloc,
-                            PushNotificationState>(
-                          listener: (context, state) {
-                            if (state is PushNotificationTappedState) {
-                              final notificationData =
-                                  NotificationData.fromMap(state.data);
-
-                              NotificationHandlerFactory.getHandler(
-                                      notificationData.notificationType)
-                                  ?.handle(context, notificationData.payload);
+                            if (!bloc.isClosed) {
+                              bloc.add(SyncRefreshEvent(userId));
                             }
+                            /* Every time when the user changes the screen
+     this will refresh the data of sync count */
+                            isar.opLogs
+                                .filter()
+                                .createdByEqualTo(userId)
+                                .syncedUpEqualTo(false)
+                                .watch()
+                                .listen(
+                              (event) {
+                                if (!bloc.isClosed) {
+                                  triggerSyncRefreshEvent(bloc, userId, event);
+                                }
+                              },
+                            );
+
+                            isar.opLogs
+                                .filter()
+                                .createdByEqualTo(userId)
+                                .syncedUpEqualTo(true)
+                                .syncedDownEqualTo(false)
+                                .watch()
+                                .listen(
+                              (event) {
+                                if (!bloc.isClosed) {
+                                  triggerSyncRefreshEvent(bloc, userId, event);
+                                }
+                              },
+                            );
+
+                            return bloc;
                           },
                         ),
-                        BlocListener<HFReferralDownSyncBloc,
-                            HFReferralDownSyncState>(
-                          listener: (context, hfDownSyncState) {
-                            final localizations = AppLocalizations.of(context);
-                            final appConfiguration = (context
-                                    .read<AppInitializationBloc>()
-                                    .state as AppInitialized)
-                                .appConfiguration;
-                            hfDownSyncState.maybeWhen(
-                              orElse: () {},
-                              loading: () {
-                                DigitSyncDialog.show(
-                                  context,
-                                  type: DialogType.inProgress,
-                                  label: localizations.translate(
-                                    i18.beneficiaryDetails
-                                        .dataDownloadInProgress,
-                                  ),
-                                  barrierDismissible: false,
-                                );
-                              },
-                              dataFound: (newCount, serverTotalCount) {
-                                Navigator.of(context, rootNavigator: true)
-                                    .popUntil((route) => route is! PopupRoute);
-                                showCustomPopup(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (ctx) => Popup(
-                                    title: localizations.translate(
-                                      newCount > 0
-                                          ? i18.beneficiaryDetails.dataFound
-                                          : i18.beneficiaryDetails.noDataFound,
-                                    ),
-                                    titleIcon: Icon(
-                                      Icons.info_outline_rounded,
-                                      color: Theme.of(context)
-                                          .colorTheme
-                                          .text
-                                          .primary,
-                                    ),
-                                    description: localizations.translate(
-                                      newCount > 0
-                                          ? i18.beneficiaryDetails
-                                              .dataFoundContent
-                                          : i18.beneficiaryDetails
-                                              .noDataFoundContent,
-                                    ),
-                                    actions: [
-                                      DigitButton(
-                                        label: localizations.translate(
-                                          newCount > 0
-                                              ? i18.common.coreCommonDownload
-                                              : i18.common.coreCommonGoback,
-                                        ),
-                                        onPressed: () {
-                                          if (newCount > 0) {
-                                            context
-                                                .read<HFReferralDownSyncBloc>()
-                                                .add(
-                                                  HFReferralDownSyncDownloadEvent(
-                                                    projectId:
-                                                        context.projectId,
-                                                    appConfiguration: [
-                                                      appConfiguration
-                                                    ],
-                                                    totalCount: newCount,
-                                                    serverTotalCount:
-                                                        serverTotalCount,
-                                                  ),
-                                                );
-                                          } else {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop();
-                                            context.router
-                                                .replaceAll([HomeRoute()]);
-                                          }
-                                        },
-                                        type: DigitButtonType.primary,
-                                        size: DigitButtonSize.medium,
-                                      ),
-                                      if (newCount > 0)
-                                        DigitButton(
-                                          label: localizations.translate(
-                                            i18.beneficiaryDetails
-                                                .proceedWithoutDownloading,
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop();
-                                            context.router
-                                                .replaceAll([HomeRoute()]);
-                                          },
-                                          type: DigitButtonType.secondary,
-                                          size: DigitButtonSize.medium,
-                                        ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              inProgress: (syncedCount, totalCount) {
-                                final progressData = HFReferralProgressData(
-                                  progress: totalCount == 0
-                                      ? 0
-                                      : (syncedCount / totalCount)
-                                          .clamp(0.0, 1.0),
-                                  syncedCount: syncedCount,
-                                  totalCount: totalCount,
-                                );
-                                if (syncedCount < 1) {
-                                  if (_hfReferralProgress.isClosed) {
-                                    _hfReferralProgress = StreamController<
-                                        HFReferralProgressData>.broadcast();
-                                  }
-                                  showHFReferralProgressDialog(
+                        BlocProvider(
+                          create: (_) => LocationBloc(location: Location())
+                            ..add(const LoadLocationEvent()),
+                        ),
+                        BlocProvider(
+                          create: (ctx) => BeneficiaryDownSyncBloc(
+                            bandwidthCheckRepository: BandwidthCheckRepository(
+                              DioClient().dio,
+                              bandwidthPath:
+                                  envConfig.variables.checkBandwidthApiPath,
+                            ),
+                            individualLocalRepository: ctx.read<
+                                LocalRepository<IndividualModel,
+                                    IndividualSearchModel>>(),
+                            downSyncRemoteRepository: ctx.read<
+                                RemoteRepository<DownsyncModel,
+                                    DownsyncSearchModel>>(),
+                            downSyncLocalRepository: ctx.read<
+                                LocalRepository<DownsyncModel,
+                                    DownsyncSearchModel>>(),
+                            householdLocalRepository: ctx.read<
+                                LocalRepository<HouseholdModel,
+                                    HouseholdSearchModel>>(),
+                            householdMemberLocalRepository: ctx.read<
+                                LocalRepository<HouseholdMemberModel,
+                                    HouseholdMemberSearchModel>>(),
+                            projectBeneficiaryLocalRepository: ctx.read<
+                                LocalRepository<ProjectBeneficiaryModel,
+                                    ProjectBeneficiarySearchModel>>(),
+                            taskLocalRepository: ctx.read<
+                                LocalRepository<TaskModel, TaskSearchModel>>(),
+                            sideEffectLocalRepository: ctx.read<
+                                LocalRepository<SideEffectModel,
+                                    SideEffectSearchModel>>(),
+                            referralLocalRepository: ctx.read<
+                                LocalRepository<ReferralModel,
+                                    ReferralSearchModel>>(),
+                            hfReferralLocalRepository: ctx.read<
+                                LocalRepository<HFReferralModel,
+                                    HFReferralSearchModel>>(),
+                            serviceLocalRepository: ctx.read<
+                                LocalRepository<ServiceModel,
+                                    ServiceSearchModel>>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (ctx) => StockDownSyncBloc(
+                            localSecureStore: LocalSecureStore.instance,
+                            bandwidthCheckRepository: BandwidthCheckRepository(
+                              DioClient().dio,
+                              bandwidthPath:
+                                  envConfig.variables.checkBandwidthApiPath,
+                            ),
+                            projectFacilityLocalRepository: ctx.read<
+                                LocalRepository<ProjectFacilityModel,
+                                    ProjectFacilitySearchModel>>(),
+                            facilityLocalRepository: ctx.read<
+                                LocalRepository<FacilityModel,
+                                    FacilitySearchModel>>(),
+                            stockRemoteRepository: ctx.read<
+                                RemoteRepository<StockModel,
+                                    StockSearchModel>>(),
+                            stockLocalRepository: ctx.read<
+                                LocalRepository<StockModel,
+                                    StockSearchModel>>(),
+                            projectResourceLocalRepository: ctx.read<
+                                LocalRepository<ProjectResourceModel,
+                                    ProjectResourceSearchModel>>(),
+                            downSyncLocalRepository: ctx.read<
+                                LocalRepository<DownsyncModel,
+                                    DownsyncSearchModel>>(),
+                            userActionRemoteRepository:
+                                ctx.read<UserActionRemoteRepository>(),
+                            userActionLocalRepository:
+                                ctx.read<UserActionLocalRepository>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (ctx) => HFReferralDownSyncBloc(
+                            bandwidthCheckRepository: BandwidthCheckRepository(
+                              DioClient().dio,
+                              bandwidthPath:
+                                  envConfig.variables.checkBandwidthApiPath,
+                            ),
+                            hfReferralLocalRepository: ctx.read<
+                                LocalRepository<HFReferralModel,
+                                    HFReferralSearchModel>>(),
+                            hfReferralRemoteRepository: ctx.read<
+                                RemoteRepository<HFReferralModel,
+                                    HFReferralSearchModel>>(),
+                            downSyncLocalRepository: ctx.read<
+                                LocalRepository<DownsyncModel,
+                                    DownsyncSearchModel>>(),
+                            projectFacilityLocalRepository: ctx.read<
+                                LocalRepository<ProjectFacilityModel,
+                                    ProjectFacilitySearchModel>>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (_) => ServiceBloc(
+                            const ServiceEmptyState(),
+                            serviceDataRepository: context
+                                .repository<ServiceModel, ServiceSearchModel>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (_) => FormsBloc(),
+                        ),
+                      ],
+                      child: MultiBlocListener(
+                        listeners: [
+                          BlocListener<PushNotificationBloc,
+                              PushNotificationState>(
+                            listener: (context, state) {
+                              if (state is PushNotificationTappedState) {
+                                final notificationData =
+                                    NotificationData.fromMap(state.data);
+
+                                NotificationHandlerFactory.getHandler(
+                                        notificationData.notificationType)
+                                    ?.handle(context, notificationData.payload);
+                              }
+                            },
+                          ),
+                          BlocListener<HFReferralDownSyncBloc,
+                              HFReferralDownSyncState>(
+                            listener: (context, hfDownSyncState) {
+                              final localizations =
+                                  AppLocalizations.of(context);
+                              final appConfiguration = (context
+                                      .read<AppInitializationBloc>()
+                                      .state as AppInitialized)
+                                  .appConfiguration;
+                              hfDownSyncState.maybeWhen(
+                                orElse: () {},
+                                loading: () {
+                                  DigitSyncDialog.show(
                                     context,
-                                    title: localizations.translate(
+                                    type: DialogType.inProgress,
+                                    label: localizations.translate(
                                       i18.beneficiaryDetails
                                           .dataDownloadInProgress,
                                     ),
-                                    progressController: _hfReferralProgress,
-                                    initialData: progressData,
+                                    barrierDismissible: false,
                                   );
-                                }
-                                if (!_hfReferralProgress.isClosed) {
-                                  _hfReferralProgress.add(progressData);
-                                }
-                              },
-                              success: (syncedCount, totalCount) {
-                                Navigator.of(context, rootNavigator: true)
-                                    .popUntil((route) => route is! PopupRoute);
-                                DigitSyncDialog.show(
-                                  context,
-                                  type: DialogType.complete,
-                                  label: localizations.translate(
-                                    i18.beneficiaryDetails
-                                        .referralDownloadCompleted,
-                                  ),
-                                  primaryAction: DigitDialogActions(
-                                    label: localizations.translate(
-                                      i18.acknowledgementSuccess.goToHome,
-                                    ),
-                                    action: (ctx) {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop();
-                                      context.router.replaceAll([HomeRoute()]);
-                                    },
-                                  ),
-                                );
-                              },
-                              failed: () {
-                                Navigator.of(context, rootNavigator: true)
-                                    .popUntil((route) => route is! PopupRoute);
-                                DigitSyncDialog.show(
-                                  context,
-                                  type: DialogType.failed,
-                                  label: localizations.translate(
-                                    i18.common.coreCommonDownloadFailed,
-                                  ),
-                                  primaryAction: DigitDialogActions(
-                                    label: localizations.translate(
-                                      i18.syncDialog.retryButtonLabel,
-                                    ),
-                                    action: (ctx) {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop();
-                                      context
-                                          .read<HFReferralDownSyncBloc>()
-                                          .add(
-                                            HFReferralDownSyncStartEvent(
-                                              projectId: context.projectId,
-                                              appConfiguration: [
-                                                appConfiguration
-                                              ],
+                                },
+                                dataFound: (newCount, serverTotalCount) {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .popUntil(
+                                          (route) => route is! PopupRoute);
+                                  showCustomPopup(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (ctx) => Popup(
+                                      title: localizations.translate(
+                                        newCount > 0
+                                            ? i18.beneficiaryDetails.dataFound
+                                            : i18
+                                                .beneficiaryDetails.noDataFound,
+                                      ),
+                                      titleIcon: Icon(
+                                        Icons.info_outline_rounded,
+                                        color: Theme.of(context)
+                                            .colorTheme
+                                            .text
+                                            .primary,
+                                      ),
+                                      description: localizations.translate(
+                                        newCount > 0
+                                            ? i18.beneficiaryDetails
+                                                .dataFoundContent
+                                            : i18.beneficiaryDetails
+                                                .noDataFoundContent,
+                                      ),
+                                      actions: [
+                                        DigitButton(
+                                          label: localizations.translate(
+                                            newCount > 0
+                                                ? i18.common.coreCommonDownload
+                                                : i18.common.coreCommonGoback,
+                                          ),
+                                          onPressed: () {
+                                            if (newCount > 0) {
+                                              context
+                                                  .read<
+                                                      HFReferralDownSyncBloc>()
+                                                  .add(
+                                                    HFReferralDownSyncDownloadEvent(
+                                                      projectId:
+                                                          context.projectId,
+                                                      appConfiguration: [
+                                                        appConfiguration
+                                                      ],
+                                                      totalCount: newCount,
+                                                      serverTotalCount:
+                                                          serverTotalCount,
+                                                    ),
+                                                  );
+                                            } else {
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop();
+                                              context.router
+                                                  .replaceAll([HomeRoute()]);
+                                            }
+                                          },
+                                          type: DigitButtonType.primary,
+                                          size: DigitButtonSize.medium,
+                                        ),
+                                        if (newCount > 0)
+                                          DigitButton(
+                                            label: localizations.translate(
+                                              i18.beneficiaryDetails
+                                                  .proceedWithoutDownloading,
                                             ),
-                                          );
-                                    },
-                                  ),
-                                  secondaryAction: DigitDialogActions(
+                                            onPressed: () {
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop();
+                                              context.router
+                                                  .replaceAll([HomeRoute()]);
+                                            },
+                                            type: DigitButtonType.secondary,
+                                            size: DigitButtonSize.medium,
+                                          ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                inProgress: (syncedCount, totalCount) {
+                                  final progressData = HFReferralProgressData(
+                                    progress: totalCount == 0
+                                        ? 0
+                                        : (syncedCount / totalCount)
+                                            .clamp(0.0, 1.0),
+                                    syncedCount: syncedCount,
+                                    totalCount: totalCount,
+                                  );
+                                  if (syncedCount < 1) {
+                                    if (_hfReferralProgress.isClosed) {
+                                      _hfReferralProgress = StreamController<
+                                          HFReferralProgressData>.broadcast();
+                                    }
+                                    showHFReferralProgressDialog(
+                                      context,
+                                      title: localizations.translate(
+                                        i18.beneficiaryDetails
+                                            .dataDownloadInProgress,
+                                      ),
+                                      progressController: _hfReferralProgress,
+                                      initialData: progressData,
+                                    );
+                                  }
+                                  if (!_hfReferralProgress.isClosed) {
+                                    _hfReferralProgress.add(progressData);
+                                  }
+                                },
+                                success: (syncedCount, totalCount) {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .popUntil(
+                                          (route) => route is! PopupRoute);
+                                  DigitSyncDialog.show(
+                                    context,
+                                    type: DialogType.complete,
                                     label: localizations.translate(
                                       i18.beneficiaryDetails
-                                          .proceedWithoutDownloading,
+                                          .referralDownloadCompleted,
                                     ),
-                                    action: (ctx) {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop();
-                                      context.router.replaceAll([HomeRoute()]);
-                                    },
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                      child: ErrorBoundary(builder: (context, error) {
-                        return error != null
-                            ? const ErrorScreen()
-                            : AutoRouter(
-                                navigatorObservers: () => [
-                                  AuthenticatedRouteObserver(
-                                    onNavigated: () {
-                                      bool shouldShowDrawer;
-                                      switch (context.router.topRoute.name) {
-                                        case ProjectSelectionRoute.name:
-                                        case BoundarySelectionRoute.name:
-                                        case PermissionsRoute.name:
-                                          shouldShowDrawer = false;
-                                          break;
-                                        default:
-                                          shouldShowDrawer = true;
-                                      }
-
-                                      _drawerVisibilityController
-                                          .add(shouldShowDrawer);
-                                    },
-                                  ),
-                                ],
+                                    primaryAction: DigitDialogActions(
+                                      label: localizations.translate(
+                                        i18.acknowledgementSuccess.goToHome,
+                                      ),
+                                      action: (ctx) {
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
+                                        context.router
+                                            .replaceAll([HomeRoute()]);
+                                      },
+                                    ),
+                                  );
+                                },
+                                failed: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .popUntil(
+                                          (route) => route is! PopupRoute);
+                                  DigitSyncDialog.show(
+                                    context,
+                                    type: DialogType.failed,
+                                    label: localizations.translate(
+                                      i18.common.coreCommonDownloadFailed,
+                                    ),
+                                    primaryAction: DigitDialogActions(
+                                      label: localizations.translate(
+                                        i18.syncDialog.retryButtonLabel,
+                                      ),
+                                      action: (ctx) {
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
+                                        context
+                                            .read<HFReferralDownSyncBloc>()
+                                            .add(
+                                              HFReferralDownSyncStartEvent(
+                                                projectId: context.projectId,
+                                                appConfiguration: [
+                                                  appConfiguration
+                                                ],
+                                              ),
+                                            );
+                                      },
+                                    ),
+                                    secondaryAction: DigitDialogActions(
+                                      label: localizations.translate(
+                                        i18.beneficiaryDetails
+                                            .proceedWithoutDownloading,
+                                      ),
+                                      action: (ctx) {
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
+                                        context.router
+                                            .replaceAll([HomeRoute()]);
+                                      },
+                                    ),
+                                  );
+                                },
                               );
-                      }),
+                            },
+                          ),
+                        ],
+                        child: ErrorBoundary(builder: (context, error) {
+                          return error != null
+                              ? const ErrorScreen()
+                              : AutoRouter(
+                                  navigatorObservers: () => [
+                                    AuthenticatedRouteObserver(
+                                      onNavigated: () {
+                                        bool shouldShowDrawer;
+                                        switch (context.router.topRoute.name) {
+                                          case ProjectSelectionRoute.name:
+                                          case BoundarySelectionRoute.name:
+                                          case PermissionsRoute.name:
+                                            shouldShowDrawer = false;
+                                            break;
+                                          default:
+                                            shouldShowDrawer = true;
+                                        }
+
+                                        _drawerVisibilityController
+                                            .add(shouldShowDrawer);
+                                      },
+                                    ),
+                                  ],
+                                );
+                        }),
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          );
-        },
-      ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -575,8 +640,6 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     final appInitializationBloc = context.read<AppInitializationBloc>();
     final appConfig =
         (appInitializationBloc.state as AppInitialized).appConfiguration;
-    final languages = appConfig.languages;
-    final localizationModulesList = appConfig.backendInterface;
     final authBloc = context.read<AuthBloc>();
     bool isDistributor = authBloc.state != const AuthState.unauthenticated()
         ? context.loggedInUserRoles
@@ -606,7 +669,18 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                       context.router.push(UserQRDetailsRoute());
                     },
                     child: QrImageView(
-                      data: context.loggedInUserUuid,
+                      // CDD identity QR carries both userId and the CDD's
+                      // leaf boundary so the warehouse manager's dispatch
+                      // scan can populate the receiver-side form. JSON keys
+                      // are deliberately named after the warehouseDetails
+                      // form field names (teamCode, administrativeArea) so
+                      // JsonSchemaScannerBuilder's spread-by-form-control
+                      // step lands them automatically — no transformer
+                      // changes and no new form fields needed.
+                      data: jsonEncode({
+                        'userId': context.loggedInUserUuid,
+                        'boundaryCode': context.boundaryOrNull?.code ?? '',
+                      }),
                       version: QrVersions.auto,
                       size: 150.0,
                     ),
@@ -672,7 +746,8 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                     .serviceRegistrys
                                     .where()
                                     .findAll();
-                                final apiEndPoint = Constants.getNotificationEndPoint(
+                                final apiEndPoint =
+                                    Constants.getNotificationEndPoint(
                                   serviceRegistry: serviceRegistry,
                                   service: 'NOTIFICATION',
                                   action: ApiOperation.unRegister.toValue(),

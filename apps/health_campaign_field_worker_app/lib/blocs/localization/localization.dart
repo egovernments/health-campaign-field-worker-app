@@ -33,65 +33,69 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     OnLoadLocalizationEvent event,
     LocalizationEmitter emit,
   ) async {
+    final allModules = event.module
+        .split(',')
+        .map((m) => m.trim())
+        .where((m) => m.isNotEmpty)
+        .toList();
+
+    // Detect missing modules PER MODULE rather than as a batch. The previous
+    // implementation did `fetchLocalization(module: allModules.join(','))`
+    // and treated any non-empty result as "cached" — so once any module
+    // in the bundle (typically `hcm-common`) was cached, every subsequent
+    // module added by a card (e.g. `hcm-dashboard`, `hcm-transit-post`)
+    // was silently skipped and rendered as raw codes. Now we ask the DB
+    // for the distinct modules that actually have rows for this locale
+    // and fetch only what's missing.
+    final cachedRows = await LocalizationLocalRepository().fetchLocalization(
+      sql: sql,
+      locale: event.locale,
+      module: allModules.join(','),
+    );
+    final cachedModules = cachedRows.map((l) => l.module).toSet();
+    final missingModules =
+        allModules.where((m) => !cachedModules.contains(m)).toList();
+
+    // Fast path: if every requested module is already loaded into
+    // AppLocalizations._localizedStrings for the current locale and nothing
+    // is missing from the DB cache, this dispatch is a no-op. Bail before
+    // touching `state.loading` and before re-running `_loadLocale` — which
+    // otherwise clears + rehydrates the static string list and flickers any
+    // widget listening for the loading transition on every card tap.
+    final params = LocalizationParams();
+    final activeLocaleTag = params.locale != null
+        ? '${params.locale!.languageCode}_${params.locale!.countryCode ?? ''}'
+        : null;
+    final activeModuleSet = (params.module ?? '')
+        .split(',')
+        .map((m) => m.trim())
+        .where((m) => m.isNotEmpty)
+        .toSet();
+    final allRequestedActive =
+        allModules.isNotEmpty && allModules.every(activeModuleSet.contains);
+    final localeMatches = activeLocaleTag == event.locale;
+    if (missingModules.isEmpty && allRequestedActive && localeMatches) {
+      return;
+    }
+
     emit(state.copyWith(loading: true));
 
     try {
-      final boundaryModuleCheck =
-          event.module.contains(Constants.boundaryLocalizationPath);
-      final allModules = event.module.split(',');
-      var boundaryModule;
-
-      if (boundaryModuleCheck) {
-        final boundaryModuleIndex =
-            allModules.indexOf(Constants.boundaryLocalizationPath);
-        boundaryModule = allModules[boundaryModuleIndex];
-        allModules.removeAt(boundaryModuleIndex);
-      }
-
-      try {
-        var localizationList;
-
-        var localResults = await LocalizationLocalRepository()
-            .fetchLocalization(
-                sql: sql, locale: event.locale, module: allModules.join(','));
-        if (localResults.isEmpty) {
-          var results = await localizationRepository.loadLocalization(
+      if (missingModules.isNotEmpty) {
+        try {
+          final results = await localizationRepository.loadLocalization(
             path: event.path,
             locale: event.locale,
-            module: allModules.join(','),
+            module: missingModules.join(','),
             tenantId: event.tenantId,
           );
-          localizationList = LocalizationLocalRepository().create(results, sql);
-          if (boundaryModule != null) {
-            try {
-              var localizationList;
-              var localResults = await LocalizationLocalRepository()
-                  .fetchLocalization(
-                      sql: sql, locale: event.locale, module: boundaryModule);
-              if (localResults.isEmpty) {
-                var results = await localizationRepository.loadLocalization(
-                  path: event.path,
-                  locale: event.locale,
-                  module: boundaryModule,
-                  tenantId: event.tenantId,
-                );
-
-                localizationList =
-                    LocalizationLocalRepository().create(results, sql);
-              } else {
-                localizationList = localResults;
-              }
-            } catch (error) {
-              debugPrint('error in boundary module localization $error');
-              emit(state.copyWith(loading: false, retryModule: boundaryModule));
-            }
-          }
-        } else {
-          localizationList = localResults;
+          await LocalizationLocalRepository().create(results, sql);
+        } catch (error) {
+          debugPrint('error fetching missing localization modules '
+              '${missingModules.join(',')}: $error');
+          emit(state.copyWith(
+              loading: false, retryModule: missingModules.join(',')));
         }
-      } catch (error) {
-        debugPrint('error in other modules localization $error');
-        emit(state.copyWith(loading: false, retryModule: allModules.join(',')));
       }
     } catch (error) {
       rethrow;

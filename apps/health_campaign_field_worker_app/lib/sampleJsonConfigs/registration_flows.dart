@@ -821,6 +821,17 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
+                    "label": "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}}",
+                    "format": "tag",
+                    "visible": "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}} != ''",
+                    "fieldName": "uniqueBeneficiaryIdTag",
+                    "properties": {
+                      "tagType": "info",
+                      "bottomGap": 16
+                    }
+                  },
+                  {
+                    "type": "template",
                     "label": "HCM_HOUSEHOLD_OVERVIEW_HEAD_TAG",
                     "format": "tag",
                     "visible": "{{fn:isHead(item.member)}}==true",
@@ -851,21 +862,12 @@ final dynamic sampleFlows = {
                       "tagType": "error"
                     }
                   },
-                  {
-                    "type": "template",
-                    "label": "HCM_HOUSEHOLD_OVERVIEW_BENEFICIARY_REFERRED_TAG",
-                    "format": "tag",
-                    "visible": "{{fn:hasReferralForCurrentCycle(item.hFReferral)}}==true && {{fn:isHead(item.member)}}==false",
-                    "fieldName": "beneficiaryReferred",
-                    "properties": {
-                      "tagType": "error"
-                    }
-                  },
+
                   {
                     "type": "template",
                     "label": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTERED_SUCCESS_TAG",
                     "format": "tag",
-                    "visible": "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                    "visible": "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
                     "fieldName": "administrationSuccess",
                     "properties": {
                       "tagType": "success",
@@ -898,7 +900,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "HCM_HOUSEHOLD_OVERVIEW_NOT_VISITED_TAG",
                     "format": "tag",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false",
+                    "visible": "{{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false",
                     "fieldName": "notVisited",
                     "properties": {
                       "tagType": "info",
@@ -909,7 +911,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "HCM_HOUSEHOLD_OVERVIEW_ACTION_BUTTON",
                     "format": "actionPopup",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false",
+                    "visible": "{{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false",
                     "fieldName": "actionButton",
                     "mandatory": true,
                     "properties": {
@@ -1374,7 +1376,9 @@ final dynamic sampleFlows = {
       "screenType": "TEMPLATE",
       "description": "HCM_HOUSEHOLD_OVERVIEW_DESCRIPTION",
       "initActions": [
-        {"actionType": "LOAD_UNIQUE_ID_POOL"},
+        {
+          "actionType": "LOAD_UNIQUE_ID_POOL"
+        },
         {
           "actionType": "SEARCH_EVENT",
           "properties": {
@@ -1697,7 +1701,7 @@ final dynamic sampleFlows = {
                     {
                       "actionType": "CLEAR_STATE",
                       "properties": {
-                        "name": "latestTask",
+                        "name": "task",
                         "filterKeys": [
                           "status",
                           "projectBeneficiary",
@@ -1748,7 +1752,46 @@ final dynamic sampleFlows = {
                         }
                       ],
                       "condition": {
-                        "expression": "selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE || selectedStatus == VISITED"
+                        "expression": "selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == INELIGIBLE || selectedStatus == VISITED"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "data": [
+                              {
+                                "key": "status",
+                                "value": ["ADMINISTRATION_FAILED"],
+                                "operation": "in"
+                              }
+                            ],
+                            "name": "task"
+                          }
+                        },
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "data": [
+                              {
+                                "key": "status",
+                                "root": "task",
+                                "value": {
+                                  "values": [
+                                    "VISITED",
+                                    "ADMINISTRATION_SUCCESS"
+                                  ]
+                                },
+                                "operation": "notExists"
+                              }
+                            ],
+                            "name": "taskExclude"
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == ADMINISTRATION_FAILED"
                       }
                     },
                     {
@@ -1783,7 +1826,8 @@ final dynamic sampleFlows = {
                                 "value": "{{singleton.selectedProject.id}}",
                                 "operation": "equals"
                               }
-                            ]
+                            ],
+                            "name": "task"
                           }
                         }
                       ],
@@ -1959,6 +2003,12 @@ final dynamic sampleFlows = {
                       "hidden": false,
                       "isActive": true,
                       "cellValue": "{{item.gender}}"
+                    },
+                    {
+                      "header": "HCM_SEARCH_TABLE_UNIQUE_BENEFICIARY_ID_HEADER",
+                      "hidden": false,
+                      "isActive": true,
+                      "cellValue": "{{fn:getUniqueBeneficiaryId(item.identifiers.0)}}"
                     }
                   ]
                 },
@@ -2189,7 +2239,9 @@ final dynamic sampleFlows = {
       "screenType": "TEMPLATE",
       "description": "HCM_SEARCH_BENEFICIARY_DESCRIPTION",
       "initActions": [
-        {"actionType": "LOAD_UNIQUE_ID_POOL"}
+        {
+          "actionType": "LOAD_UNIQUE_ID_POOL"
+        }
       ],
       "wrapperConfig": {
         "filters": [],
@@ -2273,7 +2325,8 @@ final dynamic sampleFlows = {
             "individual",
             "householdMember",
             "projectBeneficiary",
-            "task"
+            "task",
+            "hFReferral"
           ],
           "primary": "household",
           "pagination": {

@@ -55,6 +55,7 @@ import '../sampleJsonConfigs/manage_stock.dart';
 import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
+import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/registration_smc_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/attendance_utils.dart';
@@ -62,10 +63,10 @@ import '../utils/date_util_attendance.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
-import '../utils/runtime_hierarchy.dart';
 import '../utils/function_registries.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
+import '../utils/runtime_hierarchy.dart';
 import '../utils/stock_downsync_utils.dart';
 import '../utils/utils.dart';
 import '../widgets/attendance/attendance_qr_scanner_button.dart';
@@ -141,6 +142,46 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     // Register custom components for forms
     _registerCustomComponents();
+
+    // Pre-warm the heavy one-time costs the first card tap would otherwise
+    // pay synchronously. Deferred to a post-frame callback so it doesn't
+    // block the home page's own first frame — by the time a user can
+    // physically tap a card, this warmup has already completed. Saves
+    // ~60ms on the first tap that lands on sampleSMCFlows (the biggest
+    // sample-flow bundle) plus a chunk of JIT/regex warmup on the first
+    // preprocessConfigWithState call.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      try {
+        WidgetRegistry.initialize();
+        FlowRegistry.setConfig(
+          sampleSMCFlows["flows"] as List<Map<String, dynamic>>,
+        );
+        // Trigger interpolation + function-registry warmup with a throwaway
+        // resolve. Cheap in absolute terms; expensive on first call because
+        // of lazy regex compilation and JIT.
+        resolveTemplates(<Map<String, dynamic>>[
+          {'value': '{{fn:length([])}}'}
+        ], const <String, dynamic>{});
+      } catch (_) {
+        // Warmup is best-effort — a failure here shouldn't affect the app.
+      }
+    });
+  }
+
+  /// Parses the `sessionToggle` widget-data value into a bool.
+  ///
+  /// The widgetData plumbing surfaces this as a String ("true"/"false")
+  /// via the template resolver — the sibling `showAttendanceQRButton` at
+  /// line ~533 already does the string comparison manually. A raw
+  /// `x as bool?` cast throws a TypeError on a String value, which
+  /// silently killed `todayAttendeesList` / `allAttendanceSelected` and
+  /// made the Save-later button and marked-status computation misfire.
+  /// Accepts bool, "true"/"false" String, and null (defaults to morning).
+  static bool _parseIsMorning(dynamic value) {
+    if (value is bool) return value;
+    if (value == null) return true;
+    return value.toString().toLowerCase() == 'true';
   }
 
   /// Register custom components for forms engine
@@ -556,7 +597,15 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
 
       final selectedDate = widgetData?['selectedDate'] as int?;
-      final isMorning = widgetData?['sessionToggle'] as bool? ?? true;
+      // `sessionToggle` arrives as a String ("true"/"false") from the
+      // widgetData plumbing — the sibling `showAttendanceQRButton`
+      // (line 533) already unwraps it that way. A raw `as bool?` cast
+      // throws a TypeError on a String, which used to be masked by the
+      // .where crash further down; now that the register unwrap works,
+      // the cast is the next thing that fails and drops us out of the
+      // whole fn (empty items → UI treats every attendee as unmarked
+      // and Submit/save-later gating misfires).
+      final isMorning = _parseIsMorning(widgetData?['sessionToggle']);
 
       Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
           selectedDate, isMorning, attendanceRegisterModel);
@@ -627,13 +676,25 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
 
     FunctionRegistry.register('allAttendanceSelected', (args, stateData) {
-      if (args.isEmpty || args.first == null) return true;
+      // Returns TRUE when every attendee is accounted for on this
+      // session (either already saved as a log pair, or currently in the
+      // in-progress `attendanceCollection`), FALSE otherwise. The
+      // attendance config gates the Submit button with
+      // `{{fn:allAttendanceSelected(...)}}==false` so `disabled` is true
+      // whenever the fn returns false — Submit stays locked until every
+      // attendee is marked.
+      //
+      // Missing args → return false so the button stays disabled instead
+      // of enabling on an incomplete widgetData snapshot.
+      if (args.isEmpty || args.first == null) return false;
 
       final widgetData = args.first;
       final attendanceRegisterModel = args.length > 1 ? args[1] : null;
 
       final selectedDate = widgetData?['selectedDate'] as int?;
-      final isMorning = widgetData?['sessionToggle'] as bool? ?? true;
+      // See _parseIsMorning — sessionToggle arrives as String from the
+      // widgetData plumbing; a straight bool cast throws on it.
+      final isMorning = _parseIsMorning(widgetData?['sessionToggle']);
 
       Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
           selectedDate, isMorning, attendanceRegisterModel);
@@ -655,10 +716,16 @@ class _HomePageState extends LocalizedState<HomePage> {
       }).toList();
 
       if (filterAttendanceLogs.isNotEmpty) {
-        return attendees.length != (filterAttendanceLogs.length / 2);
+        // Two logs per attendee (ENTRY + EXIT). Fully-saved when the
+        // pair count matches the attendee count.
+        return attendees.length == (filterAttendanceLogs.length / 2);
       }
 
-      return attendees.length != attendanceCollection?.length;
+      // Fresh session: every attendee has an entry in the in-progress
+      // collection. Null-safe on collection so an unset widgetData
+      // doesn't accidentally count as "all marked".
+      final collectionLength = attendanceCollection?.length ?? 0;
+      return attendees.isNotEmpty && attendees.length == collectionLength;
     });
 
     FunctionRegistry.register('updateAttendeeStatus', (args, stateData) {
@@ -993,7 +1060,11 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       final widgetData = args.first as Map;
       final attendanceRegisterModel = args.length > 1 ? args[1] : null;
-      final uploadToServer = args.length > 2 ? args[2] as int? : 0;
+      // Call sites pass (widgetData, register, register.attendanceLog, flag).
+      // args[2] is the redundant log list (we re-derive it from the register
+      // on the next line), and args[3] is the upload flag — reading the flag
+      // from args[2] blew up with `List<dynamic> → int?`.
+      final uploadToServer = args.length > 3 ? args[3] as int? : 0;
 
       final registerId = attendanceRegisterModel?.id ?? '';
       List attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
@@ -1004,7 +1075,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           widgetData['attendanceQRCollection'] as Map?;
 
       final comment = widgetData['COMMENT'] as String?;
-      final isMorning = widgetData['sessionToggle'] as bool? ?? true;
+      // See _parseIsMorning — sessionToggle arrives as String from the
+      // widgetData plumbing; a straight bool cast throws on it.
+      final isMorning = _parseIsMorning(widgetData['sessionToggle']);
 
       final selectedDate = widgetData['selectedDate'] as int?;
       final attendanceManualData = widgetData['attendanceManualData'] as Map?;
@@ -2077,11 +2150,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                     );
                   } else {
                     FlowRegistry.setConfig(
-                        sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
+                        sampleFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
                       FlowBuilderHomeRoute(
-                          pageName: sampleSMCFlows["initialPage"]),
+                          pageName: sampleFlows["initialPage"]),
                     );
                   }
                 } catch (e) {
@@ -2693,7 +2766,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
           child: HomeItemCard(
-        icon: Icons.vaccines_outlined,
+        icon: Icons.local_shipping_outlined,
         label: i18.home.transitPostLabel,
         onPressed: () {
           const module = "hcm-transit-post";
@@ -2773,6 +2846,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db)
+        .where(
+            (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -2863,6 +2938,10 @@ void setPackagesSingleton(BuildContext context) {
           minAge: context.selectedProjectType?.validMinAge,
           maxAge: context.selectedProjectType?.validMaxAge,
         );
+        final selectedBoundary = context.boundaryOrNull;
+        if (selectedBoundary != null) {
+          TransitPostSingleton().setBoundary(boundary: selectedBoundary);
+        }
         FlowBuilderSingleton().setInitialData(
           beneficiaryIdMinCount:
               appConfiguration.beneficiaryIdConfig?.first.minCount.toInt(),
