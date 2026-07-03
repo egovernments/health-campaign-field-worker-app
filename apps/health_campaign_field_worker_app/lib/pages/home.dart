@@ -620,6 +620,34 @@ class _HomePageState extends LocalizedState<HomePage> {
         return (logTime == entryTime || logTime == exitTime);
       }).toList();
 
+      // Drop de-enrolled attendees. The CRUD wrapper (WrapperBuilder) hands
+      // us Maps shaped like {entity: AttendeeModel, individual: [...],
+      // <mappedFields>: ...} — `denrollmentDate` is not spread onto the top
+      // level, it lives on the underlying AttendeeModel under `entity`. Try
+      // both shapes so the filter still works if this ever changes.
+      final nowMs = DateTime.now().millisecondsSinceEpoch;
+      items = items.where((item) {
+        dynamic raw;
+        if (item is Map) {
+          raw = item['denrollmentDate'];
+          if (raw == null && item['entity'] != null) {
+            try {
+              raw = (item['entity'] as dynamic).denrollmentDate;
+            } catch (_) {}
+          }
+        } else {
+          try {
+            raw = (item as dynamic).denrollmentDate;
+          } catch (_) {
+            return true;
+          }
+        }
+        if (raw == null) return true;
+        final deDate = raw is int ? raw : int.tryParse(raw.toString());
+        if (deDate == null) return true;
+        return deDate >= nowMs;
+      }).toList();
+
       items = items.map((item) {
         if (item is Map && item['individualId'] != null) {
           double status = -1.0;
@@ -894,6 +922,45 @@ class _HomePageState extends LocalizedState<HomePage> {
           : int.tryParse(denrollmentDate.toString());
       if (deDate == null) return true;
       return deDate >= DateTime.now().millisecondsSinceEpoch;
+    });
+
+    // Count of attendees that are NOT de-enrolled. Mirrors the drop rule in
+    // todayAttendeesList so the manageAttendance card count agrees with what
+    // the register-marking list actually renders. Handles both shapes: raw
+    // AttendeeModel objects (manageAttendance wrapper has no nested relations
+    // on `attendees`) and Maps with `entity` (register-marking wrapper wraps
+    // the attendee because of the nested `individual` relation).
+    FunctionRegistry.register('activeAttendeesCount', (args, stateData) {
+      if (args.isEmpty || args.first == null) return 0;
+      final list = args.first;
+      if (list is! Iterable) return 0;
+      final nowMs = DateTime.now().millisecondsSinceEpoch;
+      var count = 0;
+      for (final item in list) {
+        dynamic raw;
+        if (item is Map) {
+          raw = item['denrollmentDate'];
+          if (raw == null && item['entity'] != null) {
+            try {
+              raw = (item['entity'] as dynamic).denrollmentDate;
+            } catch (_) {}
+          }
+        } else {
+          try {
+            raw = (item as dynamic).denrollmentDate;
+          } catch (_) {
+            count++;
+            continue;
+          }
+        }
+        if (raw == null) {
+          count++;
+          continue;
+        }
+        final deDate = raw is int ? raw : int.tryParse(raw.toString());
+        if (deDate == null || deDate >= nowMs) count++;
+      }
+      return count;
     });
 
     FunctionRegistry.register('isLogNotMarked', (args, stateData) {

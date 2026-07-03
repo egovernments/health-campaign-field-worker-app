@@ -156,7 +156,7 @@ final dynamic attendanceFlows = {
                   },
                   {
                     "key": "STAFF_COUNT_LABEL",
-                    "value": "{{fn:length(item.attendees)}}"
+                    "value": "{{fn:activeAttendeesCount(item.attendees)}}"
                   },
                   {
                     "key": "START_DATE_LABEL",
