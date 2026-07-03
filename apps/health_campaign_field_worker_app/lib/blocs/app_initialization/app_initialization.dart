@@ -87,8 +87,9 @@ class AppInitializationBloc
             schemaCode: '${ModuleEnums.hcm.toValue()}.${MasterEnums.dashboardConfig.toValue()}',
           );
           if (dashboardDataList.isNotEmpty) {
+            final String dashboardKey = MasterEnums.dashboardConfig.toValue() as String;
             final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
-              {MasterEnums.dashboardConfig.toValue(): dashboardDataList},
+              {dashboardKey: dashboardDataList},
             ).dashboardConfigWrapper;
 
             if (dashboardConfigs.isNotEmpty) {

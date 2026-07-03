@@ -61,8 +61,8 @@ class MdmsRepository {
     String tenantId,
   ) async {
     try {
-      final module = ModuleEnums.serviceRegistry.toValue();
-      final master = MasterEnums.serviceRegistryMaster.toValue();
+      final String module = ModuleEnums.serviceRegistry.toValue() as String;
+      final String master = MasterEnums.serviceRegistryMaster.toValue() as String;
 
       final dataList = await _searchV2(
         apiEndPoint,
@@ -195,8 +195,8 @@ class MdmsRepository {
     String tenantId,
   ) async {
     try {
-      final module = ModuleEnums.rainmakerPgr.toValue();
-      final master = MasterEnums.serviceDefinitions.toValue();
+      final String module = ModuleEnums.rainmakerPgr.toValue() as String;
+      final String master = MasterEnums.serviceDefinitions.toValue() as String;
 
       final dataList = await _searchV2(
         apiEndPoint,
@@ -224,8 +224,8 @@ class MdmsRepository {
     String tenantId,
   ) async {
     try {
-      final module = ModuleEnums.hcmProjectTypes.toValue();
-      final master = MasterEnums.projectTypes.toValue();
+      final String module = ModuleEnums.hcmProjectTypes.toValue() as String;
+      final String master = MasterEnums.projectTypes.toValue() as String;
 
       final dataList = await _searchV2(
         apiEndPoint,
@@ -277,8 +277,8 @@ class MdmsRepository {
     String tenantId,
   ) async {
     try {
-      final module = ModuleEnums.moduleVersion.toValue();
-      final master = MasterEnums.rowVersion.toValue();
+      final String module = ModuleEnums.moduleVersion.toValue() as String;
+      final String master = MasterEnums.rowVersion.toValue() as String;
 
       final dataList = await _searchV2(
         apiEndPoint,
