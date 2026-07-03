@@ -43,7 +43,6 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import '../models/app_config/app_config_model.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -148,10 +147,6 @@ String maskString(String input) {
       List<String>.generate(input.length, (index) => maskingChar).join();
 
   return maskedString;
-}
-
-List<MdmsMasterDetailModel> getMasterDetailsModel(List<String> masterNames) {
-  return masterNames.map((e) => MdmsMasterDetailModel(e)).toList();
 }
 
 Timer makePeriodicTimer(

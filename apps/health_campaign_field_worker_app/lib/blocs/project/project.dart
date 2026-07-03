@@ -29,7 +29,8 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
-import '../../models/app_config/app_config_model.dart';
+import '../../models/entities/mdms_master_enums.dart';
+import '../../models/entities/mdms_module_enums.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/downsync/downsync.dart';
 import '../../models/entities/roles_type.dart';
@@ -306,17 +307,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       try {
         final projectTypes = await mdmsRepository.searchProjectType(
           envConfig.variables.mdmsApiPath,
-          MdmsRequestModel(
-            mdmsCriteria: MdmsCriteriaModel(
-              tenantId: envConfig.variables.tenantId,
-              moduleDetails: [
-                const MdmsModuleDetailModel(
-                  moduleName: 'HCM-PROJECT-TYPES',
-                  masterDetails: [MdmsMasterDetailModel('projectTypes')],
-                ),
-              ],
-            ),
-          ).toJson(),
+          envConfig.variables.tenantId,
         );
 
         await mdmsRepository.writeToProjectTypeDB(
@@ -725,28 +716,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }
 
       try {
-        final formConfigResult = await mdmsRepository.searchMDMS(
+        final formConfigs = await mdmsRepository.searchMDMS(
           envConfig.variables.mdmsApiPath,
-          MdmsRequestModel(
-            mdmsCriteria: MdmsCriteriaModel(
-              tenantId: envConfig.variables.tenantId,
-              moduleDetails: [
-                MdmsModuleDetailModel(
-                  moduleName: 'HCM-ADMIN-CONSOLE',
-                  masterDetails: [
-                    MdmsMasterDetailModel(
-                      'FormConfig',
-                      filter:
-                          "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ).toJson(),
+          tenantId: envConfig.variables.tenantId,
+          schemaCode: '${ModuleEnums.hcmAdminConsole.toValue()}.${MasterEnums.formConfig.toValue()}',
+          filters: {'project': event.model.referenceID},
         );
-
-        final formConfigs = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
 
         for (final config in formConfigs) {
           await enrichFormSchemasWithEnumsForForms(config);
@@ -765,36 +740,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         return;
       }
 
-      final configResult = await mdmsRepository.searchAppConfig(
+      final configResult = await mdmsRepository.searchRowVersions(
         envConfig.variables.mdmsApiPath,
-        MdmsRequestModel(
-          mdmsCriteria: MdmsCriteriaModel(
-            tenantId: envConfig.variables.tenantId,
-            moduleDetails: [
-              const MdmsModuleDetailModel(
-                moduleName: 'module-version',
-                masterDetails: [
-                  MdmsMasterDetailModel('ROW_VERSIONS'),
-                ],
-              ),
-            ],
-          ),
-        ).toJson(),
+        envConfig.variables.tenantId,
       );
 
       final projectType = await mdmsRepository.searchProjectType(
         envConfig.variables.mdmsApiPath,
-        MdmsRequestModel(
-          mdmsCriteria: MdmsCriteriaModel(
-            tenantId: envConfig.variables.tenantId,
-            moduleDetails: [
-              const MdmsModuleDetailModel(
-                moduleName: 'HCM-PROJECT-TYPES',
-                masterDetails: [MdmsMasterDetailModel('projectTypes')],
-              ),
-            ],
-          ),
-        ).toJson(),
+        envConfig.variables.tenantId,
       );
 
       await mdmsRepository.writeToProjectTypeDB(
@@ -1397,8 +1350,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
-    // Collect all module.master pairs across all form pages
-    final Map<String, Set<String>> moduleToMasters = {};
+    // Collect all unique schemaCodes across all form pages
+    final Set<String> schemaCodes = {};
 
     for (final formConfig in formTypeConfigs) {
       final pages = formConfig['pages'] ?? [];
@@ -1409,42 +1362,31 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           if (schemaCode != null && schemaCode.toString().isNotEmpty) {
             final parts = schemaCode.split('.');
             if (parts.length == 2) {
-              final module = parts[0];
-              final master = parts[1];
-              moduleToMasters.putIfAbsent(module, () => <String>{}).add(master);
+              schemaCodes.add(schemaCode);
             }
           }
         }
       }
     }
 
-    // ✅ If no schemaCode found, just store as-is
-    if (moduleToMasters.isEmpty) {
+    // If no schemaCode found, just store as-is
+    if (schemaCodes.isEmpty) {
       await storeSchema(formConfigs);
       return;
     }
 
-    // Prepare module details for MDMS request
-    final moduleDetails = moduleToMasters.entries.map((entry) {
-      return MdmsModuleDetailModel(
-        moduleName: entry.key,
-        masterDetails:
-            entry.value.map((m) => MdmsMasterDetailModel(m)).toList(),
+    // Fetch enum data per schemaCode via v2 calls
+    final Map<String, List<dynamic>> enumsBySchemaCode = {};
+    for (final schemaCode in schemaCodes) {
+      final dataList = await mdmsRepository.searchMDMS(
+        envConfig.variables.mdmsApiPath,
+        tenantId: envConfig.variables.tenantId,
+        schemaCode: schemaCode,
       );
-    }).toList();
+      enumsBySchemaCode[schemaCode] = dataList;
+    }
 
-    // Fetch all master data in a single MDMS call
-    final mdmsResponse = await mdmsRepository.searchMDMS(
-      envConfig.variables.mdmsApiPath,
-      MdmsRequestModel(
-        mdmsCriteria: MdmsCriteriaModel(
-          tenantId: envConfig.variables.tenantId,
-          moduleDetails: moduleDetails,
-        ),
-      ).toJson(),
-    );
-
-    // ✅ Now enrich all FORM screens with enums
+    // Now enrich all FORM screens with enums
     for (final formConfig in formTypeConfigs) {
       final pages = formConfig['pages'] ?? [];
       for (final page in pages) {
@@ -1452,27 +1394,22 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         for (final property in properties) {
           final schemaCode = property['schemaCode'];
           if (schemaCode != null && schemaCode.toString().isNotEmpty) {
-            final parts = schemaCode.split('.');
-            if (parts.length == 2) {
-              final module = parts[0];
-              final master = parts[1];
-              final enumValues = mdmsResponse[module]?[master];
+            final enumValues = enumsBySchemaCode[schemaCode];
 
-              if (enumValues != null) {
-                property['enums'] = enumValues
-                    .map((e) => {
-                          'code': e['code'],
-                          'name': e['name'] ?? e['code'],
-                        })
-                    .toList();
-              }
+            if (enumValues != null) {
+              property['enums'] = enumValues
+                  .map((e) => {
+                        'code': e['code'],
+                        'name': e['name'] ?? e['code'],
+                      })
+                  .toList();
             }
           }
         }
       }
     }
 
-    // ✅ Finally, store the full formConfigs (including updated FORM ones)
+    // Finally, store the full formConfigs (including updated FORM ones)
     await storeSchema(formConfigs);
   }
 

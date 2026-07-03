@@ -70,7 +70,13 @@ void main() async {
     }
   }
   WidgetsBinding.instance.addObserver(AppLifecycleObserver());
-  await DioClient().enableSSLPinning();
+  if (envConfig.variables.envType == EnvType.prod) {
+    try {
+      await DioClient().enableSSLPinning();
+    } catch (e) {
+      debugPrint('SSL pinning failed: $e');
+    }
+  }
   _dio = DioClient().dio;
 
   DigitUi.instance.initThemeComponents();

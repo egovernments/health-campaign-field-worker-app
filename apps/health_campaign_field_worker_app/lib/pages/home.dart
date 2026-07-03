@@ -2912,7 +2912,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            (isPolio &&
+                element == i18.home.polioLqaDataCollectionLabel) ||
+            (isPolio &&
+                element == i18.home.polioInsideMonitoringLabel))
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .toList();
