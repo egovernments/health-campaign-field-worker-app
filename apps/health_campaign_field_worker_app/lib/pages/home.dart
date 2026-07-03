@@ -732,7 +732,24 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       final attendanceCollection = widgetData?['attendanceCollection'] as Map?;
 
-      final attendees = attendanceRegisterModel?.attendees ?? [];
+      // Match the render-side drop in todayAttendeesList: de-enrolled
+      // attendees are hidden from the marking list, so counting the raw
+      // `attendees` here would lock Submit forever (collectionLength can
+      // never reach the raw count). Keep only actives.
+      final nowMs = DateTime.now().millisecondsSinceEpoch;
+      final attendees = ((attendanceRegisterModel?.attendees ?? []) as List)
+          .where((a) {
+        dynamic raw;
+        try {
+          raw = (a as dynamic).denrollmentDate;
+        } catch (_) {
+          return true;
+        }
+        if (raw == null) return true;
+        final deDate = raw is int ? raw : int.tryParse(raw.toString());
+        if (deDate == null) return true;
+        return deDate >= nowMs;
+      }).toList();
       final attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
 
       // Filter logs for the selected entry and exit times that are not yet uploaded
@@ -2217,11 +2234,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                     );
                   } else {
                     FlowRegistry.setConfig(
-                        sampleFlows["flows"] as List<Map<String, dynamic>>);
+                        sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
                       FlowBuilderHomeRoute(
-                          pageName: sampleFlows["initialPage"]),
+                          pageName: sampleSMCFlows["initialPage"]),
                     );
                   }
                 } catch (e) {
@@ -2913,10 +2930,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db ||
-            (isPolio &&
-                element == i18.home.polioLqaDataCollectionLabel) ||
-            (isPolio &&
-                element == i18.home.polioInsideMonitoringLabel))
+            (isPolio && element == i18.home.polioLqaDataCollectionLabel) ||
+            (isPolio && element == i18.home.polioInsideMonitoringLabel))
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .toList();
