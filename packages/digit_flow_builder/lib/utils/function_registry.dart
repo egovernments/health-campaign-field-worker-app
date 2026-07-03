@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../blocs/app_localization.dart';
+import '../blocs/wrapper/computed_list_evaluator.dart';
 import 'interpolation.dart';
 
 /// English month abbreviations indexed by [DateTime.month] (1-based).
@@ -434,6 +435,7 @@ void initializeFunctionRegistry() {
     bool? ageEligibleByCondition;
     if (minAge == null || maxAge == null) {
       ageEligibleByCondition = false;
+      debugPrint('[EligibilityCheck] No validMinAge/validMaxAge, falling back to doseCriteria. age=$totalAgeMonths months');
       for (final cycle in projectType.cycles ?? []) {
         if ((cycle.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
             (cycle.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch) {
@@ -445,19 +447,34 @@ void initializeFunctionRegistry() {
                 break;
               }
               try {
-                final sanitizedCondition = condition
-                    .replaceAll(' and ', ' && ')
-                    .replaceAll('and', '&&');
+                // Sanitize: expand chained comparisons and replace 'and' with '&&'
+                final sanitizedCondition =
+                    ComputedListEvaluator.sanitizeCondition(condition);
+                // Extract only age-related sub-conditions since we only
+                // have age context here (height/weight checked at delivery)
+                final parts = sanitizedCondition.split('&&');
+                final ageParts = parts
+                    .where((p) => p.contains('age'))
+                    .toList();
+                if (ageParts.isEmpty) {
+                  // No age constraint in condition — treat as age-eligible
+                  ageEligibleByCondition = true;
+                  debugPrint('[EligibilityCheck] condition="$condition" has no age constraint, treating as eligible');
+                  break;
+                }
+                final ageOnlyCondition = ageParts.join('&&');
+                debugPrint('[EligibilityCheck] condition="$condition" -> ageOnly="$ageOnlyCondition" age=$totalAgeMonths');
                 final parser = FormulaParser(
-                    sanitizedCondition, {'age': totalAgeMonths});
+                    ageOnlyCondition, {'age': totalAgeMonths});
                 final result = parser.parse;
+                debugPrint('[EligibilityCheck] result: isSuccess=${result['isSuccess']}, value=${result['value']}');
                 if (result['isSuccess'] == true &&
                     result['value'] == true) {
                   ageEligibleByCondition = true;
                   break;
                 }
               } catch (e) {
-                debugPrint('Age condition evaluation error: $e');
+                debugPrint('[EligibilityCheck] Age condition evaluation error: $e');
               }
             }
             if (ageEligibleByCondition == true) break;
@@ -465,6 +482,7 @@ void initializeFunctionRegistry() {
           break;
         }
       }
+      debugPrint('[EligibilityCheck] ageEligibleByCondition=$ageEligibleByCondition');
     }
 
 // --- Tasks & SideEffects come from stateData ---
