@@ -735,7 +735,6 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                         },
                         type: PopUpType.simple,
                         inlineActions: true,
-                        actionAlignment: MainAxisAlignment.spaceEvenly,
                         actions: [
                           DigitButton(
                               label: AppLocalizations.of(context).translate(
@@ -747,7 +746,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                   rootNavigator: true,
                                 ).pop(true);
                               },
-                              type: DigitButtonType.primary,
+                              type: DigitButtonType.secondary,
                               size: DigitButtonSize.large),
                           DigitButton(
                               label: AppLocalizations.of(context).translate(
@@ -794,7 +793,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                       .add(const AuthLogoutEvent());
                                 }
                               },
-                              type: DigitButtonType.secondary,
+                              type: DigitButtonType.primary,
                               size: DigitButtonSize.large)
                         ],
                       ),
