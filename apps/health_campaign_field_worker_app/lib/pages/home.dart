@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:attendance_management/utils/utils.dart';
 import 'package:collection/collection.dart';
@@ -12,12 +11,12 @@ import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
+import 'package:digit_flow_builder/action_handler/action_executor_registry.dart';
 import 'package:digit_flow_builder/data/digit_crud_service.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:digit_flow_builder/widgets/flow_widget_interface.dart';
-import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -61,6 +60,7 @@ import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/attendance_utils.dart';
 import '../utils/date_util_attendance.dart';
 import '../utils/debound.dart';
+import '../utils/eligibility_navigation_executor.dart';
 import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
 import '../utils/function_registries.dart';
@@ -191,6 +191,13 @@ class _HomePageState extends LocalizedState<HomePage> {
     FlowWidgetFactory.register(CustomRowWidget());
     FlowWidgetFactory.register(SignatureCompareWidget());
 
+    // Register custom action executor for REDOSE eligibility check
+    ActionExecutorRegistry().register(
+      'CHECK_ELIGIBILITY_AND_NAVIGATE',
+      EligibilityNavigationExecutor(),
+    );
+    debugPrint('[REDOSE] Registered CHECK_ELIGIBILITY_AND_NAVIGATE executor');
+
     CustomComponentRegistry().registerBuilder(
       'resourceCard',
       (context, stateAccessor) {
@@ -205,49 +212,37 @@ class _HomePageState extends LocalizedState<HomePage> {
           );
         }
 
-        // REDOSE / VACCINATED_ELSEWHERE flow - compute product variants
-        // Use navigation params to filter by age condition
+        // REDOSE flow — eligibleProductVariants are pre-computed by
+        // EligibilityNavigationExecutor and passed as nav params
         final currentPage = stateAccessor.currentPageName ?? 'REDOSE';
         final navParams =
             FlowCrudStateRegistry().getNavigationParams(currentPage);
-        final cycleIndex = navParams?['cycleIndex'];
-        final ageStr = navParams?['selectedIndividualAgeInMonths'];
-        final age = int.tryParse(ageStr?.toString() ?? '');
 
-        final projectType = context.selectedProjectType;
-        final cycles = projectType?.cycles;
+        debugPrint('[REDOSE ResourceCard] currentPage=$currentPage');
+        debugPrint('[REDOSE ResourceCard] navParams keys=${navParams?.keys}');
 
-        // Find the cycle matching cycleIndex from nav params
-        final currentCycle = cycles?.firstWhereOrNull(
-          (c) => c.id.toString() == cycleIndex?.toString(),
+        // Read eligible product variants from nav params
+        // (set by CHECK_ELIGIBILITY_AND_NAVIGATE executor)
+        final eligibleProductVariants = navParams?['eligibleProductVariants'];
+
+        debugPrint(
+          '[REDOSE ResourceCard] eligibleProductVariants='
+          '$eligibleProductVariants',
         );
 
-        // Use first delivery's dose criteria (all deliveries have same criteria)
-        final firstDelivery = currentCycle?.deliveries?.firstOrNull;
-        final matchingCriteria = <Map<String, dynamic>>[];
-
-        if (firstDelivery?.doseCriteria != null && age != null) {
-          for (final dc in firstDelivery!.doseCriteria!) {
-            if (dc.condition != null && dc.condition!.isNotEmpty) {
-              // Evaluate condition e.g. "3<=ageandage<=11"
-              final sanitized = dc.condition!
-                  .replaceAll(' and ', ' && ')
-                  .replaceAll('and', '&&');
-              try {
-                final parser = FormulaParser(sanitized, {'age': age});
-                final result = parser.parse;
-                if (result['isSuccess'] && result['value'] == true) {
-                  matchingCriteria.add(dc.toMap());
-                }
-              } catch (e) {
-                debugPrint('$currentPage condition eval error: $e');
-              }
-            } else {
-              // No condition - include by default
-              matchingCriteria.add(dc.toMap());
-            }
-          }
+        List<Map<String, dynamic>> matchingCriteria;
+        if (eligibleProductVariants is List) {
+          matchingCriteria = eligibleProductVariants
+              .map((e) => Map<String, dynamic>.from(e as Map))
+              .toList();
+        } else {
+          matchingCriteria = [];
         }
+
+        debugPrint(
+          '[REDOSE ResourceCard] matchingCriteria count='
+          '${matchingCriteria.length}',
+        );
 
         final computedState = FlowCrudState(
           stateWrapper: [
@@ -732,7 +727,24 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       final attendanceCollection = widgetData?['attendanceCollection'] as Map?;
 
-      final attendees = attendanceRegisterModel?.attendees ?? [];
+      // Match the render-side drop in todayAttendeesList: de-enrolled
+      // attendees are hidden from the marking list, so counting the raw
+      // `attendees` here would lock Submit forever (collectionLength can
+      // never reach the raw count). Keep only actives.
+      final nowMs = DateTime.now().millisecondsSinceEpoch;
+      final attendees =
+          ((attendanceRegisterModel?.attendees ?? []) as List).where((a) {
+        dynamic raw;
+        try {
+          raw = (a as dynamic).denrollmentDate;
+        } catch (_) {
+          return true;
+        }
+        if (raw == null) return true;
+        final deDate = raw is int ? raw : int.tryParse(raw.toString());
+        if (deDate == null) return true;
+        return deDate >= nowMs;
+      }).toList();
       final attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
 
       // Filter logs for the selected entry and exit times that are not yet uploaded
@@ -2913,10 +2925,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db ||
-            (isPolio &&
-                element == i18.home.polioLqaDataCollectionLabel) ||
-            (isPolio &&
-                element == i18.home.polioInsideMonitoringLabel))
+            (isPolio && element == i18.home.polioLqaDataCollectionLabel) ||
+            (isPolio && element == i18.home.polioInsideMonitoringLabel))
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .toList();

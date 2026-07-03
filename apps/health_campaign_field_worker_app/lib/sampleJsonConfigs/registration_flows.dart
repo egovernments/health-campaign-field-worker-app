@@ -987,8 +987,17 @@ final dynamic sampleFlows = {
                                 "actionType": "CLOSE_POPUP"
                               },
                               {
-                                "actionType": "NAVIGATION",
+                                "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
                                 "properties": {
+                                  "failedMessage":
+                                      "BENEFICIARY_NOT_ELIGIBLE",
+                                  "eligibilityParams": [
+                                    {
+                                      "conditionVar": "age",
+                                      "navKey": "selectedIndividualAgeInMonths",
+                                      "type": "int"
+                                    }
+                                  ],
                                   "data": [
                                     {
                                       "key": "selectedIndividualClientReferenceId",
@@ -1013,10 +1022,6 @@ final dynamic sampleFlows = {
                                     {
                                       "key": "doseIndex",
                                       "value": "1"
-                                    },
-                                    {
-                                      "key": "eligibleProductVariants",
-                                      "value": "{{contextData.0.eligibleProductVariants}}"
                                     }
                                   ],
                                   "name": "VACCINATED_ELSEWHERE",
@@ -1090,8 +1095,17 @@ final dynamic sampleFlows = {
                     "visible": "{{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
                     "onAction": [
                       {
-                        "actionType": "NAVIGATION",
+                        "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
                         "properties": {
+                          "failedMessage":
+                              "BENEFICIARY_NOT_ELIGIBLE",
+                          "eligibilityParams": [
+                            {
+                              "conditionVar": "age",
+                              "navKey": "selectedIndividualAgeInMonths",
+                              "type": "int"
+                            }
+                          ],
                           "data": [
                             {
                               "key": "ProjectBeneficiaryClientReferenceId",
@@ -1112,10 +1126,6 @@ final dynamic sampleFlows = {
                             {
                               "key": "selectedIndividualAgeInMonths",
                               "value": "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
-                            },
-                            {
-                              "key": "eligibleProductVariants",
-                              "value": "{{contextData.0.eligibleProductVariants}}"
                             }
                           ],
                           "name": "REDOSE",

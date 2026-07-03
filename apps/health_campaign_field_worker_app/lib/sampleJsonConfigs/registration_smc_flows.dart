@@ -1051,6 +1051,16 @@ final dynamic sampleSMCFlows = {
                   },
                   {
                     "type": "template",
+                    "label":
+                        "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}}",
+                    "format": "tag",
+                    "visible":
+                        "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}} != ''",
+                    "fieldName": "uniqueBeneficiaryIdTag",
+                    "properties": {"tagType": "info", "bottomGap": 16}
+                  },
+                  {
+                    "type": "template",
                     "label": "{{fn:getInEligibleStatus(item.task)}}",
                     "format": "tag",
                     "visible":
@@ -1275,8 +1285,29 @@ final dynamic sampleSMCFlows = {
                     "disabled": "{{fn:isRedoseWindowExpired(item.task)}}==true",
                     "onAction": [
                       {
-                        "actionType": "NAVIGATION",
+                        "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
                         "properties": {
+                          "failedMessage":
+                              "BENEFICIARY_NOT_ELIGIBLE",
+                          "eligibilityParams": [
+                            {
+                              "conditionVar": "age",
+                              "navKey": "selectedIndividualAgeInMonths",
+                              "type": "int"
+                            },
+                            {
+                              "conditionVar": "height",
+                              "navKey": "selectedIndividualHeight",
+                              "type": "double",
+                              "default": 0
+                            },
+                            {
+                              "conditionVar": "weight",
+                              "navKey": "selectedIndividualWeight",
+                              "type": "double",
+                              "default": 0
+                            }
+                          ],
                           "data": [
                             {
                               "key": "selectedIndividualClientReferenceId",
@@ -1311,16 +1342,22 @@ final dynamic sampleSMCFlows = {
                                   "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
                             },
                             {
+                              "key": "selectedIndividualHeight",
+                              "value":
+                                  "{{item.individual.0.additionalFields.fields.height}}"
+                            },
+                            {
+                              "key": "selectedIndividualWeight",
+                              "value":
+                                  "{{item.individual.0.additionalFields.fields.weight}}"
+                            },
+                            {
                               "key": "cycleIndex",
                               "value": "{{contextData.0.currentRunningCycle}}"
                             },
                             {
                               "key": "lastDeliveredTaskClientReferenceId",
                               "value": "{{item.task.last.clientReferenceId}}"
-                            },
-                            {
-                              "key": "eligibleProductVariants",
-                              "value": "{{contextData.0.eligibleProductVariants}}"
                             }
                           ],
                           "name": "REDOSE",
@@ -1612,45 +1649,6 @@ final dynamic sampleSMCFlows = {
         ],
         "rootEntity": "HouseholdModel",
         "wrapperName": "HouseholdWrapper",
-        "computedList": {
-          "targetCycle": {
-            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-            "order": 1,
-            "where": {
-              "left": "{{id}}",
-              "right": "{{currentRunningCycle}}",
-              "operator": "equals"
-            },
-            "fallback": null,
-            "takeLast": true
-          },
-          "currentDelivery": {
-            "from": "{{targetCycle.0.deliveries}}",
-            "order": 2,
-            "where": {
-              "left": "{{id}}",
-              "right": 1,
-              "operator": "equals"
-            },
-            "fallback": null,
-            "takeLast": true
-          },
-          "eligibleProductVariants": {
-            "from": "{{currentDelivery.0.doseCriteria}}",
-            "order": 3,
-            "fallback": [],
-            "takeLast": false,
-            "evaluateCondition": {
-              "context": ["{{individuals.0}}", "{{household.0}}"],
-              "condition": "{{item.condition}}",
-              "transformations": {
-                "age": {"type": "ageInMonths", "source": "dateOfBirth"},
-                "height": {"type": "int", "source": "height"},
-                "weight": {"type": "int", "source": "weight"}
-              }
-            }
-          }
-        },
         "searchConfig": {
           "select": [
             "household",
@@ -2206,6 +2204,14 @@ final dynamic sampleSMCFlows = {
           "suffixIcon": "FilterAlt"
         },
         {
+          "type": "template",
+          "label": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
+          "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
+          "format": "noResultCard",
+          "fieldName": "beneficiaryNotFound",
+          "showOnEmptySearch": true
+        },
+        {
           "data": "members",
           "type": "template",
           "child": {
@@ -2354,6 +2360,13 @@ final dynamic sampleSMCFlows = {
                       "hidden": false,
                       "isActive": true,
                       "cellValue": "{{item.gender}}"
+                    },
+                    {
+                      "header": "UNIQUE_BENEFICIARY_ID",
+                      "hidden": false,
+                      "isActive": true,
+                      "cellValue":
+                          "{{fn:getUniqueBeneficiaryId(item.identifiers.0)}}"
                     }
                   ]
                 },
@@ -3663,6 +3676,22 @@ final dynamic sampleSMCFlows = {
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Failed to create redose task."}
+              }
+            ]
+          }
+        },
+        {
+          // Redose consumes another vial from stock (same pattern as the
+          // DELIVERY flow at line ~2741). Without this the balance stays at
+          // the pre-redose value even though the task+resource carry
+          // isDelivered=true, so StockBalanceExecutor never gets to deduct.
+          "actionType": "UPDATE_STOCK_BALANCE",
+          "properties": {
+            "entity": "TaskModel",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to update stock balance."}
               }
             ]
           }

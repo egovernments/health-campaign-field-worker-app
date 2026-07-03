@@ -72,7 +72,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "isMultiSelect": false
             },
             {
-              "type": "string",
+              "type": "integer",
               "label": "LQA_LOT_NUMBER_LABEL",
               "order": 4,
               "value": "",
@@ -651,7 +651,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
       "wrapperConfig": {
         "filters": [
           {"field": "action", "equals": "LOCATION_CAPTURE"},
-          {"field": "additionalFields.form", "equals": "POLIO_LQA"}
+          {"field": "additionalFields.fields.form", "equals": "POLIO_LQA"}
         ],
         "relations": [
           {
@@ -670,7 +670,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             },
             "entity": "UserActionModel",
             "filters": [
-              {"field": "additionalFields.formType", "equals": "LQA_CHILD_DATA"}
+              {"field": "additionalFields.fields.formType", "equals": "LQA_CHILD_DATA"}
             ],
             "relations": [
               {

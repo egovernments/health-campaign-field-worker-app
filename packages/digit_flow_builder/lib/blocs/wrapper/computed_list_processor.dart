@@ -25,9 +25,7 @@ class ComputedListProcessor {
       final key = entry.key;
       final conf = entry.value as Map<String, dynamic>;
 
-      debugPrint('[ComputedList] Evaluating "$key" (order: ${conf['order']}, from: ${conf['from']})');
       results[key] = ComputedListEvaluator.evaluate(context, conf);
-      debugPrint('[ComputedList] Result "$key" = ${results[key] is List ? '(${(results[key] as List).length} items)' : results[key]}');
 
       // Add to context for subsequent computed lists to reference
       context[key] = results[key];

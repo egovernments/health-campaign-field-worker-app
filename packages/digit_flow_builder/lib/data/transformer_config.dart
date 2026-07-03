@@ -1842,6 +1842,7 @@ final jsonConfig = {
       "UserActionModel": {
         "mappings": {
           "clientReferenceId": "__generate:uuid",
+          "resourceTag": "__ref:UserActionModel.clientReferenceId",
           "projectId": "__context:projectId",
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
@@ -1855,6 +1856,7 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "additionalFields": {
             "form": "__value:POLIO_LQA",
+            "formType": "__value:LQA_CLUSTER_DATA",
             "surveyDate": "clusterInfo.surveyDate",
             "settlementArea": "clusterInfo.settlementArea",
             "lotNumber": "clusterInfo.lotNumber",
@@ -1864,6 +1866,8 @@ final jsonConfig = {
             "lqasCoordinatorName": "clusterInfo.lqasCoordinatorName",
             "settlementType": "clusterInfo.settlementType",
             "settlementSmall": "clusterInfo.settlementSmall",
+            "gpsStartLat": "clusterInfo.gpsStart[0]",
+            "gpsStartLng": "clusterInfo.gpsStart[1]",
             "locality": "__context:selectedBoundaryCode"
           }
         }
@@ -1879,10 +1883,10 @@ final jsonConfig = {
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
           "action": "__value:LOCATION_CAPTURE",
-          "latitude": "__value:0",
-          "longitude": "__value:0",
-          "locationAccuracy": "__value:0",
           "resourceTag": "__context:ClusterClientReferenceId",
+          "latitude": "__value:0.0",
+          "longitude": "__value:0.0",
+          "locationAccuracy": "__value:0.0",
           "timestamp": "__value:DATETIME.NOW",
           "isSync": "__value:false",
           "clientAuditDetails": "__generate:clientAudit",
@@ -1921,10 +1925,10 @@ final jsonConfig = {
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
           "action": "__value:LOCATION_CAPTURE",
+          "resourceTag": "__context:ClusterClientReferenceId",
           "latitude": "closeout.gpsFinal[0]",
           "longitude": "closeout.gpsFinal[1]",
           "locationAccuracy": "closeout.gpsFinal[2]",
-          "resourceTag": "__context:ClusterClientReferenceId",
           "timestamp": "__value:DATETIME.NOW",
           "isSync": "__value:false",
           "clientAuditDetails": "__generate:clientAudit",
@@ -1932,6 +1936,8 @@ final jsonConfig = {
           "additionalFields": {
             "form": "__value:POLIO_LQA",
             "formType": "__value:LQA_CLOSEOUT",
+            "gpsFinalLat": "closeout.gpsFinal[0]",
+            "gpsFinalLng": "closeout.gpsFinal[1]",
             "finalComments": "closeout.finalComments",
             "locality": "__context:selectedBoundaryCode"
           }
@@ -1957,13 +1963,17 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "additionalFields": {
             "form": "__value:POLIO_INSIDE_MONITORING",
+            "formType": "__value:INSIDE_HOUSEHOLD_DATA",
+            "settlementType": "__context:settlementType",
+            "gpsFirstHouseholdLat":
+                "firstHouseholdLocation.gpsFirstHousehold[0]",
+            "gpsFirstHouseholdLng":
+                "firstHouseholdLocation.gpsFirstHousehold[1]",
             "monitorDesignation": "monitoringDetails.monitorDesignation",
             "designationOther": "monitoringDetails.designationOther",
             "monitoringType": "monitoringDetails.monitoringType",
             "monitoringDate": "monitoringDetails.monitoringDate",
             "settlementArea": "monitoringDetails.settlementArea",
-            "settlementName": "monitoringDetails.settlementName",
-            "settlementType": "monitoringDetails.settlementType",
             "monitorName": "monitoringDetails.monitorName",
             "monitorPhone": "monitoringDetails.monitorPhone",
             "teamVisited": "monitoringDetails.teamVisited",
@@ -1985,7 +1995,8 @@ final jsonConfig = {
             "afpSuddenWeakness": "monitoringDetails.afpSuddenWeakness",
             "caregiverName": "monitoringDetails.caregiverName",
             "caregiverPhone": "monitoringDetails.caregiverPhone",
-            "gpsLastHousehold": "closeout.gpsLastHousehold",
+            "gpsLastHouseholdLat": "closeout.gpsLastHousehold[0]",
+            "gpsLastHouseholdLng": "closeout.gpsLastHousehold[1]",
             "poorlyCoveredAreas": "closeout.poorlyCoveredAreas",
             "finalComments": "closeout.finalComments",
             "locality": "__context:selectedBoundaryCode"
