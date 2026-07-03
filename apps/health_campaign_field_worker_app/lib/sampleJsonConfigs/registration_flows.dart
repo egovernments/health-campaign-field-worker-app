@@ -5602,7 +5602,7 @@
               "label":
               "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
               "order": 3,
-              "value": "",
+              "value": true,
               "format": "checkbox",
               "hidden": false,
               "isMdms": false,
