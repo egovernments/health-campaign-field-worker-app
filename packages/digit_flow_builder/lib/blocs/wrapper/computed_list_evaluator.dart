@@ -12,10 +12,12 @@ class ComputedListEvaluator {
   static List<dynamic> evaluate(
       Map<String, dynamic> ctx, Map<String, dynamic> conf) {
     var list = resolveValueRaw(conf['from'], ctx);
+    debugPrint('[ComputedListEval] from="${conf['from']}" resolved to: ${list is Iterable ? '(${(list as Iterable).length} items)' : list?.runtimeType}');
     if (list is! Iterable) return [];
 
     // Handle evaluateCondition for formula-based filtering
     if (conf.containsKey('evaluateCondition')) {
+      debugPrint('[ComputedListEval] evaluateCondition present, processing ${(list as Iterable).length} items');
       return _evaluateWithConditionInList(ctx, conf, list);
     }
 
@@ -199,6 +201,7 @@ class ComputedListEvaluator {
 
     for (final item in contextList) {
       final contextItem = resolveValueRaw(item, ctx);
+      debugPrint('[ComputedListEval] Context item "$item" resolved to: ${contextItem?.runtimeType} (isNull: ${contextItem == null})');
 
       // Convert object to Map if it's a custom model
       Map<String, dynamic> contextAsMap;
@@ -286,12 +289,17 @@ class ComputedListEvaluator {
       final flatContext =
           buildContextForCondition(ctx, conf, requiredKeys, resolvedCondition);
 
+      debugPrint('[ComputedListEval] Item condition: "$resolvedCondition"');
+      debugPrint('[ComputedListEval] Context for parser: $flatContext');
+
       if (resolvedCondition == null || resolvedCondition.isEmpty) continue;
 
       try {
         final sanitizedCondition = sanitizeCondition(resolvedCondition);
+        debugPrint('[ComputedListEval] Sanitized: "$sanitizedCondition"');
         final parser = FormulaParser(sanitizedCondition, flatContext);
         final result = parser.parse;
+        debugPrint('[ComputedListEval] Parse result: isSuccess=${result['isSuccess']}, value=${result['value']}');
 
         if (result['isSuccess'] && result['value'] == true) {
           results.add(item);

@@ -95,10 +95,21 @@ class WrapperBuilder {
 
         // 4. Computed list fields
         try {
+          debugPrint('[WrapperBuilder] Computing list fields. wrapperData keys: ${wrapperData.keys.toList()}');
+          debugPrint('[WrapperBuilder] Has individuals: ${wrapperData.containsKey('individuals')}, Has individual: ${wrapperData.containsKey('individual')}');
+          if (wrapperData.containsKey('individual')) {
+            final ind = wrapperData['individual'];
+            debugPrint('[WrapperBuilder] individual value type: ${ind?.runtimeType}, length: ${ind is List ? ind.length : 'N/A'}');
+          }
+          if (wrapperData.containsKey('individuals')) {
+            final ind = wrapperData['individuals'];
+            debugPrint('[WrapperBuilder] individuals value type: ${ind?.runtimeType}, length: ${ind is List ? ind.length : 'N/A'}');
+          }
           final computedList = ComputedListProcessor.applyComputedList(
             wrapperData,
             config,
           );
+          debugPrint('[WrapperBuilder] computedList results: ${computedList.keys.toList()}');
           wrapperData.addAll(computedList);
         } catch (e) {
           print(e.toString());

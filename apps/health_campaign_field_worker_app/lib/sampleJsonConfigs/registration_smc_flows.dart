@@ -1638,7 +1638,17 @@ final dynamic sampleSMCFlows = {
           "eligibleProductVariants": {
             "from": "{{currentDelivery.0.doseCriteria}}",
             "order": 3,
-            "fallback": []
+            "fallback": [],
+            "takeLast": false,
+            "evaluateCondition": {
+              "context": ["{{individuals.0}}", "{{household.0}}"],
+              "condition": "{{item.condition}}",
+              "transformations": {
+                "age": {"type": "ageInMonths", "source": "dateOfBirth"},
+                "height": {"type": "int", "source": "height"},
+                "weight": {"type": "int", "source": "weight"}
+              }
+            }
           }
         },
         "searchConfig": {
