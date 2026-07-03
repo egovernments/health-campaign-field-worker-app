@@ -1612,6 +1612,35 @@ final dynamic sampleSMCFlows = {
         ],
         "rootEntity": "HouseholdModel",
         "wrapperName": "HouseholdWrapper",
+        "computedList": {
+          "targetCycle": {
+            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 1,
+            "where": {
+              "left": "{{id}}",
+              "right": "{{currentRunningCycle}}",
+              "operator": "equals"
+            },
+            "fallback": null,
+            "takeLast": true
+          },
+          "currentDelivery": {
+            "from": "{{targetCycle.0.deliveries}}",
+            "order": 2,
+            "where": {
+              "left": "{{id}}",
+              "right": 1,
+              "operator": "equals"
+            },
+            "fallback": null,
+            "takeLast": true
+          },
+          "eligibleProductVariants": {
+            "from": "{{currentDelivery.0.doseCriteria}}",
+            "order": 3,
+            "fallback": []
+          }
+        },
         "searchConfig": {
           "select": [
             "household",
