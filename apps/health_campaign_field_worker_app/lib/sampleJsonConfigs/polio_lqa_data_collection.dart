@@ -731,11 +731,6 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "systemDate": false,
               "validations": [
                 {
-                  "type": "required",
-                  "value": true,
-                  "message": "LQA_VALIDATION_REQUIRED"
-                },
-                {
                   "type": "min",
                   "value": 0,
                   "message": "LQA_VALIDATION_MIN_ZERO"
@@ -761,11 +756,6 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "isEditable": true,
               "systemDate": false,
               "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "LQA_VALIDATION_REQUIRED"
-                },
                 {
                   "type": "min",
                   "value": 0,
@@ -1172,7 +1162,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                 "expression": [
                   {
                     "type": "custom",
-                    "condition": "childDetails.caregiverInformed=='YES'"
+                    "condition": "contains(childDetails.campaignAwareness, 'OTHERS')"
                   }
                 ]
               }
@@ -1194,11 +1184,6 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "isEditable": true,
               "systemDate": false,
               "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "LQA_VALIDATION_REQUIRED"
-                },
                 {
                   "type": "min",
                   "value": 0,

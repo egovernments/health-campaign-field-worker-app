@@ -443,11 +443,6 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "systemDate": false,
               "validations": [
                 {
-                  "type": "required",
-                  "value": true,
-                  "message": "IHM_VALIDATION_REQUIRED"
-                },
-                {
                   "type": "min",
                   "value": 0,
                   "message": "IHM_VALIDATION_MIN_ZERO"
@@ -474,11 +469,6 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "isEditable": true,
               "systemDate": false,
               "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "IHM_VALIDATION_REQUIRED"
-                },
                 {
                   "type": "min",
                   "value": 0,
@@ -819,7 +809,7 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                 "expression": [
                   {
                     "type": "custom",
-                    "condition": "monitoringDetails.caregiverInformed=='YES'"
+                    "condition": "contains(monitoringDetails.campaignInfoSource, 'OTHERS')"
                   }
                 ]
               }

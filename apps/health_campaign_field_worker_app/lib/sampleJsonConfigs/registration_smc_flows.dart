@@ -1317,6 +1317,10 @@ final dynamic sampleSMCFlows = {
                             {
                               "key": "lastDeliveredTaskClientReferenceId",
                               "value": "{{item.task.last.clientReferenceId}}"
+                            },
+                            {
+                              "key": "eligibleProductVariants",
+                              "value": "{{contextData.0.eligibleProductVariants}}"
                             }
                           ],
                           "name": "REDOSE",
