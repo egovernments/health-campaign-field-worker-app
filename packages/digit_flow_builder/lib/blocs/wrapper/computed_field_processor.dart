@@ -72,8 +72,6 @@ class ComputedFieldProcessor {
         results[key] = conf['fallback'];
       }
 
-      debugPrint('[ComputedField] $key => ${results[key]}');
-
       // Add to context for subsequent computed fields to reference
       context[key] = results[key];
     }

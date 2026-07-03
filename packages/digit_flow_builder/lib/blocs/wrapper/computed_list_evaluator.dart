@@ -12,10 +12,6 @@ class ComputedListEvaluator {
   static List<dynamic> evaluate(
       Map<String, dynamic> ctx, Map<String, dynamic> conf) {
     var list = resolveValueRaw(conf['from'], ctx);
-    debugPrint('[ComputedListEval] from="${conf['from']}" => '
-        'resolved type=${list?.runtimeType}, '
-        'isIterable=${list is Iterable}, '
-        'hasEvalCondition=${conf.containsKey('evaluateCondition')}');
     if (list is! Iterable) return [];
 
     // Handle evaluateCondition for formula-based filtering
@@ -261,8 +257,6 @@ class ComputedListEvaluator {
         final defaultValue =
             _getDefaultValueForMissingKey(key, resolvedCondition);
         contextMap[key] = defaultValue;
-        debugPrint(
-            'Missing key "$key" in context, using default: $defaultValue');
       }
     }
 
@@ -298,9 +292,6 @@ class ComputedListEvaluator {
         final sanitizedCondition = sanitizeCondition(resolvedCondition);
         final parser = FormulaParser(sanitizedCondition, flatContext);
         final result = parser.parse;
-        debugPrint('[ComputedListEval] condition="$sanitizedCondition" '
-            'context=${flatContext.entries.where((e) => e.key == 'age' || e.key == 'gender').map((e) => '${e.key}=${e.value}').join(', ')} '
-            '=> isSuccess=${result['isSuccess']}, value=${result['value']}');
 
         if (result['isSuccess'] && result['value'] == true) {
           results.add(item);

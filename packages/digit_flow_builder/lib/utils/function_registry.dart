@@ -435,7 +435,6 @@ void initializeFunctionRegistry() {
     bool? ageEligibleByCondition;
     if (minAge == null || maxAge == null) {
       ageEligibleByCondition = false;
-      debugPrint('[EligibilityCheck] No validMinAge/validMaxAge, falling back to doseCriteria. age=$totalAgeMonths months');
       for (final cycle in projectType.cycles ?? []) {
         if ((cycle.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
             (cycle.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch) {
@@ -459,22 +458,19 @@ void initializeFunctionRegistry() {
                 if (ageParts.isEmpty) {
                   // No age constraint in condition — treat as age-eligible
                   ageEligibleByCondition = true;
-                  debugPrint('[EligibilityCheck] condition="$condition" has no age constraint, treating as eligible');
                   break;
                 }
                 final ageOnlyCondition = ageParts.join('&&');
-                debugPrint('[EligibilityCheck] condition="$condition" -> ageOnly="$ageOnlyCondition" age=$totalAgeMonths');
                 final parser = FormulaParser(
                     ageOnlyCondition, {'age': totalAgeMonths});
                 final result = parser.parse;
-                debugPrint('[EligibilityCheck] result: isSuccess=${result['isSuccess']}, value=${result['value']}');
                 if (result['isSuccess'] == true &&
                     result['value'] == true) {
                   ageEligibleByCondition = true;
                   break;
                 }
               } catch (e) {
-                debugPrint('[EligibilityCheck] Age condition evaluation error: $e');
+                debugPrint('Age condition evaluation error: $e');
               }
             }
             if (ageEligibleByCondition == true) break;
@@ -482,7 +478,6 @@ void initializeFunctionRegistry() {
           break;
         }
       }
-      debugPrint('[EligibilityCheck] ageEligibleByCondition=$ageEligibleByCondition');
     }
 
 // --- Tasks & SideEffects come from stateData ---
