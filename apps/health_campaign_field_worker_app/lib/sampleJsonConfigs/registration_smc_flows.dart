@@ -2096,13 +2096,13 @@ final dynamic sampleSMCFlows = {
                                 "key": "projectId",
                                 "root": "projectBeneficiary",
                                 "value": "{{singleton.selectedProject.id}}",
-                                "operation": "notEqual"
+                                "operation": "equals"
                               },
                               {
                                 "key": "status",
                                 "root": "task",
-                                "value": "NOT_ADMINISTERED",
-                                "operation": "equals"
+                                "value": {"values": []},
+                                "operation": "notExists"
                               },
                               {
                                 "key": "localityBoundaryCode",
@@ -2110,8 +2110,7 @@ final dynamic sampleSMCFlows = {
                                 "value": "{{singleton.boundary.code}}",
                                 "operation": "equals"
                               }
-                            ],
-                            "filterLogic": "or"
+                            ]
                           }
                         }
                       ],
