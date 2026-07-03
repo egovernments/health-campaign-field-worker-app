@@ -54,18 +54,11 @@ class EligibilityNavigationExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    debugPrint('[ELIGIBILITY] Executor triggered');
-
     // ── 1. Config-driven properties ──────────────────────────────────
     final failedMessage = action.properties['failedMessage']?.toString() ??
         'BENEFICIARY_NOT_ELIGIBLE';
     final failedToastTypeStr =
         action.properties['failedToastType']?.toString() ?? 'warning';
-
-    debugPrint(
-      '[ELIGIBILITY] Config: failedMessage=$failedMessage, '
-      'target=${action.properties['name']}',
-    );
 
     // ── 2. Build nav-data lookup ─────────────────────────────────────
     final navData = action.properties['data'] as List<dynamic>? ?? [];
@@ -95,17 +88,10 @@ class EligibilityNavigationExecutor extends ActionExecutor {
       final parsed = _castValue(rawValue, type);
       availableVars[conditionVar] = parsed;
       defaultValues[conditionVar] = configDefault ?? _typeDefault(type);
-
-      debugPrint(
-        '[ELIGIBILITY] Param: $conditionVar (navKey=$navKey, type=$type) '
-        '→ raw=$rawValue, parsed=$parsed, default=${defaultValues[conditionVar]}',
-      );
     }
 
     // ── 4. Get cycleIndex from nav data ──────────────────────────────
     final cycleIndex = navMap['cycleIndex']?.toString();
-
-    debugPrint('[ELIGIBILITY] cycleIndex=$cycleIndex');
 
     // ── 5. Get project type & matching cycle ─────────────────────────
     final projectType = FlowBuilderSingleton().projectType;
@@ -113,12 +99,6 @@ class EligibilityNavigationExecutor extends ActionExecutor {
 
     final currentCycle = cycles?.firstWhereOrNull(
       (c) => c.id.toString() == cycleIndex?.toString(),
-    );
-
-    debugPrint(
-      '[ELIGIBILITY] projectType=${projectType?.code}, '
-      'currentCycle id=${currentCycle?.id}, '
-      'deliveries count=${currentCycle?.deliveries?.length}',
     );
 
     // ── 6. Evaluate dose criteria ────────────────────────────────────
@@ -148,49 +128,25 @@ class EligibilityNavigationExecutor extends ActionExecutor {
             }
           }
 
-          debugPrint(
-            '[ELIGIBILITY] Condition: "${dc.condition}" '
-            '→ sanitized: "$sanitized" '
-            '| requiredKeys: $requiredKeys '
-            '| evalContext: $evalContext',
-          );
-
           try {
             final parser = FormulaParser(sanitized, evalContext);
             final result = parser.parse;
-            debugPrint('[ELIGIBILITY] FormulaParser result: $result');
 
             if (result['isSuccess'] == true && result['value'] == true) {
               matchingCriteria.add(dc.toMap());
-              debugPrint('[ELIGIBILITY] MATCHED');
-            } else {
-              debugPrint('[ELIGIBILITY] did NOT match');
             }
-          } catch (e) {
-            debugPrint('[ELIGIBILITY] Condition eval error: $e');
+          } catch (_) {
+            // Condition evaluation failed — skip this criteria
           }
         } else {
           // No condition — include by default
           matchingCriteria.add(dc.toMap());
-          debugPrint(
-            '[ELIGIBILITY] No condition on doseCriteria, included by default',
-          );
         }
       }
-    } else {
-      debugPrint('[ELIGIBILITY] No doseCriteria found on first delivery');
     }
-
-    debugPrint(
-      '[ELIGIBILITY] Total matching criteria: ${matchingCriteria.length}',
-    );
 
     // ── 7. Navigate or show toast (config-driven) ────────────────────
     if (matchingCriteria.isNotEmpty) {
-      debugPrint(
-        '[ELIGIBILITY] ELIGIBLE → navigating to ${action.properties['name']}',
-      );
-
       // Add eligibleProductVariants to nav data
       final updatedNavData = List<dynamic>.from(navData);
       updatedNavData.add({
@@ -211,10 +167,6 @@ class EligibilityNavigationExecutor extends ActionExecutor {
       return await NavigationExecutor()
           .execute(navAction, context, contextData);
     } else {
-      debugPrint(
-        '[ELIGIBILITY] NOT ELIGIBLE → toast "$failedMessage", blocking nav',
-      );
-
       final ToastType toastType;
       switch (failedToastTypeStr) {
         case 'success':

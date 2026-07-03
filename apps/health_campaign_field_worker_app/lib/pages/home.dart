@@ -196,7 +196,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       'CHECK_ELIGIBILITY_AND_NAVIGATE',
       EligibilityNavigationExecutor(),
     );
-    debugPrint('[REDOSE] Registered CHECK_ELIGIBILITY_AND_NAVIGATE executor');
 
     CustomComponentRegistry().registerBuilder(
       'resourceCard',
@@ -218,17 +217,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         final navParams =
             FlowCrudStateRegistry().getNavigationParams(currentPage);
 
-        debugPrint('[REDOSE ResourceCard] currentPage=$currentPage');
-        debugPrint('[REDOSE ResourceCard] navParams keys=${navParams?.keys}');
-
         // Read eligible product variants from nav params
         // (set by CHECK_ELIGIBILITY_AND_NAVIGATE executor)
         final eligibleProductVariants = navParams?['eligibleProductVariants'];
-
-        debugPrint(
-          '[REDOSE ResourceCard] eligibleProductVariants='
-          '$eligibleProductVariants',
-        );
 
         List<Map<String, dynamic>> matchingCriteria;
         if (eligibleProductVariants is List) {
@@ -238,11 +229,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         } else {
           matchingCriteria = [];
         }
-
-        debugPrint(
-          '[REDOSE ResourceCard] matchingCriteria count='
-          '${matchingCriteria.length}',
-        );
 
         final computedState = FlowCrudState(
           stateWrapper: [
