@@ -1723,7 +1723,7 @@
       "body": [
         {
           "type": "template",
-          "label": "SEARCH_BENEFICIARY_NAME_HINT",
+          "label": "REGISTRATION_INDIVIDUAL_SEARCH_BENEFICIARY_NAME_HINT",
           "format": "searchBar",
           "onAction": [
             {
