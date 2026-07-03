@@ -350,6 +350,9 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                               label: localizations.translate(
                                   FlowBuilderSingleton().boundary?.code ?? ""),
                               isIcon: true,
+                              isStroke: true,
+                              borderColor:
+                                  Theme.of(context).colorTheme.primary.primary2,
                               customTextStyle: Theme.of(context)
                                   .digitTextTheme(context)
                                   .bodyS
@@ -367,7 +370,9 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                               themeData: TagThemeData(
                                   monochromeBackgroundColor:
                                       Theme.of(context).colorTheme.alert.infoBg,
-                                  iconLabelGap: spacer1),
+                                  iconLabelGap: spacer1,
+                                  borderRadius: BorderRadius.circular(24),
+                                  borderWidth: 0.5),
                             ),
                             const SizedBox(height: spacer2),
                             Builder(builder: (context) {
