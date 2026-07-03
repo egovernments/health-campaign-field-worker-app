@@ -131,8 +131,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
       }
 
       final match = mappedCodes.any((code) =>
-          scannedBoundary == code ||
-          scannedBoundary.startsWith('${code}_'));
+          scannedBoundary == code || scannedBoundary.startsWith('${code}_'));
       if (match) return null;
 
       return 'Scanned user is not in your assigned boundary. Rescan a user in your area.';
@@ -735,54 +734,9 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                           Navigator.of(ctx).pop();
                         },
                         type: PopUpType.simple,
+                        inlineActions: true,
+                        actionAlignment: MainAxisAlignment.spaceEvenly,
                         actions: [
-                          DigitButton(
-                              label: AppLocalizations.of(context).translate(
-                                i18.common.coreCommonOk,
-                              ),
-                              onPressed: () async {
-                                final isar = context.read<Isar>();
-                                final serviceRegistry = await isar
-                                    .serviceRegistrys
-                                    .where()
-                                    .findAll();
-                                final apiEndPoint =
-                                    Constants.getNotificationEndPoint(
-                                  serviceRegistry: serviceRegistry,
-                                  service: 'NOTIFICATION',
-                                  action: ApiOperation.unRegister.toValue(),
-                                  entityName: 'NotificationToken',
-                                );
-
-                                if (context.mounted) {
-                                  context.read<PushNotificationBloc>().add(
-                                        PushNotificationEvent.logout(
-                                          apiEndPoint: apiEndPoint,
-                                        ),
-                                      );
-                                  context
-                                      .read<BoundaryBloc>()
-                                      .add(const BoundaryResetEvent());
-                                  context.read<LocalizationBloc>().add(
-                                        LocalizationEvent.onLoadLocalization(
-                                          module: Constants
-                                              .homeLocalizationModules
-                                              .join(','),
-                                          tenantId:
-                                              envConfig.variables.tenantId,
-                                          locale: AppSharedPreferences()
-                                                  .getSelectedLocale ??
-                                              '',
-                                          path: Constants.localizationApiPath,
-                                        ),
-                                      );
-                                  context
-                                      .read<AuthBloc>()
-                                      .add(const AuthLogoutEvent());
-                                }
-                              },
-                              type: DigitButtonType.secondary,
-                              size: DigitButtonSize.large),
                           DigitButton(
                               label: AppLocalizations.of(context).translate(
                                 i18.common.coreCommonNo,
@@ -794,6 +748,53 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                 ).pop(true);
                               },
                               type: DigitButtonType.primary,
+                              size: DigitButtonSize.large),
+                          DigitButton(
+                              label: AppLocalizations.of(context).translate(
+                                i18.common.coreCommonYes,
+                              ),
+                              onPressed: () async {
+                                final isar = context.read<Isar>();
+                                final serviceRegistry = await isar
+                                    .serviceRegistrys
+                                    .where()
+                                    .findAll();
+                                final apiEndPoint =
+                                Constants.getNotificationEndPoint(
+                                  serviceRegistry: serviceRegistry,
+                                  service: 'NOTIFICATION',
+                                  action: ApiOperation.unRegister.toValue(),
+                                  entityName: 'NotificationToken',
+                                );
+
+                                if (context.mounted) {
+                                  context.read<PushNotificationBloc>().add(
+                                    PushNotificationEvent.logout(
+                                      apiEndPoint: apiEndPoint,
+                                    ),
+                                  );
+                                  context
+                                      .read<BoundaryBloc>()
+                                      .add(const BoundaryResetEvent());
+                                  context.read<LocalizationBloc>().add(
+                                    LocalizationEvent.onLoadLocalization(
+                                      module: Constants
+                                          .homeLocalizationModules
+                                          .join(','),
+                                      tenantId:
+                                      envConfig.variables.tenantId,
+                                      locale: AppSharedPreferences()
+                                          .getSelectedLocale ??
+                                          '',
+                                      path: Constants.localizationApiPath,
+                                    ),
+                                  );
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(const AuthLogoutEvent());
+                                }
+                              },
+                              type: DigitButtonType.secondary,
                               size: DigitButtonSize.large)
                         ],
                       ),
@@ -832,7 +833,8 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     final boundaryModule =
         'hcm-boundary-${runtimeHierarchyType().toLowerCase()}';
     try {
-      final localResults = await LocalizationLocalRepository().fetchLocalization(
+      final localResults =
+          await LocalizationLocalRepository().fetchLocalization(
         sql: locBloc.sql,
         locale: locale,
         module: boundaryModule,
