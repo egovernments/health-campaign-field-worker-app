@@ -6,44 +6,26 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
   "disabled": false,
   "isSelected": true,
   "flows": [
-    // ══════════════════════════════════════════════════════════════════════
-    // Flow 1: insideHouseholdEntry (FORM) — 3 pages
-    // ══════════════════════════════════════════════════════════════════════
     {
-      "screenType": "FORM",
       "name": "insideHouseholdEntry",
-      "project": "POLIO-SIA",
-      "version": 1,
-      "disabled": false,
-      "isSelected": true,
-      "initActions": [],
-      "wrapperConfig": {},
-      "includeSummary": true,
+      "order": 1,
       "pages": [
-        // ── Page 1: First Household Location ──
         {
           "page": "firstHouseholdLocation",
+          "type": "object",
           "label": "IHM_FIRST_HOUSEHOLD_LOCATION_LABEL",
           "order": 1,
-          "type": "object",
-          "description": "IHM_FIRST_HOUSEHOLD_LOCATION_DESC",
-          "actionLabel": "IHM_NEXT",
           "value": null,
-          "required": null,
           "hidden": null,
-          "helpText": null,
-          "innerLabel": null,
-          "validations": null,
-          "tooltip": null,
-          "startDate": null,
           "endDate": null,
+          "tooltip": null,
+          "helpText": null,
           "readOnly": null,
+          "required": null,
           "charCount": null,
-          "systemDate": null,
-          "isMultiSelect": null,
-          "includeInForm": null,
-          "includeInSummary": null,
+          "startDate": null,
           "autoEnable": null,
+          "innerLabel": null,
           "navigateTo": {"name": "monitoringDetails", "type": "form"},
           "properties": [
             {
@@ -68,65 +50,39 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_gpsFirstHousehold_ERROR",
               "isMultiSelect": false
             }
-          ]
+          ],
+          "systemDate": null,
+          "actionLabel": "IHM_NEXT",
+          "description": "IHM_FIRST_HOUSEHOLD_LOCATION_DESC",
+          "validations": null,
+          "includeInForm": null,
+          "isMultiSelect": null,
+          "includeInSummary": null
         },
-
-        // ── Page 2: Monitoring Details ──
         {
           "page": "monitoringDetails",
+          "type": "object",
           "label": "IHM_MONITORING_DETAILS_LABEL",
           "order": 2,
-          "type": "object",
-          "description": "IHM_MONITORING_DETAILS_DESC",
-          "actionLabel": "IHM_NEXT",
           "value": null,
-          "required": null,
           "hidden": null,
-          "helpText": null,
-          "innerLabel": null,
-          "validations": null,
-          "tooltip": null,
-          "startDate": null,
           "endDate": null,
+          "tooltip": null,
+          "helpText": null,
           "readOnly": null,
+          "required": null,
           "charCount": null,
-          "systemDate": null,
-          "isMultiSelect": null,
-          "includeInForm": null,
-          "includeInSummary": null,
+          "startDate": null,
           "autoEnable": null,
+          "innerLabel": null,
           "navigateTo": {"name": "closeout", "type": "form"},
           "properties": [
-            // ── Monitor info ──
-
-            // 1. monitorDesignation
             {
               "type": "string",
-              "label": "IHM_MONITOR_DESIGNATION_LABEL",
-              "order": 1,
-              "value": "",
-              "format": "dropdown",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "monitorDesignation",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "IHM_VALIDATION_REQUIRED"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
               "enums": [
                 {"code": "WHO_HQ", "name": "IHM_ENUM_WHO_HQ"},
                 {"code": "WHO_REGION", "name": "IHM_ENUM_WHO_REGION"},
@@ -158,10 +114,31 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                 {"code": "VOLUNTEER", "name": "IHM_ENUM_VOLUNTEER"},
                 {"code": "STUDENT", "name": "IHM_ENUM_STUDENT"},
                 {"code": "OTHERS", "name": "IHM_ENUM_OTHERS"}
-              ]
+              ],
+              "label": "IHM_MONITOR_DESIGNATION_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "monitorDesignation",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_monitorDesignation_ERROR",
+              "isMultiSelect": false
             },
-
-            // 2. designationOther
             {
               "type": "string",
               "label": "IHM_DESIGNATION_OTHER_LABEL",
@@ -183,17 +160,19 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "visibilityCondition": {
                 "expression": [
                   {
+                    "type": "custom",
                     "condition":
-                        "monitoringDetails.monitorDesignation=='OTHERS'",
-                    "type": "custom"
+                        "monitoringDetails.monitorDesignation=='OTHERS'"
                   }
                 ]
               }
             },
-
-            // 3. monitoringType
             {
               "type": "string",
+              "enums": [
+                {"code": "IN_PROCESS", "name": "IHM_ENUM_IN_PROCESS"},
+                {"code": "END_PROCESS", "name": "IHM_ENUM_END_PROCESS"}
+              ],
               "label": "IHM_MONITORING_TYPE_LABEL",
               "order": 3,
               "value": "",
@@ -214,21 +193,16 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": [
-                {"code": "IN_PROCESS", "name": "IHM_ENUM_IN_PROCESS"},
-                {"code": "END_PROCESS", "name": "IHM_ENUM_END_PROCESS"}
-              ]
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_monitoringType_ERROR",
+              "isMultiSelect": false
             },
-
-            // 4. monitoringDate
             {
               "type": "string",
               "label": "IHM_MONITORING_DATE_LABEL",
               "order": 4,
               "value": "",
-              "format": "text",
+              "format": "date",
               "hidden": false,
               "tooltip": "",
               "helpText": "",
@@ -245,11 +219,10 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_monitoringDate_ERROR",
               "isMultiSelect": false
             },
-
-            // 5. settlementArea
             {
               "type": "string",
               "label": "IHM_SETTLEMENT_AREA_LABEL",
@@ -269,32 +242,30 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "errorMessage": "",
               "isMultiSelect": false
             },
-
-            // 7. settlementType
             {
               "type": "string",
-              "label": "IHM_SETTLEMENT_TYPE_LABEL",
-              "order": 7,
+              "label": "IHM_SETTLEMENT_NAME_LABEL",
+              "order": 6,
               "value": "",
-              "format": "dropdown",
+              "format": "text",
               "hidden": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": true,
-              "fieldName": "settlementType",
+              "fieldName": "settlementName",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "IHM_VALIDATION_REQUIRED"
-                }
-              ],
+              "validations": [],
               "errorMessage": "",
               "isMultiSelect": false,
+              "autoFillCondition": [
+                {"value": "{{settlementName}}", "expression": "true==true"}
+              ]
+            },
+            {
+              "type": "string",
               "enums": [
                 {"code": "URBAN", "name": "IHM_ENUM_URBAN"},
                 {"code": "RURAL", "name": "IHM_ENUM_RURAL"},
@@ -309,12 +280,36 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                 {"code": "IMMIGRANTS", "name": "IHM_ENUM_IMMIGRANTS"},
                 {"code": "CROSS_BORDER", "name": "IHM_ENUM_CROSS_BORDER"}
               ],
+              "label": "IHM_SETTLEMENT_TYPE_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "settlementType",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "IHM_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_settlementType_ERROR",
+              "isMultiSelect": false,
               "autoFillCondition": [
-                {"value": "{{singleton.settlementType}}", "expression": "true==true"}
+                {
+                  "value": "{{singleton.settlementType}}",
+                  "expression": "true==true"
+                }
               ]
             },
-
-            // 8. monitorName
             {
               "type": "string",
               "label": "IHM_MONITOR_NAME_LABEL",
@@ -337,17 +332,13 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_monitorName_ERROR",
               "isMultiSelect": false,
               "autoFillCondition": [
-                {
-                  "value": "{{loggedInUserName}}",
-                  "expression": "true==true"
-                }
+                {"value": "{{loggedInUserName}}", "expression": "true==true"}
               ]
             },
-
-            // 9. monitorPhone
             {
               "type": "string",
               "label": "IHM_MONITOR_PHONE_LABEL",
@@ -373,12 +364,12 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                 }
               ]
             },
-
-            // ── Household-level questions (A through P) ──
-
-            // A. teamVisited
             {
               "type": "string",
+              "enums": [
+                {"code": "YES", "name": "IHM_ENUM_YES"},
+                {"code": "NO", "name": "IHM_ENUM_NO"}
+              ],
               "label": "IHM_TEAM_VISITED_LABEL",
               "order": 10,
               "value": "",
@@ -399,17 +390,16 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
-              "isMultiSelect": false,
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_teamVisited_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
               "enums": [
                 {"code": "YES", "name": "IHM_ENUM_YES"},
                 {"code": "NO", "name": "IHM_ENUM_NO"}
-              ]
-            },
-
-            // B. houseMarked
-            {
-              "type": "string",
+              ],
               "label": "IHM_HOUSE_MARKED_LABEL",
               "order": 11,
               "value": "",
@@ -426,21 +416,15 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "validations": [],
               "errorMessage": "",
               "isMultiSelect": false,
-              "enums": [
-                {"code": "YES", "name": "IHM_ENUM_YES"},
-                {"code": "NO", "name": "IHM_ENUM_NO"}
-              ],
               "visibilityCondition": {
                 "expression": [
                   {
-                    "condition": "monitoringDetails.teamVisited=='YES'",
-                    "type": "custom"
+                    "type": "custom",
+                    "condition": "monitoringDetails.teamVisited=='YES'"
                   }
                 ]
               }
             },
-
-            // C. childrenPresent
             {
               "type": "integer",
               "label": "IHM_CHILDREN_PRESENT_LABEL",
@@ -469,11 +453,10 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_childrenPresent_ERROR",
               "isMultiSelect": false
             },
-
-            // D. childrenVaccinated
             {
               "type": "integer",
               "label": "IHM_CHILDREN_VACCINATED_LABEL",
@@ -502,29 +485,12 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_childrenVaccinated_ERROR",
               "isMultiSelect": false
             },
-
-            // E. vaccinationLocation
             {
               "type": "string",
-              "label": "IHM_VACCINATION_LOCATION_LABEL",
-              "order": 14,
-              "value": "",
-              "format": "dropdown",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "vaccinationLocation",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false,
               "enums": [
                 {"code": "HOUSE", "name": "IHM_ENUM_HOUSE"},
                 {"code": "HEALTH_FACILITY", "name": "IHM_ENUM_HEALTH_FACILITY"},
@@ -542,10 +508,24 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                 },
                 {"code": "PLAYGROUND", "name": "IHM_ENUM_PLAYGROUND"},
                 {"code": "OTHER", "name": "IHM_ENUM_OTHER"}
-              ]
+              ],
+              "label": "IHM_VACCINATION_LOCATION_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "vaccinationLocation",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
             },
-
-            // F. missedAbsent
             {
               "type": "integer",
               "label": "IHM_MISSED_ABSENT_LABEL",
@@ -569,11 +549,10 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedAbsent_ERROR",
               "isMultiSelect": false
             },
-
-            // G. missedRefusal
             {
               "type": "integer",
               "label": "IHM_MISSED_REFUSAL_LABEL",
@@ -597,11 +576,10 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedRefusal_ERROR",
               "isMultiSelect": false
             },
-
-            // H. missedNotVisited
             {
               "type": "integer",
               "label": "IHM_MISSED_NOT_VISITED_LABEL",
@@ -625,11 +603,10 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedNotVisited_ERROR",
               "isMultiSelect": false
             },
-
-            // I. missedNotRevisited
             {
               "type": "integer",
               "label": "IHM_MISSED_NOT_REVISITED_LABEL",
@@ -653,11 +630,10 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedNotRevisited_ERROR",
               "isMultiSelect": false
             },
-
-            // J. missedAsleep
             {
               "type": "integer",
               "label": "IHM_MISSED_ASLEEP_LABEL",
@@ -681,11 +657,10 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedAsleep_ERROR",
               "isMultiSelect": false
             },
-
-            // K. missedRoutine
             {
               "type": "integer",
               "label": "IHM_MISSED_ROUTINE_LABEL",
@@ -709,11 +684,10 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedRoutine_ERROR",
               "isMultiSelect": false
             },
-
-            // L. missedOther
             {
               "type": "integer",
               "label": "IHM_MISSED_OTHER_LABEL",
@@ -737,13 +711,16 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedOther_ERROR",
               "isMultiSelect": false
             },
-
-            // M. caregiverInformed
             {
               "type": "string",
+              "enums": [
+                {"code": "YES", "name": "IHM_ENUM_YES"},
+                {"code": "NO", "name": "IHM_ENUM_NO"}
+              ],
               "label": "IHM_CAREGIVER_INFORMED_LABEL",
               "order": 22,
               "value": "",
@@ -764,33 +741,12 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": [
-                {"code": "YES", "name": "IHM_ENUM_YES"},
-                {"code": "NO", "name": "IHM_ENUM_NO"}
-              ]
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_caregiverInformed_ERROR",
+              "isMultiSelect": false
             },
-
-            // N. campaignInfoSource (multi-select)
             {
               "type": "string",
-              "label": "IHM_CAMPAIGN_INFO_SOURCE_LABEL",
-              "order": 23,
-              "value": "",
-              "format": "dropdown",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "campaignInfoSource",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": true,
               "enums": [
                 {"code": "TV", "name": "IHM_ENUM_TV"},
                 {"code": "RADIO", "name": "IHM_ENUM_RADIO"},
@@ -816,18 +772,31 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                 {"code": "NEWSPAPER", "name": "IHM_ENUM_NEWSPAPER"},
                 {"code": "OTHERS", "name": "IHM_ENUM_OTHERS_SOURCE"}
               ],
+              "label": "IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+              "order": 23,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignInfoSource",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": true,
               "visibilityCondition": {
                 "expression": [
                   {
-                    "condition":
-                        "monitoringDetails.caregiverInformed=='YES'",
-                    "type": "custom"
+                    "type": "custom",
+                    "condition": "monitoringDetails.caregiverInformed=='YES'"
                   }
                 ]
               }
             },
-
-            // O. infoSourceOther
             {
               "type": "string",
               "label": "IHM_INFO_SOURCE_OTHER_LABEL",
@@ -849,17 +818,18 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "visibilityCondition": {
                 "expression": [
                   {
-                    "condition":
-                        "monitoringDetails.caregiverInformed=='YES'",
-                    "type": "custom"
+                    "type": "custom",
+                    "condition": "monitoringDetails.caregiverInformed=='YES'"
                   }
                 ]
               }
             },
-
-            // P. afpLimbWeakness
             {
               "type": "string",
+              "enums": [
+                {"code": "YES", "name": "IHM_ENUM_YES"},
+                {"code": "NO", "name": "IHM_ENUM_NO"}
+              ],
               "label": "IHM_AFP_LIMB_WEAKNESS_LABEL",
               "order": 25,
               "value": "",
@@ -880,15 +850,10 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": [
-                {"code": "YES", "name": "IHM_ENUM_YES"},
-                {"code": "NO", "name": "IHM_ENUM_NO"}
-              ]
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_afpLimbWeakness_ERROR",
+              "isMultiSelect": false
             },
-
-            // afpSuddenWeakness (number of AFP cases)
             {
               "type": "integer",
               "label": "IHM_AFP_CASE_COUNT_LABEL",
@@ -912,22 +877,18 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_afpSuddenWeakness_ERROR",
               "isMultiSelect": false,
               "visibilityCondition": {
                 "expression": [
                   {
-                    "condition":
-                        "monitoringDetails.afpLimbWeakness=='YES'",
-                    "type": "custom"
+                    "type": "custom",
+                    "condition": "monitoringDetails.afpLimbWeakness=='YES'"
                   }
                 ]
               }
             },
-
-            // ── Caregiver details ──
-
-            // caregiverName
             {
               "type": "string",
               "label": "IHM_CAREGIVER_NAME_LABEL",
@@ -950,11 +911,10 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_caregiverName_ERROR",
               "isMultiSelect": false
             },
-
-            // caregiverPhone
             {
               "type": "string",
               "label": "IHM_CAREGIVER_PHONE_LABEL",
@@ -974,35 +934,32 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "errorMessage": "",
               "isMultiSelect": false
             }
-          ]
+          ],
+          "systemDate": null,
+          "actionLabel": "IHM_NEXT",
+          "description": "IHM_MONITORING_DETAILS_DESC",
+          "validations": null,
+          "includeInForm": null,
+          "isMultiSelect": null,
+          "includeInSummary": null
         },
-
-        // ── Page 3: Closeout (Last Household Location + Final observations) ──
         {
           "page": "closeout",
+          "type": "object",
           "label": "IHM_CLOSEOUT_LABEL",
           "order": 3,
-          "type": "object",
-          "description": "IHM_CLOSEOUT_DESC",
-          "actionLabel": "IHM_SUBMIT",
           "value": null,
-          "required": null,
           "hidden": null,
-          "helpText": null,
-          "innerLabel": null,
-          "validations": null,
-          "tooltip": null,
-          "startDate": null,
           "endDate": null,
+          "tooltip": null,
+          "helpText": null,
           "readOnly": null,
+          "required": null,
           "charCount": null,
-          "systemDate": null,
-          "isMultiSelect": null,
-          "includeInForm": null,
-          "includeInSummary": null,
+          "startDate": null,
           "autoEnable": null,
+          "innerLabel": null,
           "properties": [
-            // 1. gpsLastHousehold
             {
               "type": "string",
               "label": "IHM_GPS_LAST_HOUSEHOLD_LABEL",
@@ -1022,10 +979,12 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "errorMessage": "",
               "isMultiSelect": false
             },
-
-            // 2. poorlyCoveredAreas
             {
               "type": "string",
+              "enums": [
+                {"code": "YES", "name": "IHM_ENUM_YES"},
+                {"code": "NO", "name": "IHM_ENUM_NO"}
+              ],
               "label": "IHM_POORLY_COVERED_AREAS_LABEL",
               "order": 2,
               "value": "",
@@ -1046,15 +1005,10 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": [
-                {"code": "YES", "name": "IHM_ENUM_YES"},
-                {"code": "NO", "name": "IHM_ENUM_NO"}
-              ]
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_poorlyCoveredAreas_ERROR",
+              "isMultiSelect": false
             },
-
-            // 3. finalComments
             {
               "type": "string",
               "label": "IHM_FINAL_COMMENTS_LABEL",
@@ -1077,24 +1031,35 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "message": "IHM_VALIDATION_MAX_500"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage":
+                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_finalComments_ERROR",
               "isMultiSelect": false
             }
-          ]
+          ],
+          "systemDate": null,
+          "actionLabel": "IHM_SUBMIT",
+          "description": "IHM_CLOSEOUT_DESC",
+          "validations": null,
+          "includeInForm": null,
+          "isMultiSelect": null,
+          "includeInSummary": null
         }
       ],
+      "version": 1,
+      "category": "Monitoring",
+      "disabled": false,
       "onAction": [
         {
           "actionType": "FETCH_TRANSFORMER_CONFIG",
           "properties": {
-            "configName": "polioInsideHousehold",
             "data": [],
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "IHM_ERROR_FETCH_CONFIG"}
               }
-            ]
+            ],
+            "configName": "polioInsideHousehold"
           }
         },
         {
@@ -1129,74 +1094,20 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
             ]
           }
         }
-      ]
-    },
-
-    // ══════════════════════════════════════════════════════════════════════
-    // Flow 2: insideMonitoringSummary (TEMPLATE) — Summary of recorded data
-    // ══════════════════════════════════════════════════════════════════════
-    {
-      "screenType": "TEMPLATE",
-      "name": "insideMonitoringSummary",
-      "order": 2,
-      "canPop": false,
-      "heading": "IHM_SUMMARY_HEADING",
-      "description": "IHM_SUMMARY_DESCRIPTION",
-      "header": [],
-      "initActions": [
-        {
-          "actionType": "SEARCH_EVENT",
-          "properties": {
-            "data": [
-              {
-                "key": "clientReferenceId",
-                "value": "{{navigation.SessionClientReferenceId}}",
-                "operation": "equals",
-                "root": "userAction"
-              }
-            ],
-            "name": "session",
-            "type": "SEARCH_EVENT"
-          }
-        }
       ],
-      "wrapperConfig": {
-        "filters": [
-          {"field": "action", "equals": "LOCATION_CAPTURE"},
-          {
-            "field": "additionalFields.form",
-            "equals": "POLIO_INSIDE_MONITORING"
-          }
-        ],
-        "relations": [
-          {
-            "name": "session",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "clientReferenceId"
-            },
-            "entity": "UserActionModel"
-          }
-        ],
-        "rootEntity": "UserActionModel",
-        "wrapperName": "InsideMonitoringWrapper",
-        "searchConfig": {
-          "select": ["userAction"],
-          "primary": "userAction"
-        }
-      },
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {},
+      "includeSummary": true
+    },
+    {
       "body": [
-        // ── Summary card with labelPairList ──
         {
           "type": "template",
           "format": "card",
-          "fieldName": "summaryCard",
-          "properties": {"type": "primary"},
           "children": [
             {
-              "type": "template",
-              "format": "labelPairList",
-              "fieldName": "sessionSummary",
               "data": [
                 {
                   "key": "IHM_SUMMARY_MONITOR_NAME",
@@ -1294,26 +1205,31 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                       "{{contextData.0.session.UserActionModel.additionalFields.fields.finalComments}}",
                   "isActive": true
                 }
-              ]
+              ],
+              "type": "template",
+              "format": "labelPairList",
+              "fieldName": "sessionSummary"
             }
-          ]
+          ],
+          "fieldName": "summaryCard",
+          "properties": {"type": "primary"}
         }
       ],
+      "name": "insideMonitoringSummary",
+      "order": 2,
+      "canPop": false,
       "footer": [
         {
           "type": "template",
-          "format": "button",
           "label": "IHM_ADD_ANOTHER_SESSION",
-          "fieldName": "addAnotherSession",
+          "format": "button",
           "onAction": [
             {
               "actionType": "NAVIGATION",
-              "properties": {
-                "type": "FORM",
-                "name": "insideHouseholdEntry"
-              }
+              "properties": {"name": "insideHouseholdEntry", "type": "FORM"}
             }
           ],
+          "fieldName": "addAnotherSession",
           "properties": {
             "size": "large",
             "type": "secondary",
@@ -1323,15 +1239,15 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
         },
         {
           "type": "template",
-          "format": "button",
           "label": "IHM_BACK_TO_HOME",
-          "fieldName": "backToHome",
+          "format": "button",
           "onAction": [
             {
               "actionType": "BACK_NAVIGATION",
               "properties": {"name": "HOME", "type": "HOME"}
             }
           ],
+          "fieldName": "backToHome",
           "properties": {
             "size": "large",
             "type": "primary",
@@ -1339,7 +1255,54 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
             "mainAxisAlignment": "center"
           }
         }
-      ]
+      ],
+      "header": [],
+      "heading": "IHM_SUMMARY_HEADING",
+      "category": "Monitoring",
+      "screenType": "TEMPLATE",
+      "description": "IHM_SUMMARY_DESCRIPTION",
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "clientReferenceId",
+                "root": "userAction",
+                "value": "{{navigation.SessionClientReferenceId}}",
+                "operation": "equals"
+              }
+            ],
+            "name": "session",
+            "type": "SEARCH_EVENT"
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "filters": [
+          {"field": "action", "equals": "LOCATION_CAPTURE"},
+          {
+            "field": "additionalFields.form",
+            "equals": "POLIO_INSIDE_MONITORING"
+          }
+        ],
+        "relations": [
+          {
+            "name": "session",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "UserActionModel"
+          }
+        ],
+        "rootEntity": "UserActionModel",
+        "wrapperName": "InsideMonitoringWrapper",
+        "searchConfig": {
+          "select": ["userAction"],
+          "primary": "userAction"
+        }
+      }
     }
   ]
 };

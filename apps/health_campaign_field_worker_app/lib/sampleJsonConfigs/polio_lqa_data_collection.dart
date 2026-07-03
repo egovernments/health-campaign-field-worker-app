@@ -6,11 +6,9 @@ final dynamic samplePolioLqaDataCollectionFlows = {
   "disabled": false,
   "isSelected": true,
   "flows": [
-    // ════════════════════════════════════════════════════════════════════════
-    // Flow 1: lqaClusterEntry (FORM) — Cluster info page
-    // ════════════════════════════════════════════════════════════════════════
     {
       "name": "lqaClusterEntry",
+      "order": 1,
       "pages": [
         {
           "page": "clusterInfo",
@@ -34,7 +32,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "label": "LQA_SURVEY_DATE_LABEL",
               "order": 1,
               "value": "",
-              "format": "text",
+              "format": "date",
               "hidden": false,
               "tooltip": "",
               "helpText": "",
@@ -51,7 +49,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_SURVEY_DATE_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_LQACLUSTERENTRY_surveyDate_ERROR",
               "isMultiSelect": false
             },
             {
@@ -66,25 +64,6 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "infoText": "",
               "readOnly": true,
               "fieldName": "settlementArea",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "LQA_HEALTH_FACILITY_AREA_LABEL",
-              "order": 3,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "healthFacilityArea",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -114,7 +93,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_LOT_NUMBER_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_LQACLUSTERENTRY_lotNumber_ERROR",
               "isMultiSelect": false
             },
             {
@@ -147,7 +126,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_CLUSTER_NUMBER_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_LQACLUSTERENTRY_clusterNumber_ERROR",
               "isMultiSelect": false
             },
             {
@@ -170,9 +149,14 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "type": "required",
                   "value": true,
                   "message": "LQA_VALIDATION_SURVEYOR_NAME_REQUIRED"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VALIDATION_ALPHANUMERIC_ONLY"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_LQACLUSTERENTRY_surveyorName_ERROR",
               "isMultiSelect": false,
               "autoFillCondition": [
                 {"value": "{{loggedInUserName}}", "expression": "true==true"}
@@ -200,7 +184,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_PHONE_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_LQACLUSTERENTRY_surveyorPhone_ERROR",
               "isMultiSelect": false,
               "autoFillCondition": [
                 {
@@ -216,6 +200,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "value": "",
               "format": "text",
               "hidden": false,
+              "pattern": "^[a-zA-Z0-9 ]+\$",
               "tooltip": "",
               "helpText": "",
               "infoText": "",
@@ -231,37 +216,17 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_COORDINATOR_NAME_REQUIRED"
                 },
                 {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VALIDATION_ALPHANUMERIC_ONLY"
+                },
+                {
                   "type": "minLength",
                   "value": 2,
                   "message": "LQA_VALIDATION_NAME_MIN_2_CHARS"
                 }
               ],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "LQA_STARTING_VILLAGE_LABEL",
-              "order": 9,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "startingVillage",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "LQA_VALIDATION_STARTING_VILLAGE_REQUIRED"
-                }
-              ],
-              "errorMessage": "",
+              "errorMessage": "LQA_LQACLUSTERENTRY_lqasCoordinatorName_ERROR",
               "isMultiSelect": false
             },
             {
@@ -291,7 +256,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "tooltip": "",
               "helpText": "",
               "infoText": "",
-              "readOnly": true,
+              "readOnly": false,
               "fieldName": "settlementType",
               "deleteFlag": false,
               "innerLabel": "",
@@ -303,7 +268,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_SETTLEMENT_TYPE_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_LQACLUSTERENTRY_settlementType_ERROR",
               "isMultiSelect": false,
               "autoFillCondition": [
                 {
@@ -338,7 +303,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_LQACLUSTERENTRY_settlementSmall_ERROR",
               "isMultiSelect": false
             },
             {
@@ -363,7 +328,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_GPS_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_LQACLUSTERENTRY_gpsStart_ERROR",
               "isMultiSelect": false
             }
           ],
@@ -376,8 +341,8 @@ final dynamic samplePolioLqaDataCollectionFlows = {
           "includeInSummary": null
         }
       ],
-      "project": "POLIO-SIA",
       "version": 1,
+      "category": "LQA",
       "disabled": false,
       "onAction": [
         {
@@ -431,13 +396,8 @@ final dynamic samplePolioLqaDataCollectionFlows = {
       "initActions": [],
       "wrapperConfig": {}
     },
-
-    // ════════════════════════════════════════════════════════════════════════
-    // Flow 2: clusterOverview (TEMPLATE) — Shows cluster details + children
-    // ════════════════════════════════════════════════════════════════════════
     {
       "body": [
-        // ── Cluster details card ──
         {
           "type": "template",
           "format": "card",
@@ -473,12 +433,6 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "value":
                       "{{contextData.0.cluster.UserActionModel.additionalFields.fields.surveyorName}}",
                   "isActive": true
-                },
-                {
-                  "key": "LQA_SETTLEMENT_TYPE_LABEL",
-                  "value":
-                      "{{contextData.0.cluster.UserActionModel.additionalFields.fields.settlementType}}",
-                  "isActive": true
                 }
               ],
               "type": "template",
@@ -489,8 +443,6 @@ final dynamic samplePolioLqaDataCollectionFlows = {
           "fieldName": "clusterCard",
           "properties": {"type": "primary"}
         },
-
-        // ── Children listView with memberCard ──
         {
           "type": "template",
           "child": {
@@ -498,237 +450,107 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             "format": "card",
             "children": [
               {
-                "type": "template",
-                "value":
-                    "{{ item.child.0.additionalFields.fields.fingerMarked }}",
-                "format": "tag",
-                "visible":
-                    "{{ item.child.0.additionalFields.fields.fingerMarked }}!=null",
-                "fieldName": "fingerMarkedTag",
-                "properties": {
-                  "tagType": "status",
-                  "bottomGap": 8,
-                  "tagMapping": {
-                    "YES": {
-                      "label": "LQA_TAG_FINGER_MARKED",
-                      "type": "success"
-                    },
-                    "NO": {"label": "LQA_TAG_NOT_MARKED", "type": "error"}
-                  }
-                }
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "children": [
+                "data": [
                   {
-                    "type": "template",
+                    "key": "LQA_CHILDREN_UNDER_5_LABEL",
                     "value":
-                        "{{ item.child.0.additionalFields.fields.childAgeMonths }} months | {{ item.child.0.additionalFields.fields.childSex }}",
-                    "format": "textTemplate",
-                    "fieldName": "childAgeSex"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.childrenUnder5 }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_CHILD_AGE_MONTHS_LABEL",
                     "value":
-                        "Children Under 5: {{ item.child.0.additionalFields.fields.childrenUnder5 }}",
-                    "format": "textTemplate",
-                    "fieldName": "childrenUnder5"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "visible":
-                    "{{ item.child.0.additionalFields.fields.reasonNotMarked }}!=null",
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.childAgeMonths }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_CHILD_SEX_LABEL",
                     "value":
-                        "Reason Not Marked: {{ item.child.0.additionalFields.fields.reasonNotMarked }}",
-                    "format": "textTemplate",
-                    "fieldName": "reasonNotMarked"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "visible":
-                    "{{ item.child.0.additionalFields.fields.reasonNotMarkedOther }}!=null",
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.childSex }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_FINGER_MARKED_LABEL",
                     "value":
-                        "Other Reason: {{ item.child.0.additionalFields.fields.reasonNotMarkedOther }}",
-                    "format": "textTemplate",
-                    "fieldName": "reasonNotMarkedOther"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "visible":
-                    "{{ item.child.0.additionalFields.fields.refusalReason }}!=null",
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.fingerMarked }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_REASON_NOT_MARKED_LABEL",
                     "value":
-                        "Refusal Reason: {{ item.child.0.additionalFields.fields.refusalReason }}",
-                    "format": "textTemplate",
-                    "fieldName": "refusalReason"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "visible":
-                    "{{ item.child.0.additionalFields.fields.refusalReasonOther }}!=null",
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.reasonNotMarked }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_OTHER_REASON_SPECIFY_LABEL",
                     "value":
-                        "Other Refusal: {{ item.child.0.additionalFields.fields.refusalReasonOther }}",
-                    "format": "textTemplate",
-                    "fieldName": "refusalReasonOther"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "visible":
-                    "{{ item.child.0.additionalFields.fields.absenceReason }}!=null",
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.reasonNotMarkedOther }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_REFUSAL_REASON_LABEL",
                     "value":
-                        "Absence Reason: {{ item.child.0.additionalFields.fields.absenceReason }}",
-                    "format": "textTemplate",
-                    "fieldName": "absenceReason"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "visible":
-                    "{{ item.child.0.additionalFields.fields.absenceReasonOther }}!=null",
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.refusalReason }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_OTHER_REFUSAL_REASON_LABEL",
                     "value":
-                        "Other Absence: {{ item.child.0.additionalFields.fields.absenceReasonOther }}",
-                    "format": "textTemplate",
-                    "fieldName": "absenceReasonOther"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.refusalReasonOther }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_ABSENCE_REASON_LABEL",
                     "value":
-                        "Caregiver Informed: {{ item.child.0.additionalFields.fields.caregiverInformed }}",
-                    "format": "textTemplate",
-                    "fieldName": "caregiverInformed"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "visible":
-                    "{{ item.child.0.additionalFields.fields.campaignAwareness }}!=null",
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.absenceReason }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_OTHER_ABSENCE_REASON_LABEL",
                     "value":
-                        "Campaign Awareness: {{ item.child.0.additionalFields.fields.campaignAwareness }}",
-                    "format": "textTemplate",
-                    "fieldName": "campaignAwareness"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "visible":
-                    "{{ item.child.0.additionalFields.fields.awarenessOther }}!=null",
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.absenceReasonOther }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_CAREGIVER_INFORMED_LABEL",
                     "value":
-                        "Other Awareness: {{ item.child.0.additionalFields.fields.awarenessOther }}",
-                    "format": "textTemplate",
-                    "fieldName": "awarenessOther"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.caregiverInformed }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_CAMPAIGN_AWARENESS_LABEL",
                     "value":
-                        "OPV Doses From Birth: {{ item.child.0.additionalFields.fields.opvDosesFromBirth }}",
-                    "format": "textTemplate",
-                    "fieldName": "opvDosesFromBirth"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {"bottomGap": 8},
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.campaignAwareness }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_AWARENESS_OTHER_LABEL",
                     "value":
-                        "AFP Awareness: {{ item.child.0.additionalFields.fields.afpAwareness }}",
-                    "format": "textTemplate",
-                    "fieldName": "afpAwareness"
-                  }
-                ]
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "visible":
-                    "{{ item.child.0.additionalFields.fields.afpCaseCount }}!=null",
-                "children": [
+                        "{{ item.child.0.additionalFields.fields.awarenessOther }}",
+                    "isActive": true
+                  },
                   {
-                    "type": "template",
+                    "key": "LQA_OPV_DOSES_LABEL",
                     "value":
-                        "AFP Case Count: {{ item.child.0.additionalFields.fields.afpCaseCount }}",
-                    "format": "textTemplate",
-                    "fieldName": "afpCaseCount"
+                        "{{ item.child.0.additionalFields.fields.opvDosesFromBirth }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_AFP_AWARENESS_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.afpAwareness }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_AFP_CASE_COUNT_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.afpCaseCount }}",
+                    "isActive": true
                   }
-                ]
+                ],
+                "type": "template",
+                "format": "labelPairList",
+                "fieldName": "childDetails"
               }
             ],
             "fieldName": "childCard",
@@ -743,8 +565,6 @@ final dynamic samplePolioLqaDataCollectionFlows = {
           "dataSource": "children",
           "properties": {"spacing": "spacer4"}
         },
-
-        // ── "Add Child Details" button ──
         {
           "type": "template",
           "label": "LQA_ADD_CHILD_BUTTON",
@@ -808,6 +628,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
       ],
       "header": [],
       "heading": "LQA_CLUSTER_OVERVIEW_HEADING",
+      "category": "LQA",
       "screenType": "TEMPLATE",
       "description": "LQA_CLUSTER_OVERVIEW_DESCRIPTION",
       "initActions": [
@@ -817,9 +638,9 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             "data": [
               {
                 "key": "resourceTag",
+                "root": "userAction",
                 "value": "{{navigation.ClusterClientReferenceId}}",
-                "operation": "equals",
-                "root": "userAction"
+                "operation": "equals"
               }
             ],
             "name": "cluster",
@@ -871,12 +692,9 @@ final dynamic samplePolioLqaDataCollectionFlows = {
         }
       }
     },
-
-    // ════════════════════════════════════════════════════════════════════════
-    // Flow 3: ADD_LQA_CHILD (FORM) — Add a single child interview
-    // ════════════════════════════════════════════════════════════════════════
     {
       "name": "ADD_LQA_CHILD",
+      "order": 3,
       "pages": [
         {
           "page": "childDetails",
@@ -923,7 +741,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_ADD_LQA_CHILD_childrenUnder5_ERROR",
               "isMultiSelect": false
             },
             {
@@ -959,7 +777,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_MAX_59_MONTHS"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_ADD_LQA_CHILD_childAgeMonths_ERROR",
               "isMultiSelect": false
             },
             {
@@ -988,7 +806,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_ADD_LQA_CHILD_childSex_ERROR",
               "isMultiSelect": false
             },
             {
@@ -1017,7 +835,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_ADD_LQA_CHILD_fingerMarked_ERROR",
               "isMultiSelect": false
             },
             {
@@ -1069,6 +887,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "value": "",
               "format": "text",
               "hidden": false,
+              "pattern": "^[a-zA-Z0-9 ]+\$",
               "tooltip": "",
               "helpText": "",
               "infoText": "",
@@ -1077,8 +896,14 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_reasonNotMarkedOther_ERROR",
               "isMultiSelect": false,
               "visibilityCondition": {
                 "expression": [
@@ -1134,6 +959,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "visibilityCondition": {
                 "expression": [
                   {
+                    "type": "custom",
                     "condition":
                         "childDetails.reasonNotMarked=='NON_COMPLIANCE'"
                   }
@@ -1147,6 +973,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "value": "",
               "format": "text",
               "hidden": false,
+              "pattern": "^[a-zA-Z0-9 ]+\$",
               "tooltip": "",
               "helpText": "",
               "infoText": "",
@@ -1155,8 +982,14 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_refusalReasonOther_ERROR",
               "isMultiSelect": false,
               "visibilityCondition": {
                 "expression": [
@@ -1209,6 +1042,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "value": "",
               "format": "text",
               "hidden": false,
+              "pattern": "^[a-zA-Z0-9 ]+\$",
               "tooltip": "",
               "helpText": "",
               "infoText": "",
@@ -1217,8 +1051,14 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_absenceReasonOther_ERROR",
               "isMultiSelect": false,
               "visibilityCondition": {
                 "expression": [
@@ -1255,7 +1095,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_ADD_LQA_CHILD_caregiverInformed_ERROR",
               "isMultiSelect": false
             },
             {
@@ -1365,7 +1205,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_ADD_LQA_CHILD_opvDosesFromBirth_ERROR",
               "isMultiSelect": false
             },
             {
@@ -1394,7 +1234,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_REQUIRED"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_ADD_LQA_CHILD_afpAwareness_ERROR",
               "isMultiSelect": false
             },
             {
@@ -1420,7 +1260,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_MIN_ZERO"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_ADD_LQA_CHILD_afpCaseCount_ERROR",
               "isMultiSelect": false,
               "visibilityCondition": {
                 "expression": [
@@ -1441,8 +1281,8 @@ final dynamic samplePolioLqaDataCollectionFlows = {
           "includeInSummary": null
         }
       ],
-      "project": "POLIO-SIA",
       "version": 1,
+      "category": "LQA",
       "disabled": false,
       "onAction": [
         {
@@ -1486,14 +1326,14 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             ],
             "name": "clusterOverview",
             "type": "TEMPLATE",
-            "navigationMode": "popUntilAndPush",
-            "popUntilPageName": "lqaClusterEntry",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "LQA_ERROR_NAVIGATION"}
               }
-            ]
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "lqaClusterEntry"
           }
         }
       ],
@@ -1502,12 +1342,9 @@ final dynamic samplePolioLqaDataCollectionFlows = {
       "initActions": [],
       "wrapperConfig": {}
     },
-
-    // ════════════════════════════════════════════════════════════════════════
-    // Flow 4: lqaCloseout (FORM) — GPS final + comments
-    // ════════════════════════════════════════════════════════════════════════
     {
       "name": "lqaCloseout",
+      "order": 4,
       "pages": [
         {
           "page": "closeout",
@@ -1567,7 +1404,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                   "message": "LQA_VALIDATION_MAX_500_CHARS"
                 }
               ],
-              "errorMessage": "",
+              "errorMessage": "LQA_LQACLOSEOUT_finalComments_ERROR",
               "isMultiSelect": false
             }
           ],
@@ -1580,8 +1417,8 @@ final dynamic samplePolioLqaDataCollectionFlows = {
           "includeInSummary": null
         }
       ],
-      "project": "POLIO-SIA",
       "version": 1,
+      "category": "LQA",
       "disabled": false,
       "onAction": [
         {
@@ -1633,16 +1470,13 @@ final dynamic samplePolioLqaDataCollectionFlows = {
       "initActions": [],
       "wrapperConfig": {}
     },
-
-    // ════════════════════════════════════════════════════════════════════════
-    // Flow 5: lqaSuccess (TEMPLATE) — Success screen
-    // ════════════════════════════════════════════════════════════════════════
     {
       "body": [
         {
           "type": "template",
           "label": "LQA_SUCCESS_HEADING",
           "format": "panelCard",
+          "fieldName": "lqaSuccessHeading",
           "properties": {"type": "success"},
           "description": "LQA_SUCCESS_DESCRIPTION",
           "primaryAction": {
@@ -1679,6 +1513,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
       "footer": [],
       "header": [],
       "heading": "",
+      "category": "LQA",
       "screenType": "TEMPLATE",
       "description": "",
       "initActions": []
