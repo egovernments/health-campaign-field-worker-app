@@ -1,3 +1,10 @@
+## 1.0.6+1
+
+* Removed unused models, blocs, freezed files, and manage_attendance page from the package (moved to consumer app)
+* Updated remote repositories (`attendance_logs`, `attendance_register`) to use new data repository shape
+* Accepted transactions now key off `clientReferenceId` instead of server-generated ids
+* Fixed attendance QR scan flow
+
 ## 1.0.6
 
 * Updated scanner and data_model package
