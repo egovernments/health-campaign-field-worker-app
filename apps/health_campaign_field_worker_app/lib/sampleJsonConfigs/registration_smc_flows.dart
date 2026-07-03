@@ -2173,6 +2173,14 @@ final dynamic sampleSMCFlows = {
           "suffixIcon": "FilterAlt"
         },
         {
+          "type": "template",
+          "label": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
+          "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
+          "format": "noResultCard",
+          "fieldName": "beneficiaryNotFound",
+          "showOnEmptySearch": true
+        },
+        {
           "data": "members",
           "type": "template",
           "child": {
