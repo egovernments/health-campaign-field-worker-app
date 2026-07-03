@@ -12,6 +12,10 @@ class ComputedListEvaluator {
   static List<dynamic> evaluate(
       Map<String, dynamic> ctx, Map<String, dynamic> conf) {
     var list = resolveValueRaw(conf['from'], ctx);
+    debugPrint('[ComputedListEval] from="${conf['from']}" => '
+        'resolved type=${list?.runtimeType}, '
+        'isIterable=${list is Iterable}, '
+        'hasEvalCondition=${conf.containsKey('evaluateCondition')}');
     if (list is! Iterable) return [];
 
     // Handle evaluateCondition for formula-based filtering
@@ -291,12 +295,12 @@ class ComputedListEvaluator {
       if (resolvedCondition == null || resolvedCondition.isEmpty) continue;
 
       try {
-        // TODO: Fix condition format in configuration files - replace 'and' with '&&' for proper formula parser syntax
-        final sanitizedCondition = resolvedCondition
-            .replaceAll(' and ', ' && ')
-            .replaceAll('and', '&&');
+        final sanitizedCondition = sanitizeCondition(resolvedCondition);
         final parser = FormulaParser(sanitizedCondition, flatContext);
         final result = parser.parse;
+        debugPrint('[ComputedListEval] condition="$sanitizedCondition" '
+            'context=${flatContext.entries.where((e) => e.key == 'age' || e.key == 'gender').map((e) => '${e.key}=${e.value}').join(', ')} '
+            '=> isSuccess=${result['isSuccess']}, value=${result['value']}');
 
         if (result['isSuccess'] && result['value'] == true) {
           results.add(item);
@@ -320,6 +324,28 @@ class ComputedListEvaluator {
     }
 
     return results;
+  }
+
+  /// Sanitizes a condition string for FormulaParser:
+  /// 1. Replaces `and` with `&&`
+  /// 2. Expands chained comparisons like `60<=age<=180` into
+  ///    `60<=age&&age<=180` since FormulaParser does not support
+  ///    Python-style chained comparisons.
+  static String sanitizeCondition(String condition) {
+    var sanitized = condition
+        .replaceAll(' and ', ' && ')
+        .replaceAll('and', '&&');
+
+    // Expand chained comparisons: "60<=age<=180" → "60<=age&&age<=180"
+    // Pattern: number op variable op number
+    final chainedPattern = RegExp(
+      r'(\d+(?:\.\d+)?)\s*(<=|>=|<|>)\s*([a-zA-Z_]\w*)\s*(<=|>=|<|>)\s*(\d+(?:\.\d+)?)',
+    );
+    sanitized = sanitized.replaceAllMapped(chainedPattern, (m) {
+      return '${m[1]}${m[2]}${m[3]}&&${m[3]}${m[4]}${m[5]}';
+    });
+
+    return sanitized;
   }
 
   static Iterable<T> _takeWhile<T>(

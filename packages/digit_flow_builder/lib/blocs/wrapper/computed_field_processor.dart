@@ -1,7 +1,9 @@
 import 'package:digit_formula_parser/digit_formula_parser.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../utils/utils.dart';
+import 'computed_list_evaluator.dart';
 import 'condition_evaluator.dart';
 import 'computed_evaluator.dart';
 import 'field_evaluator.dart';
@@ -70,6 +72,8 @@ class ComputedFieldProcessor {
         results[key] = conf['fallback'];
       }
 
+      debugPrint('[ComputedField] $key => ${results[key]}');
+
       // Add to context for subsequent computed fields to reference
       context[key] = results[key];
     }
@@ -120,9 +124,8 @@ class ComputedFieldProcessor {
       );
 
       try {
-        // TODO: Fix condition format in configuration files - replace 'and' with '&&' for proper formula parser syntax
         final sanitizedCondition =
-            condition.replaceAll(' and ', ' && ').replaceAll('and', '&&');
+            ComputedListEvaluator.sanitizeCondition(condition);
         final parser = FormulaParser(sanitizedCondition, flatContext);
         final result = parser.parse;
 
