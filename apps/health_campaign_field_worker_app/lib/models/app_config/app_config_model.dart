@@ -24,33 +24,14 @@ class MdmsRequestModel with _$MdmsRequestModel {
 class MdmsCriteriaModel with _$MdmsCriteriaModel {
   const factory MdmsCriteriaModel({
     required String tenantId,
-    required List<MdmsModuleDetailModel> moduleDetails,
+    required String schemaCode,
+    Map<String, dynamic>? filters,
+    int? limit,
+    bool? isActive,
   }) = _MdmsCriteriaModel;
 
   factory MdmsCriteriaModel.fromJson(Map<String, dynamic> json) =>
       _$MdmsCriteriaModelFromJson(json);
-}
-
-@freezed
-class MdmsModuleDetailModel with _$MdmsModuleDetailModel {
-  const factory MdmsModuleDetailModel({
-    required String moduleName,
-    required List<MdmsMasterDetailModel> masterDetails,
-  }) = _MdmsModuleDetailModel;
-
-  factory MdmsModuleDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$MdmsModuleDetailModelFromJson(json);
-}
-
-@freezed
-class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
-  const factory MdmsMasterDetailModel(
-      String name, {
-        String? filter,
-      }) = _MdmsMasterDetailModel;
-
-  factory MdmsMasterDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$MdmsMasterDetailModelFromJson(json);
 }
 
 @freezed

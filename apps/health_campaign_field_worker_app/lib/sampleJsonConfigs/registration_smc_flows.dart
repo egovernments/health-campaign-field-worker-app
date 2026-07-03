@@ -770,7 +770,9 @@ final dynamic sampleSMCFlows = {
               "context": ["{{individuals.0}}", "{{household.0}}"],
               "condition": "{{item.condition}}",
               "transformations": {
-                "age": {"type": "ageInMonths", "source": "dateOfBirth"}
+                "age": {"type": "ageInMonths", "source": "dateOfBirth"},
+                "height": {"type": "int", "source": "height"},
+                "weight": {"type": "int", "source": "weight"}
               }
             }
           }
@@ -1046,16 +1048,6 @@ final dynamic sampleSMCFlows = {
                     "format": "textTemplate",
                     "fieldName": "genderAge",
                     "properties": {"bottomGap": 16}
-                  },
-                  {
-                    "type": "template",
-                    "label":
-                        "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}}",
-                    "format": "tag",
-                    "visible":
-                        "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}} != ''",
-                    "fieldName": "uniqueBeneficiaryIdTag",
-                    "properties": {"tagType": "info", "bottomGap": 16}
                   },
                   {
                     "type": "template",
@@ -2320,13 +2312,6 @@ final dynamic sampleSMCFlows = {
                       "hidden": false,
                       "isActive": true,
                       "cellValue": "{{item.gender}}"
-                    },
-                    {
-                      "header": "UNIQUE_BENEFICIARY_ID",
-                      "hidden": false,
-                      "isActive": true,
-                      "cellValue":
-                          "{{fn:getUniqueBeneficiaryId(item.identifiers.0)}}"
                     }
                   ]
                 },
@@ -3641,22 +3626,6 @@ final dynamic sampleSMCFlows = {
           }
         },
         {
-          // Redose consumes another vial from stock (same pattern as the
-          // DELIVERY flow at line ~2741). Without this the balance stays at
-          // the pre-redose value even though the task+resource carry
-          // isDelivered=true, so StockBalanceExecutor never gets to deduct.
-          "actionType": "UPDATE_STOCK_BALANCE",
-          "properties": {
-            "entity": "TaskModel",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to update stock balance."}
-              }
-            ]
-          }
-        },
-        {
           "actionType": "NAVIGATION",
           "properties": {
             "data": [
@@ -4747,10 +4716,106 @@ final dynamic sampleSMCFlows = {
               "required.message": "GENDER_MANDATORY_MESSAGE_ADDMEMBER"
             },
             {
+              "type": "integer",
+              "label":
+                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_height_addmember",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "height",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "GENDER_MANDATORY_MESSAGE_HEIGHT_addmember"
+                },
+                {
+                  "type": "min",
+                  "value": true,
+                  "message":
+                      "APPONE_REGISTRATION_HOUSEDETAILS_label_height_Min_message_addmember"
+                },
+                {
+                  "type": "max",
+                  "value": true,
+                  "message":
+                      "APPONE_REGISTRATION_HOUSEDETAILS_label_height_Max_message_addmember"
+                }
+              ],
+              "errorMessage": "REGISTRATION_ADD_MEMBER_height_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label":
+                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_weight_addmember",
+              "order": 7,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "weight",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "GENDER_MANDATORY_MESSAGE_WEIGHT_addmember"
+                }
+              ],
+              "errorMessage": "REGISTRATION_ADD_MEMBER_weight_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "boolean",
+              "label":
+                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isPregnant_addmember",
+              "order": 8,
+              "value": "",
+              "format": "checkbox",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "isPregnant",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "beneficiaryDetails.gender==FEMALE && calculateAgeInMonths(beneficiaryDetails.dobPicker)>=180"
+                  }
+                ]
+              }
+            },
+            {
               "type": "string",
               "label":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_addmember",
-              "order": 6,
+              "order": 9,
               "value": "",
               "format": "mobileNumber",
               "hidden": false,
@@ -4798,7 +4863,7 @@ final dynamic sampleSMCFlows = {
               "type": "string",
               "label":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner_addmember",
-              "order": 7,
+              "order": 10,
               "value": "",
               "format": "scanner",
               "hidden": false,
@@ -5892,9 +5957,105 @@ final dynamic sampleSMCFlows = {
               "required.message": "GENDER_MANDATORY_MESSAGE"
             },
             {
+              "type": "integer",
+              "label": "APPONE_REGISTRATION_HOUSEDETAILS_label_height",
+              "order": 7,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "height",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_REGISTRATION_HOUSEDETAILS_label_height_IS_MANDATORY"
+                },
+                {
+                  "type": "min",
+                  "value": true,
+                  "message":
+                      "APPONE_REGISTRATION_HOUSEDETAILS_label_height_Min_message"
+                },
+                {
+                  "type": "max",
+                  "value": true,
+                  "message":
+                      "APPONE_REGISTRATION_HOUSEDETAILS_label_height_Max_message"
+                }
+              ],
+              "errorMessage": "REGISTRATION_HOUSEHOLD_height_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "weight",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_REGISTRATION_HOUSEDETAILS_label_weight_IS_MANDATORY"
+                }
+              ],
+              "errorMessage": "REGISTRATION_HOUSEHOLD_weight_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "boolean",
+              "label":
+                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isPregnant",
+              "order": 9,
+              "value": "",
+              "format": "checkbox",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "isPregnant",
+              "mandatory": false,
+              "showLabel": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "beneficiaryDetails.gender==FEMALE && calculateAgeInMonths(beneficiaryDetails.dobPicker)>=180"
+                  }
+                ]
+              }
+            },
+            {
               "type": "string",
               "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
-              "order": 7,
+              "order": 10,
               "value": "",
               "format": "mobileNumber",
               "hidden": false,
@@ -5941,7 +6102,7 @@ final dynamic sampleSMCFlows = {
             {
               "type": "string",
               "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner",
-              "order": 8,
+              "order": 11,
               "value": "",
               "format": "scanner",
               "hidden": false,

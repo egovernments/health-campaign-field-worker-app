@@ -178,8 +178,10 @@ MdmsCriteriaModel _$MdmsCriteriaModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$MdmsCriteriaModel {
   String get tenantId => throw _privateConstructorUsedError;
-  List<MdmsModuleDetailModel> get moduleDetails =>
-      throw _privateConstructorUsedError;
+  String get schemaCode => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get filters => throw _privateConstructorUsedError;
+  int? get limit => throw _privateConstructorUsedError;
+  bool? get isActive => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -193,7 +195,12 @@ abstract class $MdmsCriteriaModelCopyWith<$Res> {
           MdmsCriteriaModel value, $Res Function(MdmsCriteriaModel) then) =
       _$MdmsCriteriaModelCopyWithImpl<$Res, MdmsCriteriaModel>;
   @useResult
-  $Res call({String tenantId, List<MdmsModuleDetailModel> moduleDetails});
+  $Res call(
+      {String tenantId,
+      String schemaCode,
+      Map<String, dynamic>? filters,
+      int? limit,
+      bool? isActive});
 }
 
 /// @nodoc
@@ -210,17 +217,32 @@ class _$MdmsCriteriaModelCopyWithImpl<$Res, $Val extends MdmsCriteriaModel>
   @override
   $Res call({
     Object? tenantId = null,
-    Object? moduleDetails = null,
+    Object? schemaCode = null,
+    Object? filters = freezed,
+    Object? limit = freezed,
+    Object? isActive = freezed,
   }) {
     return _then(_value.copyWith(
       tenantId: null == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
               as String,
-      moduleDetails: null == moduleDetails
-          ? _value.moduleDetails
-          : moduleDetails // ignore: cast_nullable_to_non_nullable
-              as List<MdmsModuleDetailModel>,
+      schemaCode: null == schemaCode
+          ? _value.schemaCode
+          : schemaCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      filters: freezed == filters
+          ? _value.filters
+          : filters // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      limit: freezed == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isActive: freezed == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 }
@@ -233,7 +255,12 @@ abstract class _$$MdmsCriteriaModelImplCopyWith<$Res>
       __$$MdmsCriteriaModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String tenantId, List<MdmsModuleDetailModel> moduleDetails});
+  $Res call(
+      {String tenantId,
+      String schemaCode,
+      Map<String, dynamic>? filters,
+      int? limit,
+      bool? isActive});
 }
 
 /// @nodoc
@@ -248,17 +275,32 @@ class __$$MdmsCriteriaModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? tenantId = null,
-    Object? moduleDetails = null,
+    Object? schemaCode = null,
+    Object? filters = freezed,
+    Object? limit = freezed,
+    Object? isActive = freezed,
   }) {
     return _then(_$MdmsCriteriaModelImpl(
       tenantId: null == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
               as String,
-      moduleDetails: null == moduleDetails
-          ? _value._moduleDetails
-          : moduleDetails // ignore: cast_nullable_to_non_nullable
-              as List<MdmsModuleDetailModel>,
+      schemaCode: null == schemaCode
+          ? _value.schemaCode
+          : schemaCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      filters: freezed == filters
+          ? _value._filters
+          : filters // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      limit: freezed == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isActive: freezed == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -268,25 +310,37 @@ class __$$MdmsCriteriaModelImplCopyWithImpl<$Res>
 class _$MdmsCriteriaModelImpl implements _MdmsCriteriaModel {
   const _$MdmsCriteriaModelImpl(
       {required this.tenantId,
-      required final List<MdmsModuleDetailModel> moduleDetails})
-      : _moduleDetails = moduleDetails;
+      required this.schemaCode,
+      final Map<String, dynamic>? filters,
+      this.limit,
+      this.isActive})
+      : _filters = filters;
 
   factory _$MdmsCriteriaModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MdmsCriteriaModelImplFromJson(json);
 
   @override
   final String tenantId;
-  final List<MdmsModuleDetailModel> _moduleDetails;
   @override
-  List<MdmsModuleDetailModel> get moduleDetails {
-    if (_moduleDetails is EqualUnmodifiableListView) return _moduleDetails;
+  final String schemaCode;
+  final Map<String, dynamic>? _filters;
+  @override
+  Map<String, dynamic>? get filters {
+    final value = _filters;
+    if (value == null) return null;
+    if (_filters is EqualUnmodifiableMapView) return _filters;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_moduleDetails);
+    return EqualUnmodifiableMapView(value);
   }
 
   @override
+  final int? limit;
+  @override
+  final bool? isActive;
+
+  @override
   String toString() {
-    return 'MdmsCriteriaModel(tenantId: $tenantId, moduleDetails: $moduleDetails)';
+    return 'MdmsCriteriaModel(tenantId: $tenantId, schemaCode: $schemaCode, filters: $filters, limit: $limit, isActive: $isActive)';
   }
 
   @override
@@ -296,14 +350,18 @@ class _$MdmsCriteriaModelImpl implements _MdmsCriteriaModel {
             other is _$MdmsCriteriaModelImpl &&
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
-            const DeepCollectionEquality()
-                .equals(other._moduleDetails, _moduleDetails));
+            (identical(other.schemaCode, schemaCode) ||
+                other.schemaCode == schemaCode) &&
+            const DeepCollectionEquality().equals(other._filters, _filters) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.isActive, isActive) ||
+                other.isActive == isActive));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, tenantId,
-      const DeepCollectionEquality().hash(_moduleDetails));
+  int get hashCode => Object.hash(runtimeType, tenantId, schemaCode,
+      const DeepCollectionEquality().hash(_filters), limit, isActive);
 
   @JsonKey(ignore: true)
   @override
@@ -322,9 +380,11 @@ class _$MdmsCriteriaModelImpl implements _MdmsCriteriaModel {
 
 abstract class _MdmsCriteriaModel implements MdmsCriteriaModel {
   const factory _MdmsCriteriaModel(
-          {required final String tenantId,
-          required final List<MdmsModuleDetailModel> moduleDetails}) =
-      _$MdmsCriteriaModelImpl;
+      {required final String tenantId,
+      required final String schemaCode,
+      final Map<String, dynamic>? filters,
+      final int? limit,
+      final bool? isActive}) = _$MdmsCriteriaModelImpl;
 
   factory _MdmsCriteriaModel.fromJson(Map<String, dynamic> json) =
       _$MdmsCriteriaModelImpl.fromJson;
@@ -332,341 +392,17 @@ abstract class _MdmsCriteriaModel implements MdmsCriteriaModel {
   @override
   String get tenantId;
   @override
-  List<MdmsModuleDetailModel> get moduleDetails;
+  String get schemaCode;
+  @override
+  Map<String, dynamic>? get filters;
+  @override
+  int? get limit;
+  @override
+  bool? get isActive;
   @override
   @JsonKey(ignore: true)
   _$$MdmsCriteriaModelImplCopyWith<_$MdmsCriteriaModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-MdmsModuleDetailModel _$MdmsModuleDetailModelFromJson(
-    Map<String, dynamic> json) {
-  return _MdmsModuleDetailModel.fromJson(json);
-}
-
-/// @nodoc
-mixin _$MdmsModuleDetailModel {
-  String get moduleName => throw _privateConstructorUsedError;
-  List<MdmsMasterDetailModel> get masterDetails =>
-      throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $MdmsModuleDetailModelCopyWith<MdmsModuleDetailModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $MdmsModuleDetailModelCopyWith<$Res> {
-  factory $MdmsModuleDetailModelCopyWith(MdmsModuleDetailModel value,
-          $Res Function(MdmsModuleDetailModel) then) =
-      _$MdmsModuleDetailModelCopyWithImpl<$Res, MdmsModuleDetailModel>;
-  @useResult
-  $Res call({String moduleName, List<MdmsMasterDetailModel> masterDetails});
-}
-
-/// @nodoc
-class _$MdmsModuleDetailModelCopyWithImpl<$Res,
-        $Val extends MdmsModuleDetailModel>
-    implements $MdmsModuleDetailModelCopyWith<$Res> {
-  _$MdmsModuleDetailModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? moduleName = null,
-    Object? masterDetails = null,
-  }) {
-    return _then(_value.copyWith(
-      moduleName: null == moduleName
-          ? _value.moduleName
-          : moduleName // ignore: cast_nullable_to_non_nullable
-              as String,
-      masterDetails: null == masterDetails
-          ? _value.masterDetails
-          : masterDetails // ignore: cast_nullable_to_non_nullable
-              as List<MdmsMasterDetailModel>,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$MdmsModuleDetailModelImplCopyWith<$Res>
-    implements $MdmsModuleDetailModelCopyWith<$Res> {
-  factory _$$MdmsModuleDetailModelImplCopyWith(
-          _$MdmsModuleDetailModelImpl value,
-          $Res Function(_$MdmsModuleDetailModelImpl) then) =
-      __$$MdmsModuleDetailModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String moduleName, List<MdmsMasterDetailModel> masterDetails});
-}
-
-/// @nodoc
-class __$$MdmsModuleDetailModelImplCopyWithImpl<$Res>
-    extends _$MdmsModuleDetailModelCopyWithImpl<$Res,
-        _$MdmsModuleDetailModelImpl>
-    implements _$$MdmsModuleDetailModelImplCopyWith<$Res> {
-  __$$MdmsModuleDetailModelImplCopyWithImpl(_$MdmsModuleDetailModelImpl _value,
-      $Res Function(_$MdmsModuleDetailModelImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? moduleName = null,
-    Object? masterDetails = null,
-  }) {
-    return _then(_$MdmsModuleDetailModelImpl(
-      moduleName: null == moduleName
-          ? _value.moduleName
-          : moduleName // ignore: cast_nullable_to_non_nullable
-              as String,
-      masterDetails: null == masterDetails
-          ? _value._masterDetails
-          : masterDetails // ignore: cast_nullable_to_non_nullable
-              as List<MdmsMasterDetailModel>,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$MdmsModuleDetailModelImpl implements _MdmsModuleDetailModel {
-  const _$MdmsModuleDetailModelImpl(
-      {required this.moduleName,
-      required final List<MdmsMasterDetailModel> masterDetails})
-      : _masterDetails = masterDetails;
-
-  factory _$MdmsModuleDetailModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MdmsModuleDetailModelImplFromJson(json);
-
-  @override
-  final String moduleName;
-  final List<MdmsMasterDetailModel> _masterDetails;
-  @override
-  List<MdmsMasterDetailModel> get masterDetails {
-    if (_masterDetails is EqualUnmodifiableListView) return _masterDetails;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_masterDetails);
-  }
-
-  @override
-  String toString() {
-    return 'MdmsModuleDetailModel(moduleName: $moduleName, masterDetails: $masterDetails)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MdmsModuleDetailModelImpl &&
-            (identical(other.moduleName, moduleName) ||
-                other.moduleName == moduleName) &&
-            const DeepCollectionEquality()
-                .equals(other._masterDetails, _masterDetails));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, moduleName,
-      const DeepCollectionEquality().hash(_masterDetails));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MdmsModuleDetailModelImplCopyWith<_$MdmsModuleDetailModelImpl>
-      get copyWith => __$$MdmsModuleDetailModelImplCopyWithImpl<
-          _$MdmsModuleDetailModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MdmsModuleDetailModelImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _MdmsModuleDetailModel implements MdmsModuleDetailModel {
-  const factory _MdmsModuleDetailModel(
-          {required final String moduleName,
-          required final List<MdmsMasterDetailModel> masterDetails}) =
-      _$MdmsModuleDetailModelImpl;
-
-  factory _MdmsModuleDetailModel.fromJson(Map<String, dynamic> json) =
-      _$MdmsModuleDetailModelImpl.fromJson;
-
-  @override
-  String get moduleName;
-  @override
-  List<MdmsMasterDetailModel> get masterDetails;
-  @override
-  @JsonKey(ignore: true)
-  _$$MdmsModuleDetailModelImplCopyWith<_$MdmsModuleDetailModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-MdmsMasterDetailModel _$MdmsMasterDetailModelFromJson(
-    Map<String, dynamic> json) {
-  return _MdmsMasterDetailModel.fromJson(json);
-}
-
-/// @nodoc
-mixin _$MdmsMasterDetailModel {
-  String get name => throw _privateConstructorUsedError;
-  String? get filter => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $MdmsMasterDetailModelCopyWith<MdmsMasterDetailModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $MdmsMasterDetailModelCopyWith<$Res> {
-  factory $MdmsMasterDetailModelCopyWith(MdmsMasterDetailModel value,
-          $Res Function(MdmsMasterDetailModel) then) =
-      _$MdmsMasterDetailModelCopyWithImpl<$Res, MdmsMasterDetailModel>;
-  @useResult
-  $Res call({String name, String? filter});
-}
-
-/// @nodoc
-class _$MdmsMasterDetailModelCopyWithImpl<$Res,
-        $Val extends MdmsMasterDetailModel>
-    implements $MdmsMasterDetailModelCopyWith<$Res> {
-  _$MdmsMasterDetailModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? filter = freezed,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      filter: freezed == filter
-          ? _value.filter
-          : filter // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$MdmsMasterDetailModelImplCopyWith<$Res>
-    implements $MdmsMasterDetailModelCopyWith<$Res> {
-  factory _$$MdmsMasterDetailModelImplCopyWith(
-          _$MdmsMasterDetailModelImpl value,
-          $Res Function(_$MdmsMasterDetailModelImpl) then) =
-      __$$MdmsMasterDetailModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String? filter});
-}
-
-/// @nodoc
-class __$$MdmsMasterDetailModelImplCopyWithImpl<$Res>
-    extends _$MdmsMasterDetailModelCopyWithImpl<$Res,
-        _$MdmsMasterDetailModelImpl>
-    implements _$$MdmsMasterDetailModelImplCopyWith<$Res> {
-  __$$MdmsMasterDetailModelImplCopyWithImpl(_$MdmsMasterDetailModelImpl _value,
-      $Res Function(_$MdmsMasterDetailModelImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? filter = freezed,
-  }) {
-    return _then(_$MdmsMasterDetailModelImpl(
-      null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      filter: freezed == filter
-          ? _value.filter
-          : filter // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$MdmsMasterDetailModelImpl implements _MdmsMasterDetailModel {
-  const _$MdmsMasterDetailModelImpl(this.name, {this.filter});
-
-  factory _$MdmsMasterDetailModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MdmsMasterDetailModelImplFromJson(json);
-
-  @override
-  final String name;
-  @override
-  final String? filter;
-
-  @override
-  String toString() {
-    return 'MdmsMasterDetailModel(name: $name, filter: $filter)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MdmsMasterDetailModelImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.filter, filter) || other.filter == filter));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, filter);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MdmsMasterDetailModelImplCopyWith<_$MdmsMasterDetailModelImpl>
-      get copyWith => __$$MdmsMasterDetailModelImplCopyWithImpl<
-          _$MdmsMasterDetailModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MdmsMasterDetailModelImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _MdmsMasterDetailModel implements MdmsMasterDetailModel {
-  const factory _MdmsMasterDetailModel(final String name,
-      {final String? filter}) = _$MdmsMasterDetailModelImpl;
-
-  factory _MdmsMasterDetailModel.fromJson(Map<String, dynamic> json) =
-      _$MdmsMasterDetailModelImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String? get filter;
-  @override
-  @JsonKey(ignore: true)
-  _$$MdmsMasterDetailModelImplCopyWith<_$MdmsMasterDetailModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
 }
 
 AppConfigPrimaryWrapperModel _$AppConfigPrimaryWrapperModelFromJson(

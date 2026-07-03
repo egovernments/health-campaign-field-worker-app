@@ -89,6 +89,12 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.singleUserLogin;
       case "BOUNDARY_RELATIONSHIP":
         return MasterEnums.boundaryRelationShip;
+      case "serviceRegistry":
+        return MasterEnums.serviceRegistryMaster;
+      case "projectTypes":
+        return MasterEnums.projectTypes;
+      case "FormConfig":
+        return MasterEnums.formConfig;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -161,6 +167,12 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "SINGLE_USER_LOGIN";
       case MasterEnums.boundaryRelationShip:
         return "BOUNDARY_RELATIONSHIP";
+      case MasterEnums.serviceRegistryMaster:
+        return "serviceRegistry";
+      case MasterEnums.projectTypes:
+        return "projectTypes";
+      case MasterEnums.formConfig:
+        return "FormConfig";
     }
   }
 }

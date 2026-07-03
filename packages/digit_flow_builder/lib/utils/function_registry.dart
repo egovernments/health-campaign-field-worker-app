@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../blocs/app_localization.dart';
+import '../blocs/wrapper/computed_list_evaluator.dart';
 import 'interpolation.dart';
 
 /// English month abbreviations indexed by [DateTime.month] (1-based).
@@ -445,11 +446,23 @@ void initializeFunctionRegistry() {
                 break;
               }
               try {
-                final sanitizedCondition = condition
-                    .replaceAll(' and ', ' && ')
-                    .replaceAll('and', '&&');
+                // Sanitize: expand chained comparisons and replace 'and' with '&&'
+                final sanitizedCondition =
+                    ComputedListEvaluator.sanitizeCondition(condition);
+                // Extract only age-related sub-conditions since we only
+                // have age context here (height/weight checked at delivery)
+                final parts = sanitizedCondition.split('&&');
+                final ageParts = parts
+                    .where((p) => p.contains('age'))
+                    .toList();
+                if (ageParts.isEmpty) {
+                  // No age constraint in condition — treat as age-eligible
+                  ageEligibleByCondition = true;
+                  break;
+                }
+                final ageOnlyCondition = ageParts.join('&&');
                 final parser = FormulaParser(
-                    sanitizedCondition, {'age': totalAgeMonths});
+                    ageOnlyCondition, {'age': totalAgeMonths});
                 final result = parser.parse;
                 if (result['isSuccess'] == true &&
                     result['value'] == true) {
