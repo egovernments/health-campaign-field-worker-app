@@ -310,7 +310,10 @@
           sitting on a dead page-level chain. Inserted between
           <code>CREATE_EVENT</code> and <code>NAVIGATION</code> on both flows —
           REDOSE here, DELIVERY dose-1 added later as part of the release-prep
-          commit <code class="commit">321d98116</code>.
+          commit <code class="commit">321d98116</code>. The REDOSE hunk was
+          later wiped by the <code class="commit">8032b2131</code> SMC-config
+          rewrite and re-restored in <code class="commit">c5c2bf76f</code>
+          (2026-07-03).
 <pre class="config"><span class="add">+ {
 +   "actionType": "UPDATE_STOCK_BALANCE",
 +   "properties": {
