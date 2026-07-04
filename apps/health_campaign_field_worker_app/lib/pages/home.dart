@@ -719,8 +719,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       // `attendees` here would lock Submit forever (collectionLength can
       // never reach the raw count). Keep only actives.
       final nowMs = DateTime.now().millisecondsSinceEpoch;
-      final attendees =
-          ((attendanceRegisterModel?.attendees ?? []) as List).where((a) {
       final attendees = ((attendanceRegisterModel?.attendees ?? []) as List)
           .where((a) {
         dynamic raw;
