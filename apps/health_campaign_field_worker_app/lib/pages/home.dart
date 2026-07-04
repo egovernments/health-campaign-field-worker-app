@@ -721,6 +721,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       final nowMs = DateTime.now().millisecondsSinceEpoch;
       final attendees =
           ((attendanceRegisterModel?.attendees ?? []) as List).where((a) {
+      final attendees = ((attendanceRegisterModel?.attendees ?? []) as List)
+          .where((a) {
         dynamic raw;
         try {
           raw = (a as dynamic).denrollmentDate;
@@ -2216,11 +2218,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                     );
                   } else {
                     FlowRegistry.setConfig(
-                        sampleFlows["flows"] as List<Map<String, dynamic>>);
+                        sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
                       FlowBuilderHomeRoute(
-                          pageName: sampleFlows["initialPage"]),
+                          pageName: sampleSMCFlows["initialPage"]),
                     );
                   }
                 } catch (e) {
