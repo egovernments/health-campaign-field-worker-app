@@ -72,7 +72,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "isMultiSelect": false
             },
             {
-              "type": "string",
+              "type": "integer",
               "label": "LQA_LOT_NUMBER_LABEL",
               "order": 4,
               "value": "",
@@ -651,7 +651,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
       "wrapperConfig": {
         "filters": [
           {"field": "action", "equals": "LOCATION_CAPTURE"},
-          {"field": "additionalFields.form", "equals": "POLIO_LQA"}
+          {"field": "additionalFields.fields.form", "equals": "POLIO_LQA"}
         ],
         "relations": [
           {
@@ -670,7 +670,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
             },
             "entity": "UserActionModel",
             "filters": [
-              {"field": "additionalFields.formType", "equals": "LQA_CHILD_DATA"}
+              {"field": "additionalFields.fields.formType", "equals": "LQA_CHILD_DATA"}
             ],
             "relations": [
               {
@@ -731,11 +731,6 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "systemDate": false,
               "validations": [
                 {
-                  "type": "required",
-                  "value": true,
-                  "message": "LQA_VALIDATION_REQUIRED"
-                },
-                {
                   "type": "min",
                   "value": 0,
                   "message": "LQA_VALIDATION_MIN_ZERO"
@@ -761,11 +756,6 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "isEditable": true,
               "systemDate": false,
               "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "LQA_VALIDATION_REQUIRED"
-                },
                 {
                   "type": "min",
                   "value": 0,
@@ -1172,7 +1162,7 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                 "expression": [
                   {
                     "type": "custom",
-                    "condition": "childDetails.caregiverInformed=='YES'"
+                    "condition": "contains(childDetails.campaignAwareness, 'OTHERS')"
                   }
                 ]
               }
@@ -1194,11 +1184,6 @@ final dynamic samplePolioLqaDataCollectionFlows = {
               "isEditable": true,
               "systemDate": false,
               "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "LQA_VALIDATION_REQUIRED"
-                },
                 {
                   "type": "min",
                   "value": 0,

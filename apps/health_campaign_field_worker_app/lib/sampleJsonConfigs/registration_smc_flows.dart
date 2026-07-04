@@ -1285,8 +1285,29 @@ final dynamic sampleSMCFlows = {
                     "disabled": "{{fn:isRedoseWindowExpired(item.task)}}==true",
                     "onAction": [
                       {
-                        "actionType": "NAVIGATION",
+                        "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
                         "properties": {
+                          "failedMessage":
+                              "BENEFICIARY_NOT_ELIGIBLE",
+                          "eligibilityParams": [
+                            {
+                              "conditionVar": "age",
+                              "navKey": "selectedIndividualAgeInMonths",
+                              "type": "int"
+                            },
+                            {
+                              "conditionVar": "height",
+                              "navKey": "selectedIndividualHeight",
+                              "type": "double",
+                              "default": 0
+                            },
+                            {
+                              "conditionVar": "weight",
+                              "navKey": "selectedIndividualWeight",
+                              "type": "double",
+                              "default": 0
+                            }
+                          ],
                           "data": [
                             {
                               "key": "selectedIndividualClientReferenceId",
@@ -1319,6 +1340,16 @@ final dynamic sampleSMCFlows = {
                               "key": "selectedIndividualAgeInMonths",
                               "value":
                                   "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                            },
+                            {
+                              "key": "selectedIndividualHeight",
+                              "value":
+                                  "{{item.individual.0.additionalFields.fields.height}}"
+                            },
+                            {
+                              "key": "selectedIndividualWeight",
+                              "value":
+                                  "{{item.individual.0.additionalFields.fields.weight}}"
                             },
                             {
                               "key": "cycleIndex",

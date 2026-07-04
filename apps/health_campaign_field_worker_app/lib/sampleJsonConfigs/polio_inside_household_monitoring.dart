@@ -244,28 +244,6 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
             },
             {
               "type": "string",
-              "label": "IHM_SETTLEMENT_NAME_LABEL",
-              "order": 6,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": true,
-              "fieldName": "settlementName",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "autoFillCondition": [
-                {"value": "{{settlementName}}", "expression": "true==true"}
-              ]
-            },
-            {
-              "type": "string",
               "enums": [
                 {"code": "URBAN", "name": "IHM_ENUM_URBAN"},
                 {"code": "RURAL", "name": "IHM_ENUM_RURAL"},
@@ -443,11 +421,6 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "systemDate": false,
               "validations": [
                 {
-                  "type": "required",
-                  "value": true,
-                  "message": "IHM_VALIDATION_REQUIRED"
-                },
-                {
                   "type": "min",
                   "value": 0,
                   "message": "IHM_VALIDATION_MIN_ZERO"
@@ -474,11 +447,6 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "isEditable": true,
               "systemDate": false,
               "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "IHM_VALIDATION_REQUIRED"
-                },
                 {
                   "type": "min",
                   "value": 0,
@@ -819,7 +787,7 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                 "expression": [
                   {
                     "type": "custom",
-                    "condition": "monitoringDetails.caregiverInformed=='YES'"
+                    "condition": "contains(monitoringDetails.campaignInfoSource, 'OTHERS')"
                   }
                 ]
               }
@@ -1282,7 +1250,7 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
         "filters": [
           {"field": "action", "equals": "LOCATION_CAPTURE"},
           {
-            "field": "additionalFields.form",
+            "field": "additionalFields.fields.form",
             "equals": "POLIO_INSIDE_MONITORING"
           }
         ],
