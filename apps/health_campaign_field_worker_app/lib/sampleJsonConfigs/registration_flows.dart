@@ -2214,7 +2214,10 @@
                     }
                   ],
                   "format": "selectionCard",
-                  "fieldName": "selectedStatus"
+                  "fieldName": "selectedStatus",
+                  "properties": {
+                    "fullWidth": true
+                  }
                 }
               ],
               "type": "default",
