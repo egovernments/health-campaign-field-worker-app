@@ -2122,6 +2122,7 @@
             "icon": "FilterAlt",
             "size": "large",
             "type": "tertiary",
+            "radius": "spacer1",
             "suffixIcon": "FilterAlt",
             "popupConfig": {
               "body": [
