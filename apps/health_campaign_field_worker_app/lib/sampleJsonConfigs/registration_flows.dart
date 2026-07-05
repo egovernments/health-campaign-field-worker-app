@@ -1937,7 +1937,7 @@
           "icon": "FilterAlt",
           "type": "template",
           "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-          "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_LABEL",
+          "label": "DOWNLOAD_BENEFICIARY_IDS",
           "format": "actionPopup",
           "fieldName": "beneficiaryIdMinCheck",
           "properties": {
@@ -2011,7 +2011,7 @@
         },
         {
           "type": "template",
-          "label": "REGISTER_BENEFICIARY",
+          "label": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
           "format": "button",
           "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
           "onAction": [
