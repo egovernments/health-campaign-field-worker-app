@@ -432,7 +432,6 @@ void showDownloadDialog(
                 title: model.title,
                 progress: progress,
                 countLabel: '$syncedCount/$totalCount',
-                showProgressBar: false,
               );
             },
           ),
