@@ -1,3 +1,14 @@
+## 0.1.0
+
+- Added `navigationParams` on form control and JSON form schemas for richer inter-page data handoff
+- Added conditional value support in DOB validator; corrected age validation
+- Added hidden condition while building forms
+- Added alert-popup support for form submission with customizable actions
+- Added scanner spread and CDD identity QR payload handling in warehouse dispatch flow
+- Guarded `form.control()` in `JsonSchemaScannerBuilder` against missing schema control
+- Enhanced beneficiary ID handling in form control for edit mode; restore original ID number when switching identifierType back
+- End-to-end boundary gate on both scanner sides
+
 ## 0.0.1
 
 - Dynamic form rendering engine based on JSON schema

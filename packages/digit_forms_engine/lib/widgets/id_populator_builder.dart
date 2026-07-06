@@ -247,6 +247,13 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
             form.control(idTypeKey).value != 'DEFAULT')
           ReactiveFormConsumer(
             builder: (context, formGroup, child) {
+              // UNIQUE_BENEFICIARY_ID must come from the downloaded pool
+              // (via availableIDs / navigationParams). If the user skipped
+              // the download the ID field would previously fall through
+              // to editable free-text — locking it here so an operator
+              // can't type an arbitrary value against a pool-sourced type.
+              final isPoolSourcedType =
+                  form.control(idTypeKey).value == 'UNIQUE_BENEFICIARY_ID';
               return ReactiveWrapperField(
                 formControlName: formControlName,
                 validationMessages: validationMessages,
@@ -257,14 +264,17 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
                   isRequired: true,
                   child: DigitTextFormInput(
                     initialValue: form.control(idKey).value,
-                    readOnly: form.control(idAutoFilledKey).value == true,
+                    readOnly: form.control(idAutoFilledKey).value == true ||
+                        isPoolSourcedType,
                     onChange: (value) {
                       form.control(formControlName).markAsTouched();
                       form.control(idAutoFilledKey).value = false;
                       form.control(idKey).value = value;
                       updateCombinedIdentifier();
                     },
-                    errorMessage: isIdNumberMissing ? field.errorText : null,
+                    errorMessage: isPoolSourcedType && isIdNumberMissing
+                        ? loc.translate('BENEFICIARY_ID_POOL_EMPTY_ERROR')
+                        : (isIdNumberMissing ? field.errorText : null),
                   ),
                 ),
               );
