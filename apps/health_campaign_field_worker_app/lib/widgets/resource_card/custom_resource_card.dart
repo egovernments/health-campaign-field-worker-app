@@ -246,7 +246,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                             .isNotEmpty) ...[
                       Text(
                         localizations.translate(labelFromSchema!),
-                        style: textTheme.bodyL.copyWith(
+                        style: textTheme.headingS.copyWith(
                           color: theme.colorTheme.text.primary,
                         ),
                       ),
