@@ -38,7 +38,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         Padding(
-          padding: const EdgeInsets.all(spacer2 * 2),
+          padding: const EdgeInsets.symmetric(vertical: spacer2),
           child: Column(
             children: [
               LinearProgressIndicator(
