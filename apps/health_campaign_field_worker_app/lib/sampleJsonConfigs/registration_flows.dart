@@ -1792,9 +1792,8 @@
          "type": "template",
          "label": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
          "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-         "format": "infoCard",
+         "format": "noResultCard",
          "fieldName": "beneficiaryNotFound",
-         "properties": {"type": "error"},
          "showOnEmptySearch": true
         },
         {
