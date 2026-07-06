@@ -37,9 +37,36 @@ class PanelCardWidget extends ResolvedFlowWidget {
     final label = resolveTemplate(json['label'] ?? '', evalContext,
         localization: localization, screenKey: resolved.screenKey,
         stateData: resolved.stateData);
-    final description = resolveTemplate(json['description'] ?? '', evalContext,
+    String? description = resolveTemplate(json['description'] ?? '', evalContext,
         localization: localization, screenKey: resolved.screenKey,
         stateData: resolved.stateData);
+
+    // Apply descriptionArgs ({1}, {2}, ...) substitution
+    final descriptionArgs = json['descriptionArgs'] as List<dynamic>?;
+    if (description != null &&
+        descriptionArgs != null &&
+        descriptionArgs.isNotEmpty) {
+      description = substituteArgs(
+        description,
+        descriptionArgs,
+        resolved.stateData,
+        resolved.state.itemData,
+      );
+    }
+
+    // Apply descriptionPlaceHolders ({KEY}) substitution — takes priority
+    final descriptionPlaceHolders =
+        json['descriptionPlaceHolders'] as List<dynamic>?;
+    if (description != null &&
+        descriptionPlaceHolders != null &&
+        descriptionPlaceHolders.isNotEmpty) {
+      description = substitutePlaceHolders(
+        description,
+        descriptionPlaceHolders,
+        resolved.stateData,
+        resolved.state.itemData,
+      );
+    }
 
     Map<String, dynamic>? primaryAction = json['primaryAction'];
     Map<String, dynamic>? secondaryAction = json['secondaryAction'];

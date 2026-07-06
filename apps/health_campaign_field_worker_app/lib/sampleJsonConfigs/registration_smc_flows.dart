@@ -836,6 +836,9 @@ final dynamic sampleSMCFlows = {
             "properties": {"type": "primary"}
           },
           "descriptionArgs": ["{{navigation.selectedIndividualIdentifierId}}"],
+          "descriptionPlaceHolders": [
+            {"key": "ID", "value": "{{navigation.selectedIndividualIdentifierId}}"}
+          ],
           "secondaryAction": {
             "type": "template",
             "label": "GO_BACK",
@@ -2929,7 +2932,11 @@ final dynamic sampleSMCFlows = {
               "schemaCode": null,
               "systemDate": true,
               "validations": [],
-              "errorMessage": ""
+              "errorMessage": "",
+              "labelPlaceHolders": [
+                {"key": "ID", "value": "{{navigation.selectedIndividualIdentifierId}}"},
+                {"key": "NAME", "value": "{{navigation.selectedIndividualName}}"}
+              ]
             },
             {
               "type": "boolean",
