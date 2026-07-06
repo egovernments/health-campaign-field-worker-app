@@ -425,6 +425,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                                   .colorTheme
                                                   .paper
                                                   .primary,
+                                              borderRadius: BorderRadius.circular(spacer1),
                                               border: Border.all(
                                                 color: Theme.of(context)
                                                     .colorTheme
