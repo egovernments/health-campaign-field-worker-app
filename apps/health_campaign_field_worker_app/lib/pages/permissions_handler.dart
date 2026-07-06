@@ -516,7 +516,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                 if (screenConfig?['heading'] != null)
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: spacer4, horizontal: spacer3),
+                        vertical: spacer4, horizontal: spacer4),
                     child: Text(
                       localizations.translate(screenConfig!['heading']),
                       style: textTheme.headingXl.copyWith(
@@ -530,7 +530,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                 if (screenConfig?['description'] != null)
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: spacer1, horizontal: spacer3),
+                        vertical: spacer1, horizontal: spacer4),
                     child: Text(
                       localizations.translate(screenConfig!['description']),
                       style: textTheme.captionS.copyWith(
