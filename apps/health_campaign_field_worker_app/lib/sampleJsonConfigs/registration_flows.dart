@@ -1980,8 +1980,7 @@
                 },
                 {
                   "type": "template",
-                  "label":
-                  "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
+                  "label": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
                   "format": "button",
                   "onAction": [
                     {
