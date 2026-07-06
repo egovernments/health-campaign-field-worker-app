@@ -42,30 +42,39 @@ class PanelCardWidget extends ResolvedFlowWidget {
         stateData: resolved.stateData);
 
     // Apply descriptionArgs ({1}, {2}, ...) substitution
+    // Resolve each arg template via evalContext (which has navigation data)
     final descriptionArgs = json['descriptionArgs'] as List<dynamic>?;
     if (description != null &&
         descriptionArgs != null &&
         descriptionArgs.isNotEmpty) {
-      description = substituteArgs(
-        description,
-        descriptionArgs,
-        resolved.stateData,
-        resolved.state.itemData,
-      );
+      for (int i = 0; i < descriptionArgs.length; i++) {
+        final argTemplate = descriptionArgs[i]?.toString() ?? '';
+        final resolvedArg = resolveTemplate(argTemplate, evalContext,
+                screenKey: resolved.screenKey,
+                stateData: resolved.stateData) ??
+            argTemplate;
+        description = description!.replaceAll('{${i + 1}}', resolvedArg);
+      }
     }
 
     // Apply descriptionPlaceHolders ({KEY}) substitution — takes priority
+    // Resolve each value template via evalContext (which has navigation data)
     final descriptionPlaceHolders =
         json['descriptionPlaceHolders'] as List<dynamic>?;
     if (description != null &&
         descriptionPlaceHolders != null &&
         descriptionPlaceHolders.isNotEmpty) {
-      description = substitutePlaceHolders(
-        description,
-        descriptionPlaceHolders,
-        resolved.stateData,
-        resolved.state.itemData,
-      );
+      for (final ph in descriptionPlaceHolders) {
+        if (ph is! Map) continue;
+        final key = ph['key']?.toString();
+        final valueTemplate = ph['value']?.toString() ?? '';
+        if (key == null || key.isEmpty) continue;
+        final resolvedValue = resolveTemplate(valueTemplate, evalContext,
+                screenKey: resolved.screenKey,
+                stateData: resolved.stateData) ??
+            valueTemplate;
+        description = description!.replaceAll('{$key}', resolvedValue);
+      }
     }
 
     Map<String, dynamic>? primaryAction = json['primaryAction'];
