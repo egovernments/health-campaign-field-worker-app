@@ -9,14 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/project/project.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/repositories/local/localization.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/runtime_hierarchy.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -239,27 +242,152 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void navigateToBoundary(String boundary) async {
-    await triggerLocalizationIfUpdated(
-      context: context,
-      locale: AppSharedPreferences().getSelectedLocale!,
-      moduleKey:
-          'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,CLOSEHOUSEHOLD,COMPLAINTS,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,CHECKLIST,STOCK,LQA,INSIDEMONITORING',
-      projectReferenceId: context.selectedProject.referenceID ?? '',
-    );
+    final appState = context.read<AppInitializationBloc>().state;
+    final languages = (appState is AppInitialized)
+        ? (appState.appConfiguration.languages ?? [])
+        : <Languages>[];
+
+    final projectReferenceId = context.selectedProject.referenceID ?? '';
+
+    // Build module string for campaign localizations
+    const moduleKey =
+        'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,CLOSEHOUSEHOLD,COMPLAINTS,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,CHECKLIST,STOCK,LQA,INSIDEMONITORING';
+    final keys = moduleKey.split(',').map((e) => e.trim()).toList();
+    final moduleNames =
+        keys.map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId');
+    final fullModuleString = moduleNames.join(',');
+
+    final selectedLocale = AppSharedPreferences().getSelectedLocale!;
+    final locBloc = context.read<LocalizationBloc>();
+
+    // Show loading dialog while localizations are being cached
+    DialogRoute? localizationDialogRoute;
+    if (mounted) {
+      localizationDialogRoute = DialogRoute(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => DigitSyncDialogContent(
+          type: DialogType.inProgress,
+          label: localizations.translate(
+            i18.projectSelection.syncInProgressTitleText,
+          ),
+        ),
+      );
+      Navigator.of(context, rootNavigator: true)
+          .push(localizationDialogRoute);
+    }
+
+    // Cache campaign localizations for ALL locales directly to DB.
+    final campaignCacheFuture = Future.wait(languages.map((language) async {
+      try {
+        final results = await locBloc.localizationRepository.loadLocalization(
+          path: Constants.localizationApiPath,
+          locale: language.value,
+          module: fullModuleString,
+          tenantId: envConfig.variables.tenantId,
+        );
+        await LocalizationLocalRepository().create(results, locBloc.sql);
+      } catch (e) {
+        debugPrint(
+            'error caching campaign localization for ${language.value}: $e');
+      }
+    }));
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
 
     try {
-      await boundaryBloc.stream
-          .firstWhere((element) => element.boundaryList.isNotEmpty);
-      context
-          .read<LocalizationBloc>()
-          .add(LocalizationEvent.onLoadLocalization(
-        module: 'hcm-permissionhandler-${context.selectedProject.referenceID}',
+      // Wait for both campaign caching and boundary finding concurrently
+      await Future.wait([
+        campaignCacheFuture,
+        boundaryBloc.stream
+            .firstWhere((element) => element.boundaryList.isNotEmpty),
+      ]);
+
+      // Cache permission handler localizations for ALL locales directly to DB
+      final permHandlerModule =
+          'hcm-permissionhandler-$projectReferenceId';
+      await Future.wait(languages.map((language) async {
+        try {
+          final localResults =
+              await LocalizationLocalRepository().fetchLocalization(
+            sql: locBloc.sql,
+            locale: language.value,
+            module: permHandlerModule,
+          );
+          if (localResults.isEmpty) {
+            final results =
+                await locBloc.localizationRepository.loadLocalization(
+              path: Constants.localizationApiPath,
+              locale: language.value,
+              module: permHandlerModule,
+              tenantId: envConfig.variables.tenantId,
+            );
+            await LocalizationLocalRepository().create(results, locBloc.sql);
+          }
+        } catch (e) {
+          debugPrint(
+              'error caching permission handler localization for ${language.value}: $e');
+        }
+      }));
+
+      // Cache boundary localizations for ALL locales. Deferred from app-boot
+      // because hierarchyType only becomes known after project selection.
+      final boundaryModule =
+          'hcm-boundary-${runtimeHierarchyType().toLowerCase()}';
+      await Future.wait(languages.map((language) async {
+        try {
+          final localResults =
+              await LocalizationLocalRepository().fetchLocalization(
+            sql: locBloc.sql,
+            locale: language.value,
+            module: boundaryModule,
+          );
+          if (localResults.isEmpty) {
+            final results =
+                await locBloc.localizationRepository.loadLocalization(
+              path: Constants.localizationApiPath,
+              locale: language.value,
+              module: boundaryModule,
+              tenantId: envConfig.variables.tenantId,
+            );
+            await LocalizationLocalRepository().create(results, locBloc.sql);
+          }
+        } catch (e) {
+          debugPrint(
+              'error caching boundary localization for ${language.value}: $e');
+        }
+      }));
+
+      // Now load the selected locale's permission handler strings via the bloc.
+      locBloc.add(LocalizationEvent.onLoadLocalization(
+        module: permHandlerModule,
         tenantId: envConfig.variables.tenantId,
-        locale: AppSharedPreferences().getSelectedLocale!,
+        locale: selectedLocale,
         path: Constants.localizationApiPath,
       ));
+
+      // Ensure the locale index is correct
+      final targetIndex =
+          languages.indexWhere((l) => l.value == selectedLocale);
+      final resolvedIndex = targetIndex >= 0 ? targetIndex : 0;
+      locBloc.add(
+        OnUpdateLocalizationIndexEvent(
+          index: resolvedIndex,
+          code: selectedLocale,
+        ),
+      );
+
+      // Wait for both bloc events to complete.
+      await locBloc.stream.firstWhere(
+        (s) => s.index == resolvedIndex && !s.loading,
+      );
+
+      // Dismiss the loading dialog before navigating
+      if (mounted && localizationDialogRoute?.isActive == true) {
+        Navigator.of(context, rootNavigator: true)
+            .removeRoute(localizationDialogRoute!);
+      }
+
       if (mounted) {
         context.router.replaceAll([
           const PermissionsRoute(),
@@ -267,6 +395,11 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       }
     } catch (e) {
       debugPrint('error $e');
+      // Dismiss the loading dialog on error too
+      if (mounted && localizationDialogRoute?.isActive == true) {
+        Navigator.of(context, rootNavigator: true)
+            .removeRoute(localizationDialogRoute!);
+      }
     }
   }
 
