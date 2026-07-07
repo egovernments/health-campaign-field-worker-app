@@ -2281,7 +2281,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
 
       // --- Polio LQA Data Collection ---
-      if (isPolio)
+      if (isPolio &&
+          state.actionsWrapper.actions
+              .map((e) => e.displayName)
+              .contains(i18.home.polioLqaDataCollectionLabel))
         i18.home.polioLqaDataCollectionLabel:
             homeShowcaseData.polioLqaDataCollection.buildWith(
           child: HomeItemCard(
@@ -2309,7 +2312,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
 
       // --- Polio Inside Monitoring ---
-      if (isPolio)
+      if (isPolio &&
+          state.actionsWrapper.actions
+              .map((e) => e.displayName)
+              .contains(i18.home.polioInsideMonitoringLabel))
         i18.home.polioInsideMonitoringLabel:
             homeShowcaseData.polioInsideMonitoring.buildWith(
           child: HomeItemCard(
@@ -2911,9 +2917,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db ||
-            (isPolio && element == i18.home.polioLqaDataCollectionLabel) ||
-            (isPolio && element == i18.home.polioInsideMonitoringLabel))
+            element == i18.home.db)
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .toList();
