@@ -713,8 +713,14 @@ class _BoundarySelectionPageState
                                         i18.common.chooseBoundaries,
                                       ),
                                       style: Theme.of(context)
-                                          .textTheme
-                                          .headlineMedium,
+                                          .digitTextTheme(context)
+                                          .headingXl
+                                          .copyWith(
+                                            color: Theme.of(context)
+                                                .colorTheme
+                                                .primary
+                                                .primary2,
+                                          ),
                                     ),
                                     ListView.builder(
                                       shrinkWrap: true,
