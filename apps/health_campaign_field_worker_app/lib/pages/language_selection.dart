@@ -18,7 +18,6 @@ import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
-import '../data/repositories/local/localization.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -34,7 +33,6 @@ class LanguageSelectionPage extends StatefulWidget {
 
 class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   bool isDialogVisible = false;
-  bool _hasLoadedAllLocales = false;
 
   @override
   void dispose() {
@@ -61,14 +59,6 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                     state.appConfiguration.backendInterface?.interfaces;
                 if (languages == null) {
                   return const Offstage();
-                }
-
-                if (!_hasLoadedAllLocales &&
-                    localizationModulesList != null) {
-                  _hasLoadedAllLocales = true;
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _loadAllLocales(languages, localizationModulesList);
-                  });
                 }
 
                 return BlocConsumer<LocalizationBloc, LocalizationState>(
@@ -196,58 +186,6 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
             code: locale,
           ),
         );
-  }
-
-  void _loadAllLocales(
-    List<Languages> languages,
-    List<Interfaces> localizationModulesList,
-  ) async {
-    final locBloc = context.read<LocalizationBloc>();
-    final tenantId = envConfig.variables.tenantId ?? "default";
-
-    final filteredModules = localizationModulesList
-        .where((element) =>
-            element.type == Modules.localizationModule &&
-            Constants.homeLocalizationModules.contains(element.name.toString()))
-        .map((e) => e.name.toString())
-        .join(',');
-
-    // Cache localization messages for ALL locales directly to DB.
-    await Future.wait(languages.map((language) async {
-      try {
-        final localResults =
-            await LocalizationLocalRepository().fetchLocalization(
-          sql: locBloc.sql,
-          locale: language.value,
-          module: filteredModules,
-        );
-        if (localResults.isEmpty) {
-          final results = await locBloc.localizationRepository.loadLocalization(
-            path: Constants.localizationApiPath,
-            locale: language.value,
-            module: filteredModules,
-            tenantId: tenantId,
-          );
-          await LocalizationLocalRepository().create(results, locBloc.sql);
-        }
-      } catch (e) {
-        debugPrint(
-            'error caching localization for ${language.value}: $e');
-      }
-    }));
-
-    // After caching, ensure the selected locale's strings are loaded
-    final selectedLocale = AppSharedPreferences().getSelectedLocale;
-    if (selectedLocale != null && mounted) {
-      final selectedIndex =
-          languages.indexWhere((l) => l.value == selectedLocale);
-      locBloc.add(
-        OnUpdateLocalizationIndexEvent(
-          index: selectedIndex >= 0 ? selectedIndex : 0,
-          code: selectedLocale,
-        ),
-      );
-    }
   }
 
   /// Check device RAM and show warning dialog if below 2GB, then proceed
