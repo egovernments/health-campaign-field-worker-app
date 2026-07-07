@@ -365,6 +365,10 @@ final dynamic sampleSMCFlows = {
           "visible":
               "{{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == false",
           "fieldName": "insufficientStockPopUp",
+          "labelPlaceHolders": [
+            {"key": "CYCLE", "value": "{{contextData.0.nextCycleId}}"},
+            {"key": "DOSE", "value": "{{contextData.0.nextDoseId}}"}
+          ],
           "properties": {
             "icon": "Warning",
             "size": "large",
@@ -451,7 +455,7 @@ final dynamic sampleSMCFlows = {
                     "key": "beneficiaryId",
                     "value": "{{navigation.selectedIndividualIdentifierId}}"
                   },
-                  {"key": "childName", "value": "{{navigation.childName}}"},
+                  {"key": "childName", "value": "{{contextData.0.individuals.IndividualModel.name.givenName}}"},
                   {"key": "ageInMonths", "value": "{{navigation.ageInMonths}}"},
                   {"key": "gender", "value": "{{navigation.gender}}"},
                   {"key": "headName", "value": "{{navigation.headName}}"},
@@ -485,6 +489,10 @@ final dynamic sampleSMCFlows = {
           ],
           "fieldName": "recordCycle",
           "mandatory": true,
+          "labelPlaceHolders": [
+            {"key": "CYCLE", "value": "{{contextData.0.nextCycleId}}"},
+            {"key": "DOSE", "value": "{{contextData.0.nextDoseId}}"}
+          ],
           "properties": {
             "size": "large",
             "type": "primary",
@@ -836,6 +844,12 @@ final dynamic sampleSMCFlows = {
             "properties": {"type": "primary"}
           },
           "descriptionArgs": ["{{navigation.selectedIndividualIdentifierId}}"],
+          "descriptionPlaceHolders": [
+            {
+              "key": "ID",
+              "value": "{{navigation.selectedIndividualIdentifierId}}"
+            }
+          ],
           "secondaryAction": {
             "type": "template",
             "label": "GO_BACK",
@@ -1287,8 +1301,7 @@ final dynamic sampleSMCFlows = {
                       {
                         "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
                         "properties": {
-                          "failedMessage":
-                              "BENEFICIARY_NOT_ELIGIBLE",
+                          "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
                           "eligibilityParams": [
                             {
                               "conditionVar": "age",
@@ -2929,7 +2942,17 @@ final dynamic sampleSMCFlows = {
               "schemaCode": null,
               "systemDate": true,
               "validations": [],
-              "errorMessage": ""
+              "errorMessage": "",
+              "labelPlaceHolders": [
+                {
+                  "key": "ID",
+                  "value": "{{navigation.beneficiaryId}}"
+                },
+                {
+                  "key": "NAME",
+                  "value": "{{navigation.childName}}"
+                }
+              ]
             },
             {
               "type": "boolean",

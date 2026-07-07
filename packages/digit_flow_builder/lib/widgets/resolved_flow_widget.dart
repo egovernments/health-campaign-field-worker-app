@@ -42,6 +42,40 @@ String substituteArgs(
   return result;
 }
 
+/// Substitutes named placeholders (`{KEY}`) in [text] with resolved values
+/// from [placeHolders].
+///
+/// Each placeholder's `value` template is resolved via
+/// [interpolateWithCrudStates] when it contains `{{` and [stateData] is
+/// available; otherwise the raw string is used.
+String substitutePlaceHolders(
+  String text,
+  List<dynamic> placeHolders,
+  CrudStateData? stateData,
+  Map<String, dynamic>? itemData,
+) {
+  String result = text;
+  for (final ph in placeHolders) {
+    if (ph is! Map) continue;
+    final key = ph['key']?.toString();
+    final valueTemplate = ph['value']?.toString() ?? '';
+    if (key == null || key.isEmpty) continue;
+
+    String resolvedValue;
+    if (stateData != null && valueTemplate.contains('{{')) {
+      resolvedValue = interpolateWithCrudStates(
+        template: valueTemplate,
+        stateData: stateData,
+        item: itemData,
+      );
+    } else {
+      resolvedValue = valueTemplate;
+    }
+    result = result.replaceAll('{$key}', resolvedValue);
+  }
+  return result;
+}
+
 /// Pre-resolved context available to all widgets that extend [ResolvedFlowWidget].
 ///
 /// Contains the resolved state, localization, visibility/disabled status,
@@ -114,6 +148,18 @@ class ResolvedWidgetContext {
     final text = resolveTextWithCrudStates(template);
     if (args == null || args.isEmpty) return text;
     return substituteArgs(text, args, stateData, state.itemData);
+  }
+
+  /// Resolves a template as a localization key, then substitutes named
+  /// placeholders (`{KEY}`) with resolved values from [placeHolders].
+  ///
+  /// Use this for widgets that re-resolve labels directly from `json['label']`
+  /// when `labelPlaceHolders` or `descriptionPlaceHolders` is present.
+  String resolveTextWithPlaceHolders(
+      String? template, List<dynamic>? placeHolders) {
+    final text = resolveTextWithCrudStates(template);
+    if (placeHolders == null || placeHolders.isEmpty) return text;
+    return substitutePlaceHolders(text, placeHolders, stateData, state.itemData);
   }
 
   /// Resolves a value (preserving its actual type: int, bool, List, etc.).
@@ -441,6 +487,33 @@ abstract class ResolvedFlowWidget implements FlowWidget {
       resolvedDescription = substituteArgs(
         resolvedDescription,
         descriptionArgs,
+        state.stateData,
+        state.itemData,
+      );
+    }
+
+    // Substitute named labelPlaceHolders ({KEY}) — takes priority over labelArgs
+    final labelPlaceHolders = json['labelPlaceHolders'] as List<dynamic>?;
+    if (resolvedLabel != null &&
+        labelPlaceHolders != null &&
+        labelPlaceHolders.isNotEmpty) {
+      resolvedLabel = substitutePlaceHolders(
+        resolvedLabel,
+        labelPlaceHolders,
+        state.stateData,
+        state.itemData,
+      );
+    }
+
+    // Substitute named descriptionPlaceHolders ({KEY}) — takes priority over descriptionArgs
+    final descriptionPlaceHolders =
+        json['descriptionPlaceHolders'] as List<dynamic>?;
+    if (resolvedDescription != null &&
+        descriptionPlaceHolders != null &&
+        descriptionPlaceHolders.isNotEmpty) {
+      resolvedDescription = substitutePlaceHolders(
+        resolvedDescription,
+        descriptionPlaceHolders,
         state.stateData,
         state.itemData,
       );

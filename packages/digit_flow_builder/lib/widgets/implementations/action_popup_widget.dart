@@ -45,7 +45,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
       mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
       mainAxisAlignment:
           WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
-      label: localization?.translate(json['label']) ?? json['label'] ?? '',
+      label: resolved.resolvedLabel ?? json['label'] ?? '',
       onPressed: () async {
         // Trigger configured actions if any
         if (json['onAction'] != null && json['onAction'] is List) {

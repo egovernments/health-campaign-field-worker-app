@@ -23,10 +23,16 @@ class NoResultCardWidget extends ResolvedFlowWidget {
 
     if (compositeKey == null) {
       return NoResultCard(
-        label: resolved.resolveTextWithArgs(
-            json['label'], json['labelArgs']),
-        description: resolved.resolveTextWithArgs(
-            json['description'], json['descriptionArgs']),
+        label: json['labelPlaceHolders'] != null
+            ? resolved.resolveTextWithPlaceHolders(
+                json['label'], json['labelPlaceHolders'])
+            : resolved.resolveTextWithArgs(
+                json['label'], json['labelArgs']),
+        description: json['descriptionPlaceHolders'] != null
+            ? resolved.resolveTextWithPlaceHolders(
+                json['description'], json['descriptionPlaceHolders'])
+            : resolved.resolveTextWithArgs(
+                json['description'], json['descriptionArgs']),
       );
     }
 
@@ -45,10 +51,16 @@ class NoResultCardWidget extends ResolvedFlowWidget {
         }
 
         return NoResultCard(
-          label: resolved.resolveTextWithArgs(
-              json['label'], json['labelArgs']),
-          description: resolved.resolveTextWithArgs(
-              json['description'], json['descriptionArgs']),
+          label: json['labelPlaceHolders'] != null
+              ? resolved.resolveTextWithPlaceHolders(
+                  json['label'], json['labelPlaceHolders'])
+              : resolved.resolveTextWithArgs(
+                  json['label'], json['labelArgs']),
+          description: json['descriptionPlaceHolders'] != null
+              ? resolved.resolveTextWithPlaceHolders(
+                  json['description'], json['descriptionPlaceHolders'])
+              : resolved.resolveTextWithArgs(
+                  json['description'], json['descriptionArgs']),
         );
       },
     );
