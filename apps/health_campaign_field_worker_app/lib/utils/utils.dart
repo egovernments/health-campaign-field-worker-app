@@ -296,8 +296,8 @@ void showDownloadDialog(
             title: model.title,
             description: model.content,
             titleIcon: Icon(
-              Icons.warning_amber_rounded,
-              size: 60.0,
+              Icons.warning,
+              size: spacer12,
               color: Theme.of(context).colorTheme.alert.error,
             ),
             actions: [
@@ -341,8 +341,10 @@ void showDownloadDialog(
           title: model.title,
           titleIcon: Icon(
             Icons.info_outline_rounded,
-            color: Theme.of(context).colorTheme.text.primary,
+            size: spacer8,
+            color: Theme.of(context).colorTheme.alert.error,
           ),
+          titleIconAlignment: CrossAxisAlignment.center,
           description: model.content,
           actions: [
             DigitButton(

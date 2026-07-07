@@ -58,6 +58,7 @@ class DownloadProgressContent extends StatelessWidget {
             value: progress,
             minHeight: spacer1,
             color: Theme.of(context).colorTheme.alert.success,
+            backgroundColor: Theme.of(context).colorTheme.generic.background,
             borderRadius: const BorderRadius.all(Radius.circular(spacer2)),
           ),
         Row(
