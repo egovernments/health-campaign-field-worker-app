@@ -48,8 +48,8 @@ class _BoundarySelectionPageState
   int i = 0;
   int pendingSyncCount = 0;
   final clickedStatus = ValueNotifier<bool>(false);
-  StreamController<DownloadProgressData> downloadProgress =
-      StreamController<DownloadProgressData>.broadcast();
+  final ValueNotifier<DownloadProgressData?> downloadProgress =
+      ValueNotifier(null);
   Map<String, TextEditingController> dropdownControllers = {};
   late StreamSubscription syncSubscription;
   var leastLevelBoundaries;
@@ -90,7 +90,7 @@ class _BoundarySelectionPageState
     clickedStatus.value = true;
     clickedStatus.dispose();
     syncSubscription.cancel();
-    downloadProgress.close();
+    downloadProgress.dispose();
     super.dispose();
   }
 
@@ -313,6 +313,7 @@ class _BoundarySelectionPageState
                                         currentIndex: 0,
                                         totalBoundaries: 1,
                                       );
+                                      downloadProgress.value = progressData;
                                       if (syncCount < 1) {
                                         showDownloadDialog(
                                           context,
@@ -333,31 +334,14 @@ class _BoundarySelectionPageState
                                           isPop: true,
                                           downloadProgressController:
                                               downloadProgress,
-                                          initialProgressData: progressData,
                                         );
                                       }
-                                      downloadProgress.add(progressData);
                                     },
                                     success: (result) {
                                       int? epochTime = result.lastSyncedTime;
 
                                       String date =
                                           '${DigitDateUtils.getTimeFromTimestamp(epochTime!)} on ${DigitDateUtils.getDateFromTimestamp(epochTime)}';
-                                      String dataDescription =
-                                          "${localizations.translate(
-                                        i18.beneficiaryDetails.downloadreport,
-                                      )}\n\n\n${localizations.translate(
-                                        i18.beneficiaryDetails.boundary,
-                                      )} ${localizations.translate(result.locality!)}\n${localizations.translate(
-                                        i18.beneficiaryDetails.status,
-                                      )} ${localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .downloadcompleted,
-                                      )}\n${localizations.translate(
-                                        i18.beneficiaryDetails.downloadedon,
-                                      )} $date\n${localizations.translate(
-                                        i18.beneficiaryDetails.recordsdownload,
-                                      )} ${result.totalCount}/${result.totalCount}";
                                       Navigator.of(
                                         context,
                                         rootNavigator: true,
@@ -367,7 +351,10 @@ class _BoundarySelectionPageState
                                       context.router
                                           .popAndPush((AcknowledgementRoute(
                                         isDataRecordSuccess: true,
-                                        description: dataDescription,
+                                        description: localizations.translate(
+                                          i18.acknowledgementSuccess
+                                              .dataDownloadedSuccessDesc,
+                                        ),
                                         label: localizations.translate(i18
                                             .acknowledgementSuccess
                                             .dataDownloadedSuccessLabel),
@@ -497,6 +484,7 @@ class _BoundarySelectionPageState
                                         currentIndex: currentIndex,
                                         totalBoundaries: totalBoundaries,
                                       );
+                                      downloadProgress.value = progressData;
                                       if (syncCount < 1 && currentIndex == 0) {
                                         showDownloadDialog(
                                           context,
@@ -517,10 +505,8 @@ class _BoundarySelectionPageState
                                           isPop: true,
                                           downloadProgressController:
                                               downloadProgress,
-                                          initialProgressData: progressData,
                                         );
                                       }
-                                      downloadProgress.add(progressData);
                                     },
                                     multiBoundarySuccess: (results) {
                                       final now =
