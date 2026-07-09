@@ -34,7 +34,6 @@ import '../../models/entities/mdms_module_enums.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/downsync/downsync.dart';
 import '../../models/entities/roles_type.dart';
-import '../../utils/background_service.dart';
 import '../../utils/download_image.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
@@ -197,7 +196,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _loadOnline(ProjectEmitter emit) async {
-    final batchSize = await _getBatchSize();
     final userObject = await localSecureStore.userRequestModel;
     final uuid = userObject?.uuid;
 
@@ -268,17 +266,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
-      try {
-        await _loadFacilities(projects, batchSize);
-      } catch (_) {
-        emit(
-          state.copyWith(
-            loading: false,
-            syncError: ProjectSyncErrorType.facilities,
-          ),
-        );
-        return;
-      }
+      // Facility fetch moved: `_loadFacilities` used to fire a
+      // tenant-wide search here (unfiltered by project), pulling every
+      // facility in the environment. That's wasteful on large tenants —
+      // we only need the facilities referenced by the selected project's
+      // project-facility mappings. It now runs from inside
+      // `_loadProjectFacilities` after the project is selected, using
+      // the specific `facilityId`s returned there.
 
       try {
         await _loadProductVariants(projects);
@@ -471,6 +465,37 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
 
+    // Fetch only the facilities referenced by this project's
+    // project-facility mappings, instead of pulling every facility in
+    // the tenant. Chunk the id list so the query-string / body stays
+    // within a sensible size for the search API.
+    final facilityIds = projectFacilities
+        .map((pf) => pf.facilityId)
+        .whereType<String>()
+        .toSet()
+        .toList();
+    if (facilityIds.isNotEmpty) {
+      const chunkSize = 100;
+      for (var i = 0; i < facilityIds.length; i += chunkSize) {
+        final end = (i + chunkSize < facilityIds.length)
+            ? i + chunkSize
+            : facilityIds.length;
+        final chunk = facilityIds.sublist(i, end);
+        try {
+          final facilities = await facilityRemoteRepository.search(
+            FacilitySearchModel(
+              tenantId: envConfig.variables.tenantId,
+              id: chunk,
+            ),
+          );
+          await facilityLocalRepository.bulkCreate(facilities);
+        } catch (e) {
+          debugPrint(
+              'facility fetch failed for chunk starting at $i: $e');
+        }
+      }
+    }
+
     // Register notification token with current level facility IDs
     final currentFacilityIds = projectFacilities
         .where((pf) {
@@ -501,16 +526,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             );
       }
     }
-  }
-
-  FutureOr<void> _loadFacilities(
-      List<ProjectModel> projects, int batchSize) async {
-    final facilities = await facilityRemoteRepository.search(
-      FacilitySearchModel(tenantId: envConfig.variables.tenantId),
-      limit: batchSize,
-    );
-
-    await facilityLocalRepository.bulkCreate(facilities);
   }
 
   FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
@@ -1466,25 +1481,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     // Finally, store the full formConfigs (including updated FORM ones)
     await storeSchema(formConfigs);
-  }
-
-  FutureOr<int> _getBatchSize() async {
-    try {
-      final configs = await isar.appConfigurations.where().findAll();
-
-      final double speed = await bandwidthCheckRepository.pingBandwidthCheck(
-        bandWidthCheckModel: null,
-      );
-
-      int configuredBatchSize = getBatchSizeToBandwidth(
-        speed,
-        configs,
-        isDownSync: true,
-      );
-      return configuredBatchSize;
-    } catch (e) {
-      rethrow;
-    }
   }
 
   Future<void> _createUserActionForDeviceSwitch(ProjectModel project) async {
