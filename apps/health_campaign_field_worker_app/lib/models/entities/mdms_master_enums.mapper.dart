@@ -87,8 +87,6 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.deviceChangeReasons;
       case "SINGLE_USER_LOGIN":
         return MasterEnums.singleUserLogin;
-      case "BOUNDARY_RELATIONSHIP":
-        return MasterEnums.boundaryRelationShip;
       case "serviceRegistry":
         return MasterEnums.serviceRegistryMaster;
       case "projectTypes":
@@ -165,8 +163,6 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "DEVICE_CHANGE_REASONS";
       case MasterEnums.singleUserLogin:
         return "SINGLE_USER_LOGIN";
-      case MasterEnums.boundaryRelationShip:
-        return "BOUNDARY_RELATIONSHIP";
       case MasterEnums.serviceRegistryMaster:
         return "serviceRegistry";
       case MasterEnums.projectTypes:

@@ -147,7 +147,6 @@ class MdmsRepository {
           MasterEnums.searchHouseHoldFilters.toValue(),
           MasterEnums.transitPostType.toValue(),
           MasterEnums.searchCLFFilters.toValue(),
-          MasterEnums.boundaryRelationShip.toValue(),
           MasterEnums.deviceChangeReasons.toValue(),
           MasterEnums.singleUserLogin.toValue(),
         ],
@@ -634,18 +633,6 @@ class MdmsRepository {
         ..active = e.active;
 
       return reasonTypes;
-    }).toList();
-
-    appConfiguration.boundaryRelationship =
-        result.hcmWrapperModel?.boundaryRelationship?.map((e) {
-      final boundaryRelConfig = BoundaryRelationshipConfig()
-        ..boundaryType = e.boundaryType
-        ..order = e.order
-        ..parentBoundaryType = e.parent?.boundaryType ?? ''
-        ..childBoundaryTypes =
-            e.children?.map((c) => c.boundaryType).toList() ?? [];
-
-      return boundaryRelConfig;
     }).toList();
 
     isar.writeTxnSync(() {

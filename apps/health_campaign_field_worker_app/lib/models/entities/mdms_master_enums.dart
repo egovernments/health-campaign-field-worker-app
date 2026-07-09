@@ -67,8 +67,6 @@ enum MasterEnums {
   deviceChangeReasons,
   @MappableValue("SINGLE_USER_LOGIN")
   singleUserLogin,
-  @MappableValue("BOUNDARY_RELATIONSHIP")
-  boundaryRelationShip,
   @MappableValue("serviceRegistry")
   serviceRegistryMaster,
   @MappableValue("projectTypes")
