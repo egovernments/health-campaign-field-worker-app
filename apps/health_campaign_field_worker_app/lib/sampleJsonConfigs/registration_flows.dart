@@ -805,50 +805,45 @@
       "body": [
         {
           "type": "template",
+          "label": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
+          "format": "button",
+          "onAction": [
+            {
+              "actionType": "REVERSE_TRANSFORM",
+              "properties": {
+                "configName": "beneficiaryRegistration",
+                "entityTypes": ["HouseholdModel"]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{ context.household.clientReferenceId }}"
+                  },
+                  {"key": "isEdit", "value": "true"}
+                ],
+                "name": "HOUSEHOLD",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "householdEditButton",
+          "properties": {
+            "prefixIcon": "Edit",
+            "size": "medium",
+            "type": "secondary",
+            "mainAxisSize": "min",
+            "mainAxisAlignment": "center",
+            "horizontalPadding": "spacer5"
+          }
+        },
+        {
+          "type": "template",
           "format": "card",
           "children": [
-            {
-              "format": "row",
-              "children": [
-                {
-                  "type": "template",
-                  "label": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
-                  "format": "button",
-                  "onAction": [
-                    {
-                      "actionType": "REVERSE_TRANSFORM",
-                      "properties": {
-                        "configName": "beneficiaryRegistration",
-                        "entityTypes": ["HouseholdModel"]
-                      }
-                    },
-                    {
-                      "actionType": "NAVIGATION",
-                      "properties": {
-                        "data": [
-                          {
-                            "key": "HouseholdClientReferenceId",
-                            "value": "{{ context.household.clientReferenceId }}"
-                          },
-                          {"key": "isEdit", "value": "true"}
-                        ],
-                        "name": "HOUSEHOLD",
-                        "type": "FORM"
-                      }
-                    }
-                  ],
-                  "fieldName": "householdEditButton",
-                  "properties": {
-                    "icon": "Edit",
-                    "size": "large",
-                    "type": "tertiary",
-                    "mainAxisSize": "min",
-                    "mainAxisAlignment": "center"
-                  }
-                }
-              ],
-              "properties": {"mainAxisAlignment": "end"}
-            },
             {
               "data": [
                 {
@@ -935,11 +930,14 @@
                         ],
                         "fieldName": "editIndividualButton",
                         "properties": {
-                          "icon": "Edit",
-                          "size": "large",
+                          "prefixIcon": "Edit",
+                          "size": "medium",
                           "type": "tertiary",
                           "mainAxisSize": "min",
-                          "mainAxisAlignment": "center"
+                          "mainAxisAlignment": "center",
+                          "iconSize": "spacer4",
+                          "fontFamily": "Roboto",
+                          "lineHeight": "1.0"
                         }
                       }
                     ],
@@ -1394,7 +1392,6 @@
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
       "initActions": [
         {
           "actionType": "LOAD_UNIQUE_ID_POOL"
@@ -1791,7 +1788,6 @@
         {
          "type": "template",
          "label": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
-         "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
          "format": "noResultCard",
          "fieldName": "beneficiaryNotFound",
          "showOnEmptySearch": true
@@ -2412,7 +2408,6 @@
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "REGISTRATION_SEARCH_BENEFICIARY_DESC",
       "wrapperConfig": {
         "filters": [],
         "relations": [
