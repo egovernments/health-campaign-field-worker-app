@@ -244,16 +244,6 @@ class BeneficiaryDownSyncBloc
                 locality: event.boundaryCode,
                 boundaryName: event.boundaryName,
               ));
-
-              // Emit progress with the updated synced count so the bar
-              // advances after each batch (not just at batch start).
-              final syncedSoFar = (offset + event.batchSize) > totalCount
-                  ? totalCount
-                  : (offset + event.batchSize);
-              emit(BeneficiaryDownSyncState.inProgress(
-                syncedSoFar,
-                totalCount,
-              ));
             }
             // When API response failed
             else {
@@ -280,9 +270,6 @@ class BeneficiaryDownSyncBloc
               boundaryName: event.boundaryName,
             );
             await LocalSecureStore.instance.setManualSyncTrigger(false);
-            // Briefly hold the completed (100%) bar so the user can see the
-            // download finished before navigating to the acknowledgement page.
-            await Future.delayed(const Duration(milliseconds: 800));
             emit(BeneficiaryDownSyncState.success(result));
             break; // If offset is greater than or equal to totalCount, exit the loop
           }
@@ -458,19 +445,6 @@ class BeneficiaryDownSyncBloc
                 locality: boundaryCode,
                 boundaryName: boundaryName,
               ));
-
-              // Emit progress with the updated synced count so the bar
-              // advances after each batch (not just at batch start).
-              final syncedSoFar = (offset + event.batchSize) > totalCount
-                  ? totalCount
-                  : (offset + event.batchSize);
-              emit(BeneficiaryDownSyncState.multiBoundaryInProgress(
-                i,
-                boundaries.length,
-                boundaryName,
-                syncedSoFar,
-                totalCount,
-              ));
             } else {
               emit(const BeneficiaryDownSyncState.failed());
               await LocalSecureStore.instance.setManualSyncTrigger(false);
@@ -501,9 +475,6 @@ class BeneficiaryDownSyncBloc
       }
 
       await LocalSecureStore.instance.setManualSyncTrigger(false);
-      // Briefly hold the completed (100%) bar so the user can see the
-      // download finished before navigating to the acknowledgement page.
-      await Future.delayed(const Duration(milliseconds: 800));
       emit(BeneficiaryDownSyncState.multiBoundarySuccess(completedResults));
     } catch (e) {
       await LocalSecureStore.instance.setManualSyncTrigger(false);
