@@ -515,8 +515,12 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                 // Header from config
                 if (screenConfig?['heading'] != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: spacer4, horizontal: spacer4),
+                    padding: const EdgeInsets.only(
+                      left: spacer4,
+                      right: spacer4,
+                      top: spacer6,
+                      bottom: spacer1,
+                    ),
                     child: Text(
                       localizations.translate(screenConfig!['heading']),
                       style: textTheme.headingXl.copyWith(
@@ -540,7 +544,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                     ),
                   ),
                 const SizedBox(
-                  height: spacer4,
+                  height: spacer3,
                 ),
                 // Build body widgets from config
                 ...bodyConfig.map(
