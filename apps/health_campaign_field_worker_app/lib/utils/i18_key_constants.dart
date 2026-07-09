@@ -1034,6 +1034,8 @@ class AcknowledgementSuccess {
   String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
 
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
+
+  String get dataDownloadedSuccessDesc => 'DATA_DOWNLOADED_SUCCESS_DESC';
 }
 
 class ProjectSelection {

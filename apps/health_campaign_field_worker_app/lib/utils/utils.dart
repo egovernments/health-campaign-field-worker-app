@@ -244,8 +244,7 @@ void showDownloadDialog(
   required DownloadBeneficiary model,
   required DigitProgressDialogType dialogType,
   bool isPop = true,
-  StreamController<DownloadProgressData>? downloadProgressController,
-  DownloadProgressData? initialProgressData,
+  ValueNotifier<DownloadProgressData?>? downloadProgressController,
 }) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
@@ -421,11 +420,9 @@ void showDownloadDialog(
         barrierDismissible: false,
         context: context,
         builder: (ctx) => Popup(title: "", additionalWidgets: [
-          StreamBuilder<DownloadProgressData>(
-            stream: downloadProgressController?.stream,
-            initialData: initialProgressData,
-            builder: (context, snapshot) {
-              final data = snapshot.data;
+          ValueListenableBuilder<DownloadProgressData?>(
+            valueListenable: downloadProgressController!,
+            builder: (context, data, _) {
               final progress = data?.progress ?? 0;
               final totalCount = data?.totalCount ?? model.totalCount ?? 0;
               final syncedCount = data?.syncedCount ?? 0;

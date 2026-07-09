@@ -39,8 +39,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   List<DownsyncModel> downSyncList = [];
   int pendingSyncCount = 0;
   BoundaryModel? selectedBoundary;
-  StreamController<DownloadProgressData> downloadProgress =
-      StreamController<DownloadProgressData>();
+  final ValueNotifier<DownloadProgressData?> downloadProgress =
+      ValueNotifier(null);
   late StreamSubscription? syncSubscription;
 
   @override
@@ -65,6 +65,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   @override
   void dispose() {
     syncSubscription?.cancel();
+    downloadProgress.dispose();
     super.dispose();
   }
 
@@ -238,10 +239,9 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             dialogType: DigitProgressDialogType.inProgress,
                             isPop: true,
                             downloadProgressController: downloadProgress,
-                            initialProgressData: progressData,
                           );
                         }
-                        downloadProgress.add(progressData);
+                        downloadProgress.value = progressData;
                       },
                       success: (result) {
                         int? epochTime = result.lastSyncedTime;
