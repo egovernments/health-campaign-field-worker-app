@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,3166 +9,1168 @@ part of 'auth.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
 /// @nodoc
 mixin _$AuthEvent {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String userId, String password, String tenantId)
-        login,
-    required TResult Function(String tenantId) autoLogin,
-    required TResult Function() logout,
-    required TResult Function(
-            String username, String tenantId, String apiEndPoint)
-        checkOtherDeviceLogin,
-    required TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)
-        switchDevice,
-    required TResult Function() reset,
-    required TResult Function() allow,
-    required TResult Function(
-            UserActionModel userActionModel, String apiEndPoint)
-        switchDeviceUserAction,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(String tenantId)? autoLogin,
-    TResult? Function()? logout,
-    TResult? Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult? Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult? Function()? reset,
-    TResult? Function()? allow,
-    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(String tenantId)? autoLogin,
-    TResult Function()? logout,
-    TResult Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult Function()? reset,
-    TResult Function()? allow,
-    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAutoLoginEvent value) autoLogin,
-    required TResult Function(AuthLogoutEvent value) logout,
-    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
-        checkOtherDeviceLogin,
-    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
-        switchDevice,
-    required TResult Function(AuthResetEvent value) reset,
-    required TResult Function(AuthAllowEvent value) allow,
-    required TResult Function(AuthSwitchDeviceUserActionEvent value)
-        switchDeviceUserAction,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult? Function(AuthLogoutEvent value)? logout,
-    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult? Function(AuthResetEvent value)? reset,
-    TResult? Function(AuthAllowEvent value)? allow,
-    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult Function(AuthLogoutEvent value)? logout,
-    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult Function(AuthResetEvent value)? reset,
-    TResult Function(AuthAllowEvent value)? allow,
-    TResult Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthEvent);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AuthEvent()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AuthEventCopyWith<$Res> {
-  factory $AuthEventCopyWith(AuthEvent value, $Res Function(AuthEvent) then) =
-      _$AuthEventCopyWithImpl<$Res, AuthEvent>;
+class $AuthEventCopyWith<$Res>  {
+$AuthEventCopyWith(AuthEvent _, $Res Function(AuthEvent) __);
 }
 
-/// @nodoc
-class _$AuthEventCopyWithImpl<$Res, $Val extends AuthEvent>
-    implements $AuthEventCopyWith<$Res> {
-  _$AuthEventCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [AuthEvent].
+extension AuthEventPatterns on AuthEvent {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( AuthLoginEvent value)?  login,TResult Function( AuthAutoLoginEvent value)?  autoLogin,TResult Function( AuthLogoutEvent value)?  logout,TResult Function( AuthCheckOtherDeviceLoginEvent value)?  checkOtherDeviceLogin,TResult Function( AuthSwitchDeviceEventSwitchDevice value)?  switchDevice,TResult Function( AuthResetEvent value)?  reset,TResult Function( AuthAllowEvent value)?  allow,TResult Function( AuthSwitchDeviceUserActionEvent value)?  switchDeviceUserAction,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case AuthLoginEvent() when login != null:
+return login(_that);case AuthAutoLoginEvent() when autoLogin != null:
+return autoLogin(_that);case AuthLogoutEvent() when logout != null:
+return logout(_that);case AuthCheckOtherDeviceLoginEvent() when checkOtherDeviceLogin != null:
+return checkOtherDeviceLogin(_that);case AuthSwitchDeviceEventSwitchDevice() when switchDevice != null:
+return switchDevice(_that);case AuthResetEvent() when reset != null:
+return reset(_that);case AuthAllowEvent() when allow != null:
+return allow(_that);case AuthSwitchDeviceUserActionEvent() when switchDeviceUserAction != null:
+return switchDeviceUserAction(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( AuthLoginEvent value)  login,required TResult Function( AuthAutoLoginEvent value)  autoLogin,required TResult Function( AuthLogoutEvent value)  logout,required TResult Function( AuthCheckOtherDeviceLoginEvent value)  checkOtherDeviceLogin,required TResult Function( AuthSwitchDeviceEventSwitchDevice value)  switchDevice,required TResult Function( AuthResetEvent value)  reset,required TResult Function( AuthAllowEvent value)  allow,required TResult Function( AuthSwitchDeviceUserActionEvent value)  switchDeviceUserAction,}){
+final _that = this;
+switch (_that) {
+case AuthLoginEvent():
+return login(_that);case AuthAutoLoginEvent():
+return autoLogin(_that);case AuthLogoutEvent():
+return logout(_that);case AuthCheckOtherDeviceLoginEvent():
+return checkOtherDeviceLogin(_that);case AuthSwitchDeviceEventSwitchDevice():
+return switchDevice(_that);case AuthResetEvent():
+return reset(_that);case AuthAllowEvent():
+return allow(_that);case AuthSwitchDeviceUserActionEvent():
+return switchDeviceUserAction(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( AuthLoginEvent value)?  login,TResult? Function( AuthAutoLoginEvent value)?  autoLogin,TResult? Function( AuthLogoutEvent value)?  logout,TResult? Function( AuthCheckOtherDeviceLoginEvent value)?  checkOtherDeviceLogin,TResult? Function( AuthSwitchDeviceEventSwitchDevice value)?  switchDevice,TResult? Function( AuthResetEvent value)?  reset,TResult? Function( AuthAllowEvent value)?  allow,TResult? Function( AuthSwitchDeviceUserActionEvent value)?  switchDeviceUserAction,}){
+final _that = this;
+switch (_that) {
+case AuthLoginEvent() when login != null:
+return login(_that);case AuthAutoLoginEvent() when autoLogin != null:
+return autoLogin(_that);case AuthLogoutEvent() when logout != null:
+return logout(_that);case AuthCheckOtherDeviceLoginEvent() when checkOtherDeviceLogin != null:
+return checkOtherDeviceLogin(_that);case AuthSwitchDeviceEventSwitchDevice() when switchDevice != null:
+return switchDevice(_that);case AuthResetEvent() when reset != null:
+return reset(_that);case AuthAllowEvent() when allow != null:
+return allow(_that);case AuthSwitchDeviceUserActionEvent() when switchDeviceUserAction != null:
+return switchDeviceUserAction(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String userId,  String password,  String tenantId)?  login,TResult Function( String tenantId)?  autoLogin,TResult Function()?  logout,TResult Function( String username,  String tenantId,  String apiEndPoint)?  checkOtherDeviceLogin,TResult Function( String selectedReason,  String? deviceSwitchComment,  String username,  String password,  String tenantId,  String apiEndPoint)?  switchDevice,TResult Function()?  reset,TResult Function()?  allow,TResult Function( UserActionModel userActionModel,  String apiEndPoint)?  switchDeviceUserAction,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case AuthLoginEvent() when login != null:
+return login(_that.userId,_that.password,_that.tenantId);case AuthAutoLoginEvent() when autoLogin != null:
+return autoLogin(_that.tenantId);case AuthLogoutEvent() when logout != null:
+return logout();case AuthCheckOtherDeviceLoginEvent() when checkOtherDeviceLogin != null:
+return checkOtherDeviceLogin(_that.username,_that.tenantId,_that.apiEndPoint);case AuthSwitchDeviceEventSwitchDevice() when switchDevice != null:
+return switchDevice(_that.selectedReason,_that.deviceSwitchComment,_that.username,_that.password,_that.tenantId,_that.apiEndPoint);case AuthResetEvent() when reset != null:
+return reset();case AuthAllowEvent() when allow != null:
+return allow();case AuthSwitchDeviceUserActionEvent() when switchDeviceUserAction != null:
+return switchDeviceUserAction(_that.userActionModel,_that.apiEndPoint);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String userId,  String password,  String tenantId)  login,required TResult Function( String tenantId)  autoLogin,required TResult Function()  logout,required TResult Function( String username,  String tenantId,  String apiEndPoint)  checkOtherDeviceLogin,required TResult Function( String selectedReason,  String? deviceSwitchComment,  String username,  String password,  String tenantId,  String apiEndPoint)  switchDevice,required TResult Function()  reset,required TResult Function()  allow,required TResult Function( UserActionModel userActionModel,  String apiEndPoint)  switchDeviceUserAction,}) {final _that = this;
+switch (_that) {
+case AuthLoginEvent():
+return login(_that.userId,_that.password,_that.tenantId);case AuthAutoLoginEvent():
+return autoLogin(_that.tenantId);case AuthLogoutEvent():
+return logout();case AuthCheckOtherDeviceLoginEvent():
+return checkOtherDeviceLogin(_that.username,_that.tenantId,_that.apiEndPoint);case AuthSwitchDeviceEventSwitchDevice():
+return switchDevice(_that.selectedReason,_that.deviceSwitchComment,_that.username,_that.password,_that.tenantId,_that.apiEndPoint);case AuthResetEvent():
+return reset();case AuthAllowEvent():
+return allow();case AuthSwitchDeviceUserActionEvent():
+return switchDeviceUserAction(_that.userActionModel,_that.apiEndPoint);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String userId,  String password,  String tenantId)?  login,TResult? Function( String tenantId)?  autoLogin,TResult? Function()?  logout,TResult? Function( String username,  String tenantId,  String apiEndPoint)?  checkOtherDeviceLogin,TResult? Function( String selectedReason,  String? deviceSwitchComment,  String username,  String password,  String tenantId,  String apiEndPoint)?  switchDevice,TResult? Function()?  reset,TResult? Function()?  allow,TResult? Function( UserActionModel userActionModel,  String apiEndPoint)?  switchDeviceUserAction,}) {final _that = this;
+switch (_that) {
+case AuthLoginEvent() when login != null:
+return login(_that.userId,_that.password,_that.tenantId);case AuthAutoLoginEvent() when autoLogin != null:
+return autoLogin(_that.tenantId);case AuthLogoutEvent() when logout != null:
+return logout();case AuthCheckOtherDeviceLoginEvent() when checkOtherDeviceLogin != null:
+return checkOtherDeviceLogin(_that.username,_that.tenantId,_that.apiEndPoint);case AuthSwitchDeviceEventSwitchDevice() when switchDevice != null:
+return switchDevice(_that.selectedReason,_that.deviceSwitchComment,_that.username,_that.password,_that.tenantId,_that.apiEndPoint);case AuthResetEvent() when reset != null:
+return reset();case AuthAllowEvent() when allow != null:
+return allow();case AuthSwitchDeviceUserActionEvent() when switchDeviceUserAction != null:
+return switchDeviceUserAction(_that.userActionModel,_that.apiEndPoint);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$AuthLoginEventImplCopyWith<$Res> {
-  factory _$$AuthLoginEventImplCopyWith(_$AuthLoginEventImpl value,
-          $Res Function(_$AuthLoginEventImpl) then) =
-      __$$AuthLoginEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String userId, String password, String tenantId});
-}
-
-/// @nodoc
-class __$$AuthLoginEventImplCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthLoginEventImpl>
-    implements _$$AuthLoginEventImplCopyWith<$Res> {
-  __$$AuthLoginEventImplCopyWithImpl(
-      _$AuthLoginEventImpl _value, $Res Function(_$AuthLoginEventImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? userId = null,
-    Object? password = null,
-    Object? tenantId = null,
-  }) {
-    return _then(_$AuthLoginEventImpl(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      password: null == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String,
-      tenantId: null == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$AuthLoginEventImpl implements AuthLoginEvent {
-  const _$AuthLoginEventImpl(
-      {required this.userId, required this.password, required this.tenantId});
-
-  @override
-  final String userId;
-  @override
-  final String password;
-  @override
-  final String tenantId;
-
-  @override
-  String toString() {
-    return 'AuthEvent.login(userId: $userId, password: $password, tenantId: $tenantId)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AuthLoginEventImpl &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.password, password) ||
-                other.password == password) &&
-            (identical(other.tenantId, tenantId) ||
-                other.tenantId == tenantId));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, userId, password, tenantId);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AuthLoginEventImplCopyWith<_$AuthLoginEventImpl> get copyWith =>
-      __$$AuthLoginEventImplCopyWithImpl<_$AuthLoginEventImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String userId, String password, String tenantId)
-        login,
-    required TResult Function(String tenantId) autoLogin,
-    required TResult Function() logout,
-    required TResult Function(
-            String username, String tenantId, String apiEndPoint)
-        checkOtherDeviceLogin,
-    required TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)
-        switchDevice,
-    required TResult Function() reset,
-    required TResult Function() allow,
-    required TResult Function(
-            UserActionModel userActionModel, String apiEndPoint)
-        switchDeviceUserAction,
-  }) {
-    return login(userId, password, tenantId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(String tenantId)? autoLogin,
-    TResult? Function()? logout,
-    TResult? Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult? Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult? Function()? reset,
-    TResult? Function()? allow,
-    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-  }) {
-    return login?.call(userId, password, tenantId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(String tenantId)? autoLogin,
-    TResult Function()? logout,
-    TResult Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult Function()? reset,
-    TResult Function()? allow,
-    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (login != null) {
-      return login(userId, password, tenantId);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAutoLoginEvent value) autoLogin,
-    required TResult Function(AuthLogoutEvent value) logout,
-    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
-        checkOtherDeviceLogin,
-    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
-        switchDevice,
-    required TResult Function(AuthResetEvent value) reset,
-    required TResult Function(AuthAllowEvent value) allow,
-    required TResult Function(AuthSwitchDeviceUserActionEvent value)
-        switchDeviceUserAction,
-  }) {
-    return login(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult? Function(AuthLogoutEvent value)? logout,
-    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult? Function(AuthResetEvent value)? reset,
-    TResult? Function(AuthAllowEvent value)? allow,
-    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-  }) {
-    return login?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult Function(AuthLogoutEvent value)? logout,
-    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult Function(AuthResetEvent value)? reset,
-    TResult Function(AuthAllowEvent value)? allow,
-    TResult Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (login != null) {
-      return login(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class AuthLoginEvent implements AuthEvent {
-  const factory AuthLoginEvent(
-      {required final String userId,
-      required final String password,
-      required final String tenantId}) = _$AuthLoginEventImpl;
-
-  String get userId;
-  String get password;
-  String get tenantId;
-  @JsonKey(ignore: true)
-  _$$AuthLoginEventImplCopyWith<_$AuthLoginEventImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$AuthAutoLoginEventImplCopyWith<$Res> {
-  factory _$$AuthAutoLoginEventImplCopyWith(_$AuthAutoLoginEventImpl value,
-          $Res Function(_$AuthAutoLoginEventImpl) then) =
-      __$$AuthAutoLoginEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String tenantId});
-}
-
-/// @nodoc
-class __$$AuthAutoLoginEventImplCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthAutoLoginEventImpl>
-    implements _$$AuthAutoLoginEventImplCopyWith<$Res> {
-  __$$AuthAutoLoginEventImplCopyWithImpl(_$AuthAutoLoginEventImpl _value,
-      $Res Function(_$AuthAutoLoginEventImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? tenantId = null,
-  }) {
-    return _then(_$AuthAutoLoginEventImpl(
-      tenantId: null == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
-  const _$AuthAutoLoginEventImpl({required this.tenantId});
 
-  @override
-  final String tenantId;
+class AuthLoginEvent implements AuthEvent {
+  const AuthLoginEvent({required this.userId, required this.password, required this.tenantId});
+  
 
-  @override
-  String toString() {
-    return 'AuthEvent.autoLogin(tenantId: $tenantId)';
-  }
+ final  String userId;
+ final  String password;
+ final  String tenantId;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AuthAutoLoginEventImpl &&
-            (identical(other.tenantId, tenantId) ||
-                other.tenantId == tenantId));
-  }
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AuthLoginEventCopyWith<AuthLoginEvent> get copyWith => _$AuthLoginEventCopyWithImpl<AuthLoginEvent>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, tenantId);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AuthAutoLoginEventImplCopyWith<_$AuthAutoLoginEventImpl> get copyWith =>
-      __$$AuthAutoLoginEventImplCopyWithImpl<_$AuthAutoLoginEventImpl>(
-          this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String userId, String password, String tenantId)
-        login,
-    required TResult Function(String tenantId) autoLogin,
-    required TResult Function() logout,
-    required TResult Function(
-            String username, String tenantId, String apiEndPoint)
-        checkOtherDeviceLogin,
-    required TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)
-        switchDevice,
-    required TResult Function() reset,
-    required TResult Function() allow,
-    required TResult Function(
-            UserActionModel userActionModel, String apiEndPoint)
-        switchDeviceUserAction,
-  }) {
-    return autoLogin(tenantId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(String tenantId)? autoLogin,
-    TResult? Function()? logout,
-    TResult? Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult? Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult? Function()? reset,
-    TResult? Function()? allow,
-    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-  }) {
-    return autoLogin?.call(tenantId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(String tenantId)? autoLogin,
-    TResult Function()? logout,
-    TResult Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult Function()? reset,
-    TResult Function()? allow,
-    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (autoLogin != null) {
-      return autoLogin(tenantId);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAutoLoginEvent value) autoLogin,
-    required TResult Function(AuthLogoutEvent value) logout,
-    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
-        checkOtherDeviceLogin,
-    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
-        switchDevice,
-    required TResult Function(AuthResetEvent value) reset,
-    required TResult Function(AuthAllowEvent value) allow,
-    required TResult Function(AuthSwitchDeviceUserActionEvent value)
-        switchDeviceUserAction,
-  }) {
-    return autoLogin(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult? Function(AuthLogoutEvent value)? logout,
-    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult? Function(AuthResetEvent value)? reset,
-    TResult? Function(AuthAllowEvent value)? allow,
-    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-  }) {
-    return autoLogin?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult Function(AuthLogoutEvent value)? logout,
-    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult Function(AuthResetEvent value)? reset,
-    TResult Function(AuthAllowEvent value)? allow,
-    TResult Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (autoLogin != null) {
-      return autoLogin(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthLoginEvent&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.password, password) || other.password == password)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId));
 }
 
-abstract class AuthAutoLoginEvent implements AuthEvent {
-  const factory AuthAutoLoginEvent({required final String tenantId}) =
-      _$AuthAutoLoginEventImpl;
 
-  String get tenantId;
-  @JsonKey(ignore: true)
-  _$$AuthAutoLoginEventImplCopyWith<_$AuthAutoLoginEventImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+int get hashCode => Object.hash(runtimeType,userId,password,tenantId);
+
+@override
+String toString() {
+  return 'AuthEvent.login(userId: $userId, password: $password, tenantId: $tenantId)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$AuthLogoutEventImplCopyWith<$Res> {
-  factory _$$AuthLogoutEventImplCopyWith(_$AuthLogoutEventImpl value,
-          $Res Function(_$AuthLogoutEventImpl) then) =
-      __$$AuthLogoutEventImplCopyWithImpl<$Res>;
+abstract mixin class $AuthLoginEventCopyWith<$Res> implements $AuthEventCopyWith<$Res> {
+  factory $AuthLoginEventCopyWith(AuthLoginEvent value, $Res Function(AuthLoginEvent) _then) = _$AuthLoginEventCopyWithImpl;
+@useResult
+$Res call({
+ String userId, String password, String tenantId
+});
+
+
+
+
+}
+/// @nodoc
+class _$AuthLoginEventCopyWithImpl<$Res>
+    implements $AuthLoginEventCopyWith<$Res> {
+  _$AuthLoginEventCopyWithImpl(this._self, this._then);
+
+  final AuthLoginEvent _self;
+  final $Res Function(AuthLoginEvent) _then;
+
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? password = null,Object? tenantId = null,}) {
+  return _then(AuthLoginEvent(
+userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$AuthLogoutEventImplCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthLogoutEventImpl>
-    implements _$$AuthLogoutEventImplCopyWith<$Res> {
-  __$$AuthLogoutEventImplCopyWithImpl(
-      _$AuthLogoutEventImpl _value, $Res Function(_$AuthLogoutEventImpl) _then)
-      : super(_value, _then);
+
 }
 
 /// @nodoc
 
-class _$AuthLogoutEventImpl implements AuthLogoutEvent {
-  const _$AuthLogoutEventImpl();
 
-  @override
-  String toString() {
-    return 'AuthEvent.logout()';
-  }
+class AuthAutoLoginEvent implements AuthEvent {
+  const AuthAutoLoginEvent({required this.tenantId});
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$AuthLogoutEventImpl);
-  }
+ final  String tenantId;
 
-  @override
-  int get hashCode => runtimeType.hashCode;
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AuthAutoLoginEventCopyWith<AuthAutoLoginEvent> get copyWith => _$AuthAutoLoginEventCopyWithImpl<AuthAutoLoginEvent>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String userId, String password, String tenantId)
-        login,
-    required TResult Function(String tenantId) autoLogin,
-    required TResult Function() logout,
-    required TResult Function(
-            String username, String tenantId, String apiEndPoint)
-        checkOtherDeviceLogin,
-    required TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)
-        switchDevice,
-    required TResult Function() reset,
-    required TResult Function() allow,
-    required TResult Function(
-            UserActionModel userActionModel, String apiEndPoint)
-        switchDeviceUserAction,
-  }) {
-    return logout();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(String tenantId)? autoLogin,
-    TResult? Function()? logout,
-    TResult? Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult? Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult? Function()? reset,
-    TResult? Function()? allow,
-    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-  }) {
-    return logout?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(String tenantId)? autoLogin,
-    TResult Function()? logout,
-    TResult Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult Function()? reset,
-    TResult Function()? allow,
-    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (logout != null) {
-      return logout();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAutoLoginEvent value) autoLogin,
-    required TResult Function(AuthLogoutEvent value) logout,
-    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
-        checkOtherDeviceLogin,
-    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
-        switchDevice,
-    required TResult Function(AuthResetEvent value) reset,
-    required TResult Function(AuthAllowEvent value) allow,
-    required TResult Function(AuthSwitchDeviceUserActionEvent value)
-        switchDeviceUserAction,
-  }) {
-    return logout(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult? Function(AuthLogoutEvent value)? logout,
-    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult? Function(AuthResetEvent value)? reset,
-    TResult? Function(AuthAllowEvent value)? allow,
-    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-  }) {
-    return logout?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult Function(AuthLogoutEvent value)? logout,
-    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult Function(AuthResetEvent value)? reset,
-    TResult Function(AuthAllowEvent value)? allow,
-    TResult Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (logout != null) {
-      return logout(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthAutoLoginEvent&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId));
 }
 
-abstract class AuthLogoutEvent implements AuthEvent {
-  const factory AuthLogoutEvent() = _$AuthLogoutEventImpl;
+
+@override
+int get hashCode => Object.hash(runtimeType,tenantId);
+
+@override
+String toString() {
+  return 'AuthEvent.autoLogin(tenantId: $tenantId)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$AuthCheckOtherDeviceLoginEventImplCopyWith<$Res> {
-  factory _$$AuthCheckOtherDeviceLoginEventImplCopyWith(
-          _$AuthCheckOtherDeviceLoginEventImpl value,
-          $Res Function(_$AuthCheckOtherDeviceLoginEventImpl) then) =
-      __$$AuthCheckOtherDeviceLoginEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String username, String tenantId, String apiEndPoint});
+abstract mixin class $AuthAutoLoginEventCopyWith<$Res> implements $AuthEventCopyWith<$Res> {
+  factory $AuthAutoLoginEventCopyWith(AuthAutoLoginEvent value, $Res Function(AuthAutoLoginEvent) _then) = _$AuthAutoLoginEventCopyWithImpl;
+@useResult
+$Res call({
+ String tenantId
+});
+
+
+
+
+}
+/// @nodoc
+class _$AuthAutoLoginEventCopyWithImpl<$Res>
+    implements $AuthAutoLoginEventCopyWith<$Res> {
+  _$AuthAutoLoginEventCopyWithImpl(this._self, this._then);
+
+  final AuthAutoLoginEvent _self;
+  final $Res Function(AuthAutoLoginEvent) _then;
+
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? tenantId = null,}) {
+  return _then(AuthAutoLoginEvent(
+tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$AuthCheckOtherDeviceLoginEventImplCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthCheckOtherDeviceLoginEventImpl>
-    implements _$$AuthCheckOtherDeviceLoginEventImplCopyWith<$Res> {
-  __$$AuthCheckOtherDeviceLoginEventImplCopyWithImpl(
-      _$AuthCheckOtherDeviceLoginEventImpl _value,
-      $Res Function(_$AuthCheckOtherDeviceLoginEventImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? username = null,
-    Object? tenantId = null,
-    Object? apiEndPoint = null,
-  }) {
-    return _then(_$AuthCheckOtherDeviceLoginEventImpl(
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
-      tenantId: null == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String,
-      apiEndPoint: null == apiEndPoint
-          ? _value.apiEndPoint
-          : apiEndPoint // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$AuthCheckOtherDeviceLoginEventImpl
-    implements AuthCheckOtherDeviceLoginEvent {
-  const _$AuthCheckOtherDeviceLoginEventImpl(
-      {required this.username,
-      required this.tenantId,
-      required this.apiEndPoint});
 
-  @override
-  final String username;
-  @override
-  final String tenantId;
-  @override
-  final String apiEndPoint;
+class AuthLogoutEvent implements AuthEvent {
+  const AuthLogoutEvent();
+  
 
-  @override
-  String toString() {
-    return 'AuthEvent.checkOtherDeviceLogin(username: $username, tenantId: $tenantId, apiEndPoint: $apiEndPoint)';
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AuthCheckOtherDeviceLoginEventImpl &&
-            (identical(other.username, username) ||
-                other.username == username) &&
-            (identical(other.tenantId, tenantId) ||
-                other.tenantId == tenantId) &&
-            (identical(other.apiEndPoint, apiEndPoint) ||
-                other.apiEndPoint == apiEndPoint));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, username, tenantId, apiEndPoint);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AuthCheckOtherDeviceLoginEventImplCopyWith<
-          _$AuthCheckOtherDeviceLoginEventImpl>
-      get copyWith => __$$AuthCheckOtherDeviceLoginEventImplCopyWithImpl<
-          _$AuthCheckOtherDeviceLoginEventImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String userId, String password, String tenantId)
-        login,
-    required TResult Function(String tenantId) autoLogin,
-    required TResult Function() logout,
-    required TResult Function(
-            String username, String tenantId, String apiEndPoint)
-        checkOtherDeviceLogin,
-    required TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)
-        switchDevice,
-    required TResult Function() reset,
-    required TResult Function() allow,
-    required TResult Function(
-            UserActionModel userActionModel, String apiEndPoint)
-        switchDeviceUserAction,
-  }) {
-    return checkOtherDeviceLogin(username, tenantId, apiEndPoint);
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(String tenantId)? autoLogin,
-    TResult? Function()? logout,
-    TResult? Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult? Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult? Function()? reset,
-    TResult? Function()? allow,
-    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-  }) {
-    return checkOtherDeviceLogin?.call(username, tenantId, apiEndPoint);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(String tenantId)? autoLogin,
-    TResult Function()? logout,
-    TResult Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult Function()? reset,
-    TResult Function()? allow,
-    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (checkOtherDeviceLogin != null) {
-      return checkOtherDeviceLogin(username, tenantId, apiEndPoint);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAutoLoginEvent value) autoLogin,
-    required TResult Function(AuthLogoutEvent value) logout,
-    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
-        checkOtherDeviceLogin,
-    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
-        switchDevice,
-    required TResult Function(AuthResetEvent value) reset,
-    required TResult Function(AuthAllowEvent value) allow,
-    required TResult Function(AuthSwitchDeviceUserActionEvent value)
-        switchDeviceUserAction,
-  }) {
-    return checkOtherDeviceLogin(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult? Function(AuthLogoutEvent value)? logout,
-    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult? Function(AuthResetEvent value)? reset,
-    TResult? Function(AuthAllowEvent value)? allow,
-    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-  }) {
-    return checkOtherDeviceLogin?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult Function(AuthLogoutEvent value)? logout,
-    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult Function(AuthResetEvent value)? reset,
-    TResult Function(AuthAllowEvent value)? allow,
-    TResult Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (checkOtherDeviceLogin != null) {
-      return checkOtherDeviceLogin(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthLogoutEvent);
 }
 
-abstract class AuthCheckOtherDeviceLoginEvent implements AuthEvent {
-  const factory AuthCheckOtherDeviceLoginEvent(
-          {required final String username,
-          required final String tenantId,
-          required final String apiEndPoint}) =
-      _$AuthCheckOtherDeviceLoginEventImpl;
 
-  String get username;
-  String get tenantId;
-  String get apiEndPoint;
-  @JsonKey(ignore: true)
-  _$$AuthCheckOtherDeviceLoginEventImplCopyWith<
-          _$AuthCheckOtherDeviceLoginEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AuthEvent.logout()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class AuthCheckOtherDeviceLoginEvent implements AuthEvent {
+  const AuthCheckOtherDeviceLoginEvent({required this.username, required this.tenantId, required this.apiEndPoint});
+  
+
+ final  String username;
+ final  String tenantId;
+ final  String apiEndPoint;
+
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AuthCheckOtherDeviceLoginEventCopyWith<AuthCheckOtherDeviceLoginEvent> get copyWith => _$AuthCheckOtherDeviceLoginEventCopyWithImpl<AuthCheckOtherDeviceLoginEvent>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthCheckOtherDeviceLoginEvent&&(identical(other.username, username) || other.username == username)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.apiEndPoint, apiEndPoint) || other.apiEndPoint == apiEndPoint));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,username,tenantId,apiEndPoint);
+
+@override
+String toString() {
+  return 'AuthEvent.checkOtherDeviceLogin(username: $username, tenantId: $tenantId, apiEndPoint: $apiEndPoint)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$AuthSwitchDeviceEventSwitchDeviceImplCopyWith<$Res> {
-  factory _$$AuthSwitchDeviceEventSwitchDeviceImplCopyWith(
-          _$AuthSwitchDeviceEventSwitchDeviceImpl value,
-          $Res Function(_$AuthSwitchDeviceEventSwitchDeviceImpl) then) =
-      __$$AuthSwitchDeviceEventSwitchDeviceImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call(
-      {String selectedReason,
-      String? deviceSwitchComment,
-      String username,
-      String password,
-      String tenantId,
-      String apiEndPoint});
+abstract mixin class $AuthCheckOtherDeviceLoginEventCopyWith<$Res> implements $AuthEventCopyWith<$Res> {
+  factory $AuthCheckOtherDeviceLoginEventCopyWith(AuthCheckOtherDeviceLoginEvent value, $Res Function(AuthCheckOtherDeviceLoginEvent) _then) = _$AuthCheckOtherDeviceLoginEventCopyWithImpl;
+@useResult
+$Res call({
+ String username, String tenantId, String apiEndPoint
+});
+
+
+
+
+}
+/// @nodoc
+class _$AuthCheckOtherDeviceLoginEventCopyWithImpl<$Res>
+    implements $AuthCheckOtherDeviceLoginEventCopyWith<$Res> {
+  _$AuthCheckOtherDeviceLoginEventCopyWithImpl(this._self, this._then);
+
+  final AuthCheckOtherDeviceLoginEvent _self;
+  final $Res Function(AuthCheckOtherDeviceLoginEvent) _then;
+
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? username = null,Object? tenantId = null,Object? apiEndPoint = null,}) {
+  return _then(AuthCheckOtherDeviceLoginEvent(
+username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
+as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,apiEndPoint: null == apiEndPoint ? _self.apiEndPoint : apiEndPoint // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$AuthSwitchDeviceEventSwitchDeviceImplCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res,
-        _$AuthSwitchDeviceEventSwitchDeviceImpl>
-    implements _$$AuthSwitchDeviceEventSwitchDeviceImplCopyWith<$Res> {
-  __$$AuthSwitchDeviceEventSwitchDeviceImplCopyWithImpl(
-      _$AuthSwitchDeviceEventSwitchDeviceImpl _value,
-      $Res Function(_$AuthSwitchDeviceEventSwitchDeviceImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? selectedReason = null,
-    Object? deviceSwitchComment = freezed,
-    Object? username = null,
-    Object? password = null,
-    Object? tenantId = null,
-    Object? apiEndPoint = null,
-  }) {
-    return _then(_$AuthSwitchDeviceEventSwitchDeviceImpl(
-      selectedReason: null == selectedReason
-          ? _value.selectedReason
-          : selectedReason // ignore: cast_nullable_to_non_nullable
-              as String,
-      deviceSwitchComment: freezed == deviceSwitchComment
-          ? _value.deviceSwitchComment
-          : deviceSwitchComment // ignore: cast_nullable_to_non_nullable
-              as String?,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
-      password: null == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String,
-      tenantId: null == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String,
-      apiEndPoint: null == apiEndPoint
-          ? _value.apiEndPoint
-          : apiEndPoint // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$AuthSwitchDeviceEventSwitchDeviceImpl
-    implements AuthSwitchDeviceEventSwitchDevice {
-  const _$AuthSwitchDeviceEventSwitchDeviceImpl(
-      {required this.selectedReason,
-      required this.deviceSwitchComment,
-      required this.username,
-      required this.password,
-      required this.tenantId,
-      required this.apiEndPoint});
 
-  @override
-  final String selectedReason;
-  @override
-  final String? deviceSwitchComment;
-  @override
-  final String username;
-  @override
-  final String password;
-  @override
-  final String tenantId;
-  @override
-  final String apiEndPoint;
+class AuthSwitchDeviceEventSwitchDevice implements AuthEvent {
+  const AuthSwitchDeviceEventSwitchDevice({required this.selectedReason, required this.deviceSwitchComment, required this.username, required this.password, required this.tenantId, required this.apiEndPoint});
+  
 
-  @override
-  String toString() {
-    return 'AuthEvent.switchDevice(selectedReason: $selectedReason, deviceSwitchComment: $deviceSwitchComment, username: $username, password: $password, tenantId: $tenantId, apiEndPoint: $apiEndPoint)';
-  }
+ final  String selectedReason;
+ final  String? deviceSwitchComment;
+ final  String username;
+ final  String password;
+ final  String tenantId;
+ final  String apiEndPoint;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AuthSwitchDeviceEventSwitchDeviceImpl &&
-            (identical(other.selectedReason, selectedReason) ||
-                other.selectedReason == selectedReason) &&
-            (identical(other.deviceSwitchComment, deviceSwitchComment) ||
-                other.deviceSwitchComment == deviceSwitchComment) &&
-            (identical(other.username, username) ||
-                other.username == username) &&
-            (identical(other.password, password) ||
-                other.password == password) &&
-            (identical(other.tenantId, tenantId) ||
-                other.tenantId == tenantId) &&
-            (identical(other.apiEndPoint, apiEndPoint) ||
-                other.apiEndPoint == apiEndPoint));
-  }
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AuthSwitchDeviceEventSwitchDeviceCopyWith<AuthSwitchDeviceEventSwitchDevice> get copyWith => _$AuthSwitchDeviceEventSwitchDeviceCopyWithImpl<AuthSwitchDeviceEventSwitchDevice>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, selectedReason,
-      deviceSwitchComment, username, password, tenantId, apiEndPoint);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AuthSwitchDeviceEventSwitchDeviceImplCopyWith<
-          _$AuthSwitchDeviceEventSwitchDeviceImpl>
-      get copyWith => __$$AuthSwitchDeviceEventSwitchDeviceImplCopyWithImpl<
-          _$AuthSwitchDeviceEventSwitchDeviceImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String userId, String password, String tenantId)
-        login,
-    required TResult Function(String tenantId) autoLogin,
-    required TResult Function() logout,
-    required TResult Function(
-            String username, String tenantId, String apiEndPoint)
-        checkOtherDeviceLogin,
-    required TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)
-        switchDevice,
-    required TResult Function() reset,
-    required TResult Function() allow,
-    required TResult Function(
-            UserActionModel userActionModel, String apiEndPoint)
-        switchDeviceUserAction,
-  }) {
-    return switchDevice(selectedReason, deviceSwitchComment, username, password,
-        tenantId, apiEndPoint);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(String tenantId)? autoLogin,
-    TResult? Function()? logout,
-    TResult? Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult? Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult? Function()? reset,
-    TResult? Function()? allow,
-    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-  }) {
-    return switchDevice?.call(selectedReason, deviceSwitchComment, username,
-        password, tenantId, apiEndPoint);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(String tenantId)? autoLogin,
-    TResult Function()? logout,
-    TResult Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult Function()? reset,
-    TResult Function()? allow,
-    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (switchDevice != null) {
-      return switchDevice(selectedReason, deviceSwitchComment, username,
-          password, tenantId, apiEndPoint);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAutoLoginEvent value) autoLogin,
-    required TResult Function(AuthLogoutEvent value) logout,
-    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
-        checkOtherDeviceLogin,
-    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
-        switchDevice,
-    required TResult Function(AuthResetEvent value) reset,
-    required TResult Function(AuthAllowEvent value) allow,
-    required TResult Function(AuthSwitchDeviceUserActionEvent value)
-        switchDeviceUserAction,
-  }) {
-    return switchDevice(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult? Function(AuthLogoutEvent value)? logout,
-    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult? Function(AuthResetEvent value)? reset,
-    TResult? Function(AuthAllowEvent value)? allow,
-    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-  }) {
-    return switchDevice?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult Function(AuthLogoutEvent value)? logout,
-    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult Function(AuthResetEvent value)? reset,
-    TResult Function(AuthAllowEvent value)? allow,
-    TResult Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (switchDevice != null) {
-      return switchDevice(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthSwitchDeviceEventSwitchDevice&&(identical(other.selectedReason, selectedReason) || other.selectedReason == selectedReason)&&(identical(other.deviceSwitchComment, deviceSwitchComment) || other.deviceSwitchComment == deviceSwitchComment)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.apiEndPoint, apiEndPoint) || other.apiEndPoint == apiEndPoint));
 }
 
-abstract class AuthSwitchDeviceEventSwitchDevice implements AuthEvent {
-  const factory AuthSwitchDeviceEventSwitchDevice(
-          {required final String selectedReason,
-          required final String? deviceSwitchComment,
-          required final String username,
-          required final String password,
-          required final String tenantId,
-          required final String apiEndPoint}) =
-      _$AuthSwitchDeviceEventSwitchDeviceImpl;
 
-  String get selectedReason;
-  String? get deviceSwitchComment;
-  String get username;
-  String get password;
-  String get tenantId;
-  String get apiEndPoint;
-  @JsonKey(ignore: true)
-  _$$AuthSwitchDeviceEventSwitchDeviceImplCopyWith<
-          _$AuthSwitchDeviceEventSwitchDeviceImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+int get hashCode => Object.hash(runtimeType,selectedReason,deviceSwitchComment,username,password,tenantId,apiEndPoint);
+
+@override
+String toString() {
+  return 'AuthEvent.switchDevice(selectedReason: $selectedReason, deviceSwitchComment: $deviceSwitchComment, username: $username, password: $password, tenantId: $tenantId, apiEndPoint: $apiEndPoint)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$AuthResetEventImplCopyWith<$Res> {
-  factory _$$AuthResetEventImplCopyWith(_$AuthResetEventImpl value,
-          $Res Function(_$AuthResetEventImpl) then) =
-      __$$AuthResetEventImplCopyWithImpl<$Res>;
+abstract mixin class $AuthSwitchDeviceEventSwitchDeviceCopyWith<$Res> implements $AuthEventCopyWith<$Res> {
+  factory $AuthSwitchDeviceEventSwitchDeviceCopyWith(AuthSwitchDeviceEventSwitchDevice value, $Res Function(AuthSwitchDeviceEventSwitchDevice) _then) = _$AuthSwitchDeviceEventSwitchDeviceCopyWithImpl;
+@useResult
+$Res call({
+ String selectedReason, String? deviceSwitchComment, String username, String password, String tenantId, String apiEndPoint
+});
+
+
+
+
+}
+/// @nodoc
+class _$AuthSwitchDeviceEventSwitchDeviceCopyWithImpl<$Res>
+    implements $AuthSwitchDeviceEventSwitchDeviceCopyWith<$Res> {
+  _$AuthSwitchDeviceEventSwitchDeviceCopyWithImpl(this._self, this._then);
+
+  final AuthSwitchDeviceEventSwitchDevice _self;
+  final $Res Function(AuthSwitchDeviceEventSwitchDevice) _then;
+
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? selectedReason = null,Object? deviceSwitchComment = freezed,Object? username = null,Object? password = null,Object? tenantId = null,Object? apiEndPoint = null,}) {
+  return _then(AuthSwitchDeviceEventSwitchDevice(
+selectedReason: null == selectedReason ? _self.selectedReason : selectedReason // ignore: cast_nullable_to_non_nullable
+as String,deviceSwitchComment: freezed == deviceSwitchComment ? _self.deviceSwitchComment : deviceSwitchComment // ignore: cast_nullable_to_non_nullable
+as String?,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
+as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,apiEndPoint: null == apiEndPoint ? _self.apiEndPoint : apiEndPoint // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$AuthResetEventImplCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthResetEventImpl>
-    implements _$$AuthResetEventImplCopyWith<$Res> {
-  __$$AuthResetEventImplCopyWithImpl(
-      _$AuthResetEventImpl _value, $Res Function(_$AuthResetEventImpl) _then)
-      : super(_value, _then);
+
 }
 
 /// @nodoc
 
-class _$AuthResetEventImpl implements AuthResetEvent {
-  const _$AuthResetEventImpl();
 
-  @override
-  String toString() {
-    return 'AuthEvent.reset()';
-  }
+class AuthResetEvent implements AuthEvent {
+  const AuthResetEvent();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$AuthResetEventImpl);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String userId, String password, String tenantId)
-        login,
-    required TResult Function(String tenantId) autoLogin,
-    required TResult Function() logout,
-    required TResult Function(
-            String username, String tenantId, String apiEndPoint)
-        checkOtherDeviceLogin,
-    required TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)
-        switchDevice,
-    required TResult Function() reset,
-    required TResult Function() allow,
-    required TResult Function(
-            UserActionModel userActionModel, String apiEndPoint)
-        switchDeviceUserAction,
-  }) {
-    return reset();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(String tenantId)? autoLogin,
-    TResult? Function()? logout,
-    TResult? Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult? Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult? Function()? reset,
-    TResult? Function()? allow,
-    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-  }) {
-    return reset?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(String tenantId)? autoLogin,
-    TResult Function()? logout,
-    TResult Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult Function()? reset,
-    TResult Function()? allow,
-    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (reset != null) {
-      return reset();
-    }
-    return orElse();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAutoLoginEvent value) autoLogin,
-    required TResult Function(AuthLogoutEvent value) logout,
-    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
-        checkOtherDeviceLogin,
-    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
-        switchDevice,
-    required TResult Function(AuthResetEvent value) reset,
-    required TResult Function(AuthAllowEvent value) allow,
-    required TResult Function(AuthSwitchDeviceUserActionEvent value)
-        switchDeviceUserAction,
-  }) {
-    return reset(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult? Function(AuthLogoutEvent value)? logout,
-    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult? Function(AuthResetEvent value)? reset,
-    TResult? Function(AuthAllowEvent value)? allow,
-    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-  }) {
-    return reset?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult Function(AuthLogoutEvent value)? logout,
-    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult Function(AuthResetEvent value)? reset,
-    TResult Function(AuthAllowEvent value)? allow,
-    TResult Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (reset != null) {
-      return reset(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthResetEvent);
 }
 
-abstract class AuthResetEvent implements AuthEvent {
-  const factory AuthResetEvent() = _$AuthResetEventImpl;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AuthEvent.reset()';
 }
 
-/// @nodoc
-abstract class _$$AuthAllowEventImplCopyWith<$Res> {
-  factory _$$AuthAllowEventImplCopyWith(_$AuthAllowEventImpl value,
-          $Res Function(_$AuthAllowEventImpl) then) =
-      __$$AuthAllowEventImplCopyWithImpl<$Res>;
+
 }
 
-/// @nodoc
-class __$$AuthAllowEventImplCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthAllowEventImpl>
-    implements _$$AuthAllowEventImplCopyWith<$Res> {
-  __$$AuthAllowEventImplCopyWithImpl(
-      _$AuthAllowEventImpl _value, $Res Function(_$AuthAllowEventImpl) _then)
-      : super(_value, _then);
-}
+
+
 
 /// @nodoc
 
-class _$AuthAllowEventImpl implements AuthAllowEvent {
-  const _$AuthAllowEventImpl();
 
-  @override
-  String toString() {
-    return 'AuthEvent.allow()';
-  }
+class AuthAllowEvent implements AuthEvent {
+  const AuthAllowEvent();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$AuthAllowEventImpl);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String userId, String password, String tenantId)
-        login,
-    required TResult Function(String tenantId) autoLogin,
-    required TResult Function() logout,
-    required TResult Function(
-            String username, String tenantId, String apiEndPoint)
-        checkOtherDeviceLogin,
-    required TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)
-        switchDevice,
-    required TResult Function() reset,
-    required TResult Function() allow,
-    required TResult Function(
-            UserActionModel userActionModel, String apiEndPoint)
-        switchDeviceUserAction,
-  }) {
-    return allow();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(String tenantId)? autoLogin,
-    TResult? Function()? logout,
-    TResult? Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult? Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult? Function()? reset,
-    TResult? Function()? allow,
-    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-  }) {
-    return allow?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(String tenantId)? autoLogin,
-    TResult Function()? logout,
-    TResult Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult Function()? reset,
-    TResult Function()? allow,
-    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (allow != null) {
-      return allow();
-    }
-    return orElse();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAutoLoginEvent value) autoLogin,
-    required TResult Function(AuthLogoutEvent value) logout,
-    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
-        checkOtherDeviceLogin,
-    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
-        switchDevice,
-    required TResult Function(AuthResetEvent value) reset,
-    required TResult Function(AuthAllowEvent value) allow,
-    required TResult Function(AuthSwitchDeviceUserActionEvent value)
-        switchDeviceUserAction,
-  }) {
-    return allow(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult? Function(AuthLogoutEvent value)? logout,
-    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult? Function(AuthResetEvent value)? reset,
-    TResult? Function(AuthAllowEvent value)? allow,
-    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-  }) {
-    return allow?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult Function(AuthLogoutEvent value)? logout,
-    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult Function(AuthResetEvent value)? reset,
-    TResult Function(AuthAllowEvent value)? allow,
-    TResult Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (allow != null) {
-      return allow(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthAllowEvent);
 }
 
-abstract class AuthAllowEvent implements AuthEvent {
-  const factory AuthAllowEvent() = _$AuthAllowEventImpl;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AuthEvent.allow()';
 }
 
-/// @nodoc
-abstract class _$$AuthSwitchDeviceUserActionEventImplCopyWith<$Res> {
-  factory _$$AuthSwitchDeviceUserActionEventImplCopyWith(
-          _$AuthSwitchDeviceUserActionEventImpl value,
-          $Res Function(_$AuthSwitchDeviceUserActionEventImpl) then) =
-      __$$AuthSwitchDeviceUserActionEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({UserActionModel userActionModel, String apiEndPoint});
+
 }
 
-/// @nodoc
-class __$$AuthSwitchDeviceUserActionEventImplCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthSwitchDeviceUserActionEventImpl>
-    implements _$$AuthSwitchDeviceUserActionEventImplCopyWith<$Res> {
-  __$$AuthSwitchDeviceUserActionEventImplCopyWithImpl(
-      _$AuthSwitchDeviceUserActionEventImpl _value,
-      $Res Function(_$AuthSwitchDeviceUserActionEventImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? userActionModel = null,
-    Object? apiEndPoint = null,
-  }) {
-    return _then(_$AuthSwitchDeviceUserActionEventImpl(
-      userActionModel: null == userActionModel
-          ? _value.userActionModel
-          : userActionModel // ignore: cast_nullable_to_non_nullable
-              as UserActionModel,
-      apiEndPoint: null == apiEndPoint
-          ? _value.apiEndPoint
-          : apiEndPoint // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
+
 
 /// @nodoc
 
-class _$AuthSwitchDeviceUserActionEventImpl
-    implements AuthSwitchDeviceUserActionEvent {
-  const _$AuthSwitchDeviceUserActionEventImpl(
-      {required this.userActionModel, required this.apiEndPoint});
 
-  @override
-  final UserActionModel userActionModel;
-  @override
-  final String apiEndPoint;
+class AuthSwitchDeviceUserActionEvent implements AuthEvent {
+  const AuthSwitchDeviceUserActionEvent({required this.userActionModel, required this.apiEndPoint});
+  
 
-  @override
-  String toString() {
-    return 'AuthEvent.switchDeviceUserAction(userActionModel: $userActionModel, apiEndPoint: $apiEndPoint)';
-  }
+ final  UserActionModel userActionModel;
+ final  String apiEndPoint;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AuthSwitchDeviceUserActionEventImpl &&
-            (identical(other.userActionModel, userActionModel) ||
-                other.userActionModel == userActionModel) &&
-            (identical(other.apiEndPoint, apiEndPoint) ||
-                other.apiEndPoint == apiEndPoint));
-  }
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AuthSwitchDeviceUserActionEventCopyWith<AuthSwitchDeviceUserActionEvent> get copyWith => _$AuthSwitchDeviceUserActionEventCopyWithImpl<AuthSwitchDeviceUserActionEvent>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, userActionModel, apiEndPoint);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AuthSwitchDeviceUserActionEventImplCopyWith<
-          _$AuthSwitchDeviceUserActionEventImpl>
-      get copyWith => __$$AuthSwitchDeviceUserActionEventImplCopyWithImpl<
-          _$AuthSwitchDeviceUserActionEventImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String userId, String password, String tenantId)
-        login,
-    required TResult Function(String tenantId) autoLogin,
-    required TResult Function() logout,
-    required TResult Function(
-            String username, String tenantId, String apiEndPoint)
-        checkOtherDeviceLogin,
-    required TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)
-        switchDevice,
-    required TResult Function() reset,
-    required TResult Function() allow,
-    required TResult Function(
-            UserActionModel userActionModel, String apiEndPoint)
-        switchDeviceUserAction,
-  }) {
-    return switchDeviceUserAction(userActionModel, apiEndPoint);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(String tenantId)? autoLogin,
-    TResult? Function()? logout,
-    TResult? Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult? Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult? Function()? reset,
-    TResult? Function()? allow,
-    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-  }) {
-    return switchDeviceUserAction?.call(userActionModel, apiEndPoint);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(String tenantId)? autoLogin,
-    TResult Function()? logout,
-    TResult Function(String username, String tenantId, String apiEndPoint)?
-        checkOtherDeviceLogin,
-    TResult Function(
-            String selectedReason,
-            String? deviceSwitchComment,
-            String username,
-            String password,
-            String tenantId,
-            String apiEndPoint)?
-        switchDevice,
-    TResult Function()? reset,
-    TResult Function()? allow,
-    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (switchDeviceUserAction != null) {
-      return switchDeviceUserAction(userActionModel, apiEndPoint);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAutoLoginEvent value) autoLogin,
-    required TResult Function(AuthLogoutEvent value) logout,
-    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
-        checkOtherDeviceLogin,
-    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
-        switchDevice,
-    required TResult Function(AuthResetEvent value) reset,
-    required TResult Function(AuthAllowEvent value) allow,
-    required TResult Function(AuthSwitchDeviceUserActionEvent value)
-        switchDeviceUserAction,
-  }) {
-    return switchDeviceUserAction(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult? Function(AuthLogoutEvent value)? logout,
-    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult? Function(AuthResetEvent value)? reset,
-    TResult? Function(AuthAllowEvent value)? allow,
-    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-  }) {
-    return switchDeviceUserAction?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAutoLoginEvent value)? autoLogin,
-    TResult Function(AuthLogoutEvent value)? logout,
-    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
-        checkOtherDeviceLogin,
-    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
-    TResult Function(AuthResetEvent value)? reset,
-    TResult Function(AuthAllowEvent value)? allow,
-    TResult Function(AuthSwitchDeviceUserActionEvent value)?
-        switchDeviceUserAction,
-    required TResult orElse(),
-  }) {
-    if (switchDeviceUserAction != null) {
-      return switchDeviceUserAction(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthSwitchDeviceUserActionEvent&&(identical(other.userActionModel, userActionModel) || other.userActionModel == userActionModel)&&(identical(other.apiEndPoint, apiEndPoint) || other.apiEndPoint == apiEndPoint));
 }
 
-abstract class AuthSwitchDeviceUserActionEvent implements AuthEvent {
-  const factory AuthSwitchDeviceUserActionEvent(
-          {required final UserActionModel userActionModel,
-          required final String apiEndPoint}) =
-      _$AuthSwitchDeviceUserActionEventImpl;
 
-  UserActionModel get userActionModel;
-  String get apiEndPoint;
-  @JsonKey(ignore: true)
-  _$$AuthSwitchDeviceUserActionEventImplCopyWith<
-          _$AuthSwitchDeviceUserActionEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+int get hashCode => Object.hash(runtimeType,userActionModel,apiEndPoint);
+
+@override
+String toString() {
+  return 'AuthEvent.switchDeviceUserAction(userActionModel: $userActionModel, apiEndPoint: $apiEndPoint)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $AuthSwitchDeviceUserActionEventCopyWith<$Res> implements $AuthEventCopyWith<$Res> {
+  factory $AuthSwitchDeviceUserActionEventCopyWith(AuthSwitchDeviceUserActionEvent value, $Res Function(AuthSwitchDeviceUserActionEvent) _then) = _$AuthSwitchDeviceUserActionEventCopyWithImpl;
+@useResult
+$Res call({
+ UserActionModel userActionModel, String apiEndPoint
+});
+
+
+
+
+}
+/// @nodoc
+class _$AuthSwitchDeviceUserActionEventCopyWithImpl<$Res>
+    implements $AuthSwitchDeviceUserActionEventCopyWith<$Res> {
+  _$AuthSwitchDeviceUserActionEventCopyWithImpl(this._self, this._then);
+
+  final AuthSwitchDeviceUserActionEvent _self;
+  final $Res Function(AuthSwitchDeviceUserActionEvent) _then;
+
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? userActionModel = null,Object? apiEndPoint = null,}) {
+  return _then(AuthSwitchDeviceUserActionEvent(
+userActionModel: null == userActionModel ? _self.userActionModel : userActionModel // ignore: cast_nullable_to_non_nullable
+as UserActionModel,apiEndPoint: null == apiEndPoint ? _self.apiEndPoint : apiEndPoint // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
 }
 
 /// @nodoc
 mixin _$AuthState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() unauthenticated,
-    required TResult Function() loading,
-    required TResult Function() loggingOut,
-    required TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)
-        authenticated,
-    required TResult Function(String? error) error,
-    required TResult Function() otherDevice,
-    required TResult Function() allow,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? unauthenticated,
-    TResult? Function()? loading,
-    TResult? Function()? loggingOut,
-    TResult? Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult? Function(String? error)? error,
-    TResult? Function()? otherDevice,
-    TResult? Function()? allow,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? unauthenticated,
-    TResult Function()? loading,
-    TResult Function()? loggingOut,
-    TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult Function(String? error)? error,
-    TResult Function()? otherDevice,
-    TResult Function()? allow,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
-    required TResult Function(AuthLoadingState value) loading,
-    required TResult Function(AuthLoggingOutState value) loggingOut,
-    required TResult Function(AuthAuthenticatedState value) authenticated,
-    required TResult Function(AuthErrorState value) error,
-    required TResult Function(AuthOtherDeviceState value) otherDevice,
-    required TResult Function(AuthAllowState value) allow,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult? Function(AuthLoadingState value)? loading,
-    TResult? Function(AuthLoggingOutState value)? loggingOut,
-    TResult? Function(AuthAuthenticatedState value)? authenticated,
-    TResult? Function(AuthErrorState value)? error,
-    TResult? Function(AuthOtherDeviceState value)? otherDevice,
-    TResult? Function(AuthAllowState value)? allow,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult Function(AuthLoadingState value)? loading,
-    TResult Function(AuthLoggingOutState value)? loggingOut,
-    TResult Function(AuthAuthenticatedState value)? authenticated,
-    TResult Function(AuthErrorState value)? error,
-    TResult Function(AuthOtherDeviceState value)? otherDevice,
-    TResult Function(AuthAllowState value)? allow,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AuthState()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AuthStateCopyWith<$Res> {
-  factory $AuthStateCopyWith(AuthState value, $Res Function(AuthState) then) =
-      _$AuthStateCopyWithImpl<$Res, AuthState>;
+class $AuthStateCopyWith<$Res>  {
+$AuthStateCopyWith(AuthState _, $Res Function(AuthState) __);
 }
 
-/// @nodoc
-class _$AuthStateCopyWithImpl<$Res, $Val extends AuthState>
-    implements $AuthStateCopyWith<$Res> {
-  _$AuthStateCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [AuthState].
+extension AuthStatePatterns on AuthState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( AuthUnauthenticatedState value)?  unauthenticated,TResult Function( AuthLoadingState value)?  loading,TResult Function( AuthLoggingOutState value)?  loggingOut,TResult Function( AuthAuthenticatedState value)?  authenticated,TResult Function( AuthErrorState value)?  error,TResult Function( AuthOtherDeviceState value)?  otherDevice,TResult Function( AuthAllowState value)?  allow,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case AuthUnauthenticatedState() when unauthenticated != null:
+return unauthenticated(_that);case AuthLoadingState() when loading != null:
+return loading(_that);case AuthLoggingOutState() when loggingOut != null:
+return loggingOut(_that);case AuthAuthenticatedState() when authenticated != null:
+return authenticated(_that);case AuthErrorState() when error != null:
+return error(_that);case AuthOtherDeviceState() when otherDevice != null:
+return otherDevice(_that);case AuthAllowState() when allow != null:
+return allow(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( AuthUnauthenticatedState value)  unauthenticated,required TResult Function( AuthLoadingState value)  loading,required TResult Function( AuthLoggingOutState value)  loggingOut,required TResult Function( AuthAuthenticatedState value)  authenticated,required TResult Function( AuthErrorState value)  error,required TResult Function( AuthOtherDeviceState value)  otherDevice,required TResult Function( AuthAllowState value)  allow,}){
+final _that = this;
+switch (_that) {
+case AuthUnauthenticatedState():
+return unauthenticated(_that);case AuthLoadingState():
+return loading(_that);case AuthLoggingOutState():
+return loggingOut(_that);case AuthAuthenticatedState():
+return authenticated(_that);case AuthErrorState():
+return error(_that);case AuthOtherDeviceState():
+return otherDevice(_that);case AuthAllowState():
+return allow(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( AuthUnauthenticatedState value)?  unauthenticated,TResult? Function( AuthLoadingState value)?  loading,TResult? Function( AuthLoggingOutState value)?  loggingOut,TResult? Function( AuthAuthenticatedState value)?  authenticated,TResult? Function( AuthErrorState value)?  error,TResult? Function( AuthOtherDeviceState value)?  otherDevice,TResult? Function( AuthAllowState value)?  allow,}){
+final _that = this;
+switch (_that) {
+case AuthUnauthenticatedState() when unauthenticated != null:
+return unauthenticated(_that);case AuthLoadingState() when loading != null:
+return loading(_that);case AuthLoggingOutState() when loggingOut != null:
+return loggingOut(_that);case AuthAuthenticatedState() when authenticated != null:
+return authenticated(_that);case AuthErrorState() when error != null:
+return error(_that);case AuthOtherDeviceState() when otherDevice != null:
+return otherDevice(_that);case AuthAllowState() when allow != null:
+return allow(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  unauthenticated,TResult Function()?  loading,TResult Function()?  loggingOut,TResult Function( String accessToken,  String refreshToken,  UserRequestModel userModel,  RoleActionsWrapperModel actionsWrapper,  String? individualId)?  authenticated,TResult Function( String? error)?  error,TResult Function()?  otherDevice,TResult Function()?  allow,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case AuthUnauthenticatedState() when unauthenticated != null:
+return unauthenticated();case AuthLoadingState() when loading != null:
+return loading();case AuthLoggingOutState() when loggingOut != null:
+return loggingOut();case AuthAuthenticatedState() when authenticated != null:
+return authenticated(_that.accessToken,_that.refreshToken,_that.userModel,_that.actionsWrapper,_that.individualId);case AuthErrorState() when error != null:
+return error(_that.error);case AuthOtherDeviceState() when otherDevice != null:
+return otherDevice();case AuthAllowState() when allow != null:
+return allow();case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  unauthenticated,required TResult Function()  loading,required TResult Function()  loggingOut,required TResult Function( String accessToken,  String refreshToken,  UserRequestModel userModel,  RoleActionsWrapperModel actionsWrapper,  String? individualId)  authenticated,required TResult Function( String? error)  error,required TResult Function()  otherDevice,required TResult Function()  allow,}) {final _that = this;
+switch (_that) {
+case AuthUnauthenticatedState():
+return unauthenticated();case AuthLoadingState():
+return loading();case AuthLoggingOutState():
+return loggingOut();case AuthAuthenticatedState():
+return authenticated(_that.accessToken,_that.refreshToken,_that.userModel,_that.actionsWrapper,_that.individualId);case AuthErrorState():
+return error(_that.error);case AuthOtherDeviceState():
+return otherDevice();case AuthAllowState():
+return allow();case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  unauthenticated,TResult? Function()?  loading,TResult? Function()?  loggingOut,TResult? Function( String accessToken,  String refreshToken,  UserRequestModel userModel,  RoleActionsWrapperModel actionsWrapper,  String? individualId)?  authenticated,TResult? Function( String? error)?  error,TResult? Function()?  otherDevice,TResult? Function()?  allow,}) {final _that = this;
+switch (_that) {
+case AuthUnauthenticatedState() when unauthenticated != null:
+return unauthenticated();case AuthLoadingState() when loading != null:
+return loading();case AuthLoggingOutState() when loggingOut != null:
+return loggingOut();case AuthAuthenticatedState() when authenticated != null:
+return authenticated(_that.accessToken,_that.refreshToken,_that.userModel,_that.actionsWrapper,_that.individualId);case AuthErrorState() when error != null:
+return error(_that.error);case AuthOtherDeviceState() when otherDevice != null:
+return otherDevice();case AuthAllowState() when allow != null:
+return allow();case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$AuthUnauthenticatedStateImplCopyWith<$Res> {
-  factory _$$AuthUnauthenticatedStateImplCopyWith(
-          _$AuthUnauthenticatedStateImpl value,
-          $Res Function(_$AuthUnauthenticatedStateImpl) then) =
-      __$$AuthUnauthenticatedStateImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$AuthUnauthenticatedStateImplCopyWithImpl<$Res>
-    extends _$AuthStateCopyWithImpl<$Res, _$AuthUnauthenticatedStateImpl>
-    implements _$$AuthUnauthenticatedStateImplCopyWith<$Res> {
-  __$$AuthUnauthenticatedStateImplCopyWithImpl(
-      _$AuthUnauthenticatedStateImpl _value,
-      $Res Function(_$AuthUnauthenticatedStateImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
-  const _$AuthUnauthenticatedStateImpl();
-
-  @override
-  String toString() {
-    return 'AuthState.unauthenticated()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AuthUnauthenticatedStateImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() unauthenticated,
-    required TResult Function() loading,
-    required TResult Function() loggingOut,
-    required TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)
-        authenticated,
-    required TResult Function(String? error) error,
-    required TResult Function() otherDevice,
-    required TResult Function() allow,
-  }) {
-    return unauthenticated();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? unauthenticated,
-    TResult? Function()? loading,
-    TResult? Function()? loggingOut,
-    TResult? Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult? Function(String? error)? error,
-    TResult? Function()? otherDevice,
-    TResult? Function()? allow,
-  }) {
-    return unauthenticated?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? unauthenticated,
-    TResult Function()? loading,
-    TResult Function()? loggingOut,
-    TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult Function(String? error)? error,
-    TResult Function()? otherDevice,
-    TResult Function()? allow,
-    required TResult orElse(),
-  }) {
-    if (unauthenticated != null) {
-      return unauthenticated();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
-    required TResult Function(AuthLoadingState value) loading,
-    required TResult Function(AuthLoggingOutState value) loggingOut,
-    required TResult Function(AuthAuthenticatedState value) authenticated,
-    required TResult Function(AuthErrorState value) error,
-    required TResult Function(AuthOtherDeviceState value) otherDevice,
-    required TResult Function(AuthAllowState value) allow,
-  }) {
-    return unauthenticated(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult? Function(AuthLoadingState value)? loading,
-    TResult? Function(AuthLoggingOutState value)? loggingOut,
-    TResult? Function(AuthAuthenticatedState value)? authenticated,
-    TResult? Function(AuthErrorState value)? error,
-    TResult? Function(AuthOtherDeviceState value)? otherDevice,
-    TResult? Function(AuthAllowState value)? allow,
-  }) {
-    return unauthenticated?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult Function(AuthLoadingState value)? loading,
-    TResult Function(AuthLoggingOutState value)? loggingOut,
-    TResult Function(AuthAuthenticatedState value)? authenticated,
-    TResult Function(AuthErrorState value)? error,
-    TResult Function(AuthOtherDeviceState value)? otherDevice,
-    TResult Function(AuthAllowState value)? allow,
-    required TResult orElse(),
-  }) {
-    if (unauthenticated != null) {
-      return unauthenticated(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class AuthUnauthenticatedState implements AuthState {
-  const factory AuthUnauthenticatedState() = _$AuthUnauthenticatedStateImpl;
-}
-
-/// @nodoc
-abstract class _$$AuthLoadingStateImplCopyWith<$Res> {
-  factory _$$AuthLoadingStateImplCopyWith(_$AuthLoadingStateImpl value,
-          $Res Function(_$AuthLoadingStateImpl) then) =
-      __$$AuthLoadingStateImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$AuthLoadingStateImplCopyWithImpl<$Res>
-    extends _$AuthStateCopyWithImpl<$Res, _$AuthLoadingStateImpl>
-    implements _$$AuthLoadingStateImplCopyWith<$Res> {
-  __$$AuthLoadingStateImplCopyWithImpl(_$AuthLoadingStateImpl _value,
-      $Res Function(_$AuthLoadingStateImpl) _then)
-      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$AuthLoadingStateImpl implements AuthLoadingState {
-  const _$AuthLoadingStateImpl();
 
-  @override
-  String toString() {
-    return 'AuthState.loading()';
-  }
+class AuthUnauthenticatedState implements AuthState {
+  const AuthUnauthenticatedState();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$AuthLoadingStateImpl);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() unauthenticated,
-    required TResult Function() loading,
-    required TResult Function() loggingOut,
-    required TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)
-        authenticated,
-    required TResult Function(String? error) error,
-    required TResult Function() otherDevice,
-    required TResult Function() allow,
-  }) {
-    return loading();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? unauthenticated,
-    TResult? Function()? loading,
-    TResult? Function()? loggingOut,
-    TResult? Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult? Function(String? error)? error,
-    TResult? Function()? otherDevice,
-    TResult? Function()? allow,
-  }) {
-    return loading?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? unauthenticated,
-    TResult Function()? loading,
-    TResult Function()? loggingOut,
-    TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult Function(String? error)? error,
-    TResult Function()? otherDevice,
-    TResult Function()? allow,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading();
-    }
-    return orElse();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
-    required TResult Function(AuthLoadingState value) loading,
-    required TResult Function(AuthLoggingOutState value) loggingOut,
-    required TResult Function(AuthAuthenticatedState value) authenticated,
-    required TResult Function(AuthErrorState value) error,
-    required TResult Function(AuthOtherDeviceState value) otherDevice,
-    required TResult Function(AuthAllowState value) allow,
-  }) {
-    return loading(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult? Function(AuthLoadingState value)? loading,
-    TResult? Function(AuthLoggingOutState value)? loggingOut,
-    TResult? Function(AuthAuthenticatedState value)? authenticated,
-    TResult? Function(AuthErrorState value)? error,
-    TResult? Function(AuthOtherDeviceState value)? otherDevice,
-    TResult? Function(AuthAllowState value)? allow,
-  }) {
-    return loading?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult Function(AuthLoadingState value)? loading,
-    TResult Function(AuthLoggingOutState value)? loggingOut,
-    TResult Function(AuthAuthenticatedState value)? authenticated,
-    TResult Function(AuthErrorState value)? error,
-    TResult Function(AuthOtherDeviceState value)? otherDevice,
-    TResult Function(AuthAllowState value)? allow,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthUnauthenticatedState);
 }
 
-abstract class AuthLoadingState implements AuthState {
-  const factory AuthLoadingState() = _$AuthLoadingStateImpl;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AuthState.unauthenticated()';
 }
 
-/// @nodoc
-abstract class _$$AuthLoggingOutStateImplCopyWith<$Res> {
-  factory _$$AuthLoggingOutStateImplCopyWith(_$AuthLoggingOutStateImpl value,
-          $Res Function(_$AuthLoggingOutStateImpl) then) =
-      __$$AuthLoggingOutStateImplCopyWithImpl<$Res>;
+
 }
 
-/// @nodoc
-class __$$AuthLoggingOutStateImplCopyWithImpl<$Res>
-    extends _$AuthStateCopyWithImpl<$Res, _$AuthLoggingOutStateImpl>
-    implements _$$AuthLoggingOutStateImplCopyWith<$Res> {
-  __$$AuthLoggingOutStateImplCopyWithImpl(_$AuthLoggingOutStateImpl _value,
-      $Res Function(_$AuthLoggingOutStateImpl) _then)
-      : super(_value, _then);
-}
+
+
 
 /// @nodoc
 
-class _$AuthLoggingOutStateImpl implements AuthLoggingOutState {
-  const _$AuthLoggingOutStateImpl();
 
-  @override
-  String toString() {
-    return 'AuthState.loggingOut()';
-  }
+class AuthLoadingState implements AuthState {
+  const AuthLoadingState();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AuthLoggingOutStateImpl);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() unauthenticated,
-    required TResult Function() loading,
-    required TResult Function() loggingOut,
-    required TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)
-        authenticated,
-    required TResult Function(String? error) error,
-    required TResult Function() otherDevice,
-    required TResult Function() allow,
-  }) {
-    return loggingOut();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? unauthenticated,
-    TResult? Function()? loading,
-    TResult? Function()? loggingOut,
-    TResult? Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult? Function(String? error)? error,
-    TResult? Function()? otherDevice,
-    TResult? Function()? allow,
-  }) {
-    return loggingOut?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? unauthenticated,
-    TResult Function()? loading,
-    TResult Function()? loggingOut,
-    TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult Function(String? error)? error,
-    TResult Function()? otherDevice,
-    TResult Function()? allow,
-    required TResult orElse(),
-  }) {
-    if (loggingOut != null) {
-      return loggingOut();
-    }
-    return orElse();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
-    required TResult Function(AuthLoadingState value) loading,
-    required TResult Function(AuthLoggingOutState value) loggingOut,
-    required TResult Function(AuthAuthenticatedState value) authenticated,
-    required TResult Function(AuthErrorState value) error,
-    required TResult Function(AuthOtherDeviceState value) otherDevice,
-    required TResult Function(AuthAllowState value) allow,
-  }) {
-    return loggingOut(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult? Function(AuthLoadingState value)? loading,
-    TResult? Function(AuthLoggingOutState value)? loggingOut,
-    TResult? Function(AuthAuthenticatedState value)? authenticated,
-    TResult? Function(AuthErrorState value)? error,
-    TResult? Function(AuthOtherDeviceState value)? otherDevice,
-    TResult? Function(AuthAllowState value)? allow,
-  }) {
-    return loggingOut?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult Function(AuthLoadingState value)? loading,
-    TResult Function(AuthLoggingOutState value)? loggingOut,
-    TResult Function(AuthAuthenticatedState value)? authenticated,
-    TResult Function(AuthErrorState value)? error,
-    TResult Function(AuthOtherDeviceState value)? otherDevice,
-    TResult Function(AuthAllowState value)? allow,
-    required TResult orElse(),
-  }) {
-    if (loggingOut != null) {
-      return loggingOut(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthLoadingState);
 }
 
-abstract class AuthLoggingOutState implements AuthState {
-  const factory AuthLoggingOutState() = _$AuthLoggingOutStateImpl;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AuthState.loading()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class AuthLoggingOutState implements AuthState {
+  const AuthLoggingOutState();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthLoggingOutState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AuthState.loggingOut()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class AuthAuthenticatedState implements AuthState {
+  const AuthAuthenticatedState({required this.accessToken, required this.refreshToken, required this.userModel, required this.actionsWrapper, this.individualId});
+  
+
+ final  String accessToken;
+ final  String refreshToken;
+ final  UserRequestModel userModel;
+ final  RoleActionsWrapperModel actionsWrapper;
+ final  String? individualId;
+
+/// Create a copy of AuthState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AuthAuthenticatedStateCopyWith<AuthAuthenticatedState> get copyWith => _$AuthAuthenticatedStateCopyWithImpl<AuthAuthenticatedState>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthAuthenticatedState&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.userModel, userModel) || other.userModel == userModel)&&(identical(other.actionsWrapper, actionsWrapper) || other.actionsWrapper == actionsWrapper)&&(identical(other.individualId, individualId) || other.individualId == individualId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,accessToken,refreshToken,userModel,actionsWrapper,individualId);
+
+@override
+String toString() {
+  return 'AuthState.authenticated(accessToken: $accessToken, refreshToken: $refreshToken, userModel: $userModel, actionsWrapper: $actionsWrapper, individualId: $individualId)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$AuthAuthenticatedStateImplCopyWith<$Res> {
-  factory _$$AuthAuthenticatedStateImplCopyWith(
-          _$AuthAuthenticatedStateImpl value,
-          $Res Function(_$AuthAuthenticatedStateImpl) then) =
-      __$$AuthAuthenticatedStateImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call(
-      {String accessToken,
-      String refreshToken,
-      UserRequestModel userModel,
-      RoleActionsWrapperModel actionsWrapper,
-      String? individualId});
+abstract mixin class $AuthAuthenticatedStateCopyWith<$Res> implements $AuthStateCopyWith<$Res> {
+  factory $AuthAuthenticatedStateCopyWith(AuthAuthenticatedState value, $Res Function(AuthAuthenticatedState) _then) = _$AuthAuthenticatedStateCopyWithImpl;
+@useResult
+$Res call({
+ String accessToken, String refreshToken, UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper, String? individualId
+});
 
-  $UserRequestModelCopyWith<$Res> get userModel;
-  $RoleActionsWrapperModelCopyWith<$Res> get actionsWrapper;
+
+$UserRequestModelCopyWith<$Res> get userModel;$RoleActionsWrapperModelCopyWith<$Res> get actionsWrapper;
+
+}
+/// @nodoc
+class _$AuthAuthenticatedStateCopyWithImpl<$Res>
+    implements $AuthAuthenticatedStateCopyWith<$Res> {
+  _$AuthAuthenticatedStateCopyWithImpl(this._self, this._then);
+
+  final AuthAuthenticatedState _self;
+  final $Res Function(AuthAuthenticatedState) _then;
+
+/// Create a copy of AuthState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? accessToken = null,Object? refreshToken = null,Object? userModel = null,Object? actionsWrapper = null,Object? individualId = freezed,}) {
+  return _then(AuthAuthenticatedState(
+accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
+as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
+as String,userModel: null == userModel ? _self.userModel : userModel // ignore: cast_nullable_to_non_nullable
+as UserRequestModel,actionsWrapper: null == actionsWrapper ? _self.actionsWrapper : actionsWrapper // ignore: cast_nullable_to_non_nullable
+as RoleActionsWrapperModel,individualId: freezed == individualId ? _self.individualId : individualId // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-class __$$AuthAuthenticatedStateImplCopyWithImpl<$Res>
-    extends _$AuthStateCopyWithImpl<$Res, _$AuthAuthenticatedStateImpl>
-    implements _$$AuthAuthenticatedStateImplCopyWith<$Res> {
-  __$$AuthAuthenticatedStateImplCopyWithImpl(
-      _$AuthAuthenticatedStateImpl _value,
-      $Res Function(_$AuthAuthenticatedStateImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? accessToken = null,
-    Object? refreshToken = null,
-    Object? userModel = null,
-    Object? actionsWrapper = null,
-    Object? individualId = freezed,
-  }) {
-    return _then(_$AuthAuthenticatedStateImpl(
-      accessToken: null == accessToken
-          ? _value.accessToken
-          : accessToken // ignore: cast_nullable_to_non_nullable
-              as String,
-      refreshToken: null == refreshToken
-          ? _value.refreshToken
-          : refreshToken // ignore: cast_nullable_to_non_nullable
-              as String,
-      userModel: null == userModel
-          ? _value.userModel
-          : userModel // ignore: cast_nullable_to_non_nullable
-              as UserRequestModel,
-      actionsWrapper: null == actionsWrapper
-          ? _value.actionsWrapper
-          : actionsWrapper // ignore: cast_nullable_to_non_nullable
-              as RoleActionsWrapperModel,
-      individualId: freezed == individualId
-          ? _value.individualId
-          : individualId // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $UserRequestModelCopyWith<$Res> get userModel {
-    return $UserRequestModelCopyWith<$Res>(_value.userModel, (value) {
-      return _then(_value.copyWith(userModel: value));
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $RoleActionsWrapperModelCopyWith<$Res> get actionsWrapper {
-    return $RoleActionsWrapperModelCopyWith<$Res>(_value.actionsWrapper,
-        (value) {
-      return _then(_value.copyWith(actionsWrapper: value));
-    });
-  }
+/// Create a copy of AuthState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserRequestModelCopyWith<$Res> get userModel {
+  
+  return $UserRequestModelCopyWith<$Res>(_self.userModel, (value) {
+    return _then(_self.copyWith(userModel: value));
+  });
+}/// Create a copy of AuthState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RoleActionsWrapperModelCopyWith<$Res> get actionsWrapper {
+  
+  return $RoleActionsWrapperModelCopyWith<$Res>(_self.actionsWrapper, (value) {
+    return _then(_self.copyWith(actionsWrapper: value));
+  });
+}
 }
 
 /// @nodoc
 
-class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
-  const _$AuthAuthenticatedStateImpl(
-      {required this.accessToken,
-      required this.refreshToken,
-      required this.userModel,
-      required this.actionsWrapper,
-      this.individualId});
 
-  @override
-  final String accessToken;
-  @override
-  final String refreshToken;
-  @override
-  final UserRequestModel userModel;
-  @override
-  final RoleActionsWrapperModel actionsWrapper;
-  @override
-  final String? individualId;
+class AuthErrorState implements AuthState {
+  const AuthErrorState([this.error]);
+  
 
-  @override
-  String toString() {
-    return 'AuthState.authenticated(accessToken: $accessToken, refreshToken: $refreshToken, userModel: $userModel, actionsWrapper: $actionsWrapper, individualId: $individualId)';
-  }
+ final  String? error;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AuthAuthenticatedStateImpl &&
-            (identical(other.accessToken, accessToken) ||
-                other.accessToken == accessToken) &&
-            (identical(other.refreshToken, refreshToken) ||
-                other.refreshToken == refreshToken) &&
-            (identical(other.userModel, userModel) ||
-                other.userModel == userModel) &&
-            (identical(other.actionsWrapper, actionsWrapper) ||
-                other.actionsWrapper == actionsWrapper) &&
-            (identical(other.individualId, individualId) ||
-                other.individualId == individualId));
-  }
+/// Create a copy of AuthState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AuthErrorStateCopyWith<AuthErrorState> get copyWith => _$AuthErrorStateCopyWithImpl<AuthErrorState>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, accessToken, refreshToken,
-      userModel, actionsWrapper, individualId);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AuthAuthenticatedStateImplCopyWith<_$AuthAuthenticatedStateImpl>
-      get copyWith => __$$AuthAuthenticatedStateImplCopyWithImpl<
-          _$AuthAuthenticatedStateImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() unauthenticated,
-    required TResult Function() loading,
-    required TResult Function() loggingOut,
-    required TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)
-        authenticated,
-    required TResult Function(String? error) error,
-    required TResult Function() otherDevice,
-    required TResult Function() allow,
-  }) {
-    return authenticated(
-        accessToken, refreshToken, userModel, actionsWrapper, individualId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? unauthenticated,
-    TResult? Function()? loading,
-    TResult? Function()? loggingOut,
-    TResult? Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult? Function(String? error)? error,
-    TResult? Function()? otherDevice,
-    TResult? Function()? allow,
-  }) {
-    return authenticated?.call(
-        accessToken, refreshToken, userModel, actionsWrapper, individualId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? unauthenticated,
-    TResult Function()? loading,
-    TResult Function()? loggingOut,
-    TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult Function(String? error)? error,
-    TResult Function()? otherDevice,
-    TResult Function()? allow,
-    required TResult orElse(),
-  }) {
-    if (authenticated != null) {
-      return authenticated(
-          accessToken, refreshToken, userModel, actionsWrapper, individualId);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
-    required TResult Function(AuthLoadingState value) loading,
-    required TResult Function(AuthLoggingOutState value) loggingOut,
-    required TResult Function(AuthAuthenticatedState value) authenticated,
-    required TResult Function(AuthErrorState value) error,
-    required TResult Function(AuthOtherDeviceState value) otherDevice,
-    required TResult Function(AuthAllowState value) allow,
-  }) {
-    return authenticated(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult? Function(AuthLoadingState value)? loading,
-    TResult? Function(AuthLoggingOutState value)? loggingOut,
-    TResult? Function(AuthAuthenticatedState value)? authenticated,
-    TResult? Function(AuthErrorState value)? error,
-    TResult? Function(AuthOtherDeviceState value)? otherDevice,
-    TResult? Function(AuthAllowState value)? allow,
-  }) {
-    return authenticated?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult Function(AuthLoadingState value)? loading,
-    TResult Function(AuthLoggingOutState value)? loggingOut,
-    TResult Function(AuthAuthenticatedState value)? authenticated,
-    TResult Function(AuthErrorState value)? error,
-    TResult Function(AuthOtherDeviceState value)? otherDevice,
-    TResult Function(AuthAllowState value)? allow,
-    required TResult orElse(),
-  }) {
-    if (authenticated != null) {
-      return authenticated(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthErrorState&&(identical(other.error, error) || other.error == error));
 }
 
-abstract class AuthAuthenticatedState implements AuthState {
-  const factory AuthAuthenticatedState(
-      {required final String accessToken,
-      required final String refreshToken,
-      required final UserRequestModel userModel,
-      required final RoleActionsWrapperModel actionsWrapper,
-      final String? individualId}) = _$AuthAuthenticatedStateImpl;
 
-  String get accessToken;
-  String get refreshToken;
-  UserRequestModel get userModel;
-  RoleActionsWrapperModel get actionsWrapper;
-  String? get individualId;
-  @JsonKey(ignore: true)
-  _$$AuthAuthenticatedStateImplCopyWith<_$AuthAuthenticatedStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+int get hashCode => Object.hash(runtimeType,error);
+
+@override
+String toString() {
+  return 'AuthState.error(error: $error)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$AuthErrorStateImplCopyWith<$Res> {
-  factory _$$AuthErrorStateImplCopyWith(_$AuthErrorStateImpl value,
-          $Res Function(_$AuthErrorStateImpl) then) =
-      __$$AuthErrorStateImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String? error});
+abstract mixin class $AuthErrorStateCopyWith<$Res> implements $AuthStateCopyWith<$Res> {
+  factory $AuthErrorStateCopyWith(AuthErrorState value, $Res Function(AuthErrorState) _then) = _$AuthErrorStateCopyWithImpl;
+@useResult
+$Res call({
+ String? error
+});
+
+
+
+
+}
+/// @nodoc
+class _$AuthErrorStateCopyWithImpl<$Res>
+    implements $AuthErrorStateCopyWith<$Res> {
+  _$AuthErrorStateCopyWithImpl(this._self, this._then);
+
+  final AuthErrorState _self;
+  final $Res Function(AuthErrorState) _then;
+
+/// Create a copy of AuthState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? error = freezed,}) {
+  return _then(AuthErrorState(
+freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-class __$$AuthErrorStateImplCopyWithImpl<$Res>
-    extends _$AuthStateCopyWithImpl<$Res, _$AuthErrorStateImpl>
-    implements _$$AuthErrorStateImplCopyWith<$Res> {
-  __$$AuthErrorStateImplCopyWithImpl(
-      _$AuthErrorStateImpl _value, $Res Function(_$AuthErrorStateImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? error = freezed,
-  }) {
-    return _then(_$AuthErrorStateImpl(
-      freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$AuthErrorStateImpl implements AuthErrorState {
-  const _$AuthErrorStateImpl([this.error]);
 
-  @override
-  final String? error;
+class AuthOtherDeviceState implements AuthState {
+  const AuthOtherDeviceState();
+  
 
-  @override
-  String toString() {
-    return 'AuthState.error(error: $error)';
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AuthErrorStateImpl &&
-            (identical(other.error, error) || other.error == error));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, error);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AuthErrorStateImplCopyWith<_$AuthErrorStateImpl> get copyWith =>
-      __$$AuthErrorStateImplCopyWithImpl<_$AuthErrorStateImpl>(
-          this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() unauthenticated,
-    required TResult Function() loading,
-    required TResult Function() loggingOut,
-    required TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)
-        authenticated,
-    required TResult Function(String? error) error,
-    required TResult Function() otherDevice,
-    required TResult Function() allow,
-  }) {
-    return error(this.error);
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? unauthenticated,
-    TResult? Function()? loading,
-    TResult? Function()? loggingOut,
-    TResult? Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult? Function(String? error)? error,
-    TResult? Function()? otherDevice,
-    TResult? Function()? allow,
-  }) {
-    return error?.call(this.error);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? unauthenticated,
-    TResult Function()? loading,
-    TResult Function()? loggingOut,
-    TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult Function(String? error)? error,
-    TResult Function()? otherDevice,
-    TResult Function()? allow,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this.error);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
-    required TResult Function(AuthLoadingState value) loading,
-    required TResult Function(AuthLoggingOutState value) loggingOut,
-    required TResult Function(AuthAuthenticatedState value) authenticated,
-    required TResult Function(AuthErrorState value) error,
-    required TResult Function(AuthOtherDeviceState value) otherDevice,
-    required TResult Function(AuthAllowState value) allow,
-  }) {
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult? Function(AuthLoadingState value)? loading,
-    TResult? Function(AuthLoggingOutState value)? loggingOut,
-    TResult? Function(AuthAuthenticatedState value)? authenticated,
-    TResult? Function(AuthErrorState value)? error,
-    TResult? Function(AuthOtherDeviceState value)? otherDevice,
-    TResult? Function(AuthAllowState value)? allow,
-  }) {
-    return error?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult Function(AuthLoadingState value)? loading,
-    TResult Function(AuthLoggingOutState value)? loggingOut,
-    TResult Function(AuthAuthenticatedState value)? authenticated,
-    TResult Function(AuthErrorState value)? error,
-    TResult Function(AuthOtherDeviceState value)? otherDevice,
-    TResult Function(AuthAllowState value)? allow,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthOtherDeviceState);
 }
 
-abstract class AuthErrorState implements AuthState {
-  const factory AuthErrorState([final String? error]) = _$AuthErrorStateImpl;
 
-  String? get error;
-  @JsonKey(ignore: true)
-  _$$AuthErrorStateImplCopyWith<_$AuthErrorStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AuthState.otherDevice()';
 }
 
-/// @nodoc
-abstract class _$$AuthOtherDeviceStateImplCopyWith<$Res> {
-  factory _$$AuthOtherDeviceStateImplCopyWith(_$AuthOtherDeviceStateImpl value,
-          $Res Function(_$AuthOtherDeviceStateImpl) then) =
-      __$$AuthOtherDeviceStateImplCopyWithImpl<$Res>;
+
 }
 
-/// @nodoc
-class __$$AuthOtherDeviceStateImplCopyWithImpl<$Res>
-    extends _$AuthStateCopyWithImpl<$Res, _$AuthOtherDeviceStateImpl>
-    implements _$$AuthOtherDeviceStateImplCopyWith<$Res> {
-  __$$AuthOtherDeviceStateImplCopyWithImpl(_$AuthOtherDeviceStateImpl _value,
-      $Res Function(_$AuthOtherDeviceStateImpl) _then)
-      : super(_value, _then);
-}
+
+
 
 /// @nodoc
 
-class _$AuthOtherDeviceStateImpl implements AuthOtherDeviceState {
-  const _$AuthOtherDeviceStateImpl();
 
-  @override
-  String toString() {
-    return 'AuthState.otherDevice()';
-  }
+class AuthAllowState implements AuthState {
+  const AuthAllowState();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AuthOtherDeviceStateImpl);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() unauthenticated,
-    required TResult Function() loading,
-    required TResult Function() loggingOut,
-    required TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)
-        authenticated,
-    required TResult Function(String? error) error,
-    required TResult Function() otherDevice,
-    required TResult Function() allow,
-  }) {
-    return otherDevice();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? unauthenticated,
-    TResult? Function()? loading,
-    TResult? Function()? loggingOut,
-    TResult? Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult? Function(String? error)? error,
-    TResult? Function()? otherDevice,
-    TResult? Function()? allow,
-  }) {
-    return otherDevice?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? unauthenticated,
-    TResult Function()? loading,
-    TResult Function()? loggingOut,
-    TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult Function(String? error)? error,
-    TResult Function()? otherDevice,
-    TResult Function()? allow,
-    required TResult orElse(),
-  }) {
-    if (otherDevice != null) {
-      return otherDevice();
-    }
-    return orElse();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
-    required TResult Function(AuthLoadingState value) loading,
-    required TResult Function(AuthLoggingOutState value) loggingOut,
-    required TResult Function(AuthAuthenticatedState value) authenticated,
-    required TResult Function(AuthErrorState value) error,
-    required TResult Function(AuthOtherDeviceState value) otherDevice,
-    required TResult Function(AuthAllowState value) allow,
-  }) {
-    return otherDevice(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult? Function(AuthLoadingState value)? loading,
-    TResult? Function(AuthLoggingOutState value)? loggingOut,
-    TResult? Function(AuthAuthenticatedState value)? authenticated,
-    TResult? Function(AuthErrorState value)? error,
-    TResult? Function(AuthOtherDeviceState value)? otherDevice,
-    TResult? Function(AuthAllowState value)? allow,
-  }) {
-    return otherDevice?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult Function(AuthLoadingState value)? loading,
-    TResult Function(AuthLoggingOutState value)? loggingOut,
-    TResult Function(AuthAuthenticatedState value)? authenticated,
-    TResult Function(AuthErrorState value)? error,
-    TResult Function(AuthOtherDeviceState value)? otherDevice,
-    TResult Function(AuthAllowState value)? allow,
-    required TResult orElse(),
-  }) {
-    if (otherDevice != null) {
-      return otherDevice(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthAllowState);
 }
 
-abstract class AuthOtherDeviceState implements AuthState {
-  const factory AuthOtherDeviceState() = _$AuthOtherDeviceStateImpl;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AuthState.allow()';
 }
 
-/// @nodoc
-abstract class _$$AuthAllowStateImplCopyWith<$Res> {
-  factory _$$AuthAllowStateImplCopyWith(_$AuthAllowStateImpl value,
-          $Res Function(_$AuthAllowStateImpl) then) =
-      __$$AuthAllowStateImplCopyWithImpl<$Res>;
+
 }
 
-/// @nodoc
-class __$$AuthAllowStateImplCopyWithImpl<$Res>
-    extends _$AuthStateCopyWithImpl<$Res, _$AuthAllowStateImpl>
-    implements _$$AuthAllowStateImplCopyWith<$Res> {
-  __$$AuthAllowStateImplCopyWithImpl(
-      _$AuthAllowStateImpl _value, $Res Function(_$AuthAllowStateImpl) _then)
-      : super(_value, _then);
-}
 
-/// @nodoc
 
-class _$AuthAllowStateImpl implements AuthAllowState {
-  const _$AuthAllowStateImpl();
 
-  @override
-  String toString() {
-    return 'AuthState.allow()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$AuthAllowStateImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() unauthenticated,
-    required TResult Function() loading,
-    required TResult Function() loggingOut,
-    required TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)
-        authenticated,
-    required TResult Function(String? error) error,
-    required TResult Function() otherDevice,
-    required TResult Function() allow,
-  }) {
-    return allow();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? unauthenticated,
-    TResult? Function()? loading,
-    TResult? Function()? loggingOut,
-    TResult? Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult? Function(String? error)? error,
-    TResult? Function()? otherDevice,
-    TResult? Function()? allow,
-  }) {
-    return allow?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? unauthenticated,
-    TResult Function()? loading,
-    TResult Function()? loggingOut,
-    TResult Function(
-            String accessToken,
-            String refreshToken,
-            UserRequestModel userModel,
-            RoleActionsWrapperModel actionsWrapper,
-            String? individualId)?
-        authenticated,
-    TResult Function(String? error)? error,
-    TResult Function()? otherDevice,
-    TResult Function()? allow,
-    required TResult orElse(),
-  }) {
-    if (allow != null) {
-      return allow();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
-    required TResult Function(AuthLoadingState value) loading,
-    required TResult Function(AuthLoggingOutState value) loggingOut,
-    required TResult Function(AuthAuthenticatedState value) authenticated,
-    required TResult Function(AuthErrorState value) error,
-    required TResult Function(AuthOtherDeviceState value) otherDevice,
-    required TResult Function(AuthAllowState value) allow,
-  }) {
-    return allow(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult? Function(AuthLoadingState value)? loading,
-    TResult? Function(AuthLoggingOutState value)? loggingOut,
-    TResult? Function(AuthAuthenticatedState value)? authenticated,
-    TResult? Function(AuthErrorState value)? error,
-    TResult? Function(AuthOtherDeviceState value)? otherDevice,
-    TResult? Function(AuthAllowState value)? allow,
-  }) {
-    return allow?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
-    TResult Function(AuthLoadingState value)? loading,
-    TResult Function(AuthLoggingOutState value)? loggingOut,
-    TResult Function(AuthAuthenticatedState value)? authenticated,
-    TResult Function(AuthErrorState value)? error,
-    TResult Function(AuthOtherDeviceState value)? otherDevice,
-    TResult Function(AuthAllowState value)? allow,
-    required TResult orElse(),
-  }) {
-    if (allow != null) {
-      return allow(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class AuthAllowState implements AuthState {
-  const factory AuthAllowState() = _$AuthAllowStateImpl;
-}
+// dart format on

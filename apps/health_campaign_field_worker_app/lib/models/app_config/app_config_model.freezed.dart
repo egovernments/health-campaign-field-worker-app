@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,6769 +9,9245 @@ part of 'app_config_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-MdmsRequestModel _$MdmsRequestModelFromJson(Map<String, dynamic> json) {
-  return _MdmsRequestModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$MdmsRequestModel {
-  @JsonKey(name: 'MdmsCriteria')
-  MdmsCriteriaModel get mdmsCriteria => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $MdmsRequestModelCopyWith<MdmsRequestModel> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'MdmsCriteria') MdmsCriteriaModel get mdmsCriteria;
+/// Create a copy of MdmsRequestModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MdmsRequestModelCopyWith<MdmsRequestModel> get copyWith => _$MdmsRequestModelCopyWithImpl<MdmsRequestModel>(this as MdmsRequestModel, _$identity);
+
+  /// Serializes this MdmsRequestModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MdmsRequestModel&&(identical(other.mdmsCriteria, mdmsCriteria) || other.mdmsCriteria == mdmsCriteria));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,mdmsCriteria);
+
+@override
+String toString() {
+  return 'MdmsRequestModel(mdmsCriteria: $mdmsCriteria)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $MdmsRequestModelCopyWith<$Res> {
-  factory $MdmsRequestModelCopyWith(
-          MdmsRequestModel value, $Res Function(MdmsRequestModel) then) =
-      _$MdmsRequestModelCopyWithImpl<$Res, MdmsRequestModel>;
-  @useResult
-  $Res call({@JsonKey(name: 'MdmsCriteria') MdmsCriteriaModel mdmsCriteria});
+abstract mixin class $MdmsRequestModelCopyWith<$Res>  {
+  factory $MdmsRequestModelCopyWith(MdmsRequestModel value, $Res Function(MdmsRequestModel) _then) = _$MdmsRequestModelCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'MdmsCriteria') MdmsCriteriaModel mdmsCriteria
+});
 
-  $MdmsCriteriaModelCopyWith<$Res> get mdmsCriteria;
+
+$MdmsCriteriaModelCopyWith<$Res> get mdmsCriteria;
+
 }
-
 /// @nodoc
-class _$MdmsRequestModelCopyWithImpl<$Res, $Val extends MdmsRequestModel>
+class _$MdmsRequestModelCopyWithImpl<$Res>
     implements $MdmsRequestModelCopyWith<$Res> {
-  _$MdmsRequestModelCopyWithImpl(this._value, this._then);
+  _$MdmsRequestModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final MdmsRequestModel _self;
+  final $Res Function(MdmsRequestModel) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? mdmsCriteria = null,
-  }) {
-    return _then(_value.copyWith(
-      mdmsCriteria: null == mdmsCriteria
-          ? _value.mdmsCriteria
-          : mdmsCriteria // ignore: cast_nullable_to_non_nullable
-              as MdmsCriteriaModel,
-    ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $MdmsCriteriaModelCopyWith<$Res> get mdmsCriteria {
-    return $MdmsCriteriaModelCopyWith<$Res>(_value.mdmsCriteria, (value) {
-      return _then(_value.copyWith(mdmsCriteria: value) as $Val);
-    });
-  }
+/// Create a copy of MdmsRequestModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? mdmsCriteria = null,}) {
+  return _then(_self.copyWith(
+mdmsCriteria: null == mdmsCriteria ? _self.mdmsCriteria : mdmsCriteria // ignore: cast_nullable_to_non_nullable
+as MdmsCriteriaModel,
+  ));
+}
+/// Create a copy of MdmsRequestModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MdmsCriteriaModelCopyWith<$Res> get mdmsCriteria {
+  
+  return $MdmsCriteriaModelCopyWith<$Res>(_self.mdmsCriteria, (value) {
+    return _then(_self.copyWith(mdmsCriteria: value));
+  });
+}
 }
 
-/// @nodoc
-abstract class _$$MdmsRequestModelImplCopyWith<$Res>
-    implements $MdmsRequestModelCopyWith<$Res> {
-  factory _$$MdmsRequestModelImplCopyWith(_$MdmsRequestModelImpl value,
-          $Res Function(_$MdmsRequestModelImpl) then) =
-      __$$MdmsRequestModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({@JsonKey(name: 'MdmsCriteria') MdmsCriteriaModel mdmsCriteria});
 
-  @override
-  $MdmsCriteriaModelCopyWith<$Res> get mdmsCriteria;
+/// Adds pattern-matching-related methods to [MdmsRequestModel].
+extension MdmsRequestModelPatterns on MdmsRequestModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MdmsRequestModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _MdmsRequestModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MdmsRequestModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _MdmsRequestModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MdmsRequestModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _MdmsRequestModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'MdmsCriteria')  MdmsCriteriaModel mdmsCriteria)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _MdmsRequestModel() when $default != null:
+return $default(_that.mdmsCriteria);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'MdmsCriteria')  MdmsCriteriaModel mdmsCriteria)  $default,) {final _that = this;
+switch (_that) {
+case _MdmsRequestModel():
+return $default(_that.mdmsCriteria);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'MdmsCriteria')  MdmsCriteriaModel mdmsCriteria)?  $default,) {final _that = this;
+switch (_that) {
+case _MdmsRequestModel() when $default != null:
+return $default(_that.mdmsCriteria);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-class __$$MdmsRequestModelImplCopyWithImpl<$Res>
-    extends _$MdmsRequestModelCopyWithImpl<$Res, _$MdmsRequestModelImpl>
-    implements _$$MdmsRequestModelImplCopyWith<$Res> {
-  __$$MdmsRequestModelImplCopyWithImpl(_$MdmsRequestModelImpl _value,
-      $Res Function(_$MdmsRequestModelImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? mdmsCriteria = null,
-  }) {
-    return _then(_$MdmsRequestModelImpl(
-      mdmsCriteria: null == mdmsCriteria
-          ? _value.mdmsCriteria
-          : mdmsCriteria // ignore: cast_nullable_to_non_nullable
-              as MdmsCriteriaModel,
-    ));
-  }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$MdmsRequestModelImpl implements _MdmsRequestModel {
-  const _$MdmsRequestModelImpl(
-      {@JsonKey(name: 'MdmsCriteria') required this.mdmsCriteria});
 
-  factory _$MdmsRequestModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MdmsRequestModelImplFromJson(json);
+class _MdmsRequestModel implements MdmsRequestModel {
+  const _MdmsRequestModel({@JsonKey(name: 'MdmsCriteria') required this.mdmsCriteria});
+  factory _MdmsRequestModel.fromJson(Map<String, dynamic> json) => _$MdmsRequestModelFromJson(json);
 
-  @override
-  @JsonKey(name: 'MdmsCriteria')
-  final MdmsCriteriaModel mdmsCriteria;
+@override@JsonKey(name: 'MdmsCriteria') final  MdmsCriteriaModel mdmsCriteria;
 
-  @override
-  String toString() {
-    return 'MdmsRequestModel(mdmsCriteria: $mdmsCriteria)';
-  }
+/// Create a copy of MdmsRequestModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MdmsRequestModelCopyWith<_MdmsRequestModel> get copyWith => __$MdmsRequestModelCopyWithImpl<_MdmsRequestModel>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MdmsRequestModelImpl &&
-            (identical(other.mdmsCriteria, mdmsCriteria) ||
-                other.mdmsCriteria == mdmsCriteria));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, mdmsCriteria);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MdmsRequestModelImplCopyWith<_$MdmsRequestModelImpl> get copyWith =>
-      __$$MdmsRequestModelImplCopyWithImpl<_$MdmsRequestModelImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MdmsRequestModelImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$MdmsRequestModelToJson(this, );
 }
 
-abstract class _MdmsRequestModel implements MdmsRequestModel {
-  const factory _MdmsRequestModel(
-      {@JsonKey(name: 'MdmsCriteria')
-      required final MdmsCriteriaModel mdmsCriteria}) = _$MdmsRequestModelImpl;
-
-  factory _MdmsRequestModel.fromJson(Map<String, dynamic> json) =
-      _$MdmsRequestModelImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'MdmsCriteria')
-  MdmsCriteriaModel get mdmsCriteria;
-  @override
-  @JsonKey(ignore: true)
-  _$$MdmsRequestModelImplCopyWith<_$MdmsRequestModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MdmsRequestModel&&(identical(other.mdmsCriteria, mdmsCriteria) || other.mdmsCriteria == mdmsCriteria));
 }
 
-MdmsCriteriaModel _$MdmsCriteriaModelFromJson(Map<String, dynamic> json) {
-  return _MdmsCriteriaModel.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,mdmsCriteria);
+
+@override
+String toString() {
+  return 'MdmsRequestModel(mdmsCriteria: $mdmsCriteria)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MdmsRequestModelCopyWith<$Res> implements $MdmsRequestModelCopyWith<$Res> {
+  factory _$MdmsRequestModelCopyWith(_MdmsRequestModel value, $Res Function(_MdmsRequestModel) _then) = __$MdmsRequestModelCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'MdmsCriteria') MdmsCriteriaModel mdmsCriteria
+});
+
+
+@override $MdmsCriteriaModelCopyWith<$Res> get mdmsCriteria;
+
+}
+/// @nodoc
+class __$MdmsRequestModelCopyWithImpl<$Res>
+    implements _$MdmsRequestModelCopyWith<$Res> {
+  __$MdmsRequestModelCopyWithImpl(this._self, this._then);
+
+  final _MdmsRequestModel _self;
+  final $Res Function(_MdmsRequestModel) _then;
+
+/// Create a copy of MdmsRequestModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? mdmsCriteria = null,}) {
+  return _then(_MdmsRequestModel(
+mdmsCriteria: null == mdmsCriteria ? _self.mdmsCriteria : mdmsCriteria // ignore: cast_nullable_to_non_nullable
+as MdmsCriteriaModel,
+  ));
+}
+
+/// Create a copy of MdmsRequestModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MdmsCriteriaModelCopyWith<$Res> get mdmsCriteria {
+  
+  return $MdmsCriteriaModelCopyWith<$Res>(_self.mdmsCriteria, (value) {
+    return _then(_self.copyWith(mdmsCriteria: value));
+  });
+}
+}
+
 
 /// @nodoc
 mixin _$MdmsCriteriaModel {
-  String get tenantId => throw _privateConstructorUsedError;
-  String get schemaCode => throw _privateConstructorUsedError;
-  Map<String, dynamic>? get filters => throw _privateConstructorUsedError;
-  int? get limit => throw _privateConstructorUsedError;
-  bool? get isActive => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $MdmsCriteriaModelCopyWith<MdmsCriteriaModel> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get tenantId; String get schemaCode; Map<String, dynamic>? get filters; int? get limit; bool? get isActive;
+/// Create a copy of MdmsCriteriaModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MdmsCriteriaModelCopyWith<MdmsCriteriaModel> get copyWith => _$MdmsCriteriaModelCopyWithImpl<MdmsCriteriaModel>(this as MdmsCriteriaModel, _$identity);
+
+  /// Serializes this MdmsCriteriaModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MdmsCriteriaModel&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.schemaCode, schemaCode) || other.schemaCode == schemaCode)&&const DeepCollectionEquality().equals(other.filters, filters)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.isActive, isActive) || other.isActive == isActive));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,tenantId,schemaCode,const DeepCollectionEquality().hash(filters),limit,isActive);
+
+@override
+String toString() {
+  return 'MdmsCriteriaModel(tenantId: $tenantId, schemaCode: $schemaCode, filters: $filters, limit: $limit, isActive: $isActive)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $MdmsCriteriaModelCopyWith<$Res> {
-  factory $MdmsCriteriaModelCopyWith(
-          MdmsCriteriaModel value, $Res Function(MdmsCriteriaModel) then) =
-      _$MdmsCriteriaModelCopyWithImpl<$Res, MdmsCriteriaModel>;
-  @useResult
-  $Res call(
-      {String tenantId,
-      String schemaCode,
-      Map<String, dynamic>? filters,
-      int? limit,
-      bool? isActive});
-}
+abstract mixin class $MdmsCriteriaModelCopyWith<$Res>  {
+  factory $MdmsCriteriaModelCopyWith(MdmsCriteriaModel value, $Res Function(MdmsCriteriaModel) _then) = _$MdmsCriteriaModelCopyWithImpl;
+@useResult
+$Res call({
+ String tenantId, String schemaCode, Map<String, dynamic>? filters, int? limit, bool? isActive
+});
 
+
+
+
+}
 /// @nodoc
-class _$MdmsCriteriaModelCopyWithImpl<$Res, $Val extends MdmsCriteriaModel>
+class _$MdmsCriteriaModelCopyWithImpl<$Res>
     implements $MdmsCriteriaModelCopyWith<$Res> {
-  _$MdmsCriteriaModelCopyWithImpl(this._value, this._then);
+  _$MdmsCriteriaModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final MdmsCriteriaModel _self;
+  final $Res Function(MdmsCriteriaModel) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? tenantId = null,
-    Object? schemaCode = null,
-    Object? filters = freezed,
-    Object? limit = freezed,
-    Object? isActive = freezed,
-  }) {
-    return _then(_value.copyWith(
-      tenantId: null == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String,
-      schemaCode: null == schemaCode
-          ? _value.schemaCode
-          : schemaCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      filters: freezed == filters
-          ? _value.filters
-          : filters // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      limit: freezed == limit
-          ? _value.limit
-          : limit // ignore: cast_nullable_to_non_nullable
-              as int?,
-      isActive: freezed == isActive
-          ? _value.isActive
-          : isActive // ignore: cast_nullable_to_non_nullable
-              as bool?,
-    ) as $Val);
-  }
+/// Create a copy of MdmsCriteriaModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? tenantId = null,Object? schemaCode = null,Object? filters = freezed,Object? limit = freezed,Object? isActive = freezed,}) {
+  return _then(_self.copyWith(
+tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,schemaCode: null == schemaCode ? _self.schemaCode : schemaCode // ignore: cast_nullable_to_non_nullable
+as String,filters: freezed == filters ? _self.filters : filters // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,limit: freezed == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
+as int?,isActive: freezed == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
+as bool?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$MdmsCriteriaModelImplCopyWith<$Res>
-    implements $MdmsCriteriaModelCopyWith<$Res> {
-  factory _$$MdmsCriteriaModelImplCopyWith(_$MdmsCriteriaModelImpl value,
-          $Res Function(_$MdmsCriteriaModelImpl) then) =
-      __$$MdmsCriteriaModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String tenantId,
-      String schemaCode,
-      Map<String, dynamic>? filters,
-      int? limit,
-      bool? isActive});
 }
 
-/// @nodoc
-class __$$MdmsCriteriaModelImplCopyWithImpl<$Res>
-    extends _$MdmsCriteriaModelCopyWithImpl<$Res, _$MdmsCriteriaModelImpl>
-    implements _$$MdmsCriteriaModelImplCopyWith<$Res> {
-  __$$MdmsCriteriaModelImplCopyWithImpl(_$MdmsCriteriaModelImpl _value,
-      $Res Function(_$MdmsCriteriaModelImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? tenantId = null,
-    Object? schemaCode = null,
-    Object? filters = freezed,
-    Object? limit = freezed,
-    Object? isActive = freezed,
-  }) {
-    return _then(_$MdmsCriteriaModelImpl(
-      tenantId: null == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String,
-      schemaCode: null == schemaCode
-          ? _value.schemaCode
-          : schemaCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      filters: freezed == filters
-          ? _value._filters
-          : filters // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      limit: freezed == limit
-          ? _value.limit
-          : limit // ignore: cast_nullable_to_non_nullable
-              as int?,
-      isActive: freezed == isActive
-          ? _value.isActive
-          : isActive // ignore: cast_nullable_to_non_nullable
-              as bool?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [MdmsCriteriaModel].
+extension MdmsCriteriaModelPatterns on MdmsCriteriaModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MdmsCriteriaModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _MdmsCriteriaModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MdmsCriteriaModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _MdmsCriteriaModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MdmsCriteriaModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _MdmsCriteriaModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String tenantId,  String schemaCode,  Map<String, dynamic>? filters,  int? limit,  bool? isActive)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _MdmsCriteriaModel() when $default != null:
+return $default(_that.tenantId,_that.schemaCode,_that.filters,_that.limit,_that.isActive);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String tenantId,  String schemaCode,  Map<String, dynamic>? filters,  int? limit,  bool? isActive)  $default,) {final _that = this;
+switch (_that) {
+case _MdmsCriteriaModel():
+return $default(_that.tenantId,_that.schemaCode,_that.filters,_that.limit,_that.isActive);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String tenantId,  String schemaCode,  Map<String, dynamic>? filters,  int? limit,  bool? isActive)?  $default,) {final _that = this;
+switch (_that) {
+case _MdmsCriteriaModel() when $default != null:
+return $default(_that.tenantId,_that.schemaCode,_that.filters,_that.limit,_that.isActive);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$MdmsCriteriaModelImpl implements _MdmsCriteriaModel {
-  const _$MdmsCriteriaModelImpl(
-      {required this.tenantId,
-      required this.schemaCode,
-      final Map<String, dynamic>? filters,
-      this.limit,
-      this.isActive})
-      : _filters = filters;
 
-  factory _$MdmsCriteriaModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MdmsCriteriaModelImplFromJson(json);
+class _MdmsCriteriaModel implements MdmsCriteriaModel {
+  const _MdmsCriteriaModel({required this.tenantId, required this.schemaCode, final  Map<String, dynamic>? filters, this.limit, this.isActive}): _filters = filters;
+  factory _MdmsCriteriaModel.fromJson(Map<String, dynamic> json) => _$MdmsCriteriaModelFromJson(json);
 
-  @override
-  final String tenantId;
-  @override
-  final String schemaCode;
-  final Map<String, dynamic>? _filters;
-  @override
-  Map<String, dynamic>? get filters {
-    final value = _filters;
-    if (value == null) return null;
-    if (_filters is EqualUnmodifiableMapView) return _filters;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
-
-  @override
-  final int? limit;
-  @override
-  final bool? isActive;
-
-  @override
-  String toString() {
-    return 'MdmsCriteriaModel(tenantId: $tenantId, schemaCode: $schemaCode, filters: $filters, limit: $limit, isActive: $isActive)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MdmsCriteriaModelImpl &&
-            (identical(other.tenantId, tenantId) ||
-                other.tenantId == tenantId) &&
-            (identical(other.schemaCode, schemaCode) ||
-                other.schemaCode == schemaCode) &&
-            const DeepCollectionEquality().equals(other._filters, _filters) &&
-            (identical(other.limit, limit) || other.limit == limit) &&
-            (identical(other.isActive, isActive) ||
-                other.isActive == isActive));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, tenantId, schemaCode,
-      const DeepCollectionEquality().hash(_filters), limit, isActive);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MdmsCriteriaModelImplCopyWith<_$MdmsCriteriaModelImpl> get copyWith =>
-      __$$MdmsCriteriaModelImplCopyWithImpl<_$MdmsCriteriaModelImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MdmsCriteriaModelImplToJson(
-      this,
-    );
-  }
+@override final  String tenantId;
+@override final  String schemaCode;
+ final  Map<String, dynamic>? _filters;
+@override Map<String, dynamic>? get filters {
+  final value = _filters;
+  if (value == null) return null;
+  if (_filters is EqualUnmodifiableMapView) return _filters;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
 }
 
-abstract class _MdmsCriteriaModel implements MdmsCriteriaModel {
-  const factory _MdmsCriteriaModel(
-      {required final String tenantId,
-      required final String schemaCode,
-      final Map<String, dynamic>? filters,
-      final int? limit,
-      final bool? isActive}) = _$MdmsCriteriaModelImpl;
+@override final  int? limit;
+@override final  bool? isActive;
 
-  factory _MdmsCriteriaModel.fromJson(Map<String, dynamic> json) =
-      _$MdmsCriteriaModelImpl.fromJson;
+/// Create a copy of MdmsCriteriaModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MdmsCriteriaModelCopyWith<_MdmsCriteriaModel> get copyWith => __$MdmsCriteriaModelCopyWithImpl<_MdmsCriteriaModel>(this, _$identity);
 
-  @override
-  String get tenantId;
-  @override
-  String get schemaCode;
-  @override
-  Map<String, dynamic>? get filters;
-  @override
-  int? get limit;
-  @override
-  bool? get isActive;
-  @override
-  @JsonKey(ignore: true)
-  _$$MdmsCriteriaModelImplCopyWith<_$MdmsCriteriaModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$MdmsCriteriaModelToJson(this, );
 }
 
-AppConfigPrimaryWrapperModel _$AppConfigPrimaryWrapperModelFromJson(
-    Map<String, dynamic> json) {
-  return _AppConfigPrimaryWrapperModel.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MdmsCriteriaModel&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.schemaCode, schemaCode) || other.schemaCode == schemaCode)&&const DeepCollectionEquality().equals(other._filters, _filters)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.isActive, isActive) || other.isActive == isActive));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,tenantId,schemaCode,const DeepCollectionEquality().hash(_filters),limit,isActive);
+
+@override
+String toString() {
+  return 'MdmsCriteriaModel(tenantId: $tenantId, schemaCode: $schemaCode, filters: $filters, limit: $limit, isActive: $isActive)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MdmsCriteriaModelCopyWith<$Res> implements $MdmsCriteriaModelCopyWith<$Res> {
+  factory _$MdmsCriteriaModelCopyWith(_MdmsCriteriaModel value, $Res Function(_MdmsCriteriaModel) _then) = __$MdmsCriteriaModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String tenantId, String schemaCode, Map<String, dynamic>? filters, int? limit, bool? isActive
+});
+
+
+
+
+}
+/// @nodoc
+class __$MdmsCriteriaModelCopyWithImpl<$Res>
+    implements _$MdmsCriteriaModelCopyWith<$Res> {
+  __$MdmsCriteriaModelCopyWithImpl(this._self, this._then);
+
+  final _MdmsCriteriaModel _self;
+  final $Res Function(_MdmsCriteriaModel) _then;
+
+/// Create a copy of MdmsCriteriaModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? tenantId = null,Object? schemaCode = null,Object? filters = freezed,Object? limit = freezed,Object? isActive = freezed,}) {
+  return _then(_MdmsCriteriaModel(
+tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,schemaCode: null == schemaCode ? _self.schemaCode : schemaCode // ignore: cast_nullable_to_non_nullable
+as String,filters: freezed == filters ? _self._filters : filters // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,limit: freezed == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
+as int?,isActive: freezed == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
+as bool?,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$AppConfigPrimaryWrapperModel {
-  @JsonKey(name: 'HCM')
-  HCMWrapperModel? get hcmWrapperModel => throw _privateConstructorUsedError;
-  @JsonKey(name: 'common-masters')
-  CommonMastersWrapperModel? get commonMasters =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'module-version')
-  RowVersionWrapperModel? get rowVersions => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $AppConfigPrimaryWrapperModelCopyWith<AppConfigPrimaryWrapperModel>
-      get copyWith => throw _privateConstructorUsedError;
+@JsonKey(name: 'HCM') HCMWrapperModel? get hcmWrapperModel;@JsonKey(name: 'common-masters') CommonMastersWrapperModel? get commonMasters;@JsonKey(name: 'module-version') RowVersionWrapperModel? get rowVersions;
+/// Create a copy of AppConfigPrimaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AppConfigPrimaryWrapperModelCopyWith<AppConfigPrimaryWrapperModel> get copyWith => _$AppConfigPrimaryWrapperModelCopyWithImpl<AppConfigPrimaryWrapperModel>(this as AppConfigPrimaryWrapperModel, _$identity);
+
+  /// Serializes this AppConfigPrimaryWrapperModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppConfigPrimaryWrapperModel&&(identical(other.hcmWrapperModel, hcmWrapperModel) || other.hcmWrapperModel == hcmWrapperModel)&&(identical(other.commonMasters, commonMasters) || other.commonMasters == commonMasters)&&(identical(other.rowVersions, rowVersions) || other.rowVersions == rowVersions));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,hcmWrapperModel,commonMasters,rowVersions);
+
+@override
+String toString() {
+  return 'AppConfigPrimaryWrapperModel(hcmWrapperModel: $hcmWrapperModel, commonMasters: $commonMasters, rowVersions: $rowVersions)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AppConfigPrimaryWrapperModelCopyWith<$Res> {
-  factory $AppConfigPrimaryWrapperModelCopyWith(
-          AppConfigPrimaryWrapperModel value,
-          $Res Function(AppConfigPrimaryWrapperModel) then) =
-      _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
-          AppConfigPrimaryWrapperModel>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,
-      @JsonKey(name: 'common-masters') CommonMastersWrapperModel? commonMasters,
-      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions});
+abstract mixin class $AppConfigPrimaryWrapperModelCopyWith<$Res>  {
+  factory $AppConfigPrimaryWrapperModelCopyWith(AppConfigPrimaryWrapperModel value, $Res Function(AppConfigPrimaryWrapperModel) _then) = _$AppConfigPrimaryWrapperModelCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,@JsonKey(name: 'common-masters') CommonMastersWrapperModel? commonMasters,@JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions
+});
 
-  $HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel;
-  $CommonMastersWrapperModelCopyWith<$Res>? get commonMasters;
-  $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
+
+$HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel;$CommonMastersWrapperModelCopyWith<$Res>? get commonMasters;$RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
+
 }
-
 /// @nodoc
-class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
-        $Val extends AppConfigPrimaryWrapperModel>
+class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
     implements $AppConfigPrimaryWrapperModelCopyWith<$Res> {
-  _$AppConfigPrimaryWrapperModelCopyWithImpl(this._value, this._then);
+  _$AppConfigPrimaryWrapperModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final AppConfigPrimaryWrapperModel _self;
+  final $Res Function(AppConfigPrimaryWrapperModel) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? hcmWrapperModel = freezed,
-    Object? commonMasters = freezed,
-    Object? rowVersions = freezed,
-  }) {
-    return _then(_value.copyWith(
-      hcmWrapperModel: freezed == hcmWrapperModel
-          ? _value.hcmWrapperModel
-          : hcmWrapperModel // ignore: cast_nullable_to_non_nullable
-              as HCMWrapperModel?,
-      commonMasters: freezed == commonMasters
-          ? _value.commonMasters
-          : commonMasters // ignore: cast_nullable_to_non_nullable
-              as CommonMastersWrapperModel?,
-      rowVersions: freezed == rowVersions
-          ? _value.rowVersions
-          : rowVersions // ignore: cast_nullable_to_non_nullable
-              as RowVersionWrapperModel?,
-    ) as $Val);
+/// Create a copy of AppConfigPrimaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? hcmWrapperModel = freezed,Object? commonMasters = freezed,Object? rowVersions = freezed,}) {
+  return _then(_self.copyWith(
+hcmWrapperModel: freezed == hcmWrapperModel ? _self.hcmWrapperModel : hcmWrapperModel // ignore: cast_nullable_to_non_nullable
+as HCMWrapperModel?,commonMasters: freezed == commonMasters ? _self.commonMasters : commonMasters // ignore: cast_nullable_to_non_nullable
+as CommonMastersWrapperModel?,rowVersions: freezed == rowVersions ? _self.rowVersions : rowVersions // ignore: cast_nullable_to_non_nullable
+as RowVersionWrapperModel?,
+  ));
+}
+/// Create a copy of AppConfigPrimaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel {
+    if (_self.hcmWrapperModel == null) {
+    return null;
   }
 
-  @override
-  @pragma('vm:prefer-inline')
-  $HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel {
-    if (_value.hcmWrapperModel == null) {
-      return null;
-    }
-
-    return $HCMWrapperModelCopyWith<$Res>(_value.hcmWrapperModel!, (value) {
-      return _then(_value.copyWith(hcmWrapperModel: value) as $Val);
-    });
+  return $HCMWrapperModelCopyWith<$Res>(_self.hcmWrapperModel!, (value) {
+    return _then(_self.copyWith(hcmWrapperModel: value));
+  });
+}/// Create a copy of AppConfigPrimaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CommonMastersWrapperModelCopyWith<$Res>? get commonMasters {
+    if (_self.commonMasters == null) {
+    return null;
   }
 
-  @override
-  @pragma('vm:prefer-inline')
-  $CommonMastersWrapperModelCopyWith<$Res>? get commonMasters {
-    if (_value.commonMasters == null) {
-      return null;
-    }
-
-    return $CommonMastersWrapperModelCopyWith<$Res>(_value.commonMasters!,
-        (value) {
-      return _then(_value.copyWith(commonMasters: value) as $Val);
-    });
+  return $CommonMastersWrapperModelCopyWith<$Res>(_self.commonMasters!, (value) {
+    return _then(_self.copyWith(commonMasters: value));
+  });
+}/// Create a copy of AppConfigPrimaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RowVersionWrapperModelCopyWith<$Res>? get rowVersions {
+    if (_self.rowVersions == null) {
+    return null;
   }
 
-  @override
-  @pragma('vm:prefer-inline')
-  $RowVersionWrapperModelCopyWith<$Res>? get rowVersions {
-    if (_value.rowVersions == null) {
-      return null;
-    }
-
-    return $RowVersionWrapperModelCopyWith<$Res>(_value.rowVersions!, (value) {
-      return _then(_value.copyWith(rowVersions: value) as $Val);
-    });
-  }
+  return $RowVersionWrapperModelCopyWith<$Res>(_self.rowVersions!, (value) {
+    return _then(_self.copyWith(rowVersions: value));
+  });
+}
 }
 
-/// @nodoc
-abstract class _$$AppConfigPrimaryWrapperModelImplCopyWith<$Res>
-    implements $AppConfigPrimaryWrapperModelCopyWith<$Res> {
-  factory _$$AppConfigPrimaryWrapperModelImplCopyWith(
-          _$AppConfigPrimaryWrapperModelImpl value,
-          $Res Function(_$AppConfigPrimaryWrapperModelImpl) then) =
-      __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,
-      @JsonKey(name: 'common-masters') CommonMastersWrapperModel? commonMasters,
-      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions});
 
-  @override
-  $HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel;
-  @override
-  $CommonMastersWrapperModelCopyWith<$Res>? get commonMasters;
-  @override
-  $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
+/// Adds pattern-matching-related methods to [AppConfigPrimaryWrapperModel].
+extension AppConfigPrimaryWrapperModelPatterns on AppConfigPrimaryWrapperModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AppConfigPrimaryWrapperModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AppConfigPrimaryWrapperModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AppConfigPrimaryWrapperModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _AppConfigPrimaryWrapperModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AppConfigPrimaryWrapperModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AppConfigPrimaryWrapperModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'HCM')  HCMWrapperModel? hcmWrapperModel, @JsonKey(name: 'common-masters')  CommonMastersWrapperModel? commonMasters, @JsonKey(name: 'module-version')  RowVersionWrapperModel? rowVersions)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AppConfigPrimaryWrapperModel() when $default != null:
+return $default(_that.hcmWrapperModel,_that.commonMasters,_that.rowVersions);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'HCM')  HCMWrapperModel? hcmWrapperModel, @JsonKey(name: 'common-masters')  CommonMastersWrapperModel? commonMasters, @JsonKey(name: 'module-version')  RowVersionWrapperModel? rowVersions)  $default,) {final _that = this;
+switch (_that) {
+case _AppConfigPrimaryWrapperModel():
+return $default(_that.hcmWrapperModel,_that.commonMasters,_that.rowVersions);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'HCM')  HCMWrapperModel? hcmWrapperModel, @JsonKey(name: 'common-masters')  CommonMastersWrapperModel? commonMasters, @JsonKey(name: 'module-version')  RowVersionWrapperModel? rowVersions)?  $default,) {final _that = this;
+switch (_that) {
+case _AppConfigPrimaryWrapperModel() when $default != null:
+return $default(_that.hcmWrapperModel,_that.commonMasters,_that.rowVersions);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-class __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>
-    extends _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
-        _$AppConfigPrimaryWrapperModelImpl>
-    implements _$$AppConfigPrimaryWrapperModelImplCopyWith<$Res> {
-  __$$AppConfigPrimaryWrapperModelImplCopyWithImpl(
-      _$AppConfigPrimaryWrapperModelImpl _value,
-      $Res Function(_$AppConfigPrimaryWrapperModelImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? hcmWrapperModel = freezed,
-    Object? commonMasters = freezed,
-    Object? rowVersions = freezed,
-  }) {
-    return _then(_$AppConfigPrimaryWrapperModelImpl(
-      hcmWrapperModel: freezed == hcmWrapperModel
-          ? _value.hcmWrapperModel
-          : hcmWrapperModel // ignore: cast_nullable_to_non_nullable
-              as HCMWrapperModel?,
-      commonMasters: freezed == commonMasters
-          ? _value.commonMasters
-          : commonMasters // ignore: cast_nullable_to_non_nullable
-              as CommonMastersWrapperModel?,
-      rowVersions: freezed == rowVersions
-          ? _value.rowVersions
-          : rowVersions // ignore: cast_nullable_to_non_nullable
-              as RowVersionWrapperModel?,
-    ));
-  }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$AppConfigPrimaryWrapperModelImpl
-    implements _AppConfigPrimaryWrapperModel {
-  const _$AppConfigPrimaryWrapperModelImpl(
-      {@JsonKey(name: 'HCM') this.hcmWrapperModel,
-      @JsonKey(name: 'common-masters') this.commonMasters,
-      @JsonKey(name: 'module-version') this.rowVersions});
 
-  factory _$AppConfigPrimaryWrapperModelImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$AppConfigPrimaryWrapperModelImplFromJson(json);
+class _AppConfigPrimaryWrapperModel implements AppConfigPrimaryWrapperModel {
+  const _AppConfigPrimaryWrapperModel({@JsonKey(name: 'HCM') this.hcmWrapperModel, @JsonKey(name: 'common-masters') this.commonMasters, @JsonKey(name: 'module-version') this.rowVersions});
+  factory _AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) => _$AppConfigPrimaryWrapperModelFromJson(json);
 
-  @override
-  @JsonKey(name: 'HCM')
-  final HCMWrapperModel? hcmWrapperModel;
-  @override
-  @JsonKey(name: 'common-masters')
-  final CommonMastersWrapperModel? commonMasters;
-  @override
-  @JsonKey(name: 'module-version')
-  final RowVersionWrapperModel? rowVersions;
+@override@JsonKey(name: 'HCM') final  HCMWrapperModel? hcmWrapperModel;
+@override@JsonKey(name: 'common-masters') final  CommonMastersWrapperModel? commonMasters;
+@override@JsonKey(name: 'module-version') final  RowVersionWrapperModel? rowVersions;
 
-  @override
-  String toString() {
-    return 'AppConfigPrimaryWrapperModel(hcmWrapperModel: $hcmWrapperModel, commonMasters: $commonMasters, rowVersions: $rowVersions)';
-  }
+/// Create a copy of AppConfigPrimaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AppConfigPrimaryWrapperModelCopyWith<_AppConfigPrimaryWrapperModel> get copyWith => __$AppConfigPrimaryWrapperModelCopyWithImpl<_AppConfigPrimaryWrapperModel>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AppConfigPrimaryWrapperModelImpl &&
-            (identical(other.hcmWrapperModel, hcmWrapperModel) ||
-                other.hcmWrapperModel == hcmWrapperModel) &&
-            (identical(other.commonMasters, commonMasters) ||
-                other.commonMasters == commonMasters) &&
-            (identical(other.rowVersions, rowVersions) ||
-                other.rowVersions == rowVersions));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, hcmWrapperModel, commonMasters, rowVersions);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AppConfigPrimaryWrapperModelImplCopyWith<
-          _$AppConfigPrimaryWrapperModelImpl>
-      get copyWith => __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<
-          _$AppConfigPrimaryWrapperModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AppConfigPrimaryWrapperModelImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$AppConfigPrimaryWrapperModelToJson(this, );
 }
 
-abstract class _AppConfigPrimaryWrapperModel
-    implements AppConfigPrimaryWrapperModel {
-  const factory _AppConfigPrimaryWrapperModel(
-          {@JsonKey(name: 'HCM') final HCMWrapperModel? hcmWrapperModel,
-          @JsonKey(name: 'common-masters')
-          final CommonMastersWrapperModel? commonMasters,
-          @JsonKey(name: 'module-version')
-          final RowVersionWrapperModel? rowVersions}) =
-      _$AppConfigPrimaryWrapperModelImpl;
-
-  factory _AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =
-      _$AppConfigPrimaryWrapperModelImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'HCM')
-  HCMWrapperModel? get hcmWrapperModel;
-  @override
-  @JsonKey(name: 'common-masters')
-  CommonMastersWrapperModel? get commonMasters;
-  @override
-  @JsonKey(name: 'module-version')
-  RowVersionWrapperModel? get rowVersions;
-  @override
-  @JsonKey(ignore: true)
-  _$$AppConfigPrimaryWrapperModelImplCopyWith<
-          _$AppConfigPrimaryWrapperModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppConfigPrimaryWrapperModel&&(identical(other.hcmWrapperModel, hcmWrapperModel) || other.hcmWrapperModel == hcmWrapperModel)&&(identical(other.commonMasters, commonMasters) || other.commonMasters == commonMasters)&&(identical(other.rowVersions, rowVersions) || other.rowVersions == rowVersions));
 }
 
-HCMWrapperModel _$HCMWrapperModelFromJson(Map<String, dynamic> json) {
-  return _HCMWrapperModel.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,hcmWrapperModel,commonMasters,rowVersions);
+
+@override
+String toString() {
+  return 'AppConfigPrimaryWrapperModel(hcmWrapperModel: $hcmWrapperModel, commonMasters: $commonMasters, rowVersions: $rowVersions)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AppConfigPrimaryWrapperModelCopyWith<$Res> implements $AppConfigPrimaryWrapperModelCopyWith<$Res> {
+  factory _$AppConfigPrimaryWrapperModelCopyWith(_AppConfigPrimaryWrapperModel value, $Res Function(_AppConfigPrimaryWrapperModel) _then) = __$AppConfigPrimaryWrapperModelCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,@JsonKey(name: 'common-masters') CommonMastersWrapperModel? commonMasters,@JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions
+});
+
+
+@override $HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel;@override $CommonMastersWrapperModelCopyWith<$Res>? get commonMasters;@override $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
+
+}
+/// @nodoc
+class __$AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
+    implements _$AppConfigPrimaryWrapperModelCopyWith<$Res> {
+  __$AppConfigPrimaryWrapperModelCopyWithImpl(this._self, this._then);
+
+  final _AppConfigPrimaryWrapperModel _self;
+  final $Res Function(_AppConfigPrimaryWrapperModel) _then;
+
+/// Create a copy of AppConfigPrimaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? hcmWrapperModel = freezed,Object? commonMasters = freezed,Object? rowVersions = freezed,}) {
+  return _then(_AppConfigPrimaryWrapperModel(
+hcmWrapperModel: freezed == hcmWrapperModel ? _self.hcmWrapperModel : hcmWrapperModel // ignore: cast_nullable_to_non_nullable
+as HCMWrapperModel?,commonMasters: freezed == commonMasters ? _self.commonMasters : commonMasters // ignore: cast_nullable_to_non_nullable
+as CommonMastersWrapperModel?,rowVersions: freezed == rowVersions ? _self.rowVersions : rowVersions // ignore: cast_nullable_to_non_nullable
+as RowVersionWrapperModel?,
+  ));
+}
+
+/// Create a copy of AppConfigPrimaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel {
+    if (_self.hcmWrapperModel == null) {
+    return null;
+  }
+
+  return $HCMWrapperModelCopyWith<$Res>(_self.hcmWrapperModel!, (value) {
+    return _then(_self.copyWith(hcmWrapperModel: value));
+  });
+}/// Create a copy of AppConfigPrimaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CommonMastersWrapperModelCopyWith<$Res>? get commonMasters {
+    if (_self.commonMasters == null) {
+    return null;
+  }
+
+  return $CommonMastersWrapperModelCopyWith<$Res>(_self.commonMasters!, (value) {
+    return _then(_self.copyWith(commonMasters: value));
+  });
+}/// Create a copy of AppConfigPrimaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RowVersionWrapperModelCopyWith<$Res>? get rowVersions {
+    if (_self.rowVersions == null) {
+    return null;
+  }
+
+  return $RowVersionWrapperModelCopyWith<$Res>(_self.rowVersions!, (value) {
+    return _then(_self.copyWith(rowVersions: value));
+  });
+}
+}
+
 
 /// @nodoc
 mixin _$HCMWrapperModel {
-  @JsonKey(name: 'APP_CONFIG')
-  List<AppConfig> get appConfig => throw _privateConstructorUsedError;
-  @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-  List<BandWidthBatchSize> get bandWidthBatchSize =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
-  List<BeneficiaryIdConfig> get beneficiaryIdConfig =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
-  List<BandWidthBatchSize> get downSyncBandWidthBatchSize =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdDeletionReasonOptions =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdMemberDeletionReasonOptions =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-  List<BackgroundServiceConfig>? get backgroundServiceConfig =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'CHECKLIST_TYPES')
-  List<CheckListTypes> get checklistTypes => throw _privateConstructorUsedError;
-  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
-  List<DeviceChangeReasons> get deviceChangeReasons =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'SINGLE_USER_LOGIN')
-  List<SingleUserLogin> get singleUserLogin =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-  List<IdTypeOptions> get idTypeOptions => throw _privateConstructorUsedError;
-  @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
-  List<RelationShipTypeOptions> get relationShipTypeOptions =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-  List<DeliveryCommentOptions> get deliveryCommentOptions =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'BACKEND_INTERFACE')
-  List<BackendInterface> get backendInterface =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'CALL_SUPPORT')
-  List<CallSupportList>? get callSupportOptions =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'TRANSPORT_TYPES')
-  List<TransportTypes> get transportTypes => throw _privateConstructorUsedError;
-  @JsonKey(name: 'SYMPTOM_TYPES')
-  List<SymptomsType>? get symptomsTypeList =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
-  List<SearchHouseHoldFilters>? get searchHouseHoldFilters =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'SEARCH_CLF_FILTERS')
-  List<SearchCLFFilters>? get searchCLFFilters =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'REFERRAL_REASONS')
-  List<ReferralReasonType>? get referralReasonList =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
-  List<ManualAttendanceReasonType>? get manualAttendanceReasonList =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
-  List<CommonMasterModel>? get houseStructureTypes =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'REFUSAL_REASONS')
-  List<CommonMasterModel>? get refusalReasons =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'FIREBASE_CONFIG')
-  List<FirebaseConfig>? get firebaseConfig =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'TRANSIT_POST_TYPE')
-  List<TransitPostType>? get transitPostType =>
-      throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $HCMWrapperModelCopyWith<HCMWrapperModel> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'APP_CONFIG') List<AppConfig> get appConfig;@JsonKey(name: 'BANDWIDTH_BATCH_SIZE') List<BandWidthBatchSize> get bandWidthBatchSize;@JsonKey(name: 'BENEFICIARY_ID_CONFIG') List<BeneficiaryIdConfig> get beneficiaryIdConfig;@JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE') List<BandWidthBatchSize> get downSyncBandWidthBatchSize;@JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS') List<DeletionReasonOptions> get householdDeletionReasonOptions;@JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS') List<DeletionReasonOptions> get householdMemberDeletionReasonOptions;@JsonKey(name: 'BACKGROUND_SERVICE_CONFIG') List<BackgroundServiceConfig>? get backgroundServiceConfig;@JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> get checklistTypes;@JsonKey(name: 'DEVICE_CHANGE_REASONS') List<DeviceChangeReasons> get deviceChangeReasons;@JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> get singleUserLogin;@JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR') List<IdTypeOptions> get idTypeOptions;@JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES') List<RelationShipTypeOptions> get relationShipTypeOptions;@JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR') List<DeliveryCommentOptions> get deliveryCommentOptions;@JsonKey(name: 'BACKEND_INTERFACE') List<BackendInterface> get backendInterface;@JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? get callSupportOptions;@JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> get transportTypes;@JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? get symptomsTypeList;@JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS') List<SearchHouseHoldFilters>? get searchHouseHoldFilters;@JsonKey(name: 'SEARCH_CLF_FILTERS') List<SearchCLFFilters>? get searchCLFFilters;@JsonKey(name: 'REFERRAL_REASONS') List<ReferralReasonType>? get referralReasonList;@JsonKey(name: 'MANUAL_ATTENDANCE_REASONS') List<ManualAttendanceReasonType>? get manualAttendanceReasonList;@JsonKey(name: 'HOUSE_STRUCTURE_TYPES') List<CommonMasterModel>? get houseStructureTypes;@JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? get refusalReasons;@JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? get firebaseConfig;@JsonKey(name: 'TRANSIT_POST_TYPE') List<TransitPostType>? get transitPostType;
+/// Create a copy of HCMWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$HCMWrapperModelCopyWith<HCMWrapperModel> get copyWith => _$HCMWrapperModelCopyWithImpl<HCMWrapperModel>(this as HCMWrapperModel, _$identity);
+
+  /// Serializes this HCMWrapperModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HCMWrapperModel&&const DeepCollectionEquality().equals(other.appConfig, appConfig)&&const DeepCollectionEquality().equals(other.bandWidthBatchSize, bandWidthBatchSize)&&const DeepCollectionEquality().equals(other.beneficiaryIdConfig, beneficiaryIdConfig)&&const DeepCollectionEquality().equals(other.downSyncBandWidthBatchSize, downSyncBandWidthBatchSize)&&const DeepCollectionEquality().equals(other.householdDeletionReasonOptions, householdDeletionReasonOptions)&&const DeepCollectionEquality().equals(other.householdMemberDeletionReasonOptions, householdMemberDeletionReasonOptions)&&const DeepCollectionEquality().equals(other.backgroundServiceConfig, backgroundServiceConfig)&&const DeepCollectionEquality().equals(other.checklistTypes, checklistTypes)&&const DeepCollectionEquality().equals(other.deviceChangeReasons, deviceChangeReasons)&&const DeepCollectionEquality().equals(other.singleUserLogin, singleUserLogin)&&const DeepCollectionEquality().equals(other.idTypeOptions, idTypeOptions)&&const DeepCollectionEquality().equals(other.relationShipTypeOptions, relationShipTypeOptions)&&const DeepCollectionEquality().equals(other.deliveryCommentOptions, deliveryCommentOptions)&&const DeepCollectionEquality().equals(other.backendInterface, backendInterface)&&const DeepCollectionEquality().equals(other.callSupportOptions, callSupportOptions)&&const DeepCollectionEquality().equals(other.transportTypes, transportTypes)&&const DeepCollectionEquality().equals(other.symptomsTypeList, symptomsTypeList)&&const DeepCollectionEquality().equals(other.searchHouseHoldFilters, searchHouseHoldFilters)&&const DeepCollectionEquality().equals(other.searchCLFFilters, searchCLFFilters)&&const DeepCollectionEquality().equals(other.referralReasonList, referralReasonList)&&const DeepCollectionEquality().equals(other.manualAttendanceReasonList, manualAttendanceReasonList)&&const DeepCollectionEquality().equals(other.houseStructureTypes, houseStructureTypes)&&const DeepCollectionEquality().equals(other.refusalReasons, refusalReasons)&&const DeepCollectionEquality().equals(other.firebaseConfig, firebaseConfig)&&const DeepCollectionEquality().equals(other.transitPostType, transitPostType));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hashAll([runtimeType,const DeepCollectionEquality().hash(appConfig),const DeepCollectionEquality().hash(bandWidthBatchSize),const DeepCollectionEquality().hash(beneficiaryIdConfig),const DeepCollectionEquality().hash(downSyncBandWidthBatchSize),const DeepCollectionEquality().hash(householdDeletionReasonOptions),const DeepCollectionEquality().hash(householdMemberDeletionReasonOptions),const DeepCollectionEquality().hash(backgroundServiceConfig),const DeepCollectionEquality().hash(checklistTypes),const DeepCollectionEquality().hash(deviceChangeReasons),const DeepCollectionEquality().hash(singleUserLogin),const DeepCollectionEquality().hash(idTypeOptions),const DeepCollectionEquality().hash(relationShipTypeOptions),const DeepCollectionEquality().hash(deliveryCommentOptions),const DeepCollectionEquality().hash(backendInterface),const DeepCollectionEquality().hash(callSupportOptions),const DeepCollectionEquality().hash(transportTypes),const DeepCollectionEquality().hash(symptomsTypeList),const DeepCollectionEquality().hash(searchHouseHoldFilters),const DeepCollectionEquality().hash(searchCLFFilters),const DeepCollectionEquality().hash(referralReasonList),const DeepCollectionEquality().hash(manualAttendanceReasonList),const DeepCollectionEquality().hash(houseStructureTypes),const DeepCollectionEquality().hash(refusalReasons),const DeepCollectionEquality().hash(firebaseConfig),const DeepCollectionEquality().hash(transitPostType)]);
+
+@override
+String toString() {
+  return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, beneficiaryIdConfig: $beneficiaryIdConfig, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, deviceChangeReasons: $deviceChangeReasons, singleUserLogin: $singleUserLogin, idTypeOptions: $idTypeOptions, relationShipTypeOptions: $relationShipTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, manualAttendanceReasonList: $manualAttendanceReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, transitPostType: $transitPostType)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $HCMWrapperModelCopyWith<$Res> {
-  factory $HCMWrapperModelCopyWith(
-          HCMWrapperModel value, $Res Function(HCMWrapperModel) then) =
-      _$HCMWrapperModelCopyWithImpl<$Res, HCMWrapperModel>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'APP_CONFIG') List<AppConfig> appConfig,
-      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-      List<BandWidthBatchSize> bandWidthBatchSize,
-      @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
-      List<BeneficiaryIdConfig> beneficiaryIdConfig,
-      @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
-      List<BandWidthBatchSize> downSyncBandWidthBatchSize,
-      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-      List<DeletionReasonOptions> householdDeletionReasonOptions,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-      List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
-      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-      List<BackgroundServiceConfig>? backgroundServiceConfig,
-      @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
-      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
-      List<DeviceChangeReasons> deviceChangeReasons,
-      @JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> singleUserLogin,
-      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-      List<IdTypeOptions> idTypeOptions,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
-      List<RelationShipTypeOptions> relationShipTypeOptions,
-      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-      List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE')
-      List<BackendInterface> backendInterface,
-      @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
-      @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
-      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
-      List<SearchHouseHoldFilters>? searchHouseHoldFilters,
-      @JsonKey(name: 'SEARCH_CLF_FILTERS')
-      List<SearchCLFFilters>? searchCLFFilters,
-      @JsonKey(name: 'REFERRAL_REASONS')
-      List<ReferralReasonType>? referralReasonList,
-      @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
-      List<ManualAttendanceReasonType>? manualAttendanceReasonList,
-      @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
-      List<CommonMasterModel>? houseStructureTypes,
-      @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'TRANSIT_POST_TYPE')
-      List<TransitPostType>? transitPostType});
-}
+abstract mixin class $HCMWrapperModelCopyWith<$Res>  {
+  factory $HCMWrapperModelCopyWith(HCMWrapperModel value, $Res Function(HCMWrapperModel) _then) = _$HCMWrapperModelCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'APP_CONFIG') List<AppConfig> appConfig,@JsonKey(name: 'BANDWIDTH_BATCH_SIZE') List<BandWidthBatchSize> bandWidthBatchSize,@JsonKey(name: 'BENEFICIARY_ID_CONFIG') List<BeneficiaryIdConfig> beneficiaryIdConfig,@JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE') List<BandWidthBatchSize> downSyncBandWidthBatchSize,@JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS') List<DeletionReasonOptions> householdDeletionReasonOptions,@JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS') List<DeletionReasonOptions> householdMemberDeletionReasonOptions,@JsonKey(name: 'BACKGROUND_SERVICE_CONFIG') List<BackgroundServiceConfig>? backgroundServiceConfig,@JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,@JsonKey(name: 'DEVICE_CHANGE_REASONS') List<DeviceChangeReasons> deviceChangeReasons,@JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> singleUserLogin,@JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR') List<IdTypeOptions> idTypeOptions,@JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES') List<RelationShipTypeOptions> relationShipTypeOptions,@JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR') List<DeliveryCommentOptions> deliveryCommentOptions,@JsonKey(name: 'BACKEND_INTERFACE') List<BackendInterface> backendInterface,@JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,@JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,@JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,@JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS') List<SearchHouseHoldFilters>? searchHouseHoldFilters,@JsonKey(name: 'SEARCH_CLF_FILTERS') List<SearchCLFFilters>? searchCLFFilters,@JsonKey(name: 'REFERRAL_REASONS') List<ReferralReasonType>? referralReasonList,@JsonKey(name: 'MANUAL_ATTENDANCE_REASONS') List<ManualAttendanceReasonType>? manualAttendanceReasonList,@JsonKey(name: 'HOUSE_STRUCTURE_TYPES') List<CommonMasterModel>? houseStructureTypes,@JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,@JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,@JsonKey(name: 'TRANSIT_POST_TYPE') List<TransitPostType>? transitPostType
+});
 
+
+
+
+}
 /// @nodoc
-class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
+class _$HCMWrapperModelCopyWithImpl<$Res>
     implements $HCMWrapperModelCopyWith<$Res> {
-  _$HCMWrapperModelCopyWithImpl(this._value, this._then);
+  _$HCMWrapperModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final HCMWrapperModel _self;
+  final $Res Function(HCMWrapperModel) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? appConfig = null,
-    Object? bandWidthBatchSize = null,
-    Object? beneficiaryIdConfig = null,
-    Object? downSyncBandWidthBatchSize = null,
-    Object? householdDeletionReasonOptions = null,
-    Object? householdMemberDeletionReasonOptions = null,
-    Object? backgroundServiceConfig = freezed,
-    Object? checklistTypes = null,
-    Object? deviceChangeReasons = null,
-    Object? singleUserLogin = null,
-    Object? idTypeOptions = null,
-    Object? relationShipTypeOptions = null,
-    Object? deliveryCommentOptions = null,
-    Object? backendInterface = null,
-    Object? callSupportOptions = freezed,
-    Object? transportTypes = null,
-    Object? symptomsTypeList = freezed,
-    Object? searchHouseHoldFilters = freezed,
-    Object? searchCLFFilters = freezed,
-    Object? referralReasonList = freezed,
-    Object? manualAttendanceReasonList = freezed,
-    Object? houseStructureTypes = freezed,
-    Object? refusalReasons = freezed,
-    Object? firebaseConfig = freezed,
-    Object? transitPostType = freezed,
-  }) {
-    return _then(_value.copyWith(
-      appConfig: null == appConfig
-          ? _value.appConfig
-          : appConfig // ignore: cast_nullable_to_non_nullable
-              as List<AppConfig>,
-      bandWidthBatchSize: null == bandWidthBatchSize
-          ? _value.bandWidthBatchSize
-          : bandWidthBatchSize // ignore: cast_nullable_to_non_nullable
-              as List<BandWidthBatchSize>,
-      beneficiaryIdConfig: null == beneficiaryIdConfig
-          ? _value.beneficiaryIdConfig
-          : beneficiaryIdConfig // ignore: cast_nullable_to_non_nullable
-              as List<BeneficiaryIdConfig>,
-      downSyncBandWidthBatchSize: null == downSyncBandWidthBatchSize
-          ? _value.downSyncBandWidthBatchSize
-          : downSyncBandWidthBatchSize // ignore: cast_nullable_to_non_nullable
-              as List<BandWidthBatchSize>,
-      householdDeletionReasonOptions: null == householdDeletionReasonOptions
-          ? _value.householdDeletionReasonOptions
-          : householdDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeletionReasonOptions>,
-      householdMemberDeletionReasonOptions: null ==
-              householdMemberDeletionReasonOptions
-          ? _value.householdMemberDeletionReasonOptions
-          : householdMemberDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeletionReasonOptions>,
-      backgroundServiceConfig: freezed == backgroundServiceConfig
-          ? _value.backgroundServiceConfig
-          : backgroundServiceConfig // ignore: cast_nullable_to_non_nullable
-              as List<BackgroundServiceConfig>?,
-      checklistTypes: null == checklistTypes
-          ? _value.checklistTypes
-          : checklistTypes // ignore: cast_nullable_to_non_nullable
-              as List<CheckListTypes>,
-      deviceChangeReasons: null == deviceChangeReasons
-          ? _value.deviceChangeReasons
-          : deviceChangeReasons // ignore: cast_nullable_to_non_nullable
-              as List<DeviceChangeReasons>,
-      singleUserLogin: null == singleUserLogin
-          ? _value.singleUserLogin
-          : singleUserLogin // ignore: cast_nullable_to_non_nullable
-              as List<SingleUserLogin>,
-      idTypeOptions: null == idTypeOptions
-          ? _value.idTypeOptions
-          : idTypeOptions // ignore: cast_nullable_to_non_nullable
-              as List<IdTypeOptions>,
-      relationShipTypeOptions: null == relationShipTypeOptions
-          ? _value.relationShipTypeOptions
-          : relationShipTypeOptions // ignore: cast_nullable_to_non_nullable
-              as List<RelationShipTypeOptions>,
-      deliveryCommentOptions: null == deliveryCommentOptions
-          ? _value.deliveryCommentOptions
-          : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeliveryCommentOptions>,
-      backendInterface: null == backendInterface
-          ? _value.backendInterface
-          : backendInterface // ignore: cast_nullable_to_non_nullable
-              as List<BackendInterface>,
-      callSupportOptions: freezed == callSupportOptions
-          ? _value.callSupportOptions
-          : callSupportOptions // ignore: cast_nullable_to_non_nullable
-              as List<CallSupportList>?,
-      transportTypes: null == transportTypes
-          ? _value.transportTypes
-          : transportTypes // ignore: cast_nullable_to_non_nullable
-              as List<TransportTypes>,
-      symptomsTypeList: freezed == symptomsTypeList
-          ? _value.symptomsTypeList
-          : symptomsTypeList // ignore: cast_nullable_to_non_nullable
-              as List<SymptomsType>?,
-      searchHouseHoldFilters: freezed == searchHouseHoldFilters
-          ? _value.searchHouseHoldFilters
-          : searchHouseHoldFilters // ignore: cast_nullable_to_non_nullable
-              as List<SearchHouseHoldFilters>?,
-      searchCLFFilters: freezed == searchCLFFilters
-          ? _value.searchCLFFilters
-          : searchCLFFilters // ignore: cast_nullable_to_non_nullable
-              as List<SearchCLFFilters>?,
-      referralReasonList: freezed == referralReasonList
-          ? _value.referralReasonList
-          : referralReasonList // ignore: cast_nullable_to_non_nullable
-              as List<ReferralReasonType>?,
-      manualAttendanceReasonList: freezed == manualAttendanceReasonList
-          ? _value.manualAttendanceReasonList
-          : manualAttendanceReasonList // ignore: cast_nullable_to_non_nullable
-              as List<ManualAttendanceReasonType>?,
-      houseStructureTypes: freezed == houseStructureTypes
-          ? _value.houseStructureTypes
-          : houseStructureTypes // ignore: cast_nullable_to_non_nullable
-              as List<CommonMasterModel>?,
-      refusalReasons: freezed == refusalReasons
-          ? _value.refusalReasons
-          : refusalReasons // ignore: cast_nullable_to_non_nullable
-              as List<CommonMasterModel>?,
-      firebaseConfig: freezed == firebaseConfig
-          ? _value.firebaseConfig
-          : firebaseConfig // ignore: cast_nullable_to_non_nullable
-              as List<FirebaseConfig>?,
-      transitPostType: freezed == transitPostType
-          ? _value.transitPostType
-          : transitPostType // ignore: cast_nullable_to_non_nullable
-              as List<TransitPostType>?,
-    ) as $Val);
-  }
+/// Create a copy of HCMWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? appConfig = null,Object? bandWidthBatchSize = null,Object? beneficiaryIdConfig = null,Object? downSyncBandWidthBatchSize = null,Object? householdDeletionReasonOptions = null,Object? householdMemberDeletionReasonOptions = null,Object? backgroundServiceConfig = freezed,Object? checklistTypes = null,Object? deviceChangeReasons = null,Object? singleUserLogin = null,Object? idTypeOptions = null,Object? relationShipTypeOptions = null,Object? deliveryCommentOptions = null,Object? backendInterface = null,Object? callSupportOptions = freezed,Object? transportTypes = null,Object? symptomsTypeList = freezed,Object? searchHouseHoldFilters = freezed,Object? searchCLFFilters = freezed,Object? referralReasonList = freezed,Object? manualAttendanceReasonList = freezed,Object? houseStructureTypes = freezed,Object? refusalReasons = freezed,Object? firebaseConfig = freezed,Object? transitPostType = freezed,}) {
+  return _then(_self.copyWith(
+appConfig: null == appConfig ? _self.appConfig : appConfig // ignore: cast_nullable_to_non_nullable
+as List<AppConfig>,bandWidthBatchSize: null == bandWidthBatchSize ? _self.bandWidthBatchSize : bandWidthBatchSize // ignore: cast_nullable_to_non_nullable
+as List<BandWidthBatchSize>,beneficiaryIdConfig: null == beneficiaryIdConfig ? _self.beneficiaryIdConfig : beneficiaryIdConfig // ignore: cast_nullable_to_non_nullable
+as List<BeneficiaryIdConfig>,downSyncBandWidthBatchSize: null == downSyncBandWidthBatchSize ? _self.downSyncBandWidthBatchSize : downSyncBandWidthBatchSize // ignore: cast_nullable_to_non_nullable
+as List<BandWidthBatchSize>,householdDeletionReasonOptions: null == householdDeletionReasonOptions ? _self.householdDeletionReasonOptions : householdDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
+as List<DeletionReasonOptions>,householdMemberDeletionReasonOptions: null == householdMemberDeletionReasonOptions ? _self.householdMemberDeletionReasonOptions : householdMemberDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
+as List<DeletionReasonOptions>,backgroundServiceConfig: freezed == backgroundServiceConfig ? _self.backgroundServiceConfig : backgroundServiceConfig // ignore: cast_nullable_to_non_nullable
+as List<BackgroundServiceConfig>?,checklistTypes: null == checklistTypes ? _self.checklistTypes : checklistTypes // ignore: cast_nullable_to_non_nullable
+as List<CheckListTypes>,deviceChangeReasons: null == deviceChangeReasons ? _self.deviceChangeReasons : deviceChangeReasons // ignore: cast_nullable_to_non_nullable
+as List<DeviceChangeReasons>,singleUserLogin: null == singleUserLogin ? _self.singleUserLogin : singleUserLogin // ignore: cast_nullable_to_non_nullable
+as List<SingleUserLogin>,idTypeOptions: null == idTypeOptions ? _self.idTypeOptions : idTypeOptions // ignore: cast_nullable_to_non_nullable
+as List<IdTypeOptions>,relationShipTypeOptions: null == relationShipTypeOptions ? _self.relationShipTypeOptions : relationShipTypeOptions // ignore: cast_nullable_to_non_nullable
+as List<RelationShipTypeOptions>,deliveryCommentOptions: null == deliveryCommentOptions ? _self.deliveryCommentOptions : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
+as List<DeliveryCommentOptions>,backendInterface: null == backendInterface ? _self.backendInterface : backendInterface // ignore: cast_nullable_to_non_nullable
+as List<BackendInterface>,callSupportOptions: freezed == callSupportOptions ? _self.callSupportOptions : callSupportOptions // ignore: cast_nullable_to_non_nullable
+as List<CallSupportList>?,transportTypes: null == transportTypes ? _self.transportTypes : transportTypes // ignore: cast_nullable_to_non_nullable
+as List<TransportTypes>,symptomsTypeList: freezed == symptomsTypeList ? _self.symptomsTypeList : symptomsTypeList // ignore: cast_nullable_to_non_nullable
+as List<SymptomsType>?,searchHouseHoldFilters: freezed == searchHouseHoldFilters ? _self.searchHouseHoldFilters : searchHouseHoldFilters // ignore: cast_nullable_to_non_nullable
+as List<SearchHouseHoldFilters>?,searchCLFFilters: freezed == searchCLFFilters ? _self.searchCLFFilters : searchCLFFilters // ignore: cast_nullable_to_non_nullable
+as List<SearchCLFFilters>?,referralReasonList: freezed == referralReasonList ? _self.referralReasonList : referralReasonList // ignore: cast_nullable_to_non_nullable
+as List<ReferralReasonType>?,manualAttendanceReasonList: freezed == manualAttendanceReasonList ? _self.manualAttendanceReasonList : manualAttendanceReasonList // ignore: cast_nullable_to_non_nullable
+as List<ManualAttendanceReasonType>?,houseStructureTypes: freezed == houseStructureTypes ? _self.houseStructureTypes : houseStructureTypes // ignore: cast_nullable_to_non_nullable
+as List<CommonMasterModel>?,refusalReasons: freezed == refusalReasons ? _self.refusalReasons : refusalReasons // ignore: cast_nullable_to_non_nullable
+as List<CommonMasterModel>?,firebaseConfig: freezed == firebaseConfig ? _self.firebaseConfig : firebaseConfig // ignore: cast_nullable_to_non_nullable
+as List<FirebaseConfig>?,transitPostType: freezed == transitPostType ? _self.transitPostType : transitPostType // ignore: cast_nullable_to_non_nullable
+as List<TransitPostType>?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$HCMWrapperModelImplCopyWith<$Res>
-    implements $HCMWrapperModelCopyWith<$Res> {
-  factory _$$HCMWrapperModelImplCopyWith(_$HCMWrapperModelImpl value,
-          $Res Function(_$HCMWrapperModelImpl) then) =
-      __$$HCMWrapperModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'APP_CONFIG') List<AppConfig> appConfig,
-      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-      List<BandWidthBatchSize> bandWidthBatchSize,
-      @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
-      List<BeneficiaryIdConfig> beneficiaryIdConfig,
-      @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
-      List<BandWidthBatchSize> downSyncBandWidthBatchSize,
-      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-      List<DeletionReasonOptions> householdDeletionReasonOptions,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-      List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
-      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-      List<BackgroundServiceConfig>? backgroundServiceConfig,
-      @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
-      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
-      List<DeviceChangeReasons> deviceChangeReasons,
-      @JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> singleUserLogin,
-      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-      List<IdTypeOptions> idTypeOptions,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
-      List<RelationShipTypeOptions> relationShipTypeOptions,
-      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-      List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE')
-      List<BackendInterface> backendInterface,
-      @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
-      @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
-      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
-      List<SearchHouseHoldFilters>? searchHouseHoldFilters,
-      @JsonKey(name: 'SEARCH_CLF_FILTERS')
-      List<SearchCLFFilters>? searchCLFFilters,
-      @JsonKey(name: 'REFERRAL_REASONS')
-      List<ReferralReasonType>? referralReasonList,
-      @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
-      List<ManualAttendanceReasonType>? manualAttendanceReasonList,
-      @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
-      List<CommonMasterModel>? houseStructureTypes,
-      @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'TRANSIT_POST_TYPE')
-      List<TransitPostType>? transitPostType});
 }
 
-/// @nodoc
-class __$$HCMWrapperModelImplCopyWithImpl<$Res>
-    extends _$HCMWrapperModelCopyWithImpl<$Res, _$HCMWrapperModelImpl>
-    implements _$$HCMWrapperModelImplCopyWith<$Res> {
-  __$$HCMWrapperModelImplCopyWithImpl(
-      _$HCMWrapperModelImpl _value, $Res Function(_$HCMWrapperModelImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? appConfig = null,
-    Object? bandWidthBatchSize = null,
-    Object? beneficiaryIdConfig = null,
-    Object? downSyncBandWidthBatchSize = null,
-    Object? householdDeletionReasonOptions = null,
-    Object? householdMemberDeletionReasonOptions = null,
-    Object? backgroundServiceConfig = freezed,
-    Object? checklistTypes = null,
-    Object? deviceChangeReasons = null,
-    Object? singleUserLogin = null,
-    Object? idTypeOptions = null,
-    Object? relationShipTypeOptions = null,
-    Object? deliveryCommentOptions = null,
-    Object? backendInterface = null,
-    Object? callSupportOptions = freezed,
-    Object? transportTypes = null,
-    Object? symptomsTypeList = freezed,
-    Object? searchHouseHoldFilters = freezed,
-    Object? searchCLFFilters = freezed,
-    Object? referralReasonList = freezed,
-    Object? manualAttendanceReasonList = freezed,
-    Object? houseStructureTypes = freezed,
-    Object? refusalReasons = freezed,
-    Object? firebaseConfig = freezed,
-    Object? transitPostType = freezed,
-  }) {
-    return _then(_$HCMWrapperModelImpl(
-      appConfig: null == appConfig
-          ? _value._appConfig
-          : appConfig // ignore: cast_nullable_to_non_nullable
-              as List<AppConfig>,
-      bandWidthBatchSize: null == bandWidthBatchSize
-          ? _value._bandWidthBatchSize
-          : bandWidthBatchSize // ignore: cast_nullable_to_non_nullable
-              as List<BandWidthBatchSize>,
-      beneficiaryIdConfig: null == beneficiaryIdConfig
-          ? _value._beneficiaryIdConfig
-          : beneficiaryIdConfig // ignore: cast_nullable_to_non_nullable
-              as List<BeneficiaryIdConfig>,
-      downSyncBandWidthBatchSize: null == downSyncBandWidthBatchSize
-          ? _value._downSyncBandWidthBatchSize
-          : downSyncBandWidthBatchSize // ignore: cast_nullable_to_non_nullable
-              as List<BandWidthBatchSize>,
-      householdDeletionReasonOptions: null == householdDeletionReasonOptions
-          ? _value._householdDeletionReasonOptions
-          : householdDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeletionReasonOptions>,
-      householdMemberDeletionReasonOptions: null ==
-              householdMemberDeletionReasonOptions
-          ? _value._householdMemberDeletionReasonOptions
-          : householdMemberDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeletionReasonOptions>,
-      backgroundServiceConfig: freezed == backgroundServiceConfig
-          ? _value._backgroundServiceConfig
-          : backgroundServiceConfig // ignore: cast_nullable_to_non_nullable
-              as List<BackgroundServiceConfig>?,
-      checklistTypes: null == checklistTypes
-          ? _value._checklistTypes
-          : checklistTypes // ignore: cast_nullable_to_non_nullable
-              as List<CheckListTypes>,
-      deviceChangeReasons: null == deviceChangeReasons
-          ? _value._deviceChangeReasons
-          : deviceChangeReasons // ignore: cast_nullable_to_non_nullable
-              as List<DeviceChangeReasons>,
-      singleUserLogin: null == singleUserLogin
-          ? _value._singleUserLogin
-          : singleUserLogin // ignore: cast_nullable_to_non_nullable
-              as List<SingleUserLogin>,
-      idTypeOptions: null == idTypeOptions
-          ? _value._idTypeOptions
-          : idTypeOptions // ignore: cast_nullable_to_non_nullable
-              as List<IdTypeOptions>,
-      relationShipTypeOptions: null == relationShipTypeOptions
-          ? _value._relationShipTypeOptions
-          : relationShipTypeOptions // ignore: cast_nullable_to_non_nullable
-              as List<RelationShipTypeOptions>,
-      deliveryCommentOptions: null == deliveryCommentOptions
-          ? _value._deliveryCommentOptions
-          : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeliveryCommentOptions>,
-      backendInterface: null == backendInterface
-          ? _value._backendInterface
-          : backendInterface // ignore: cast_nullable_to_non_nullable
-              as List<BackendInterface>,
-      callSupportOptions: freezed == callSupportOptions
-          ? _value._callSupportOptions
-          : callSupportOptions // ignore: cast_nullable_to_non_nullable
-              as List<CallSupportList>?,
-      transportTypes: null == transportTypes
-          ? _value._transportTypes
-          : transportTypes // ignore: cast_nullable_to_non_nullable
-              as List<TransportTypes>,
-      symptomsTypeList: freezed == symptomsTypeList
-          ? _value._symptomsTypeList
-          : symptomsTypeList // ignore: cast_nullable_to_non_nullable
-              as List<SymptomsType>?,
-      searchHouseHoldFilters: freezed == searchHouseHoldFilters
-          ? _value._searchHouseHoldFilters
-          : searchHouseHoldFilters // ignore: cast_nullable_to_non_nullable
-              as List<SearchHouseHoldFilters>?,
-      searchCLFFilters: freezed == searchCLFFilters
-          ? _value._searchCLFFilters
-          : searchCLFFilters // ignore: cast_nullable_to_non_nullable
-              as List<SearchCLFFilters>?,
-      referralReasonList: freezed == referralReasonList
-          ? _value._referralReasonList
-          : referralReasonList // ignore: cast_nullable_to_non_nullable
-              as List<ReferralReasonType>?,
-      manualAttendanceReasonList: freezed == manualAttendanceReasonList
-          ? _value._manualAttendanceReasonList
-          : manualAttendanceReasonList // ignore: cast_nullable_to_non_nullable
-              as List<ManualAttendanceReasonType>?,
-      houseStructureTypes: freezed == houseStructureTypes
-          ? _value._houseStructureTypes
-          : houseStructureTypes // ignore: cast_nullable_to_non_nullable
-              as List<CommonMasterModel>?,
-      refusalReasons: freezed == refusalReasons
-          ? _value._refusalReasons
-          : refusalReasons // ignore: cast_nullable_to_non_nullable
-              as List<CommonMasterModel>?,
-      firebaseConfig: freezed == firebaseConfig
-          ? _value._firebaseConfig
-          : firebaseConfig // ignore: cast_nullable_to_non_nullable
-              as List<FirebaseConfig>?,
-      transitPostType: freezed == transitPostType
-          ? _value._transitPostType
-          : transitPostType // ignore: cast_nullable_to_non_nullable
-              as List<TransitPostType>?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [HCMWrapperModel].
+extension HCMWrapperModelPatterns on HCMWrapperModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _HCMWrapperModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _HCMWrapperModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _HCMWrapperModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _HCMWrapperModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _HCMWrapperModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _HCMWrapperModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'APP_CONFIG')  List<AppConfig> appConfig, @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')  List<BandWidthBatchSize> bandWidthBatchSize, @JsonKey(name: 'BENEFICIARY_ID_CONFIG')  List<BeneficiaryIdConfig> beneficiaryIdConfig, @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')  List<BandWidthBatchSize> downSyncBandWidthBatchSize, @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')  List<DeletionReasonOptions> householdDeletionReasonOptions, @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')  List<DeletionReasonOptions> householdMemberDeletionReasonOptions, @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')  List<BackgroundServiceConfig>? backgroundServiceConfig, @JsonKey(name: 'CHECKLIST_TYPES')  List<CheckListTypes> checklistTypes, @JsonKey(name: 'DEVICE_CHANGE_REASONS')  List<DeviceChangeReasons> deviceChangeReasons, @JsonKey(name: 'SINGLE_USER_LOGIN')  List<SingleUserLogin> singleUserLogin, @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')  List<IdTypeOptions> idTypeOptions, @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')  List<RelationShipTypeOptions> relationShipTypeOptions, @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')  List<DeliveryCommentOptions> deliveryCommentOptions, @JsonKey(name: 'BACKEND_INTERFACE')  List<BackendInterface> backendInterface, @JsonKey(name: 'CALL_SUPPORT')  List<CallSupportList>? callSupportOptions, @JsonKey(name: 'TRANSPORT_TYPES')  List<TransportTypes> transportTypes, @JsonKey(name: 'SYMPTOM_TYPES')  List<SymptomsType>? symptomsTypeList, @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')  List<SearchHouseHoldFilters>? searchHouseHoldFilters, @JsonKey(name: 'SEARCH_CLF_FILTERS')  List<SearchCLFFilters>? searchCLFFilters, @JsonKey(name: 'REFERRAL_REASONS')  List<ReferralReasonType>? referralReasonList, @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')  List<ManualAttendanceReasonType>? manualAttendanceReasonList, @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')  List<CommonMasterModel>? houseStructureTypes, @JsonKey(name: 'REFUSAL_REASONS')  List<CommonMasterModel>? refusalReasons, @JsonKey(name: 'FIREBASE_CONFIG')  List<FirebaseConfig>? firebaseConfig, @JsonKey(name: 'TRANSIT_POST_TYPE')  List<TransitPostType>? transitPostType)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _HCMWrapperModel() when $default != null:
+return $default(_that.appConfig,_that.bandWidthBatchSize,_that.beneficiaryIdConfig,_that.downSyncBandWidthBatchSize,_that.householdDeletionReasonOptions,_that.householdMemberDeletionReasonOptions,_that.backgroundServiceConfig,_that.checklistTypes,_that.deviceChangeReasons,_that.singleUserLogin,_that.idTypeOptions,_that.relationShipTypeOptions,_that.deliveryCommentOptions,_that.backendInterface,_that.callSupportOptions,_that.transportTypes,_that.symptomsTypeList,_that.searchHouseHoldFilters,_that.searchCLFFilters,_that.referralReasonList,_that.manualAttendanceReasonList,_that.houseStructureTypes,_that.refusalReasons,_that.firebaseConfig,_that.transitPostType);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'APP_CONFIG')  List<AppConfig> appConfig, @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')  List<BandWidthBatchSize> bandWidthBatchSize, @JsonKey(name: 'BENEFICIARY_ID_CONFIG')  List<BeneficiaryIdConfig> beneficiaryIdConfig, @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')  List<BandWidthBatchSize> downSyncBandWidthBatchSize, @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')  List<DeletionReasonOptions> householdDeletionReasonOptions, @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')  List<DeletionReasonOptions> householdMemberDeletionReasonOptions, @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')  List<BackgroundServiceConfig>? backgroundServiceConfig, @JsonKey(name: 'CHECKLIST_TYPES')  List<CheckListTypes> checklistTypes, @JsonKey(name: 'DEVICE_CHANGE_REASONS')  List<DeviceChangeReasons> deviceChangeReasons, @JsonKey(name: 'SINGLE_USER_LOGIN')  List<SingleUserLogin> singleUserLogin, @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')  List<IdTypeOptions> idTypeOptions, @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')  List<RelationShipTypeOptions> relationShipTypeOptions, @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')  List<DeliveryCommentOptions> deliveryCommentOptions, @JsonKey(name: 'BACKEND_INTERFACE')  List<BackendInterface> backendInterface, @JsonKey(name: 'CALL_SUPPORT')  List<CallSupportList>? callSupportOptions, @JsonKey(name: 'TRANSPORT_TYPES')  List<TransportTypes> transportTypes, @JsonKey(name: 'SYMPTOM_TYPES')  List<SymptomsType>? symptomsTypeList, @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')  List<SearchHouseHoldFilters>? searchHouseHoldFilters, @JsonKey(name: 'SEARCH_CLF_FILTERS')  List<SearchCLFFilters>? searchCLFFilters, @JsonKey(name: 'REFERRAL_REASONS')  List<ReferralReasonType>? referralReasonList, @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')  List<ManualAttendanceReasonType>? manualAttendanceReasonList, @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')  List<CommonMasterModel>? houseStructureTypes, @JsonKey(name: 'REFUSAL_REASONS')  List<CommonMasterModel>? refusalReasons, @JsonKey(name: 'FIREBASE_CONFIG')  List<FirebaseConfig>? firebaseConfig, @JsonKey(name: 'TRANSIT_POST_TYPE')  List<TransitPostType>? transitPostType)  $default,) {final _that = this;
+switch (_that) {
+case _HCMWrapperModel():
+return $default(_that.appConfig,_that.bandWidthBatchSize,_that.beneficiaryIdConfig,_that.downSyncBandWidthBatchSize,_that.householdDeletionReasonOptions,_that.householdMemberDeletionReasonOptions,_that.backgroundServiceConfig,_that.checklistTypes,_that.deviceChangeReasons,_that.singleUserLogin,_that.idTypeOptions,_that.relationShipTypeOptions,_that.deliveryCommentOptions,_that.backendInterface,_that.callSupportOptions,_that.transportTypes,_that.symptomsTypeList,_that.searchHouseHoldFilters,_that.searchCLFFilters,_that.referralReasonList,_that.manualAttendanceReasonList,_that.houseStructureTypes,_that.refusalReasons,_that.firebaseConfig,_that.transitPostType);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'APP_CONFIG')  List<AppConfig> appConfig, @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')  List<BandWidthBatchSize> bandWidthBatchSize, @JsonKey(name: 'BENEFICIARY_ID_CONFIG')  List<BeneficiaryIdConfig> beneficiaryIdConfig, @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')  List<BandWidthBatchSize> downSyncBandWidthBatchSize, @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')  List<DeletionReasonOptions> householdDeletionReasonOptions, @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')  List<DeletionReasonOptions> householdMemberDeletionReasonOptions, @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')  List<BackgroundServiceConfig>? backgroundServiceConfig, @JsonKey(name: 'CHECKLIST_TYPES')  List<CheckListTypes> checklistTypes, @JsonKey(name: 'DEVICE_CHANGE_REASONS')  List<DeviceChangeReasons> deviceChangeReasons, @JsonKey(name: 'SINGLE_USER_LOGIN')  List<SingleUserLogin> singleUserLogin, @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')  List<IdTypeOptions> idTypeOptions, @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')  List<RelationShipTypeOptions> relationShipTypeOptions, @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')  List<DeliveryCommentOptions> deliveryCommentOptions, @JsonKey(name: 'BACKEND_INTERFACE')  List<BackendInterface> backendInterface, @JsonKey(name: 'CALL_SUPPORT')  List<CallSupportList>? callSupportOptions, @JsonKey(name: 'TRANSPORT_TYPES')  List<TransportTypes> transportTypes, @JsonKey(name: 'SYMPTOM_TYPES')  List<SymptomsType>? symptomsTypeList, @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')  List<SearchHouseHoldFilters>? searchHouseHoldFilters, @JsonKey(name: 'SEARCH_CLF_FILTERS')  List<SearchCLFFilters>? searchCLFFilters, @JsonKey(name: 'REFERRAL_REASONS')  List<ReferralReasonType>? referralReasonList, @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')  List<ManualAttendanceReasonType>? manualAttendanceReasonList, @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')  List<CommonMasterModel>? houseStructureTypes, @JsonKey(name: 'REFUSAL_REASONS')  List<CommonMasterModel>? refusalReasons, @JsonKey(name: 'FIREBASE_CONFIG')  List<FirebaseConfig>? firebaseConfig, @JsonKey(name: 'TRANSIT_POST_TYPE')  List<TransitPostType>? transitPostType)?  $default,) {final _that = this;
+switch (_that) {
+case _HCMWrapperModel() when $default != null:
+return $default(_that.appConfig,_that.bandWidthBatchSize,_that.beneficiaryIdConfig,_that.downSyncBandWidthBatchSize,_that.householdDeletionReasonOptions,_that.householdMemberDeletionReasonOptions,_that.backgroundServiceConfig,_that.checklistTypes,_that.deviceChangeReasons,_that.singleUserLogin,_that.idTypeOptions,_that.relationShipTypeOptions,_that.deliveryCommentOptions,_that.backendInterface,_that.callSupportOptions,_that.transportTypes,_that.symptomsTypeList,_that.searchHouseHoldFilters,_that.searchCLFFilters,_that.referralReasonList,_that.manualAttendanceReasonList,_that.houseStructureTypes,_that.refusalReasons,_that.firebaseConfig,_that.transitPostType);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$HCMWrapperModelImpl implements _HCMWrapperModel {
-  const _$HCMWrapperModelImpl(
-      {@JsonKey(name: 'APP_CONFIG') required final List<AppConfig> appConfig,
-      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-      required final List<BandWidthBatchSize> bandWidthBatchSize,
-      @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
-      required final List<BeneficiaryIdConfig> beneficiaryIdConfig,
-      @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
-      required final List<BandWidthBatchSize> downSyncBandWidthBatchSize,
-      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-      required final List<DeletionReasonOptions> householdDeletionReasonOptions,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-      required final List<DeletionReasonOptions>
-          householdMemberDeletionReasonOptions,
-      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-      final List<BackgroundServiceConfig>? backgroundServiceConfig,
-      @JsonKey(name: 'CHECKLIST_TYPES')
-      required final List<CheckListTypes> checklistTypes,
-      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
-      required final List<DeviceChangeReasons> deviceChangeReasons,
-      @JsonKey(name: 'SINGLE_USER_LOGIN')
-      required final List<SingleUserLogin> singleUserLogin,
-      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-      required final List<IdTypeOptions> idTypeOptions,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
-      required final List<RelationShipTypeOptions> relationShipTypeOptions,
-      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-      required final List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE')
-      required final List<BackendInterface> backendInterface,
-      @JsonKey(name: 'CALL_SUPPORT')
-      required final List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES')
-      required final List<TransportTypes> transportTypes,
-      @JsonKey(name: 'SYMPTOM_TYPES')
-      final List<SymptomsType>? symptomsTypeList,
-      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
-      final List<SearchHouseHoldFilters>? searchHouseHoldFilters,
-      @JsonKey(name: 'SEARCH_CLF_FILTERS')
-      final List<SearchCLFFilters>? searchCLFFilters,
-      @JsonKey(name: 'REFERRAL_REASONS')
-      final List<ReferralReasonType>? referralReasonList,
-      @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
-      final List<ManualAttendanceReasonType>? manualAttendanceReasonList,
-      @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
-      final List<CommonMasterModel>? houseStructureTypes,
-      @JsonKey(name: 'REFUSAL_REASONS')
-      final List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG')
-      required final List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'TRANSIT_POST_TYPE')
-      final List<TransitPostType>? transitPostType})
-      : _appConfig = appConfig,
-        _bandWidthBatchSize = bandWidthBatchSize,
-        _beneficiaryIdConfig = beneficiaryIdConfig,
-        _downSyncBandWidthBatchSize = downSyncBandWidthBatchSize,
-        _householdDeletionReasonOptions = householdDeletionReasonOptions,
-        _householdMemberDeletionReasonOptions =
-            householdMemberDeletionReasonOptions,
-        _backgroundServiceConfig = backgroundServiceConfig,
-        _checklistTypes = checklistTypes,
-        _deviceChangeReasons = deviceChangeReasons,
-        _singleUserLogin = singleUserLogin,
-        _idTypeOptions = idTypeOptions,
-        _relationShipTypeOptions = relationShipTypeOptions,
-        _deliveryCommentOptions = deliveryCommentOptions,
-        _backendInterface = backendInterface,
-        _callSupportOptions = callSupportOptions,
-        _transportTypes = transportTypes,
-        _symptomsTypeList = symptomsTypeList,
-        _searchHouseHoldFilters = searchHouseHoldFilters,
-        _searchCLFFilters = searchCLFFilters,
-        _referralReasonList = referralReasonList,
-        _manualAttendanceReasonList = manualAttendanceReasonList,
-        _houseStructureTypes = houseStructureTypes,
-        _refusalReasons = refusalReasons,
-        _firebaseConfig = firebaseConfig,
-        _transitPostType = transitPostType;
 
-  factory _$HCMWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$HCMWrapperModelImplFromJson(json);
+class _HCMWrapperModel implements HCMWrapperModel {
+  const _HCMWrapperModel({@JsonKey(name: 'APP_CONFIG') required final  List<AppConfig> appConfig, @JsonKey(name: 'BANDWIDTH_BATCH_SIZE') required final  List<BandWidthBatchSize> bandWidthBatchSize, @JsonKey(name: 'BENEFICIARY_ID_CONFIG') required final  List<BeneficiaryIdConfig> beneficiaryIdConfig, @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE') required final  List<BandWidthBatchSize> downSyncBandWidthBatchSize, @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS') required final  List<DeletionReasonOptions> householdDeletionReasonOptions, @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS') required final  List<DeletionReasonOptions> householdMemberDeletionReasonOptions, @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG') final  List<BackgroundServiceConfig>? backgroundServiceConfig, @JsonKey(name: 'CHECKLIST_TYPES') required final  List<CheckListTypes> checklistTypes, @JsonKey(name: 'DEVICE_CHANGE_REASONS') required final  List<DeviceChangeReasons> deviceChangeReasons, @JsonKey(name: 'SINGLE_USER_LOGIN') required final  List<SingleUserLogin> singleUserLogin, @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR') required final  List<IdTypeOptions> idTypeOptions, @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES') required final  List<RelationShipTypeOptions> relationShipTypeOptions, @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR') required final  List<DeliveryCommentOptions> deliveryCommentOptions, @JsonKey(name: 'BACKEND_INTERFACE') required final  List<BackendInterface> backendInterface, @JsonKey(name: 'CALL_SUPPORT') required final  List<CallSupportList>? callSupportOptions, @JsonKey(name: 'TRANSPORT_TYPES') required final  List<TransportTypes> transportTypes, @JsonKey(name: 'SYMPTOM_TYPES') final  List<SymptomsType>? symptomsTypeList, @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS') final  List<SearchHouseHoldFilters>? searchHouseHoldFilters, @JsonKey(name: 'SEARCH_CLF_FILTERS') final  List<SearchCLFFilters>? searchCLFFilters, @JsonKey(name: 'REFERRAL_REASONS') final  List<ReferralReasonType>? referralReasonList, @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS') final  List<ManualAttendanceReasonType>? manualAttendanceReasonList, @JsonKey(name: 'HOUSE_STRUCTURE_TYPES') final  List<CommonMasterModel>? houseStructureTypes, @JsonKey(name: 'REFUSAL_REASONS') final  List<CommonMasterModel>? refusalReasons, @JsonKey(name: 'FIREBASE_CONFIG') required final  List<FirebaseConfig>? firebaseConfig, @JsonKey(name: 'TRANSIT_POST_TYPE') final  List<TransitPostType>? transitPostType}): _appConfig = appConfig,_bandWidthBatchSize = bandWidthBatchSize,_beneficiaryIdConfig = beneficiaryIdConfig,_downSyncBandWidthBatchSize = downSyncBandWidthBatchSize,_householdDeletionReasonOptions = householdDeletionReasonOptions,_householdMemberDeletionReasonOptions = householdMemberDeletionReasonOptions,_backgroundServiceConfig = backgroundServiceConfig,_checklistTypes = checklistTypes,_deviceChangeReasons = deviceChangeReasons,_singleUserLogin = singleUserLogin,_idTypeOptions = idTypeOptions,_relationShipTypeOptions = relationShipTypeOptions,_deliveryCommentOptions = deliveryCommentOptions,_backendInterface = backendInterface,_callSupportOptions = callSupportOptions,_transportTypes = transportTypes,_symptomsTypeList = symptomsTypeList,_searchHouseHoldFilters = searchHouseHoldFilters,_searchCLFFilters = searchCLFFilters,_referralReasonList = referralReasonList,_manualAttendanceReasonList = manualAttendanceReasonList,_houseStructureTypes = houseStructureTypes,_refusalReasons = refusalReasons,_firebaseConfig = firebaseConfig,_transitPostType = transitPostType;
+  factory _HCMWrapperModel.fromJson(Map<String, dynamic> json) => _$HCMWrapperModelFromJson(json);
 
-  final List<AppConfig> _appConfig;
-  @override
-  @JsonKey(name: 'APP_CONFIG')
-  List<AppConfig> get appConfig {
-    if (_appConfig is EqualUnmodifiableListView) return _appConfig;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_appConfig);
-  }
-
-  final List<BandWidthBatchSize> _bandWidthBatchSize;
-  @override
-  @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-  List<BandWidthBatchSize> get bandWidthBatchSize {
-    if (_bandWidthBatchSize is EqualUnmodifiableListView)
-      return _bandWidthBatchSize;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_bandWidthBatchSize);
-  }
-
-  final List<BeneficiaryIdConfig> _beneficiaryIdConfig;
-  @override
-  @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
-  List<BeneficiaryIdConfig> get beneficiaryIdConfig {
-    if (_beneficiaryIdConfig is EqualUnmodifiableListView)
-      return _beneficiaryIdConfig;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_beneficiaryIdConfig);
-  }
-
-  final List<BandWidthBatchSize> _downSyncBandWidthBatchSize;
-  @override
-  @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
-  List<BandWidthBatchSize> get downSyncBandWidthBatchSize {
-    if (_downSyncBandWidthBatchSize is EqualUnmodifiableListView)
-      return _downSyncBandWidthBatchSize;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_downSyncBandWidthBatchSize);
-  }
-
-  final List<DeletionReasonOptions> _householdDeletionReasonOptions;
-  @override
-  @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdDeletionReasonOptions {
-    if (_householdDeletionReasonOptions is EqualUnmodifiableListView)
-      return _householdDeletionReasonOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_householdDeletionReasonOptions);
-  }
-
-  final List<DeletionReasonOptions> _householdMemberDeletionReasonOptions;
-  @override
-  @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdMemberDeletionReasonOptions {
-    if (_householdMemberDeletionReasonOptions is EqualUnmodifiableListView)
-      return _householdMemberDeletionReasonOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_householdMemberDeletionReasonOptions);
-  }
-
-  final List<BackgroundServiceConfig>? _backgroundServiceConfig;
-  @override
-  @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-  List<BackgroundServiceConfig>? get backgroundServiceConfig {
-    final value = _backgroundServiceConfig;
-    if (value == null) return null;
-    if (_backgroundServiceConfig is EqualUnmodifiableListView)
-      return _backgroundServiceConfig;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<CheckListTypes> _checklistTypes;
-  @override
-  @JsonKey(name: 'CHECKLIST_TYPES')
-  List<CheckListTypes> get checklistTypes {
-    if (_checklistTypes is EqualUnmodifiableListView) return _checklistTypes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_checklistTypes);
-  }
-
-  final List<DeviceChangeReasons> _deviceChangeReasons;
-  @override
-  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
-  List<DeviceChangeReasons> get deviceChangeReasons {
-    if (_deviceChangeReasons is EqualUnmodifiableListView)
-      return _deviceChangeReasons;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_deviceChangeReasons);
-  }
-
-  final List<SingleUserLogin> _singleUserLogin;
-  @override
-  @JsonKey(name: 'SINGLE_USER_LOGIN')
-  List<SingleUserLogin> get singleUserLogin {
-    if (_singleUserLogin is EqualUnmodifiableListView) return _singleUserLogin;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_singleUserLogin);
-  }
-
-  final List<IdTypeOptions> _idTypeOptions;
-  @override
-  @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-  List<IdTypeOptions> get idTypeOptions {
-    if (_idTypeOptions is EqualUnmodifiableListView) return _idTypeOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_idTypeOptions);
-  }
-
-  final List<RelationShipTypeOptions> _relationShipTypeOptions;
-  @override
-  @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
-  List<RelationShipTypeOptions> get relationShipTypeOptions {
-    if (_relationShipTypeOptions is EqualUnmodifiableListView)
-      return _relationShipTypeOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_relationShipTypeOptions);
-  }
-
-  final List<DeliveryCommentOptions> _deliveryCommentOptions;
-  @override
-  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-  List<DeliveryCommentOptions> get deliveryCommentOptions {
-    if (_deliveryCommentOptions is EqualUnmodifiableListView)
-      return _deliveryCommentOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_deliveryCommentOptions);
-  }
-
-  final List<BackendInterface> _backendInterface;
-  @override
-  @JsonKey(name: 'BACKEND_INTERFACE')
-  List<BackendInterface> get backendInterface {
-    if (_backendInterface is EqualUnmodifiableListView)
-      return _backendInterface;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_backendInterface);
-  }
-
-  final List<CallSupportList>? _callSupportOptions;
-  @override
-  @JsonKey(name: 'CALL_SUPPORT')
-  List<CallSupportList>? get callSupportOptions {
-    final value = _callSupportOptions;
-    if (value == null) return null;
-    if (_callSupportOptions is EqualUnmodifiableListView)
-      return _callSupportOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<TransportTypes> _transportTypes;
-  @override
-  @JsonKey(name: 'TRANSPORT_TYPES')
-  List<TransportTypes> get transportTypes {
-    if (_transportTypes is EqualUnmodifiableListView) return _transportTypes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_transportTypes);
-  }
-
-  final List<SymptomsType>? _symptomsTypeList;
-  @override
-  @JsonKey(name: 'SYMPTOM_TYPES')
-  List<SymptomsType>? get symptomsTypeList {
-    final value = _symptomsTypeList;
-    if (value == null) return null;
-    if (_symptomsTypeList is EqualUnmodifiableListView)
-      return _symptomsTypeList;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<SearchHouseHoldFilters>? _searchHouseHoldFilters;
-  @override
-  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
-  List<SearchHouseHoldFilters>? get searchHouseHoldFilters {
-    final value = _searchHouseHoldFilters;
-    if (value == null) return null;
-    if (_searchHouseHoldFilters is EqualUnmodifiableListView)
-      return _searchHouseHoldFilters;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<SearchCLFFilters>? _searchCLFFilters;
-  @override
-  @JsonKey(name: 'SEARCH_CLF_FILTERS')
-  List<SearchCLFFilters>? get searchCLFFilters {
-    final value = _searchCLFFilters;
-    if (value == null) return null;
-    if (_searchCLFFilters is EqualUnmodifiableListView)
-      return _searchCLFFilters;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<ReferralReasonType>? _referralReasonList;
-  @override
-  @JsonKey(name: 'REFERRAL_REASONS')
-  List<ReferralReasonType>? get referralReasonList {
-    final value = _referralReasonList;
-    if (value == null) return null;
-    if (_referralReasonList is EqualUnmodifiableListView)
-      return _referralReasonList;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<ManualAttendanceReasonType>? _manualAttendanceReasonList;
-  @override
-  @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
-  List<ManualAttendanceReasonType>? get manualAttendanceReasonList {
-    final value = _manualAttendanceReasonList;
-    if (value == null) return null;
-    if (_manualAttendanceReasonList is EqualUnmodifiableListView)
-      return _manualAttendanceReasonList;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<CommonMasterModel>? _houseStructureTypes;
-  @override
-  @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
-  List<CommonMasterModel>? get houseStructureTypes {
-    final value = _houseStructureTypes;
-    if (value == null) return null;
-    if (_houseStructureTypes is EqualUnmodifiableListView)
-      return _houseStructureTypes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<CommonMasterModel>? _refusalReasons;
-  @override
-  @JsonKey(name: 'REFUSAL_REASONS')
-  List<CommonMasterModel>? get refusalReasons {
-    final value = _refusalReasons;
-    if (value == null) return null;
-    if (_refusalReasons is EqualUnmodifiableListView) return _refusalReasons;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<FirebaseConfig>? _firebaseConfig;
-  @override
-  @JsonKey(name: 'FIREBASE_CONFIG')
-  List<FirebaseConfig>? get firebaseConfig {
-    final value = _firebaseConfig;
-    if (value == null) return null;
-    if (_firebaseConfig is EqualUnmodifiableListView) return _firebaseConfig;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<TransitPostType>? _transitPostType;
-  @override
-  @JsonKey(name: 'TRANSIT_POST_TYPE')
-  List<TransitPostType>? get transitPostType {
-    final value = _transitPostType;
-    if (value == null) return null;
-    if (_transitPostType is EqualUnmodifiableListView) return _transitPostType;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, beneficiaryIdConfig: $beneficiaryIdConfig, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, deviceChangeReasons: $deviceChangeReasons, singleUserLogin: $singleUserLogin, idTypeOptions: $idTypeOptions, relationShipTypeOptions: $relationShipTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, manualAttendanceReasonList: $manualAttendanceReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, transitPostType: $transitPostType)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$HCMWrapperModelImpl &&
-            const DeepCollectionEquality()
-                .equals(other._appConfig, _appConfig) &&
-            const DeepCollectionEquality()
-                .equals(other._bandWidthBatchSize, _bandWidthBatchSize) &&
-            const DeepCollectionEquality()
-                .equals(other._beneficiaryIdConfig, _beneficiaryIdConfig) &&
-            const DeepCollectionEquality().equals(
-                other._downSyncBandWidthBatchSize,
-                _downSyncBandWidthBatchSize) &&
-            const DeepCollectionEquality().equals(
-                other._householdDeletionReasonOptions,
-                _householdDeletionReasonOptions) &&
-            const DeepCollectionEquality().equals(
-                other._householdMemberDeletionReasonOptions,
-                _householdMemberDeletionReasonOptions) &&
-            const DeepCollectionEquality().equals(
-                other._backgroundServiceConfig, _backgroundServiceConfig) &&
-            const DeepCollectionEquality()
-                .equals(other._checklistTypes, _checklistTypes) &&
-            const DeepCollectionEquality()
-                .equals(other._deviceChangeReasons, _deviceChangeReasons) &&
-            const DeepCollectionEquality()
-                .equals(other._singleUserLogin, _singleUserLogin) &&
-            const DeepCollectionEquality()
-                .equals(other._idTypeOptions, _idTypeOptions) &&
-            const DeepCollectionEquality().equals(
-                other._relationShipTypeOptions, _relationShipTypeOptions) &&
-            const DeepCollectionEquality().equals(
-                other._deliveryCommentOptions, _deliveryCommentOptions) &&
-            const DeepCollectionEquality()
-                .equals(other._backendInterface, _backendInterface) &&
-            const DeepCollectionEquality()
-                .equals(other._callSupportOptions, _callSupportOptions) &&
-            const DeepCollectionEquality()
-                .equals(other._transportTypes, _transportTypes) &&
-            const DeepCollectionEquality()
-                .equals(other._symptomsTypeList, _symptomsTypeList) &&
-            const DeepCollectionEquality().equals(
-                other._searchHouseHoldFilters, _searchHouseHoldFilters) &&
-            const DeepCollectionEquality()
-                .equals(other._searchCLFFilters, _searchCLFFilters) &&
-            const DeepCollectionEquality()
-                .equals(other._referralReasonList, _referralReasonList) &&
-            const DeepCollectionEquality().equals(
-                other._manualAttendanceReasonList,
-                _manualAttendanceReasonList) &&
-            const DeepCollectionEquality()
-                .equals(other._houseStructureTypes, _houseStructureTypes) &&
-            const DeepCollectionEquality()
-                .equals(other._refusalReasons, _refusalReasons) &&
-            const DeepCollectionEquality()
-                .equals(other._firebaseConfig, _firebaseConfig) &&
-            const DeepCollectionEquality()
-                .equals(other._transitPostType, _transitPostType));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hashAll([
-        runtimeType,
-        const DeepCollectionEquality().hash(_appConfig),
-        const DeepCollectionEquality().hash(_bandWidthBatchSize),
-        const DeepCollectionEquality().hash(_beneficiaryIdConfig),
-        const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),
-        const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
-        const DeepCollectionEquality()
-            .hash(_householdMemberDeletionReasonOptions),
-        const DeepCollectionEquality().hash(_backgroundServiceConfig),
-        const DeepCollectionEquality().hash(_checklistTypes),
-        const DeepCollectionEquality().hash(_deviceChangeReasons),
-        const DeepCollectionEquality().hash(_singleUserLogin),
-        const DeepCollectionEquality().hash(_idTypeOptions),
-        const DeepCollectionEquality().hash(_relationShipTypeOptions),
-        const DeepCollectionEquality().hash(_deliveryCommentOptions),
-        const DeepCollectionEquality().hash(_backendInterface),
-        const DeepCollectionEquality().hash(_callSupportOptions),
-        const DeepCollectionEquality().hash(_transportTypes),
-        const DeepCollectionEquality().hash(_symptomsTypeList),
-        const DeepCollectionEquality().hash(_searchHouseHoldFilters),
-        const DeepCollectionEquality().hash(_searchCLFFilters),
-        const DeepCollectionEquality().hash(_referralReasonList),
-        const DeepCollectionEquality().hash(_manualAttendanceReasonList),
-        const DeepCollectionEquality().hash(_houseStructureTypes),
-        const DeepCollectionEquality().hash(_refusalReasons),
-        const DeepCollectionEquality().hash(_firebaseConfig),
-        const DeepCollectionEquality().hash(_transitPostType)
-      ]);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$HCMWrapperModelImplCopyWith<_$HCMWrapperModelImpl> get copyWith =>
-      __$$HCMWrapperModelImplCopyWithImpl<_$HCMWrapperModelImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$HCMWrapperModelImplToJson(
-      this,
-    );
-  }
+ final  List<AppConfig> _appConfig;
+@override@JsonKey(name: 'APP_CONFIG') List<AppConfig> get appConfig {
+  if (_appConfig is EqualUnmodifiableListView) return _appConfig;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_appConfig);
 }
 
-abstract class _HCMWrapperModel implements HCMWrapperModel {
-  const factory _HCMWrapperModel(
-      {@JsonKey(name: 'APP_CONFIG') required final List<AppConfig> appConfig,
-      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-      required final List<BandWidthBatchSize> bandWidthBatchSize,
-      @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
-      required final List<BeneficiaryIdConfig> beneficiaryIdConfig,
-      @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
-      required final List<BandWidthBatchSize> downSyncBandWidthBatchSize,
-      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-      required final List<DeletionReasonOptions> householdDeletionReasonOptions,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-      required final List<DeletionReasonOptions>
-          householdMemberDeletionReasonOptions,
-      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-      final List<BackgroundServiceConfig>? backgroundServiceConfig,
-      @JsonKey(name: 'CHECKLIST_TYPES')
-      required final List<CheckListTypes> checklistTypes,
-      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
-      required final List<DeviceChangeReasons> deviceChangeReasons,
-      @JsonKey(name: 'SINGLE_USER_LOGIN')
-      required final List<SingleUserLogin> singleUserLogin,
-      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-      required final List<IdTypeOptions> idTypeOptions,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
-      required final List<RelationShipTypeOptions> relationShipTypeOptions,
-      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-      required final List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE')
-      required final List<BackendInterface> backendInterface,
-      @JsonKey(name: 'CALL_SUPPORT')
-      required final List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES')
-      required final List<TransportTypes> transportTypes,
-      @JsonKey(name: 'SYMPTOM_TYPES')
-      final List<SymptomsType>? symptomsTypeList,
-      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
-      final List<SearchHouseHoldFilters>? searchHouseHoldFilters,
-      @JsonKey(name: 'SEARCH_CLF_FILTERS')
-      final List<SearchCLFFilters>? searchCLFFilters,
-      @JsonKey(name: 'REFERRAL_REASONS')
-      final List<ReferralReasonType>? referralReasonList,
-      @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
-      final List<ManualAttendanceReasonType>? manualAttendanceReasonList,
-      @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
-      final List<CommonMasterModel>? houseStructureTypes,
-      @JsonKey(name: 'REFUSAL_REASONS')
-      final List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG')
-      required final List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'TRANSIT_POST_TYPE')
-      final List<TransitPostType>? transitPostType}) = _$HCMWrapperModelImpl;
-
-  factory _HCMWrapperModel.fromJson(Map<String, dynamic> json) =
-      _$HCMWrapperModelImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'APP_CONFIG')
-  List<AppConfig> get appConfig;
-  @override
-  @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-  List<BandWidthBatchSize> get bandWidthBatchSize;
-  @override
-  @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
-  List<BeneficiaryIdConfig> get beneficiaryIdConfig;
-  @override
-  @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
-  List<BandWidthBatchSize> get downSyncBandWidthBatchSize;
-  @override
-  @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdDeletionReasonOptions;
-  @override
-  @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdMemberDeletionReasonOptions;
-  @override
-  @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-  List<BackgroundServiceConfig>? get backgroundServiceConfig;
-  @override
-  @JsonKey(name: 'CHECKLIST_TYPES')
-  List<CheckListTypes> get checklistTypes;
-  @override
-  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
-  List<DeviceChangeReasons> get deviceChangeReasons;
-  @override
-  @JsonKey(name: 'SINGLE_USER_LOGIN')
-  List<SingleUserLogin> get singleUserLogin;
-  @override
-  @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-  List<IdTypeOptions> get idTypeOptions;
-  @override
-  @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
-  List<RelationShipTypeOptions> get relationShipTypeOptions;
-  @override
-  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-  List<DeliveryCommentOptions> get deliveryCommentOptions;
-  @override
-  @JsonKey(name: 'BACKEND_INTERFACE')
-  List<BackendInterface> get backendInterface;
-  @override
-  @JsonKey(name: 'CALL_SUPPORT')
-  List<CallSupportList>? get callSupportOptions;
-  @override
-  @JsonKey(name: 'TRANSPORT_TYPES')
-  List<TransportTypes> get transportTypes;
-  @override
-  @JsonKey(name: 'SYMPTOM_TYPES')
-  List<SymptomsType>? get symptomsTypeList;
-  @override
-  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
-  List<SearchHouseHoldFilters>? get searchHouseHoldFilters;
-  @override
-  @JsonKey(name: 'SEARCH_CLF_FILTERS')
-  List<SearchCLFFilters>? get searchCLFFilters;
-  @override
-  @JsonKey(name: 'REFERRAL_REASONS')
-  List<ReferralReasonType>? get referralReasonList;
-  @override
-  @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
-  List<ManualAttendanceReasonType>? get manualAttendanceReasonList;
-  @override
-  @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
-  List<CommonMasterModel>? get houseStructureTypes;
-  @override
-  @JsonKey(name: 'REFUSAL_REASONS')
-  List<CommonMasterModel>? get refusalReasons;
-  @override
-  @JsonKey(name: 'FIREBASE_CONFIG')
-  List<FirebaseConfig>? get firebaseConfig;
-  @override
-  @JsonKey(name: 'TRANSIT_POST_TYPE')
-  List<TransitPostType>? get transitPostType;
-  @override
-  @JsonKey(ignore: true)
-  _$$HCMWrapperModelImplCopyWith<_$HCMWrapperModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+ final  List<BandWidthBatchSize> _bandWidthBatchSize;
+@override@JsonKey(name: 'BANDWIDTH_BATCH_SIZE') List<BandWidthBatchSize> get bandWidthBatchSize {
+  if (_bandWidthBatchSize is EqualUnmodifiableListView) return _bandWidthBatchSize;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_bandWidthBatchSize);
 }
 
-AppConfigSecondaryWrapperModel _$AppConfigSecondaryWrapperModelFromJson(
-    Map<String, dynamic> json) {
-  return _AppConfigSecondaryWrapperModel.fromJson(json);
+ final  List<BeneficiaryIdConfig> _beneficiaryIdConfig;
+@override@JsonKey(name: 'BENEFICIARY_ID_CONFIG') List<BeneficiaryIdConfig> get beneficiaryIdConfig {
+  if (_beneficiaryIdConfig is EqualUnmodifiableListView) return _beneficiaryIdConfig;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_beneficiaryIdConfig);
 }
+
+ final  List<BandWidthBatchSize> _downSyncBandWidthBatchSize;
+@override@JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE') List<BandWidthBatchSize> get downSyncBandWidthBatchSize {
+  if (_downSyncBandWidthBatchSize is EqualUnmodifiableListView) return _downSyncBandWidthBatchSize;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_downSyncBandWidthBatchSize);
+}
+
+ final  List<DeletionReasonOptions> _householdDeletionReasonOptions;
+@override@JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS') List<DeletionReasonOptions> get householdDeletionReasonOptions {
+  if (_householdDeletionReasonOptions is EqualUnmodifiableListView) return _householdDeletionReasonOptions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_householdDeletionReasonOptions);
+}
+
+ final  List<DeletionReasonOptions> _householdMemberDeletionReasonOptions;
+@override@JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS') List<DeletionReasonOptions> get householdMemberDeletionReasonOptions {
+  if (_householdMemberDeletionReasonOptions is EqualUnmodifiableListView) return _householdMemberDeletionReasonOptions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_householdMemberDeletionReasonOptions);
+}
+
+ final  List<BackgroundServiceConfig>? _backgroundServiceConfig;
+@override@JsonKey(name: 'BACKGROUND_SERVICE_CONFIG') List<BackgroundServiceConfig>? get backgroundServiceConfig {
+  final value = _backgroundServiceConfig;
+  if (value == null) return null;
+  if (_backgroundServiceConfig is EqualUnmodifiableListView) return _backgroundServiceConfig;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<CheckListTypes> _checklistTypes;
+@override@JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> get checklistTypes {
+  if (_checklistTypes is EqualUnmodifiableListView) return _checklistTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_checklistTypes);
+}
+
+ final  List<DeviceChangeReasons> _deviceChangeReasons;
+@override@JsonKey(name: 'DEVICE_CHANGE_REASONS') List<DeviceChangeReasons> get deviceChangeReasons {
+  if (_deviceChangeReasons is EqualUnmodifiableListView) return _deviceChangeReasons;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_deviceChangeReasons);
+}
+
+ final  List<SingleUserLogin> _singleUserLogin;
+@override@JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> get singleUserLogin {
+  if (_singleUserLogin is EqualUnmodifiableListView) return _singleUserLogin;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_singleUserLogin);
+}
+
+ final  List<IdTypeOptions> _idTypeOptions;
+@override@JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR') List<IdTypeOptions> get idTypeOptions {
+  if (_idTypeOptions is EqualUnmodifiableListView) return _idTypeOptions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_idTypeOptions);
+}
+
+ final  List<RelationShipTypeOptions> _relationShipTypeOptions;
+@override@JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES') List<RelationShipTypeOptions> get relationShipTypeOptions {
+  if (_relationShipTypeOptions is EqualUnmodifiableListView) return _relationShipTypeOptions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_relationShipTypeOptions);
+}
+
+ final  List<DeliveryCommentOptions> _deliveryCommentOptions;
+@override@JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR') List<DeliveryCommentOptions> get deliveryCommentOptions {
+  if (_deliveryCommentOptions is EqualUnmodifiableListView) return _deliveryCommentOptions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_deliveryCommentOptions);
+}
+
+ final  List<BackendInterface> _backendInterface;
+@override@JsonKey(name: 'BACKEND_INTERFACE') List<BackendInterface> get backendInterface {
+  if (_backendInterface is EqualUnmodifiableListView) return _backendInterface;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_backendInterface);
+}
+
+ final  List<CallSupportList>? _callSupportOptions;
+@override@JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? get callSupportOptions {
+  final value = _callSupportOptions;
+  if (value == null) return null;
+  if (_callSupportOptions is EqualUnmodifiableListView) return _callSupportOptions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<TransportTypes> _transportTypes;
+@override@JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> get transportTypes {
+  if (_transportTypes is EqualUnmodifiableListView) return _transportTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_transportTypes);
+}
+
+ final  List<SymptomsType>? _symptomsTypeList;
+@override@JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? get symptomsTypeList {
+  final value = _symptomsTypeList;
+  if (value == null) return null;
+  if (_symptomsTypeList is EqualUnmodifiableListView) return _symptomsTypeList;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<SearchHouseHoldFilters>? _searchHouseHoldFilters;
+@override@JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS') List<SearchHouseHoldFilters>? get searchHouseHoldFilters {
+  final value = _searchHouseHoldFilters;
+  if (value == null) return null;
+  if (_searchHouseHoldFilters is EqualUnmodifiableListView) return _searchHouseHoldFilters;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<SearchCLFFilters>? _searchCLFFilters;
+@override@JsonKey(name: 'SEARCH_CLF_FILTERS') List<SearchCLFFilters>? get searchCLFFilters {
+  final value = _searchCLFFilters;
+  if (value == null) return null;
+  if (_searchCLFFilters is EqualUnmodifiableListView) return _searchCLFFilters;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<ReferralReasonType>? _referralReasonList;
+@override@JsonKey(name: 'REFERRAL_REASONS') List<ReferralReasonType>? get referralReasonList {
+  final value = _referralReasonList;
+  if (value == null) return null;
+  if (_referralReasonList is EqualUnmodifiableListView) return _referralReasonList;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<ManualAttendanceReasonType>? _manualAttendanceReasonList;
+@override@JsonKey(name: 'MANUAL_ATTENDANCE_REASONS') List<ManualAttendanceReasonType>? get manualAttendanceReasonList {
+  final value = _manualAttendanceReasonList;
+  if (value == null) return null;
+  if (_manualAttendanceReasonList is EqualUnmodifiableListView) return _manualAttendanceReasonList;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<CommonMasterModel>? _houseStructureTypes;
+@override@JsonKey(name: 'HOUSE_STRUCTURE_TYPES') List<CommonMasterModel>? get houseStructureTypes {
+  final value = _houseStructureTypes;
+  if (value == null) return null;
+  if (_houseStructureTypes is EqualUnmodifiableListView) return _houseStructureTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<CommonMasterModel>? _refusalReasons;
+@override@JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? get refusalReasons {
+  final value = _refusalReasons;
+  if (value == null) return null;
+  if (_refusalReasons is EqualUnmodifiableListView) return _refusalReasons;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<FirebaseConfig>? _firebaseConfig;
+@override@JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? get firebaseConfig {
+  final value = _firebaseConfig;
+  if (value == null) return null;
+  if (_firebaseConfig is EqualUnmodifiableListView) return _firebaseConfig;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<TransitPostType>? _transitPostType;
+@override@JsonKey(name: 'TRANSIT_POST_TYPE') List<TransitPostType>? get transitPostType {
+  final value = _transitPostType;
+  if (value == null) return null;
+  if (_transitPostType is EqualUnmodifiableListView) return _transitPostType;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+
+/// Create a copy of HCMWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$HCMWrapperModelCopyWith<_HCMWrapperModel> get copyWith => __$HCMWrapperModelCopyWithImpl<_HCMWrapperModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$HCMWrapperModelToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HCMWrapperModel&&const DeepCollectionEquality().equals(other._appConfig, _appConfig)&&const DeepCollectionEquality().equals(other._bandWidthBatchSize, _bandWidthBatchSize)&&const DeepCollectionEquality().equals(other._beneficiaryIdConfig, _beneficiaryIdConfig)&&const DeepCollectionEquality().equals(other._downSyncBandWidthBatchSize, _downSyncBandWidthBatchSize)&&const DeepCollectionEquality().equals(other._householdDeletionReasonOptions, _householdDeletionReasonOptions)&&const DeepCollectionEquality().equals(other._householdMemberDeletionReasonOptions, _householdMemberDeletionReasonOptions)&&const DeepCollectionEquality().equals(other._backgroundServiceConfig, _backgroundServiceConfig)&&const DeepCollectionEquality().equals(other._checklistTypes, _checklistTypes)&&const DeepCollectionEquality().equals(other._deviceChangeReasons, _deviceChangeReasons)&&const DeepCollectionEquality().equals(other._singleUserLogin, _singleUserLogin)&&const DeepCollectionEquality().equals(other._idTypeOptions, _idTypeOptions)&&const DeepCollectionEquality().equals(other._relationShipTypeOptions, _relationShipTypeOptions)&&const DeepCollectionEquality().equals(other._deliveryCommentOptions, _deliveryCommentOptions)&&const DeepCollectionEquality().equals(other._backendInterface, _backendInterface)&&const DeepCollectionEquality().equals(other._callSupportOptions, _callSupportOptions)&&const DeepCollectionEquality().equals(other._transportTypes, _transportTypes)&&const DeepCollectionEquality().equals(other._symptomsTypeList, _symptomsTypeList)&&const DeepCollectionEquality().equals(other._searchHouseHoldFilters, _searchHouseHoldFilters)&&const DeepCollectionEquality().equals(other._searchCLFFilters, _searchCLFFilters)&&const DeepCollectionEquality().equals(other._referralReasonList, _referralReasonList)&&const DeepCollectionEquality().equals(other._manualAttendanceReasonList, _manualAttendanceReasonList)&&const DeepCollectionEquality().equals(other._houseStructureTypes, _houseStructureTypes)&&const DeepCollectionEquality().equals(other._refusalReasons, _refusalReasons)&&const DeepCollectionEquality().equals(other._firebaseConfig, _firebaseConfig)&&const DeepCollectionEquality().equals(other._transitPostType, _transitPostType));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_appConfig),const DeepCollectionEquality().hash(_bandWidthBatchSize),const DeepCollectionEquality().hash(_beneficiaryIdConfig),const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),const DeepCollectionEquality().hash(_householdDeletionReasonOptions),const DeepCollectionEquality().hash(_householdMemberDeletionReasonOptions),const DeepCollectionEquality().hash(_backgroundServiceConfig),const DeepCollectionEquality().hash(_checklistTypes),const DeepCollectionEquality().hash(_deviceChangeReasons),const DeepCollectionEquality().hash(_singleUserLogin),const DeepCollectionEquality().hash(_idTypeOptions),const DeepCollectionEquality().hash(_relationShipTypeOptions),const DeepCollectionEquality().hash(_deliveryCommentOptions),const DeepCollectionEquality().hash(_backendInterface),const DeepCollectionEquality().hash(_callSupportOptions),const DeepCollectionEquality().hash(_transportTypes),const DeepCollectionEquality().hash(_symptomsTypeList),const DeepCollectionEquality().hash(_searchHouseHoldFilters),const DeepCollectionEquality().hash(_searchCLFFilters),const DeepCollectionEquality().hash(_referralReasonList),const DeepCollectionEquality().hash(_manualAttendanceReasonList),const DeepCollectionEquality().hash(_houseStructureTypes),const DeepCollectionEquality().hash(_refusalReasons),const DeepCollectionEquality().hash(_firebaseConfig),const DeepCollectionEquality().hash(_transitPostType)]);
+
+@override
+String toString() {
+  return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, beneficiaryIdConfig: $beneficiaryIdConfig, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, deviceChangeReasons: $deviceChangeReasons, singleUserLogin: $singleUserLogin, idTypeOptions: $idTypeOptions, relationShipTypeOptions: $relationShipTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, manualAttendanceReasonList: $manualAttendanceReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, transitPostType: $transitPostType)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$HCMWrapperModelCopyWith<$Res> implements $HCMWrapperModelCopyWith<$Res> {
+  factory _$HCMWrapperModelCopyWith(_HCMWrapperModel value, $Res Function(_HCMWrapperModel) _then) = __$HCMWrapperModelCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'APP_CONFIG') List<AppConfig> appConfig,@JsonKey(name: 'BANDWIDTH_BATCH_SIZE') List<BandWidthBatchSize> bandWidthBatchSize,@JsonKey(name: 'BENEFICIARY_ID_CONFIG') List<BeneficiaryIdConfig> beneficiaryIdConfig,@JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE') List<BandWidthBatchSize> downSyncBandWidthBatchSize,@JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS') List<DeletionReasonOptions> householdDeletionReasonOptions,@JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS') List<DeletionReasonOptions> householdMemberDeletionReasonOptions,@JsonKey(name: 'BACKGROUND_SERVICE_CONFIG') List<BackgroundServiceConfig>? backgroundServiceConfig,@JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,@JsonKey(name: 'DEVICE_CHANGE_REASONS') List<DeviceChangeReasons> deviceChangeReasons,@JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> singleUserLogin,@JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR') List<IdTypeOptions> idTypeOptions,@JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES') List<RelationShipTypeOptions> relationShipTypeOptions,@JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR') List<DeliveryCommentOptions> deliveryCommentOptions,@JsonKey(name: 'BACKEND_INTERFACE') List<BackendInterface> backendInterface,@JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,@JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,@JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,@JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS') List<SearchHouseHoldFilters>? searchHouseHoldFilters,@JsonKey(name: 'SEARCH_CLF_FILTERS') List<SearchCLFFilters>? searchCLFFilters,@JsonKey(name: 'REFERRAL_REASONS') List<ReferralReasonType>? referralReasonList,@JsonKey(name: 'MANUAL_ATTENDANCE_REASONS') List<ManualAttendanceReasonType>? manualAttendanceReasonList,@JsonKey(name: 'HOUSE_STRUCTURE_TYPES') List<CommonMasterModel>? houseStructureTypes,@JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,@JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,@JsonKey(name: 'TRANSIT_POST_TYPE') List<TransitPostType>? transitPostType
+});
+
+
+
+
+}
+/// @nodoc
+class __$HCMWrapperModelCopyWithImpl<$Res>
+    implements _$HCMWrapperModelCopyWith<$Res> {
+  __$HCMWrapperModelCopyWithImpl(this._self, this._then);
+
+  final _HCMWrapperModel _self;
+  final $Res Function(_HCMWrapperModel) _then;
+
+/// Create a copy of HCMWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? appConfig = null,Object? bandWidthBatchSize = null,Object? beneficiaryIdConfig = null,Object? downSyncBandWidthBatchSize = null,Object? householdDeletionReasonOptions = null,Object? householdMemberDeletionReasonOptions = null,Object? backgroundServiceConfig = freezed,Object? checklistTypes = null,Object? deviceChangeReasons = null,Object? singleUserLogin = null,Object? idTypeOptions = null,Object? relationShipTypeOptions = null,Object? deliveryCommentOptions = null,Object? backendInterface = null,Object? callSupportOptions = freezed,Object? transportTypes = null,Object? symptomsTypeList = freezed,Object? searchHouseHoldFilters = freezed,Object? searchCLFFilters = freezed,Object? referralReasonList = freezed,Object? manualAttendanceReasonList = freezed,Object? houseStructureTypes = freezed,Object? refusalReasons = freezed,Object? firebaseConfig = freezed,Object? transitPostType = freezed,}) {
+  return _then(_HCMWrapperModel(
+appConfig: null == appConfig ? _self._appConfig : appConfig // ignore: cast_nullable_to_non_nullable
+as List<AppConfig>,bandWidthBatchSize: null == bandWidthBatchSize ? _self._bandWidthBatchSize : bandWidthBatchSize // ignore: cast_nullable_to_non_nullable
+as List<BandWidthBatchSize>,beneficiaryIdConfig: null == beneficiaryIdConfig ? _self._beneficiaryIdConfig : beneficiaryIdConfig // ignore: cast_nullable_to_non_nullable
+as List<BeneficiaryIdConfig>,downSyncBandWidthBatchSize: null == downSyncBandWidthBatchSize ? _self._downSyncBandWidthBatchSize : downSyncBandWidthBatchSize // ignore: cast_nullable_to_non_nullable
+as List<BandWidthBatchSize>,householdDeletionReasonOptions: null == householdDeletionReasonOptions ? _self._householdDeletionReasonOptions : householdDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
+as List<DeletionReasonOptions>,householdMemberDeletionReasonOptions: null == householdMemberDeletionReasonOptions ? _self._householdMemberDeletionReasonOptions : householdMemberDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
+as List<DeletionReasonOptions>,backgroundServiceConfig: freezed == backgroundServiceConfig ? _self._backgroundServiceConfig : backgroundServiceConfig // ignore: cast_nullable_to_non_nullable
+as List<BackgroundServiceConfig>?,checklistTypes: null == checklistTypes ? _self._checklistTypes : checklistTypes // ignore: cast_nullable_to_non_nullable
+as List<CheckListTypes>,deviceChangeReasons: null == deviceChangeReasons ? _self._deviceChangeReasons : deviceChangeReasons // ignore: cast_nullable_to_non_nullable
+as List<DeviceChangeReasons>,singleUserLogin: null == singleUserLogin ? _self._singleUserLogin : singleUserLogin // ignore: cast_nullable_to_non_nullable
+as List<SingleUserLogin>,idTypeOptions: null == idTypeOptions ? _self._idTypeOptions : idTypeOptions // ignore: cast_nullable_to_non_nullable
+as List<IdTypeOptions>,relationShipTypeOptions: null == relationShipTypeOptions ? _self._relationShipTypeOptions : relationShipTypeOptions // ignore: cast_nullable_to_non_nullable
+as List<RelationShipTypeOptions>,deliveryCommentOptions: null == deliveryCommentOptions ? _self._deliveryCommentOptions : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
+as List<DeliveryCommentOptions>,backendInterface: null == backendInterface ? _self._backendInterface : backendInterface // ignore: cast_nullable_to_non_nullable
+as List<BackendInterface>,callSupportOptions: freezed == callSupportOptions ? _self._callSupportOptions : callSupportOptions // ignore: cast_nullable_to_non_nullable
+as List<CallSupportList>?,transportTypes: null == transportTypes ? _self._transportTypes : transportTypes // ignore: cast_nullable_to_non_nullable
+as List<TransportTypes>,symptomsTypeList: freezed == symptomsTypeList ? _self._symptomsTypeList : symptomsTypeList // ignore: cast_nullable_to_non_nullable
+as List<SymptomsType>?,searchHouseHoldFilters: freezed == searchHouseHoldFilters ? _self._searchHouseHoldFilters : searchHouseHoldFilters // ignore: cast_nullable_to_non_nullable
+as List<SearchHouseHoldFilters>?,searchCLFFilters: freezed == searchCLFFilters ? _self._searchCLFFilters : searchCLFFilters // ignore: cast_nullable_to_non_nullable
+as List<SearchCLFFilters>?,referralReasonList: freezed == referralReasonList ? _self._referralReasonList : referralReasonList // ignore: cast_nullable_to_non_nullable
+as List<ReferralReasonType>?,manualAttendanceReasonList: freezed == manualAttendanceReasonList ? _self._manualAttendanceReasonList : manualAttendanceReasonList // ignore: cast_nullable_to_non_nullable
+as List<ManualAttendanceReasonType>?,houseStructureTypes: freezed == houseStructureTypes ? _self._houseStructureTypes : houseStructureTypes // ignore: cast_nullable_to_non_nullable
+as List<CommonMasterModel>?,refusalReasons: freezed == refusalReasons ? _self._refusalReasons : refusalReasons // ignore: cast_nullable_to_non_nullable
+as List<CommonMasterModel>?,firebaseConfig: freezed == firebaseConfig ? _self._firebaseConfig : firebaseConfig // ignore: cast_nullable_to_non_nullable
+as List<FirebaseConfig>?,transitPostType: freezed == transitPostType ? _self._transitPostType : transitPostType // ignore: cast_nullable_to_non_nullable
+as List<TransitPostType>?,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$AppConfigSecondaryWrapperModel {
-  @JsonKey(name: 'appConfig')
-  List<AppConfig>? get appConfiglist => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $AppConfigSecondaryWrapperModelCopyWith<AppConfigSecondaryWrapperModel>
-      get copyWith => throw _privateConstructorUsedError;
+@JsonKey(name: 'appConfig') List<AppConfig>? get appConfiglist;
+/// Create a copy of AppConfigSecondaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AppConfigSecondaryWrapperModelCopyWith<AppConfigSecondaryWrapperModel> get copyWith => _$AppConfigSecondaryWrapperModelCopyWithImpl<AppConfigSecondaryWrapperModel>(this as AppConfigSecondaryWrapperModel, _$identity);
+
+  /// Serializes this AppConfigSecondaryWrapperModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppConfigSecondaryWrapperModel&&const DeepCollectionEquality().equals(other.appConfiglist, appConfiglist));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(appConfiglist));
+
+@override
+String toString() {
+  return 'AppConfigSecondaryWrapperModel(appConfiglist: $appConfiglist)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AppConfigSecondaryWrapperModelCopyWith<$Res> {
-  factory $AppConfigSecondaryWrapperModelCopyWith(
-          AppConfigSecondaryWrapperModel value,
-          $Res Function(AppConfigSecondaryWrapperModel) then) =
-      _$AppConfigSecondaryWrapperModelCopyWithImpl<$Res,
-          AppConfigSecondaryWrapperModel>;
-  @useResult
-  $Res call({@JsonKey(name: 'appConfig') List<AppConfig>? appConfiglist});
-}
+abstract mixin class $AppConfigSecondaryWrapperModelCopyWith<$Res>  {
+  factory $AppConfigSecondaryWrapperModelCopyWith(AppConfigSecondaryWrapperModel value, $Res Function(AppConfigSecondaryWrapperModel) _then) = _$AppConfigSecondaryWrapperModelCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'appConfig') List<AppConfig>? appConfiglist
+});
 
+
+
+
+}
 /// @nodoc
-class _$AppConfigSecondaryWrapperModelCopyWithImpl<$Res,
-        $Val extends AppConfigSecondaryWrapperModel>
+class _$AppConfigSecondaryWrapperModelCopyWithImpl<$Res>
     implements $AppConfigSecondaryWrapperModelCopyWith<$Res> {
-  _$AppConfigSecondaryWrapperModelCopyWithImpl(this._value, this._then);
+  _$AppConfigSecondaryWrapperModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final AppConfigSecondaryWrapperModel _self;
+  final $Res Function(AppConfigSecondaryWrapperModel) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? appConfiglist = freezed,
-  }) {
-    return _then(_value.copyWith(
-      appConfiglist: freezed == appConfiglist
-          ? _value.appConfiglist
-          : appConfiglist // ignore: cast_nullable_to_non_nullable
-              as List<AppConfig>?,
-    ) as $Val);
-  }
+/// Create a copy of AppConfigSecondaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? appConfiglist = freezed,}) {
+  return _then(_self.copyWith(
+appConfiglist: freezed == appConfiglist ? _self.appConfiglist : appConfiglist // ignore: cast_nullable_to_non_nullable
+as List<AppConfig>?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$AppConfigSecondaryWrapperModelImplCopyWith<$Res>
-    implements $AppConfigSecondaryWrapperModelCopyWith<$Res> {
-  factory _$$AppConfigSecondaryWrapperModelImplCopyWith(
-          _$AppConfigSecondaryWrapperModelImpl value,
-          $Res Function(_$AppConfigSecondaryWrapperModelImpl) then) =
-      __$$AppConfigSecondaryWrapperModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({@JsonKey(name: 'appConfig') List<AppConfig>? appConfiglist});
 }
 
-/// @nodoc
-class __$$AppConfigSecondaryWrapperModelImplCopyWithImpl<$Res>
-    extends _$AppConfigSecondaryWrapperModelCopyWithImpl<$Res,
-        _$AppConfigSecondaryWrapperModelImpl>
-    implements _$$AppConfigSecondaryWrapperModelImplCopyWith<$Res> {
-  __$$AppConfigSecondaryWrapperModelImplCopyWithImpl(
-      _$AppConfigSecondaryWrapperModelImpl _value,
-      $Res Function(_$AppConfigSecondaryWrapperModelImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? appConfiglist = freezed,
-  }) {
-    return _then(_$AppConfigSecondaryWrapperModelImpl(
-      appConfiglist: freezed == appConfiglist
-          ? _value._appConfiglist
-          : appConfiglist // ignore: cast_nullable_to_non_nullable
-              as List<AppConfig>?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [AppConfigSecondaryWrapperModel].
+extension AppConfigSecondaryWrapperModelPatterns on AppConfigSecondaryWrapperModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AppConfigSecondaryWrapperModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AppConfigSecondaryWrapperModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AppConfigSecondaryWrapperModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _AppConfigSecondaryWrapperModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AppConfigSecondaryWrapperModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AppConfigSecondaryWrapperModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'appConfig')  List<AppConfig>? appConfiglist)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AppConfigSecondaryWrapperModel() when $default != null:
+return $default(_that.appConfiglist);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'appConfig')  List<AppConfig>? appConfiglist)  $default,) {final _that = this;
+switch (_that) {
+case _AppConfigSecondaryWrapperModel():
+return $default(_that.appConfiglist);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'appConfig')  List<AppConfig>? appConfiglist)?  $default,) {final _that = this;
+switch (_that) {
+case _AppConfigSecondaryWrapperModel() when $default != null:
+return $default(_that.appConfiglist);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$AppConfigSecondaryWrapperModelImpl
-    implements _AppConfigSecondaryWrapperModel {
-  const _$AppConfigSecondaryWrapperModelImpl(
-      {@JsonKey(name: 'appConfig') final List<AppConfig>? appConfiglist})
-      : _appConfiglist = appConfiglist;
 
-  factory _$AppConfigSecondaryWrapperModelImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$AppConfigSecondaryWrapperModelImplFromJson(json);
+class _AppConfigSecondaryWrapperModel implements AppConfigSecondaryWrapperModel {
+  const _AppConfigSecondaryWrapperModel({@JsonKey(name: 'appConfig') final  List<AppConfig>? appConfiglist}): _appConfiglist = appConfiglist;
+  factory _AppConfigSecondaryWrapperModel.fromJson(Map<String, dynamic> json) => _$AppConfigSecondaryWrapperModelFromJson(json);
 
-  final List<AppConfig>? _appConfiglist;
-  @override
-  @JsonKey(name: 'appConfig')
-  List<AppConfig>? get appConfiglist {
-    final value = _appConfiglist;
-    if (value == null) return null;
-    if (_appConfiglist is EqualUnmodifiableListView) return _appConfiglist;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  String toString() {
-    return 'AppConfigSecondaryWrapperModel(appConfiglist: $appConfiglist)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AppConfigSecondaryWrapperModelImpl &&
-            const DeepCollectionEquality()
-                .equals(other._appConfiglist, _appConfiglist));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_appConfiglist));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AppConfigSecondaryWrapperModelImplCopyWith<
-          _$AppConfigSecondaryWrapperModelImpl>
-      get copyWith => __$$AppConfigSecondaryWrapperModelImplCopyWithImpl<
-          _$AppConfigSecondaryWrapperModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AppConfigSecondaryWrapperModelImplToJson(
-      this,
-    );
-  }
+ final  List<AppConfig>? _appConfiglist;
+@override@JsonKey(name: 'appConfig') List<AppConfig>? get appConfiglist {
+  final value = _appConfiglist;
+  if (value == null) return null;
+  if (_appConfiglist is EqualUnmodifiableListView) return _appConfiglist;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
 }
 
-abstract class _AppConfigSecondaryWrapperModel
-    implements AppConfigSecondaryWrapperModel {
-  const factory _AppConfigSecondaryWrapperModel(
-          {@JsonKey(name: 'appConfig') final List<AppConfig>? appConfiglist}) =
-      _$AppConfigSecondaryWrapperModelImpl;
 
-  factory _AppConfigSecondaryWrapperModel.fromJson(Map<String, dynamic> json) =
-      _$AppConfigSecondaryWrapperModelImpl.fromJson;
+/// Create a copy of AppConfigSecondaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AppConfigSecondaryWrapperModelCopyWith<_AppConfigSecondaryWrapperModel> get copyWith => __$AppConfigSecondaryWrapperModelCopyWithImpl<_AppConfigSecondaryWrapperModel>(this, _$identity);
 
-  @override
-  @JsonKey(name: 'appConfig')
-  List<AppConfig>? get appConfiglist;
-  @override
-  @JsonKey(ignore: true)
-  _$$AppConfigSecondaryWrapperModelImplCopyWith<
-          _$AppConfigSecondaryWrapperModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$AppConfigSecondaryWrapperModelToJson(this, );
 }
 
-CommonMastersWrapperModel _$CommonMastersWrapperModelFromJson(
-    Map<String, dynamic> json) {
-  return _CommonMastersWrapperModel.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppConfigSecondaryWrapperModel&&const DeepCollectionEquality().equals(other._appConfiglist, _appConfiglist));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_appConfiglist));
+
+@override
+String toString() {
+  return 'AppConfigSecondaryWrapperModel(appConfiglist: $appConfiglist)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AppConfigSecondaryWrapperModelCopyWith<$Res> implements $AppConfigSecondaryWrapperModelCopyWith<$Res> {
+  factory _$AppConfigSecondaryWrapperModelCopyWith(_AppConfigSecondaryWrapperModel value, $Res Function(_AppConfigSecondaryWrapperModel) _then) = __$AppConfigSecondaryWrapperModelCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'appConfig') List<AppConfig>? appConfiglist
+});
+
+
+
+
+}
+/// @nodoc
+class __$AppConfigSecondaryWrapperModelCopyWithImpl<$Res>
+    implements _$AppConfigSecondaryWrapperModelCopyWith<$Res> {
+  __$AppConfigSecondaryWrapperModelCopyWithImpl(this._self, this._then);
+
+  final _AppConfigSecondaryWrapperModel _self;
+  final $Res Function(_AppConfigSecondaryWrapperModel) _then;
+
+/// Create a copy of AppConfigSecondaryWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? appConfiglist = freezed,}) {
+  return _then(_AppConfigSecondaryWrapperModel(
+appConfiglist: freezed == appConfiglist ? _self._appConfiglist : appConfiglist // ignore: cast_nullable_to_non_nullable
+as List<AppConfig>?,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$CommonMastersWrapperModel {
-  @JsonKey(name: 'GenderType')
-  List<CommonMasterModel> get genderType => throw _privateConstructorUsedError;
-  @JsonKey(name: 'StateInfo')
-  List<StateInfoModel> get stateInfo => throw _privateConstructorUsedError;
-  @JsonKey(name: 'PrivacyPolicy')
-  List<PrivacyPolicyModel>? get privacyPolicyConfig =>
-      throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $CommonMastersWrapperModelCopyWith<CommonMastersWrapperModel> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'GenderType') List<CommonMasterModel> get genderType;@JsonKey(name: 'StateInfo') List<StateInfoModel> get stateInfo;@JsonKey(name: 'PrivacyPolicy') List<PrivacyPolicyModel>? get privacyPolicyConfig;
+/// Create a copy of CommonMastersWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CommonMastersWrapperModelCopyWith<CommonMastersWrapperModel> get copyWith => _$CommonMastersWrapperModelCopyWithImpl<CommonMastersWrapperModel>(this as CommonMastersWrapperModel, _$identity);
+
+  /// Serializes this CommonMastersWrapperModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommonMastersWrapperModel&&const DeepCollectionEquality().equals(other.genderType, genderType)&&const DeepCollectionEquality().equals(other.stateInfo, stateInfo)&&const DeepCollectionEquality().equals(other.privacyPolicyConfig, privacyPolicyConfig));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(genderType),const DeepCollectionEquality().hash(stateInfo),const DeepCollectionEquality().hash(privacyPolicyConfig));
+
+@override
+String toString() {
+  return 'CommonMastersWrapperModel(genderType: $genderType, stateInfo: $stateInfo, privacyPolicyConfig: $privacyPolicyConfig)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $CommonMastersWrapperModelCopyWith<$Res> {
-  factory $CommonMastersWrapperModelCopyWith(CommonMastersWrapperModel value,
-          $Res Function(CommonMastersWrapperModel) then) =
-      _$CommonMastersWrapperModelCopyWithImpl<$Res, CommonMastersWrapperModel>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,
-      @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo,
-      @JsonKey(name: 'PrivacyPolicy')
-      List<PrivacyPolicyModel>? privacyPolicyConfig});
-}
+abstract mixin class $CommonMastersWrapperModelCopyWith<$Res>  {
+  factory $CommonMastersWrapperModelCopyWith(CommonMastersWrapperModel value, $Res Function(CommonMastersWrapperModel) _then) = _$CommonMastersWrapperModelCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,@JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo,@JsonKey(name: 'PrivacyPolicy') List<PrivacyPolicyModel>? privacyPolicyConfig
+});
 
+
+
+
+}
 /// @nodoc
-class _$CommonMastersWrapperModelCopyWithImpl<$Res,
-        $Val extends CommonMastersWrapperModel>
+class _$CommonMastersWrapperModelCopyWithImpl<$Res>
     implements $CommonMastersWrapperModelCopyWith<$Res> {
-  _$CommonMastersWrapperModelCopyWithImpl(this._value, this._then);
+  _$CommonMastersWrapperModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final CommonMastersWrapperModel _self;
+  final $Res Function(CommonMastersWrapperModel) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? genderType = null,
-    Object? stateInfo = null,
-    Object? privacyPolicyConfig = freezed,
-  }) {
-    return _then(_value.copyWith(
-      genderType: null == genderType
-          ? _value.genderType
-          : genderType // ignore: cast_nullable_to_non_nullable
-              as List<CommonMasterModel>,
-      stateInfo: null == stateInfo
-          ? _value.stateInfo
-          : stateInfo // ignore: cast_nullable_to_non_nullable
-              as List<StateInfoModel>,
-      privacyPolicyConfig: freezed == privacyPolicyConfig
-          ? _value.privacyPolicyConfig
-          : privacyPolicyConfig // ignore: cast_nullable_to_non_nullable
-              as List<PrivacyPolicyModel>?,
-    ) as $Val);
-  }
+/// Create a copy of CommonMastersWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? genderType = null,Object? stateInfo = null,Object? privacyPolicyConfig = freezed,}) {
+  return _then(_self.copyWith(
+genderType: null == genderType ? _self.genderType : genderType // ignore: cast_nullable_to_non_nullable
+as List<CommonMasterModel>,stateInfo: null == stateInfo ? _self.stateInfo : stateInfo // ignore: cast_nullable_to_non_nullable
+as List<StateInfoModel>,privacyPolicyConfig: freezed == privacyPolicyConfig ? _self.privacyPolicyConfig : privacyPolicyConfig // ignore: cast_nullable_to_non_nullable
+as List<PrivacyPolicyModel>?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$CommonMastersWrapperModelImplCopyWith<$Res>
-    implements $CommonMastersWrapperModelCopyWith<$Res> {
-  factory _$$CommonMastersWrapperModelImplCopyWith(
-          _$CommonMastersWrapperModelImpl value,
-          $Res Function(_$CommonMastersWrapperModelImpl) then) =
-      __$$CommonMastersWrapperModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,
-      @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo,
-      @JsonKey(name: 'PrivacyPolicy')
-      List<PrivacyPolicyModel>? privacyPolicyConfig});
 }
 
-/// @nodoc
-class __$$CommonMastersWrapperModelImplCopyWithImpl<$Res>
-    extends _$CommonMastersWrapperModelCopyWithImpl<$Res,
-        _$CommonMastersWrapperModelImpl>
-    implements _$$CommonMastersWrapperModelImplCopyWith<$Res> {
-  __$$CommonMastersWrapperModelImplCopyWithImpl(
-      _$CommonMastersWrapperModelImpl _value,
-      $Res Function(_$CommonMastersWrapperModelImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? genderType = null,
-    Object? stateInfo = null,
-    Object? privacyPolicyConfig = freezed,
-  }) {
-    return _then(_$CommonMastersWrapperModelImpl(
-      genderType: null == genderType
-          ? _value._genderType
-          : genderType // ignore: cast_nullable_to_non_nullable
-              as List<CommonMasterModel>,
-      stateInfo: null == stateInfo
-          ? _value._stateInfo
-          : stateInfo // ignore: cast_nullable_to_non_nullable
-              as List<StateInfoModel>,
-      privacyPolicyConfig: freezed == privacyPolicyConfig
-          ? _value._privacyPolicyConfig
-          : privacyPolicyConfig // ignore: cast_nullable_to_non_nullable
-              as List<PrivacyPolicyModel>?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [CommonMastersWrapperModel].
+extension CommonMastersWrapperModelPatterns on CommonMastersWrapperModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CommonMastersWrapperModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CommonMastersWrapperModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CommonMastersWrapperModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _CommonMastersWrapperModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CommonMastersWrapperModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CommonMastersWrapperModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'GenderType')  List<CommonMasterModel> genderType, @JsonKey(name: 'StateInfo')  List<StateInfoModel> stateInfo, @JsonKey(name: 'PrivacyPolicy')  List<PrivacyPolicyModel>? privacyPolicyConfig)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CommonMastersWrapperModel() when $default != null:
+return $default(_that.genderType,_that.stateInfo,_that.privacyPolicyConfig);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'GenderType')  List<CommonMasterModel> genderType, @JsonKey(name: 'StateInfo')  List<StateInfoModel> stateInfo, @JsonKey(name: 'PrivacyPolicy')  List<PrivacyPolicyModel>? privacyPolicyConfig)  $default,) {final _that = this;
+switch (_that) {
+case _CommonMastersWrapperModel():
+return $default(_that.genderType,_that.stateInfo,_that.privacyPolicyConfig);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'GenderType')  List<CommonMasterModel> genderType, @JsonKey(name: 'StateInfo')  List<StateInfoModel> stateInfo, @JsonKey(name: 'PrivacyPolicy')  List<PrivacyPolicyModel>? privacyPolicyConfig)?  $default,) {final _that = this;
+switch (_that) {
+case _CommonMastersWrapperModel() when $default != null:
+return $default(_that.genderType,_that.stateInfo,_that.privacyPolicyConfig);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
-  const _$CommonMastersWrapperModelImpl(
-      {@JsonKey(name: 'GenderType')
-      required final List<CommonMasterModel> genderType,
-      @JsonKey(name: 'StateInfo') required final List<StateInfoModel> stateInfo,
-      @JsonKey(name: 'PrivacyPolicy')
-      final List<PrivacyPolicyModel>? privacyPolicyConfig})
-      : _genderType = genderType,
-        _stateInfo = stateInfo,
-        _privacyPolicyConfig = privacyPolicyConfig;
 
-  factory _$CommonMastersWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CommonMastersWrapperModelImplFromJson(json);
+class _CommonMastersWrapperModel implements CommonMastersWrapperModel {
+  const _CommonMastersWrapperModel({@JsonKey(name: 'GenderType') required final  List<CommonMasterModel> genderType, @JsonKey(name: 'StateInfo') required final  List<StateInfoModel> stateInfo, @JsonKey(name: 'PrivacyPolicy') final  List<PrivacyPolicyModel>? privacyPolicyConfig}): _genderType = genderType,_stateInfo = stateInfo,_privacyPolicyConfig = privacyPolicyConfig;
+  factory _CommonMastersWrapperModel.fromJson(Map<String, dynamic> json) => _$CommonMastersWrapperModelFromJson(json);
 
-  final List<CommonMasterModel> _genderType;
-  @override
-  @JsonKey(name: 'GenderType')
-  List<CommonMasterModel> get genderType {
-    if (_genderType is EqualUnmodifiableListView) return _genderType;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_genderType);
-  }
-
-  final List<StateInfoModel> _stateInfo;
-  @override
-  @JsonKey(name: 'StateInfo')
-  List<StateInfoModel> get stateInfo {
-    if (_stateInfo is EqualUnmodifiableListView) return _stateInfo;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_stateInfo);
-  }
-
-  final List<PrivacyPolicyModel>? _privacyPolicyConfig;
-  @override
-  @JsonKey(name: 'PrivacyPolicy')
-  List<PrivacyPolicyModel>? get privacyPolicyConfig {
-    final value = _privacyPolicyConfig;
-    if (value == null) return null;
-    if (_privacyPolicyConfig is EqualUnmodifiableListView)
-      return _privacyPolicyConfig;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  String toString() {
-    return 'CommonMastersWrapperModel(genderType: $genderType, stateInfo: $stateInfo, privacyPolicyConfig: $privacyPolicyConfig)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$CommonMastersWrapperModelImpl &&
-            const DeepCollectionEquality()
-                .equals(other._genderType, _genderType) &&
-            const DeepCollectionEquality()
-                .equals(other._stateInfo, _stateInfo) &&
-            const DeepCollectionEquality()
-                .equals(other._privacyPolicyConfig, _privacyPolicyConfig));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_genderType),
-      const DeepCollectionEquality().hash(_stateInfo),
-      const DeepCollectionEquality().hash(_privacyPolicyConfig));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$CommonMastersWrapperModelImplCopyWith<_$CommonMastersWrapperModelImpl>
-      get copyWith => __$$CommonMastersWrapperModelImplCopyWithImpl<
-          _$CommonMastersWrapperModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CommonMastersWrapperModelImplToJson(
-      this,
-    );
-  }
+ final  List<CommonMasterModel> _genderType;
+@override@JsonKey(name: 'GenderType') List<CommonMasterModel> get genderType {
+  if (_genderType is EqualUnmodifiableListView) return _genderType;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_genderType);
 }
 
-abstract class _CommonMastersWrapperModel implements CommonMastersWrapperModel {
-  const factory _CommonMastersWrapperModel(
-      {@JsonKey(name: 'GenderType')
-      required final List<CommonMasterModel> genderType,
-      @JsonKey(name: 'StateInfo') required final List<StateInfoModel> stateInfo,
-      @JsonKey(name: 'PrivacyPolicy')
-      final List<PrivacyPolicyModel>?
-          privacyPolicyConfig}) = _$CommonMastersWrapperModelImpl;
-
-  factory _CommonMastersWrapperModel.fromJson(Map<String, dynamic> json) =
-      _$CommonMastersWrapperModelImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'GenderType')
-  List<CommonMasterModel> get genderType;
-  @override
-  @JsonKey(name: 'StateInfo')
-  List<StateInfoModel> get stateInfo;
-  @override
-  @JsonKey(name: 'PrivacyPolicy')
-  List<PrivacyPolicyModel>? get privacyPolicyConfig;
-  @override
-  @JsonKey(ignore: true)
-  _$$CommonMastersWrapperModelImplCopyWith<_$CommonMastersWrapperModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+ final  List<StateInfoModel> _stateInfo;
+@override@JsonKey(name: 'StateInfo') List<StateInfoModel> get stateInfo {
+  if (_stateInfo is EqualUnmodifiableListView) return _stateInfo;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_stateInfo);
 }
 
-CommonMasterModel _$CommonMasterModelFromJson(Map<String, dynamic> json) {
-  return _CommonMasterModel.fromJson(json);
+ final  List<PrivacyPolicyModel>? _privacyPolicyConfig;
+@override@JsonKey(name: 'PrivacyPolicy') List<PrivacyPolicyModel>? get privacyPolicyConfig {
+  final value = _privacyPolicyConfig;
+  if (value == null) return null;
+  if (_privacyPolicyConfig is EqualUnmodifiableListView) return _privacyPolicyConfig;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
 }
+
+
+/// Create a copy of CommonMastersWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CommonMastersWrapperModelCopyWith<_CommonMastersWrapperModel> get copyWith => __$CommonMastersWrapperModelCopyWithImpl<_CommonMastersWrapperModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$CommonMastersWrapperModelToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommonMastersWrapperModel&&const DeepCollectionEquality().equals(other._genderType, _genderType)&&const DeepCollectionEquality().equals(other._stateInfo, _stateInfo)&&const DeepCollectionEquality().equals(other._privacyPolicyConfig, _privacyPolicyConfig));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_genderType),const DeepCollectionEquality().hash(_stateInfo),const DeepCollectionEquality().hash(_privacyPolicyConfig));
+
+@override
+String toString() {
+  return 'CommonMastersWrapperModel(genderType: $genderType, stateInfo: $stateInfo, privacyPolicyConfig: $privacyPolicyConfig)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CommonMastersWrapperModelCopyWith<$Res> implements $CommonMastersWrapperModelCopyWith<$Res> {
+  factory _$CommonMastersWrapperModelCopyWith(_CommonMastersWrapperModel value, $Res Function(_CommonMastersWrapperModel) _then) = __$CommonMastersWrapperModelCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,@JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo,@JsonKey(name: 'PrivacyPolicy') List<PrivacyPolicyModel>? privacyPolicyConfig
+});
+
+
+
+
+}
+/// @nodoc
+class __$CommonMastersWrapperModelCopyWithImpl<$Res>
+    implements _$CommonMastersWrapperModelCopyWith<$Res> {
+  __$CommonMastersWrapperModelCopyWithImpl(this._self, this._then);
+
+  final _CommonMastersWrapperModel _self;
+  final $Res Function(_CommonMastersWrapperModel) _then;
+
+/// Create a copy of CommonMastersWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? genderType = null,Object? stateInfo = null,Object? privacyPolicyConfig = freezed,}) {
+  return _then(_CommonMastersWrapperModel(
+genderType: null == genderType ? _self._genderType : genderType // ignore: cast_nullable_to_non_nullable
+as List<CommonMasterModel>,stateInfo: null == stateInfo ? _self._stateInfo : stateInfo // ignore: cast_nullable_to_non_nullable
+as List<StateInfoModel>,privacyPolicyConfig: freezed == privacyPolicyConfig ? _self._privacyPolicyConfig : privacyPolicyConfig // ignore: cast_nullable_to_non_nullable
+as List<PrivacyPolicyModel>?,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$CommonMasterModel {
-  @JsonKey(name: 'code')
-  String get code => throw _privateConstructorUsedError;
-  @JsonKey(name: 'name')
-  String? get name => throw _privateConstructorUsedError;
-  @JsonKey(name: 'active')
-  bool get active => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $CommonMasterModelCopyWith<CommonMasterModel> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'code') String get code;@JsonKey(name: 'name') String? get name;@JsonKey(name: 'active') bool get active;
+/// Create a copy of CommonMasterModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CommonMasterModelCopyWith<CommonMasterModel> get copyWith => _$CommonMasterModelCopyWithImpl<CommonMasterModel>(this as CommonMasterModel, _$identity);
+
+  /// Serializes this CommonMasterModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommonMasterModel&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.active, active) || other.active == active));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,name,active);
+
+@override
+String toString() {
+  return 'CommonMasterModel(code: $code, name: $name, active: $active)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $CommonMasterModelCopyWith<$Res> {
-  factory $CommonMasterModelCopyWith(
-          CommonMasterModel value, $Res Function(CommonMasterModel) then) =
-      _$CommonMasterModelCopyWithImpl<$Res, CommonMasterModel>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'code') String code,
-      @JsonKey(name: 'name') String? name,
-      @JsonKey(name: 'active') bool active});
-}
+abstract mixin class $CommonMasterModelCopyWith<$Res>  {
+  factory $CommonMasterModelCopyWith(CommonMasterModel value, $Res Function(CommonMasterModel) _then) = _$CommonMasterModelCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'code') String code,@JsonKey(name: 'name') String? name,@JsonKey(name: 'active') bool active
+});
 
+
+
+
+}
 /// @nodoc
-class _$CommonMasterModelCopyWithImpl<$Res, $Val extends CommonMasterModel>
+class _$CommonMasterModelCopyWithImpl<$Res>
     implements $CommonMasterModelCopyWith<$Res> {
-  _$CommonMasterModelCopyWithImpl(this._value, this._then);
+  _$CommonMasterModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final CommonMasterModel _self;
+  final $Res Function(CommonMasterModel) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? code = null,
-    Object? name = freezed,
-    Object? active = null,
-  }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
+/// Create a copy of CommonMasterModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = freezed,Object? active = null,}) {
+  return _then(_self.copyWith(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-abstract class _$$CommonMasterModelImplCopyWith<$Res>
-    implements $CommonMasterModelCopyWith<$Res> {
-  factory _$$CommonMasterModelImplCopyWith(_$CommonMasterModelImpl value,
-          $Res Function(_$CommonMasterModelImpl) then) =
-      __$$CommonMasterModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'code') String code,
-      @JsonKey(name: 'name') String? name,
-      @JsonKey(name: 'active') bool active});
 }
 
-/// @nodoc
-class __$$CommonMasterModelImplCopyWithImpl<$Res>
-    extends _$CommonMasterModelCopyWithImpl<$Res, _$CommonMasterModelImpl>
-    implements _$$CommonMasterModelImplCopyWith<$Res> {
-  __$$CommonMasterModelImplCopyWithImpl(_$CommonMasterModelImpl _value,
-      $Res Function(_$CommonMasterModelImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? code = null,
-    Object? name = freezed,
-    Object? active = null,
-  }) {
-    return _then(_$CommonMasterModelImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+/// Adds pattern-matching-related methods to [CommonMasterModel].
+extension CommonMasterModelPatterns on CommonMasterModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CommonMasterModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CommonMasterModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CommonMasterModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _CommonMasterModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CommonMasterModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CommonMasterModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'code')  String code, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'active')  bool active)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CommonMasterModel() when $default != null:
+return $default(_that.code,_that.name,_that.active);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'code')  String code, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'active')  bool active)  $default,) {final _that = this;
+switch (_that) {
+case _CommonMasterModel():
+return $default(_that.code,_that.name,_that.active);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'code')  String code, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'active')  bool active)?  $default,) {final _that = this;
+switch (_that) {
+case _CommonMasterModel() when $default != null:
+return $default(_that.code,_that.name,_that.active);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$CommonMasterModelImpl implements _CommonMasterModel {
-  const _$CommonMasterModelImpl(
-      {@JsonKey(name: 'code') required this.code,
-      @JsonKey(name: 'name') this.name,
-      @JsonKey(name: 'active') required this.active});
 
-  factory _$CommonMasterModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CommonMasterModelImplFromJson(json);
+class _CommonMasterModel implements CommonMasterModel {
+  const _CommonMasterModel({@JsonKey(name: 'code') required this.code, @JsonKey(name: 'name') this.name, @JsonKey(name: 'active') required this.active});
+  factory _CommonMasterModel.fromJson(Map<String, dynamic> json) => _$CommonMasterModelFromJson(json);
 
-  @override
-  @JsonKey(name: 'code')
-  final String code;
-  @override
-  @JsonKey(name: 'name')
-  final String? name;
-  @override
-  @JsonKey(name: 'active')
-  final bool active;
+@override@JsonKey(name: 'code') final  String code;
+@override@JsonKey(name: 'name') final  String? name;
+@override@JsonKey(name: 'active') final  bool active;
 
-  @override
-  String toString() {
-    return 'CommonMasterModel(code: $code, name: $name, active: $active)';
-  }
+/// Create a copy of CommonMasterModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CommonMasterModelCopyWith<_CommonMasterModel> get copyWith => __$CommonMasterModelCopyWithImpl<_CommonMasterModel>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$CommonMasterModelImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.active, active) || other.active == active));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, code, name, active);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$CommonMasterModelImplCopyWith<_$CommonMasterModelImpl> get copyWith =>
-      __$$CommonMasterModelImplCopyWithImpl<_$CommonMasterModelImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CommonMasterModelImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$CommonMasterModelToJson(this, );
 }
 
-abstract class _CommonMasterModel implements CommonMasterModel {
-  const factory _CommonMasterModel(
-          {@JsonKey(name: 'code') required final String code,
-          @JsonKey(name: 'name') final String? name,
-          @JsonKey(name: 'active') required final bool active}) =
-      _$CommonMasterModelImpl;
-
-  factory _CommonMasterModel.fromJson(Map<String, dynamic> json) =
-      _$CommonMasterModelImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'code')
-  String get code;
-  @override
-  @JsonKey(name: 'name')
-  String? get name;
-  @override
-  @JsonKey(name: 'active')
-  bool get active;
-  @override
-  @JsonKey(ignore: true)
-  _$$CommonMasterModelImplCopyWith<_$CommonMasterModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommonMasterModel&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.active, active) || other.active == active));
 }
 
-StateInfoModel _$StateInfoModelFromJson(Map<String, dynamic> json) {
-  return _StateInfoModel.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,name,active);
+
+@override
+String toString() {
+  return 'CommonMasterModel(code: $code, name: $name, active: $active)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CommonMasterModelCopyWith<$Res> implements $CommonMasterModelCopyWith<$Res> {
+  factory _$CommonMasterModelCopyWith(_CommonMasterModel value, $Res Function(_CommonMasterModel) _then) = __$CommonMasterModelCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'code') String code,@JsonKey(name: 'name') String? name,@JsonKey(name: 'active') bool active
+});
+
+
+
+
+}
+/// @nodoc
+class __$CommonMasterModelCopyWithImpl<$Res>
+    implements _$CommonMasterModelCopyWith<$Res> {
+  __$CommonMasterModelCopyWithImpl(this._self, this._then);
+
+  final _CommonMasterModel _self;
+  final $Res Function(_CommonMasterModel) _then;
+
+/// Create a copy of CommonMasterModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = freezed,Object? active = null,}) {
+  return _then(_CommonMasterModel(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$StateInfoModel {
-  @JsonKey(name: 'code')
-  String get code => throw _privateConstructorUsedError;
-  @JsonKey(name: 'languages')
-  List<Languages> get languages => throw _privateConstructorUsedError;
-  @JsonKey(name: 'localizationModules')
-  List<Languages>? get localizationModules =>
-      throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $StateInfoModelCopyWith<StateInfoModel> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'code') String get code;@JsonKey(name: 'languages') List<Languages> get languages;@JsonKey(name: 'localizationModules') List<Languages>? get localizationModules;
+/// Create a copy of StateInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$StateInfoModelCopyWith<StateInfoModel> get copyWith => _$StateInfoModelCopyWithImpl<StateInfoModel>(this as StateInfoModel, _$identity);
+
+  /// Serializes this StateInfoModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StateInfoModel&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other.languages, languages)&&const DeepCollectionEquality().equals(other.localizationModules, localizationModules));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,const DeepCollectionEquality().hash(languages),const DeepCollectionEquality().hash(localizationModules));
+
+@override
+String toString() {
+  return 'StateInfoModel(code: $code, languages: $languages, localizationModules: $localizationModules)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $StateInfoModelCopyWith<$Res> {
-  factory $StateInfoModelCopyWith(
-          StateInfoModel value, $Res Function(StateInfoModel) then) =
-      _$StateInfoModelCopyWithImpl<$Res, StateInfoModel>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'code') String code,
-      @JsonKey(name: 'languages') List<Languages> languages,
-      @JsonKey(name: 'localizationModules')
-      List<Languages>? localizationModules});
-}
+abstract mixin class $StateInfoModelCopyWith<$Res>  {
+  factory $StateInfoModelCopyWith(StateInfoModel value, $Res Function(StateInfoModel) _then) = _$StateInfoModelCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'code') String code,@JsonKey(name: 'languages') List<Languages> languages,@JsonKey(name: 'localizationModules') List<Languages>? localizationModules
+});
 
+
+
+
+}
 /// @nodoc
-class _$StateInfoModelCopyWithImpl<$Res, $Val extends StateInfoModel>
+class _$StateInfoModelCopyWithImpl<$Res>
     implements $StateInfoModelCopyWith<$Res> {
-  _$StateInfoModelCopyWithImpl(this._value, this._then);
+  _$StateInfoModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final StateInfoModel _self;
+  final $Res Function(StateInfoModel) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? code = null,
-    Object? languages = null,
-    Object? localizationModules = freezed,
-  }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      languages: null == languages
-          ? _value.languages
-          : languages // ignore: cast_nullable_to_non_nullable
-              as List<Languages>,
-      localizationModules: freezed == localizationModules
-          ? _value.localizationModules
-          : localizationModules // ignore: cast_nullable_to_non_nullable
-              as List<Languages>?,
-    ) as $Val);
-  }
+/// Create a copy of StateInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? languages = null,Object? localizationModules = freezed,}) {
+  return _then(_self.copyWith(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,languages: null == languages ? _self.languages : languages // ignore: cast_nullable_to_non_nullable
+as List<Languages>,localizationModules: freezed == localizationModules ? _self.localizationModules : localizationModules // ignore: cast_nullable_to_non_nullable
+as List<Languages>?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$StateInfoModelImplCopyWith<$Res>
-    implements $StateInfoModelCopyWith<$Res> {
-  factory _$$StateInfoModelImplCopyWith(_$StateInfoModelImpl value,
-          $Res Function(_$StateInfoModelImpl) then) =
-      __$$StateInfoModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'code') String code,
-      @JsonKey(name: 'languages') List<Languages> languages,
-      @JsonKey(name: 'localizationModules')
-      List<Languages>? localizationModules});
 }
 
-/// @nodoc
-class __$$StateInfoModelImplCopyWithImpl<$Res>
-    extends _$StateInfoModelCopyWithImpl<$Res, _$StateInfoModelImpl>
-    implements _$$StateInfoModelImplCopyWith<$Res> {
-  __$$StateInfoModelImplCopyWithImpl(
-      _$StateInfoModelImpl _value, $Res Function(_$StateInfoModelImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? code = null,
-    Object? languages = null,
-    Object? localizationModules = freezed,
-  }) {
-    return _then(_$StateInfoModelImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      languages: null == languages
-          ? _value._languages
-          : languages // ignore: cast_nullable_to_non_nullable
-              as List<Languages>,
-      localizationModules: freezed == localizationModules
-          ? _value._localizationModules
-          : localizationModules // ignore: cast_nullable_to_non_nullable
-              as List<Languages>?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [StateInfoModel].
+extension StateInfoModelPatterns on StateInfoModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StateInfoModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _StateInfoModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StateInfoModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _StateInfoModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StateInfoModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _StateInfoModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'code')  String code, @JsonKey(name: 'languages')  List<Languages> languages, @JsonKey(name: 'localizationModules')  List<Languages>? localizationModules)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _StateInfoModel() when $default != null:
+return $default(_that.code,_that.languages,_that.localizationModules);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'code')  String code, @JsonKey(name: 'languages')  List<Languages> languages, @JsonKey(name: 'localizationModules')  List<Languages>? localizationModules)  $default,) {final _that = this;
+switch (_that) {
+case _StateInfoModel():
+return $default(_that.code,_that.languages,_that.localizationModules);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'code')  String code, @JsonKey(name: 'languages')  List<Languages> languages, @JsonKey(name: 'localizationModules')  List<Languages>? localizationModules)?  $default,) {final _that = this;
+switch (_that) {
+case _StateInfoModel() when $default != null:
+return $default(_that.code,_that.languages,_that.localizationModules);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$StateInfoModelImpl implements _StateInfoModel {
-  const _$StateInfoModelImpl(
-      {@JsonKey(name: 'code') required this.code,
-      @JsonKey(name: 'languages') required final List<Languages> languages,
-      @JsonKey(name: 'localizationModules')
-      final List<Languages>? localizationModules})
-      : _languages = languages,
-        _localizationModules = localizationModules;
 
-  factory _$StateInfoModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$StateInfoModelImplFromJson(json);
+class _StateInfoModel implements StateInfoModel {
+  const _StateInfoModel({@JsonKey(name: 'code') required this.code, @JsonKey(name: 'languages') required final  List<Languages> languages, @JsonKey(name: 'localizationModules') final  List<Languages>? localizationModules}): _languages = languages,_localizationModules = localizationModules;
+  factory _StateInfoModel.fromJson(Map<String, dynamic> json) => _$StateInfoModelFromJson(json);
 
-  @override
-  @JsonKey(name: 'code')
-  final String code;
-  final List<Languages> _languages;
-  @override
-  @JsonKey(name: 'languages')
-  List<Languages> get languages {
-    if (_languages is EqualUnmodifiableListView) return _languages;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_languages);
-  }
-
-  final List<Languages>? _localizationModules;
-  @override
-  @JsonKey(name: 'localizationModules')
-  List<Languages>? get localizationModules {
-    final value = _localizationModules;
-    if (value == null) return null;
-    if (_localizationModules is EqualUnmodifiableListView)
-      return _localizationModules;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  String toString() {
-    return 'StateInfoModel(code: $code, languages: $languages, localizationModules: $localizationModules)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$StateInfoModelImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            const DeepCollectionEquality()
-                .equals(other._languages, _languages) &&
-            const DeepCollectionEquality()
-                .equals(other._localizationModules, _localizationModules));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      code,
-      const DeepCollectionEquality().hash(_languages),
-      const DeepCollectionEquality().hash(_localizationModules));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$StateInfoModelImplCopyWith<_$StateInfoModelImpl> get copyWith =>
-      __$$StateInfoModelImplCopyWithImpl<_$StateInfoModelImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$StateInfoModelImplToJson(
-      this,
-    );
-  }
+@override@JsonKey(name: 'code') final  String code;
+ final  List<Languages> _languages;
+@override@JsonKey(name: 'languages') List<Languages> get languages {
+  if (_languages is EqualUnmodifiableListView) return _languages;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_languages);
 }
 
-abstract class _StateInfoModel implements StateInfoModel {
-  const factory _StateInfoModel(
-      {@JsonKey(name: 'code') required final String code,
-      @JsonKey(name: 'languages') required final List<Languages> languages,
-      @JsonKey(name: 'localizationModules')
-      final List<Languages>? localizationModules}) = _$StateInfoModelImpl;
-
-  factory _StateInfoModel.fromJson(Map<String, dynamic> json) =
-      _$StateInfoModelImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'code')
-  String get code;
-  @override
-  @JsonKey(name: 'languages')
-  List<Languages> get languages;
-  @override
-  @JsonKey(name: 'localizationModules')
-  List<Languages>? get localizationModules;
-  @override
-  @JsonKey(ignore: true)
-  _$$StateInfoModelImplCopyWith<_$StateInfoModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+ final  List<Languages>? _localizationModules;
+@override@JsonKey(name: 'localizationModules') List<Languages>? get localizationModules {
+  final value = _localizationModules;
+  if (value == null) return null;
+  if (_localizationModules is EqualUnmodifiableListView) return _localizationModules;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
 }
 
-RowVersionWrapperModel _$RowVersionWrapperModelFromJson(
-    Map<String, dynamic> json) {
-  return _RowVersionWrapperModel.fromJson(json);
+
+/// Create a copy of StateInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$StateInfoModelCopyWith<_StateInfoModel> get copyWith => __$StateInfoModelCopyWithImpl<_StateInfoModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$StateInfoModelToJson(this, );
 }
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StateInfoModel&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other._languages, _languages)&&const DeepCollectionEquality().equals(other._localizationModules, _localizationModules));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,const DeepCollectionEquality().hash(_languages),const DeepCollectionEquality().hash(_localizationModules));
+
+@override
+String toString() {
+  return 'StateInfoModel(code: $code, languages: $languages, localizationModules: $localizationModules)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$StateInfoModelCopyWith<$Res> implements $StateInfoModelCopyWith<$Res> {
+  factory _$StateInfoModelCopyWith(_StateInfoModel value, $Res Function(_StateInfoModel) _then) = __$StateInfoModelCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'code') String code,@JsonKey(name: 'languages') List<Languages> languages,@JsonKey(name: 'localizationModules') List<Languages>? localizationModules
+});
+
+
+
+
+}
+/// @nodoc
+class __$StateInfoModelCopyWithImpl<$Res>
+    implements _$StateInfoModelCopyWith<$Res> {
+  __$StateInfoModelCopyWithImpl(this._self, this._then);
+
+  final _StateInfoModel _self;
+  final $Res Function(_StateInfoModel) _then;
+
+/// Create a copy of StateInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? languages = null,Object? localizationModules = freezed,}) {
+  return _then(_StateInfoModel(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,languages: null == languages ? _self._languages : languages // ignore: cast_nullable_to_non_nullable
+as List<Languages>,localizationModules: freezed == localizationModules ? _self._localizationModules : localizationModules // ignore: cast_nullable_to_non_nullable
+as List<Languages>?,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$RowVersionWrapperModel {
-  @JsonKey(name: 'ROW_VERSIONS')
-  List<RowVersions>? get rowVersionslist => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $RowVersionWrapperModelCopyWith<RowVersionWrapperModel> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'ROW_VERSIONS') List<RowVersions>? get rowVersionslist;
+/// Create a copy of RowVersionWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RowVersionWrapperModelCopyWith<RowVersionWrapperModel> get copyWith => _$RowVersionWrapperModelCopyWithImpl<RowVersionWrapperModel>(this as RowVersionWrapperModel, _$identity);
+
+  /// Serializes this RowVersionWrapperModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RowVersionWrapperModel&&const DeepCollectionEquality().equals(other.rowVersionslist, rowVersionslist));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(rowVersionslist));
+
+@override
+String toString() {
+  return 'RowVersionWrapperModel(rowVersionslist: $rowVersionslist)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $RowVersionWrapperModelCopyWith<$Res> {
-  factory $RowVersionWrapperModelCopyWith(RowVersionWrapperModel value,
-          $Res Function(RowVersionWrapperModel) then) =
-      _$RowVersionWrapperModelCopyWithImpl<$Res, RowVersionWrapperModel>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'ROW_VERSIONS') List<RowVersions>? rowVersionslist});
-}
+abstract mixin class $RowVersionWrapperModelCopyWith<$Res>  {
+  factory $RowVersionWrapperModelCopyWith(RowVersionWrapperModel value, $Res Function(RowVersionWrapperModel) _then) = _$RowVersionWrapperModelCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'ROW_VERSIONS') List<RowVersions>? rowVersionslist
+});
 
+
+
+
+}
 /// @nodoc
-class _$RowVersionWrapperModelCopyWithImpl<$Res,
-        $Val extends RowVersionWrapperModel>
+class _$RowVersionWrapperModelCopyWithImpl<$Res>
     implements $RowVersionWrapperModelCopyWith<$Res> {
-  _$RowVersionWrapperModelCopyWithImpl(this._value, this._then);
+  _$RowVersionWrapperModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final RowVersionWrapperModel _self;
+  final $Res Function(RowVersionWrapperModel) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? rowVersionslist = freezed,
-  }) {
-    return _then(_value.copyWith(
-      rowVersionslist: freezed == rowVersionslist
-          ? _value.rowVersionslist
-          : rowVersionslist // ignore: cast_nullable_to_non_nullable
-              as List<RowVersions>?,
-    ) as $Val);
-  }
+/// Create a copy of RowVersionWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? rowVersionslist = freezed,}) {
+  return _then(_self.copyWith(
+rowVersionslist: freezed == rowVersionslist ? _self.rowVersionslist : rowVersionslist // ignore: cast_nullable_to_non_nullable
+as List<RowVersions>?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$RowVersionWrapperModelImplCopyWith<$Res>
-    implements $RowVersionWrapperModelCopyWith<$Res> {
-  factory _$$RowVersionWrapperModelImplCopyWith(
-          _$RowVersionWrapperModelImpl value,
-          $Res Function(_$RowVersionWrapperModelImpl) then) =
-      __$$RowVersionWrapperModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'ROW_VERSIONS') List<RowVersions>? rowVersionslist});
 }
 
-/// @nodoc
-class __$$RowVersionWrapperModelImplCopyWithImpl<$Res>
-    extends _$RowVersionWrapperModelCopyWithImpl<$Res,
-        _$RowVersionWrapperModelImpl>
-    implements _$$RowVersionWrapperModelImplCopyWith<$Res> {
-  __$$RowVersionWrapperModelImplCopyWithImpl(
-      _$RowVersionWrapperModelImpl _value,
-      $Res Function(_$RowVersionWrapperModelImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? rowVersionslist = freezed,
-  }) {
-    return _then(_$RowVersionWrapperModelImpl(
-      rowVersionslist: freezed == rowVersionslist
-          ? _value._rowVersionslist
-          : rowVersionslist // ignore: cast_nullable_to_non_nullable
-              as List<RowVersions>?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [RowVersionWrapperModel].
+extension RowVersionWrapperModelPatterns on RowVersionWrapperModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RowVersionWrapperModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _RowVersionWrapperModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RowVersionWrapperModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _RowVersionWrapperModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RowVersionWrapperModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _RowVersionWrapperModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'ROW_VERSIONS')  List<RowVersions>? rowVersionslist)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _RowVersionWrapperModel() when $default != null:
+return $default(_that.rowVersionslist);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'ROW_VERSIONS')  List<RowVersions>? rowVersionslist)  $default,) {final _that = this;
+switch (_that) {
+case _RowVersionWrapperModel():
+return $default(_that.rowVersionslist);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'ROW_VERSIONS')  List<RowVersions>? rowVersionslist)?  $default,) {final _that = this;
+switch (_that) {
+case _RowVersionWrapperModel() when $default != null:
+return $default(_that.rowVersionslist);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$RowVersionWrapperModelImpl implements _RowVersionWrapperModel {
-  const _$RowVersionWrapperModelImpl(
-      {@JsonKey(name: 'ROW_VERSIONS') final List<RowVersions>? rowVersionslist})
-      : _rowVersionslist = rowVersionslist;
 
-  factory _$RowVersionWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RowVersionWrapperModelImplFromJson(json);
+class _RowVersionWrapperModel implements RowVersionWrapperModel {
+  const _RowVersionWrapperModel({@JsonKey(name: 'ROW_VERSIONS') final  List<RowVersions>? rowVersionslist}): _rowVersionslist = rowVersionslist;
+  factory _RowVersionWrapperModel.fromJson(Map<String, dynamic> json) => _$RowVersionWrapperModelFromJson(json);
 
-  final List<RowVersions>? _rowVersionslist;
-  @override
-  @JsonKey(name: 'ROW_VERSIONS')
-  List<RowVersions>? get rowVersionslist {
-    final value = _rowVersionslist;
-    if (value == null) return null;
-    if (_rowVersionslist is EqualUnmodifiableListView) return _rowVersionslist;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  String toString() {
-    return 'RowVersionWrapperModel(rowVersionslist: $rowVersionslist)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$RowVersionWrapperModelImpl &&
-            const DeepCollectionEquality()
-                .equals(other._rowVersionslist, _rowVersionslist));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_rowVersionslist));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$RowVersionWrapperModelImplCopyWith<_$RowVersionWrapperModelImpl>
-      get copyWith => __$$RowVersionWrapperModelImplCopyWithImpl<
-          _$RowVersionWrapperModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$RowVersionWrapperModelImplToJson(
-      this,
-    );
-  }
+ final  List<RowVersions>? _rowVersionslist;
+@override@JsonKey(name: 'ROW_VERSIONS') List<RowVersions>? get rowVersionslist {
+  final value = _rowVersionslist;
+  if (value == null) return null;
+  if (_rowVersionslist is EqualUnmodifiableListView) return _rowVersionslist;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
 }
 
-abstract class _RowVersionWrapperModel implements RowVersionWrapperModel {
-  const factory _RowVersionWrapperModel(
-      {@JsonKey(name: 'ROW_VERSIONS')
-      final List<RowVersions>? rowVersionslist}) = _$RowVersionWrapperModelImpl;
 
-  factory _RowVersionWrapperModel.fromJson(Map<String, dynamic> json) =
-      _$RowVersionWrapperModelImpl.fromJson;
+/// Create a copy of RowVersionWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RowVersionWrapperModelCopyWith<_RowVersionWrapperModel> get copyWith => __$RowVersionWrapperModelCopyWithImpl<_RowVersionWrapperModel>(this, _$identity);
 
-  @override
-  @JsonKey(name: 'ROW_VERSIONS')
-  List<RowVersions>? get rowVersionslist;
-  @override
-  @JsonKey(ignore: true)
-  _$$RowVersionWrapperModelImplCopyWith<_$RowVersionWrapperModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$RowVersionWrapperModelToJson(this, );
 }
 
-AppConfig _$AppConfigFromJson(Map<String, dynamic> json) {
-  return _AppConfig.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RowVersionWrapperModel&&const DeepCollectionEquality().equals(other._rowVersionslist, _rowVersionslist));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_rowVersionslist));
+
+@override
+String toString() {
+  return 'RowVersionWrapperModel(rowVersionslist: $rowVersionslist)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RowVersionWrapperModelCopyWith<$Res> implements $RowVersionWrapperModelCopyWith<$Res> {
+  factory _$RowVersionWrapperModelCopyWith(_RowVersionWrapperModel value, $Res Function(_RowVersionWrapperModel) _then) = __$RowVersionWrapperModelCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'ROW_VERSIONS') List<RowVersions>? rowVersionslist
+});
+
+
+
+
+}
+/// @nodoc
+class __$RowVersionWrapperModelCopyWithImpl<$Res>
+    implements _$RowVersionWrapperModelCopyWith<$Res> {
+  __$RowVersionWrapperModelCopyWithImpl(this._self, this._then);
+
+  final _RowVersionWrapperModel _self;
+  final $Res Function(_RowVersionWrapperModel) _then;
+
+/// Create a copy of RowVersionWrapperModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? rowVersionslist = freezed,}) {
+  return _then(_RowVersionWrapperModel(
+rowVersionslist: freezed == rowVersionslist ? _self._rowVersionslist : rowVersionslist // ignore: cast_nullable_to_non_nullable
+as List<RowVersions>?,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$AppConfig {
-  @JsonKey(name: 'NETWORK_DETECTION')
-  String get networkDetection => throw _privateConstructorUsedError;
-  @JsonKey(name: 'PERSISTENCE_MODE')
-  String get persistenceMode => throw _privateConstructorUsedError;
-  @JsonKey(name: 'SYNC_METHOD')
-  String get syncMethod => throw _privateConstructorUsedError;
-  @JsonKey(name: 'SYNC_TRIGGER')
-  String get syncTrigger => throw _privateConstructorUsedError;
-  @JsonKey(name: 'TENANT_ID')
-  String? get tenantId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-  double? get maxRadius => throw _privateConstructorUsedError;
-  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
-  int? get boundaryLastLevelMaxSelection => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $AppConfigCopyWith<AppConfig> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'NETWORK_DETECTION') String get networkDetection;@JsonKey(name: 'PERSISTENCE_MODE') String get persistenceMode;@JsonKey(name: 'SYNC_METHOD') String get syncMethod;@JsonKey(name: 'SYNC_TRIGGER') String get syncTrigger;@JsonKey(name: 'TENANT_ID') String? get tenantId;@JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? get maxRadius;@JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION') int? get boundaryLastLevelMaxSelection;
+/// Create a copy of AppConfig
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AppConfigCopyWith<AppConfig> get copyWith => _$AppConfigCopyWithImpl<AppConfig>(this as AppConfig, _$identity);
+
+  /// Serializes this AppConfig to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppConfig&&(identical(other.networkDetection, networkDetection) || other.networkDetection == networkDetection)&&(identical(other.persistenceMode, persistenceMode) || other.persistenceMode == persistenceMode)&&(identical(other.syncMethod, syncMethod) || other.syncMethod == syncMethod)&&(identical(other.syncTrigger, syncTrigger) || other.syncTrigger == syncTrigger)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.maxRadius, maxRadius) || other.maxRadius == maxRadius)&&(identical(other.boundaryLastLevelMaxSelection, boundaryLastLevelMaxSelection) || other.boundaryLastLevelMaxSelection == boundaryLastLevelMaxSelection));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,networkDetection,persistenceMode,syncMethod,syncTrigger,tenantId,maxRadius,boundaryLastLevelMaxSelection);
+
+@override
+String toString() {
+  return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, tenantId: $tenantId, maxRadius: $maxRadius, boundaryLastLevelMaxSelection: $boundaryLastLevelMaxSelection)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AppConfigCopyWith<$Res> {
-  factory $AppConfigCopyWith(AppConfig value, $Res Function(AppConfig) then) =
-      _$AppConfigCopyWithImpl<$Res, AppConfig>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'NETWORK_DETECTION') String networkDetection,
-      @JsonKey(name: 'PERSISTENCE_MODE') String persistenceMode,
-      @JsonKey(name: 'SYNC_METHOD') String syncMethod,
-      @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
-      @JsonKey(name: 'TENANT_ID') String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
-      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
-      int? boundaryLastLevelMaxSelection});
-}
+abstract mixin class $AppConfigCopyWith<$Res>  {
+  factory $AppConfigCopyWith(AppConfig value, $Res Function(AppConfig) _then) = _$AppConfigCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'NETWORK_DETECTION') String networkDetection,@JsonKey(name: 'PERSISTENCE_MODE') String persistenceMode,@JsonKey(name: 'SYNC_METHOD') String syncMethod,@JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,@JsonKey(name: 'TENANT_ID') String? tenantId,@JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,@JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION') int? boundaryLastLevelMaxSelection
+});
 
+
+
+
+}
 /// @nodoc
-class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
+class _$AppConfigCopyWithImpl<$Res>
     implements $AppConfigCopyWith<$Res> {
-  _$AppConfigCopyWithImpl(this._value, this._then);
+  _$AppConfigCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final AppConfig _self;
+  final $Res Function(AppConfig) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? networkDetection = null,
-    Object? persistenceMode = null,
-    Object? syncMethod = null,
-    Object? syncTrigger = null,
-    Object? tenantId = freezed,
-    Object? maxRadius = freezed,
-    Object? boundaryLastLevelMaxSelection = freezed,
-  }) {
-    return _then(_value.copyWith(
-      networkDetection: null == networkDetection
-          ? _value.networkDetection
-          : networkDetection // ignore: cast_nullable_to_non_nullable
-              as String,
-      persistenceMode: null == persistenceMode
-          ? _value.persistenceMode
-          : persistenceMode // ignore: cast_nullable_to_non_nullable
-              as String,
-      syncMethod: null == syncMethod
-          ? _value.syncMethod
-          : syncMethod // ignore: cast_nullable_to_non_nullable
-              as String,
-      syncTrigger: null == syncTrigger
-          ? _value.syncTrigger
-          : syncTrigger // ignore: cast_nullable_to_non_nullable
-              as String,
-      tenantId: freezed == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      maxRadius: freezed == maxRadius
-          ? _value.maxRadius
-          : maxRadius // ignore: cast_nullable_to_non_nullable
-              as double?,
-      boundaryLastLevelMaxSelection: freezed == boundaryLastLevelMaxSelection
-          ? _value.boundaryLastLevelMaxSelection
-          : boundaryLastLevelMaxSelection // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
-  }
+/// Create a copy of AppConfig
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? networkDetection = null,Object? persistenceMode = null,Object? syncMethod = null,Object? syncTrigger = null,Object? tenantId = freezed,Object? maxRadius = freezed,Object? boundaryLastLevelMaxSelection = freezed,}) {
+  return _then(_self.copyWith(
+networkDetection: null == networkDetection ? _self.networkDetection : networkDetection // ignore: cast_nullable_to_non_nullable
+as String,persistenceMode: null == persistenceMode ? _self.persistenceMode : persistenceMode // ignore: cast_nullable_to_non_nullable
+as String,syncMethod: null == syncMethod ? _self.syncMethod : syncMethod // ignore: cast_nullable_to_non_nullable
+as String,syncTrigger: null == syncTrigger ? _self.syncTrigger : syncTrigger // ignore: cast_nullable_to_non_nullable
+as String,tenantId: freezed == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String?,maxRadius: freezed == maxRadius ? _self.maxRadius : maxRadius // ignore: cast_nullable_to_non_nullable
+as double?,boundaryLastLevelMaxSelection: freezed == boundaryLastLevelMaxSelection ? _self.boundaryLastLevelMaxSelection : boundaryLastLevelMaxSelection // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$AppConfigImplCopyWith<$Res>
-    implements $AppConfigCopyWith<$Res> {
-  factory _$$AppConfigImplCopyWith(
-          _$AppConfigImpl value, $Res Function(_$AppConfigImpl) then) =
-      __$$AppConfigImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'NETWORK_DETECTION') String networkDetection,
-      @JsonKey(name: 'PERSISTENCE_MODE') String persistenceMode,
-      @JsonKey(name: 'SYNC_METHOD') String syncMethod,
-      @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
-      @JsonKey(name: 'TENANT_ID') String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
-      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
-      int? boundaryLastLevelMaxSelection});
 }
 
-/// @nodoc
-class __$$AppConfigImplCopyWithImpl<$Res>
-    extends _$AppConfigCopyWithImpl<$Res, _$AppConfigImpl>
-    implements _$$AppConfigImplCopyWith<$Res> {
-  __$$AppConfigImplCopyWithImpl(
-      _$AppConfigImpl _value, $Res Function(_$AppConfigImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? networkDetection = null,
-    Object? persistenceMode = null,
-    Object? syncMethod = null,
-    Object? syncTrigger = null,
-    Object? tenantId = freezed,
-    Object? maxRadius = freezed,
-    Object? boundaryLastLevelMaxSelection = freezed,
-  }) {
-    return _then(_$AppConfigImpl(
-      networkDetection: null == networkDetection
-          ? _value.networkDetection
-          : networkDetection // ignore: cast_nullable_to_non_nullable
-              as String,
-      persistenceMode: null == persistenceMode
-          ? _value.persistenceMode
-          : persistenceMode // ignore: cast_nullable_to_non_nullable
-              as String,
-      syncMethod: null == syncMethod
-          ? _value.syncMethod
-          : syncMethod // ignore: cast_nullable_to_non_nullable
-              as String,
-      syncTrigger: null == syncTrigger
-          ? _value.syncTrigger
-          : syncTrigger // ignore: cast_nullable_to_non_nullable
-              as String,
-      tenantId: freezed == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      maxRadius: freezed == maxRadius
-          ? _value.maxRadius
-          : maxRadius // ignore: cast_nullable_to_non_nullable
-              as double?,
-      boundaryLastLevelMaxSelection: freezed == boundaryLastLevelMaxSelection
-          ? _value.boundaryLastLevelMaxSelection
-          : boundaryLastLevelMaxSelection // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [AppConfig].
+extension AppConfigPatterns on AppConfig {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AppConfig value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AppConfig() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AppConfig value)  $default,){
+final _that = this;
+switch (_that) {
+case _AppConfig():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AppConfig value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AppConfig() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'NETWORK_DETECTION')  String networkDetection, @JsonKey(name: 'PERSISTENCE_MODE')  String persistenceMode, @JsonKey(name: 'SYNC_METHOD')  String syncMethod, @JsonKey(name: 'SYNC_TRIGGER')  String syncTrigger, @JsonKey(name: 'TENANT_ID')  String? tenantId, @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')  double? maxRadius, @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')  int? boundaryLastLevelMaxSelection)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AppConfig() when $default != null:
+return $default(_that.networkDetection,_that.persistenceMode,_that.syncMethod,_that.syncTrigger,_that.tenantId,_that.maxRadius,_that.boundaryLastLevelMaxSelection);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'NETWORK_DETECTION')  String networkDetection, @JsonKey(name: 'PERSISTENCE_MODE')  String persistenceMode, @JsonKey(name: 'SYNC_METHOD')  String syncMethod, @JsonKey(name: 'SYNC_TRIGGER')  String syncTrigger, @JsonKey(name: 'TENANT_ID')  String? tenantId, @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')  double? maxRadius, @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')  int? boundaryLastLevelMaxSelection)  $default,) {final _that = this;
+switch (_that) {
+case _AppConfig():
+return $default(_that.networkDetection,_that.persistenceMode,_that.syncMethod,_that.syncTrigger,_that.tenantId,_that.maxRadius,_that.boundaryLastLevelMaxSelection);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'NETWORK_DETECTION')  String networkDetection, @JsonKey(name: 'PERSISTENCE_MODE')  String persistenceMode, @JsonKey(name: 'SYNC_METHOD')  String syncMethod, @JsonKey(name: 'SYNC_TRIGGER')  String syncTrigger, @JsonKey(name: 'TENANT_ID')  String? tenantId, @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')  double? maxRadius, @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')  int? boundaryLastLevelMaxSelection)?  $default,) {final _that = this;
+switch (_that) {
+case _AppConfig() when $default != null:
+return $default(_that.networkDetection,_that.persistenceMode,_that.syncMethod,_that.syncTrigger,_that.tenantId,_that.maxRadius,_that.boundaryLastLevelMaxSelection);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$AppConfigImpl implements _AppConfig {
-  _$AppConfigImpl(
-      {@JsonKey(name: 'NETWORK_DETECTION') required this.networkDetection,
-      @JsonKey(name: 'PERSISTENCE_MODE') required this.persistenceMode,
-      @JsonKey(name: 'SYNC_METHOD') required this.syncMethod,
-      @JsonKey(name: 'SYNC_TRIGGER') required this.syncTrigger,
-      @JsonKey(name: 'TENANT_ID') this.tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') this.maxRadius,
-      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
-      this.boundaryLastLevelMaxSelection});
 
-  factory _$AppConfigImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AppConfigImplFromJson(json);
+class _AppConfig implements AppConfig {
+   _AppConfig({@JsonKey(name: 'NETWORK_DETECTION') required this.networkDetection, @JsonKey(name: 'PERSISTENCE_MODE') required this.persistenceMode, @JsonKey(name: 'SYNC_METHOD') required this.syncMethod, @JsonKey(name: 'SYNC_TRIGGER') required this.syncTrigger, @JsonKey(name: 'TENANT_ID') this.tenantId, @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') this.maxRadius, @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION') this.boundaryLastLevelMaxSelection});
+  factory _AppConfig.fromJson(Map<String, dynamic> json) => _$AppConfigFromJson(json);
 
-  @override
-  @JsonKey(name: 'NETWORK_DETECTION')
-  final String networkDetection;
-  @override
-  @JsonKey(name: 'PERSISTENCE_MODE')
-  final String persistenceMode;
-  @override
-  @JsonKey(name: 'SYNC_METHOD')
-  final String syncMethod;
-  @override
-  @JsonKey(name: 'SYNC_TRIGGER')
-  final String syncTrigger;
-  @override
-  @JsonKey(name: 'TENANT_ID')
-  final String? tenantId;
-  @override
-  @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-  final double? maxRadius;
-  @override
-  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
-  final int? boundaryLastLevelMaxSelection;
+@override@JsonKey(name: 'NETWORK_DETECTION') final  String networkDetection;
+@override@JsonKey(name: 'PERSISTENCE_MODE') final  String persistenceMode;
+@override@JsonKey(name: 'SYNC_METHOD') final  String syncMethod;
+@override@JsonKey(name: 'SYNC_TRIGGER') final  String syncTrigger;
+@override@JsonKey(name: 'TENANT_ID') final  String? tenantId;
+@override@JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final  double? maxRadius;
+@override@JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION') final  int? boundaryLastLevelMaxSelection;
 
-  @override
-  String toString() {
-    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, tenantId: $tenantId, maxRadius: $maxRadius, boundaryLastLevelMaxSelection: $boundaryLastLevelMaxSelection)';
-  }
+/// Create a copy of AppConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AppConfigCopyWith<_AppConfig> get copyWith => __$AppConfigCopyWithImpl<_AppConfig>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AppConfigImpl &&
-            (identical(other.networkDetection, networkDetection) ||
-                other.networkDetection == networkDetection) &&
-            (identical(other.persistenceMode, persistenceMode) ||
-                other.persistenceMode == persistenceMode) &&
-            (identical(other.syncMethod, syncMethod) ||
-                other.syncMethod == syncMethod) &&
-            (identical(other.syncTrigger, syncTrigger) ||
-                other.syncTrigger == syncTrigger) &&
-            (identical(other.tenantId, tenantId) ||
-                other.tenantId == tenantId) &&
-            (identical(other.maxRadius, maxRadius) ||
-                other.maxRadius == maxRadius) &&
-            (identical(other.boundaryLastLevelMaxSelection,
-                    boundaryLastLevelMaxSelection) ||
-                other.boundaryLastLevelMaxSelection ==
-                    boundaryLastLevelMaxSelection));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      networkDetection,
-      persistenceMode,
-      syncMethod,
-      syncTrigger,
-      tenantId,
-      maxRadius,
-      boundaryLastLevelMaxSelection);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AppConfigImplCopyWith<_$AppConfigImpl> get copyWith =>
-      __$$AppConfigImplCopyWithImpl<_$AppConfigImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AppConfigImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$AppConfigToJson(this, );
 }
 
-abstract class _AppConfig implements AppConfig {
-  factory _AppConfig(
-      {@JsonKey(name: 'NETWORK_DETECTION')
-      required final String networkDetection,
-      @JsonKey(name: 'PERSISTENCE_MODE') required final String persistenceMode,
-      @JsonKey(name: 'SYNC_METHOD') required final String syncMethod,
-      @JsonKey(name: 'SYNC_TRIGGER') required final String syncTrigger,
-      @JsonKey(name: 'TENANT_ID') final String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
-      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
-      final int? boundaryLastLevelMaxSelection}) = _$AppConfigImpl;
-
-  factory _AppConfig.fromJson(Map<String, dynamic> json) =
-      _$AppConfigImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'NETWORK_DETECTION')
-  String get networkDetection;
-  @override
-  @JsonKey(name: 'PERSISTENCE_MODE')
-  String get persistenceMode;
-  @override
-  @JsonKey(name: 'SYNC_METHOD')
-  String get syncMethod;
-  @override
-  @JsonKey(name: 'SYNC_TRIGGER')
-  String get syncTrigger;
-  @override
-  @JsonKey(name: 'TENANT_ID')
-  String? get tenantId;
-  @override
-  @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-  double? get maxRadius;
-  @override
-  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
-  int? get boundaryLastLevelMaxSelection;
-  @override
-  @JsonKey(ignore: true)
-  _$$AppConfigImplCopyWith<_$AppConfigImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppConfig&&(identical(other.networkDetection, networkDetection) || other.networkDetection == networkDetection)&&(identical(other.persistenceMode, persistenceMode) || other.persistenceMode == persistenceMode)&&(identical(other.syncMethod, syncMethod) || other.syncMethod == syncMethod)&&(identical(other.syncTrigger, syncTrigger) || other.syncTrigger == syncTrigger)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.maxRadius, maxRadius) || other.maxRadius == maxRadius)&&(identical(other.boundaryLastLevelMaxSelection, boundaryLastLevelMaxSelection) || other.boundaryLastLevelMaxSelection == boundaryLastLevelMaxSelection));
 }
 
-IdTypeOptions _$IdTypeOptionsFromJson(Map<String, dynamic> json) {
-  return _IdTypeOptions.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,networkDetection,persistenceMode,syncMethod,syncTrigger,tenantId,maxRadius,boundaryLastLevelMaxSelection);
+
+@override
+String toString() {
+  return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, tenantId: $tenantId, maxRadius: $maxRadius, boundaryLastLevelMaxSelection: $boundaryLastLevelMaxSelection)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AppConfigCopyWith<$Res> implements $AppConfigCopyWith<$Res> {
+  factory _$AppConfigCopyWith(_AppConfig value, $Res Function(_AppConfig) _then) = __$AppConfigCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'NETWORK_DETECTION') String networkDetection,@JsonKey(name: 'PERSISTENCE_MODE') String persistenceMode,@JsonKey(name: 'SYNC_METHOD') String syncMethod,@JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,@JsonKey(name: 'TENANT_ID') String? tenantId,@JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,@JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION') int? boundaryLastLevelMaxSelection
+});
+
+
+
+
+}
+/// @nodoc
+class __$AppConfigCopyWithImpl<$Res>
+    implements _$AppConfigCopyWith<$Res> {
+  __$AppConfigCopyWithImpl(this._self, this._then);
+
+  final _AppConfig _self;
+  final $Res Function(_AppConfig) _then;
+
+/// Create a copy of AppConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? networkDetection = null,Object? persistenceMode = null,Object? syncMethod = null,Object? syncTrigger = null,Object? tenantId = freezed,Object? maxRadius = freezed,Object? boundaryLastLevelMaxSelection = freezed,}) {
+  return _then(_AppConfig(
+networkDetection: null == networkDetection ? _self.networkDetection : networkDetection // ignore: cast_nullable_to_non_nullable
+as String,persistenceMode: null == persistenceMode ? _self.persistenceMode : persistenceMode // ignore: cast_nullable_to_non_nullable
+as String,syncMethod: null == syncMethod ? _self.syncMethod : syncMethod // ignore: cast_nullable_to_non_nullable
+as String,syncTrigger: null == syncTrigger ? _self.syncTrigger : syncTrigger // ignore: cast_nullable_to_non_nullable
+as String,tenantId: freezed == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String?,maxRadius: freezed == maxRadius ? _self.maxRadius : maxRadius // ignore: cast_nullable_to_non_nullable
+as double?,boundaryLastLevelMaxSelection: freezed == boundaryLastLevelMaxSelection ? _self.boundaryLastLevelMaxSelection : boundaryLastLevelMaxSelection // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$IdTypeOptions {
-  String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $IdTypeOptionsCopyWith<IdTypeOptions> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get name; String get code;
+/// Create a copy of IdTypeOptions
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$IdTypeOptionsCopyWith<IdTypeOptions> get copyWith => _$IdTypeOptionsCopyWithImpl<IdTypeOptions>(this as IdTypeOptions, _$identity);
+
+  /// Serializes this IdTypeOptions to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IdTypeOptions&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'IdTypeOptions(name: $name, code: $code)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $IdTypeOptionsCopyWith<$Res> {
-  factory $IdTypeOptionsCopyWith(
-          IdTypeOptions value, $Res Function(IdTypeOptions) then) =
-      _$IdTypeOptionsCopyWithImpl<$Res, IdTypeOptions>;
-  @useResult
-  $Res call({String name, String code});
-}
+abstract mixin class $IdTypeOptionsCopyWith<$Res>  {
+  factory $IdTypeOptionsCopyWith(IdTypeOptions value, $Res Function(IdTypeOptions) _then) = _$IdTypeOptionsCopyWithImpl;
+@useResult
+$Res call({
+ String name, String code
+});
 
+
+
+
+}
 /// @nodoc
-class _$IdTypeOptionsCopyWithImpl<$Res, $Val extends IdTypeOptions>
+class _$IdTypeOptionsCopyWithImpl<$Res>
     implements $IdTypeOptionsCopyWith<$Res> {
-  _$IdTypeOptionsCopyWithImpl(this._value, this._then);
+  _$IdTypeOptionsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final IdTypeOptions _self;
+  final $Res Function(IdTypeOptions) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of IdTypeOptions
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$IdTypeOptionsImplCopyWith<$Res>
-    implements $IdTypeOptionsCopyWith<$Res> {
-  factory _$$IdTypeOptionsImplCopyWith(
-          _$IdTypeOptionsImpl value, $Res Function(_$IdTypeOptionsImpl) then) =
-      __$$IdTypeOptionsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String code});
 }
 
-/// @nodoc
-class __$$IdTypeOptionsImplCopyWithImpl<$Res>
-    extends _$IdTypeOptionsCopyWithImpl<$Res, _$IdTypeOptionsImpl>
-    implements _$$IdTypeOptionsImplCopyWith<$Res> {
-  __$$IdTypeOptionsImplCopyWithImpl(
-      _$IdTypeOptionsImpl _value, $Res Function(_$IdTypeOptionsImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_$IdTypeOptionsImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [IdTypeOptions].
+extension IdTypeOptionsPatterns on IdTypeOptions {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _IdTypeOptions value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _IdTypeOptions() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _IdTypeOptions value)  $default,){
+final _that = this;
+switch (_that) {
+case _IdTypeOptions():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _IdTypeOptions value)?  $default,){
+final _that = this;
+switch (_that) {
+case _IdTypeOptions() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String code)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _IdTypeOptions() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String code)  $default,) {final _that = this;
+switch (_that) {
+case _IdTypeOptions():
+return $default(_that.name,_that.code);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String code)?  $default,) {final _that = this;
+switch (_that) {
+case _IdTypeOptions() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$IdTypeOptionsImpl implements _IdTypeOptions {
-  _$IdTypeOptionsImpl({required this.name, required this.code});
 
-  factory _$IdTypeOptionsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$IdTypeOptionsImplFromJson(json);
+class _IdTypeOptions implements IdTypeOptions {
+   _IdTypeOptions({required this.name, required this.code});
+  factory _IdTypeOptions.fromJson(Map<String, dynamic> json) => _$IdTypeOptionsFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String code;
+@override final  String name;
+@override final  String code;
 
-  @override
-  String toString() {
-    return 'IdTypeOptions(name: $name, code: $code)';
-  }
+/// Create a copy of IdTypeOptions
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$IdTypeOptionsCopyWith<_IdTypeOptions> get copyWith => __$IdTypeOptionsCopyWithImpl<_IdTypeOptions>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$IdTypeOptionsImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, code);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$IdTypeOptionsImplCopyWith<_$IdTypeOptionsImpl> get copyWith =>
-      __$$IdTypeOptionsImplCopyWithImpl<_$IdTypeOptionsImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$IdTypeOptionsImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$IdTypeOptionsToJson(this, );
 }
 
-abstract class _IdTypeOptions implements IdTypeOptions {
-  factory _IdTypeOptions(
-      {required final String name,
-      required final String code}) = _$IdTypeOptionsImpl;
-
-  factory _IdTypeOptions.fromJson(Map<String, dynamic> json) =
-      _$IdTypeOptionsImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String get code;
-  @override
-  @JsonKey(ignore: true)
-  _$$IdTypeOptionsImplCopyWith<_$IdTypeOptionsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IdTypeOptions&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
 }
 
-RelationShipTypeOptions _$RelationShipTypeOptionsFromJson(
-    Map<String, dynamic> json) {
-  return _RelationShipTypeOptions.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'IdTypeOptions(name: $name, code: $code)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$IdTypeOptionsCopyWith<$Res> implements $IdTypeOptionsCopyWith<$Res> {
+  factory _$IdTypeOptionsCopyWith(_IdTypeOptions value, $Res Function(_IdTypeOptions) _then) = __$IdTypeOptionsCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String code
+});
+
+
+
+
+}
+/// @nodoc
+class __$IdTypeOptionsCopyWithImpl<$Res>
+    implements _$IdTypeOptionsCopyWith<$Res> {
+  __$IdTypeOptionsCopyWithImpl(this._self, this._then);
+
+  final _IdTypeOptions _self;
+  final $Res Function(_IdTypeOptions) _then;
+
+/// Create a copy of IdTypeOptions
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_IdTypeOptions(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$RelationShipTypeOptions {
-  String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
-  bool get active => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $RelationShipTypeOptionsCopyWith<RelationShipTypeOptions> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get name; String get code; bool get active;
+/// Create a copy of RelationShipTypeOptions
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RelationShipTypeOptionsCopyWith<RelationShipTypeOptions> get copyWith => _$RelationShipTypeOptionsCopyWithImpl<RelationShipTypeOptions>(this as RelationShipTypeOptions, _$identity);
+
+  /// Serializes this RelationShipTypeOptions to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RelationShipTypeOptions&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.active, active) || other.active == active));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code,active);
+
+@override
+String toString() {
+  return 'RelationShipTypeOptions(name: $name, code: $code, active: $active)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $RelationShipTypeOptionsCopyWith<$Res> {
-  factory $RelationShipTypeOptionsCopyWith(RelationShipTypeOptions value,
-          $Res Function(RelationShipTypeOptions) then) =
-      _$RelationShipTypeOptionsCopyWithImpl<$Res, RelationShipTypeOptions>;
-  @useResult
-  $Res call({String name, String code, bool active});
-}
+abstract mixin class $RelationShipTypeOptionsCopyWith<$Res>  {
+  factory $RelationShipTypeOptionsCopyWith(RelationShipTypeOptions value, $Res Function(RelationShipTypeOptions) _then) = _$RelationShipTypeOptionsCopyWithImpl;
+@useResult
+$Res call({
+ String name, String code, bool active
+});
 
+
+
+
+}
 /// @nodoc
-class _$RelationShipTypeOptionsCopyWithImpl<$Res,
-        $Val extends RelationShipTypeOptions>
+class _$RelationShipTypeOptionsCopyWithImpl<$Res>
     implements $RelationShipTypeOptionsCopyWith<$Res> {
-  _$RelationShipTypeOptionsCopyWithImpl(this._value, this._then);
+  _$RelationShipTypeOptionsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final RelationShipTypeOptions _self;
+  final $Res Function(RelationShipTypeOptions) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-    Object? active = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
+/// Create a copy of RelationShipTypeOptions
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,Object? active = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-abstract class _$$RelationShipTypeOptionsImplCopyWith<$Res>
-    implements $RelationShipTypeOptionsCopyWith<$Res> {
-  factory _$$RelationShipTypeOptionsImplCopyWith(
-          _$RelationShipTypeOptionsImpl value,
-          $Res Function(_$RelationShipTypeOptionsImpl) then) =
-      __$$RelationShipTypeOptionsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String code, bool active});
 }
 
-/// @nodoc
-class __$$RelationShipTypeOptionsImplCopyWithImpl<$Res>
-    extends _$RelationShipTypeOptionsCopyWithImpl<$Res,
-        _$RelationShipTypeOptionsImpl>
-    implements _$$RelationShipTypeOptionsImplCopyWith<$Res> {
-  __$$RelationShipTypeOptionsImplCopyWithImpl(
-      _$RelationShipTypeOptionsImpl _value,
-      $Res Function(_$RelationShipTypeOptionsImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-    Object? active = null,
-  }) {
-    return _then(_$RelationShipTypeOptionsImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+/// Adds pattern-matching-related methods to [RelationShipTypeOptions].
+extension RelationShipTypeOptionsPatterns on RelationShipTypeOptions {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RelationShipTypeOptions value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _RelationShipTypeOptions() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RelationShipTypeOptions value)  $default,){
+final _that = this;
+switch (_that) {
+case _RelationShipTypeOptions():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RelationShipTypeOptions value)?  $default,){
+final _that = this;
+switch (_that) {
+case _RelationShipTypeOptions() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String code,  bool active)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _RelationShipTypeOptions() when $default != null:
+return $default(_that.name,_that.code,_that.active);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String code,  bool active)  $default,) {final _that = this;
+switch (_that) {
+case _RelationShipTypeOptions():
+return $default(_that.name,_that.code,_that.active);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String code,  bool active)?  $default,) {final _that = this;
+switch (_that) {
+case _RelationShipTypeOptions() when $default != null:
+return $default(_that.name,_that.code,_that.active);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$RelationShipTypeOptionsImpl implements _RelationShipTypeOptions {
-  _$RelationShipTypeOptionsImpl(
-      {required this.name, required this.code, required this.active});
 
-  factory _$RelationShipTypeOptionsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RelationShipTypeOptionsImplFromJson(json);
+class _RelationShipTypeOptions implements RelationShipTypeOptions {
+   _RelationShipTypeOptions({required this.name, required this.code, required this.active});
+  factory _RelationShipTypeOptions.fromJson(Map<String, dynamic> json) => _$RelationShipTypeOptionsFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String code;
-  @override
-  final bool active;
+@override final  String name;
+@override final  String code;
+@override final  bool active;
 
-  @override
-  String toString() {
-    return 'RelationShipTypeOptions(name: $name, code: $code, active: $active)';
-  }
+/// Create a copy of RelationShipTypeOptions
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RelationShipTypeOptionsCopyWith<_RelationShipTypeOptions> get copyWith => __$RelationShipTypeOptionsCopyWithImpl<_RelationShipTypeOptions>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$RelationShipTypeOptionsImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.active, active) || other.active == active));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, code, active);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$RelationShipTypeOptionsImplCopyWith<_$RelationShipTypeOptionsImpl>
-      get copyWith => __$$RelationShipTypeOptionsImplCopyWithImpl<
-          _$RelationShipTypeOptionsImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$RelationShipTypeOptionsImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$RelationShipTypeOptionsToJson(this, );
 }
 
-abstract class _RelationShipTypeOptions implements RelationShipTypeOptions {
-  factory _RelationShipTypeOptions(
-      {required final String name,
-      required final String code,
-      required final bool active}) = _$RelationShipTypeOptionsImpl;
-
-  factory _RelationShipTypeOptions.fromJson(Map<String, dynamic> json) =
-      _$RelationShipTypeOptionsImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String get code;
-  @override
-  bool get active;
-  @override
-  @JsonKey(ignore: true)
-  _$$RelationShipTypeOptionsImplCopyWith<_$RelationShipTypeOptionsImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RelationShipTypeOptions&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.active, active) || other.active == active));
 }
 
-BandWidthBatchSize _$BandWidthBatchSizeFromJson(Map<String, dynamic> json) {
-  return _BandWidthBatchSize.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code,active);
+
+@override
+String toString() {
+  return 'RelationShipTypeOptions(name: $name, code: $code, active: $active)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RelationShipTypeOptionsCopyWith<$Res> implements $RelationShipTypeOptionsCopyWith<$Res> {
+  factory _$RelationShipTypeOptionsCopyWith(_RelationShipTypeOptions value, $Res Function(_RelationShipTypeOptions) _then) = __$RelationShipTypeOptionsCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String code, bool active
+});
+
+
+
+
+}
+/// @nodoc
+class __$RelationShipTypeOptionsCopyWithImpl<$Res>
+    implements _$RelationShipTypeOptionsCopyWith<$Res> {
+  __$RelationShipTypeOptionsCopyWithImpl(this._self, this._then);
+
+  final _RelationShipTypeOptions _self;
+  final $Res Function(_RelationShipTypeOptions) _then;
+
+/// Create a copy of RelationShipTypeOptions
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? code = null,Object? active = null,}) {
+  return _then(_RelationShipTypeOptions(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$BandWidthBatchSize {
-  @JsonKey(name: 'MIN_RANGE')
-  double get minRange => throw _privateConstructorUsedError;
-  @JsonKey(name: 'MAX_RANGE')
-  double get maxRange => throw _privateConstructorUsedError;
-  @JsonKey(name: 'BATCH_SIZE')
-  int get batchSize => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $BandWidthBatchSizeCopyWith<BandWidthBatchSize> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'MIN_RANGE') double get minRange;@JsonKey(name: 'MAX_RANGE') double get maxRange;@JsonKey(name: 'BATCH_SIZE') int get batchSize;
+/// Create a copy of BandWidthBatchSize
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$BandWidthBatchSizeCopyWith<BandWidthBatchSize> get copyWith => _$BandWidthBatchSizeCopyWithImpl<BandWidthBatchSize>(this as BandWidthBatchSize, _$identity);
+
+  /// Serializes this BandWidthBatchSize to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BandWidthBatchSize&&(identical(other.minRange, minRange) || other.minRange == minRange)&&(identical(other.maxRange, maxRange) || other.maxRange == maxRange)&&(identical(other.batchSize, batchSize) || other.batchSize == batchSize));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,minRange,maxRange,batchSize);
+
+@override
+String toString() {
+  return 'BandWidthBatchSize(minRange: $minRange, maxRange: $maxRange, batchSize: $batchSize)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $BandWidthBatchSizeCopyWith<$Res> {
-  factory $BandWidthBatchSizeCopyWith(
-          BandWidthBatchSize value, $Res Function(BandWidthBatchSize) then) =
-      _$BandWidthBatchSizeCopyWithImpl<$Res, BandWidthBatchSize>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'MIN_RANGE') double minRange,
-      @JsonKey(name: 'MAX_RANGE') double maxRange,
-      @JsonKey(name: 'BATCH_SIZE') int batchSize});
-}
+abstract mixin class $BandWidthBatchSizeCopyWith<$Res>  {
+  factory $BandWidthBatchSizeCopyWith(BandWidthBatchSize value, $Res Function(BandWidthBatchSize) _then) = _$BandWidthBatchSizeCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'MIN_RANGE') double minRange,@JsonKey(name: 'MAX_RANGE') double maxRange,@JsonKey(name: 'BATCH_SIZE') int batchSize
+});
 
+
+
+
+}
 /// @nodoc
-class _$BandWidthBatchSizeCopyWithImpl<$Res, $Val extends BandWidthBatchSize>
+class _$BandWidthBatchSizeCopyWithImpl<$Res>
     implements $BandWidthBatchSizeCopyWith<$Res> {
-  _$BandWidthBatchSizeCopyWithImpl(this._value, this._then);
+  _$BandWidthBatchSizeCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final BandWidthBatchSize _self;
+  final $Res Function(BandWidthBatchSize) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? minRange = null,
-    Object? maxRange = null,
-    Object? batchSize = null,
-  }) {
-    return _then(_value.copyWith(
-      minRange: null == minRange
-          ? _value.minRange
-          : minRange // ignore: cast_nullable_to_non_nullable
-              as double,
-      maxRange: null == maxRange
-          ? _value.maxRange
-          : maxRange // ignore: cast_nullable_to_non_nullable
-              as double,
-      batchSize: null == batchSize
-          ? _value.batchSize
-          : batchSize // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
+/// Create a copy of BandWidthBatchSize
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? minRange = null,Object? maxRange = null,Object? batchSize = null,}) {
+  return _then(_self.copyWith(
+minRange: null == minRange ? _self.minRange : minRange // ignore: cast_nullable_to_non_nullable
+as double,maxRange: null == maxRange ? _self.maxRange : maxRange // ignore: cast_nullable_to_non_nullable
+as double,batchSize: null == batchSize ? _self.batchSize : batchSize // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$BandWidthBatchSizeImplCopyWith<$Res>
-    implements $BandWidthBatchSizeCopyWith<$Res> {
-  factory _$$BandWidthBatchSizeImplCopyWith(_$BandWidthBatchSizeImpl value,
-          $Res Function(_$BandWidthBatchSizeImpl) then) =
-      __$$BandWidthBatchSizeImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'MIN_RANGE') double minRange,
-      @JsonKey(name: 'MAX_RANGE') double maxRange,
-      @JsonKey(name: 'BATCH_SIZE') int batchSize});
 }
 
-/// @nodoc
-class __$$BandWidthBatchSizeImplCopyWithImpl<$Res>
-    extends _$BandWidthBatchSizeCopyWithImpl<$Res, _$BandWidthBatchSizeImpl>
-    implements _$$BandWidthBatchSizeImplCopyWith<$Res> {
-  __$$BandWidthBatchSizeImplCopyWithImpl(_$BandWidthBatchSizeImpl _value,
-      $Res Function(_$BandWidthBatchSizeImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? minRange = null,
-    Object? maxRange = null,
-    Object? batchSize = null,
-  }) {
-    return _then(_$BandWidthBatchSizeImpl(
-      minRange: null == minRange
-          ? _value.minRange
-          : minRange // ignore: cast_nullable_to_non_nullable
-              as double,
-      maxRange: null == maxRange
-          ? _value.maxRange
-          : maxRange // ignore: cast_nullable_to_non_nullable
-              as double,
-      batchSize: null == batchSize
-          ? _value.batchSize
-          : batchSize // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
+/// Adds pattern-matching-related methods to [BandWidthBatchSize].
+extension BandWidthBatchSizePatterns on BandWidthBatchSize {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _BandWidthBatchSize value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _BandWidthBatchSize() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _BandWidthBatchSize value)  $default,){
+final _that = this;
+switch (_that) {
+case _BandWidthBatchSize():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _BandWidthBatchSize value)?  $default,){
+final _that = this;
+switch (_that) {
+case _BandWidthBatchSize() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'MIN_RANGE')  double minRange, @JsonKey(name: 'MAX_RANGE')  double maxRange, @JsonKey(name: 'BATCH_SIZE')  int batchSize)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _BandWidthBatchSize() when $default != null:
+return $default(_that.minRange,_that.maxRange,_that.batchSize);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'MIN_RANGE')  double minRange, @JsonKey(name: 'MAX_RANGE')  double maxRange, @JsonKey(name: 'BATCH_SIZE')  int batchSize)  $default,) {final _that = this;
+switch (_that) {
+case _BandWidthBatchSize():
+return $default(_that.minRange,_that.maxRange,_that.batchSize);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'MIN_RANGE')  double minRange, @JsonKey(name: 'MAX_RANGE')  double maxRange, @JsonKey(name: 'BATCH_SIZE')  int batchSize)?  $default,) {final _that = this;
+switch (_that) {
+case _BandWidthBatchSize() when $default != null:
+return $default(_that.minRange,_that.maxRange,_that.batchSize);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$BandWidthBatchSizeImpl implements _BandWidthBatchSize {
-  _$BandWidthBatchSizeImpl(
-      {@JsonKey(name: 'MIN_RANGE') required this.minRange,
-      @JsonKey(name: 'MAX_RANGE') required this.maxRange,
-      @JsonKey(name: 'BATCH_SIZE') required this.batchSize});
 
-  factory _$BandWidthBatchSizeImpl.fromJson(Map<String, dynamic> json) =>
-      _$$BandWidthBatchSizeImplFromJson(json);
+class _BandWidthBatchSize implements BandWidthBatchSize {
+   _BandWidthBatchSize({@JsonKey(name: 'MIN_RANGE') required this.minRange, @JsonKey(name: 'MAX_RANGE') required this.maxRange, @JsonKey(name: 'BATCH_SIZE') required this.batchSize});
+  factory _BandWidthBatchSize.fromJson(Map<String, dynamic> json) => _$BandWidthBatchSizeFromJson(json);
 
-  @override
-  @JsonKey(name: 'MIN_RANGE')
-  final double minRange;
-  @override
-  @JsonKey(name: 'MAX_RANGE')
-  final double maxRange;
-  @override
-  @JsonKey(name: 'BATCH_SIZE')
-  final int batchSize;
+@override@JsonKey(name: 'MIN_RANGE') final  double minRange;
+@override@JsonKey(name: 'MAX_RANGE') final  double maxRange;
+@override@JsonKey(name: 'BATCH_SIZE') final  int batchSize;
 
-  @override
-  String toString() {
-    return 'BandWidthBatchSize(minRange: $minRange, maxRange: $maxRange, batchSize: $batchSize)';
-  }
+/// Create a copy of BandWidthBatchSize
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$BandWidthBatchSizeCopyWith<_BandWidthBatchSize> get copyWith => __$BandWidthBatchSizeCopyWithImpl<_BandWidthBatchSize>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$BandWidthBatchSizeImpl &&
-            (identical(other.minRange, minRange) ||
-                other.minRange == minRange) &&
-            (identical(other.maxRange, maxRange) ||
-                other.maxRange == maxRange) &&
-            (identical(other.batchSize, batchSize) ||
-                other.batchSize == batchSize));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, minRange, maxRange, batchSize);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$BandWidthBatchSizeImplCopyWith<_$BandWidthBatchSizeImpl> get copyWith =>
-      __$$BandWidthBatchSizeImplCopyWithImpl<_$BandWidthBatchSizeImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$BandWidthBatchSizeImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$BandWidthBatchSizeToJson(this, );
 }
 
-abstract class _BandWidthBatchSize implements BandWidthBatchSize {
-  factory _BandWidthBatchSize(
-          {@JsonKey(name: 'MIN_RANGE') required final double minRange,
-          @JsonKey(name: 'MAX_RANGE') required final double maxRange,
-          @JsonKey(name: 'BATCH_SIZE') required final int batchSize}) =
-      _$BandWidthBatchSizeImpl;
-
-  factory _BandWidthBatchSize.fromJson(Map<String, dynamic> json) =
-      _$BandWidthBatchSizeImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'MIN_RANGE')
-  double get minRange;
-  @override
-  @JsonKey(name: 'MAX_RANGE')
-  double get maxRange;
-  @override
-  @JsonKey(name: 'BATCH_SIZE')
-  int get batchSize;
-  @override
-  @JsonKey(ignore: true)
-  _$$BandWidthBatchSizeImplCopyWith<_$BandWidthBatchSizeImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BandWidthBatchSize&&(identical(other.minRange, minRange) || other.minRange == minRange)&&(identical(other.maxRange, maxRange) || other.maxRange == maxRange)&&(identical(other.batchSize, batchSize) || other.batchSize == batchSize));
 }
 
-BeneficiaryIdConfig _$BeneficiaryIdConfigFromJson(Map<String, dynamic> json) {
-  return _BeneficiaryIdConfig.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,minRange,maxRange,batchSize);
+
+@override
+String toString() {
+  return 'BandWidthBatchSize(minRange: $minRange, maxRange: $maxRange, batchSize: $batchSize)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$BandWidthBatchSizeCopyWith<$Res> implements $BandWidthBatchSizeCopyWith<$Res> {
+  factory _$BandWidthBatchSizeCopyWith(_BandWidthBatchSize value, $Res Function(_BandWidthBatchSize) _then) = __$BandWidthBatchSizeCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'MIN_RANGE') double minRange,@JsonKey(name: 'MAX_RANGE') double maxRange,@JsonKey(name: 'BATCH_SIZE') int batchSize
+});
+
+
+
+
+}
+/// @nodoc
+class __$BandWidthBatchSizeCopyWithImpl<$Res>
+    implements _$BandWidthBatchSizeCopyWith<$Res> {
+  __$BandWidthBatchSizeCopyWithImpl(this._self, this._then);
+
+  final _BandWidthBatchSize _self;
+  final $Res Function(_BandWidthBatchSize) _then;
+
+/// Create a copy of BandWidthBatchSize
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? minRange = null,Object? maxRange = null,Object? batchSize = null,}) {
+  return _then(_BandWidthBatchSize(
+minRange: null == minRange ? _self.minRange : minRange // ignore: cast_nullable_to_non_nullable
+as double,maxRange: null == maxRange ? _self.maxRange : maxRange // ignore: cast_nullable_to_non_nullable
+as double,batchSize: null == batchSize ? _self.batchSize : batchSize // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$BeneficiaryIdConfig {
-  @JsonKey(name: 'MIN_COUNT')
-  double get minCount => throw _privateConstructorUsedError;
-  @JsonKey(name: 'BATCH_SIZE')
-  int get batchSize => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $BeneficiaryIdConfigCopyWith<BeneficiaryIdConfig> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'MIN_COUNT') double get minCount;@JsonKey(name: 'BATCH_SIZE') int get batchSize;
+/// Create a copy of BeneficiaryIdConfig
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$BeneficiaryIdConfigCopyWith<BeneficiaryIdConfig> get copyWith => _$BeneficiaryIdConfigCopyWithImpl<BeneficiaryIdConfig>(this as BeneficiaryIdConfig, _$identity);
+
+  /// Serializes this BeneficiaryIdConfig to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BeneficiaryIdConfig&&(identical(other.minCount, minCount) || other.minCount == minCount)&&(identical(other.batchSize, batchSize) || other.batchSize == batchSize));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,minCount,batchSize);
+
+@override
+String toString() {
+  return 'BeneficiaryIdConfig(minCount: $minCount, batchSize: $batchSize)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $BeneficiaryIdConfigCopyWith<$Res> {
-  factory $BeneficiaryIdConfigCopyWith(
-          BeneficiaryIdConfig value, $Res Function(BeneficiaryIdConfig) then) =
-      _$BeneficiaryIdConfigCopyWithImpl<$Res, BeneficiaryIdConfig>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'MIN_COUNT') double minCount,
-      @JsonKey(name: 'BATCH_SIZE') int batchSize});
-}
+abstract mixin class $BeneficiaryIdConfigCopyWith<$Res>  {
+  factory $BeneficiaryIdConfigCopyWith(BeneficiaryIdConfig value, $Res Function(BeneficiaryIdConfig) _then) = _$BeneficiaryIdConfigCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'MIN_COUNT') double minCount,@JsonKey(name: 'BATCH_SIZE') int batchSize
+});
 
+
+
+
+}
 /// @nodoc
-class _$BeneficiaryIdConfigCopyWithImpl<$Res, $Val extends BeneficiaryIdConfig>
+class _$BeneficiaryIdConfigCopyWithImpl<$Res>
     implements $BeneficiaryIdConfigCopyWith<$Res> {
-  _$BeneficiaryIdConfigCopyWithImpl(this._value, this._then);
+  _$BeneficiaryIdConfigCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final BeneficiaryIdConfig _self;
+  final $Res Function(BeneficiaryIdConfig) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? minCount = null,
-    Object? batchSize = null,
-  }) {
-    return _then(_value.copyWith(
-      minCount: null == minCount
-          ? _value.minCount
-          : minCount // ignore: cast_nullable_to_non_nullable
-              as double,
-      batchSize: null == batchSize
-          ? _value.batchSize
-          : batchSize // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
+/// Create a copy of BeneficiaryIdConfig
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? minCount = null,Object? batchSize = null,}) {
+  return _then(_self.copyWith(
+minCount: null == minCount ? _self.minCount : minCount // ignore: cast_nullable_to_non_nullable
+as double,batchSize: null == batchSize ? _self.batchSize : batchSize // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$BeneficiaryIdConfigImplCopyWith<$Res>
-    implements $BeneficiaryIdConfigCopyWith<$Res> {
-  factory _$$BeneficiaryIdConfigImplCopyWith(_$BeneficiaryIdConfigImpl value,
-          $Res Function(_$BeneficiaryIdConfigImpl) then) =
-      __$$BeneficiaryIdConfigImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'MIN_COUNT') double minCount,
-      @JsonKey(name: 'BATCH_SIZE') int batchSize});
 }
 
-/// @nodoc
-class __$$BeneficiaryIdConfigImplCopyWithImpl<$Res>
-    extends _$BeneficiaryIdConfigCopyWithImpl<$Res, _$BeneficiaryIdConfigImpl>
-    implements _$$BeneficiaryIdConfigImplCopyWith<$Res> {
-  __$$BeneficiaryIdConfigImplCopyWithImpl(_$BeneficiaryIdConfigImpl _value,
-      $Res Function(_$BeneficiaryIdConfigImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? minCount = null,
-    Object? batchSize = null,
-  }) {
-    return _then(_$BeneficiaryIdConfigImpl(
-      minCount: null == minCount
-          ? _value.minCount
-          : minCount // ignore: cast_nullable_to_non_nullable
-              as double,
-      batchSize: null == batchSize
-          ? _value.batchSize
-          : batchSize // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
+/// Adds pattern-matching-related methods to [BeneficiaryIdConfig].
+extension BeneficiaryIdConfigPatterns on BeneficiaryIdConfig {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _BeneficiaryIdConfig value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _BeneficiaryIdConfig() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _BeneficiaryIdConfig value)  $default,){
+final _that = this;
+switch (_that) {
+case _BeneficiaryIdConfig():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _BeneficiaryIdConfig value)?  $default,){
+final _that = this;
+switch (_that) {
+case _BeneficiaryIdConfig() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'MIN_COUNT')  double minCount, @JsonKey(name: 'BATCH_SIZE')  int batchSize)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _BeneficiaryIdConfig() when $default != null:
+return $default(_that.minCount,_that.batchSize);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'MIN_COUNT')  double minCount, @JsonKey(name: 'BATCH_SIZE')  int batchSize)  $default,) {final _that = this;
+switch (_that) {
+case _BeneficiaryIdConfig():
+return $default(_that.minCount,_that.batchSize);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'MIN_COUNT')  double minCount, @JsonKey(name: 'BATCH_SIZE')  int batchSize)?  $default,) {final _that = this;
+switch (_that) {
+case _BeneficiaryIdConfig() when $default != null:
+return $default(_that.minCount,_that.batchSize);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$BeneficiaryIdConfigImpl implements _BeneficiaryIdConfig {
-  _$BeneficiaryIdConfigImpl(
-      {@JsonKey(name: 'MIN_COUNT') required this.minCount,
-      @JsonKey(name: 'BATCH_SIZE') required this.batchSize});
 
-  factory _$BeneficiaryIdConfigImpl.fromJson(Map<String, dynamic> json) =>
-      _$$BeneficiaryIdConfigImplFromJson(json);
+class _BeneficiaryIdConfig implements BeneficiaryIdConfig {
+   _BeneficiaryIdConfig({@JsonKey(name: 'MIN_COUNT') required this.minCount, @JsonKey(name: 'BATCH_SIZE') required this.batchSize});
+  factory _BeneficiaryIdConfig.fromJson(Map<String, dynamic> json) => _$BeneficiaryIdConfigFromJson(json);
 
-  @override
-  @JsonKey(name: 'MIN_COUNT')
-  final double minCount;
-  @override
-  @JsonKey(name: 'BATCH_SIZE')
-  final int batchSize;
+@override@JsonKey(name: 'MIN_COUNT') final  double minCount;
+@override@JsonKey(name: 'BATCH_SIZE') final  int batchSize;
 
-  @override
-  String toString() {
-    return 'BeneficiaryIdConfig(minCount: $minCount, batchSize: $batchSize)';
-  }
+/// Create a copy of BeneficiaryIdConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$BeneficiaryIdConfigCopyWith<_BeneficiaryIdConfig> get copyWith => __$BeneficiaryIdConfigCopyWithImpl<_BeneficiaryIdConfig>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryIdConfigImpl &&
-            (identical(other.minCount, minCount) ||
-                other.minCount == minCount) &&
-            (identical(other.batchSize, batchSize) ||
-                other.batchSize == batchSize));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, minCount, batchSize);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$BeneficiaryIdConfigImplCopyWith<_$BeneficiaryIdConfigImpl> get copyWith =>
-      __$$BeneficiaryIdConfigImplCopyWithImpl<_$BeneficiaryIdConfigImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$BeneficiaryIdConfigImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$BeneficiaryIdConfigToJson(this, );
 }
 
-abstract class _BeneficiaryIdConfig implements BeneficiaryIdConfig {
-  factory _BeneficiaryIdConfig(
-          {@JsonKey(name: 'MIN_COUNT') required final double minCount,
-          @JsonKey(name: 'BATCH_SIZE') required final int batchSize}) =
-      _$BeneficiaryIdConfigImpl;
-
-  factory _BeneficiaryIdConfig.fromJson(Map<String, dynamic> json) =
-      _$BeneficiaryIdConfigImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'MIN_COUNT')
-  double get minCount;
-  @override
-  @JsonKey(name: 'BATCH_SIZE')
-  int get batchSize;
-  @override
-  @JsonKey(ignore: true)
-  _$$BeneficiaryIdConfigImplCopyWith<_$BeneficiaryIdConfigImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BeneficiaryIdConfig&&(identical(other.minCount, minCount) || other.minCount == minCount)&&(identical(other.batchSize, batchSize) || other.batchSize == batchSize));
 }
 
-DeliveryCommentOptions _$DeliveryCommentOptionsFromJson(
-    Map<String, dynamic> json) {
-  return _DeliveryCommentOptions.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,minCount,batchSize);
+
+@override
+String toString() {
+  return 'BeneficiaryIdConfig(minCount: $minCount, batchSize: $batchSize)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$BeneficiaryIdConfigCopyWith<$Res> implements $BeneficiaryIdConfigCopyWith<$Res> {
+  factory _$BeneficiaryIdConfigCopyWith(_BeneficiaryIdConfig value, $Res Function(_BeneficiaryIdConfig) _then) = __$BeneficiaryIdConfigCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'MIN_COUNT') double minCount,@JsonKey(name: 'BATCH_SIZE') int batchSize
+});
+
+
+
+
+}
+/// @nodoc
+class __$BeneficiaryIdConfigCopyWithImpl<$Res>
+    implements _$BeneficiaryIdConfigCopyWith<$Res> {
+  __$BeneficiaryIdConfigCopyWithImpl(this._self, this._then);
+
+  final _BeneficiaryIdConfig _self;
+  final $Res Function(_BeneficiaryIdConfig) _then;
+
+/// Create a copy of BeneficiaryIdConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? minCount = null,Object? batchSize = null,}) {
+  return _then(_BeneficiaryIdConfig(
+minCount: null == minCount ? _self.minCount : minCount // ignore: cast_nullable_to_non_nullable
+as double,batchSize: null == batchSize ? _self.batchSize : batchSize // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$DeliveryCommentOptions {
-  String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $DeliveryCommentOptionsCopyWith<DeliveryCommentOptions> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get name; String get code;
+/// Create a copy of DeliveryCommentOptions
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DeliveryCommentOptionsCopyWith<DeliveryCommentOptions> get copyWith => _$DeliveryCommentOptionsCopyWithImpl<DeliveryCommentOptions>(this as DeliveryCommentOptions, _$identity);
+
+  /// Serializes this DeliveryCommentOptions to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeliveryCommentOptions&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'DeliveryCommentOptions(name: $name, code: $code)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $DeliveryCommentOptionsCopyWith<$Res> {
-  factory $DeliveryCommentOptionsCopyWith(DeliveryCommentOptions value,
-          $Res Function(DeliveryCommentOptions) then) =
-      _$DeliveryCommentOptionsCopyWithImpl<$Res, DeliveryCommentOptions>;
-  @useResult
-  $Res call({String name, String code});
-}
+abstract mixin class $DeliveryCommentOptionsCopyWith<$Res>  {
+  factory $DeliveryCommentOptionsCopyWith(DeliveryCommentOptions value, $Res Function(DeliveryCommentOptions) _then) = _$DeliveryCommentOptionsCopyWithImpl;
+@useResult
+$Res call({
+ String name, String code
+});
 
+
+
+
+}
 /// @nodoc
-class _$DeliveryCommentOptionsCopyWithImpl<$Res,
-        $Val extends DeliveryCommentOptions>
+class _$DeliveryCommentOptionsCopyWithImpl<$Res>
     implements $DeliveryCommentOptionsCopyWith<$Res> {
-  _$DeliveryCommentOptionsCopyWithImpl(this._value, this._then);
+  _$DeliveryCommentOptionsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final DeliveryCommentOptions _self;
+  final $Res Function(DeliveryCommentOptions) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of DeliveryCommentOptions
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$DeliveryCommentOptionsImplCopyWith<$Res>
-    implements $DeliveryCommentOptionsCopyWith<$Res> {
-  factory _$$DeliveryCommentOptionsImplCopyWith(
-          _$DeliveryCommentOptionsImpl value,
-          $Res Function(_$DeliveryCommentOptionsImpl) then) =
-      __$$DeliveryCommentOptionsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String code});
 }
 
-/// @nodoc
-class __$$DeliveryCommentOptionsImplCopyWithImpl<$Res>
-    extends _$DeliveryCommentOptionsCopyWithImpl<$Res,
-        _$DeliveryCommentOptionsImpl>
-    implements _$$DeliveryCommentOptionsImplCopyWith<$Res> {
-  __$$DeliveryCommentOptionsImplCopyWithImpl(
-      _$DeliveryCommentOptionsImpl _value,
-      $Res Function(_$DeliveryCommentOptionsImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_$DeliveryCommentOptionsImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [DeliveryCommentOptions].
+extension DeliveryCommentOptionsPatterns on DeliveryCommentOptions {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DeliveryCommentOptions value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DeliveryCommentOptions() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DeliveryCommentOptions value)  $default,){
+final _that = this;
+switch (_that) {
+case _DeliveryCommentOptions():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DeliveryCommentOptions value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DeliveryCommentOptions() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String code)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DeliveryCommentOptions() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String code)  $default,) {final _that = this;
+switch (_that) {
+case _DeliveryCommentOptions():
+return $default(_that.name,_that.code);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String code)?  $default,) {final _that = this;
+switch (_that) {
+case _DeliveryCommentOptions() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$DeliveryCommentOptionsImpl implements _DeliveryCommentOptions {
-  _$DeliveryCommentOptionsImpl({required this.name, required this.code});
 
-  factory _$DeliveryCommentOptionsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DeliveryCommentOptionsImplFromJson(json);
+class _DeliveryCommentOptions implements DeliveryCommentOptions {
+   _DeliveryCommentOptions({required this.name, required this.code});
+  factory _DeliveryCommentOptions.fromJson(Map<String, dynamic> json) => _$DeliveryCommentOptionsFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String code;
+@override final  String name;
+@override final  String code;
 
-  @override
-  String toString() {
-    return 'DeliveryCommentOptions(name: $name, code: $code)';
-  }
+/// Create a copy of DeliveryCommentOptions
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DeliveryCommentOptionsCopyWith<_DeliveryCommentOptions> get copyWith => __$DeliveryCommentOptionsCopyWithImpl<_DeliveryCommentOptions>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DeliveryCommentOptionsImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, code);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DeliveryCommentOptionsImplCopyWith<_$DeliveryCommentOptionsImpl>
-      get copyWith => __$$DeliveryCommentOptionsImplCopyWithImpl<
-          _$DeliveryCommentOptionsImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DeliveryCommentOptionsImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$DeliveryCommentOptionsToJson(this, );
 }
 
-abstract class _DeliveryCommentOptions implements DeliveryCommentOptions {
-  factory _DeliveryCommentOptions(
-      {required final String name,
-      required final String code}) = _$DeliveryCommentOptionsImpl;
-
-  factory _DeliveryCommentOptions.fromJson(Map<String, dynamic> json) =
-      _$DeliveryCommentOptionsImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String get code;
-  @override
-  @JsonKey(ignore: true)
-  _$$DeliveryCommentOptionsImplCopyWith<_$DeliveryCommentOptionsImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeliveryCommentOptions&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
 }
 
-DeletionReasonOptions _$DeletionReasonOptionsFromJson(
-    Map<String, dynamic> json) {
-  return _DeletionReasonOptions.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'DeliveryCommentOptions(name: $name, code: $code)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DeliveryCommentOptionsCopyWith<$Res> implements $DeliveryCommentOptionsCopyWith<$Res> {
+  factory _$DeliveryCommentOptionsCopyWith(_DeliveryCommentOptions value, $Res Function(_DeliveryCommentOptions) _then) = __$DeliveryCommentOptionsCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String code
+});
+
+
+
+
+}
+/// @nodoc
+class __$DeliveryCommentOptionsCopyWithImpl<$Res>
+    implements _$DeliveryCommentOptionsCopyWith<$Res> {
+  __$DeliveryCommentOptionsCopyWithImpl(this._self, this._then);
+
+  final _DeliveryCommentOptions _self;
+  final $Res Function(_DeliveryCommentOptions) _then;
+
+/// Create a copy of DeliveryCommentOptions
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_DeliveryCommentOptions(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$DeletionReasonOptions {
-  String get value => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $DeletionReasonOptionsCopyWith<DeletionReasonOptions> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get value; String get code;
+/// Create a copy of DeletionReasonOptions
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DeletionReasonOptionsCopyWith<DeletionReasonOptions> get copyWith => _$DeletionReasonOptionsCopyWithImpl<DeletionReasonOptions>(this as DeletionReasonOptions, _$identity);
+
+  /// Serializes this DeletionReasonOptions to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeletionReasonOptions&&(identical(other.value, value) || other.value == value)&&(identical(other.code, code) || other.code == code));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,value,code);
+
+@override
+String toString() {
+  return 'DeletionReasonOptions(value: $value, code: $code)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $DeletionReasonOptionsCopyWith<$Res> {
-  factory $DeletionReasonOptionsCopyWith(DeletionReasonOptions value,
-          $Res Function(DeletionReasonOptions) then) =
-      _$DeletionReasonOptionsCopyWithImpl<$Res, DeletionReasonOptions>;
-  @useResult
-  $Res call({String value, String code});
-}
+abstract mixin class $DeletionReasonOptionsCopyWith<$Res>  {
+  factory $DeletionReasonOptionsCopyWith(DeletionReasonOptions value, $Res Function(DeletionReasonOptions) _then) = _$DeletionReasonOptionsCopyWithImpl;
+@useResult
+$Res call({
+ String value, String code
+});
 
+
+
+
+}
 /// @nodoc
-class _$DeletionReasonOptionsCopyWithImpl<$Res,
-        $Val extends DeletionReasonOptions>
+class _$DeletionReasonOptionsCopyWithImpl<$Res>
     implements $DeletionReasonOptionsCopyWith<$Res> {
-  _$DeletionReasonOptionsCopyWithImpl(this._value, this._then);
+  _$DeletionReasonOptionsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final DeletionReasonOptions _self;
+  final $Res Function(DeletionReasonOptions) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? value = null,
-    Object? code = null,
-  }) {
-    return _then(_value.copyWith(
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of DeletionReasonOptions
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? code = null,}) {
+  return _then(_self.copyWith(
+value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$DeletionReasonOptionsImplCopyWith<$Res>
-    implements $DeletionReasonOptionsCopyWith<$Res> {
-  factory _$$DeletionReasonOptionsImplCopyWith(
-          _$DeletionReasonOptionsImpl value,
-          $Res Function(_$DeletionReasonOptionsImpl) then) =
-      __$$DeletionReasonOptionsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String value, String code});
 }
 
-/// @nodoc
-class __$$DeletionReasonOptionsImplCopyWithImpl<$Res>
-    extends _$DeletionReasonOptionsCopyWithImpl<$Res,
-        _$DeletionReasonOptionsImpl>
-    implements _$$DeletionReasonOptionsImplCopyWith<$Res> {
-  __$$DeletionReasonOptionsImplCopyWithImpl(_$DeletionReasonOptionsImpl _value,
-      $Res Function(_$DeletionReasonOptionsImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? value = null,
-    Object? code = null,
-  }) {
-    return _then(_$DeletionReasonOptionsImpl(
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [DeletionReasonOptions].
+extension DeletionReasonOptionsPatterns on DeletionReasonOptions {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DeletionReasonOptions value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DeletionReasonOptions() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DeletionReasonOptions value)  $default,){
+final _that = this;
+switch (_that) {
+case _DeletionReasonOptions():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DeletionReasonOptions value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DeletionReasonOptions() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String value,  String code)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DeletionReasonOptions() when $default != null:
+return $default(_that.value,_that.code);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String value,  String code)  $default,) {final _that = this;
+switch (_that) {
+case _DeletionReasonOptions():
+return $default(_that.value,_that.code);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String value,  String code)?  $default,) {final _that = this;
+switch (_that) {
+case _DeletionReasonOptions() when $default != null:
+return $default(_that.value,_that.code);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$DeletionReasonOptionsImpl implements _DeletionReasonOptions {
-  _$DeletionReasonOptionsImpl({required this.value, required this.code});
 
-  factory _$DeletionReasonOptionsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DeletionReasonOptionsImplFromJson(json);
+class _DeletionReasonOptions implements DeletionReasonOptions {
+   _DeletionReasonOptions({required this.value, required this.code});
+  factory _DeletionReasonOptions.fromJson(Map<String, dynamic> json) => _$DeletionReasonOptionsFromJson(json);
 
-  @override
-  final String value;
-  @override
-  final String code;
+@override final  String value;
+@override final  String code;
 
-  @override
-  String toString() {
-    return 'DeletionReasonOptions(value: $value, code: $code)';
-  }
+/// Create a copy of DeletionReasonOptions
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DeletionReasonOptionsCopyWith<_DeletionReasonOptions> get copyWith => __$DeletionReasonOptionsCopyWithImpl<_DeletionReasonOptions>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DeletionReasonOptionsImpl &&
-            (identical(other.value, value) || other.value == value) &&
-            (identical(other.code, code) || other.code == code));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, value, code);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DeletionReasonOptionsImplCopyWith<_$DeletionReasonOptionsImpl>
-      get copyWith => __$$DeletionReasonOptionsImplCopyWithImpl<
-          _$DeletionReasonOptionsImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DeletionReasonOptionsImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$DeletionReasonOptionsToJson(this, );
 }
 
-abstract class _DeletionReasonOptions implements DeletionReasonOptions {
-  factory _DeletionReasonOptions(
-      {required final String value,
-      required final String code}) = _$DeletionReasonOptionsImpl;
-
-  factory _DeletionReasonOptions.fromJson(Map<String, dynamic> json) =
-      _$DeletionReasonOptionsImpl.fromJson;
-
-  @override
-  String get value;
-  @override
-  String get code;
-  @override
-  @JsonKey(ignore: true)
-  _$$DeletionReasonOptionsImplCopyWith<_$DeletionReasonOptionsImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeletionReasonOptions&&(identical(other.value, value) || other.value == value)&&(identical(other.code, code) || other.code == code));
 }
 
-GenderOptions _$GenderOptionsFromJson(Map<String, dynamic> json) {
-  return _GenderOptions.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,value,code);
+
+@override
+String toString() {
+  return 'DeletionReasonOptions(value: $value, code: $code)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DeletionReasonOptionsCopyWith<$Res> implements $DeletionReasonOptionsCopyWith<$Res> {
+  factory _$DeletionReasonOptionsCopyWith(_DeletionReasonOptions value, $Res Function(_DeletionReasonOptions) _then) = __$DeletionReasonOptionsCopyWithImpl;
+@override @useResult
+$Res call({
+ String value, String code
+});
+
+
+
+
+}
+/// @nodoc
+class __$DeletionReasonOptionsCopyWithImpl<$Res>
+    implements _$DeletionReasonOptionsCopyWith<$Res> {
+  __$DeletionReasonOptionsCopyWithImpl(this._self, this._then);
+
+  final _DeletionReasonOptions _self;
+  final $Res Function(_DeletionReasonOptions) _then;
+
+/// Create a copy of DeletionReasonOptions
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? code = null,}) {
+  return _then(_DeletionReasonOptions(
+value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$GenderOptions {
-  String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $GenderOptionsCopyWith<GenderOptions> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get name; String get code;
+/// Create a copy of GenderOptions
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$GenderOptionsCopyWith<GenderOptions> get copyWith => _$GenderOptionsCopyWithImpl<GenderOptions>(this as GenderOptions, _$identity);
+
+  /// Serializes this GenderOptions to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GenderOptions&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'GenderOptions(name: $name, code: $code)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $GenderOptionsCopyWith<$Res> {
-  factory $GenderOptionsCopyWith(
-          GenderOptions value, $Res Function(GenderOptions) then) =
-      _$GenderOptionsCopyWithImpl<$Res, GenderOptions>;
-  @useResult
-  $Res call({String name, String code});
-}
+abstract mixin class $GenderOptionsCopyWith<$Res>  {
+  factory $GenderOptionsCopyWith(GenderOptions value, $Res Function(GenderOptions) _then) = _$GenderOptionsCopyWithImpl;
+@useResult
+$Res call({
+ String name, String code
+});
 
+
+
+
+}
 /// @nodoc
-class _$GenderOptionsCopyWithImpl<$Res, $Val extends GenderOptions>
+class _$GenderOptionsCopyWithImpl<$Res>
     implements $GenderOptionsCopyWith<$Res> {
-  _$GenderOptionsCopyWithImpl(this._value, this._then);
+  _$GenderOptionsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final GenderOptions _self;
+  final $Res Function(GenderOptions) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of GenderOptions
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$GenderOptionsImplCopyWith<$Res>
-    implements $GenderOptionsCopyWith<$Res> {
-  factory _$$GenderOptionsImplCopyWith(
-          _$GenderOptionsImpl value, $Res Function(_$GenderOptionsImpl) then) =
-      __$$GenderOptionsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String code});
 }
 
-/// @nodoc
-class __$$GenderOptionsImplCopyWithImpl<$Res>
-    extends _$GenderOptionsCopyWithImpl<$Res, _$GenderOptionsImpl>
-    implements _$$GenderOptionsImplCopyWith<$Res> {
-  __$$GenderOptionsImplCopyWithImpl(
-      _$GenderOptionsImpl _value, $Res Function(_$GenderOptionsImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_$GenderOptionsImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [GenderOptions].
+extension GenderOptionsPatterns on GenderOptions {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GenderOptions value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _GenderOptions() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GenderOptions value)  $default,){
+final _that = this;
+switch (_that) {
+case _GenderOptions():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GenderOptions value)?  $default,){
+final _that = this;
+switch (_that) {
+case _GenderOptions() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String code)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _GenderOptions() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String code)  $default,) {final _that = this;
+switch (_that) {
+case _GenderOptions():
+return $default(_that.name,_that.code);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String code)?  $default,) {final _that = this;
+switch (_that) {
+case _GenderOptions() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$GenderOptionsImpl implements _GenderOptions {
-  _$GenderOptionsImpl({required this.name, required this.code});
 
-  factory _$GenderOptionsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$GenderOptionsImplFromJson(json);
+class _GenderOptions implements GenderOptions {
+   _GenderOptions({required this.name, required this.code});
+  factory _GenderOptions.fromJson(Map<String, dynamic> json) => _$GenderOptionsFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String code;
+@override final  String name;
+@override final  String code;
 
-  @override
-  String toString() {
-    return 'GenderOptions(name: $name, code: $code)';
-  }
+/// Create a copy of GenderOptions
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$GenderOptionsCopyWith<_GenderOptions> get copyWith => __$GenderOptionsCopyWithImpl<_GenderOptions>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$GenderOptionsImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, code);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$GenderOptionsImplCopyWith<_$GenderOptionsImpl> get copyWith =>
-      __$$GenderOptionsImplCopyWithImpl<_$GenderOptionsImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$GenderOptionsImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$GenderOptionsToJson(this, );
 }
 
-abstract class _GenderOptions implements GenderOptions {
-  factory _GenderOptions(
-      {required final String name,
-      required final String code}) = _$GenderOptionsImpl;
-
-  factory _GenderOptions.fromJson(Map<String, dynamic> json) =
-      _$GenderOptionsImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String get code;
-  @override
-  @JsonKey(ignore: true)
-  _$$GenderOptionsImplCopyWith<_$GenderOptionsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GenderOptions&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
 }
 
-BackgroundServiceConfig _$BackgroundServiceConfigFromJson(
-    Map<String, dynamic> json) {
-  return _BackgroundServiceConfig.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'GenderOptions(name: $name, code: $code)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$GenderOptionsCopyWith<$Res> implements $GenderOptionsCopyWith<$Res> {
+  factory _$GenderOptionsCopyWith(_GenderOptions value, $Res Function(_GenderOptions) _then) = __$GenderOptionsCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String code
+});
+
+
+
+
+}
+/// @nodoc
+class __$GenderOptionsCopyWithImpl<$Res>
+    implements _$GenderOptionsCopyWith<$Res> {
+  __$GenderOptionsCopyWithImpl(this._self, this._then);
+
+  final _GenderOptions _self;
+  final $Res Function(_GenderOptions) _then;
+
+/// Create a copy of GenderOptions
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_GenderOptions(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$BackgroundServiceConfig {
-  @JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')
-  int get batteryPercentCutOff => throw _privateConstructorUsedError;
-  @JsonKey(name: 'SERVICE_INTERVAL')
-  int get serviceInterval => throw _privateConstructorUsedError;
-  @JsonKey(name: 'API_CONCURRENCY')
-  int get apiConcurrency => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $BackgroundServiceConfigCopyWith<BackgroundServiceConfig> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF') int get batteryPercentCutOff;@JsonKey(name: 'SERVICE_INTERVAL') int get serviceInterval;@JsonKey(name: 'API_CONCURRENCY') int get apiConcurrency;
+/// Create a copy of BackgroundServiceConfig
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$BackgroundServiceConfigCopyWith<BackgroundServiceConfig> get copyWith => _$BackgroundServiceConfigCopyWithImpl<BackgroundServiceConfig>(this as BackgroundServiceConfig, _$identity);
+
+  /// Serializes this BackgroundServiceConfig to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BackgroundServiceConfig&&(identical(other.batteryPercentCutOff, batteryPercentCutOff) || other.batteryPercentCutOff == batteryPercentCutOff)&&(identical(other.serviceInterval, serviceInterval) || other.serviceInterval == serviceInterval)&&(identical(other.apiConcurrency, apiConcurrency) || other.apiConcurrency == apiConcurrency));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,batteryPercentCutOff,serviceInterval,apiConcurrency);
+
+@override
+String toString() {
+  return 'BackgroundServiceConfig(batteryPercentCutOff: $batteryPercentCutOff, serviceInterval: $serviceInterval, apiConcurrency: $apiConcurrency)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $BackgroundServiceConfigCopyWith<$Res> {
-  factory $BackgroundServiceConfigCopyWith(BackgroundServiceConfig value,
-          $Res Function(BackgroundServiceConfig) then) =
-      _$BackgroundServiceConfigCopyWithImpl<$Res, BackgroundServiceConfig>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF') int batteryPercentCutOff,
-      @JsonKey(name: 'SERVICE_INTERVAL') int serviceInterval,
-      @JsonKey(name: 'API_CONCURRENCY') int apiConcurrency});
-}
+abstract mixin class $BackgroundServiceConfigCopyWith<$Res>  {
+  factory $BackgroundServiceConfigCopyWith(BackgroundServiceConfig value, $Res Function(BackgroundServiceConfig) _then) = _$BackgroundServiceConfigCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF') int batteryPercentCutOff,@JsonKey(name: 'SERVICE_INTERVAL') int serviceInterval,@JsonKey(name: 'API_CONCURRENCY') int apiConcurrency
+});
 
+
+
+
+}
 /// @nodoc
-class _$BackgroundServiceConfigCopyWithImpl<$Res,
-        $Val extends BackgroundServiceConfig>
+class _$BackgroundServiceConfigCopyWithImpl<$Res>
     implements $BackgroundServiceConfigCopyWith<$Res> {
-  _$BackgroundServiceConfigCopyWithImpl(this._value, this._then);
+  _$BackgroundServiceConfigCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final BackgroundServiceConfig _self;
+  final $Res Function(BackgroundServiceConfig) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? batteryPercentCutOff = null,
-    Object? serviceInterval = null,
-    Object? apiConcurrency = null,
-  }) {
-    return _then(_value.copyWith(
-      batteryPercentCutOff: null == batteryPercentCutOff
-          ? _value.batteryPercentCutOff
-          : batteryPercentCutOff // ignore: cast_nullable_to_non_nullable
-              as int,
-      serviceInterval: null == serviceInterval
-          ? _value.serviceInterval
-          : serviceInterval // ignore: cast_nullable_to_non_nullable
-              as int,
-      apiConcurrency: null == apiConcurrency
-          ? _value.apiConcurrency
-          : apiConcurrency // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
+/// Create a copy of BackgroundServiceConfig
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? batteryPercentCutOff = null,Object? serviceInterval = null,Object? apiConcurrency = null,}) {
+  return _then(_self.copyWith(
+batteryPercentCutOff: null == batteryPercentCutOff ? _self.batteryPercentCutOff : batteryPercentCutOff // ignore: cast_nullable_to_non_nullable
+as int,serviceInterval: null == serviceInterval ? _self.serviceInterval : serviceInterval // ignore: cast_nullable_to_non_nullable
+as int,apiConcurrency: null == apiConcurrency ? _self.apiConcurrency : apiConcurrency // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$BackgroundServiceConfigImplCopyWith<$Res>
-    implements $BackgroundServiceConfigCopyWith<$Res> {
-  factory _$$BackgroundServiceConfigImplCopyWith(
-          _$BackgroundServiceConfigImpl value,
-          $Res Function(_$BackgroundServiceConfigImpl) then) =
-      __$$BackgroundServiceConfigImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF') int batteryPercentCutOff,
-      @JsonKey(name: 'SERVICE_INTERVAL') int serviceInterval,
-      @JsonKey(name: 'API_CONCURRENCY') int apiConcurrency});
 }
 
-/// @nodoc
-class __$$BackgroundServiceConfigImplCopyWithImpl<$Res>
-    extends _$BackgroundServiceConfigCopyWithImpl<$Res,
-        _$BackgroundServiceConfigImpl>
-    implements _$$BackgroundServiceConfigImplCopyWith<$Res> {
-  __$$BackgroundServiceConfigImplCopyWithImpl(
-      _$BackgroundServiceConfigImpl _value,
-      $Res Function(_$BackgroundServiceConfigImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? batteryPercentCutOff = null,
-    Object? serviceInterval = null,
-    Object? apiConcurrency = null,
-  }) {
-    return _then(_$BackgroundServiceConfigImpl(
-      batteryPercentCutOff: null == batteryPercentCutOff
-          ? _value.batteryPercentCutOff
-          : batteryPercentCutOff // ignore: cast_nullable_to_non_nullable
-              as int,
-      serviceInterval: null == serviceInterval
-          ? _value.serviceInterval
-          : serviceInterval // ignore: cast_nullable_to_non_nullable
-              as int,
-      apiConcurrency: null == apiConcurrency
-          ? _value.apiConcurrency
-          : apiConcurrency // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
+/// Adds pattern-matching-related methods to [BackgroundServiceConfig].
+extension BackgroundServiceConfigPatterns on BackgroundServiceConfig {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _BackgroundServiceConfig value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _BackgroundServiceConfig() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _BackgroundServiceConfig value)  $default,){
+final _that = this;
+switch (_that) {
+case _BackgroundServiceConfig():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _BackgroundServiceConfig value)?  $default,){
+final _that = this;
+switch (_that) {
+case _BackgroundServiceConfig() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')  int batteryPercentCutOff, @JsonKey(name: 'SERVICE_INTERVAL')  int serviceInterval, @JsonKey(name: 'API_CONCURRENCY')  int apiConcurrency)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _BackgroundServiceConfig() when $default != null:
+return $default(_that.batteryPercentCutOff,_that.serviceInterval,_that.apiConcurrency);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')  int batteryPercentCutOff, @JsonKey(name: 'SERVICE_INTERVAL')  int serviceInterval, @JsonKey(name: 'API_CONCURRENCY')  int apiConcurrency)  $default,) {final _that = this;
+switch (_that) {
+case _BackgroundServiceConfig():
+return $default(_that.batteryPercentCutOff,_that.serviceInterval,_that.apiConcurrency);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')  int batteryPercentCutOff, @JsonKey(name: 'SERVICE_INTERVAL')  int serviceInterval, @JsonKey(name: 'API_CONCURRENCY')  int apiConcurrency)?  $default,) {final _that = this;
+switch (_that) {
+case _BackgroundServiceConfig() when $default != null:
+return $default(_that.batteryPercentCutOff,_that.serviceInterval,_that.apiConcurrency);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$BackgroundServiceConfigImpl implements _BackgroundServiceConfig {
-  _$BackgroundServiceConfigImpl(
-      {@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')
-      required this.batteryPercentCutOff,
-      @JsonKey(name: 'SERVICE_INTERVAL') required this.serviceInterval,
-      @JsonKey(name: 'API_CONCURRENCY') required this.apiConcurrency});
 
-  factory _$BackgroundServiceConfigImpl.fromJson(Map<String, dynamic> json) =>
-      _$$BackgroundServiceConfigImplFromJson(json);
+class _BackgroundServiceConfig implements BackgroundServiceConfig {
+   _BackgroundServiceConfig({@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF') required this.batteryPercentCutOff, @JsonKey(name: 'SERVICE_INTERVAL') required this.serviceInterval, @JsonKey(name: 'API_CONCURRENCY') required this.apiConcurrency});
+  factory _BackgroundServiceConfig.fromJson(Map<String, dynamic> json) => _$BackgroundServiceConfigFromJson(json);
 
-  @override
-  @JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')
-  final int batteryPercentCutOff;
-  @override
-  @JsonKey(name: 'SERVICE_INTERVAL')
-  final int serviceInterval;
-  @override
-  @JsonKey(name: 'API_CONCURRENCY')
-  final int apiConcurrency;
+@override@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF') final  int batteryPercentCutOff;
+@override@JsonKey(name: 'SERVICE_INTERVAL') final  int serviceInterval;
+@override@JsonKey(name: 'API_CONCURRENCY') final  int apiConcurrency;
 
-  @override
-  String toString() {
-    return 'BackgroundServiceConfig(batteryPercentCutOff: $batteryPercentCutOff, serviceInterval: $serviceInterval, apiConcurrency: $apiConcurrency)';
-  }
+/// Create a copy of BackgroundServiceConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$BackgroundServiceConfigCopyWith<_BackgroundServiceConfig> get copyWith => __$BackgroundServiceConfigCopyWithImpl<_BackgroundServiceConfig>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$BackgroundServiceConfigImpl &&
-            (identical(other.batteryPercentCutOff, batteryPercentCutOff) ||
-                other.batteryPercentCutOff == batteryPercentCutOff) &&
-            (identical(other.serviceInterval, serviceInterval) ||
-                other.serviceInterval == serviceInterval) &&
-            (identical(other.apiConcurrency, apiConcurrency) ||
-                other.apiConcurrency == apiConcurrency));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, batteryPercentCutOff, serviceInterval, apiConcurrency);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$BackgroundServiceConfigImplCopyWith<_$BackgroundServiceConfigImpl>
-      get copyWith => __$$BackgroundServiceConfigImplCopyWithImpl<
-          _$BackgroundServiceConfigImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$BackgroundServiceConfigImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$BackgroundServiceConfigToJson(this, );
 }
 
-abstract class _BackgroundServiceConfig implements BackgroundServiceConfig {
-  factory _BackgroundServiceConfig(
-      {@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')
-      required final int batteryPercentCutOff,
-      @JsonKey(name: 'SERVICE_INTERVAL') required final int serviceInterval,
-      @JsonKey(name: 'API_CONCURRENCY')
-      required final int apiConcurrency}) = _$BackgroundServiceConfigImpl;
-
-  factory _BackgroundServiceConfig.fromJson(Map<String, dynamic> json) =
-      _$BackgroundServiceConfigImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')
-  int get batteryPercentCutOff;
-  @override
-  @JsonKey(name: 'SERVICE_INTERVAL')
-  int get serviceInterval;
-  @override
-  @JsonKey(name: 'API_CONCURRENCY')
-  int get apiConcurrency;
-  @override
-  @JsonKey(ignore: true)
-  _$$BackgroundServiceConfigImplCopyWith<_$BackgroundServiceConfigImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BackgroundServiceConfig&&(identical(other.batteryPercentCutOff, batteryPercentCutOff) || other.batteryPercentCutOff == batteryPercentCutOff)&&(identical(other.serviceInterval, serviceInterval) || other.serviceInterval == serviceInterval)&&(identical(other.apiConcurrency, apiConcurrency) || other.apiConcurrency == apiConcurrency));
 }
 
-BackendInterface _$BackendInterfaceFromJson(Map<String, dynamic> json) {
-  return _BackendInterface.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,batteryPercentCutOff,serviceInterval,apiConcurrency);
+
+@override
+String toString() {
+  return 'BackgroundServiceConfig(batteryPercentCutOff: $batteryPercentCutOff, serviceInterval: $serviceInterval, apiConcurrency: $apiConcurrency)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$BackgroundServiceConfigCopyWith<$Res> implements $BackgroundServiceConfigCopyWith<$Res> {
+  factory _$BackgroundServiceConfigCopyWith(_BackgroundServiceConfig value, $Res Function(_BackgroundServiceConfig) _then) = __$BackgroundServiceConfigCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF') int batteryPercentCutOff,@JsonKey(name: 'SERVICE_INTERVAL') int serviceInterval,@JsonKey(name: 'API_CONCURRENCY') int apiConcurrency
+});
+
+
+
+
+}
+/// @nodoc
+class __$BackgroundServiceConfigCopyWithImpl<$Res>
+    implements _$BackgroundServiceConfigCopyWith<$Res> {
+  __$BackgroundServiceConfigCopyWithImpl(this._self, this._then);
+
+  final _BackgroundServiceConfig _self;
+  final $Res Function(_BackgroundServiceConfig) _then;
+
+/// Create a copy of BackgroundServiceConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? batteryPercentCutOff = null,Object? serviceInterval = null,Object? apiConcurrency = null,}) {
+  return _then(_BackgroundServiceConfig(
+batteryPercentCutOff: null == batteryPercentCutOff ? _self.batteryPercentCutOff : batteryPercentCutOff // ignore: cast_nullable_to_non_nullable
+as int,serviceInterval: null == serviceInterval ? _self.serviceInterval : serviceInterval // ignore: cast_nullable_to_non_nullable
+as int,apiConcurrency: null == apiConcurrency ? _self.apiConcurrency : apiConcurrency // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$BackendInterface {
-  @JsonKey(name: 'interfaces')
-  List<Interfaces> get interface => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $BackendInterfaceCopyWith<BackendInterface> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(name: 'interfaces') List<Interfaces> get interface;
+/// Create a copy of BackendInterface
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$BackendInterfaceCopyWith<BackendInterface> get copyWith => _$BackendInterfaceCopyWithImpl<BackendInterface>(this as BackendInterface, _$identity);
+
+  /// Serializes this BackendInterface to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BackendInterface&&const DeepCollectionEquality().equals(other.interface, interface));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(interface));
+
+@override
+String toString() {
+  return 'BackendInterface(interface: $interface)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $BackendInterfaceCopyWith<$Res> {
-  factory $BackendInterfaceCopyWith(
-          BackendInterface value, $Res Function(BackendInterface) then) =
-      _$BackendInterfaceCopyWithImpl<$Res, BackendInterface>;
-  @useResult
-  $Res call({@JsonKey(name: 'interfaces') List<Interfaces> interface});
-}
+abstract mixin class $BackendInterfaceCopyWith<$Res>  {
+  factory $BackendInterfaceCopyWith(BackendInterface value, $Res Function(BackendInterface) _then) = _$BackendInterfaceCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'interfaces') List<Interfaces> interface
+});
 
+
+
+
+}
 /// @nodoc
-class _$BackendInterfaceCopyWithImpl<$Res, $Val extends BackendInterface>
+class _$BackendInterfaceCopyWithImpl<$Res>
     implements $BackendInterfaceCopyWith<$Res> {
-  _$BackendInterfaceCopyWithImpl(this._value, this._then);
+  _$BackendInterfaceCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final BackendInterface _self;
+  final $Res Function(BackendInterface) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? interface = null,
-  }) {
-    return _then(_value.copyWith(
-      interface: null == interface
-          ? _value.interface
-          : interface // ignore: cast_nullable_to_non_nullable
-              as List<Interfaces>,
-    ) as $Val);
-  }
+/// Create a copy of BackendInterface
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? interface = null,}) {
+  return _then(_self.copyWith(
+interface: null == interface ? _self.interface : interface // ignore: cast_nullable_to_non_nullable
+as List<Interfaces>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$BackendInterfaceImplCopyWith<$Res>
-    implements $BackendInterfaceCopyWith<$Res> {
-  factory _$$BackendInterfaceImplCopyWith(_$BackendInterfaceImpl value,
-          $Res Function(_$BackendInterfaceImpl) then) =
-      __$$BackendInterfaceImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({@JsonKey(name: 'interfaces') List<Interfaces> interface});
 }
 
-/// @nodoc
-class __$$BackendInterfaceImplCopyWithImpl<$Res>
-    extends _$BackendInterfaceCopyWithImpl<$Res, _$BackendInterfaceImpl>
-    implements _$$BackendInterfaceImplCopyWith<$Res> {
-  __$$BackendInterfaceImplCopyWithImpl(_$BackendInterfaceImpl _value,
-      $Res Function(_$BackendInterfaceImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? interface = null,
-  }) {
-    return _then(_$BackendInterfaceImpl(
-      interface: null == interface
-          ? _value._interface
-          : interface // ignore: cast_nullable_to_non_nullable
-              as List<Interfaces>,
-    ));
-  }
+/// Adds pattern-matching-related methods to [BackendInterface].
+extension BackendInterfacePatterns on BackendInterface {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _BackendInterface value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _BackendInterface() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _BackendInterface value)  $default,){
+final _that = this;
+switch (_that) {
+case _BackendInterface():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _BackendInterface value)?  $default,){
+final _that = this;
+switch (_that) {
+case _BackendInterface() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'interfaces')  List<Interfaces> interface)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _BackendInterface() when $default != null:
+return $default(_that.interface);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'interfaces')  List<Interfaces> interface)  $default,) {final _that = this;
+switch (_that) {
+case _BackendInterface():
+return $default(_that.interface);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'interfaces')  List<Interfaces> interface)?  $default,) {final _that = this;
+switch (_that) {
+case _BackendInterface() when $default != null:
+return $default(_that.interface);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$BackendInterfaceImpl implements _BackendInterface {
-  _$BackendInterfaceImpl(
-      {@JsonKey(name: 'interfaces') required final List<Interfaces> interface})
-      : _interface = interface;
 
-  factory _$BackendInterfaceImpl.fromJson(Map<String, dynamic> json) =>
-      _$$BackendInterfaceImplFromJson(json);
+class _BackendInterface implements BackendInterface {
+   _BackendInterface({@JsonKey(name: 'interfaces') required final  List<Interfaces> interface}): _interface = interface;
+  factory _BackendInterface.fromJson(Map<String, dynamic> json) => _$BackendInterfaceFromJson(json);
 
-  final List<Interfaces> _interface;
-  @override
-  @JsonKey(name: 'interfaces')
-  List<Interfaces> get interface {
-    if (_interface is EqualUnmodifiableListView) return _interface;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_interface);
-  }
-
-  @override
-  String toString() {
-    return 'BackendInterface(interface: $interface)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$BackendInterfaceImpl &&
-            const DeepCollectionEquality()
-                .equals(other._interface, _interface));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_interface));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$BackendInterfaceImplCopyWith<_$BackendInterfaceImpl> get copyWith =>
-      __$$BackendInterfaceImplCopyWithImpl<_$BackendInterfaceImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$BackendInterfaceImplToJson(
-      this,
-    );
-  }
+ final  List<Interfaces> _interface;
+@override@JsonKey(name: 'interfaces') List<Interfaces> get interface {
+  if (_interface is EqualUnmodifiableListView) return _interface;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_interface);
 }
 
-abstract class _BackendInterface implements BackendInterface {
-  factory _BackendInterface(
-      {@JsonKey(name: 'interfaces')
-      required final List<Interfaces> interface}) = _$BackendInterfaceImpl;
 
-  factory _BackendInterface.fromJson(Map<String, dynamic> json) =
-      _$BackendInterfaceImpl.fromJson;
+/// Create a copy of BackendInterface
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$BackendInterfaceCopyWith<_BackendInterface> get copyWith => __$BackendInterfaceCopyWithImpl<_BackendInterface>(this, _$identity);
 
-  @override
-  @JsonKey(name: 'interfaces')
-  List<Interfaces> get interface;
-  @override
-  @JsonKey(ignore: true)
-  _$$BackendInterfaceImplCopyWith<_$BackendInterfaceImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$BackendInterfaceToJson(this, );
 }
 
-InterfacesWrapper _$InterfacesWrapperFromJson(Map<String, dynamic> json) {
-  return _InterfacesWrapper.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BackendInterface&&const DeepCollectionEquality().equals(other._interface, _interface));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_interface));
+
+@override
+String toString() {
+  return 'BackendInterface(interface: $interface)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$BackendInterfaceCopyWith<$Res> implements $BackendInterfaceCopyWith<$Res> {
+  factory _$BackendInterfaceCopyWith(_BackendInterface value, $Res Function(_BackendInterface) _then) = __$BackendInterfaceCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'interfaces') List<Interfaces> interface
+});
+
+
+
+
+}
+/// @nodoc
+class __$BackendInterfaceCopyWithImpl<$Res>
+    implements _$BackendInterfaceCopyWith<$Res> {
+  __$BackendInterfaceCopyWithImpl(this._self, this._then);
+
+  final _BackendInterface _self;
+  final $Res Function(_BackendInterface) _then;
+
+/// Create a copy of BackendInterface
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? interface = null,}) {
+  return _then(_BackendInterface(
+interface: null == interface ? _self._interface : interface // ignore: cast_nullable_to_non_nullable
+as List<Interfaces>,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$InterfacesWrapper {
-  List<Interfaces> get interface => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $InterfacesWrapperCopyWith<InterfacesWrapper> get copyWith =>
-      throw _privateConstructorUsedError;
+ List<Interfaces> get interface;
+/// Create a copy of InterfacesWrapper
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$InterfacesWrapperCopyWith<InterfacesWrapper> get copyWith => _$InterfacesWrapperCopyWithImpl<InterfacesWrapper>(this as InterfacesWrapper, _$identity);
+
+  /// Serializes this InterfacesWrapper to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterfacesWrapper&&const DeepCollectionEquality().equals(other.interface, interface));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(interface));
+
+@override
+String toString() {
+  return 'InterfacesWrapper(interface: $interface)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $InterfacesWrapperCopyWith<$Res> {
-  factory $InterfacesWrapperCopyWith(
-          InterfacesWrapper value, $Res Function(InterfacesWrapper) then) =
-      _$InterfacesWrapperCopyWithImpl<$Res, InterfacesWrapper>;
-  @useResult
-  $Res call({List<Interfaces> interface});
-}
+abstract mixin class $InterfacesWrapperCopyWith<$Res>  {
+  factory $InterfacesWrapperCopyWith(InterfacesWrapper value, $Res Function(InterfacesWrapper) _then) = _$InterfacesWrapperCopyWithImpl;
+@useResult
+$Res call({
+ List<Interfaces> interface
+});
 
+
+
+
+}
 /// @nodoc
-class _$InterfacesWrapperCopyWithImpl<$Res, $Val extends InterfacesWrapper>
+class _$InterfacesWrapperCopyWithImpl<$Res>
     implements $InterfacesWrapperCopyWith<$Res> {
-  _$InterfacesWrapperCopyWithImpl(this._value, this._then);
+  _$InterfacesWrapperCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final InterfacesWrapper _self;
+  final $Res Function(InterfacesWrapper) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? interface = null,
-  }) {
-    return _then(_value.copyWith(
-      interface: null == interface
-          ? _value.interface
-          : interface // ignore: cast_nullable_to_non_nullable
-              as List<Interfaces>,
-    ) as $Val);
-  }
+/// Create a copy of InterfacesWrapper
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? interface = null,}) {
+  return _then(_self.copyWith(
+interface: null == interface ? _self.interface : interface // ignore: cast_nullable_to_non_nullable
+as List<Interfaces>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$InterfacesWrapperImplCopyWith<$Res>
-    implements $InterfacesWrapperCopyWith<$Res> {
-  factory _$$InterfacesWrapperImplCopyWith(_$InterfacesWrapperImpl value,
-          $Res Function(_$InterfacesWrapperImpl) then) =
-      __$$InterfacesWrapperImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({List<Interfaces> interface});
 }
 
-/// @nodoc
-class __$$InterfacesWrapperImplCopyWithImpl<$Res>
-    extends _$InterfacesWrapperCopyWithImpl<$Res, _$InterfacesWrapperImpl>
-    implements _$$InterfacesWrapperImplCopyWith<$Res> {
-  __$$InterfacesWrapperImplCopyWithImpl(_$InterfacesWrapperImpl _value,
-      $Res Function(_$InterfacesWrapperImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? interface = null,
-  }) {
-    return _then(_$InterfacesWrapperImpl(
-      interface: null == interface
-          ? _value._interface
-          : interface // ignore: cast_nullable_to_non_nullable
-              as List<Interfaces>,
-    ));
-  }
+/// Adds pattern-matching-related methods to [InterfacesWrapper].
+extension InterfacesWrapperPatterns on InterfacesWrapper {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _InterfacesWrapper value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _InterfacesWrapper() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _InterfacesWrapper value)  $default,){
+final _that = this;
+switch (_that) {
+case _InterfacesWrapper():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _InterfacesWrapper value)?  $default,){
+final _that = this;
+switch (_that) {
+case _InterfacesWrapper() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Interfaces> interface)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _InterfacesWrapper() when $default != null:
+return $default(_that.interface);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Interfaces> interface)  $default,) {final _that = this;
+switch (_that) {
+case _InterfacesWrapper():
+return $default(_that.interface);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Interfaces> interface)?  $default,) {final _that = this;
+switch (_that) {
+case _InterfacesWrapper() when $default != null:
+return $default(_that.interface);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$InterfacesWrapperImpl implements _InterfacesWrapper {
-  _$InterfacesWrapperImpl({required final List<Interfaces> interface})
-      : _interface = interface;
 
-  factory _$InterfacesWrapperImpl.fromJson(Map<String, dynamic> json) =>
-      _$$InterfacesWrapperImplFromJson(json);
+class _InterfacesWrapper implements InterfacesWrapper {
+   _InterfacesWrapper({required final  List<Interfaces> interface}): _interface = interface;
+  factory _InterfacesWrapper.fromJson(Map<String, dynamic> json) => _$InterfacesWrapperFromJson(json);
 
-  final List<Interfaces> _interface;
-  @override
-  List<Interfaces> get interface {
-    if (_interface is EqualUnmodifiableListView) return _interface;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_interface);
-  }
-
-  @override
-  String toString() {
-    return 'InterfacesWrapper(interface: $interface)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$InterfacesWrapperImpl &&
-            const DeepCollectionEquality()
-                .equals(other._interface, _interface));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_interface));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$InterfacesWrapperImplCopyWith<_$InterfacesWrapperImpl> get copyWith =>
-      __$$InterfacesWrapperImplCopyWithImpl<_$InterfacesWrapperImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$InterfacesWrapperImplToJson(
-      this,
-    );
-  }
+ final  List<Interfaces> _interface;
+@override List<Interfaces> get interface {
+  if (_interface is EqualUnmodifiableListView) return _interface;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_interface);
 }
 
-abstract class _InterfacesWrapper implements InterfacesWrapper {
-  factory _InterfacesWrapper({required final List<Interfaces> interface}) =
-      _$InterfacesWrapperImpl;
 
-  factory _InterfacesWrapper.fromJson(Map<String, dynamic> json) =
-      _$InterfacesWrapperImpl.fromJson;
+/// Create a copy of InterfacesWrapper
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$InterfacesWrapperCopyWith<_InterfacesWrapper> get copyWith => __$InterfacesWrapperCopyWithImpl<_InterfacesWrapper>(this, _$identity);
 
-  @override
-  List<Interfaces> get interface;
-  @override
-  @JsonKey(ignore: true)
-  _$$InterfacesWrapperImplCopyWith<_$InterfacesWrapperImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$InterfacesWrapperToJson(this, );
 }
 
-Interfaces _$InterfacesFromJson(Map<String, dynamic> json) {
-  return _Interfaces.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterfacesWrapper&&const DeepCollectionEquality().equals(other._interface, _interface));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_interface));
+
+@override
+String toString() {
+  return 'InterfacesWrapper(interface: $interface)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$InterfacesWrapperCopyWith<$Res> implements $InterfacesWrapperCopyWith<$Res> {
+  factory _$InterfacesWrapperCopyWith(_InterfacesWrapper value, $Res Function(_InterfacesWrapper) _then) = __$InterfacesWrapperCopyWithImpl;
+@override @useResult
+$Res call({
+ List<Interfaces> interface
+});
+
+
+
+
+}
+/// @nodoc
+class __$InterfacesWrapperCopyWithImpl<$Res>
+    implements _$InterfacesWrapperCopyWith<$Res> {
+  __$InterfacesWrapperCopyWithImpl(this._self, this._then);
+
+  final _InterfacesWrapper _self;
+  final $Res Function(_InterfacesWrapper) _then;
+
+/// Create a copy of InterfacesWrapper
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? interface = null,}) {
+  return _then(_InterfacesWrapper(
+interface: null == interface ? _self._interface : interface // ignore: cast_nullable_to_non_nullable
+as List<Interfaces>,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$Interfaces {
-  String get type => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  Config get config => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $InterfacesCopyWith<Interfaces> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get type; String get name; Config get config;
+/// Create a copy of Interfaces
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$InterfacesCopyWith<Interfaces> get copyWith => _$InterfacesCopyWithImpl<Interfaces>(this as Interfaces, _$identity);
+
+  /// Serializes this Interfaces to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Interfaces&&(identical(other.type, type) || other.type == type)&&(identical(other.name, name) || other.name == name)&&(identical(other.config, config) || other.config == config));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,name,config);
+
+@override
+String toString() {
+  return 'Interfaces(type: $type, name: $name, config: $config)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $InterfacesCopyWith<$Res> {
-  factory $InterfacesCopyWith(
-          Interfaces value, $Res Function(Interfaces) then) =
-      _$InterfacesCopyWithImpl<$Res, Interfaces>;
-  @useResult
-  $Res call({String type, String name, Config config});
+abstract mixin class $InterfacesCopyWith<$Res>  {
+  factory $InterfacesCopyWith(Interfaces value, $Res Function(Interfaces) _then) = _$InterfacesCopyWithImpl;
+@useResult
+$Res call({
+ String type, String name, Config config
+});
 
-  $ConfigCopyWith<$Res> get config;
+
+$ConfigCopyWith<$Res> get config;
+
 }
-
 /// @nodoc
-class _$InterfacesCopyWithImpl<$Res, $Val extends Interfaces>
+class _$InterfacesCopyWithImpl<$Res>
     implements $InterfacesCopyWith<$Res> {
-  _$InterfacesCopyWithImpl(this._value, this._then);
+  _$InterfacesCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final Interfaces _self;
+  final $Res Function(Interfaces) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? name = null,
-    Object? config = null,
-  }) {
-    return _then(_value.copyWith(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      config: null == config
-          ? _value.config
-          : config // ignore: cast_nullable_to_non_nullable
-              as Config,
-    ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ConfigCopyWith<$Res> get config {
-    return $ConfigCopyWith<$Res>(_value.config, (value) {
-      return _then(_value.copyWith(config: value) as $Val);
-    });
-  }
+/// Create a copy of Interfaces
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? name = null,Object? config = null,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,config: null == config ? _self.config : config // ignore: cast_nullable_to_non_nullable
+as Config,
+  ));
+}
+/// Create a copy of Interfaces
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ConfigCopyWith<$Res> get config {
+  
+  return $ConfigCopyWith<$Res>(_self.config, (value) {
+    return _then(_self.copyWith(config: value));
+  });
+}
 }
 
-/// @nodoc
-abstract class _$$InterfacesImplCopyWith<$Res>
-    implements $InterfacesCopyWith<$Res> {
-  factory _$$InterfacesImplCopyWith(
-          _$InterfacesImpl value, $Res Function(_$InterfacesImpl) then) =
-      __$$InterfacesImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String type, String name, Config config});
 
-  @override
-  $ConfigCopyWith<$Res> get config;
+/// Adds pattern-matching-related methods to [Interfaces].
+extension InterfacesPatterns on Interfaces {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Interfaces value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Interfaces() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Interfaces value)  $default,){
+final _that = this;
+switch (_that) {
+case _Interfaces():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Interfaces value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Interfaces() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  String name,  Config config)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Interfaces() when $default != null:
+return $default(_that.type,_that.name,_that.config);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  String name,  Config config)  $default,) {final _that = this;
+switch (_that) {
+case _Interfaces():
+return $default(_that.type,_that.name,_that.config);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  String name,  Config config)?  $default,) {final _that = this;
+switch (_that) {
+case _Interfaces() when $default != null:
+return $default(_that.type,_that.name,_that.config);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-class __$$InterfacesImplCopyWithImpl<$Res>
-    extends _$InterfacesCopyWithImpl<$Res, _$InterfacesImpl>
-    implements _$$InterfacesImplCopyWith<$Res> {
-  __$$InterfacesImplCopyWithImpl(
-      _$InterfacesImpl _value, $Res Function(_$InterfacesImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? name = null,
-    Object? config = null,
-  }) {
-    return _then(_$InterfacesImpl(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      config: null == config
-          ? _value.config
-          : config // ignore: cast_nullable_to_non_nullable
-              as Config,
-    ));
-  }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$InterfacesImpl implements _Interfaces {
-  _$InterfacesImpl(
-      {required this.type, required this.name, required this.config});
 
-  factory _$InterfacesImpl.fromJson(Map<String, dynamic> json) =>
-      _$$InterfacesImplFromJson(json);
+class _Interfaces implements Interfaces {
+   _Interfaces({required this.type, required this.name, required this.config});
+  factory _Interfaces.fromJson(Map<String, dynamic> json) => _$InterfacesFromJson(json);
 
-  @override
-  final String type;
-  @override
-  final String name;
-  @override
-  final Config config;
+@override final  String type;
+@override final  String name;
+@override final  Config config;
 
-  @override
-  String toString() {
-    return 'Interfaces(type: $type, name: $name, config: $config)';
-  }
+/// Create a copy of Interfaces
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$InterfacesCopyWith<_Interfaces> get copyWith => __$InterfacesCopyWithImpl<_Interfaces>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$InterfacesImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.config, config) || other.config == config));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, type, name, config);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$InterfacesImplCopyWith<_$InterfacesImpl> get copyWith =>
-      __$$InterfacesImplCopyWithImpl<_$InterfacesImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$InterfacesImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$InterfacesToJson(this, );
 }
 
-abstract class _Interfaces implements Interfaces {
-  factory _Interfaces(
-      {required final String type,
-      required final String name,
-      required final Config config}) = _$InterfacesImpl;
-
-  factory _Interfaces.fromJson(Map<String, dynamic> json) =
-      _$InterfacesImpl.fromJson;
-
-  @override
-  String get type;
-  @override
-  String get name;
-  @override
-  Config get config;
-  @override
-  @JsonKey(ignore: true)
-  _$$InterfacesImplCopyWith<_$InterfacesImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Interfaces&&(identical(other.type, type) || other.type == type)&&(identical(other.name, name) || other.name == name)&&(identical(other.config, config) || other.config == config));
 }
 
-Config _$ConfigFromJson(Map<String, dynamic> json) {
-  return _Config.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,name,config);
+
+@override
+String toString() {
+  return 'Interfaces(type: $type, name: $name, config: $config)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$InterfacesCopyWith<$Res> implements $InterfacesCopyWith<$Res> {
+  factory _$InterfacesCopyWith(_Interfaces value, $Res Function(_Interfaces) _then) = __$InterfacesCopyWithImpl;
+@override @useResult
+$Res call({
+ String type, String name, Config config
+});
+
+
+@override $ConfigCopyWith<$Res> get config;
+
+}
+/// @nodoc
+class __$InterfacesCopyWithImpl<$Res>
+    implements _$InterfacesCopyWith<$Res> {
+  __$InterfacesCopyWithImpl(this._self, this._then);
+
+  final _Interfaces _self;
+  final $Res Function(_Interfaces) _then;
+
+/// Create a copy of Interfaces
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? name = null,Object? config = null,}) {
+  return _then(_Interfaces(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,config: null == config ? _self.config : config // ignore: cast_nullable_to_non_nullable
+as Config,
+  ));
+}
+
+/// Create a copy of Interfaces
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ConfigCopyWith<$Res> get config {
+  
+  return $ConfigCopyWith<$Res>(_self.config, (value) {
+    return _then(_self.copyWith(config: value));
+  });
+}
+}
+
 
 /// @nodoc
 mixin _$Config {
-  int get localStoreTTL => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ConfigCopyWith<Config> get copyWith => throw _privateConstructorUsedError;
+ int get localStoreTTL;
+/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ConfigCopyWith<Config> get copyWith => _$ConfigCopyWithImpl<Config>(this as Config, _$identity);
+
+  /// Serializes this Config to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Config&&(identical(other.localStoreTTL, localStoreTTL) || other.localStoreTTL == localStoreTTL));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,localStoreTTL);
+
+@override
+String toString() {
+  return 'Config(localStoreTTL: $localStoreTTL)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ConfigCopyWith<$Res> {
-  factory $ConfigCopyWith(Config value, $Res Function(Config) then) =
-      _$ConfigCopyWithImpl<$Res, Config>;
-  @useResult
-  $Res call({int localStoreTTL});
-}
+abstract mixin class $ConfigCopyWith<$Res>  {
+  factory $ConfigCopyWith(Config value, $Res Function(Config) _then) = _$ConfigCopyWithImpl;
+@useResult
+$Res call({
+ int localStoreTTL
+});
 
+
+
+
+}
 /// @nodoc
-class _$ConfigCopyWithImpl<$Res, $Val extends Config>
+class _$ConfigCopyWithImpl<$Res>
     implements $ConfigCopyWith<$Res> {
-  _$ConfigCopyWithImpl(this._value, this._then);
+  _$ConfigCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final Config _self;
+  final $Res Function(Config) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? localStoreTTL = null,
-  }) {
-    return _then(_value.copyWith(
-      localStoreTTL: null == localStoreTTL
-          ? _value.localStoreTTL
-          : localStoreTTL // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
+/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? localStoreTTL = null,}) {
+  return _then(_self.copyWith(
+localStoreTTL: null == localStoreTTL ? _self.localStoreTTL : localStoreTTL // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$ConfigImplCopyWith<$Res> implements $ConfigCopyWith<$Res> {
-  factory _$$ConfigImplCopyWith(
-          _$ConfigImpl value, $Res Function(_$ConfigImpl) then) =
-      __$$ConfigImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int localStoreTTL});
 }
 
-/// @nodoc
-class __$$ConfigImplCopyWithImpl<$Res>
-    extends _$ConfigCopyWithImpl<$Res, _$ConfigImpl>
-    implements _$$ConfigImplCopyWith<$Res> {
-  __$$ConfigImplCopyWithImpl(
-      _$ConfigImpl _value, $Res Function(_$ConfigImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? localStoreTTL = null,
-  }) {
-    return _then(_$ConfigImpl(
-      localStoreTTL: null == localStoreTTL
-          ? _value.localStoreTTL
-          : localStoreTTL // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
+/// Adds pattern-matching-related methods to [Config].
+extension ConfigPatterns on Config {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Config value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Config() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Config value)  $default,){
+final _that = this;
+switch (_that) {
+case _Config():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Config value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Config() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int localStoreTTL)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Config() when $default != null:
+return $default(_that.localStoreTTL);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int localStoreTTL)  $default,) {final _that = this;
+switch (_that) {
+case _Config():
+return $default(_that.localStoreTTL);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int localStoreTTL)?  $default,) {final _that = this;
+switch (_that) {
+case _Config() when $default != null:
+return $default(_that.localStoreTTL);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$ConfigImpl implements _Config {
-  _$ConfigImpl({required this.localStoreTTL});
 
-  factory _$ConfigImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ConfigImplFromJson(json);
+class _Config implements Config {
+   _Config({required this.localStoreTTL});
+  factory _Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 
-  @override
-  final int localStoreTTL;
+@override final  int localStoreTTL;
 
-  @override
-  String toString() {
-    return 'Config(localStoreTTL: $localStoreTTL)';
-  }
+/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ConfigCopyWith<_Config> get copyWith => __$ConfigCopyWithImpl<_Config>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ConfigImpl &&
-            (identical(other.localStoreTTL, localStoreTTL) ||
-                other.localStoreTTL == localStoreTTL));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, localStoreTTL);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ConfigImplCopyWith<_$ConfigImpl> get copyWith =>
-      __$$ConfigImplCopyWithImpl<_$ConfigImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ConfigImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$ConfigToJson(this, );
 }
 
-abstract class _Config implements Config {
-  factory _Config({required final int localStoreTTL}) = _$ConfigImpl;
-
-  factory _Config.fromJson(Map<String, dynamic> json) = _$ConfigImpl.fromJson;
-
-  @override
-  int get localStoreTTL;
-  @override
-  @JsonKey(ignore: true)
-  _$$ConfigImplCopyWith<_$ConfigImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Config&&(identical(other.localStoreTTL, localStoreTTL) || other.localStoreTTL == localStoreTTL));
 }
 
-Languages _$LanguagesFromJson(Map<String, dynamic> json) {
-  return _Languages.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,localStoreTTL);
+
+@override
+String toString() {
+  return 'Config(localStoreTTL: $localStoreTTL)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ConfigCopyWith<$Res> implements $ConfigCopyWith<$Res> {
+  factory _$ConfigCopyWith(_Config value, $Res Function(_Config) _then) = __$ConfigCopyWithImpl;
+@override @useResult
+$Res call({
+ int localStoreTTL
+});
+
+
+
+
+}
+/// @nodoc
+class __$ConfigCopyWithImpl<$Res>
+    implements _$ConfigCopyWith<$Res> {
+  __$ConfigCopyWithImpl(this._self, this._then);
+
+  final _Config _self;
+  final $Res Function(_Config) _then;
+
+/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? localStoreTTL = null,}) {
+  return _then(_Config(
+localStoreTTL: null == localStoreTTL ? _self.localStoreTTL : localStoreTTL // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$Languages {
-  String get label => throw _privateConstructorUsedError;
-  String get value => throw _privateConstructorUsedError;
-  bool get isSelected => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $LanguagesCopyWith<Languages> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get label; String get value; bool get isSelected;
+/// Create a copy of Languages
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LanguagesCopyWith<Languages> get copyWith => _$LanguagesCopyWithImpl<Languages>(this as Languages, _$identity);
+
+  /// Serializes this Languages to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Languages&&(identical(other.label, label) || other.label == label)&&(identical(other.value, value) || other.value == value)&&(identical(other.isSelected, isSelected) || other.isSelected == isSelected));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,label,value,isSelected);
+
+@override
+String toString() {
+  return 'Languages(label: $label, value: $value, isSelected: $isSelected)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $LanguagesCopyWith<$Res> {
-  factory $LanguagesCopyWith(Languages value, $Res Function(Languages) then) =
-      _$LanguagesCopyWithImpl<$Res, Languages>;
-  @useResult
-  $Res call({String label, String value, bool isSelected});
-}
+abstract mixin class $LanguagesCopyWith<$Res>  {
+  factory $LanguagesCopyWith(Languages value, $Res Function(Languages) _then) = _$LanguagesCopyWithImpl;
+@useResult
+$Res call({
+ String label, String value, bool isSelected
+});
 
+
+
+
+}
 /// @nodoc
-class _$LanguagesCopyWithImpl<$Res, $Val extends Languages>
+class _$LanguagesCopyWithImpl<$Res>
     implements $LanguagesCopyWith<$Res> {
-  _$LanguagesCopyWithImpl(this._value, this._then);
+  _$LanguagesCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final Languages _self;
+  final $Res Function(Languages) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? label = null,
-    Object? value = null,
-    Object? isSelected = null,
-  }) {
-    return _then(_value.copyWith(
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-      isSelected: null == isSelected
-          ? _value.isSelected
-          : isSelected // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
+/// Create a copy of Languages
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? label = null,Object? value = null,Object? isSelected = null,}) {
+  return _then(_self.copyWith(
+label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as String,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as String,isSelected: null == isSelected ? _self.isSelected : isSelected // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-abstract class _$$LanguagesImplCopyWith<$Res>
-    implements $LanguagesCopyWith<$Res> {
-  factory _$$LanguagesImplCopyWith(
-          _$LanguagesImpl value, $Res Function(_$LanguagesImpl) then) =
-      __$$LanguagesImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String label, String value, bool isSelected});
 }
 
-/// @nodoc
-class __$$LanguagesImplCopyWithImpl<$Res>
-    extends _$LanguagesCopyWithImpl<$Res, _$LanguagesImpl>
-    implements _$$LanguagesImplCopyWith<$Res> {
-  __$$LanguagesImplCopyWithImpl(
-      _$LanguagesImpl _value, $Res Function(_$LanguagesImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? label = null,
-    Object? value = null,
-    Object? isSelected = null,
-  }) {
-    return _then(_$LanguagesImpl(
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-      isSelected: null == isSelected
-          ? _value.isSelected
-          : isSelected // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+/// Adds pattern-matching-related methods to [Languages].
+extension LanguagesPatterns on Languages {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Languages value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Languages() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Languages value)  $default,){
+final _that = this;
+switch (_that) {
+case _Languages():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Languages value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Languages() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String label,  String value,  bool isSelected)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Languages() when $default != null:
+return $default(_that.label,_that.value,_that.isSelected);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String label,  String value,  bool isSelected)  $default,) {final _that = this;
+switch (_that) {
+case _Languages():
+return $default(_that.label,_that.value,_that.isSelected);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String label,  String value,  bool isSelected)?  $default,) {final _that = this;
+switch (_that) {
+case _Languages() when $default != null:
+return $default(_that.label,_that.value,_that.isSelected);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$LanguagesImpl implements _Languages {
-  _$LanguagesImpl(
-      {required this.label, required this.value, this.isSelected = false});
 
-  factory _$LanguagesImpl.fromJson(Map<String, dynamic> json) =>
-      _$$LanguagesImplFromJson(json);
+class _Languages implements Languages {
+   _Languages({required this.label, required this.value, this.isSelected = false});
+  factory _Languages.fromJson(Map<String, dynamic> json) => _$LanguagesFromJson(json);
 
-  @override
-  final String label;
-  @override
-  final String value;
-  @override
-  @JsonKey()
-  final bool isSelected;
+@override final  String label;
+@override final  String value;
+@override@JsonKey() final  bool isSelected;
 
-  @override
-  String toString() {
-    return 'Languages(label: $label, value: $value, isSelected: $isSelected)';
-  }
+/// Create a copy of Languages
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LanguagesCopyWith<_Languages> get copyWith => __$LanguagesCopyWithImpl<_Languages>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LanguagesImpl &&
-            (identical(other.label, label) || other.label == label) &&
-            (identical(other.value, value) || other.value == value) &&
-            (identical(other.isSelected, isSelected) ||
-                other.isSelected == isSelected));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, label, value, isSelected);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LanguagesImplCopyWith<_$LanguagesImpl> get copyWith =>
-      __$$LanguagesImplCopyWithImpl<_$LanguagesImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$LanguagesImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$LanguagesToJson(this, );
 }
 
-abstract class _Languages implements Languages {
-  factory _Languages(
-      {required final String label,
-      required final String value,
-      final bool isSelected}) = _$LanguagesImpl;
-
-  factory _Languages.fromJson(Map<String, dynamic> json) =
-      _$LanguagesImpl.fromJson;
-
-  @override
-  String get label;
-  @override
-  String get value;
-  @override
-  bool get isSelected;
-  @override
-  @JsonKey(ignore: true)
-  _$$LanguagesImplCopyWith<_$LanguagesImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Languages&&(identical(other.label, label) || other.label == label)&&(identical(other.value, value) || other.value == value)&&(identical(other.isSelected, isSelected) || other.isSelected == isSelected));
 }
 
-CheckListTypes _$CheckListTypesFromJson(Map<String, dynamic> json) {
-  return _CheckListTypes.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,label,value,isSelected);
+
+@override
+String toString() {
+  return 'Languages(label: $label, value: $value, isSelected: $isSelected)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LanguagesCopyWith<$Res> implements $LanguagesCopyWith<$Res> {
+  factory _$LanguagesCopyWith(_Languages value, $Res Function(_Languages) _then) = __$LanguagesCopyWithImpl;
+@override @useResult
+$Res call({
+ String label, String value, bool isSelected
+});
+
+
+
+
+}
+/// @nodoc
+class __$LanguagesCopyWithImpl<$Res>
+    implements _$LanguagesCopyWith<$Res> {
+  __$LanguagesCopyWithImpl(this._self, this._then);
+
+  final _Languages _self;
+  final $Res Function(_Languages) _then;
+
+/// Create a copy of Languages
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? label = null,Object? value = null,Object? isSelected = null,}) {
+  return _then(_Languages(
+label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as String,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as String,isSelected: null == isSelected ? _self.isSelected : isSelected // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$CheckListTypes {
-  String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $CheckListTypesCopyWith<CheckListTypes> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get name; String get code;
+/// Create a copy of CheckListTypes
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CheckListTypesCopyWith<CheckListTypes> get copyWith => _$CheckListTypesCopyWithImpl<CheckListTypes>(this as CheckListTypes, _$identity);
+
+  /// Serializes this CheckListTypes to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CheckListTypes&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'CheckListTypes(name: $name, code: $code)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $CheckListTypesCopyWith<$Res> {
-  factory $CheckListTypesCopyWith(
-          CheckListTypes value, $Res Function(CheckListTypes) then) =
-      _$CheckListTypesCopyWithImpl<$Res, CheckListTypes>;
-  @useResult
-  $Res call({String name, String code});
-}
+abstract mixin class $CheckListTypesCopyWith<$Res>  {
+  factory $CheckListTypesCopyWith(CheckListTypes value, $Res Function(CheckListTypes) _then) = _$CheckListTypesCopyWithImpl;
+@useResult
+$Res call({
+ String name, String code
+});
 
+
+
+
+}
 /// @nodoc
-class _$CheckListTypesCopyWithImpl<$Res, $Val extends CheckListTypes>
+class _$CheckListTypesCopyWithImpl<$Res>
     implements $CheckListTypesCopyWith<$Res> {
-  _$CheckListTypesCopyWithImpl(this._value, this._then);
+  _$CheckListTypesCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final CheckListTypes _self;
+  final $Res Function(CheckListTypes) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of CheckListTypes
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$CheckListTypesImplCopyWith<$Res>
-    implements $CheckListTypesCopyWith<$Res> {
-  factory _$$CheckListTypesImplCopyWith(_$CheckListTypesImpl value,
-          $Res Function(_$CheckListTypesImpl) then) =
-      __$$CheckListTypesImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String code});
 }
 
-/// @nodoc
-class __$$CheckListTypesImplCopyWithImpl<$Res>
-    extends _$CheckListTypesCopyWithImpl<$Res, _$CheckListTypesImpl>
-    implements _$$CheckListTypesImplCopyWith<$Res> {
-  __$$CheckListTypesImplCopyWithImpl(
-      _$CheckListTypesImpl _value, $Res Function(_$CheckListTypesImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_$CheckListTypesImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [CheckListTypes].
+extension CheckListTypesPatterns on CheckListTypes {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CheckListTypes value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CheckListTypes() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CheckListTypes value)  $default,){
+final _that = this;
+switch (_that) {
+case _CheckListTypes():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CheckListTypes value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CheckListTypes() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String code)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CheckListTypes() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String code)  $default,) {final _that = this;
+switch (_that) {
+case _CheckListTypes():
+return $default(_that.name,_that.code);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String code)?  $default,) {final _that = this;
+switch (_that) {
+case _CheckListTypes() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$CheckListTypesImpl implements _CheckListTypes {
-  _$CheckListTypesImpl({required this.name, required this.code});
 
-  factory _$CheckListTypesImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CheckListTypesImplFromJson(json);
+class _CheckListTypes implements CheckListTypes {
+   _CheckListTypes({required this.name, required this.code});
+  factory _CheckListTypes.fromJson(Map<String, dynamic> json) => _$CheckListTypesFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String code;
+@override final  String name;
+@override final  String code;
 
-  @override
-  String toString() {
-    return 'CheckListTypes(name: $name, code: $code)';
-  }
+/// Create a copy of CheckListTypes
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CheckListTypesCopyWith<_CheckListTypes> get copyWith => __$CheckListTypesCopyWithImpl<_CheckListTypes>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$CheckListTypesImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, code);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$CheckListTypesImplCopyWith<_$CheckListTypesImpl> get copyWith =>
-      __$$CheckListTypesImplCopyWithImpl<_$CheckListTypesImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CheckListTypesImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$CheckListTypesToJson(this, );
 }
 
-abstract class _CheckListTypes implements CheckListTypes {
-  factory _CheckListTypes(
-      {required final String name,
-      required final String code}) = _$CheckListTypesImpl;
-
-  factory _CheckListTypes.fromJson(Map<String, dynamic> json) =
-      _$CheckListTypesImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String get code;
-  @override
-  @JsonKey(ignore: true)
-  _$$CheckListTypesImplCopyWith<_$CheckListTypesImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CheckListTypes&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
 }
 
-CallSupportList _$CallSupportListFromJson(Map<String, dynamic> json) {
-  return _CallSupportList.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'CheckListTypes(name: $name, code: $code)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CheckListTypesCopyWith<$Res> implements $CheckListTypesCopyWith<$Res> {
+  factory _$CheckListTypesCopyWith(_CheckListTypes value, $Res Function(_CheckListTypes) _then) = __$CheckListTypesCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String code
+});
+
+
+
+
+}
+/// @nodoc
+class __$CheckListTypesCopyWithImpl<$Res>
+    implements _$CheckListTypesCopyWith<$Res> {
+  __$CheckListTypesCopyWithImpl(this._self, this._then);
+
+  final _CheckListTypes _self;
+  final $Res Function(_CheckListTypes) _then;
+
+/// Create a copy of CheckListTypes
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_CheckListTypes(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$CallSupportList {
-  String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $CallSupportListCopyWith<CallSupportList> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get name; String get code;
+/// Create a copy of CallSupportList
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CallSupportListCopyWith<CallSupportList> get copyWith => _$CallSupportListCopyWithImpl<CallSupportList>(this as CallSupportList, _$identity);
+
+  /// Serializes this CallSupportList to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CallSupportList&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'CallSupportList(name: $name, code: $code)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $CallSupportListCopyWith<$Res> {
-  factory $CallSupportListCopyWith(
-          CallSupportList value, $Res Function(CallSupportList) then) =
-      _$CallSupportListCopyWithImpl<$Res, CallSupportList>;
-  @useResult
-  $Res call({String name, String code});
-}
+abstract mixin class $CallSupportListCopyWith<$Res>  {
+  factory $CallSupportListCopyWith(CallSupportList value, $Res Function(CallSupportList) _then) = _$CallSupportListCopyWithImpl;
+@useResult
+$Res call({
+ String name, String code
+});
 
+
+
+
+}
 /// @nodoc
-class _$CallSupportListCopyWithImpl<$Res, $Val extends CallSupportList>
+class _$CallSupportListCopyWithImpl<$Res>
     implements $CallSupportListCopyWith<$Res> {
-  _$CallSupportListCopyWithImpl(this._value, this._then);
+  _$CallSupportListCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final CallSupportList _self;
+  final $Res Function(CallSupportList) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of CallSupportList
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$CallSupportListImplCopyWith<$Res>
-    implements $CallSupportListCopyWith<$Res> {
-  factory _$$CallSupportListImplCopyWith(_$CallSupportListImpl value,
-          $Res Function(_$CallSupportListImpl) then) =
-      __$$CallSupportListImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String code});
 }
 
-/// @nodoc
-class __$$CallSupportListImplCopyWithImpl<$Res>
-    extends _$CallSupportListCopyWithImpl<$Res, _$CallSupportListImpl>
-    implements _$$CallSupportListImplCopyWith<$Res> {
-  __$$CallSupportListImplCopyWithImpl(
-      _$CallSupportListImpl _value, $Res Function(_$CallSupportListImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_$CallSupportListImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [CallSupportList].
+extension CallSupportListPatterns on CallSupportList {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CallSupportList value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CallSupportList() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CallSupportList value)  $default,){
+final _that = this;
+switch (_that) {
+case _CallSupportList():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CallSupportList value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CallSupportList() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String code)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CallSupportList() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String code)  $default,) {final _that = this;
+switch (_that) {
+case _CallSupportList():
+return $default(_that.name,_that.code);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String code)?  $default,) {final _that = this;
+switch (_that) {
+case _CallSupportList() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$CallSupportListImpl implements _CallSupportList {
-  _$CallSupportListImpl({required this.name, required this.code});
 
-  factory _$CallSupportListImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CallSupportListImplFromJson(json);
+class _CallSupportList implements CallSupportList {
+   _CallSupportList({required this.name, required this.code});
+  factory _CallSupportList.fromJson(Map<String, dynamic> json) => _$CallSupportListFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String code;
+@override final  String name;
+@override final  String code;
 
-  @override
-  String toString() {
-    return 'CallSupportList(name: $name, code: $code)';
-  }
+/// Create a copy of CallSupportList
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CallSupportListCopyWith<_CallSupportList> get copyWith => __$CallSupportListCopyWithImpl<_CallSupportList>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$CallSupportListImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, code);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$CallSupportListImplCopyWith<_$CallSupportListImpl> get copyWith =>
-      __$$CallSupportListImplCopyWithImpl<_$CallSupportListImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CallSupportListImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$CallSupportListToJson(this, );
 }
 
-abstract class _CallSupportList implements CallSupportList {
-  factory _CallSupportList(
-      {required final String name,
-      required final String code}) = _$CallSupportListImpl;
-
-  factory _CallSupportList.fromJson(Map<String, dynamic> json) =
-      _$CallSupportListImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String get code;
-  @override
-  @JsonKey(ignore: true)
-  _$$CallSupportListImplCopyWith<_$CallSupportListImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CallSupportList&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
 }
 
-SearchHouseHoldFilters _$SearchHouseHoldFiltersFromJson(
-    Map<String, dynamic> json) {
-  return _SearchHouseHoldFilters.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'CallSupportList(name: $name, code: $code)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CallSupportListCopyWith<$Res> implements $CallSupportListCopyWith<$Res> {
+  factory _$CallSupportListCopyWith(_CallSupportList value, $Res Function(_CallSupportList) _then) = __$CallSupportListCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String code
+});
+
+
+
+
+}
+/// @nodoc
+class __$CallSupportListCopyWithImpl<$Res>
+    implements _$CallSupportListCopyWith<$Res> {
+  __$CallSupportListCopyWithImpl(this._self, this._then);
+
+  final _CallSupportList _self;
+  final $Res Function(_CallSupportList) _then;
+
+/// Create a copy of CallSupportList
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_CallSupportList(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$SearchHouseHoldFilters {
-  String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
-  bool get active => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $SearchHouseHoldFiltersCopyWith<SearchHouseHoldFilters> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get name; String get code; bool get active;
+/// Create a copy of SearchHouseHoldFilters
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SearchHouseHoldFiltersCopyWith<SearchHouseHoldFilters> get copyWith => _$SearchHouseHoldFiltersCopyWithImpl<SearchHouseHoldFilters>(this as SearchHouseHoldFilters, _$identity);
+
+  /// Serializes this SearchHouseHoldFilters to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchHouseHoldFilters&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.active, active) || other.active == active));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code,active);
+
+@override
+String toString() {
+  return 'SearchHouseHoldFilters(name: $name, code: $code, active: $active)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $SearchHouseHoldFiltersCopyWith<$Res> {
-  factory $SearchHouseHoldFiltersCopyWith(SearchHouseHoldFilters value,
-          $Res Function(SearchHouseHoldFilters) then) =
-      _$SearchHouseHoldFiltersCopyWithImpl<$Res, SearchHouseHoldFilters>;
-  @useResult
-  $Res call({String name, String code, bool active});
-}
+abstract mixin class $SearchHouseHoldFiltersCopyWith<$Res>  {
+  factory $SearchHouseHoldFiltersCopyWith(SearchHouseHoldFilters value, $Res Function(SearchHouseHoldFilters) _then) = _$SearchHouseHoldFiltersCopyWithImpl;
+@useResult
+$Res call({
+ String name, String code, bool active
+});
 
+
+
+
+}
 /// @nodoc
-class _$SearchHouseHoldFiltersCopyWithImpl<$Res,
-        $Val extends SearchHouseHoldFilters>
+class _$SearchHouseHoldFiltersCopyWithImpl<$Res>
     implements $SearchHouseHoldFiltersCopyWith<$Res> {
-  _$SearchHouseHoldFiltersCopyWithImpl(this._value, this._then);
+  _$SearchHouseHoldFiltersCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final SearchHouseHoldFilters _self;
+  final $Res Function(SearchHouseHoldFilters) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-    Object? active = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
+/// Create a copy of SearchHouseHoldFilters
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,Object? active = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-abstract class _$$SearchHouseHoldFiltersImplCopyWith<$Res>
-    implements $SearchHouseHoldFiltersCopyWith<$Res> {
-  factory _$$SearchHouseHoldFiltersImplCopyWith(
-          _$SearchHouseHoldFiltersImpl value,
-          $Res Function(_$SearchHouseHoldFiltersImpl) then) =
-      __$$SearchHouseHoldFiltersImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String code, bool active});
 }
 
-/// @nodoc
-class __$$SearchHouseHoldFiltersImplCopyWithImpl<$Res>
-    extends _$SearchHouseHoldFiltersCopyWithImpl<$Res,
-        _$SearchHouseHoldFiltersImpl>
-    implements _$$SearchHouseHoldFiltersImplCopyWith<$Res> {
-  __$$SearchHouseHoldFiltersImplCopyWithImpl(
-      _$SearchHouseHoldFiltersImpl _value,
-      $Res Function(_$SearchHouseHoldFiltersImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-    Object? active = null,
-  }) {
-    return _then(_$SearchHouseHoldFiltersImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+/// Adds pattern-matching-related methods to [SearchHouseHoldFilters].
+extension SearchHouseHoldFiltersPatterns on SearchHouseHoldFilters {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SearchHouseHoldFilters value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _SearchHouseHoldFilters() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SearchHouseHoldFilters value)  $default,){
+final _that = this;
+switch (_that) {
+case _SearchHouseHoldFilters():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SearchHouseHoldFilters value)?  $default,){
+final _that = this;
+switch (_that) {
+case _SearchHouseHoldFilters() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String code,  bool active)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _SearchHouseHoldFilters() when $default != null:
+return $default(_that.name,_that.code,_that.active);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String code,  bool active)  $default,) {final _that = this;
+switch (_that) {
+case _SearchHouseHoldFilters():
+return $default(_that.name,_that.code,_that.active);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String code,  bool active)?  $default,) {final _that = this;
+switch (_that) {
+case _SearchHouseHoldFilters() when $default != null:
+return $default(_that.name,_that.code,_that.active);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$SearchHouseHoldFiltersImpl implements _SearchHouseHoldFilters {
-  _$SearchHouseHoldFiltersImpl(
-      {required this.name, required this.code, required this.active});
 
-  factory _$SearchHouseHoldFiltersImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SearchHouseHoldFiltersImplFromJson(json);
+class _SearchHouseHoldFilters implements SearchHouseHoldFilters {
+   _SearchHouseHoldFilters({required this.name, required this.code, required this.active});
+  factory _SearchHouseHoldFilters.fromJson(Map<String, dynamic> json) => _$SearchHouseHoldFiltersFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String code;
-  @override
-  final bool active;
+@override final  String name;
+@override final  String code;
+@override final  bool active;
 
-  @override
-  String toString() {
-    return 'SearchHouseHoldFilters(name: $name, code: $code, active: $active)';
-  }
+/// Create a copy of SearchHouseHoldFilters
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SearchHouseHoldFiltersCopyWith<_SearchHouseHoldFilters> get copyWith => __$SearchHouseHoldFiltersCopyWithImpl<_SearchHouseHoldFilters>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SearchHouseHoldFiltersImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.active, active) || other.active == active));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, code, active);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SearchHouseHoldFiltersImplCopyWith<_$SearchHouseHoldFiltersImpl>
-      get copyWith => __$$SearchHouseHoldFiltersImplCopyWithImpl<
-          _$SearchHouseHoldFiltersImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$SearchHouseHoldFiltersImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$SearchHouseHoldFiltersToJson(this, );
 }
 
-abstract class _SearchHouseHoldFilters implements SearchHouseHoldFilters {
-  factory _SearchHouseHoldFilters(
-      {required final String name,
-      required final String code,
-      required final bool active}) = _$SearchHouseHoldFiltersImpl;
-
-  factory _SearchHouseHoldFilters.fromJson(Map<String, dynamic> json) =
-      _$SearchHouseHoldFiltersImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String get code;
-  @override
-  bool get active;
-  @override
-  @JsonKey(ignore: true)
-  _$$SearchHouseHoldFiltersImplCopyWith<_$SearchHouseHoldFiltersImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchHouseHoldFilters&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.active, active) || other.active == active));
 }
 
-SearchCLFFilters _$SearchCLFFiltersFromJson(Map<String, dynamic> json) {
-  return _SearchCLFFilters.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code,active);
+
+@override
+String toString() {
+  return 'SearchHouseHoldFilters(name: $name, code: $code, active: $active)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SearchHouseHoldFiltersCopyWith<$Res> implements $SearchHouseHoldFiltersCopyWith<$Res> {
+  factory _$SearchHouseHoldFiltersCopyWith(_SearchHouseHoldFilters value, $Res Function(_SearchHouseHoldFilters) _then) = __$SearchHouseHoldFiltersCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String code, bool active
+});
+
+
+
+
+}
+/// @nodoc
+class __$SearchHouseHoldFiltersCopyWithImpl<$Res>
+    implements _$SearchHouseHoldFiltersCopyWith<$Res> {
+  __$SearchHouseHoldFiltersCopyWithImpl(this._self, this._then);
+
+  final _SearchHouseHoldFilters _self;
+  final $Res Function(_SearchHouseHoldFilters) _then;
+
+/// Create a copy of SearchHouseHoldFilters
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? code = null,Object? active = null,}) {
+  return _then(_SearchHouseHoldFilters(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$SearchCLFFilters {
-  String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
-  bool get active => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $SearchCLFFiltersCopyWith<SearchCLFFilters> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get name; String get code; bool get active;
+/// Create a copy of SearchCLFFilters
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SearchCLFFiltersCopyWith<SearchCLFFilters> get copyWith => _$SearchCLFFiltersCopyWithImpl<SearchCLFFilters>(this as SearchCLFFilters, _$identity);
+
+  /// Serializes this SearchCLFFilters to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchCLFFilters&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.active, active) || other.active == active));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code,active);
+
+@override
+String toString() {
+  return 'SearchCLFFilters(name: $name, code: $code, active: $active)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $SearchCLFFiltersCopyWith<$Res> {
-  factory $SearchCLFFiltersCopyWith(
-          SearchCLFFilters value, $Res Function(SearchCLFFilters) then) =
-      _$SearchCLFFiltersCopyWithImpl<$Res, SearchCLFFilters>;
-  @useResult
-  $Res call({String name, String code, bool active});
-}
+abstract mixin class $SearchCLFFiltersCopyWith<$Res>  {
+  factory $SearchCLFFiltersCopyWith(SearchCLFFilters value, $Res Function(SearchCLFFilters) _then) = _$SearchCLFFiltersCopyWithImpl;
+@useResult
+$Res call({
+ String name, String code, bool active
+});
 
+
+
+
+}
 /// @nodoc
-class _$SearchCLFFiltersCopyWithImpl<$Res, $Val extends SearchCLFFilters>
+class _$SearchCLFFiltersCopyWithImpl<$Res>
     implements $SearchCLFFiltersCopyWith<$Res> {
-  _$SearchCLFFiltersCopyWithImpl(this._value, this._then);
+  _$SearchCLFFiltersCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final SearchCLFFilters _self;
+  final $Res Function(SearchCLFFilters) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-    Object? active = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
+/// Create a copy of SearchCLFFilters
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,Object? active = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-abstract class _$$SearchCLFFiltersImplCopyWith<$Res>
-    implements $SearchCLFFiltersCopyWith<$Res> {
-  factory _$$SearchCLFFiltersImplCopyWith(_$SearchCLFFiltersImpl value,
-          $Res Function(_$SearchCLFFiltersImpl) then) =
-      __$$SearchCLFFiltersImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String code, bool active});
 }
 
-/// @nodoc
-class __$$SearchCLFFiltersImplCopyWithImpl<$Res>
-    extends _$SearchCLFFiltersCopyWithImpl<$Res, _$SearchCLFFiltersImpl>
-    implements _$$SearchCLFFiltersImplCopyWith<$Res> {
-  __$$SearchCLFFiltersImplCopyWithImpl(_$SearchCLFFiltersImpl _value,
-      $Res Function(_$SearchCLFFiltersImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-    Object? active = null,
-  }) {
-    return _then(_$SearchCLFFiltersImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+/// Adds pattern-matching-related methods to [SearchCLFFilters].
+extension SearchCLFFiltersPatterns on SearchCLFFilters {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SearchCLFFilters value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _SearchCLFFilters() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SearchCLFFilters value)  $default,){
+final _that = this;
+switch (_that) {
+case _SearchCLFFilters():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SearchCLFFilters value)?  $default,){
+final _that = this;
+switch (_that) {
+case _SearchCLFFilters() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String code,  bool active)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _SearchCLFFilters() when $default != null:
+return $default(_that.name,_that.code,_that.active);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String code,  bool active)  $default,) {final _that = this;
+switch (_that) {
+case _SearchCLFFilters():
+return $default(_that.name,_that.code,_that.active);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String code,  bool active)?  $default,) {final _that = this;
+switch (_that) {
+case _SearchCLFFilters() when $default != null:
+return $default(_that.name,_that.code,_that.active);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$SearchCLFFiltersImpl implements _SearchCLFFilters {
-  _$SearchCLFFiltersImpl(
-      {required this.name, required this.code, required this.active});
 
-  factory _$SearchCLFFiltersImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SearchCLFFiltersImplFromJson(json);
+class _SearchCLFFilters implements SearchCLFFilters {
+   _SearchCLFFilters({required this.name, required this.code, required this.active});
+  factory _SearchCLFFilters.fromJson(Map<String, dynamic> json) => _$SearchCLFFiltersFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String code;
-  @override
-  final bool active;
+@override final  String name;
+@override final  String code;
+@override final  bool active;
 
-  @override
-  String toString() {
-    return 'SearchCLFFilters(name: $name, code: $code, active: $active)';
-  }
+/// Create a copy of SearchCLFFilters
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SearchCLFFiltersCopyWith<_SearchCLFFilters> get copyWith => __$SearchCLFFiltersCopyWithImpl<_SearchCLFFilters>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SearchCLFFiltersImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.active, active) || other.active == active));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, code, active);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SearchCLFFiltersImplCopyWith<_$SearchCLFFiltersImpl> get copyWith =>
-      __$$SearchCLFFiltersImplCopyWithImpl<_$SearchCLFFiltersImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$SearchCLFFiltersImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$SearchCLFFiltersToJson(this, );
 }
 
-abstract class _SearchCLFFilters implements SearchCLFFilters {
-  factory _SearchCLFFilters(
-      {required final String name,
-      required final String code,
-      required final bool active}) = _$SearchCLFFiltersImpl;
-
-  factory _SearchCLFFilters.fromJson(Map<String, dynamic> json) =
-      _$SearchCLFFiltersImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String get code;
-  @override
-  bool get active;
-  @override
-  @JsonKey(ignore: true)
-  _$$SearchCLFFiltersImplCopyWith<_$SearchCLFFiltersImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchCLFFilters&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.active, active) || other.active == active));
 }
 
-TransitPostType _$TransitPostTypeFromJson(Map<String, dynamic> json) {
-  return _TransitPostType.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code,active);
+
+@override
+String toString() {
+  return 'SearchCLFFilters(name: $name, code: $code, active: $active)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SearchCLFFiltersCopyWith<$Res> implements $SearchCLFFiltersCopyWith<$Res> {
+  factory _$SearchCLFFiltersCopyWith(_SearchCLFFilters value, $Res Function(_SearchCLFFilters) _then) = __$SearchCLFFiltersCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String code, bool active
+});
+
+
+
+
+}
+/// @nodoc
+class __$SearchCLFFiltersCopyWithImpl<$Res>
+    implements _$SearchCLFFiltersCopyWith<$Res> {
+  __$SearchCLFFiltersCopyWithImpl(this._self, this._then);
+
+  final _SearchCLFFilters _self;
+  final $Res Function(_SearchCLFFilters) _then;
+
+/// Create a copy of SearchCLFFilters
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? code = null,Object? active = null,}) {
+  return _then(_SearchCLFFilters(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$TransitPostType {
-  String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
-  bool get active => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $TransitPostTypeCopyWith<TransitPostType> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get name; String get code; bool get active;
+/// Create a copy of TransitPostType
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TransitPostTypeCopyWith<TransitPostType> get copyWith => _$TransitPostTypeCopyWithImpl<TransitPostType>(this as TransitPostType, _$identity);
+
+  /// Serializes this TransitPostType to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransitPostType&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.active, active) || other.active == active));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code,active);
+
+@override
+String toString() {
+  return 'TransitPostType(name: $name, code: $code, active: $active)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $TransitPostTypeCopyWith<$Res> {
-  factory $TransitPostTypeCopyWith(
-          TransitPostType value, $Res Function(TransitPostType) then) =
-      _$TransitPostTypeCopyWithImpl<$Res, TransitPostType>;
-  @useResult
-  $Res call({String name, String code, bool active});
-}
+abstract mixin class $TransitPostTypeCopyWith<$Res>  {
+  factory $TransitPostTypeCopyWith(TransitPostType value, $Res Function(TransitPostType) _then) = _$TransitPostTypeCopyWithImpl;
+@useResult
+$Res call({
+ String name, String code, bool active
+});
 
+
+
+
+}
 /// @nodoc
-class _$TransitPostTypeCopyWithImpl<$Res, $Val extends TransitPostType>
+class _$TransitPostTypeCopyWithImpl<$Res>
     implements $TransitPostTypeCopyWith<$Res> {
-  _$TransitPostTypeCopyWithImpl(this._value, this._then);
+  _$TransitPostTypeCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final TransitPostType _self;
+  final $Res Function(TransitPostType) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-    Object? active = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
+/// Create a copy of TransitPostType
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,Object? active = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-abstract class _$$TransitPostTypeImplCopyWith<$Res>
-    implements $TransitPostTypeCopyWith<$Res> {
-  factory _$$TransitPostTypeImplCopyWith(_$TransitPostTypeImpl value,
-          $Res Function(_$TransitPostTypeImpl) then) =
-      __$$TransitPostTypeImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String code, bool active});
 }
 
-/// @nodoc
-class __$$TransitPostTypeImplCopyWithImpl<$Res>
-    extends _$TransitPostTypeCopyWithImpl<$Res, _$TransitPostTypeImpl>
-    implements _$$TransitPostTypeImplCopyWith<$Res> {
-  __$$TransitPostTypeImplCopyWithImpl(
-      _$TransitPostTypeImpl _value, $Res Function(_$TransitPostTypeImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-    Object? active = null,
-  }) {
-    return _then(_$TransitPostTypeImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+/// Adds pattern-matching-related methods to [TransitPostType].
+extension TransitPostTypePatterns on TransitPostType {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TransitPostType value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TransitPostType() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TransitPostType value)  $default,){
+final _that = this;
+switch (_that) {
+case _TransitPostType():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TransitPostType value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TransitPostType() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String code,  bool active)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TransitPostType() when $default != null:
+return $default(_that.name,_that.code,_that.active);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String code,  bool active)  $default,) {final _that = this;
+switch (_that) {
+case _TransitPostType():
+return $default(_that.name,_that.code,_that.active);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String code,  bool active)?  $default,) {final _that = this;
+switch (_that) {
+case _TransitPostType() when $default != null:
+return $default(_that.name,_that.code,_that.active);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$TransitPostTypeImpl implements _TransitPostType {
-  _$TransitPostTypeImpl(
-      {required this.name, required this.code, required this.active});
 
-  factory _$TransitPostTypeImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TransitPostTypeImplFromJson(json);
+class _TransitPostType implements TransitPostType {
+   _TransitPostType({required this.name, required this.code, required this.active});
+  factory _TransitPostType.fromJson(Map<String, dynamic> json) => _$TransitPostTypeFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String code;
-  @override
-  final bool active;
+@override final  String name;
+@override final  String code;
+@override final  bool active;
 
-  @override
-  String toString() {
-    return 'TransitPostType(name: $name, code: $code, active: $active)';
-  }
+/// Create a copy of TransitPostType
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TransitPostTypeCopyWith<_TransitPostType> get copyWith => __$TransitPostTypeCopyWithImpl<_TransitPostType>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$TransitPostTypeImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.active, active) || other.active == active));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, code, active);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$TransitPostTypeImplCopyWith<_$TransitPostTypeImpl> get copyWith =>
-      __$$TransitPostTypeImplCopyWithImpl<_$TransitPostTypeImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$TransitPostTypeImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$TransitPostTypeToJson(this, );
 }
 
-abstract class _TransitPostType implements TransitPostType {
-  factory _TransitPostType(
-      {required final String name,
-      required final String code,
-      required final bool active}) = _$TransitPostTypeImpl;
-
-  factory _TransitPostType.fromJson(Map<String, dynamic> json) =
-      _$TransitPostTypeImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String get code;
-  @override
-  bool get active;
-  @override
-  @JsonKey(ignore: true)
-  _$$TransitPostTypeImplCopyWith<_$TransitPostTypeImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransitPostType&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.active, active) || other.active == active));
 }
 
-DeviceChangeReasons _$DeviceChangeReasonsFromJson(Map<String, dynamic> json) {
-  return _DeviceChangeReasons.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code,active);
+
+@override
+String toString() {
+  return 'TransitPostType(name: $name, code: $code, active: $active)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TransitPostTypeCopyWith<$Res> implements $TransitPostTypeCopyWith<$Res> {
+  factory _$TransitPostTypeCopyWith(_TransitPostType value, $Res Function(_TransitPostType) _then) = __$TransitPostTypeCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String code, bool active
+});
+
+
+
+
+}
+/// @nodoc
+class __$TransitPostTypeCopyWithImpl<$Res>
+    implements _$TransitPostTypeCopyWith<$Res> {
+  __$TransitPostTypeCopyWithImpl(this._self, this._then);
+
+  final _TransitPostType _self;
+  final $Res Function(_TransitPostType) _then;
+
+/// Create a copy of TransitPostType
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? code = null,Object? active = null,}) {
+  return _then(_TransitPostType(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$DeviceChangeReasons {
-  String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $DeviceChangeReasonsCopyWith<DeviceChangeReasons> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get name; String get code;
+/// Create a copy of DeviceChangeReasons
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DeviceChangeReasonsCopyWith<DeviceChangeReasons> get copyWith => _$DeviceChangeReasonsCopyWithImpl<DeviceChangeReasons>(this as DeviceChangeReasons, _$identity);
+
+  /// Serializes this DeviceChangeReasons to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceChangeReasons&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'DeviceChangeReasons(name: $name, code: $code)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $DeviceChangeReasonsCopyWith<$Res> {
-  factory $DeviceChangeReasonsCopyWith(
-          DeviceChangeReasons value, $Res Function(DeviceChangeReasons) then) =
-      _$DeviceChangeReasonsCopyWithImpl<$Res, DeviceChangeReasons>;
-  @useResult
-  $Res call({String name, String code});
-}
+abstract mixin class $DeviceChangeReasonsCopyWith<$Res>  {
+  factory $DeviceChangeReasonsCopyWith(DeviceChangeReasons value, $Res Function(DeviceChangeReasons) _then) = _$DeviceChangeReasonsCopyWithImpl;
+@useResult
+$Res call({
+ String name, String code
+});
 
+
+
+
+}
 /// @nodoc
-class _$DeviceChangeReasonsCopyWithImpl<$Res, $Val extends DeviceChangeReasons>
+class _$DeviceChangeReasonsCopyWithImpl<$Res>
     implements $DeviceChangeReasonsCopyWith<$Res> {
-  _$DeviceChangeReasonsCopyWithImpl(this._value, this._then);
+  _$DeviceChangeReasonsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final DeviceChangeReasons _self;
+  final $Res Function(DeviceChangeReasons) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of DeviceChangeReasons
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$DeviceChangeReasonsImplCopyWith<$Res>
-    implements $DeviceChangeReasonsCopyWith<$Res> {
-  factory _$$DeviceChangeReasonsImplCopyWith(_$DeviceChangeReasonsImpl value,
-          $Res Function(_$DeviceChangeReasonsImpl) then) =
-      __$$DeviceChangeReasonsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String code});
 }
 
-/// @nodoc
-class __$$DeviceChangeReasonsImplCopyWithImpl<$Res>
-    extends _$DeviceChangeReasonsCopyWithImpl<$Res, _$DeviceChangeReasonsImpl>
-    implements _$$DeviceChangeReasonsImplCopyWith<$Res> {
-  __$$DeviceChangeReasonsImplCopyWithImpl(_$DeviceChangeReasonsImpl _value,
-      $Res Function(_$DeviceChangeReasonsImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_$DeviceChangeReasonsImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [DeviceChangeReasons].
+extension DeviceChangeReasonsPatterns on DeviceChangeReasons {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DeviceChangeReasons value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DeviceChangeReasons() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DeviceChangeReasons value)  $default,){
+final _that = this;
+switch (_that) {
+case _DeviceChangeReasons():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DeviceChangeReasons value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DeviceChangeReasons() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String code)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DeviceChangeReasons() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String code)  $default,) {final _that = this;
+switch (_that) {
+case _DeviceChangeReasons():
+return $default(_that.name,_that.code);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String code)?  $default,) {final _that = this;
+switch (_that) {
+case _DeviceChangeReasons() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$DeviceChangeReasonsImpl implements _DeviceChangeReasons {
-  _$DeviceChangeReasonsImpl({required this.name, required this.code});
 
-  factory _$DeviceChangeReasonsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DeviceChangeReasonsImplFromJson(json);
+class _DeviceChangeReasons implements DeviceChangeReasons {
+   _DeviceChangeReasons({required this.name, required this.code});
+  factory _DeviceChangeReasons.fromJson(Map<String, dynamic> json) => _$DeviceChangeReasonsFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String code;
+@override final  String name;
+@override final  String code;
 
-  @override
-  String toString() {
-    return 'DeviceChangeReasons(name: $name, code: $code)';
-  }
+/// Create a copy of DeviceChangeReasons
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DeviceChangeReasonsCopyWith<_DeviceChangeReasons> get copyWith => __$DeviceChangeReasonsCopyWithImpl<_DeviceChangeReasons>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DeviceChangeReasonsImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, code);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DeviceChangeReasonsImplCopyWith<_$DeviceChangeReasonsImpl> get copyWith =>
-      __$$DeviceChangeReasonsImplCopyWithImpl<_$DeviceChangeReasonsImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DeviceChangeReasonsImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$DeviceChangeReasonsToJson(this, );
 }
 
-abstract class _DeviceChangeReasons implements DeviceChangeReasons {
-  factory _DeviceChangeReasons(
-      {required final String name,
-      required final String code}) = _$DeviceChangeReasonsImpl;
-
-  factory _DeviceChangeReasons.fromJson(Map<String, dynamic> json) =
-      _$DeviceChangeReasonsImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String get code;
-  @override
-  @JsonKey(ignore: true)
-  _$$DeviceChangeReasonsImplCopyWith<_$DeviceChangeReasonsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceChangeReasons&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
 }
 
-SingleUserLogin _$SingleUserLoginFromJson(Map<String, dynamic> json) {
-  return _SingleUserLogin.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'DeviceChangeReasons(name: $name, code: $code)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DeviceChangeReasonsCopyWith<$Res> implements $DeviceChangeReasonsCopyWith<$Res> {
+  factory _$DeviceChangeReasonsCopyWith(_DeviceChangeReasons value, $Res Function(_DeviceChangeReasons) _then) = __$DeviceChangeReasonsCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String code
+});
+
+
+
+
+}
+/// @nodoc
+class __$DeviceChangeReasonsCopyWithImpl<$Res>
+    implements _$DeviceChangeReasonsCopyWith<$Res> {
+  __$DeviceChangeReasonsCopyWithImpl(this._self, this._then);
+
+  final _DeviceChangeReasons _self;
+  final $Res Function(_DeviceChangeReasons) _then;
+
+/// Create a copy of DeviceChangeReasons
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_DeviceChangeReasons(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$SingleUserLogin {
-  bool get enabled => throw _privateConstructorUsedError;
-  int get id => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $SingleUserLoginCopyWith<SingleUserLogin> get copyWith =>
-      throw _privateConstructorUsedError;
+ bool get enabled; int get id;
+/// Create a copy of SingleUserLogin
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SingleUserLoginCopyWith<SingleUserLogin> get copyWith => _$SingleUserLoginCopyWithImpl<SingleUserLogin>(this as SingleUserLogin, _$identity);
+
+  /// Serializes this SingleUserLogin to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SingleUserLogin&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.id, id) || other.id == id));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,enabled,id);
+
+@override
+String toString() {
+  return 'SingleUserLogin(enabled: $enabled, id: $id)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $SingleUserLoginCopyWith<$Res> {
-  factory $SingleUserLoginCopyWith(
-          SingleUserLogin value, $Res Function(SingleUserLogin) then) =
-      _$SingleUserLoginCopyWithImpl<$Res, SingleUserLogin>;
-  @useResult
-  $Res call({bool enabled, int id});
-}
+abstract mixin class $SingleUserLoginCopyWith<$Res>  {
+  factory $SingleUserLoginCopyWith(SingleUserLogin value, $Res Function(SingleUserLogin) _then) = _$SingleUserLoginCopyWithImpl;
+@useResult
+$Res call({
+ bool enabled, int id
+});
 
+
+
+
+}
 /// @nodoc
-class _$SingleUserLoginCopyWithImpl<$Res, $Val extends SingleUserLogin>
+class _$SingleUserLoginCopyWithImpl<$Res>
     implements $SingleUserLoginCopyWith<$Res> {
-  _$SingleUserLoginCopyWithImpl(this._value, this._then);
+  _$SingleUserLoginCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final SingleUserLogin _self;
+  final $Res Function(SingleUserLogin) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? enabled = null,
-    Object? id = null,
-  }) {
-    return _then(_value.copyWith(
-      enabled: null == enabled
-          ? _value.enabled
-          : enabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
+/// Create a copy of SingleUserLogin
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? id = null,}) {
+  return _then(_self.copyWith(
+enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$SingleUserLoginImplCopyWith<$Res>
-    implements $SingleUserLoginCopyWith<$Res> {
-  factory _$$SingleUserLoginImplCopyWith(_$SingleUserLoginImpl value,
-          $Res Function(_$SingleUserLoginImpl) then) =
-      __$$SingleUserLoginImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({bool enabled, int id});
 }
 
-/// @nodoc
-class __$$SingleUserLoginImplCopyWithImpl<$Res>
-    extends _$SingleUserLoginCopyWithImpl<$Res, _$SingleUserLoginImpl>
-    implements _$$SingleUserLoginImplCopyWith<$Res> {
-  __$$SingleUserLoginImplCopyWithImpl(
-      _$SingleUserLoginImpl _value, $Res Function(_$SingleUserLoginImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? enabled = null,
-    Object? id = null,
-  }) {
-    return _then(_$SingleUserLoginImpl(
-      enabled: null == enabled
-          ? _value.enabled
-          : enabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
+/// Adds pattern-matching-related methods to [SingleUserLogin].
+extension SingleUserLoginPatterns on SingleUserLogin {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SingleUserLogin value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _SingleUserLogin() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SingleUserLogin value)  $default,){
+final _that = this;
+switch (_that) {
+case _SingleUserLogin():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SingleUserLogin value)?  $default,){
+final _that = this;
+switch (_that) {
+case _SingleUserLogin() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled,  int id)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _SingleUserLogin() when $default != null:
+return $default(_that.enabled,_that.id);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled,  int id)  $default,) {final _that = this;
+switch (_that) {
+case _SingleUserLogin():
+return $default(_that.enabled,_that.id);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled,  int id)?  $default,) {final _that = this;
+switch (_that) {
+case _SingleUserLogin() when $default != null:
+return $default(_that.enabled,_that.id);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$SingleUserLoginImpl implements _SingleUserLogin {
-  _$SingleUserLoginImpl({required this.enabled, required this.id});
 
-  factory _$SingleUserLoginImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SingleUserLoginImplFromJson(json);
+class _SingleUserLogin implements SingleUserLogin {
+   _SingleUserLogin({required this.enabled, required this.id});
+  factory _SingleUserLogin.fromJson(Map<String, dynamic> json) => _$SingleUserLoginFromJson(json);
 
-  @override
-  final bool enabled;
-  @override
-  final int id;
+@override final  bool enabled;
+@override final  int id;
 
-  @override
-  String toString() {
-    return 'SingleUserLogin(enabled: $enabled, id: $id)';
-  }
+/// Create a copy of SingleUserLogin
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SingleUserLoginCopyWith<_SingleUserLogin> get copyWith => __$SingleUserLoginCopyWithImpl<_SingleUserLogin>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SingleUserLoginImpl &&
-            (identical(other.enabled, enabled) || other.enabled == enabled) &&
-            (identical(other.id, id) || other.id == id));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, enabled, id);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SingleUserLoginImplCopyWith<_$SingleUserLoginImpl> get copyWith =>
-      __$$SingleUserLoginImplCopyWithImpl<_$SingleUserLoginImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$SingleUserLoginImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$SingleUserLoginToJson(this, );
 }
 
-abstract class _SingleUserLogin implements SingleUserLogin {
-  factory _SingleUserLogin(
-      {required final bool enabled,
-      required final int id}) = _$SingleUserLoginImpl;
-
-  factory _SingleUserLogin.fromJson(Map<String, dynamic> json) =
-      _$SingleUserLoginImpl.fromJson;
-
-  @override
-  bool get enabled;
-  @override
-  int get id;
-  @override
-  @JsonKey(ignore: true)
-  _$$SingleUserLoginImplCopyWith<_$SingleUserLoginImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SingleUserLogin&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.id, id) || other.id == id));
 }
 
-TransportTypes _$TransportTypesFromJson(Map<String, dynamic> json) {
-  return _TransportTypes.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,enabled,id);
+
+@override
+String toString() {
+  return 'SingleUserLogin(enabled: $enabled, id: $id)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SingleUserLoginCopyWith<$Res> implements $SingleUserLoginCopyWith<$Res> {
+  factory _$SingleUserLoginCopyWith(_SingleUserLogin value, $Res Function(_SingleUserLogin) _then) = __$SingleUserLoginCopyWithImpl;
+@override @useResult
+$Res call({
+ bool enabled, int id
+});
+
+
+
+
+}
+/// @nodoc
+class __$SingleUserLoginCopyWithImpl<$Res>
+    implements _$SingleUserLoginCopyWith<$Res> {
+  __$SingleUserLoginCopyWithImpl(this._self, this._then);
+
+  final _SingleUserLogin _self;
+  final $Res Function(_SingleUserLogin) _then;
+
+/// Create a copy of SingleUserLogin
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? id = null,}) {
+  return _then(_SingleUserLogin(
+enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$TransportTypes {
-  String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $TransportTypesCopyWith<TransportTypes> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get name; String get code;
+/// Create a copy of TransportTypes
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TransportTypesCopyWith<TransportTypes> get copyWith => _$TransportTypesCopyWithImpl<TransportTypes>(this as TransportTypes, _$identity);
+
+  /// Serializes this TransportTypes to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransportTypes&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'TransportTypes(name: $name, code: $code)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $TransportTypesCopyWith<$Res> {
-  factory $TransportTypesCopyWith(
-          TransportTypes value, $Res Function(TransportTypes) then) =
-      _$TransportTypesCopyWithImpl<$Res, TransportTypes>;
-  @useResult
-  $Res call({String name, String code});
-}
+abstract mixin class $TransportTypesCopyWith<$Res>  {
+  factory $TransportTypesCopyWith(TransportTypes value, $Res Function(TransportTypes) _then) = _$TransportTypesCopyWithImpl;
+@useResult
+$Res call({
+ String name, String code
+});
 
+
+
+
+}
 /// @nodoc
-class _$TransportTypesCopyWithImpl<$Res, $Val extends TransportTypes>
+class _$TransportTypesCopyWithImpl<$Res>
     implements $TransportTypesCopyWith<$Res> {
-  _$TransportTypesCopyWithImpl(this._value, this._then);
+  _$TransportTypesCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final TransportTypes _self;
+  final $Res Function(TransportTypes) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of TransportTypes
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$TransportTypesImplCopyWith<$Res>
-    implements $TransportTypesCopyWith<$Res> {
-  factory _$$TransportTypesImplCopyWith(_$TransportTypesImpl value,
-          $Res Function(_$TransportTypesImpl) then) =
-      __$$TransportTypesImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String code});
 }
 
-/// @nodoc
-class __$$TransportTypesImplCopyWithImpl<$Res>
-    extends _$TransportTypesCopyWithImpl<$Res, _$TransportTypesImpl>
-    implements _$$TransportTypesImplCopyWith<$Res> {
-  __$$TransportTypesImplCopyWithImpl(
-      _$TransportTypesImpl _value, $Res Function(_$TransportTypesImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? code = null,
-  }) {
-    return _then(_$TransportTypesImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [TransportTypes].
+extension TransportTypesPatterns on TransportTypes {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TransportTypes value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TransportTypes() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TransportTypes value)  $default,){
+final _that = this;
+switch (_that) {
+case _TransportTypes():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TransportTypes value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TransportTypes() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String code)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TransportTypes() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String code)  $default,) {final _that = this;
+switch (_that) {
+case _TransportTypes():
+return $default(_that.name,_that.code);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String code)?  $default,) {final _that = this;
+switch (_that) {
+case _TransportTypes() when $default != null:
+return $default(_that.name,_that.code);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$TransportTypesImpl implements _TransportTypes {
-  _$TransportTypesImpl({required this.name, required this.code});
 
-  factory _$TransportTypesImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TransportTypesImplFromJson(json);
+class _TransportTypes implements TransportTypes {
+   _TransportTypes({required this.name, required this.code});
+  factory _TransportTypes.fromJson(Map<String, dynamic> json) => _$TransportTypesFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String code;
+@override final  String name;
+@override final  String code;
 
-  @override
-  String toString() {
-    return 'TransportTypes(name: $name, code: $code)';
-  }
+/// Create a copy of TransportTypes
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TransportTypesCopyWith<_TransportTypes> get copyWith => __$TransportTypesCopyWithImpl<_TransportTypes>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$TransportTypesImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, code);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$TransportTypesImplCopyWith<_$TransportTypesImpl> get copyWith =>
-      __$$TransportTypesImplCopyWithImpl<_$TransportTypesImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$TransportTypesImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$TransportTypesToJson(this, );
 }
 
-abstract class _TransportTypes implements TransportTypes {
-  factory _TransportTypes(
-      {required final String name,
-      required final String code}) = _$TransportTypesImpl;
-
-  factory _TransportTypes.fromJson(Map<String, dynamic> json) =
-      _$TransportTypesImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String get code;
-  @override
-  @JsonKey(ignore: true)
-  _$$TransportTypesImplCopyWith<_$TransportTypesImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransportTypes&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code));
 }
 
-RowVersions _$RowVersionsFromJson(Map<String, dynamic> json) {
-  return _RowVersions.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,code);
+
+@override
+String toString() {
+  return 'TransportTypes(name: $name, code: $code)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TransportTypesCopyWith<$Res> implements $TransportTypesCopyWith<$Res> {
+  factory _$TransportTypesCopyWith(_TransportTypes value, $Res Function(_TransportTypes) _then) = __$TransportTypesCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String code
+});
+
+
+
+
+}
+/// @nodoc
+class __$TransportTypesCopyWithImpl<$Res>
+    implements _$TransportTypesCopyWith<$Res> {
+  __$TransportTypesCopyWithImpl(this._self, this._then);
+
+  final _TransportTypes _self;
+  final $Res Function(_TransportTypes) _then;
+
+/// Create a copy of TransportTypes
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? code = null,}) {
+  return _then(_TransportTypes(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$RowVersions {
-  String get module => throw _privateConstructorUsedError;
-  String get version => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $RowVersionsCopyWith<RowVersions> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get module; String get version;
+/// Create a copy of RowVersions
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RowVersionsCopyWith<RowVersions> get copyWith => _$RowVersionsCopyWithImpl<RowVersions>(this as RowVersions, _$identity);
+
+  /// Serializes this RowVersions to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RowVersions&&(identical(other.module, module) || other.module == module)&&(identical(other.version, version) || other.version == version));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,module,version);
+
+@override
+String toString() {
+  return 'RowVersions(module: $module, version: $version)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $RowVersionsCopyWith<$Res> {
-  factory $RowVersionsCopyWith(
-          RowVersions value, $Res Function(RowVersions) then) =
-      _$RowVersionsCopyWithImpl<$Res, RowVersions>;
-  @useResult
-  $Res call({String module, String version});
-}
+abstract mixin class $RowVersionsCopyWith<$Res>  {
+  factory $RowVersionsCopyWith(RowVersions value, $Res Function(RowVersions) _then) = _$RowVersionsCopyWithImpl;
+@useResult
+$Res call({
+ String module, String version
+});
 
+
+
+
+}
 /// @nodoc
-class _$RowVersionsCopyWithImpl<$Res, $Val extends RowVersions>
+class _$RowVersionsCopyWithImpl<$Res>
     implements $RowVersionsCopyWith<$Res> {
-  _$RowVersionsCopyWithImpl(this._value, this._then);
+  _$RowVersionsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final RowVersions _self;
+  final $Res Function(RowVersions) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? module = null,
-    Object? version = null,
-  }) {
-    return _then(_value.copyWith(
-      module: null == module
-          ? _value.module
-          : module // ignore: cast_nullable_to_non_nullable
-              as String,
-      version: null == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of RowVersions
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? module = null,Object? version = null,}) {
+  return _then(_self.copyWith(
+module: null == module ? _self.module : module // ignore: cast_nullable_to_non_nullable
+as String,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$RowVersionsImplCopyWith<$Res>
-    implements $RowVersionsCopyWith<$Res> {
-  factory _$$RowVersionsImplCopyWith(
-          _$RowVersionsImpl value, $Res Function(_$RowVersionsImpl) then) =
-      __$$RowVersionsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String module, String version});
 }
 
-/// @nodoc
-class __$$RowVersionsImplCopyWithImpl<$Res>
-    extends _$RowVersionsCopyWithImpl<$Res, _$RowVersionsImpl>
-    implements _$$RowVersionsImplCopyWith<$Res> {
-  __$$RowVersionsImplCopyWithImpl(
-      _$RowVersionsImpl _value, $Res Function(_$RowVersionsImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? module = null,
-    Object? version = null,
-  }) {
-    return _then(_$RowVersionsImpl(
-      module: null == module
-          ? _value.module
-          : module // ignore: cast_nullable_to_non_nullable
-              as String,
-      version: null == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [RowVersions].
+extension RowVersionsPatterns on RowVersions {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RowVersions value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _RowVersions() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RowVersions value)  $default,){
+final _that = this;
+switch (_that) {
+case _RowVersions():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RowVersions value)?  $default,){
+final _that = this;
+switch (_that) {
+case _RowVersions() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String module,  String version)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _RowVersions() when $default != null:
+return $default(_that.module,_that.version);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String module,  String version)  $default,) {final _that = this;
+switch (_that) {
+case _RowVersions():
+return $default(_that.module,_that.version);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String module,  String version)?  $default,) {final _that = this;
+switch (_that) {
+case _RowVersions() when $default != null:
+return $default(_that.module,_that.version);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$RowVersionsImpl implements _RowVersions {
-  _$RowVersionsImpl({required this.module, required this.version});
 
-  factory _$RowVersionsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RowVersionsImplFromJson(json);
+class _RowVersions implements RowVersions {
+   _RowVersions({required this.module, required this.version});
+  factory _RowVersions.fromJson(Map<String, dynamic> json) => _$RowVersionsFromJson(json);
 
-  @override
-  final String module;
-  @override
-  final String version;
+@override final  String module;
+@override final  String version;
 
-  @override
-  String toString() {
-    return 'RowVersions(module: $module, version: $version)';
-  }
+/// Create a copy of RowVersions
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RowVersionsCopyWith<_RowVersions> get copyWith => __$RowVersionsCopyWithImpl<_RowVersions>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$RowVersionsImpl &&
-            (identical(other.module, module) || other.module == module) &&
-            (identical(other.version, version) || other.version == version));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, module, version);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$RowVersionsImplCopyWith<_$RowVersionsImpl> get copyWith =>
-      __$$RowVersionsImplCopyWithImpl<_$RowVersionsImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$RowVersionsImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$RowVersionsToJson(this, );
 }
 
-abstract class _RowVersions implements RowVersions {
-  factory _RowVersions(
-      {required final String module,
-      required final String version}) = _$RowVersionsImpl;
-
-  factory _RowVersions.fromJson(Map<String, dynamic> json) =
-      _$RowVersionsImpl.fromJson;
-
-  @override
-  String get module;
-  @override
-  String get version;
-  @override
-  @JsonKey(ignore: true)
-  _$$RowVersionsImplCopyWith<_$RowVersionsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RowVersions&&(identical(other.module, module) || other.module == module)&&(identical(other.version, version) || other.version == version));
 }
 
-FirebaseConfig _$FirebaseConfigFromJson(Map<String, dynamic> json) {
-  return _FirebaseConfig.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,module,version);
+
+@override
+String toString() {
+  return 'RowVersions(module: $module, version: $version)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RowVersionsCopyWith<$Res> implements $RowVersionsCopyWith<$Res> {
+  factory _$RowVersionsCopyWith(_RowVersions value, $Res Function(_RowVersions) _then) = __$RowVersionsCopyWithImpl;
+@override @useResult
+$Res call({
+ String module, String version
+});
+
+
+
+
+}
+/// @nodoc
+class __$RowVersionsCopyWithImpl<$Res>
+    implements _$RowVersionsCopyWith<$Res> {
+  __$RowVersionsCopyWithImpl(this._self, this._then);
+
+  final _RowVersions _self;
+  final $Res Function(_RowVersions) _then;
+
+/// Create a copy of RowVersions
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? module = null,Object? version = null,}) {
+  return _then(_RowVersions(
+module: null == module ? _self.module : module // ignore: cast_nullable_to_non_nullable
+as String,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$FirebaseConfig {
-  bool get enableCrashlytics => throw _privateConstructorUsedError;
-  bool get enableAnalytics => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $FirebaseConfigCopyWith<FirebaseConfig> get copyWith =>
-      throw _privateConstructorUsedError;
+ bool get enableCrashlytics; bool get enableAnalytics;
+/// Create a copy of FirebaseConfig
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$FirebaseConfigCopyWith<FirebaseConfig> get copyWith => _$FirebaseConfigCopyWithImpl<FirebaseConfig>(this as FirebaseConfig, _$identity);
+
+  /// Serializes this FirebaseConfig to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FirebaseConfig&&(identical(other.enableCrashlytics, enableCrashlytics) || other.enableCrashlytics == enableCrashlytics)&&(identical(other.enableAnalytics, enableAnalytics) || other.enableAnalytics == enableAnalytics));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,enableCrashlytics,enableAnalytics);
+
+@override
+String toString() {
+  return 'FirebaseConfig(enableCrashlytics: $enableCrashlytics, enableAnalytics: $enableAnalytics)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $FirebaseConfigCopyWith<$Res> {
-  factory $FirebaseConfigCopyWith(
-          FirebaseConfig value, $Res Function(FirebaseConfig) then) =
-      _$FirebaseConfigCopyWithImpl<$Res, FirebaseConfig>;
-  @useResult
-  $Res call({bool enableCrashlytics, bool enableAnalytics});
-}
+abstract mixin class $FirebaseConfigCopyWith<$Res>  {
+  factory $FirebaseConfigCopyWith(FirebaseConfig value, $Res Function(FirebaseConfig) _then) = _$FirebaseConfigCopyWithImpl;
+@useResult
+$Res call({
+ bool enableCrashlytics, bool enableAnalytics
+});
 
+
+
+
+}
 /// @nodoc
-class _$FirebaseConfigCopyWithImpl<$Res, $Val extends FirebaseConfig>
+class _$FirebaseConfigCopyWithImpl<$Res>
     implements $FirebaseConfigCopyWith<$Res> {
-  _$FirebaseConfigCopyWithImpl(this._value, this._then);
+  _$FirebaseConfigCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final FirebaseConfig _self;
+  final $Res Function(FirebaseConfig) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? enableCrashlytics = null,
-    Object? enableAnalytics = null,
-  }) {
-    return _then(_value.copyWith(
-      enableCrashlytics: null == enableCrashlytics
-          ? _value.enableCrashlytics
-          : enableCrashlytics // ignore: cast_nullable_to_non_nullable
-              as bool,
-      enableAnalytics: null == enableAnalytics
-          ? _value.enableAnalytics
-          : enableAnalytics // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
+/// Create a copy of FirebaseConfig
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? enableCrashlytics = null,Object? enableAnalytics = null,}) {
+  return _then(_self.copyWith(
+enableCrashlytics: null == enableCrashlytics ? _self.enableCrashlytics : enableCrashlytics // ignore: cast_nullable_to_non_nullable
+as bool,enableAnalytics: null == enableAnalytics ? _self.enableAnalytics : enableAnalytics // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-abstract class _$$FirebaseConfigImplCopyWith<$Res>
-    implements $FirebaseConfigCopyWith<$Res> {
-  factory _$$FirebaseConfigImplCopyWith(_$FirebaseConfigImpl value,
-          $Res Function(_$FirebaseConfigImpl) then) =
-      __$$FirebaseConfigImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({bool enableCrashlytics, bool enableAnalytics});
 }
 
-/// @nodoc
-class __$$FirebaseConfigImplCopyWithImpl<$Res>
-    extends _$FirebaseConfigCopyWithImpl<$Res, _$FirebaseConfigImpl>
-    implements _$$FirebaseConfigImplCopyWith<$Res> {
-  __$$FirebaseConfigImplCopyWithImpl(
-      _$FirebaseConfigImpl _value, $Res Function(_$FirebaseConfigImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? enableCrashlytics = null,
-    Object? enableAnalytics = null,
-  }) {
-    return _then(_$FirebaseConfigImpl(
-      enableCrashlytics: null == enableCrashlytics
-          ? _value.enableCrashlytics
-          : enableCrashlytics // ignore: cast_nullable_to_non_nullable
-              as bool,
-      enableAnalytics: null == enableAnalytics
-          ? _value.enableAnalytics
-          : enableAnalytics // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+/// Adds pattern-matching-related methods to [FirebaseConfig].
+extension FirebaseConfigPatterns on FirebaseConfig {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _FirebaseConfig value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _FirebaseConfig() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _FirebaseConfig value)  $default,){
+final _that = this;
+switch (_that) {
+case _FirebaseConfig():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _FirebaseConfig value)?  $default,){
+final _that = this;
+switch (_that) {
+case _FirebaseConfig() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enableCrashlytics,  bool enableAnalytics)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _FirebaseConfig() when $default != null:
+return $default(_that.enableCrashlytics,_that.enableAnalytics);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enableCrashlytics,  bool enableAnalytics)  $default,) {final _that = this;
+switch (_that) {
+case _FirebaseConfig():
+return $default(_that.enableCrashlytics,_that.enableAnalytics);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enableCrashlytics,  bool enableAnalytics)?  $default,) {final _that = this;
+switch (_that) {
+case _FirebaseConfig() when $default != null:
+return $default(_that.enableCrashlytics,_that.enableAnalytics);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$FirebaseConfigImpl implements _FirebaseConfig {
-  _$FirebaseConfigImpl(
-      {required this.enableCrashlytics, required this.enableAnalytics});
 
-  factory _$FirebaseConfigImpl.fromJson(Map<String, dynamic> json) =>
-      _$$FirebaseConfigImplFromJson(json);
+class _FirebaseConfig implements FirebaseConfig {
+   _FirebaseConfig({required this.enableCrashlytics, required this.enableAnalytics});
+  factory _FirebaseConfig.fromJson(Map<String, dynamic> json) => _$FirebaseConfigFromJson(json);
 
-  @override
-  final bool enableCrashlytics;
-  @override
-  final bool enableAnalytics;
+@override final  bool enableCrashlytics;
+@override final  bool enableAnalytics;
 
-  @override
-  String toString() {
-    return 'FirebaseConfig(enableCrashlytics: $enableCrashlytics, enableAnalytics: $enableAnalytics)';
-  }
+/// Create a copy of FirebaseConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$FirebaseConfigCopyWith<_FirebaseConfig> get copyWith => __$FirebaseConfigCopyWithImpl<_FirebaseConfig>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$FirebaseConfigImpl &&
-            (identical(other.enableCrashlytics, enableCrashlytics) ||
-                other.enableCrashlytics == enableCrashlytics) &&
-            (identical(other.enableAnalytics, enableAnalytics) ||
-                other.enableAnalytics == enableAnalytics));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, enableCrashlytics, enableAnalytics);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$FirebaseConfigImplCopyWith<_$FirebaseConfigImpl> get copyWith =>
-      __$$FirebaseConfigImplCopyWithImpl<_$FirebaseConfigImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$FirebaseConfigImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$FirebaseConfigToJson(this, );
 }
 
-abstract class _FirebaseConfig implements FirebaseConfig {
-  factory _FirebaseConfig(
-      {required final bool enableCrashlytics,
-      required final bool enableAnalytics}) = _$FirebaseConfigImpl;
-
-  factory _FirebaseConfig.fromJson(Map<String, dynamic> json) =
-      _$FirebaseConfigImpl.fromJson;
-
-  @override
-  bool get enableCrashlytics;
-  @override
-  bool get enableAnalytics;
-  @override
-  @JsonKey(ignore: true)
-  _$$FirebaseConfigImplCopyWith<_$FirebaseConfigImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FirebaseConfig&&(identical(other.enableCrashlytics, enableCrashlytics) || other.enableCrashlytics == enableCrashlytics)&&(identical(other.enableAnalytics, enableAnalytics) || other.enableAnalytics == enableAnalytics));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,enableCrashlytics,enableAnalytics);
+
+@override
+String toString() {
+  return 'FirebaseConfig(enableCrashlytics: $enableCrashlytics, enableAnalytics: $enableAnalytics)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$FirebaseConfigCopyWith<$Res> implements $FirebaseConfigCopyWith<$Res> {
+  factory _$FirebaseConfigCopyWith(_FirebaseConfig value, $Res Function(_FirebaseConfig) _then) = __$FirebaseConfigCopyWithImpl;
+@override @useResult
+$Res call({
+ bool enableCrashlytics, bool enableAnalytics
+});
+
+
+
+
+}
+/// @nodoc
+class __$FirebaseConfigCopyWithImpl<$Res>
+    implements _$FirebaseConfigCopyWith<$Res> {
+  __$FirebaseConfigCopyWithImpl(this._self, this._then);
+
+  final _FirebaseConfig _self;
+  final $Res Function(_FirebaseConfig) _then;
+
+/// Create a copy of FirebaseConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? enableCrashlytics = null,Object? enableAnalytics = null,}) {
+  return _then(_FirebaseConfig(
+enableCrashlytics: null == enableCrashlytics ? _self.enableCrashlytics : enableCrashlytics // ignore: cast_nullable_to_non_nullable
+as bool,enableAnalytics: null == enableAnalytics ? _self.enableAnalytics : enableAnalytics // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+// dart format on

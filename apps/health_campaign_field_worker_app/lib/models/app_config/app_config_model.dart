@@ -34,28 +34,6 @@ abstract class MdmsCriteriaModel with _$MdmsCriteriaModel {
 }
 
 @freezed
-abstract class MdmsModuleDetailModel with _$MdmsModuleDetailModel {
-  const factory MdmsModuleDetailModel({
-    required String moduleName,
-    required List<MdmsMasterDetailModel> masterDetails,
-  }) = _MdmsModuleDetailModel;
-
-  factory MdmsModuleDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$MdmsModuleDetailModelFromJson(json);
-}
-
-@freezed
-abstract class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
-  const factory MdmsMasterDetailModel(
-      String name, {
-        String? filter,
-      }) = _MdmsMasterDetailModel;
-
-  factory MdmsMasterDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$MdmsMasterDetailModelFromJson(json);
-}
-
-@freezed
 abstract class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
   const factory AppConfigPrimaryWrapperModel({
     @JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,
@@ -466,28 +444,4 @@ abstract class FirebaseConfig with _$FirebaseConfig {
 
   factory FirebaseConfig.fromJson(Map<String, dynamic> json) =>
       _$FirebaseConfigFromJson(json);
-}
-
-@freezed
-abstract class BoundaryRelationship with _$BoundaryRelationship {
-  factory BoundaryRelationship({
-    required String boundaryType,
-    required int order,
-    BoundaryRelationshipRef? parent,
-    List<BoundaryRelationshipRef>? children,
-  }) = _BoundaryRelationship;
-
-  factory BoundaryRelationship.fromJson(Map<String, dynamic> json) =>
-      _$BoundaryRelationshipFromJson(json);
-}
-
-@freezed
-abstract class BoundaryRelationshipRef with _$BoundaryRelationshipRef {
-  factory BoundaryRelationshipRef({
-    required String boundaryType,
-    required int order,
-  }) = _BoundaryRelationshipRef;
-
-  factory BoundaryRelationshipRef.fromJson(Map<String, dynamic> json) =>
-      _$BoundaryRelationshipRefFromJson(json);
 }

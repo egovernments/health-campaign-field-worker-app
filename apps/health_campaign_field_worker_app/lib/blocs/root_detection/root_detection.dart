@@ -24,12 +24,12 @@ class RootDetectionBloc extends Bloc<RootDetectionEvent, RootDetectionState> {
 }
 
 @freezed
-class RootDetectionEvent with _$RootDetectionEvent {
+sealed class RootDetectionEvent with _$RootDetectionEvent {
   const factory RootDetectionEvent.onLoaded() = RootDetectionLoadedEvent;
 }
 
 @freezed
-class RootDetectionState with _$RootDetectionState {
+abstract class RootDetectionState with _$RootDetectionState {
   const factory RootDetectionState({
     bool? isRooted,
   }) = _RootDetectionState;
