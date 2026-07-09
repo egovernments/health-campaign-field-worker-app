@@ -35,39 +35,46 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: PanelCard(
-        type: PanelType.success,
-        title: widget.label ??
-            localizations.translate(
-              i18.acknowledgementSuccess.acknowledgementLabelText,
-            ),
-        additionWidgets: widget.isDataRecordSuccess
-            ? [
-                LabelValueSummary(
-                  items: widget.descriptionTableData!.keys
-                      .map((e) => LabelValueItem(
-                          labelFlex: 5,
-                          label: e,
-                          maxLines: 3,
-                          value: widget.descriptionTableData?[e].toString()))
-                      .toList(),
-                ),
-              ]
-            : null,
-        actions: (!widget.isDataRecordSuccess)
-            ? [
-                DigitButton(
-                  isDisabled: widget.isDataRecordSuccess,
-                  type: DigitButtonType.primary,
-                  size: DigitButtonSize.large,
-                  label: localizations
-                      .translate(i18.acknowledgementSuccess.actionLabelText),
-                  onPressed: () {
-                    context.router.maybePop();
-                  },
-                ),
-              ]
-            : null,
+      body: Padding(
+        padding: const EdgeInsets.only(left: spacer2, right: spacer2, top: spacer4),
+        child: PanelCard(
+          type: PanelType.success,
+          title: widget.label ??
+              localizations.translate(
+                i18.acknowledgementSuccess.acknowledgementLabelText,
+              ),
+          description: widget.description ??
+              localizations.translate(
+                i18.acknowledgementSuccess.acknowledgementDescriptionText,
+              ),
+          additionWidgets: widget.isDataRecordSuccess
+              ? [
+                  LabelValueSummary(
+                    items: widget.descriptionTableData!.keys
+                        .map((e) => LabelValueItem(
+                            labelFlex: 5,
+                            label: e,
+                            maxLines: 3,
+                            value: widget.descriptionTableData?[e].toString()))
+                        .toList(),
+                  ),
+                ]
+              : null,
+          actions: (!widget.isDataRecordSuccess)
+              ? [
+                  DigitButton(
+                    isDisabled: widget.isDataRecordSuccess,
+                    type: DigitButtonType.primary,
+                    size: DigitButtonSize.large,
+                    label: localizations.translate(
+                        i18.acknowledgementSuccess.actionLabelText),
+                    onPressed: () {
+                      context.router.maybePop();
+                    },
+                  ),
+                ]
+              : null,
+        ),
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
