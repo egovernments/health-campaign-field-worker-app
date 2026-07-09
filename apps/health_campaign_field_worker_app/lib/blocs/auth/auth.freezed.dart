@@ -1871,6 +1871,7 @@ mixin _$AuthState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -1887,6 +1888,7 @@ mixin _$AuthState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -1903,6 +1905,7 @@ mixin _$AuthState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -1920,6 +1923,7 @@ mixin _$AuthState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
     required TResult Function(AuthOtherDeviceState value) otherDevice,
@@ -1930,6 +1934,7 @@ mixin _$AuthState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
     TResult? Function(AuthOtherDeviceState value)? otherDevice,
@@ -1940,6 +1945,7 @@ mixin _$AuthState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
     TResult Function(AuthOtherDeviceState value)? otherDevice,
@@ -2009,6 +2015,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -2028,6 +2035,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -2047,6 +2055,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -2070,6 +2079,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
     required TResult Function(AuthOtherDeviceState value) otherDevice,
@@ -2083,6 +2093,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
     TResult? Function(AuthOtherDeviceState value)? otherDevice,
@@ -2096,6 +2107,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
     TResult Function(AuthOtherDeviceState value)? otherDevice,
@@ -2153,6 +2165,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -2172,6 +2185,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -2191,6 +2205,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -2214,6 +2229,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
     required TResult Function(AuthOtherDeviceState value) otherDevice,
@@ -2227,6 +2243,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
     TResult? Function(AuthOtherDeviceState value)? otherDevice,
@@ -2240,6 +2257,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
     TResult Function(AuthOtherDeviceState value)? otherDevice,
@@ -2255,6 +2273,157 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
 
 abstract class AuthLoadingState implements AuthState {
   const factory AuthLoadingState() = _$AuthLoadingStateImpl;
+}
+
+/// @nodoc
+abstract class _$$AuthLoggingOutStateImplCopyWith<$Res> {
+  factory _$$AuthLoggingOutStateImplCopyWith(_$AuthLoggingOutStateImpl value,
+          $Res Function(_$AuthLoggingOutStateImpl) then) =
+      __$$AuthLoggingOutStateImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$AuthLoggingOutStateImplCopyWithImpl<$Res>
+    extends _$AuthStateCopyWithImpl<$Res, _$AuthLoggingOutStateImpl>
+    implements _$$AuthLoggingOutStateImplCopyWith<$Res> {
+  __$$AuthLoggingOutStateImplCopyWithImpl(_$AuthLoggingOutStateImpl _value,
+      $Res Function(_$AuthLoggingOutStateImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$AuthLoggingOutStateImpl implements AuthLoggingOutState {
+  const _$AuthLoggingOutStateImpl();
+
+  @override
+  String toString() {
+    return 'AuthState.loggingOut()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AuthLoggingOutStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unauthenticated,
+    required TResult Function() loading,
+    required TResult Function() loggingOut,
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
+        authenticated,
+    required TResult Function(String? error) error,
+    required TResult Function() otherDevice,
+    required TResult Function() allow,
+  }) {
+    return loggingOut();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unauthenticated,
+    TResult? Function()? loading,
+    TResult? Function()? loggingOut,
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
+        authenticated,
+    TResult? Function(String? error)? error,
+    TResult? Function()? otherDevice,
+    TResult? Function()? allow,
+  }) {
+    return loggingOut?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unauthenticated,
+    TResult Function()? loading,
+    TResult Function()? loggingOut,
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
+        authenticated,
+    TResult Function(String? error)? error,
+    TResult Function()? otherDevice,
+    TResult Function()? allow,
+    required TResult orElse(),
+  }) {
+    if (loggingOut != null) {
+      return loggingOut();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
+    required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
+    required TResult Function(AuthAuthenticatedState value) authenticated,
+    required TResult Function(AuthErrorState value) error,
+    required TResult Function(AuthOtherDeviceState value) otherDevice,
+    required TResult Function(AuthAllowState value) allow,
+  }) {
+    return loggingOut(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
+    TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
+    TResult? Function(AuthAuthenticatedState value)? authenticated,
+    TResult? Function(AuthErrorState value)? error,
+    TResult? Function(AuthOtherDeviceState value)? otherDevice,
+    TResult? Function(AuthAllowState value)? allow,
+  }) {
+    return loggingOut?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
+    TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
+    TResult Function(AuthAuthenticatedState value)? authenticated,
+    TResult Function(AuthErrorState value)? error,
+    TResult Function(AuthOtherDeviceState value)? otherDevice,
+    TResult Function(AuthAllowState value)? allow,
+    required TResult orElse(),
+  }) {
+    if (loggingOut != null) {
+      return loggingOut(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthLoggingOutState implements AuthState {
+  const factory AuthLoggingOutState() = _$AuthLoggingOutStateImpl;
 }
 
 /// @nodoc
@@ -2394,6 +2563,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -2414,6 +2584,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -2434,6 +2605,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -2458,6 +2630,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
     required TResult Function(AuthOtherDeviceState value) otherDevice,
@@ -2471,6 +2644,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
     TResult? Function(AuthOtherDeviceState value)? otherDevice,
@@ -2484,6 +2658,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
     TResult Function(AuthOtherDeviceState value)? otherDevice,
@@ -2582,6 +2757,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -2601,6 +2777,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -2620,6 +2797,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -2643,6 +2821,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
     required TResult Function(AuthOtherDeviceState value) otherDevice,
@@ -2656,6 +2835,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
     TResult? Function(AuthOtherDeviceState value)? otherDevice,
@@ -2669,6 +2849,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
     TResult Function(AuthOtherDeviceState value)? otherDevice,
@@ -2732,6 +2913,7 @@ class _$AuthOtherDeviceStateImpl implements AuthOtherDeviceState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -2751,6 +2933,7 @@ class _$AuthOtherDeviceStateImpl implements AuthOtherDeviceState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -2770,6 +2953,7 @@ class _$AuthOtherDeviceStateImpl implements AuthOtherDeviceState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -2793,6 +2977,7 @@ class _$AuthOtherDeviceStateImpl implements AuthOtherDeviceState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
     required TResult Function(AuthOtherDeviceState value) otherDevice,
@@ -2806,6 +2991,7 @@ class _$AuthOtherDeviceStateImpl implements AuthOtherDeviceState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
     TResult? Function(AuthOtherDeviceState value)? otherDevice,
@@ -2819,6 +3005,7 @@ class _$AuthOtherDeviceStateImpl implements AuthOtherDeviceState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
     TResult Function(AuthOtherDeviceState value)? otherDevice,
@@ -2876,6 +3063,7 @@ class _$AuthAllowStateImpl implements AuthAllowState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -2895,6 +3083,7 @@ class _$AuthAllowStateImpl implements AuthAllowState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -2914,6 +3103,7 @@ class _$AuthAllowStateImpl implements AuthAllowState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -2937,6 +3127,7 @@ class _$AuthAllowStateImpl implements AuthAllowState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
     required TResult Function(AuthOtherDeviceState value) otherDevice,
@@ -2950,6 +3141,7 @@ class _$AuthAllowStateImpl implements AuthAllowState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
     TResult? Function(AuthOtherDeviceState value)? otherDevice,
@@ -2963,6 +3155,7 @@ class _$AuthAllowStateImpl implements AuthAllowState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
     TResult Function(AuthOtherDeviceState value)? otherDevice,
