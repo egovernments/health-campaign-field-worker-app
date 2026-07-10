@@ -335,37 +335,42 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       // picks up boundary codes automatically — they live in the same
       // `_messagesByCode` map as the rest of the strings, so boundary
       // dropdowns render translated names instead of raw codes.
-      final boundaryModule =
-          'hcm-boundary-${runtimeHierarchyType().toLowerCase()}';
+      final hierarchyType = runtimeHierarchyType();
+      final boundaryModule = 'hcm-boundary-${hierarchyType.toLowerCase()}';
       // Restrict the boundary fetch to codes actually assigned to this user
       // (the descendants under the project's root boundary that BoundaryBloc
-      // just resolved). Include both the boundary code (e.g. IN_KA_BLR) and
-      // the hierarchy-level label (e.g. "District") — both live in the same
-      // localization module and both need translations. Sending an empty
-      // codes value falls back to fetching everything.
+      // just resolved). Two kinds of code go in:
+      //   1. Boundary code (e.g. IN_KA_BLR) — the raw `b.code`.
+      //   2. Hierarchy-level LABEL code (e.g. HCM-MOZ-HIERARCHY_District) —
+      //      not the bare `b.label`. The boundary selection page looks up
+      //      level labels as `${runtimeHierarchyType()}_$label`
+      //      (boundary_selection.dart:142-145), so the localization row for
+      //      the label lives under that composite code, not the bare label.
+      // Sending an empty codes value falls back to fetching everything.
       final boundaryCodes = boundaryBloc.state.boundaryList
-          .expand((b) => [b.code, b.label])
+          .expand((b) => [
+                b.code,
+                if (b.label != null && b.label!.isNotEmpty)
+                  '${hierarchyType}_${b.label}',
+              ])
           .whereType<String>()
           .where((s) => s.isNotEmpty)
           .toSet()
           .join(',');
       try {
-        final localBoundary =
-            await LocalizationLocalRepository().fetchLocalization(
-          sql: locBloc.sql,
+        // Always fetch — the local `fetchLocalization` check is coarse
+        // (any-row-for-module), so a partially-populated cache from a
+        // previous session would silently skip the fetch even when the
+        // specific codes we need are missing. Runs inside the sync
+        // dialog and `insertAllOnConflictUpdate` is idempotent.
+        final results = await locBloc.localizationRepository.loadLocalization(
+          path: Constants.localizationApiPath,
           locale: selectedLocale,
           module: boundaryModule,
+          tenantId: envConfig.variables.tenantId,
+          codes: boundaryCodes,
         );
-        if (localBoundary.isEmpty) {
-          final results = await locBloc.localizationRepository.loadLocalization(
-            path: Constants.localizationApiPath,
-            locale: selectedLocale,
-            module: boundaryModule,
-            tenantId: envConfig.variables.tenantId,
-            codes: boundaryCodes,
-          );
-          await LocalizationLocalRepository().create(results, locBloc.sql);
-        }
+        await LocalizationLocalRepository().create(results, locBloc.sql);
       } catch (e) {
         debugPrint(
             'error caching boundary localization for $selectedLocale: $e');

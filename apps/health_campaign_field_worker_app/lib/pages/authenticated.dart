@@ -829,28 +829,35 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
   ) async {
     final locBloc = context.read<LocalizationBloc>();
     final boundaryBloc = context.read<BoundaryBloc>();
-    final boundaryModule =
-        'hcm-boundary-${runtimeHierarchyType().toLowerCase()}';
-    // Restrict the fetch to codes assigned to this user. Include both
-    // boundary codes (e.g. IN_KA_BLR) and hierarchy-level labels
-    // (e.g. "District") — both need translations from this module.
+    final hierarchyType = runtimeHierarchyType();
+    final boundaryModule = 'hcm-boundary-${hierarchyType.toLowerCase()}';
+    // Restrict the fetch to codes assigned to this user. Two kinds of code
+    // go in:
+    //   1. Boundary code (e.g. IN_KA_BLR) — the raw `b.code`.
+    //   2. Hierarchy-level LABEL code (e.g. HCM-MOZ-HIERARCHY_District) —
+    //      not the bare `b.label`. The boundary selection page looks up
+    //      level labels as `${runtimeHierarchyType()}_$label`
+    //      (boundary_selection.dart:142-145), so the localization row for
+    //      the label lives under that composite code, not the bare label.
     // BoundaryBloc is populated on project selection, so by the time the
     // user switches language its `boundaryList` mirrors the descendants
     // of the project's root boundary.
     final boundaryCodes = boundaryBloc.state.boundaryList
-        .expand((b) => [b.code, b.label])
+        .expand((b) => [
+              b.code,
+              if (b.label != null && b.label!.isNotEmpty)
+                '${hierarchyType}_${b.label}',
+            ])
         .whereType<String>()
         .where((s) => s.isNotEmpty)
         .toSet()
         .join(',');
     try {
-      final localResults =
-          await LocalizationLocalRepository().fetchLocalization(
-        sql: locBloc.sql,
-        locale: locale,
-        module: boundaryModule,
-      );
-      if (localResults.isNotEmpty) return;
+      // Always fetch — the local `fetchLocalization` check is coarse
+      // (any-row-for-module), so a partially-populated cache from a
+      // previous session would silently skip the fetch even when the
+      // specific codes we need are missing. `insertAllOnConflictUpdate`
+      // is idempotent.
       final results = await locBloc.localizationRepository.loadLocalization(
         path: Constants.localizationApiPath,
         locale: locale,
