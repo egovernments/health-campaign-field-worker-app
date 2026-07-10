@@ -819,18 +819,30 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     });
   }
 
-  /// Fetches and caches the boundary localization for [locale] if it isn't
-  /// already in the local store. Mirrors the cache loop in
-  /// `project_selection.dart` but runs at language-switch time so a previously
-  /// failed seed for this locale doesn't leave boundary labels blank. Any
+  /// Fetches and caches the boundary localization for [locale] in the main
+  /// `localization` table. Runs at language-switch time so a locale we
+  /// haven't fetched yet doesn't leave the boundary dropdown blank. Any
   /// failure here is non-fatal — the language switch always proceeds.
   Future<void> _ensureBoundaryLocalizationCached(
     BuildContext context,
     String locale,
   ) async {
     final locBloc = context.read<LocalizationBloc>();
+    final boundaryBloc = context.read<BoundaryBloc>();
     final boundaryModule =
         'hcm-boundary-${runtimeHierarchyType().toLowerCase()}';
+    // Restrict the fetch to codes assigned to this user. Include both
+    // boundary codes (e.g. IN_KA_BLR) and hierarchy-level labels
+    // (e.g. "District") — both need translations from this module.
+    // BoundaryBloc is populated on project selection, so by the time the
+    // user switches language its `boundaryList` mirrors the descendants
+    // of the project's root boundary.
+    final boundaryCodes = boundaryBloc.state.boundaryList
+        .expand((b) => [b.code, b.label])
+        .whereType<String>()
+        .where((s) => s.isNotEmpty)
+        .toSet()
+        .join(',');
     try {
       final localResults =
           await LocalizationLocalRepository().fetchLocalization(
@@ -844,6 +856,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
         locale: locale,
         module: boundaryModule,
         tenantId: envConfig.variables.tenantId,
+        codes: boundaryCodes,
       );
       await LocalizationLocalRepository().create(results, locBloc.sql);
     } catch (e) {

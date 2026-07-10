@@ -9,11 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/project/project.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/repositories/local/localization.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -240,6 +242,11 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void navigateToBoundary(String boundary) async {
+    final appState = context.read<AppInitializationBloc>().state;
+    final languages = (appState is AppInitialized)
+        ? (appState.appConfiguration.languages ?? [])
+        : <Languages>[];
+
     final projectReferenceId = context.selectedProject.referenceID ?? '';
     final selectedLocale = AppSharedPreferences().getSelectedLocale!;
     final locBloc = context.read<LocalizationBloc>();
@@ -252,36 +259,153 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         keys.map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId');
     final fullModuleString = moduleNames.join(',');
 
-    // Load campaign localizations for the selected locale only (with DB caching)
-    locBloc.add(LocalizationEvent.onLoadLocalization(
-      module: fullModuleString,
-      tenantId: envConfig.variables.tenantId,
-      locale: selectedLocale,
-      path: Constants.localizationApiPath,
-    ));
+    // Show loading dialog while localizations are being cached
+    DialogRoute? localizationDialogRoute;
+    if (mounted) {
+      localizationDialogRoute = DialogRoute(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => DigitSyncDialogContent(
+          type: DialogType.inProgress,
+          label: localizations.translate(
+            i18.projectSelection.syncInProgressTitleText,
+          ),
+        ),
+      );
+      Navigator.of(context, rootNavigator: true)
+          .push(localizationDialogRoute);
+    }
 
+    // Cache campaign localizations for the SELECTED locale only. Fetching
+    // every language up-front at project selection meant N network calls +
+    // N large batch inserts blocking the sync flow. Other locales can be
+    // lazily fetched on demand when the user actually switches language.
+    final campaignCacheFuture = () async {
+      try {
+        final results = await locBloc.localizationRepository.loadLocalization(
+          path: Constants.localizationApiPath,
+          locale: selectedLocale,
+          module: fullModuleString,
+          tenantId: envConfig.variables.tenantId,
+        );
+        await LocalizationLocalRepository().create(results, locBloc.sql);
+      } catch (e) {
+        debugPrint(
+            'error caching campaign localization for $selectedLocale: $e');
+      }
+    }();
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
 
     try {
-      await boundaryBloc.stream
-          .firstWhere((element) => element.boundaryList.isNotEmpty);
+      // Wait for both campaign caching and boundary finding concurrently
+      await Future.wait([
+        campaignCacheFuture,
+        boundaryBloc.stream
+            .firstWhere((element) => element.boundaryList.isNotEmpty),
+      ]);
 
-      // Load permission handler localizations for selected locale (with DB caching)
+      // Cache permission handler localizations for the SELECTED locale only.
+      final permHandlerModule =
+          'hcm-permissionhandler-$projectReferenceId';
+      try {
+        final localResults =
+            await LocalizationLocalRepository().fetchLocalization(
+          sql: locBloc.sql,
+          locale: selectedLocale,
+          module: permHandlerModule,
+        );
+        if (localResults.isEmpty) {
+          final results = await locBloc.localizationRepository.loadLocalization(
+            path: Constants.localizationApiPath,
+            locale: selectedLocale,
+            module: permHandlerModule,
+            tenantId: envConfig.variables.tenantId,
+          );
+          await LocalizationLocalRepository().create(results, locBloc.sql);
+        }
+      } catch (e) {
+        debugPrint(
+            'error caching permission handler localization for $selectedLocale: $e');
+      }
+
+      // Cache boundary localization for the SELECTED locale in the main
+      // localization table. Runs once during the "Sync in progress" modal,
+      // so the ~3–5k row insert is off the interactive path. `translate()`
+      // picks up boundary codes automatically — they live in the same
+      // `_messagesByCode` map as the rest of the strings, so boundary
+      // dropdowns render translated names instead of raw codes.
+      final boundaryModule =
+          'hcm-boundary-${runtimeHierarchyType().toLowerCase()}';
+      // Restrict the boundary fetch to codes actually assigned to this user
+      // (the descendants under the project's root boundary that BoundaryBloc
+      // just resolved). Include both the boundary code (e.g. IN_KA_BLR) and
+      // the hierarchy-level label (e.g. "District") — both live in the same
+      // localization module and both need translations. Sending an empty
+      // codes value falls back to fetching everything.
+      final boundaryCodes = boundaryBloc.state.boundaryList
+          .expand((b) => [b.code, b.label])
+          .whereType<String>()
+          .where((s) => s.isNotEmpty)
+          .toSet()
+          .join(',');
+      try {
+        final localBoundary =
+            await LocalizationLocalRepository().fetchLocalization(
+          sql: locBloc.sql,
+          locale: selectedLocale,
+          module: boundaryModule,
+        );
+        if (localBoundary.isEmpty) {
+          final results = await locBloc.localizationRepository.loadLocalization(
+            path: Constants.localizationApiPath,
+            locale: selectedLocale,
+            module: boundaryModule,
+            tenantId: envConfig.variables.tenantId,
+            codes: boundaryCodes,
+          );
+          await LocalizationLocalRepository().create(results, locBloc.sql);
+        }
+      } catch (e) {
+        debugPrint(
+            'error caching boundary localization for $selectedLocale: $e');
+      }
+
+      // Now load ALL selected-locale strings into `_messagesByCode` via the
+      // bloc. This is the ONE event that sets `LocalizationParams.module`
+      // and triggers `_loadLocale` — so the module list here must cover
+      // every module we just wrote directly to the DB above (campaign +
+      // permission handler + boundary). Sending only one of these was
+      // leaving the other two unresolved because `_loadLocale` clears the
+      // map and refills only what matches the current filter.
       locBloc.add(LocalizationEvent.onLoadLocalization(
-        module: 'hcm-permissionhandler-$projectReferenceId',
+        module: '$fullModuleString,$permHandlerModule,$boundaryModule',
         tenantId: envConfig.variables.tenantId,
         locale: selectedLocale,
         path: Constants.localizationApiPath,
       ));
 
-      // Load boundary localizations for selected locale (with DB caching)
-      locBloc.add(LocalizationEvent.onLoadLocalization(
-        module: 'hcm-boundary-${runtimeHierarchyType().toLowerCase()}',
-        tenantId: envConfig.variables.tenantId,
-        locale: selectedLocale,
-        path: Constants.localizationApiPath,
-      ));
+      // Ensure the locale index is correct
+      final targetIndex =
+          languages.indexWhere((l) => l.value == selectedLocale);
+      final resolvedIndex = targetIndex >= 0 ? targetIndex : 0;
+      locBloc.add(
+        OnUpdateLocalizationIndexEvent(
+          index: resolvedIndex,
+          code: selectedLocale,
+        ),
+      );
+
+      // Wait for both bloc events to complete.
+      await locBloc.stream.firstWhere(
+        (s) => s.index == resolvedIndex && !s.loading,
+      );
+
+      // Dismiss the loading dialog before navigating
+      if (mounted && localizationDialogRoute?.isActive == true) {
+        Navigator.of(context, rootNavigator: true)
+            .removeRoute(localizationDialogRoute!);
+      }
 
       if (mounted) {
         context.router.replaceAll([
@@ -290,6 +414,11 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       }
     } catch (e) {
       debugPrint('error $e');
+      // Dismiss the loading dialog on error too
+      if (mounted && localizationDialogRoute?.isActive == true) {
+        Navigator.of(context, rootNavigator: true)
+            .removeRoute(localizationDialogRoute!);
+      }
     }
   }
 

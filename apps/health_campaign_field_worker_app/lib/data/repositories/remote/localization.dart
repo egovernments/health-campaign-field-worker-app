@@ -42,14 +42,19 @@ class LocalizationRepository {
     required String locale,
     required String module,
     required String tenantId,
+    String? codes,
   }) async {
+    final queryParameters = {
+      "module": module,
+      "locale": locale,
+      "tenantId": tenantId,
+    };
+    if (codes != null && codes.isNotEmpty) {
+      queryParameters["codes"] = codes;
+    }
     var results = await search(
       url: path,
-      queryParameters: {
-        "module": module,
-        "locale": locale,
-        "tenantId": tenantId,
-      },
+      queryParameters: queryParameters,
     );
 
     return results.messages
