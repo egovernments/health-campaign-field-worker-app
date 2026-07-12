@@ -35,6 +35,7 @@ class WrapperBuilder {
       final groupByType = config['groupByType'] == true;
       final groupByField = config['groupBy'] as String?;
 
+
       if (groupByType) {
         // Return all entities grouped by type
         final filters = config['filters'] as List<dynamic>?;

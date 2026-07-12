@@ -605,6 +605,137 @@ void initializeFunctionRegistry() {
     }
   });
 
+  /// Checks whether any doseCriteria condition in the current cycle matches
+  /// the beneficiary's attributes. Fully config-driven: the function
+  /// auto-extracts variable names from each doseCriteria condition string
+  /// and resolves them from the individual / household data passed as args.
+  ///
+  /// - **Function Name**: `'hasEligibleProductVariants'`
+  /// - **Arguments**:
+  ///   - `args[0]` — individual map (must contain `dateOfBirth` and optionally
+  ///                  `additionalFields.fields` with height, weight, etc.)
+  ///   - `args[1]` — currentRunningCycle index (optional, falls back to
+  ///                  active cycle by date)
+  ///   - `args[2]` — household map (optional, for household-level condition
+  ///                  variables like `memberCount`)
+  /// - **Returns**: `true` if at least one doseCriteria condition matches,
+  ///   `false` if none match or no cycle/delivery found.
+  ///
+  /// New condition variables (e.g. `memberCount>=1andmaxCount<=3`) are
+  /// automatically picked up from the condition string. The function looks
+  /// for each variable in:
+  ///   1. Special variables: `age` → computed from individual.dateOfBirth
+  ///   2. individual.additionalFields.fields by key
+  ///   3. household.additionalFields.fields by key (if household passed)
+  ///   4. Direct fields on individual / household map
+  /// If a variable referenced in a condition is not found, its default is
+  /// inferred from the condition context (0 for numeric, false for boolean).
+  FunctionRegistry.register('hasEligibleProductVariants', (args, stateData) {
+    if (args.isEmpty || args.first == null) return false;
+
+    // ── 1. Resolve individual data ────────────────────────────────────
+    final individual = _toMap(args.first);
+    if (individual == null) return false;
+
+    // ── 2. Get project type & current cycle ───────────────────────────
+    final projectType = FlowBuilderSingleton().projectType;
+    if (projectType == null) return false;
+
+    final cycleIndexArg =
+        args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') : null;
+
+    dynamic currentCycle;
+    if (cycleIndexArg != null) {
+      currentCycle = projectType.cycles?.firstWhereOrNull(
+        (c) => c.id.toString() == cycleIndexArg.toString(),
+      );
+    }
+    currentCycle ??= projectType.cycles?.firstWhereOrNull(
+      (c) =>
+          (c.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+          (c.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch,
+    );
+    if (currentCycle == null) return false;
+
+    final firstDelivery =
+        (currentCycle.deliveries as List?)?.firstOrNull;
+    if (firstDelivery == null) return false;
+
+    final doseCriteriaList = firstDelivery.doseCriteria as List?;
+    if (doseCriteriaList == null || doseCriteriaList.isEmpty) {
+      return true; // No criteria configured → all eligible
+    }
+
+    // ── 3. Build available variables from all entity maps passed ──────
+    // Fully generic: extracts every scalar top-level field and every
+    // additionalFields.fields entry from each entity map.  No keys are
+    // hardcoded — any new variable that appears in a doseCriteria
+    // condition will be resolved automatically as long as the value is
+    // present in the entity data (either as a direct field or inside
+    // additionalFields).
+    final availableVars = <String, dynamic>{};
+
+    // 3a. Compute age from dateOfBirth (derived field)
+    final dobString = individual['dateOfBirth']?.toString() ?? '';
+    if (dobString.isNotEmpty) {
+      final dob = DigitDateUtils.getFormattedDateToDateTime(dobString);
+      if (dob != null) {
+        final age = DigitDateUtils.calculateAge(dob);
+        availableVars['age'] = age.years * 12 + age.months;
+      }
+    }
+
+    // 3b. Extract from individual (additionalFields + direct fields)
+    _extractAllFields(individual, availableVars);
+
+    // 3c. Extract from household and any other entity maps passed
+    //     (args index 2+). Earlier entities take precedence on key
+    //     conflicts via putIfAbsent.
+    for (int i = 2; i < args.length; i++) {
+      if (args[i] == null) continue;
+      final entityMap = _toMap(args[i]);
+      if (entityMap != null) {
+        _extractAllFields(entityMap, availableVars);
+      }
+    }
+
+    // ── 4. Evaluate each doseCriteria ─────────────────────────────────
+    for (final dc in doseCriteriaList) {
+      final condition = dc.condition?.toString() ?? '';
+      if (condition.isEmpty) {
+        return true; // No condition → eligible
+      }
+
+      final requiredKeys = ComputedListEvaluator.extractKeys(condition);
+      final sanitized = ComputedListEvaluator.sanitizeCondition(condition);
+
+      final evalContext = <String, dynamic>{};
+      for (final key in requiredKeys) {
+        if (availableVars.containsKey(key)) {
+          evalContext[key] = availableVars[key] ?? 0;
+        } else {
+          // Variable not found in entity data — use type-inferred default
+          evalContext[key] =
+              ComputedListEvaluator.getDefaultValueForMissingKey(
+                      key, sanitized) ??
+                  0;
+        }
+      }
+
+      try {
+        final parser = FormulaParser(sanitized, evalContext);
+        final result = parser.parse;
+        if (result['isSuccess'] == true && result['value'] == true) {
+          return true;
+        }
+      } catch (e) {
+        debugPrint('hasEligibleProductVariants condition error: $e');
+      }
+    }
+
+    return false; // No doseCriteria matched
+  });
+
   FunctionRegistry.register("getInEligibleStatus", (args, stateData) {
     // No arguments passed
     if (args.isEmpty) return TaskStatus.ineligible;
@@ -2259,5 +2390,69 @@ int? _parseToInt(dynamic value) {
   if (value is int) return value;
   if (value is double) return value.toInt();
   if (value is String) return int.tryParse(value);
+  return null;
+}
+
+/// Converts an arbitrary argument to a Map<String, dynamic>.
+/// Handles Map, Map<String, dynamic>, and objects with toMap()/toJson().
+Map<String, dynamic>? _toMap(dynamic value) {
+  if (value == null) return null;
+  if (value is Map<String, dynamic>) return value;
+  if (value is Map) return Map<String, dynamic>.from(value);
+  try {
+    return (value as dynamic).toMap() as Map<String, dynamic>;
+  } catch (_) {
+    try {
+      return (value as dynamic).toJson() as Map<String, dynamic>;
+    } catch (_) {
+      return null;
+    }
+  }
+}
+
+/// Extracts ALL fields from an entity map into [target]:
+///   1. additionalFields.fields entries (key-value pairs)
+///   2. All scalar top-level fields (String, num, bool)
+///
+/// This is fully generic — no field names are hardcoded. Any variable
+/// referenced in a doseCriteria condition will be resolved automatically
+/// as long as the value exists somewhere in the entity data.
+/// Earlier entries take precedence (via putIfAbsent).
+void _extractAllFields(
+    Map<String, dynamic> entity, Map<String, dynamic> target) {
+  // First: additionalFields.fields (higher priority — explicit key-value pairs)
+  final additionalFields = entity['additionalFields'];
+  if (additionalFields is Map) {
+    final fields = additionalFields['fields'];
+    if (fields is List) {
+      for (final field in fields) {
+        if (field is Map && field['key'] != null && field['value'] != null) {
+          final key = field['key'].toString();
+          final rawValue = field['value'];
+          target.putIfAbsent(
+              key, () => _tryParseNumeric(rawValue) ?? rawValue);
+        }
+      }
+    }
+  }
+
+  // Second: top-level scalar fields (String, num, bool only — skip complex
+  // objects like nested Maps, Lists, additionalFields itself, etc.)
+  for (final entry in entity.entries) {
+    if (entry.key == 'additionalFields') continue;
+    final val = entry.value;
+    if (val is String || val is num || val is bool) {
+      target.putIfAbsent(
+          entry.key, () => _tryParseNumeric(val) ?? val);
+    }
+  }
+}
+
+/// Tries to parse [value] as int or double. Returns null if not numeric.
+num? _tryParseNumeric(dynamic value) {
+  if (value is num) return value;
+  if (value is String) {
+    return int.tryParse(value) ?? double.tryParse(value);
+  }
   return null;
 }

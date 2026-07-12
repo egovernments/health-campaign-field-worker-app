@@ -79,7 +79,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.5+2"
+    version: "1.0.6+1"
   audioplayers:
     dependency: transitive
     description:
@@ -525,28 +525,28 @@ packages:
       path: "../../packages/digit_crud_bloc"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.1.0"
   digit_data_converter:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_converter"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.2"
   digit_data_model:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.2.0-dev.2-console"
+    version: "1.4.0"
   digit_dss:
     dependency: "direct main"
     description:
       path: "../../packages/digit_dss"
       relative: true
     source: path
-    version: "1.0.4+2"
+    version: "1.0.5+1"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -561,14 +561,14 @@ packages:
       path: "../../packages/digit_flow_builder"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.1.0"
   digit_forms_engine:
     dependency: "direct main"
     description:
       path: "../../packages/digit_forms_engine"
       relative: true
     source: path
-    version: "0.0.2-dev"
+    version: "0.1.0"
   digit_formula_parser:
     dependency: "direct main"
     description:
@@ -589,14 +589,14 @@ packages:
       path: "../../packages/digit_scanner"
       relative: true
     source: path
-    version: "0.0.2-console"
+    version: "1.0.7+2"
   digit_showcase:
     dependency: "direct main"
     description:
       path: "../../packages/digit_showcase"
       relative: true
     source: path
-    version: "1.0.2+1"
+    version: "1.0.3"
   digit_ui_components:
     dependency: "direct main"
     description:
@@ -2109,7 +2109,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.0.4"
   sync_http:
     dependency: transitive
     description:
@@ -2124,7 +2124,7 @@ packages:
       path: "../../packages/sync_service"
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.0.5"
   synchronized:
     dependency: transitive
     description:
@@ -2195,7 +2195,7 @@ packages:
       path: "../../packages/transit_post"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.2"
   type_plus:
     dependency: transitive
     description:
