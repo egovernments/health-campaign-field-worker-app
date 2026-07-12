@@ -495,11 +495,23 @@ class StockBalanceExecutor extends ActionExecutor {
     final stockRepo =
         context.read<LocalRepository<StockModel, StockSearchModel>>();
 
+    // Scope the seed to the current project via `referenceId`. Stocks
+    // carry the project id there (with `referenceIdType = 'Project'`);
+    // without it a distributor seed would sum stocks from every project
+    // the user has ever been in and inflate the first-touch balance for
+    // a fresh project.
+    final projectId = FlowBuilderSingleton().projectId;
     final receivedStocks = await stockRepo.search(
-      StockSearchModel(receiverId: facilityId),
+      StockSearchModel(
+        receiverId: facilityId,
+        referenceId: projectId,
+      ),
     );
     final sentStocks = await stockRepo.search(
-      StockSearchModel(senderId: facilityId),
+      StockSearchModel(
+        senderId: facilityId,
+        referenceId: projectId,
+      ),
     );
 
     final allStocksMap = <String, StockModel>{};
