@@ -19,7 +19,6 @@ class LabelPairListWidget extends ResolvedFlowWidget {
   ) {
     final List<dynamic> data = json['data'] ?? [];
     final localization = resolved.localization;
-
     // Filter out null items if hideIfNull is true
     final filteredItems = <LabelValueItem>[];
 
@@ -68,12 +67,26 @@ class LabelPairListWidget extends ResolvedFlowWidget {
         );
       }
 
+      // Localize the display value — split dot-separated multi-select
+      // values so each code is translated individually.
+      String? displayValue;
+      if (valueText == null || valueText == 'null') {
+        displayValue = '--';
+      } else if (valueText.contains('.')) {
+        displayValue = valueText
+            .split('.')
+            .map((part) => localization?.translate(part) ?? part)
+            .join(', ');
+      } else {
+        displayValue = localization?.translate(valueText) ?? valueText;
+      }
+
       // Add the item to the list
       filteredItems.add(
         LabelValueItem(
           maxLines: 5,
           label: keyText,
-          value: valueText != "null" ? localization?.translate(valueText)  : "--",
+          value: displayValue,
           labelFlex: 7,
         ),
       );
