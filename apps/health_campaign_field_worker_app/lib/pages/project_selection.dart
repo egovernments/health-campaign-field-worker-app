@@ -337,17 +337,32 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       // dropdowns render translated names instead of raw codes.
       final hierarchyType = runtimeHierarchyType();
       final boundaryModule = 'hcm-boundary-${hierarchyType.toLowerCase()}';
-      // Restrict the boundary fetch to codes actually assigned to this user
-      // (the descendants under the project's root boundary that BoundaryBloc
-      // just resolved). Two kinds of code go in:
+      // Restrict the boundary fetch to codes actually assigned to this user.
+      // Two kinds of code go in:
       //   1. Boundary code (e.g. IN_KA_BLR) — the raw `b.code`.
       //   2. Hierarchy-level LABEL code (e.g. HCM-MOZ-HIERARCHY_District) —
       //      not the bare `b.label`. The boundary selection page looks up
       //      level labels as `${runtimeHierarchyType()}_$label`
       //      (boundary_selection.dart:142-145), so the localization row for
       //      the label lives under that composite code, not the bare label.
+      //
+      // Reading from `boundaryLocalRepository`, NOT from
+      // `boundaryBloc.state.boundaryList`. The bloc's list only holds what
+      // `BoundaryFindEvent(codes: project.address.boundary, isSingle: true)`
+      // returned — a partial slice of the tree. The FULL tree was already
+      // downsynced into the local DB by ProjectBloc at project-selection
+      // time (see project.dart:801 → boundaryLocalRepository.bulkCreate).
+      // Using the local repo here means the first fetch already covers
+      // every boundary the user can drill into on BoundarySelectionPage,
+      // so drill-down refetches become a safety net instead of the
+      // primary source.
+      //
       // Sending an empty codes value falls back to fetching everything.
-      final boundaryCodes = boundaryBloc.state.boundaryList
+      final boundaryLocalRepo =
+          context.read<LocalRepository<BoundaryModel, BoundarySearchModel>>();
+      final allBoundaries =
+          await boundaryLocalRepo.search(BoundarySearchModel());
+      final boundaryCodes = allBoundaries
           .expand((b) => [
                 b.code,
                 if (b.label != null && b.label!.isNotEmpty)

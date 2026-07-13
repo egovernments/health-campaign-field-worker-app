@@ -828,21 +828,28 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     String locale,
   ) async {
     final locBloc = context.read<LocalizationBloc>();
-    final boundaryBloc = context.read<BoundaryBloc>();
     final hierarchyType = runtimeHierarchyType();
     final boundaryModule = 'hcm-boundary-${hierarchyType.toLowerCase()}';
-    // Restrict the fetch to codes assigned to this user. Two kinds of code
-    // go in:
+    // Two kinds of code go in:
     //   1. Boundary code (e.g. IN_KA_BLR) — the raw `b.code`.
     //   2. Hierarchy-level LABEL code (e.g. HCM-MOZ-HIERARCHY_District) —
     //      not the bare `b.label`. The boundary selection page looks up
     //      level labels as `${runtimeHierarchyType()}_$label`
     //      (boundary_selection.dart:142-145), so the localization row for
     //      the label lives under that composite code, not the bare label.
-    // BoundaryBloc is populated on project selection, so by the time the
-    // user switches language its `boundaryList` mirrors the descendants
-    // of the project's root boundary.
-    final boundaryCodes = boundaryBloc.state.boundaryList
+    //
+    // Reading from `boundaryLocalRepository`, NOT from
+    // `boundaryBloc.state.boundaryList`. The bloc's list only holds the
+    // partial slice `BoundaryFindEvent` returned; the full tree the user
+    // can drill into was downsynced into the local DB at project selection
+    // (project.dart:801). Using the local repo here means switching
+    // language pulls translations for every drill-reachable boundary in
+    // one shot.
+    final boundaryLocalRepo =
+        context.read<LocalRepository<BoundaryModel, BoundarySearchModel>>();
+    final allBoundaries =
+        await boundaryLocalRepo.search(BoundarySearchModel());
+    final boundaryCodes = allBoundaries
         .expand((b) => [
               b.code,
               if (b.label != null && b.label!.isNotEmpty)

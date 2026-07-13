@@ -82,17 +82,13 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
 
     try {
       if (missingModules.isNotEmpty) {
-        try {
-          final results = await localizationRepository.loadLocalization(
-            path: event.path,
-            locale: event.locale,
-            module: missingModules.join(','),
-            tenantId: event.tenantId,
-          );
-          await LocalizationLocalRepository().create(results, sql);
-        } catch (error) {
-          debugPrint('error fetching missing localization modules '
-              '${missingModules.join(',')}: $error');
+        final ok = await _fetchAndStoreModules(
+          modules: missingModules,
+          locale: event.locale,
+          tenantId: event.tenantId,
+          path: event.path,
+        );
+        if (!ok) {
           emit(state.copyWith(
               loading: false, retryModule: missingModules.join(',')));
         }
@@ -107,6 +103,36 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     }
   }
 
+  /// Attempts to fetch a bundle of localization modules and persist them
+  /// locally. Retries up to [attempts] times on transient failures
+  /// (network hiccups, truncated payloads, 5xx). Returns true on the first
+  /// successful attempt, false if every attempt failed.
+  Future<bool> _fetchAndStoreModules({
+    required List<String> modules,
+    required String locale,
+    required String tenantId,
+    required String path,
+    int attempts = 3,
+  }) async {
+    final joined = modules.join(',');
+    for (var i = 0; i < attempts; i++) {
+      try {
+        final results = await localizationRepository.loadLocalization(
+          path: path,
+          locale: locale,
+          module: joined,
+          tenantId: tenantId,
+        );
+        await LocalizationLocalRepository().create(results, sql);
+        return true;
+      } catch (error) {
+        debugPrint('localization fetch failed for "$joined" '
+            '(attempt ${i + 1}/$attempts): $error');
+      }
+    }
+    return false;
+  }
+
   FutureOr<void> _onRemoteLoadLocalization(
     OnRemoteLoadLocalizationEvent event,
     LocalizationEmitter emit,
@@ -116,19 +142,13 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     try {
       final allModules = event.module.split(',');
 
-      try {
-        var localizationList;
-
-        var results = await localizationRepository.loadLocalization(
-          path: event.path,
-          locale: event.locale,
-          module: allModules.join(','),
-          tenantId: event.tenantId,
-        );
-        localizationList =
-            await LocalizationLocalRepository().create(results, sql);
-      } catch (error) {
-        debugPrint('error in fetching modules localization $error');
+      final ok = await _fetchAndStoreModules(
+        modules: allModules,
+        locale: event.locale,
+        tenantId: event.tenantId,
+        path: event.path,
+      );
+      if (!ok) {
         emit(state.copyWith(loading: false, retryModule: allModules.join(',')));
       }
 
