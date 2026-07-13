@@ -842,8 +842,9 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "label": "IHM_CAREGIVER_PHONE_LABEL",
               "order": 28,
               "value": "",
-              "format": "phone",
+              "format": "mobileNumber",
               "hidden": false,
+              "pattern": "^\\d+\$",
               "tooltip": "",
               "helpText": "",
               "infoText": "",
@@ -852,16 +853,26 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
+              "lengthRange": {
+                "maxLength": 8,
+                "minLength": 8,
+                "errorMessage": "IHM_PHONE_LENGTH_ERROR"
+              },
               "validations": [
                 {
+                  "type": "pattern",
+                  "value": "^[1-9]\\d*\$",
+                  "message": "IHM_PHONE_NO_LEADING_ZERO"
+                },
+                {
                   "type": "minLength",
-                  "value": "10",
-                  "message": "IHM_PHONE_MIN_LENGTH_ERROR"
+                  "value": 8,
+                  "message": "IHM_PHONE_LENGTH_ERROR"
                 },
                 {
                   "type": "maxLength",
-                  "value": "10",
-                  "message": "IHM_PHONE_MAX_LENGTH_ERROR"
+                  "value": 8,
+                  "message": "IHM_PHONE_LENGTH_ERROR"
                 }
               ],
               "errorMessage": "",
