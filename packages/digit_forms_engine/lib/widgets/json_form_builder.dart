@@ -713,13 +713,17 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
             ? DigitCard(
                 cardType: CardType.secondary,
                 width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(
+                    spacer4 - 2, spacer4, spacer4 - 2, spacer4 - 2),
                 children: [field],
               )
             : field;
 
         final isLast = index == visibleEntries.length - 1;
+        final nextIsDependent = !isLast &&
+            visibleEntries[index + 1].value.visibilityCondition != null;
 
-        if (showDividers && !isLast) {
+        if (showDividers && !isLast && !nextIsDependent) {
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

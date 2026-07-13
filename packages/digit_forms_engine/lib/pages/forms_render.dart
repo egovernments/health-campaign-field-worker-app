@@ -721,7 +721,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       ],
                       DigitCard(
                         margin: const EdgeInsets.symmetric(
-                          horizontal: spacer2,
+                          horizontal: spacer4,
                         ),
                         children: [
                           Column(
