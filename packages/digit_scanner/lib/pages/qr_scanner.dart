@@ -14,6 +14,7 @@ import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
@@ -974,18 +975,21 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                 builder: (context, form, child) {
                   return ScrollableContent(
                     backgroundColor: theme.colorScheme.onError,
-                    header: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          manualCode = false;
-                          initializeCameras();
-                        });
-                      },
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: Icon(
-                          Icons.close,
-                          color: Theme.of(context).colorTheme.text.primary,
+                    header: Padding(
+                      padding: const EdgeInsets.all(spacer4),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            manualCode = false;
+                            initializeCameras();
+                          });
+                        },
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Icon(
+                            Icons.close,
+                            color: Theme.of(context).colorTheme.text.primary,
+                          ),
                         ),
                       ),
                     ),
@@ -1107,9 +1111,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                       ),
                     ),
                     children: [
-                      DigitCard(
-                          margin: const EdgeInsets.all(spacer2),
-                          cardType: CardType.secondary,
+                      Padding(
+                        padding: const EdgeInsets.all(spacer4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Align(
                               alignment: Alignment.topLeft,
@@ -1122,6 +1127,16 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 ),
                               ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: spacer4),
+                              child: Text(
+                                localizations.translate(i18.scanner.manualCodeDescription),
+                                style: textTheme.bodyL.copyWith(
+                                  color: theme.colorTheme.text.secondary,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: spacer4),
                             ReactiveWrapperField(
                               formControlName: _manualCodeFormKey,
                               builder: (field) {
@@ -1138,7 +1153,9 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                     });
                               },
                             ),
-                          ])
+                          ],
+                        ),
+                      ),
                     ],
                   );
                 });
@@ -1214,15 +1231,25 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Icon(
-                    flashStatus ? Icons.flashlight_off : Icons.flashlight_on,
-                    color: theme.colorScheme.secondary,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                    child: flashStatus
+                        ? SvgPicture.asset(
+                            'assets/svg/flash_on.svg',
+                            package: 'digit_scanner',
+                            width: spacer6,
+                            height: spacer6,
+                          )
+                        : Icon(
+                            Icons.flashlight_off,
+                            color: theme.colorScheme.secondary,
+                          ),
                   ),
                   Text(
                     localizations.translate(
-                      flashStatus ? i18.scanner.flashOff : i18.scanner.flashOn,
+                      flashStatus ? i18.scanner.flashOn : i18.scanner.flashOff,
                     ),
-                    style: TextStyle(
+                    style: textTheme.bodyS.copyWith(
                       color: theme.colorScheme.secondary,
                     ),
                   )
@@ -1242,67 +1269,73 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
             ),
           ),
         ),
-        // [TODO : Need move to constants]
-        Padding(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.14,
-          ),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Text(
-              localizations.translate(
-                i18.scanner.scannerLabel,
-              ),
-              style: TextStyle(
-                color: theme.colorScheme.onError,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ),
-
-        Center(
-          child: overlayForManualEntry(theme, textTheme),
-        ),
-
-        renderScannedResource(theme, textTheme, state)
-      ],
-    );
-  }
-
-  overlayForManualEntry(ThemeData theme, DigitTextTheme textTheme) {
-    return Align(
-      alignment: Alignment.center,
-      widthFactor: 2,
-      child: Padding(
-        padding: const EdgeInsets.only(top: spacer8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: spacer1),
-              child: Text(
+        // Label, scan frame and manual-entry link are siblings in one
+        // Column so they can never overlap, whatever the screen size.
+        Positioned.fill(
+          child: SafeArea(
+            child: Column(
+              children: [
+                // Clears the flash / close buttons pinned at the top.
+                const SizedBox(height: spacer8),
+                const Spacer(),
+                Text(
+                  localizations.translate(
+                    i18.scanner.scannerLabel,
+                  ),
+                  textAlign: TextAlign.center,
+                  style: textTheme.bodyL.copyWith(
+                    color: theme.colorScheme.onError,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: spacer4),
+                FractionallySizedBox(
+                  widthFactor: 0.75,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: spacer1,
+                          color: theme.colorScheme.error,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: spacer6),
+                Text(
                   localizations.translate(
                     i18.scanner.manualScan,
                   ),
                   style: textTheme.bodyL
-                      .copyWith(color: theme.colorTheme.paper.primary)),
-            ),
-            DigitButton(
-                label: localizations.translate(
-                  i18.scanner.enterManualCode,
+                      .copyWith(color: theme.colorTheme.paper.primary),
                 ),
-                onPressed: () {
-                  setState(() {
-                    manualCode = true;
-                  });
-                },
-                type: DigitButtonType.link,
-                size: DigitButtonSize.large)
-          ],
+                const SizedBox(height: spacer6),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      manualCode = true;
+                    });
+                  },
+                  child: Text(
+                    localizations.translate(i18.scanner.enterManualCode),
+                    style: textTheme.bodyL.copyWith(
+                      color: theme.colorScheme.secondary,
+                      decoration: TextDecoration.underline,
+                      decorationColor: theme.colorScheme.secondary,
+                    ),
+                  ),
+                ),
+                // Larger flex leaves room for the bottom sheet.
+                const Spacer(flex: 2),
+              ],
+            ),
+          ),
         ),
-      ),
+
+        renderScannedResource(theme, textTheme, state)
+      ],
     );
   }
 
@@ -1328,8 +1361,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
         decoration: BoxDecoration(
           color: theme.colorScheme.onError,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(spacer1 + 4),
-            topRight: Radius.circular(spacer1 + 4),
+            topLeft: Radius.circular(spacer2),
+            topRight: Radius.circular(spacer2),
           ),
         ),
         child: Column(
@@ -1338,7 +1371,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
           children: [
             Center(
               child: Padding(
-                padding: const EdgeInsets.only(top: spacer2, bottom: spacer3),
+                padding: const EdgeInsets.only(top: spacer2, bottom: spacer6),
                 child: Container(
                   width: spacer8,
                   height: spacer1,
@@ -1352,8 +1385,9 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
             if (scannedCount > 0) ...[
               Padding(
                 padding: const EdgeInsets.only(
+                  top: spacer1,
                   bottom: spacer2,
-                  left: spacer3,
+                  left: spacer5,
                 ),
                 child: Text(
                   '$scannedCount ${localizations.translate(i18.scanner.resourcesScanned)}',
@@ -1493,8 +1527,11 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                             Radius.circular(4.0),
                           ),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: spacer2, vertical: spacer1),
+                        padding: const EdgeInsets.only(
+                            left: spacer4,
+                            right: spacer1,
+                            top: spacer3,
+                            bottom: spacer3),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1506,21 +1543,25 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                     effectiveQrCodes[index].toString()),
                               ),
                             ),
-                            IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              icon: Icon(
-                                Icons.delete,
-                                color: theme.colorScheme.error,
-                                size: 24,
-                              ),
-                              onPressed: () {
-                                final bloc = context.read<DigitScannerBloc>();
-                                codes = List.from(effectiveQrCodes);
-                                codes.removeAt(index);
-                                setState(() {
-                                  codes = codes;
-                                });
+                            SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: ClipRect(
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: theme.colorScheme.error,
+                                    size: 24,
+                                  ),
+                                  onPressed: () {
+                                    final bloc = context.read<DigitScannerBloc>();
+                                    codes = List.from(effectiveQrCodes);
+                                    codes.removeAt(index);
+                                    setState(() {
+                                      codes = codes;
+                                    });
                                 bloc.add(
                                   DigitScannerEvent.handleScanner(
                                     barCode: effectiveBarcodes,
@@ -1530,7 +1571,9 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                     scannerId: widget.scannerId,
                                   ),
                                 );
-                              },
+                                  },
+                                ),
+                              ),
                             ),
                           ],
                         ),

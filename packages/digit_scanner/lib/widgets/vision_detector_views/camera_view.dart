@@ -117,7 +117,6 @@ class _CameraViewState extends State<CameraView> {
                     child: widget.customPaint,
                   ),
           ),
-          _exposureControl(context),
           if (_showAdvancedCameraControls) ...[
             _switchLiveCameraToggle(),
             _detectionViewModeToggle(),
@@ -213,32 +212,6 @@ class _CameraViewState extends State<CameraView> {
               ],
             ),
           ),
-        ),
-      );
-
-  Widget _exposureControl(context) => Positioned(
-        top: MediaQuery.of(context).size.height * 0.165,
-        left: MediaQuery.of(context).size.width / 14,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxHeight: 250,
-          ),
-          child: Column(children: [
-            Expanded(
-              child: Container(
-                width: MediaQuery.of(context).size.width / 1.2,
-                margin: const EdgeInsets.all(15.0),
-                padding: const EdgeInsets.all(3.0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: spacer1,
-                    color: DigitTheme.instance.colorScheme.error,
-                  ),
-                ),
-              ),
-            ),
-            // TODO : Need to add the Scanner Box
-          ]),
         ),
       );
 
