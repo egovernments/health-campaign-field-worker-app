@@ -44,6 +44,9 @@ class PropertySchema with _$PropertySchema {
     String? suffixText,
     String? innerLabel,
     String? label,
+    // Auto-capitalization for text inputs: "words" capitalizes the first
+    // letter of every word as the user types
+    String? textCapitalization,
     bool? isMultiSelect,
     dynamic value,
     DisplayBehavior? displayBehavior,

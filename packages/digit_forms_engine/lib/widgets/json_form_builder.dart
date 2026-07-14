@@ -516,6 +516,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
+          capitalizeWords: widget.schema.textCapitalization == 'words',
         );
     }
   }
@@ -650,6 +651,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
+          capitalizeWords: widget.schema.textCapitalization == 'words',
         );
     }
   }

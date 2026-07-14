@@ -54,7 +54,10 @@ mixin _$PropertySchema {
   String? get prefixText => throw _privateConstructorUsedError;
   String? get suffixText => throw _privateConstructorUsedError;
   String? get innerLabel => throw _privateConstructorUsedError;
-  String? get label => throw _privateConstructorUsedError;
+  String? get label =>
+      throw _privateConstructorUsedError; // Auto-capitalization for text inputs: "words" capitalizes the first
+// letter of every word as the user types
+  String? get textCapitalization => throw _privateConstructorUsedError;
   bool? get isMultiSelect => throw _privateConstructorUsedError;
   dynamic get value => throw _privateConstructorUsedError;
   DisplayBehavior? get displayBehavior => throw _privateConstructorUsedError;
@@ -134,6 +137,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
       String? suffixText,
       String? innerLabel,
       String? label,
+      String? textCapitalization,
       bool? isMultiSelect,
       dynamic value,
       DisplayBehavior? displayBehavior,
@@ -210,6 +214,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? suffixText = freezed,
     Object? innerLabel = freezed,
     Object? label = freezed,
+    Object? textCapitalization = freezed,
     Object? isMultiSelect = freezed,
     Object? value = freezed,
     Object? displayBehavior = freezed,
@@ -328,6 +333,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       label: freezed == label
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
+              as String?,
+      textCapitalization: freezed == textCapitalization
+          ? _value.textCapitalization
+          : textCapitalization // ignore: cast_nullable_to_non_nullable
               as String?,
       isMultiSelect: freezed == isMultiSelect
           ? _value.isMultiSelect
@@ -550,6 +559,7 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       String? suffixText,
       String? innerLabel,
       String? label,
+      String? textCapitalization,
       bool? isMultiSelect,
       dynamic value,
       DisplayBehavior? displayBehavior,
@@ -632,6 +642,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? suffixText = freezed,
     Object? innerLabel = freezed,
     Object? label = freezed,
+    Object? textCapitalization = freezed,
     Object? isMultiSelect = freezed,
     Object? value = freezed,
     Object? displayBehavior = freezed,
@@ -750,6 +761,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
       label: freezed == label
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
+              as String?,
+      textCapitalization: freezed == textCapitalization
+          ? _value.textCapitalization
+          : textCapitalization // ignore: cast_nullable_to_non_nullable
               as String?,
       isMultiSelect: freezed == isMultiSelect
           ? _value.isMultiSelect
@@ -870,6 +885,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.suffixText,
       this.innerLabel,
       this.label,
+      this.textCapitalization,
       this.isMultiSelect,
       this.value,
       this.displayBehavior,
@@ -978,6 +994,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
   final String? innerLabel;
   @override
   final String? label;
+// Auto-capitalization for text inputs: "words" capitalizes the first
+// letter of every word as the user types
+  @override
+  final String? textCapitalization;
   @override
   final bool? isMultiSelect;
   @override
@@ -1074,7 +1094,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, showSecondaryAlertPopUp: $showSecondaryAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, textCapitalization: $textCapitalization, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, showSecondaryAlertPopUp: $showSecondaryAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig)';
   }
 
   @override
@@ -1121,6 +1141,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.innerLabel, innerLabel) ||
                 other.innerLabel == innerLabel) &&
             (identical(other.label, label) || other.label == label) &&
+            (identical(other.textCapitalization, textCapitalization) ||
+                other.textCapitalization == textCapitalization) &&
             (identical(other.isMultiSelect, isMultiSelect) ||
                 other.isMultiSelect == isMultiSelect) &&
             const DeepCollectionEquality().equals(other.value, value) &&
@@ -1192,6 +1214,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
         suffixText,
         innerLabel,
         label,
+        textCapitalization,
         isMultiSelect,
         const DeepCollectionEquality().hash(value),
         displayBehavior,
@@ -1258,6 +1281,7 @@ abstract class _PropertySchema implements PropertySchema {
       final String? suffixText,
       final String? innerLabel,
       final String? label,
+      final String? textCapitalization,
       final bool? isMultiSelect,
       final dynamic value,
       final DisplayBehavior? displayBehavior,
@@ -1349,6 +1373,9 @@ abstract class _PropertySchema implements PropertySchema {
   String? get innerLabel;
   @override
   String? get label;
+  @override // Auto-capitalization for text inputs: "words" capitalizes the first
+// letter of every word as the user types
+  String? get textCapitalization;
   @override
   bool? get isMultiSelect;
   @override

@@ -39,6 +39,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       suffixText: json['suffixText'] as String?,
       innerLabel: json['innerLabel'] as String?,
       label: json['label'] as String?,
+      textCapitalization: json['textCapitalization'] as String?,
       isMultiSelect: json['isMultiSelect'] as bool?,
       value: json['value'],
       displayBehavior: json['displayBehavior'] == null
@@ -107,6 +108,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('suffixText', instance.suffixText);
   writeNotNull('innerLabel', instance.innerLabel);
   writeNotNull('label', instance.label);
+  writeNotNull('textCapitalization', instance.textCapitalization);
   writeNotNull('isMultiSelect', instance.isMultiSelect);
   writeNotNull('value', instance.value);
   writeNotNull('displayBehavior', instance.displayBehavior?.toJson());
