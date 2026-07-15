@@ -37,7 +37,12 @@ class LayoutRendererPage extends LocalizedStatefulWidget {
   State<LayoutRendererPage> createState() => LayoutRendererPageState();
 }
 
-class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
+class LayoutRendererPageState extends LocalizedState<LayoutRendererPage>
+    with WidgetsBindingObserver {
+  // Whether the on-screen keyboard is currently open. Updated via
+  // didChangeMetrics so the fixed footer can be hidden while typing.
+  bool _keyboardVisible = false;
+
   // Scroll listener state
   Timer? _debounceTimer;
   bool _hasTriggeredAtBottom = false;
@@ -63,6 +68,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     // Parse scroll listener configuration from screen config
     final scrollListenerConfig =
@@ -89,8 +95,23 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _debounceTimer?.cancel();
     super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    if (!mounted) return;
+    // Read the RAW keyboard inset from the view. The app-shell Scaffold
+    // (authenticated.dart) sets resizeToAvoidBottomInset, which consumes
+    // viewInsets so MediaQuery below it always reports 0. Reading the view
+    // directly bypasses that and reflects the true keyboard height.
+    final bool isVisible = View.of(context).viewInsets.bottom > 0.0;
+    if (isVisible != _keyboardVisible) {
+      setState(() => _keyboardVisible = isVisible);
+    }
   }
 
   /// Handles scroll notifications from the page
@@ -288,6 +309,11 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
         debugPrint('LayoutRenderer: REBUILD - screenKey=$screenKey, '
             'wrapperLength=$currentWrapperLength, isLoading=$isLoading');
 
+        // Hide the fixed footer while the keyboard is open so it doesn't
+        // float above it; it reappears when the keyboard is dismissed.
+        // _keyboardVisible is driven by didChangeMetrics (see above).
+        final bool showFooter = actions.isNotEmpty && !_keyboardVisible;
+
         return LocalizationContext(
           localization: localizations,
           child: NotificationListener<ScrollNotification>(
@@ -320,8 +346,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                             ),
                           )
                         : null,
-                    enableFixedDigitButton: actions.isNotEmpty ? true : false,
-                    footer: actions.isNotEmpty
+                    enableFixedDigitButton: showFooter,
+                    footer: showFooter
                         ? DigitCard(
                             spacing: spacer2,
                             children: actions
@@ -346,35 +372,45 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Tag(
-                              label: localizations.translate(
-                                  FlowBuilderSingleton().boundary?.code ?? ""),
-                              isIcon: true,
-                              isStroke: true,
-                              borderColor:
-                                  Theme.of(context).colorTheme.primary.primary2,
-                              customTextStyle: Theme.of(context)
-                                  .digitTextTheme(context)
-                                  .bodyS
-                                  .copyWith(
-                                      color: Theme.of(context)
-                                          .colorTheme
-                                          .alert
-                                          .info),
-                              type: TagType.monochrome,
-                              customIcon: Icon(
-                                Icons.location_on_outlined,
-                                color: Theme.of(context).colorTheme.alert.info,
-                                size: 16,
+                            // Per-screen override via config "showLocationTag"
+                            // (defaults to true when absent).
+                            if (widget.config['showLocationTag'] != false) ...[
+                              Tag(
+                                label: localizations.translate(
+                                    FlowBuilderSingleton().boundary?.code ??
+                                        ""),
+                                isIcon: true,
+                                isStroke: true,
+                                borderColor: Theme.of(context)
+                                    .colorTheme
+                                    .primary
+                                    .primary2,
+                                customTextStyle: Theme.of(context)
+                                    .digitTextTheme(context)
+                                    .bodyS
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorTheme
+                                            .alert
+                                            .info),
+                                type: TagType.monochrome,
+                                customIcon: Icon(
+                                  Icons.location_on_outlined,
+                                  color:
+                                      Theme.of(context).colorTheme.alert.info,
+                                  size: 16,
+                                ),
+                                themeData: TagThemeData(
+                                    monochromeBackgroundColor: Theme.of(context)
+                                        .colorTheme
+                                        .alert
+                                        .infoBg,
+                                    iconLabelGap: spacer1,
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderWidth: 0.5),
                               ),
-                              themeData: TagThemeData(
-                                  monochromeBackgroundColor:
-                                      Theme.of(context).colorTheme.alert.infoBg,
-                                  iconLabelGap: spacer1,
-                                  borderRadius: BorderRadius.circular(24),
-                                  borderWidth: 0.5),
-                            ),
-                            const SizedBox(height: spacer2),
+                              const SizedBox(height: spacer4),
+                            ],
                             Builder(builder: (context) {
                               final headingActionsConfig =
                                   (widget.config['headingActions'] as List?) ??
@@ -383,14 +419,21 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                   widget.config['heading'], screenKey);
                               final resolvedDescription = _resolveDescription(
                                   widget.config['description'], screenKey);
-                              final headingStyle = Theme.of(context)
-                                  .digitTextTheme(context)
-                                  .headingXl
-                                  .copyWith(
-                                      color: Theme.of(context)
-                                          .colorTheme
-                                          .primary
-                                          .primary2);
+                              // Per-screen override via config "headingStyle"
+                              // (e.g. "headingL"); defaults to headingXl.
+                              final baseHeadingStyle =
+                                  widget.config['headingStyle'] == 'headingL'
+                                      ? Theme.of(context)
+                                          .digitTextTheme(context)
+                                          .headingL
+                                      : Theme.of(context)
+                                          .digitTextTheme(context)
+                                          .headingXl;
+                              final headingStyle = baseHeadingStyle.copyWith(
+                                  color: Theme.of(context)
+                                      .colorTheme
+                                      .primary
+                                      .primary2);
 
                               if (headingActionsConfig.isEmpty) {
                                 return DigitTextBlock(
@@ -406,8 +449,11 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Row(
+                                    // Align actions with the FIRST line of the
+                                    // heading so they stay in place when the
+                                    // title wraps to multiple lines.
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.end,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: Text(
@@ -418,6 +464,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                       const SizedBox(width: spacer2),
                                       ...headingActionsConfig.map((e) =>
                                           Container(
+                                            height: spacer7,
+                                            alignment: Alignment.center,
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: spacer2),
                                             decoration: BoxDecoration(

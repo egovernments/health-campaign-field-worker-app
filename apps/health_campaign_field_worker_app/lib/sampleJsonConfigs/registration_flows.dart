@@ -715,7 +715,7 @@
           "fieldName": "successCard",
           "mandatory": true,
           "properties": {"type": "success"},
-          "description": "ID-{{navigation.selectedIndividualIdentifierId}}",
+          "description": "REFERRAL_SUCCESSFUL_PANEL_CARD_DESC",
           "primaryAction": {
             "type": "template",
             "label": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
@@ -1061,8 +1061,7 @@
                       "size": "medium",
                       "type": "primary",
                       "mainAxisSize": "max",
-                      "mainAxisAlignment": "center",
-                      "bottomGap": 16
+                      "mainAxisAlignment": "center"
                     }
                   },
                   {
@@ -1107,7 +1106,7 @@
                       "type": "secondary",
                       "mainAxisSize": "max",
                       "mainAxisAlignment": "center",
-                      "bottomGap": 16
+                      "topGap": 16
                     }
                   },
                   {
@@ -1169,8 +1168,7 @@
                       "size": "medium",
                       "type": "secondary",
                       "mainAxisSize": "max",
-                      "mainAxisAlignment": "center",
-                      "bottomGap": 16
+                      "mainAxisAlignment": "center"
                     }
                   },
                   {
@@ -1239,7 +1237,7 @@
                       "type": "primary",
                       "mainAxisSize": "max",
                       "mainAxisAlignment": "center",
-                      "bottomGap": 16
+                      "topGap": 16
                     }
                   },
                 ],
@@ -1780,6 +1778,7 @@
           ],
           "fieldName": "searchBar",
           "mandatory": true,
+          "textCapitalization": "words",
           "validations": [
             {"type": "minSearchChars", "value": 2}
           ],
@@ -1933,7 +1932,7 @@
           "icon": "FilterAlt",
           "type": "template",
           "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-          "label": "DOWNLOAD_BENEFICIARY_IDS",
+          "label": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
           "format": "actionPopup",
           "fieldName": "beneficiaryIdMinCheck",
           "properties": {
@@ -2974,7 +2973,12 @@
             },
             {
               "type": "string",
-              "enums": null,
+              "enums": [
+                {
+                  "code": "SUCCESSFUL_DELIVERY",
+                  "name": "DASHBOARD_DELIVERY_SUCCESSFUL"
+                }
+              ],
               "label":
               "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_deliveryComments",
               "order": 3,
@@ -4337,6 +4341,7 @@
               "order": 1,
               "value": "",
               "format": "text",
+              "textCapitalization": "words",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
@@ -4389,6 +4394,7 @@
               "order": 2,
               "value": "",
               "format": "text",
+              "textCapitalization": "words",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
@@ -5507,6 +5513,7 @@
               "order": 1,
               "value": "",
               "format": "text",
+              "textCapitalization": "words",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
@@ -5559,6 +5566,7 @@
               "order": 2,
               "value": "",
               "format": "text",
+              "textCapitalization": "words",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",

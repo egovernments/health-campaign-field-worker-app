@@ -151,7 +151,11 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                     header: const Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(spacer2),
+                          padding: EdgeInsets.only(
+                            top: spacer2,
+                            left: spacer2,
+                            right: spacer2,
+                          ),
                           child: BackNavigationHelpHeaderWidget(
                             showBackNavigation: true,
                           ),
@@ -772,7 +776,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             ],
                           ),
                           JsonForms(
-                            propertySchema: schema,
+                            propertySchema: _excludeSeparateCardFields(schema),
                             pageName: widget.pageName,
                             currentSchemaKey: widget.currentSchemaKey,
                             childrens: widget.customComponents,
@@ -783,6 +787,27 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           )
                         ],
                       ),
+                      if (_separateCardFields(schema) != null) ...[
+                        const SizedBox(
+                          height: spacer4,
+                        ),
+                        DigitCard(
+                          width: double.infinity,
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: spacer4,
+                          ),
+                          children: [
+                            JsonForms(
+                              propertySchema: _separateCardFields(schema)!,
+                              pageName: widget.pageName,
+                              currentSchemaKey: widget.currentSchemaKey,
+                              childrens: widget.customComponents,
+                              navigationParams: widget.navigationParams,
+                              defaultValues: const {},
+                            )
+                          ],
+                        ),
+                      ],
                       const SizedBox(
                         height: spacer2,
                       ),
@@ -880,7 +905,11 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               header: const Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(spacer2),
+                    padding: EdgeInsets.only(
+                      top: spacer2,
+                      left: spacer2,
+                      right: spacer2,
+                    ),
                     child: BackNavigationHelpHeaderWidget(
                       showBackNavigation: true,
                     ),
@@ -1525,6 +1554,28 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
   bool _hasDisplayOnlyProperties(PropertySchema schema) {
     return schema.properties?.values.any((p) => p.displayOnly == true) ?? false;
+  }
+
+  /// Fields flagged with `conditions.separateCard` are rendered in their own
+  /// card below the main form card. Returns null when no field is flagged.
+  PropertySchema? _separateCardFields(PropertySchema schema) {
+    final entries = schema.properties?.entries
+            .where((e) => e.value.conditions?['separateCard'] == true)
+            .toList() ??
+        [];
+    if (entries.isEmpty) return null;
+    return schema.copyWith(properties: Map.fromEntries(entries));
+  }
+
+  PropertySchema _excludeSeparateCardFields(PropertySchema schema) {
+    final props = schema.properties;
+    if (props == null || _separateCardFields(schema) == null) return schema;
+    return schema.copyWith(
+      properties: Map.fromEntries(
+        props.entries
+            .where((e) => e.value.conditions?['separateCard'] != true),
+      ),
+    );
   }
 
   Widget _buildDisplayOnlyCard(BuildContext context, PropertySchema schema) {

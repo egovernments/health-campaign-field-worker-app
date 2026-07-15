@@ -42,9 +42,12 @@ class NoResultCardWidget extends ResolvedFlowWidget {
           }
         }
 
-        return NoResultCard(
-          label: resolved.resolveText(json['label']),
-          description: resolved.resolveText(json['description']),
+        return Padding(
+          padding: const EdgeInsets.only(top: spacer12 * 1.5),
+          child: NoResultCard(
+            label: resolved.resolveText(json['label']),
+            description: resolved.resolveText(json['description']),
+          ),
         );
       },
     );
