@@ -43,7 +43,7 @@ class NoResultCardWidget extends ResolvedFlowWidget {
         }
 
         return Padding(
-          padding: const EdgeInsets.only(top: spacer12 * 1.5),
+          padding: const EdgeInsets.only(top: spacer12 * 1.7),
           child: NoResultCard(
             label: resolved.resolveText(json['label']),
             description: resolved.resolveText(json['description']),
