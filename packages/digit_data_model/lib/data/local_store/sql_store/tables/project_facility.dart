@@ -3,6 +3,8 @@
 import 'package:drift/drift.dart';
 
 
+@TableIndex(name: 'project_facility_projectid', columns: {#projectId})
+@TableIndex(name: 'project_facility_facilityid', columns: {#facilityId})
 class ProjectFacility extends Table {
   TextColumn get id => text()();
   TextColumn get facilityId => text()();

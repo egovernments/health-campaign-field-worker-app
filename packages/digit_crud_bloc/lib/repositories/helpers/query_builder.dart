@@ -6,9 +6,54 @@ import 'dart:math' as math;
 import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart' hide OrderBy;
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart' as debug;
 
 class QueryBuilder {
+  /// Tables we've already logged an EXPLAIN QUERY PLAN for in this session.
+  /// EXPLAIN QUERY PLAN is a debug-only diagnostic — running it once per
+  /// (table, filter-column set) is enough to tell us whether SQLite is
+  /// hitting an index or falling back to a full-table SCAN.
+  static final Set<String> _planLogged = <String>{};
+
+  /// Emits an `EXPLAIN QUERY PLAN` line for a lookup on [table] filtered by
+  /// [filterColumns]. One-shot per unique (table, columns) tuple. Fires only
+  /// in debug builds. If the plan says `SCAN <table>` instead of
+  /// `SEARCH <table> USING INDEX ...`, we know the index isn't being used
+  /// and can chase it (missing index, stats not populated, planner picking
+  /// wrong path, etc.).
+  static Future<void> _logQueryPlan(
+    LocalSqlDataStore sql,
+    String table,
+    List<String> filterColumns,
+  ) async {
+    if (!kDebugMode) return;
+    final key = '$table|${(filterColumns..sort()).join(",")}';
+    if (!_planLogged.add(key)) return;
+    if (filterColumns.isEmpty) return;
+    try {
+      final tableSnake = camelToSnake(table);
+      final where = filterColumns
+          .map((c) => '${camelToSnake(c)} = ?')
+          .join(' AND ');
+      final placeholders =
+          List<Variable>.filled(filterColumns.length, const Variable(''));
+      final planRows = await sql
+          .customSelect(
+            'EXPLAIN QUERY PLAN SELECT * FROM $tableSnake WHERE $where',
+            variables: placeholders,
+          )
+          .get();
+      final buf = StringBuffer('[QueryPlan] $tableSnake WHERE $where\n');
+      for (final row in planRows) {
+        buf.writeln('  ${row.data}');
+      }
+      debug.debugPrint(buf.toString());
+    } catch (e) {
+      debug.debugPrint('[QueryPlan] $table failed: $e');
+    }
+  }
+
   /// Looks up a dynamic table by camelCase name.
   static TableInfo<Table, Object?> _tableInfo(
       LocalSqlDataStore sql, String tableName) {
@@ -990,6 +1035,21 @@ class QueryBuilder {
       countMs = cs.elapsedMilliseconds;
       onCountFetched!(total);
     }
+    // One-shot EXPLAIN QUERY PLAN for the primary-table lookup, so a slow
+    // `data=Xms rows=few` log below can be diagnosed as "index used" vs
+    // "SCAN". Extracts the direct equality filters on this table (the ones
+    // that would use an index); ignores range/OR/subquery constraints.
+    if (isPrimaryTable) {
+      final filterColumns = filters
+          .where((f) =>
+              f.root == table &&
+              (f.operator == 'equals' || f.operator == 'in'))
+          .map((f) => f.field)
+          .toList();
+      // fire-and-forget so it can't slow the actual query
+      unawaited(_logQueryPlan(sql, table, filterColumns));
+    }
+
     final dataSw = Stopwatch()..start();
     final results = await dataQuery.get();
     final dataMs = dataSw.elapsedMilliseconds;

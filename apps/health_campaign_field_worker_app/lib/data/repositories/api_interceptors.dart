@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../models/request_info/request_info_model.dart';
 import '../../utils/constants.dart';
@@ -49,17 +50,19 @@ class ApiLoggerInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    // Skip request-body logging for the same paths whose responses we
-    // silence below — the request bodies for these are large auto-generated
-    // payloads (module lists, boundary codes) that don't add debug value.
-    final path = options.path;
-    final isNoisyEndpoint =
-        path.contains('boundarys') || path.contains(Constants.localizationApiPath);
-    if (!isNoisyEndpoint && (options.data is Map || options.data is List)) {
-      AppLogger.instance.info(
-        _getIndentedJson(json.encode(options.data)),
-        title: '[REQUEST] ${options.uri.toString()}',
-      );
+    if (kDebugMode) {
+      // Skip request-body logging for the same paths whose responses we
+      // silence below — the request bodies for these are large auto-generated
+      // payloads (module lists, boundary codes) that don't add debug value.
+      final path = options.path;
+      final isNoisyEndpoint = path.contains('boundarys') ||
+          path.contains(Constants.localizationApiPath);
+      if (!isNoisyEndpoint && (options.data is Map || options.data is List)) {
+        AppLogger.instance.info(
+          _getIndentedJson(json.encode(options.data)),
+          title: '[REQUEST] ${options.uri.toString()}',
+        );
+      }
     }
     super.onRequest(options, handler);
   }
@@ -67,6 +70,7 @@ class ApiLoggerInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     super.onResponse(response, handler);
+    if (!kDebugMode) return;
 
     final path = response.requestOptions.path;
     if (path.contains('boundarys')) return;

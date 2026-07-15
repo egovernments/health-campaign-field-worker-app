@@ -44,7 +44,9 @@ class SearchEntityRepository extends LocalRepository {
             "SELECT tbl_name, name FROM sqlite_master "
             "WHERE type='index' AND tbl_name IN "
             "('identifier','address','name','individual','household',"
-            "'household_member','project_beneficiary') "
+            "'household_member','project_beneficiary','project_facility',"
+            "'project_resource','product_variant','stock','facility',"
+            "'unique_id_pool','pgr_service') "
             "ORDER BY tbl_name, name",
           )
           .get();
@@ -71,6 +73,77 @@ class SearchEntityRepository extends LocalRepository {
         planBuf.writeln('  ${row.data}');
       }
       debugPrint(planBuf.toString());
+
+      // Dump sqlite_stat1 to see what stats the planner is actually using.
+      // If this table is empty or shows tiny row counts (~0-16) for tables
+      // we know are populated, ANALYZE hasn't run on real data — that
+      // explains why plans fall back to SCAN despite indexes existing.
+      final stats = await sql
+          .customSelect(
+            "SELECT tbl, idx, stat FROM sqlite_stat1 "
+            "WHERE tbl IN ('project_facility','project_resource',"
+            "'product_variant','identifier','address','name','individual',"
+            "'household','household_member','project_beneficiary','stock',"
+            "'facility') "
+            "ORDER BY tbl, idx",
+          )
+          .get();
+      if (stats.isEmpty) {
+        debugPrint('[IndexDiag] sqlite_stat1 is EMPTY '
+            '— ANALYZE never populated stats; planner will pick SCAN');
+      } else {
+        final statBuf = StringBuffer('[IndexDiag] sqlite_stat1:\n');
+        for (final row in stats) {
+          statBuf.writeln('  ${row.read<String>("tbl")} '
+              '${row.read<String>("idx")} -> ${row.read<String>("stat")}');
+        }
+        debugPrint(statBuf.toString());
+      }
+
+      // Journal mode: SCAN on a small table shouldn't take 2s. If we're
+      // hitting write-lock contention with the sync isolate, WAL should
+      // eliminate it. If journal_mode reads back as something other than
+      // 'wal' the PRAGMA in `setup` never took effect.
+      final journalRows = await sql
+          .customSelect('PRAGMA journal_mode')
+          .get();
+      if (journalRows.isNotEmpty) {
+        debugPrint(
+            '[IndexDiag] journal_mode = ${journalRows.first.data.values.first}');
+      }
+
+      // Actual row counts — critical because sqlite_stat1 is APPROXIMATE.
+      // If stat1 says `2 2` for project_facility but COUNT(*) is 15000,
+      // the planner is being lied to and picks SCAN over the index.
+      // Also times a raw select-with-filter on the same connection: if
+      // COUNT is 3ms but the WHERE query is 2000ms for the same 2 rows,
+      // the slowness is drift-level or SQLCipher decrypt, not planner.
+      final probeTables = [
+        'project_facility',
+        'project_resource',
+        'product_variant',
+        'identifier',
+        'individual',
+        'name',
+        'household',
+        'household_member',
+        'address',
+        'facility',
+        'stock',
+      ];
+      final countBuf = StringBuffer('[IndexDiag] actual row counts:\n');
+      for (final t in probeTables) {
+        try {
+          final sw = Stopwatch()..start();
+          final r = await sql.customSelect('SELECT COUNT(*) AS c FROM $t').get();
+          final ms = sw.elapsedMilliseconds;
+          final count = r.first.read<int>('c');
+          countBuf.writeln('  $t = $count (COUNT took ${ms}ms)');
+        } catch (e) {
+          countBuf.writeln('  $t = ERROR ($e)');
+        }
+      }
+      debugPrint(countBuf.toString());
     } catch (e) {
       debugPrint('[IndexDiag] failed: $e');
     }
@@ -237,12 +310,22 @@ class SearchEntityRepository extends LocalRepository {
       select: select,
       pagination: pagination,
       isPrimaryTable: true,
-      onCountFetched: (count) {
-        totalCount = count;
-      },
+      // Only fire a SELECT COUNT(*) when the caller actually needs the total
+      // for pagination. Without pagination we already fetch every matching
+      // row, so `results.length` is the correct total — and the extra COUNT
+      // was blocking the whole search behind write-lock contention with the
+      // background sync isolate (measured at ~1.1s per warm search entry).
+      onCountFetched: pagination != null
+          ? (count) {
+              totalCount = count;
+            }
+          : null,
       orderBy: orderBy,
       extraConstraints: crossTableConstraints,
     );
+    if (pagination == null) {
+      totalCount = primaryResults.length;
+    }
     debugPrint(
         '[SearchPerf] primaryQuery=${stepSw.elapsedMilliseconds}ms '
         '(rows=${primaryResults.length}, totalCount=$totalCount)');

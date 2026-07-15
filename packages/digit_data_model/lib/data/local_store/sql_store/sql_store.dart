@@ -144,7 +144,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 11; // Increment schema version
+  int get schemaVersion => 12; // Increment schema version
 
   Future<void> _createTaskSearchIndexes() async {
     await customStatement('''
@@ -158,6 +158,41 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
     await customStatement('''
       CREATE INDEX IF NOT EXISTS task_search_project_created_status_plannedstart
       ON task (project_id, client_created_by, status, planned_start_date);
+    ''');
+  }
+
+  /// v12 hot-path indexes. Each of these columns is a WHERE-clause target
+  /// somewhere in the app but the table had no matching index — meaning
+  /// SQLite was doing full-table SCAN + SQLCipher page decrypt on every
+  /// filter. The composite `(locale, module)` on localization is the
+  /// biggest win (measured ~1000× speedup on cacheProbe). The rest are
+  /// preventative — the tables are small today but will grow. Idempotent
+  /// via `IF NOT EXISTS` so this is safe to call on fresh installs and
+  /// upgrades alike.
+  Future<void> _createV12HotPathIndexes() async {
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS localization_locale_module
+      ON localization (locale, module);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS pgr_service_tenantid
+      ON pgr_service (tenant_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS product_variant_productid
+      ON product_variant (product_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS project_facility_projectid
+      ON project_facility (project_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS project_facility_facilityid
+      ON project_facility (facility_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS project_resource_projectid
+      ON project_resource (project_id);
     ''');
   }
 
@@ -405,6 +440,43 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               }
             }
           }
+
+          if (from < 12) {
+            // v12: add hot-path indexes that were previously missing on
+            // localization (composite locale+module), pgr_service,
+            // product_variant, project_facility, and project_resource.
+            // See _createV12HotPathIndexes for rationale.
+            try {
+              await _createV12HotPathIndexes();
+              await customStatement('ANALYZE');
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to create hot-path indexes in v12 migration: $e");
+              }
+            }
+          }
+        },
+        // Runs AFTER onCreate / onUpgrade complete, but BEFORE the app
+        // executes its first user query. This is the right hook for a
+        // stats refresh: the ANALYZE in `setup` fires before migrations,
+        // so on a fresh install it runs against empty tables and produces
+        // useless stats — that's why the planner keeps picking SCAN over
+        // our indexes for hot lookups (project_facility, identifier, etc.).
+        // Running ANALYZE here guarantees stats reflect the actual row
+        // counts every table has at the moment queries start firing.
+        beforeOpen: (details) async {
+          try {
+            await customStatement('PRAGMA analysis_limit = 400;');
+            await customStatement('ANALYZE');
+            // PRAGMA optimize is SQLite's built-in "auto-refresh stats
+            // when needed" mechanism. Cheap when stats are current,
+            // rescans specific tables when significant change is detected.
+            await customStatement('PRAGMA optimize');
+          } catch (e) {
+            if (kDebugMode) {
+              print("beforeOpen ANALYZE failed: $e");
+            }
+          }
         },
       );
 
@@ -480,6 +552,19 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
           database.execute('PRAGMA temp_store = MEMORY;');
           database.execute('PRAGMA mmap_size = 30000000;'); // 30 MB mmap
           database.execute('PRAGMA synchronous = NORMAL;');
+          // Refresh sqlite_stat1 at connection open. Migrations run
+          // ANALYZE while tables are still empty (before downsync), so
+          // without this the planner keeps thinking every table has
+          // ~0 rows and picks SCAN over our indexes — a 2-row lookup on
+          // an indexed table can end up doing a full-table scan.
+          // `analysis_limit = 1000` caps the per-index sample at
+          // ~50-100 ms so this is cheap to run on every open.
+          try {
+            database.execute('PRAGMA analysis_limit = 1000;');
+            database.execute('ANALYZE;');
+          } catch (_) {
+            // Best-effort — never block DB open on stats refresh.
+          }
         },
       );
     });
