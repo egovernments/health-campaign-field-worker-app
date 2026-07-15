@@ -42,7 +42,7 @@
           },
           "secondaryAction": {
             "type": "template",
-            "label": "GO_BACK",
+            "label": "HCM_DELIVERY_SUCCESS_BACK_TO_SEARCH_BENEFICIARY",
             "format": "button",
             "hidden": false,
             "onAction": [
@@ -56,7 +56,7 @@
             "properties": {"type": "secondary"}
           },
           "primaryActionLabel": "VIEW_HOUSEHOLD_DETAILS",
-          "secondaryActionLabel": "GO_BACK"
+          "secondaryActionLabel": "HCM_DELIVERY_SUCCESS_BACK_TO_SEARCH_BENEFICIARY"
         }
       ],
       "name": "deliverySuccess",
@@ -1338,7 +1338,7 @@
                     {
                       "type": "template",
                       "label":
-                      "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
+                      "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
                       "format": "button",
                       "onAction": [
                         {
@@ -1779,6 +1779,7 @@
           "fieldName": "searchBar",
           "mandatory": true,
           "textCapitalization": "words",
+          "pattern": "[a-zA-Z ]",
           "validations": [
             {"type": "minSearchChars", "value": 2}
           ],
@@ -1787,6 +1788,7 @@
         {
          "type": "template",
          "label": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
+         "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
          "format": "noResultCard",
          "fieldName": "beneficiaryNotFound",
          "showOnEmptySearch": true
@@ -4363,6 +4365,7 @@
                 "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message_addmember"
               },
               "validations": [
+                {"type": "pattern", "value": "[a-zA-Z ]+"},
                 {
                   "type": "required",
                   "value": true,
@@ -4414,6 +4417,7 @@
                 "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message_addmember"
               },
               "validations": [
+                {"type": "pattern", "value": "[a-zA-Z ]+"},
                 {
                   "type": "required",
                   "value": true,
@@ -5535,6 +5539,7 @@
                 "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message"
               },
               "validations": [
+                {"type": "pattern", "value": "[a-zA-Z ]+"},
                 {
                   "type": "required",
                   "value": true,
@@ -5586,6 +5591,7 @@
                 "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message"
               },
               "validations": [
+                {"type": "pattern", "value": "[a-zA-Z ]+"},
                 {
                   "type": "required",
                   "value": true,

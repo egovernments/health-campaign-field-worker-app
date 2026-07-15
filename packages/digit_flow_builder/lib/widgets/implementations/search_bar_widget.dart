@@ -334,9 +334,12 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
   @override
   Widget build(BuildContext context) {
     final compositeKey = widget.compositeKey;
-    final formatters = widget.capitalizeWords
-        ? [_CapitalizeWordsFormatter()]
-        : null;
+    final pattern = widget.json['pattern'];
+    final formatters = [
+      if (pattern is String && pattern.isNotEmpty)
+        FilteringTextInputFormatter.allow(RegExp(pattern)),
+      if (widget.capitalizeWords) _CapitalizeWordsFormatter(),
+    ];
     if (compositeKey == null) {
       return DigitSearchBar(
         hintText: widget.hintText,
