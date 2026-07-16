@@ -1390,7 +1390,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                   left: spacer5,
                 ),
                 child: Text(
-                  '$scannedCount ${localizations.translate(i18.scanner.resourcesScanned)}',
+                  '$scannedCount ${localizations.translate(scannedCount == 1 ? i18.scanner.resourceScanned : i18.scanner.resourcesScanned)}',
                   style: textTheme.headingM
                       .copyWith(color: theme.colorTheme.text.primary),
                 ),
