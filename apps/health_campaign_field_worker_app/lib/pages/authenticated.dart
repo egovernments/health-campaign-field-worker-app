@@ -69,6 +69,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
 
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
   bool _isOfflineDialogShowing = false;
+  bool _isLanguageLoaderShowing = false;
 
   @override
   void initState() {
@@ -636,7 +637,12 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
       return BlocListener<LocalizationBloc, LocalizationState>(
         listener: (context, state) {
-          if (state.loading == false) {
+          // Only dismiss the overlay loader shown on language change.
+          // Localization also reloads during logout, where a blind pop
+          // would dismiss an arbitrary route (e.g. re-flash the logout
+          // popup while it is animating out).
+          if (state.loading == false && _isLanguageLoaderShowing) {
+            _isLanguageLoaderShowing = false;
             Navigator.of(context, rootNavigator: true).pop();
           }
         },
@@ -694,7 +700,11 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                 final isConnected = await getIsConnected();
                 if (context.mounted) {
                   if (isConnected) {
-                    await showCustomPopup(
+                    // The popup only collects the decision; all logout side
+                    // effects run after it has fully left the screen so it
+                    // can never re-render (e.g. with cleared localization
+                    // strings) while animating out.
+                    final shouldLogout = await showCustomPopup(
                       context: context,
                       builder: (ctx) => Popup(
                         title: AppLocalizations.of(context).translate(
@@ -704,58 +714,20 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                           i18.common.logoutConfirmationDescription,
                         ),
                         onOutsideTap: () {
-                          Navigator.of(ctx).pop();
+                          Navigator.of(ctx).pop(false);
+                        },
+                        onCrossTap: () {
+                          Navigator.of(ctx).pop(false);
                         },
                         type: PopUpType.simple,
-                        titleIcon: Icon(
-                          Icons.info,
-                          color: Theme.of(context).colorTheme.alert.info,
-                        ),
                         inlineActions: true,
                         actions: [
                           DigitButton(
                               label: AppLocalizations.of(context).translate(
                                 i18.common.coreCommonLogout,
                               ),
-                              onPressed: () async {
-                                final isar = context.read<Isar>();
-                                final serviceRegistry = await isar
-                                    .serviceRegistrys
-                                    .where()
-                                    .findAll();
-                                final apiEndPoint = Constants.getNotificationEndPoint(
-                                  serviceRegistry: serviceRegistry,
-                                  service: 'NOTIFICATION',
-                                  action: ApiOperation.unRegister.toValue(),
-                                  entityName: 'NotificationToken',
-                                );
-
-                                if (context.mounted) {
-                                  context.read<PushNotificationBloc>().add(
-                                        PushNotificationEvent.logout(
-                                          apiEndPoint: apiEndPoint,
-                                        ),
-                                      );
-                                  context
-                                      .read<BoundaryBloc>()
-                                      .add(const BoundaryResetEvent());
-                                  context.read<LocalizationBloc>().add(
-                                        LocalizationEvent.onLoadLocalization(
-                                          module: Constants
-                                              .homeLocalizationModules
-                                              .join(','),
-                                          tenantId:
-                                              envConfig.variables.tenantId,
-                                          locale: AppSharedPreferences()
-                                                  .getSelectedLocale ??
-                                              '',
-                                          path: Constants.localizationApiPath,
-                                        ),
-                                      );
-                                  context
-                                      .read<AuthBloc>()
-                                      .add(const AuthLogoutEvent());
-                                }
+                              onPressed: () {
+                                Navigator.of(ctx).pop(true);
                               },
                               type: DigitButtonType.primary,
                               size: DigitButtonSize.large),
@@ -764,16 +736,54 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                 i18.common.coreCommonCancel,
                               ),
                               onPressed: () {
-                                Navigator.of(
-                                  context,
-                                  rootNavigator: true,
-                                ).pop(true);
+                                Navigator.of(ctx).pop(false);
                               },
                               type: DigitButtonType.secondary,
                               size: DigitButtonSize.large)
                         ],
                       ),
                     );
+
+                    if (shouldLogout == true && context.mounted) {
+                      // Wait out the popup's exit transition (300ms in
+                      // showCustomPopup) before clearing localization.
+                      await Future.delayed(const Duration(milliseconds: 300));
+                      if (!context.mounted) return;
+                      final isar = context.read<Isar>();
+                      final serviceRegistry =
+                          await isar.serviceRegistrys.where().findAll();
+                      final apiEndPoint = Constants.getNotificationEndPoint(
+                        serviceRegistry: serviceRegistry,
+                        service: 'NOTIFICATION',
+                        action: ApiOperation.unRegister.toValue(),
+                        entityName: 'NotificationToken',
+                      );
+
+                      if (context.mounted) {
+                        context.read<PushNotificationBloc>().add(
+                              PushNotificationEvent.logout(
+                                apiEndPoint: apiEndPoint,
+                              ),
+                            );
+                        context
+                            .read<BoundaryBloc>()
+                            .add(const BoundaryResetEvent());
+                        context.read<LocalizationBloc>().add(
+                              LocalizationEvent.onLoadLocalization(
+                                module: Constants.homeLocalizationModules
+                                    .join(','),
+                                tenantId: envConfig.variables.tenantId,
+                                locale: AppSharedPreferences()
+                                        .getSelectedLocale ??
+                                    '',
+                                path: Constants.localizationApiPath,
+                              ),
+                            );
+                        context
+                            .read<AuthBloc>()
+                            .add(const AuthLogoutEvent());
+                      }
+                    }
                   } else {
                     Toast.showToast(
                       context,
@@ -805,6 +815,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
         ?.map((e) => SidebarItem(
               title: e.label,
               onPressed: () async {
+                _isLanguageLoaderShowing = true;
                 DigitLoaders.overlayLoader(context: context);
 
                 int index = languages.indexWhere(
