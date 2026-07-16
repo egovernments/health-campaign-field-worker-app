@@ -52,7 +52,7 @@ class DownloadProgressContent extends StatelessWidget {
                 ),
           ),
         ),
-        const SizedBox(height: spacer2 * 2),
+        const SizedBox(height: spacer5),
         if (showProgressBar)
           LinearProgressIndicator(
             value: progress,
