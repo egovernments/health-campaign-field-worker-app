@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../layout_renderer.dart';
+import '../../utils/conditional_evaluator.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/widget_parsers.dart';
 import '../../widget_registry.dart';
@@ -12,6 +13,57 @@ import '../resolved_flow_widget.dart';
 class CardWidget extends ResolvedFlowWidget {
   @override
   String get format => 'card';
+
+  /// Mirrors the visibility check used for top-level body items in
+  /// layout_renderer so hidden children are skipped entirely instead of
+  /// rendering as zero-height widgets that still receive DigitCard's
+  /// inter-child spacing.
+  bool _isChildVisible(Map<String, dynamic> json, dynamic stateData,
+      String? screenKey, dynamic item) {
+    final modelMap = stateData?.modelMap ?? {};
+    final evalContext = {
+      'item': item,
+      'contextData': stateData?.rawState ?? {},
+      ...modelMap,
+    };
+
+    if (json['hidden'] != null) {
+      final hiddenResult = ConditionalEvaluator.evaluate(
+        json['hidden'],
+        evalContext,
+        screenKey: screenKey,
+        stateData: stateData,
+      );
+      if (hiddenResult == true) return false;
+    }
+
+    if (json['visible'] != null) {
+      final visibleResult = ConditionalEvaluator.evaluate(
+        json['visible'],
+        evalContext,
+        screenKey: screenKey,
+        stateData: stateData,
+      );
+      if (visibleResult == false) return false;
+    }
+
+    return true;
+  }
+
+  double? _parseRadiusValue(dynamic key) {
+    switch (key?.toString()) {
+      case 'radius1':
+        return radius1;
+      case 'radius2':
+        return radius2;
+      case 'radius3':
+        return radius3;
+      case 'radius4':
+        return radius4;
+      default:
+        return null;
+    }
+  }
 
   @override
   Widget buildResolved(
@@ -30,11 +82,13 @@ class CardWidget extends ResolvedFlowWidget {
 
     final String cardTypeStr =
         json['properties']?['type']?.toString() ?? 'primary';
-    // Secondary cards use radius1 (4px) to match the SelectionCard container.
+    final radiusOverride = _parseRadiusValue(json['properties']?['radius']);
+    // Secondary cards use radius1 (4px) to match the SelectionCard container,
+    // unless a per-instance "radius" property is provided.
     // Primary cards fall back to DigitCard's own default (radius4 = 12px).
-    final BorderRadius? borderRadius = cardTypeStr == 'secondary'
-        ? BorderRadius.circular(radius1)
-        : null;
+    final BorderRadius? borderRadius = radiusOverride != null
+        ? BorderRadius.circular(radiusOverride)
+        : (cardTypeStr == 'secondary' ? BorderRadius.circular(radius1) : null);
 
     return DigitCard(
       width: MediaQuery.of(context).size.width,
@@ -55,7 +109,7 @@ class CardWidget extends ResolvedFlowWidget {
           }
         }
       },
-      children: (json['children'] as List).map<Widget>((childJson) {
+      children: (json['children'] as List).map<Widget?>((childJson) {
         final processed = stateData != null
             ? preprocessConfigWithState(
                 Map<String, dynamic>.from(childJson),
@@ -64,6 +118,13 @@ class CardWidget extends ResolvedFlowWidget {
                 item: crudCtx?.item,
               )
             : Map<String, dynamic>.from(childJson);
+
+        // Skip hidden children so they don't consume DigitCard's
+        // inter-child spacing as invisible zero-height widgets.
+        if (!_isChildVisible(
+            processed, stateData, crudCtx?.screenKey, crudCtx?.item)) {
+          return null;
+        }
 
         return CrudItemContext(
           stateData: stateData,
@@ -76,7 +137,7 @@ class CardWidget extends ResolvedFlowWidget {
               listIndex: crudCtx?.listIndex,
               compositeKey: resolved.compositeKey),
         );
-      }).toList(),
+      }).whereType<Widget>().toList(),
     );
   }
 }

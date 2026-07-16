@@ -160,13 +160,14 @@ class WidgetParsers {
     if (properties == null) return child;
 
     final bottomGap = properties['bottomGap'];
-    if (bottomGap == null) return child;
+    final topGap = properties['topGap'];
 
-    final double gap = bottomGap is num ? bottomGap.toDouble() : 0;
-    if (gap <= 0) return child;
+    final double bottom = bottomGap is num ? bottomGap.toDouble() : 0;
+    final double top = topGap is num ? topGap.toDouble() : 0;
+    if (bottom <= 0 && top <= 0) return child;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: gap),
+      padding: EdgeInsets.only(top: top, bottom: bottom),
       child: child,
     );
   }

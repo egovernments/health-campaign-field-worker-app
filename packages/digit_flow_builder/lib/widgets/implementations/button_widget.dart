@@ -23,6 +23,10 @@ class ButtonWidget extends ResolvedFlowWidget {
     DigitButtonSize size = WidgetParsers.parseButtonSize(props['size']);
     String? height = props['height'];
     String? radius = props['radius'];
+    String? iconSize = props['iconSize'];
+    String? horizontalPadding = props['horizontalPadding'];
+    String? fontFamily = props['fontFamily'];
+    final bool overrideTextStyle = fontFamily != null;
 
     final bool alignCenter = props['align'] == 'center';
 
@@ -65,6 +69,40 @@ class ButtonWidget extends ResolvedFlowWidget {
           largeRadius: (size == DigitButtonSize.large && radius != null)
               ? BorderRadius.circular(WidgetParsers.parseSize(radius))
               : DigitButtonThemeData.defaultTheme(context).largeRadius,
+          smallIconSize: (size == DigitButtonSize.small && iconSize != null)
+              ? WidgetParsers.parseSize(iconSize)
+              : DigitButtonThemeData.defaultTheme(context).smallIconSize,
+          mediumIconSize: (size == DigitButtonSize.medium && iconSize != null)
+              ? WidgetParsers.parseSize(iconSize)
+              : DigitButtonThemeData.defaultTheme(context).mediumIconSize,
+          largeIconSize: (size == DigitButtonSize.large && iconSize != null)
+              ? WidgetParsers.parseSize(iconSize)
+              : DigitButtonThemeData.defaultTheme(context).largeIconSize,
+          padding: horizontalPadding != null
+              ? EdgeInsets.symmetric(
+                  horizontal: WidgetParsers.parseSize(horizontalPadding))
+              : DigitButtonThemeData.defaultTheme(context).padding,
+          smallDigitButtonTextStyle:
+              (size == DigitButtonSize.small && overrideTextStyle)
+                  ? DigitButtonThemeData.defaultTheme(context)
+                      .smallDigitButtonTextStyle
+                      ?.copyWith(fontFamily: fontFamily)
+                  : DigitButtonThemeData.defaultTheme(context)
+                      .smallDigitButtonTextStyle,
+          mediumDigitButtonTextStyle:
+              (size == DigitButtonSize.medium && overrideTextStyle)
+                  ? DigitButtonThemeData.defaultTheme(context)
+                      .mediumDigitButtonTextStyle
+                      ?.copyWith(fontFamily: fontFamily)
+                  : DigitButtonThemeData.defaultTheme(context)
+                      .mediumDigitButtonTextStyle,
+          largeDigitButtonTextStyle:
+              (size == DigitButtonSize.large && overrideTextStyle)
+                  ? DigitButtonThemeData.defaultTheme(context)
+                      .largeDigitButtonTextStyle
+                      ?.copyWith(fontFamily: fontFamily)
+                  : DigitButtonThemeData.defaultTheme(context)
+                      .largeDigitButtonTextStyle,
         ),
         mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment:

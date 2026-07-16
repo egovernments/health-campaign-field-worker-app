@@ -108,7 +108,10 @@ class ActionPopupWidget extends ResolvedFlowWidget {
           : null,
     );
 
-    return alignCenter ? Center(child: button) : button;
+    return WidgetParsers.wrapWithBottomGap(
+      alignCenter ? Center(child: button) : button,
+      props,
+    );
   }
 
   /// Show the action popup based on configuration
