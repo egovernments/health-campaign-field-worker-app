@@ -1135,7 +1135,8 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "key": "IHM_CAMPAIGN_INFO_SOURCE_LABEL",
                   "value":
                       "{{contextData.0.session.UserActionModel.additionalFields.fields.campaignInfoSource}}",
-                  "isActive": true
+                  "isActive": true,
+                  "isMultiSelect": true
                 },
                 {
                   "key": "IHM_SUMMARY_POORLY_COVERED",

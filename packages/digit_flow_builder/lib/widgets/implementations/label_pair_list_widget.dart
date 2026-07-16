@@ -35,6 +35,7 @@ class LabelPairListWidget extends ResolvedFlowWidget {
       final value = e['value'];
       final defaultValue = e['defaultValue'];
       final hideIfNull = e['hideIfNull'] == true;
+      final isMultiSelect = e['isMultiSelect'] == true;
 
       // Resolve template using evalContext
       final keyText = resolveTemplate(
@@ -67,12 +68,12 @@ class LabelPairListWidget extends ResolvedFlowWidget {
         );
       }
 
-      // Localize the display value — split dot-separated multi-select
-      // values so each code is translated individually.
+      // Localize the display value. For multi-select fields, split
+      // dot-separated codes and translate each individually.
       String? displayValue;
       if (valueText == null || valueText == 'null') {
         displayValue = '--';
-      } else if (valueText.contains('.')) {
+      } else if (isMultiSelect && valueText.contains('.')) {
         displayValue = valueText
             .split('.')
             .map((part) => localization?.translate(part) ?? part)

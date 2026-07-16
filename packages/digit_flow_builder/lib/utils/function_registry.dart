@@ -701,10 +701,9 @@ void initializeFunctionRegistry() {
 
     // ── 4. Evaluate each doseCriteria ─────────────────────────────────
     for (final dc in doseCriteriaList) {
-      final condition = dc.condition?.toString() ?? '';
-      if (condition.isEmpty) {
-        return true; // No condition → eligible
-      }
+      if (dc.condition == null) continue; // No condition on this dose → skip
+      final condition = dc.condition.toString().trim();
+      if (condition.isEmpty) continue; // Blank condition → skip
 
       final requiredKeys = ComputedListEvaluator.extractKeys(condition);
       final sanitized = ComputedListEvaluator.sanitizeCondition(condition);
