@@ -36,8 +36,23 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(left: spacer2, right: spacer2, top: spacer4),
-        child: PanelCard(
+        padding: const EdgeInsets.only(
+            left: spacer4, right: spacer4, top: spacer4),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(radius4),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF000000).withOpacity(.16),
+                offset: const Offset(0, 1),
+                spreadRadius: 0,
+                blurRadius: 2,
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(radius4),
+            child: PanelCard(
           type: PanelType.success,
           title: widget.label ??
               localizations.translate(
@@ -74,6 +89,8 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                   ),
                 ]
               : null,
+            ),
+          ),
         ),
       ),
       bottomNavigationBar: Offstage(
@@ -97,8 +114,8 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
             onPressed: () {
               context.router.popAndPush(BoundarySelectionRoute());
             },
-            label: localizations
-                .translate(i18.acknowledgementSuccess.downloadmoredata),
+            label: localizations.translate(
+                i18.acknowledgementSuccess.backToBoundarySelection),
           ),
         ]),
       ),
