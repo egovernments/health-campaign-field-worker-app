@@ -82,6 +82,8 @@ class TextWidget extends ResolvedFlowWidget {
         return theme.colorScheme.onSurface;
       case 'textSecondary':
         return theme.colorTheme.text.secondary;
+      case 'inputBorder':
+        return theme.colorTheme.generic.inputBorder;
       default:
         return null;
     }
