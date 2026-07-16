@@ -36,6 +36,8 @@ import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_location_tracker/data/oplog/oplog.dart';
 import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
 import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
+import 'package:dedup_engine/dedup_engine.dart';
+import '../dedup/dedup_provider_setup.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:dio/dio.dart';
@@ -125,7 +127,10 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ],
           child: Provider(
             create: (ctx) => NetworkManager(configuration: configuration),
-            child: child,
+            child: Provider<DedupEngine>(
+              create: (_) => createHcmDedupEngine(sql),
+              child: child,
+            ),
           ),
         );
       },

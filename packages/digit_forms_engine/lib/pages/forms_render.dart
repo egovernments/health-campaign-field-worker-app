@@ -80,6 +80,21 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     super.dispose();
   }
 
+  /// Whether the flow builder's action chain handles page lifecycle instead
+  /// of forms_render.dart. When true, popUntil after submit is skipped here
+  /// and deferred to the action chain (screen_builder.dart).
+  bool get _shouldDeferPop =>
+      widget.navigationParams?['_deferPopOnSubmit'] == true;
+
+  /// Pop all FormsRenderRoute pages — unless the flow builder deferred this.
+  void _popFormPagesIfNeeded() {
+    if (!_shouldDeferPop) {
+      context.router.popUntil((route) {
+        return route.settings.name != FormsRenderRoute.name;
+      });
+    }
+  }
+
   /// Update screen protection based on the current page's preventScreenCapture flag
   void _updateScreenProtection(bool? preventScreenCapture) {
     // Update the protection manager with the actual protection requirement
@@ -407,10 +422,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                           isEdit: widget.isEdit,
                                           schemaKey: widget.currentSchemaKey));
                                   // Pop all form pages
-                                  context.router.popUntil((route) {
-                                    return route.settings.name !=
-                                        FormsRenderRoute.name;
-                                  });
+                                  _popFormPagesIfNeeded();
                                   return;
                                 }
                               }
@@ -534,13 +546,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                         ctx,
                                                         rootNavigator: true,
                                                       ).pop();
-                                                      context.router
-                                                          .popUntil((route) {
-                                                        return route.settings
-                                                                .name !=
-                                                            FormsRenderRoute
-                                                                .name;
-                                                      });
+                                                      _popFormPagesIfNeeded();
                                                     },
                                                     type:
                                                         DigitButtonType.primary,
@@ -579,12 +585,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                 schemaKey:
                                                     widget.currentSchemaKey));
                                         // Pop all form pages (FormsRenderRoute)
-
-                                        /// FIXME: NOT BACKWARD COMPATIBLE
-                                        context.router.popUntil((route) {
-                                          return route.settings.name !=
-                                              FormsRenderRoute.name;
-                                        });
+                                        _popFormPagesIfNeeded();
                                         return; // Skip default logic
                                       }
                                       // context.read<FormsBloc>().add(
@@ -688,12 +689,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                     ctx,
                                                     rootNavigator: true,
                                                   ).pop();
-                                                  context.router
-                                                      .popUntil((route) {
-                                                    return route
-                                                            .settings.name !=
-                                                        FormsRenderRoute.name;
-                                                  });
+                                                  _popFormPagesIfNeeded();
                                                 },
                                                 type: DigitButtonType.primary,
                                                 size: DigitButtonSize.large),
@@ -727,12 +723,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                             schemaKey:
                                                 widget.currentSchemaKey));
                                     // Pop all form pages (FormsRenderRoute)
-
-                                    /// FIXME: NOT BACKWARD COMPATIBLE
-                                    context.router.popUntil((route) {
-                                      return route.settings.name !=
-                                          FormsRenderRoute.name;
-                                    });
+                                    _popFormPagesIfNeeded();
                                   }
                                 }
                               }
@@ -1096,9 +1087,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   schemaKey: widget.currentSchemaKey,
                                 ),
                               );
-                          context.router.popUntil((route) {
-                            return route.settings.name != FormsRenderRoute.name;
-                          });
+                          _popFormPagesIfNeeded();
                         }
                       },
                       type: DigitButtonType.primary,
@@ -1390,10 +1379,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                     schemaKey: widget.currentSchemaKey, isEdit: widget.isEdit));
 
                 // Pop all form pages (FormsRenderRoute)
-                /// FIXME: NOT BACKWARD COMPATIBLE
-                context.router.popUntil((route) {
-                  return route.settings.name != FormsRenderRoute.name;
-                });
+                _popFormPagesIfNeeded();
               },
               type: DigitButtonType.primary,
               size: DigitButtonSize.large,

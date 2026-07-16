@@ -81,6 +81,11 @@ dependencies:
   digit_formula_parser: ^1.2.0
   digit_flow_builder:
     path: ../../packages/digit_flow_builder
+  dedup_engine:
+    git:
+      url: https://github.com/egovernments/pes-university-projects.git
+      ref: dedup-engine-sarayu
+      path: PES-U/beneficiary-dedup-engine/dedup_engine
   jailbreak_root_detection: ^1.1.6
 
 dev_dependencies:

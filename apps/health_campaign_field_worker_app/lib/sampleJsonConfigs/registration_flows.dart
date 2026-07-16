@@ -3070,8 +3070,25 @@ final dynamic sampleFlows = {
             {
               "actions": [
                 {
+                  "actionType": "DEDUP_CHECK",
+                  "properties": {
+                    "minProbability": 70,
+                    "maxResults": 5,
+                    "scopeToBoundary": true,
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "HCM_DEDUP_CHECK_ERROR"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
                   "actionType": "UPDATE_IDENTIFIER_STATUS",
                   "properties": {
+                    "applyIf": "dedupDecision!=LINK",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -3086,7 +3103,14 @@ final dynamic sampleFlows = {
                 {
                   "actionType": "CREATE_EVENT",
                   "properties": {
+                    "applyIf": "dedupDecision!=LINK",
                     "entity": "INDIVIDUAL, PROJECTBENEFICIARY, MEMBER"
+                  }
+                },
+                {
+                  "actionType": "DEDUP_INDEX",
+                  "properties": {
+                    "applyIf": "dedupDecision!=LINK"
                   }
                 }
               ],
@@ -3477,8 +3501,25 @@ final dynamic sampleFlows = {
         {
           "actions": [
             {
+              "actionType": "DEDUP_CHECK",
+              "properties": {
+                "minProbability": 70,
+                "maxResults": 5,
+                "scopeToBoundary": true,
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "HCM_DEDUP_CHECK_ERROR"
+                    }
+                  }
+                ]
+              }
+            },
+            {
               "actionType": "UPDATE_IDENTIFIER_STATUS",
               "properties": {
+                "applyIf": "dedupDecision!=LINK",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -3493,7 +3534,14 @@ final dynamic sampleFlows = {
             {
               "actionType": "CREATE_EVENT",
               "properties": {
+                "applyIf": "dedupDecision!=LINK",
                 "entity": "INDIVIDUAL, PROJECTBENEFICIARY, MEMBER"
+              }
+            },
+            {
+              "actionType": "DEDUP_INDEX",
+              "properties": {
+                "applyIf": "dedupDecision!=LINK"
               }
             }
           ],
@@ -3802,8 +3850,25 @@ final dynamic sampleFlows = {
                   }
                 },
                 {
+                  "actionType": "DEDUP_CHECK",
+                  "properties": {
+                    "minProbability": 70,
+                    "maxResults": 5,
+                    "scopeToBoundary": true,
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "HCM_DEDUP_CHECK_ERROR"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
                   "actionType": "UPDATE_IDENTIFIER_STATUS",
                   "properties": {
+                    "applyIf": "dedupDecision!=LINK",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -3818,6 +3883,7 @@ final dynamic sampleFlows = {
                 {
                   "actionType": "CREATE_EVENT",
                   "properties": {
+                    "applyIf": "dedupDecision!=LINK",
                     "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
                     "onError": [
                       {
@@ -3827,6 +3893,12 @@ final dynamic sampleFlows = {
                         }
                       }
                     ]
+                  }
+                },
+                {
+                  "actionType": "DEDUP_INDEX",
+                  "properties": {
+                    "applyIf": "dedupDecision!=LINK"
                   }
                 },
                 {
@@ -5178,8 +5250,25 @@ final dynamic sampleFlows = {
               }
             },
             {
+              "actionType": "DEDUP_CHECK",
+              "properties": {
+                "minProbability": 70,
+                "maxResults": 5,
+                "scopeToBoundary": true,
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "HCM_DEDUP_CHECK_ERROR"
+                    }
+                  }
+                ]
+              }
+            },
+            {
               "actionType": "UPDATE_IDENTIFIER_STATUS",
               "properties": {
+                "applyIf": "dedupDecision!=LINK",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -5194,6 +5283,7 @@ final dynamic sampleFlows = {
             {
               "actionType": "CREATE_EVENT",
               "properties": {
+                "applyIf": "dedupDecision!=LINK",
                 "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
                 "onError": [
                   {
@@ -5203,6 +5293,12 @@ final dynamic sampleFlows = {
                     }
                   }
                 ]
+              }
+            },
+            {
+              "actionType": "DEDUP_INDEX",
+              "properties": {
+                "applyIf": "dedupDecision!=LINK"
               }
             },
             {

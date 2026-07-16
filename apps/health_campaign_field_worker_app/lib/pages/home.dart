@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:attendance_management/utils/utils.dart';
 import 'package:collection/collection.dart';
@@ -55,8 +54,8 @@ import '../sampleJsonConfigs/manage_stock.dart';
 import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
-import '../sampleJsonConfigs/registration_smc_flows.dart';
 import '../sampleJsonConfigs/registration_flows.dart';
+import '../sampleJsonConfigs/registration_smc_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/attendance_utils.dart';
 import '../utils/date_util_attendance.dart';
@@ -2196,33 +2195,32 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (schemaJsonRaw != null) {
-                    final allSchemas =
-                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                    final data = allSchemas['REGISTRATION'];
-
-                    final registrationDeliveryData = data?['data'];
-                    final flowsData = (registrationDeliveryData['flows']
-                                as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                    FlowRegistry.setConfig(flowsData);
-                    NavigationRegistry.setupNavigation(ctx);
-
-                    ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName: registrationDeliveryData["initialPage"]),
-                    );
-                  } else {
+                  // if (schemaJsonRaw != null) {
+                  //   final allSchemas =
+                  //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                  //   final data = allSchemas['REGISTRATION'];
+                  //
+                  //   final registrationDeliveryData = data?['data'];
+                  //   final flowsData = (registrationDeliveryData['flows']
+                  //               as List<dynamic>?)
+                  //           ?.map((e) => Map<String, dynamic>.from(e as Map))
+                  //           .toList() ??
+                  //       [];
+                  //   FlowRegistry.setConfig(flowsData);
+                  //   NavigationRegistry.setupNavigation(ctx);
+                  //
+                  //   ctx.router.push(
+                  //     FlowBuilderHomeRoute(
+                  //         pageName: registrationDeliveryData["initialPage"]),
+                  //   );
+                  // } else {
                   FlowRegistry.setConfig(
-                      sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
+                      sampleFlows["flows"] as List<Map<String, dynamic>>);
                   NavigationRegistry.setupNavigation(ctx);
                   ctx.router.push(
-                    FlowBuilderHomeRoute(
-                        pageName: sampleSMCFlows["initialPage"]),
+                    FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
                   );
-                  }
+                  // }
                 } catch (e) {
                   debugPrint('error $e');
                 }

@@ -236,6 +236,7 @@ class ActionHandler {
             for (final subActionJson in subActions) {
               final action = ActionConfig.fromJson(subActionJson);
               contextData = await execute(action, context, contextData);
+              if (contextData['_abortActionChain'] == true) break;
             }
             break; // Execute only the first matching condition in this group
           }
@@ -247,6 +248,9 @@ class ActionHandler {
         contextData = await execute(action, context, contextData);
         i++;
       }
+
+      // If an executor requested aborting the chain, stop immediately.
+      if (contextData['_abortActionChain'] == true) break;
     }
     return contextData;
   }

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_flow_builder/utils/scanner_comparison_utils.dart';
@@ -166,14 +167,22 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
     };
 
     if (onSubmit != null) {
-      // Clear form state via registry
-      FormSubmissionRegistry().clearForm(_schemaKey);
-
       contextData = await ActionHandler.executeActions(
         onSubmit,
         context,
         contextData,
       );
+
+      if (contextData['_abortActionChain'] != true) {
+        // Chain completed — clear form and pop any deferred FormsRenderRoute
+        // pages that forms_render.dart skipped (via _deferPopOnSubmit flag).
+        FormSubmissionRegistry().clearForm(_schemaKey);
+        if (mounted) {
+          context.router.popUntil((route) {
+            return route.settings.name != 'FormsRenderRoute';
+          });
+        }
+      }
     }
   }
 
@@ -262,12 +271,18 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
         };
       }
 
+      // When the flow has an onAction chain, tell forms_render.dart to
+      // skip its automatic popUntil after submit.  The action chain's
+      // NAVIGATION executor (or an abort) will handle page lifecycle.
+      final hasActionChain = widget.config['onAction'] != null;
+
       return _FormScreenWrapper(
         schemaKey: schemaKey,
         defaultValues: defaultValues,
         navigationParams: widget.navigationParams,
         compositeKey: _compositeKey,
         onSecondaryAction: onSecondaryAction,
+        deferPopOnSubmit: hasActionChain,
       );
     } else if (screenType == 'TEMPLATE') {
       return LayoutRendererPage(
@@ -286,6 +301,7 @@ class _FormScreenWrapper extends LocalizedStatefulWidget {
   final Map<String, dynamic>? navigationParams;
   final String compositeKey;
   final void Function({Map<String, dynamic>? popupData})? onSecondaryAction;
+  final bool deferPopOnSubmit;
 
   const _FormScreenWrapper({
     required this.schemaKey,
@@ -293,6 +309,7 @@ class _FormScreenWrapper extends LocalizedStatefulWidget {
     this.navigationParams,
     required this.compositeKey,
     this.onSecondaryAction,
+    this.deferPopOnSubmit = false,
   });
 
   @override
@@ -326,6 +343,7 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
           ...?widget.navigationParams,
           ...?registryNavParams,
           if (instanceId != null) '_instanceId': instanceId,
+          if (widget.deferPopOnSubmit) '_deferPopOnSubmit': true,
         };
 
         return BlocBuilder<FormsBloc, FormsState>(builder: (context, state) {

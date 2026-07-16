@@ -15,6 +15,8 @@ import 'executors/toast_executor.dart';
 import 'executors/clear_state_executor.dart';
 import 'executors/open_scanner_executor.dart';
 import 'executors/reverse_transformer_executor.dart';
+import 'executors/dedup_check_executor.dart';
+import 'executors/dedup_index_executor.dart';
 
 /// Registry for managing action executors
 class ActionExecutorRegistry {
@@ -46,6 +48,8 @@ class ActionExecutorRegistry {
     register('OPEN_POPUP', OpenPopupExecutor());
     register('CLOSE_POPUP', ClosePopupExecutor());
     register('CUSTOM_DATA', CustomDataExecutor());
+    register('DEDUP_CHECK', DedupCheckExecutor());
+    register('DEDUP_INDEX', DedupIndexExecutor());
   }
 
   /// Register a custom executor
