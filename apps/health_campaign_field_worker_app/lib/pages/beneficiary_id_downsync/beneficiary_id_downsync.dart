@@ -18,6 +18,7 @@ import '../../blocs/unique_beneficiary_id/unique_id.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../widgets/download_progress/download_spinner_content.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import 'id_count_popup.dart';
@@ -36,18 +37,11 @@ class BeneficiaryIdDownSyncPage extends LocalizedStatefulWidget {
 
 class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
   int beneficiaryIdCount = 0, beneficiaryIdTotalCount = 0;
-  bool _isProgressDialogVisible = false;
-  final ProgressDialog _progressDialog = ProgressDialog();
+  bool _isFetchingVisible = false;
 
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _progressDialog.dispose();
-    super.dispose();
   }
 
   @override
@@ -87,34 +81,84 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                   state.maybeWhen(
                       orElse: () {},
                       idCount: (availableCount, totalCount) {
-                        _progressDialog.closeProgressDialog();
-                        _isProgressDialogVisible = false;
-                        beneficiaryIdCount = availableCount;
-                        beneficiaryIdTotalCount = totalCount;
-                      },
-                      ids: (ids) {
-                        _isProgressDialogVisible = false;
+                        setState(() {
+                          beneficiaryIdCount = availableCount;
+                          beneficiaryIdTotalCount = totalCount;
+                        });
                       },
                       fetching: (currentCount, totalCount) {
-                        if (_isProgressDialogVisible == false) {
-                          _progressDialog.showProgressDialog(
+                        if (!_isFetchingVisible) {
+                          _isFetchingVisible = true;
+                          showCustomPopup(
                             context: context,
-                            localizations: AppLocalizations.of(context),
-                            currentCount: currentCount,
-                            totalCount: totalCount,
-                            theme: theme,
-                          );
-                          _isProgressDialogVisible = true;
-                        } else {
-                          _progressDialog.updateProgressDialog(
-                            currentCount: currentCount,
-                            totalCount: totalCount,
+                            barrierDismissible: false,
+                            builder: (ctx) => Popup(
+                              type: PopUpType.simple,
+                              title: '',
+                              additionalWidgets: [
+                                DownloadSpinnerContent(
+                                  title: localizations.translate(
+                                    i18.beneficiaryId.fetchingBeneficiaryIds,
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
                         }
                       },
+                      ids: (ids) {
+                        _isFetchingVisible = false;
+                        Navigator.of(context, rootNavigator: true)
+                            .popUntil((route) => route is! PopupRoute);
+                        final bool dataFound = ids.isNotEmpty;
+                        showCustomPopup(
+                          context: context,
+                          builder: (ctx) => Popup(
+                            type: PopUpType.simple,
+                            title: localizations.translate(
+                              dataFound
+                                  ? i18.beneficiaryId.dataFoundBeneficiaryIds
+                                  : i18.beneficiaryId.dataNotFoundBeneficiaryIds,
+                            ),
+                            titleIcon: Icon(
+                              dataFound
+                                  ? Icons.check_circle_outline
+                                  : Icons.warning_amber_rounded,
+                              color: dataFound
+                                  ? theme.colorTheme.alert.success
+                                  : theme.colorTheme.alert.error,
+                              size: 40,
+                            ),
+                            description: localizations.translate(
+                              dataFound
+                                  ? i18.beneficiaryId
+                                      .dataFoundBeneficiaryIdsContent
+                                  : i18.beneficiaryId
+                                      .dataNotFoundBeneficiaryIdsContent,
+                            ),
+                            actions: [
+                              DigitButton(
+                                capitalizeLetters: false,
+                                type: DigitButtonType.primary,
+                                size: DigitButtonSize.large,
+                                mainAxisSize: MainAxisSize.max,
+                                onPressed: () {
+                                  Navigator.of(ctx).pop();
+                                  context.read<UniqueIdBloc>().add(
+                                        const UniqueIdEvent.fetchIdCount(),
+                                      );
+                                },
+                                label: localizations
+                                    .translate(i18.common.corecommonclose),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                       failed: (String? error) {
-                        _progressDialog.closeProgressDialog();
-                        _isProgressDialogVisible = false;
+                        _isFetchingVisible = false;
+                        Navigator.of(context, rootNavigator: true)
+                            .popUntil((route) => route is! PopupRoute);
                         if (error != null) {
                           Toast.showToast(context,
                               message: localizations.translate(
@@ -124,8 +168,9 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                         }
                       },
                       limitExceeded: (String? error) {
-                        _progressDialog.closeProgressDialog();
-                        _isProgressDialogVisible = false;
+                        _isFetchingVisible = false;
+                        Navigator.of(context, rootNavigator: true)
+                            .popUntil((route) => route is! PopupRoute);
                         if (error != null) {
                           showCustomPopup(
                               context: context,
@@ -172,8 +217,9 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                         }
                       },
                       noInternet: () {
-                        _progressDialog.closeProgressDialog();
-                        _isProgressDialogVisible = false;
+                        _isFetchingVisible = false;
+                        Navigator.of(context, rootNavigator: true)
+                            .popUntil((route) => route is! PopupRoute);
                         showCustomPopup(
                             context: context,
                             builder: (ctx) {
