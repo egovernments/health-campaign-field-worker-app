@@ -297,6 +297,8 @@ class Common {
 
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
 
+  String get chooseLanguage => 'CORE_COMMON_CHOOSE_LANGUAGE';
+
   String get coreCommonSyncProgress => 'CORE_COMMON_SYNC_PROGRESS';
 
   String get coreCommonDataSynced => 'CORE_COMMON_DATA_SYNCED';
@@ -952,6 +954,16 @@ class BeneficiaryID {
   String get beneficiaryIdsReFetch => 'BENEFICIARY_IDS_RE_FETCH';
 
   String get totalBeneficiaryIds => 'TOTAL_BENEFICIARY_IDS';
+
+  String get fetchingBeneficiaryIds => 'FETCHING_BENEFICIARY_IDS';
+
+  String get dataFoundBeneficiaryIds => 'DATA_FOUND_BENEFICIARY_IDS';
+
+  String get dataFoundBeneficiaryIdsContent => 'DATA_FOUND_BENEFICIARY_IDS_CONTENT';
+
+  String get dataNotFoundBeneficiaryIds => 'DATA_NOT_FOUND_BENEFICIARY_IDS';
+
+  String get dataNotFoundBeneficiaryIdsContent => 'DATA_NOT_FOUND_BENEFICIARY_IDS_CONTENT';
 }
 
 class DataShare {
@@ -1036,6 +1048,8 @@ class AcknowledgementSuccess {
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 
   String get dataDownloadedSuccessDesc => 'DATA_DOWNLOADED_SUCCESS_DESC';
+
+  String get backToBoundarySelection => 'BACK_TO_BOUNDARY_SELECTION';
 }
 
 class ProjectSelection {
@@ -1475,6 +1489,9 @@ class BeneficiaryDetails {
 
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
 
+  String get unableToCheckDataInServerDescription =>
+      'FAILED_TO_CHECK_DATA_IN_SERVER_DESCRIPTION';
+
   String get dataFound => 'DATA_FOUND';
 
   String get noDataFound => 'NO_DATA_FOUND';
@@ -1484,6 +1501,8 @@ class BeneficiaryDetails {
   String get noDataFoundContent => 'NO_DATA_FOUND_CONTENT';
 
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
+
+  String get fetchingData => 'CORE_COMMON_FETCHING_DATA';
 
   String get insufficientStorage => 'INSUFFICIENT_STORAGE_WARNING';
 
