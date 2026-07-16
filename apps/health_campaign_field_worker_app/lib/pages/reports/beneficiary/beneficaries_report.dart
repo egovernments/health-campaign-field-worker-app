@@ -270,11 +270,6 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                               i18.beneficiaryDetails.boundary,
                             ): localizations.translate(result.locality!),
                             localizations.translate(
-                              i18.beneficiaryDetails.status,
-                            ): localizations.translate(
-                              i18.beneficiaryDetails.downloadcompleted,
-                            ),
-                            localizations.translate(
                               i18.beneficiaryDetails.downloadtime,
                             ): date,
                             localizations.translate(

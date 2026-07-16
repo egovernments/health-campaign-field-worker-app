@@ -244,14 +244,14 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                         localizations
                             .translate(labelFromSchema!)
                             .isNotEmpty) ...[
-                      Text(
-                        localizations.translate(labelFromSchema!),
-                        style: textTheme.headingS.copyWith(
-                          color: theme.colorTheme.text.primary,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: spacer4),
+                        child: Text(
+                          localizations.translate(labelFromSchema!),
+                          style: textTheme.bodyL.copyWith(
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: spacer1,
                       ),
                     ],
                     Column(

@@ -1,5 +1,6 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -42,10 +43,23 @@ class ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return DigitCard(cardType: CardType.secondary, children: [
-      SelectionCard<DeliveryProductVariant>(
+      Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(spacer4),
+        decoration: BoxDecoration(
+          color: theme.colorTheme.paper.primary,
+          borderRadius: BorderRadius.circular(spacer1),
+          border: Border.all(
+            color: theme.colorTheme.generic.divider,
+            width: 1,
+          ),
+        ),
+        child: SelectionCard<DeliveryProductVariant>(
         width: MediaQuery.of(context).size.width * .8,
-        showParentContainer: true,
+        showParentContainer: false,
         options: widget.variants ?? [],
         readOnly: widget.readOnly,
         onSelectionChanged: (selectedOptions) {
@@ -79,6 +93,7 @@ class ResourceBeneficiaryCardState
           );
         },
         allowMultipleSelection: false,
+        ),
       ),
       ReactiveWrapperField(
         formControlName: 'quantityDistributed.${widget.cardIndex}',
