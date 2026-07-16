@@ -205,7 +205,7 @@ class _BoundarySelectionPageState
                                             DownloadSpinnerContent(
                                               title: localizations.translate(
                                                 i18.beneficiaryDetails
-                                                    .dataDownloadInProgress,
+                                                    .fetchingData,
                                               ),
                                             ),
                                           ],
@@ -363,12 +363,6 @@ class _BoundarySelectionPageState
                                             i18.beneficiaryDetails.boundary,
                                           ): localizations
                                               .translate(result.locality!),
-                                          localizations.translate(
-                                            i18.beneficiaryDetails.status,
-                                          ): localizations.translate(
-                                            i18.beneficiaryDetails
-                                                .downloadcompleted,
-                                          ),
                                           localizations.translate(
                                             i18.beneficiaryDetails.downloadtime,
                                           ): date,
@@ -530,7 +524,10 @@ class _BoundarySelectionPageState
                                       context.router
                                           .popAndPush((AcknowledgementRoute(
                                         isDataRecordSuccess: true,
-                                        description: '',
+                                        description: localizations.translate(
+                                          i18.acknowledgementSuccess
+                                              .dataDownloadedSuccessDesc,
+                                        ),
                                         label: localizations.translate(i18
                                             .acknowledgementSuccess
                                             .dataDownloadedSuccessLabel),
@@ -538,12 +535,6 @@ class _BoundarySelectionPageState
                                           localizations.translate(
                                             i18.beneficiaryDetails.boundary,
                                           ): boundaryNames,
-                                          localizations.translate(
-                                            i18.beneficiaryDetails.status,
-                                          ): localizations.translate(
-                                            i18.beneficiaryDetails
-                                                .downloadcompleted,
-                                          ),
                                           localizations.translate(
                                             i18.beneficiaryDetails.downloadtime,
                                           ): date,
