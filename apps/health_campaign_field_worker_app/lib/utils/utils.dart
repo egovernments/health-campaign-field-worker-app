@@ -257,6 +257,11 @@ void showDownloadDialog(
         context,
         type: DialogType.failed,
         label: model.title,
+        description: dialogType == DigitProgressDialogType.checkFailed
+            ? AppLocalizations.of(context).translate(
+                i18.beneficiaryDetails.unableToCheckDataInServerDescription,
+              )
+            : null,
         primaryAction: DigitDialogActions(
           label: model.primaryButtonLabel ?? '',
           action: (ctx) {
@@ -294,6 +299,12 @@ void showDownloadDialog(
             type: PopUpType.alert,
             title: model.title,
             description: model.content,
+            onCrossTap: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.read<BeneficiaryDownSyncBloc>().add(
+                    const DownSyncResetStateEvent(),
+                  );
+            },
             titleIcon: Icon(
               Icons.warning,
               size: spacer12,
@@ -386,10 +397,10 @@ void showDownloadDialog(
             dialogType == DigitProgressDialogType.insufficientStorage
                 ? Icons.warning
                 : Icons.info_outline_rounded,
-            color: dialogType == DigitProgressDialogType.insufficientStorage
-                ? Theme.of(context).colorTheme.alert.error
-                : Theme.of(context).colorTheme.text.primary,
+            size: spacer8,
+            color: Theme.of(context).colorTheme.alert.error,
           ),
+          titleIconAlignment: CrossAxisAlignment.center,
           description: model.content,
           actions: [
             DigitButton(
