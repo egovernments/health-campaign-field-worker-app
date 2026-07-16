@@ -306,7 +306,13 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
     }
 
     return DigitCard(
-      margin: const EdgeInsets.all(spacer2),
+      // Aligned with home tiles' visible edge at 12px from the device edge
+      // (tiles: spacer2 grid padding + 4px showcase wrapper). Bottom is 2px
+      // larger to widen the gap to the progress bar card below.
+      margin: const EdgeInsets.symmetric(horizontal: spacer3, vertical: spacer2)
+          .copyWith(bottom: spacer2 + 2),
+      padding: const EdgeInsets.all(spacer4),
+      borderRadius: BorderRadius.circular(radius1),
       children: [
         // Facility selector (only show if multiple facilities and not distributor)
         if (_facilities.length > 1 && !_isDistributor)
@@ -362,7 +368,7 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
               localizations.translate(product.sku ?? product.id);
 
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: spacer1),
+            padding: const EdgeInsets.symmetric(vertical: spacer2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

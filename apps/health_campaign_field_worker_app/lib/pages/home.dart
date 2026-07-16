@@ -1585,16 +1585,28 @@ class _HomePageState extends LocalizedState<HomePage> {
           height: MediaQuery.of(context).size.height,
           child: ScrollableContent(
             slivers: [
-              SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return homeItems.elementAt(index);
-                  },
-                  childCount: homeItems.length,
+              SliverPadding(
+                // Each tile is showcase-wrapped (+4px), so spacer2 here puts
+                // the visible tile edge at 12px from the device edge.
+                padding: const EdgeInsets.symmetric(
+                  horizontal: spacer2,
+                  vertical: spacer2,
                 ),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 145,
-                  childAspectRatio: 104 / 128,
+                sliver: SliverGrid(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return homeItems.elementAt(index);
+                    },
+                    childCount: homeItems.length,
+                  ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    // 2px tighter than spacer3 to give each tile a bit more
+                    // width; no design token exists for 10px.
+                    crossAxisSpacing: spacer3 - 2,
+                    mainAxisSpacing: spacer4,
+                    childAspectRatio: 104 / 128,
+                  ),
                 ),
               ),
             ],

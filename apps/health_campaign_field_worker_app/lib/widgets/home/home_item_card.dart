@@ -1,5 +1,6 @@
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/theme/radius.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,8 @@ class HomeItemCard extends StatelessWidget {
     return DigitCard(
         onPressed: onPressed,
         padding: const EdgeInsets.all(spacer1).copyWith(top: spacer1),
-        margin: const EdgeInsets.all(spacer2),
+        margin: EdgeInsets.zero,
+        borderRadius: BorderRadius.circular(radius1),
         inline: true,
         children: [
           const Padding(padding: EdgeInsets.only(top: spacer1)),
