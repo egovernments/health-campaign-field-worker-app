@@ -24,6 +24,10 @@ import '../pages/current_boundary.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
+import '../pages/face_auth_history.dart';
+import '../pages/face_gate.dart';
+import '../pages/pin_fallback.dart';
+import '../pages/non_mobile_user/non_mobile_face_enroll.dart';
 import '../pages/non_mobile_user/non_mobile_user_list.dart';
 import '../pages/peer_to_peer/data_receiver.dart';
 import '../pages/peer_to_peer/data_share_home.dart';
@@ -81,6 +85,9 @@ class AppRouter extends _$AppRouter {
           page: PermissionsRoute.page,
           path: 'permissions-page',
         ),
+        AutoRoute(page: FaceGateRoute.page, path: 'face-gate'),
+        AutoRoute(page: FaceAuthHistoryRoute.page, path: 'face-auth-history'),
+        AutoRoute(page: PinFallbackRoute.page, path: 'pin-fallback'),
         AutoRoute(page: HomeRoute.page, path: 'home'),
         AutoRoute(page: ProfileRoute.page, path: 'profile'),
         AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
@@ -93,6 +100,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: NonMobileUserListRoute.page,
           path: 'non-mobile-users',
+        ),
+        AutoRoute(
+          page: NonMobileFaceEnrollRoute.page,
+          path: 'non-mobile-face-enroll',
         ),
         // DSS Dashboard Routes
         AutoRoute(

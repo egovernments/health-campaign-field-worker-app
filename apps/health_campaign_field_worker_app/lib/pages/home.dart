@@ -76,6 +76,7 @@ import '../widgets/attendance/group_list_view_widget.dart';
 import '../widgets/attendance/signature_compare_dialog_widget.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
+import '../widgets/face_auth/face_auth_session_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/inventory/custom_facility_widgets.dart';
@@ -109,10 +110,47 @@ class _HomePageState extends LocalizedState<HomePage> {
   final _syncDebouncer = Debouncer(seconds: 5);
   final StreamController<double> stockDownloadProgress =
       StreamController<double>.broadcast();
+  bool _faceGateActive = false;
+
+  /// Check if the logged-in user needs face enrollment (first time only).
+  /// Routes to the face gate, which handles enrollment + verification.
+  void _checkFaceEnrollment() async {
+    try {
+      final individualId = await LocalSecureStore.instance.userIndividualId;
+      if (individualId == null || !mounted) return;
+
+      final isEnrollmentComplete =
+          await LocalSecureStore.instance.isFaceEnrollmentComplete;
+      if (isEnrollmentComplete || !mounted) return;
+
+      _faceGateActive = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          context.router.push(
+            FaceGateRoute(
+              onVerified: () {
+                _faceGateActive = false;
+                if (mounted) {
+                  context.router.popUntilRouteWithName(HomeRoute.name);
+                }
+              },
+            ),
+          ).then((_) {
+            _faceGateActive = false;
+          });
+        }
+      });
+    } catch (e) {
+      debugPrint('HomePage: _checkFaceEnrollment error: $e');
+    }
+  }
 
   @override
   initState() {
     super.initState();
+
+    // Check if the user needs face enrollment (first time after login).
+    _checkFaceEnrollment();
 
     // If background service was killed with the app, release orphaned lock
     // and restart the service.
@@ -1766,6 +1804,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     showcaseFor: showcaseKeys.toSet().toList(),
                   ),
                 ),
+                const FaceAuthSessionCard(),
                 // Show stock balance card for users with stock management access (not for Polio)
                 if (!isPolio &&
                     state.actionsWrapper.actions

@@ -39,6 +39,9 @@ import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../blocs/push_notification/push_notification.dart';
 import '../data/local_store/app_shared_preferences.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
+import '../blocs/face_auth/face_gate_bloc.dart';
+import '../services/worker_registry_service.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/local/localization.dart';
@@ -211,6 +214,33 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                     drawer: showDrawer ? drawerWidget(context) : null,
                     body: MultiBlocProvider(
                       providers: [
+                        // Face-auth: provide the ML service, embedding store,
+                        // and gate/verification blocs so the FaceGate route
+                        // (pushed from Home) can read them.
+                        RepositoryProvider<FaceModelService>(
+                          create: (_) => FaceModelService()..initialize(),
+                        ),
+                        RepositoryProvider<FaceEmbeddingRepository>(
+                          create: (ctx) =>
+                              FaceEmbeddingRepository(ctx.read<Isar>()),
+                        ),
+                        BlocProvider(
+                          create: (ctx) => FaceGateBloc(
+                            repository: ctx.read<FaceEmbeddingRepository>(),
+                            workerRegistryService: WorkerRegistryService(
+                              dio: DioClient().dio,
+                              tenantId: envConfig.variables.tenantId,
+                            ),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (ctx) => FaceVerificationBloc(
+                            faceModelService: ctx.read<FaceModelService>(),
+                            embeddingRepository:
+                                ctx.read<FaceEmbeddingRepository>(),
+                          ),
+                        ),
+                        BlocProvider(create: (_) => LivenessBloc()),
                         // INFO : Need to add bloc of package Here
                         BlocProvider(
                           create: (context) {
