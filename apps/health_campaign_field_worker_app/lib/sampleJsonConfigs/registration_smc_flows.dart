@@ -455,7 +455,11 @@ final dynamic sampleSMCFlows = {
                     "key": "beneficiaryId",
                     "value": "{{navigation.selectedIndividualIdentifierId}}"
                   },
-                  {"key": "childName", "value": "{{contextData.0.individuals.IndividualModel.name.givenName}}"},
+                  {
+                    "key": "childName",
+                    "value":
+                        "{{contextData.0.individuals.IndividualModel.name.givenName}}"
+                  },
                   {"key": "ageInMonths", "value": "{{navigation.ageInMonths}}"},
                   {"key": "gender", "value": "{{navigation.gender}}"},
                   {"key": "headName", "value": "{{navigation.headName}}"},
@@ -2944,14 +2948,8 @@ final dynamic sampleSMCFlows = {
               "validations": [],
               "errorMessage": "",
               "labelPlaceHolders": [
-                {
-                  "key": "ID",
-                  "value": "{{navigation.beneficiaryId}}"
-                },
-                {
-                  "key": "NAME",
-                  "value": "{{navigation.childName}}"
-                }
+                {"key": "ID", "value": "{{navigation.beneficiaryId}}"},
+                {"key": "NAME", "value": "{{navigation.childName}}"}
               ]
             },
             {

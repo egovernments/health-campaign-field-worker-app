@@ -1983,6 +1983,11 @@ final dynamic sampleInventoryFlows = {
                 "operation": "equalsAny"
               },
               {
+                "key": "referenceId",
+                "value": "{{singleton.selectedProject.id}}",
+                "operation": "equals"
+              },
+              {
                 "key": "additionalFields",
                 "value": "\"value\":\"REJECTED\"",
                 "operation": "notContains"
