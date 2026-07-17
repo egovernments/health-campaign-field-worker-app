@@ -405,6 +405,10 @@ class FormEntityMapper {
       existingFields[key] = value;
     });
 
+    // Filter out entries with null or empty string values
+    existingFields.removeWhere((key, value) =>
+        value == null || value.toString().trim().isEmpty);
+
     final mergedFields = existingFields.entries
         .map((e) => {'key': e.key, 'value': e.value})
         .toList();
@@ -753,10 +757,14 @@ class FormEntityMapper {
       if (value != null && value.toString().trim().isNotEmpty) {
         fieldsList.add({
           'key': customKey,
-          'value': value is DateTime ? value.millisecondsSinceEpoch : value
+          'value': value is DateTime ? value.millisecondsSinceEpoch : value,
         });
       }
     });
+
+    // Remove any entries where value is null or empty string (safety net)
+    fieldsList.removeWhere((f) =>
+        f['value'] == null || f['value'].toString().trim().isEmpty);
 
     if (fieldsList.isEmpty) return null;
 
@@ -1296,6 +1304,10 @@ class FormEntityMapper {
           mergedFields.add({'key': entry.key, 'value': entry.value});
         }
       }
+
+      // Filter out entries with null or empty string values
+      mergedFields.removeWhere((f) =>
+          f['value'] == null || f['value'].toString().trim().isEmpty);
 
       mergedData['additionalFields'] = {
         'schema': modelName.replaceAll('Model', ''),

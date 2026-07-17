@@ -55,8 +55,8 @@ import '../sampleJsonConfigs/manage_stock.dart';
 import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
-import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/registration_smc_flows.dart';
+import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/attendance_utils.dart';
 import '../utils/date_util_attendance.dart';
@@ -719,8 +719,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       // `attendees` here would lock Submit forever (collectionLength can
       // never reach the raw count). Keep only actives.
       final nowMs = DateTime.now().millisecondsSinceEpoch;
-      final attendees = ((attendanceRegisterModel?.attendees ?? []) as List)
-          .where((a) {
+      final attendees =
+          ((attendanceRegisterModel?.attendees ?? []) as List).where((a) {
         dynamic raw;
         try {
           raw = (a as dynamic).denrollmentDate;
@@ -2215,13 +2215,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                           pageName: registrationDeliveryData["initialPage"]),
                     );
                   } else {
-                    FlowRegistry.setConfig(
-                        sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
-                    NavigationRegistry.setupNavigation(ctx);
-                    ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName: sampleSMCFlows["initialPage"]),
-                    );
+                  FlowRegistry.setConfig(
+                      sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
+                  NavigationRegistry.setupNavigation(ctx);
+                  ctx.router.push(
+                    FlowBuilderHomeRoute(
+                        pageName: sampleSMCFlows["initialPage"]),
+                  );
                   }
                 } catch (e) {
                   debugPrint('error $e');
