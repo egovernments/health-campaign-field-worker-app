@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/app_localization.dart';
 import '../blocs/liveness_bloc.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../data/liveness_detection_service.dart';
 
 /// Animated overlay that displays liveness challenge instructions
@@ -29,12 +31,13 @@ class LivenessChallengeView extends StatelessWidget {
           passed: () => _StatusOverlay(
             icon: Icons.check_circle,
             color: Colors.green,
-            text: 'Liveness verified!',
+            text: FaceVerificationLocalization.localized(context,
+                i18.faceVerification.livenessPassed, 'Liveness verified!'),
           ),
           failed: (reason) => _StatusOverlay(
             icon: Icons.error,
             color: Colors.red,
-            text: reason,
+            text: FaceVerificationLocalization.localized(context, reason),
           ),
           orElse: () => const SizedBox.shrink(),
         );
@@ -74,7 +77,7 @@ class _ChallengeOverlay extends StatelessWidget {
         const SizedBox(height: 12),
         // Instruction text
         Text(
-          instruction,
+          FaceVerificationLocalization.localized(context, instruction),
           textAlign: TextAlign.center,
           style: const TextStyle(
             color: Colors.white,

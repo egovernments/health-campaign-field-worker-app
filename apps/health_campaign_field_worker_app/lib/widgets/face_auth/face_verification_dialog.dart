@@ -9,7 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/face_auth/face_gate_bloc.dart';
+import '../../blocs/localization/app_localization.dart';
 import '../../data/remote_client.dart';
+import '../../data/repositories/remote/mdms.dart';
+import '../../services/face_auth_config.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 import '../../services/worker_registry_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/extensions/extensions.dart';
@@ -61,12 +65,24 @@ Future<FaceVerificationResult> showFaceVerificationDialog(
                 dio: DioClient().dio,
                 tenantId: envConfig.variables.tenantId,
               ),
+              configLoader: () => MdmsRepository(DioClient().dio)
+                  .searchFaceAuthConfig(
+                envConfig.variables.mdmsApiPath,
+                envConfig.variables.tenantId,
+              ),
             ),
           ),
           BlocProvider(
             create: (_) => FaceVerificationBloc(
               faceModelService: modelService,
               embeddingRepository: repo,
+              similarityThreshold: FaceAuthConfig.defaultFaceMatchThreshold,
+              thresholdLoader: () async => (await MdmsRepository(DioClient().dio)
+                      .searchFaceAuthConfig(
+                    envConfig.variables.mdmsApiPath,
+                    envConfig.variables.tenantId,
+                  ))
+                  ?.faceMatchThreshold,
             ),
           ),
           BlocProvider(
@@ -218,8 +234,10 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
                 );
           },
           guidanceText: attemptNumber != null
-              ? 'Try again — look at the camera'
-              : 'Position your face to verify',
+              ? AppLocalizations.of(context)
+                  .translate(i18.faceAuth.tryAgainLookCamera)
+              : AppLocalizations.of(context)
+                  .translate(i18.faceAuth.positionFace),
         ),
 
         // Back button
@@ -319,7 +337,7 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Face Verified',
+              AppLocalizations.of(context).translate(i18.faceAuth.gateVerified),
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -340,7 +358,11 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
             ],
             const SizedBox(height: 12),
             Text(
-              isFace ? 'Face match' : 'PIN verified',
+              isFace
+                  ? AppLocalizations.of(context)
+                      .translate(i18.faceAuth.faceMatch)
+                  : AppLocalizations.of(context)
+                      .translate(i18.faceAuth.pinVerified),
               style: TextStyle(
                 fontSize: 15,
                 color: colorTheme.text.secondary,
@@ -396,7 +418,8 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
             ),
             const SizedBox(height: 28),
             Text(
-              'Face Verification Failed',
+              AppLocalizations.of(context)
+                  .translate(i18.faceAuth.verificationFailed),
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -413,7 +436,8 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
             ),
             const SizedBox(height: 40),
             DigitButton(
-              label: 'Use PIN Instead',
+              label: AppLocalizations.of(context)
+                  .translate(i18.faceAuth.reVerificationUsePinInstead),
               onPressed: () {
                 context
                     .read<FaceGateBloc>()
@@ -426,7 +450,8 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
             ),
             const SizedBox(height: 16),
             DigitButton(
-              label: 'Cancel',
+              label: AppLocalizations.of(context)
+                  .translate(i18.common.coreCommonCancel),
               onPressed: _closeFailed,
               type: DigitButtonType.tertiary,
               size: DigitButtonSize.medium,
@@ -472,7 +497,8 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
             ),
             const SizedBox(height: 28),
             Text(
-              'Something Went Wrong',
+              AppLocalizations.of(context)
+                  .translate(i18.faceAuth.somethingWentWrong),
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -489,7 +515,8 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
             ),
             const SizedBox(height: 40),
             DigitButton(
-              label: 'Try Again',
+              label: AppLocalizations.of(context)
+                  .translate(i18.common.coreCommonRetry),
               onPressed: () => context
                   .read<FaceGateBloc>()
                   .add(const FaceGateEvent.checkEnrollment()),
@@ -500,7 +527,8 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
             ),
             const SizedBox(height: 16),
             DigitButton(
-              label: 'Cancel',
+              label: AppLocalizations.of(context)
+                  .translate(i18.common.coreCommonCancel),
               onPressed: _closeFailed,
               type: DigitButtonType.tertiary,
               size: DigitButtonSize.medium,
@@ -585,9 +613,12 @@ class _PinEntryView extends StatelessWidget {
                 ],
                 CustomPinPad(
                   key: ValueKey(attemptCount),
-                  title: 'Enter Your PIN',
-                  subtitle: 'Enter the 4-digit backup PIN',
-                  submitLabel: 'Verify PIN',
+                  title: AppLocalizations.of(context)
+                      .translate(i18.faceAuth.enterYourPin),
+                  subtitle: AppLocalizations.of(context)
+                      .translate(i18.faceAuth.pinSubtitle),
+                  submitLabel: AppLocalizations.of(context)
+                      .translate(i18.faceAuth.pinVerify),
                   primaryColor: colorTheme.primary.primary1,
                   onComplete: onSubmit,
                 ),

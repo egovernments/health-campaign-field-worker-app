@@ -1,5 +1,7 @@
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
+import '../utils/i18_key_constants.dart' as i18;
+
 /// Result of a liveness check.
 class LivenessResult {
   final bool passed;
@@ -49,7 +51,7 @@ class LivenessDetectionService {
     if (_currentChallengeIndex >= _challenges.length) {
       return const LivenessResult(
         passed: true,
-        instruction: 'Liveness check passed!',
+        instruction: 'FACE_AUTH_LIVENESS_PASSED',
         progress: 1.0,
       );
     }
@@ -77,7 +79,7 @@ class LivenessDetectionService {
       if (_currentChallengeIndex >= _challenges.length) {
         return const LivenessResult(
           passed: true,
-          instruction: 'Liveness check passed!',
+          instruction: 'FACE_AUTH_LIVENESS_PASSED',
           progress: 1.0,
         );
       }
@@ -132,11 +134,11 @@ class LivenessDetectionService {
   String _getInstruction(LivenessChallenge? challenge) {
     switch (challenge) {
       case LivenessChallenge.blink:
-        return 'Please blink your eyes';
+        return i18.faceVerification.livenessBlink;
       case LivenessChallenge.turnLeft:
-        return 'Turn your head to the left';
+        return i18.faceVerification.livenessTurnLeft;
       case LivenessChallenge.turnRight:
-        return 'Turn your head to the right';
+        return i18.faceVerification.livenessTurnRight;
       case null:
         return '';
     }

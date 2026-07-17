@@ -34,7 +34,7 @@ class LivenessBloc extends Bloc<LivenessEvent, LivenessState> {
     _startTimer();
     emit(const LivenessState.challenging(
       challenge: LivenessChallenge.blink,
-      instruction: 'Please blink your eyes',
+      instruction: 'FACE_AUTH_LIVENESS_BLINK',
       progress: 0.0,
     ));
   }
@@ -70,7 +70,7 @@ class LivenessBloc extends Bloc<LivenessEvent, LivenessState> {
   ) {
     _cancelTimer();
     _service.reset();
-    emit(const LivenessState.failed(reason: 'Challenge timed out'));
+    emit(const LivenessState.failed(reason: 'FACE_AUTH_LIVENESS_TIMEOUT'));
   }
 
   FutureOr<void> _onReset(

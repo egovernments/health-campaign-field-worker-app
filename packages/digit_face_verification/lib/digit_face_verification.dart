@@ -5,6 +5,10 @@ export 'blocs/face_verification_bloc.dart';
 export 'blocs/face_enrollment_bloc.dart';
 export 'blocs/liveness_bloc.dart';
 
+// Localization
+export 'blocs/app_localization.dart';
+export 'blocs/face_verification_localization_delegate.dart';
+
 // Data / Services
 export 'data/face_embedding_repository.dart';
 export 'data/face_model_service.dart';

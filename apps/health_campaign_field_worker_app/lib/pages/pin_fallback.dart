@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/face_auth/face_gate_bloc.dart';
+import '../blocs/localization/app_localization.dart';
+import '../utils/i18_key_constants.dart' as i18;
 
 /// PIN fallback page — shown when face verification fails after max attempts.
 /// Allows user to enter their 4-digit PIN as an alternative.
@@ -48,11 +50,13 @@ class _PinFallbackPageState extends State<PinFallbackPage> {
 
   void _verifyPin() {
     if (_selectedIndividualId == null) {
-      setState(() => _errorMessage = 'Please select a profile');
+      setState(() => _errorMessage = AppLocalizations.of(context)
+          .translate(i18.faceAuth.pinSelectProfile));
       return;
     }
     if (_pinController.text.length != 4) {
-      setState(() => _errorMessage = 'PIN must be 4 digits');
+      setState(() => _errorMessage =
+          AppLocalizations.of(context).translate(i18.faceAuth.pinInvalid));
       return;
     }
 
@@ -78,7 +82,9 @@ class _PinFallbackPageState extends State<PinFallbackPage> {
         );
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('PIN Verification')),
+        appBar: AppBar(
+            title: Text(AppLocalizations.of(context)
+                .translate(i18.faceAuth.pinVerificationTitle))),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -87,9 +93,11 @@ class _PinFallbackPageState extends State<PinFallbackPage> {
               children: [
                 const Icon(Icons.lock_outline, size: 64, color: Colors.blue),
                 const SizedBox(height: 24),
-                const Text(
-                  'Enter your fallback PIN',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Text(
+                  AppLocalizations.of(context)
+                      .translate(i18.faceAuth.pinFallbackEnter),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 24),
 
@@ -97,9 +105,10 @@ class _PinFallbackPageState extends State<PinFallbackPage> {
                 if (_profiles.length > 1)
                   DropdownButtonFormField<String>(
                     value: _selectedIndividualId,
-                    decoration: const InputDecoration(
-                      labelText: 'Select Profile',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)
+                          .translate(i18.faceAuth.selectProfileLabel),
+                      border: const OutlineInputBorder(),
                     ),
                     items: _profiles
                         .map((p) => DropdownMenuItem(
@@ -143,7 +152,8 @@ class _PinFallbackPageState extends State<PinFallbackPage> {
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 48),
                   ),
-                  child: const Text('Verify PIN'),
+                  child: Text(AppLocalizations.of(context)
+                      .translate(i18.faceAuth.pinVerify)),
                 ),
               ],
             ),

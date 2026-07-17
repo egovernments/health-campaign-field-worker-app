@@ -41,9 +41,11 @@ import '../blocs/push_notification/push_notification.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import 'package:digit_face_verification/digit_face_verification.dart';
 import '../blocs/face_auth/face_gate_bloc.dart';
+import '../services/face_auth_config.dart';
 import '../services/worker_registry_service.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/remote_client.dart';
+import '../data/repositories/remote/mdms.dart';
 import '../data/repositories/local/localization.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/downsync/downsync.dart';
@@ -85,6 +87,14 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
         Connectivity().onConnectivityChanged.listen(_handleConnectivityChange);
     _registerScannerIdentityValidator();
   }
+
+  /// The independent MDMS face-auth config fetch, shared by the gate and
+  /// verification blocs so the server threshold is authoritative everywhere.
+  Future<FaceAuthConfig?> _fetchFaceConfig() =>
+      MdmsRepository(DioClient().dio).searchFaceAuthConfig(
+        envConfig.variables.mdmsApiPath,
+        envConfig.variables.tenantId,
+      );
 
   @override
   void dispose() {
@@ -231,6 +241,10 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                               dio: DioClient().dio,
                               tenantId: envConfig.variables.tenantId,
                             ),
+                            // Independent MDMS fetch, loaded lazily by the bloc
+                            // on checkEnrollment so the server threshold applies
+                            // before the first verification.
+                            configLoader: _fetchFaceConfig,
                           ),
                         ),
                         BlocProvider(
@@ -238,6 +252,10 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                             faceModelService: ctx.read<FaceModelService>(),
                             embeddingRepository:
                                 ctx.read<FaceEmbeddingRepository>(),
+                            similarityThreshold:
+                                FaceAuthConfig.defaultFaceMatchThreshold,
+                            thresholdLoader: () async =>
+                                (await _fetchFaceConfig())?.faceMatchThreshold,
                           ),
                         ),
                         BlocProvider(create: (_) => LivenessBloc()),

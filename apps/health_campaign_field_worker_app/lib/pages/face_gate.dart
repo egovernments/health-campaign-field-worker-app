@@ -21,8 +21,10 @@ import '../data/local_store/secure_store/secure_store.dart';
 import '../data/remote_client.dart';
 import '../services/face_auth_event_logger.dart';
 import '../services/worker_registry_service.dart';
+import '../blocs/localization/app_localization.dart';
 import '../utils/environment_config.dart';
 import '../utils/extensions/extensions.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/face_auth/reverification_popup.dart';
 
 /// Face identity gate page — shown after login/boundary selection.
@@ -385,19 +387,23 @@ class _EnrollmentWrapper extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: Text(
+            AppLocalizations.of(context).translate(i18.common.coreCommonLogout)),
+        content: Text(AppLocalizations.of(context)
+            .translate(i18.faceAuth.logoutConfirm)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('No'),
+            child: Text(AppLocalizations.of(context)
+                .translate(i18.common.coreCommonNo)),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               context.read<AuthBloc>().add(const AuthLogoutEvent());
             },
-            child: const Text('Yes'),
+            child: Text(AppLocalizations.of(context)
+                .translate(i18.common.coreCommonYes)),
           ),
         ],
       ),
@@ -477,7 +483,8 @@ class _ScanningView extends StatelessWidget {
           onFaceCaptured: (embedding, quality, {faceImageBytes}) {
             onCaptured(embedding, quality, faceImageBytes: faceImageBytes);
           },
-          guidanceText: 'Position your face to verify identity',
+          guidanceText: AppLocalizations.of(context)
+              .translate(i18.faceAuth.positionFace),
         ),
         if (attemptNumber != null && maxAttempts != null)
           Positioned(
@@ -567,7 +574,8 @@ class _FallbackView extends StatelessWidget {
               ),
               const SizedBox(height: 28),
               Text(
-                'Face Verification Failed',
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.verificationFailed),
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -586,7 +594,8 @@ class _FallbackView extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               DigitButton(
-                label: 'Use PIN Instead',
+                label: AppLocalizations.of(context)
+                    .translate(i18.faceAuth.reVerificationUsePinInstead),
                 onPressed: onPinEntry,
                 type: DigitButtonType.primary,
                 size: DigitButtonSize.large,
@@ -670,9 +679,12 @@ class _PinEntryView extends StatelessWidget {
                 ],
                 CustomPinPad(
                   key: ValueKey(attemptCount),
-                  title: 'Enter Your PIN',
-                  subtitle: 'Enter the 4-digit backup PIN',
-                  submitLabel: 'Verify PIN',
+                  title: AppLocalizations.of(context)
+                      .translate(i18.faceAuth.enterYourPin),
+                  subtitle: AppLocalizations.of(context)
+                      .translate(i18.faceAuth.pinSubtitle),
+                  submitLabel: AppLocalizations.of(context)
+                      .translate(i18.faceAuth.pinVerify),
                   primaryColor: colorTheme.primary.primary1,
                   onComplete: onSubmit,
                 ),
@@ -745,7 +757,7 @@ class _SuccessViewState extends State<_SuccessView> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Face Verified',
+              AppLocalizations.of(context).translate(i18.faceAuth.gateVerified),
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -766,7 +778,11 @@ class _SuccessViewState extends State<_SuccessView> {
             ],
             const SizedBox(height: 12),
             Text(
-              isFace ? 'Face match' : 'PIN verified',
+              isFace
+                  ? AppLocalizations.of(context)
+                      .translate(i18.faceAuth.faceMatch)
+                  : AppLocalizations.of(context)
+                      .translate(i18.faceAuth.pinVerified),
               style: TextStyle(
                 fontSize: 15,
                 color: colorTheme.text.secondary,
@@ -925,7 +941,8 @@ class _WorkerNotFoundView extends StatelessWidget {
               ),
               const SizedBox(height: 28),
               Text(
-                'Worker Not Found',
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.workerNotFound),
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -934,7 +951,8 @@ class _WorkerNotFoundView extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Your worker record was not found in the registry. Please contact your supervisor.',
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.workerNotFoundMessage),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 15,
@@ -944,7 +962,8 @@ class _WorkerNotFoundView extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               DigitButton(
-                label: 'Retry',
+                label: AppLocalizations.of(context)
+                    .translate(i18.common.coreCommonRetry),
                 onPressed: onRetry,
                 type: DigitButtonType.primary,
                 size: DigitButtonSize.large,
@@ -995,7 +1014,8 @@ class _ErrorView extends StatelessWidget {
               ),
               const SizedBox(height: 28),
               Text(
-                'Something Went Wrong',
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.somethingWentWrong),
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -1014,7 +1034,8 @@ class _ErrorView extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               DigitButton(
-                label: 'Try Again',
+                label: AppLocalizations.of(context)
+                    .translate(i18.common.coreCommonRetry),
                 onPressed: onRetry,
                 type: DigitButtonType.primary,
                 size: DigitButtonSize.large,
@@ -1065,7 +1086,8 @@ class _LocationFetchingView extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Please wait while we capture your GPS coordinates.',
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.capturingGps),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -1112,7 +1134,8 @@ class _CapacityReachedView extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'Device capacity reached',
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.deviceCapacityReached),
                 style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -1121,8 +1144,8 @@ class _CapacityReachedView extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'This device has reached its maximum number of enrolled users. '
-                'Please contact your supervisor.',
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.deviceCapacityMessage),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 15,
@@ -1140,7 +1163,8 @@ class _CapacityReachedView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Continue Anyway'),
+                  child: Text(AppLocalizations.of(context)
+                      .translate(i18.faceAuth.continueAnyway)),
                 ),
               ),
             ],

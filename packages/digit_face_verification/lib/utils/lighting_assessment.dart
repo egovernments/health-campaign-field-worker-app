@@ -29,7 +29,7 @@ class LightingAssessment {
       return const LightingResult(
         brightness: 0.0,
         isSufficient: false,
-        guidance: 'Unable to assess lighting',
+        guidance: 'FACE_AUTH_LIGHTING_UNKNOWN',
       );
     }
 
@@ -41,7 +41,7 @@ class LightingAssessment {
       return LightingResult(
         brightness: brightness,
         isSufficient: false,
-        guidance: 'Move to a brighter area',
+        guidance: 'FACE_AUTH_LIGHTING_TOO_LOW',
       );
     }
 
@@ -49,14 +49,14 @@ class LightingAssessment {
       return LightingResult(
         brightness: brightness,
         isSufficient: true,
-        guidance: 'Avoid direct bright light',
+        guidance: 'FACE_AUTH_LIGHTING_TOO_BRIGHT',
       );
     }
 
     return LightingResult(
       brightness: brightness,
       isSufficient: true,
-      guidance: 'Good lighting',
+      guidance: 'FACE_AUTH_LIGHTING_GOOD',
     );
   }
 

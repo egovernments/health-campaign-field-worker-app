@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/app_localization.dart';
 import '../blocs/face_enrollment_bloc.dart';
 import '../blocs/liveness_bloc.dart';
 import '../data/face_model_service.dart';
 import '../data/liveness_detection_service.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import 'face_capture_view.dart';
 import 'face_guide_icon.dart';
 import 'liveness_challenge_view.dart';
@@ -153,7 +155,9 @@ class _FaceEnrollmentViewState extends State<FaceEnrollmentView> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Setting up your profile...',
+                    FaceVerificationLocalization.localized(context,
+                        i18.faceVerification.settingUpProfile,
+                        'Setting up your profile...'),
                     style: TextStyle(
                         fontSize: 16,
                         color: cs.onSurface.withOpacity(0.6)),
@@ -216,7 +220,8 @@ class _IntroScreen extends StatelessWidget {
                   onPressed: onLogout,
                   icon: Icon(Icons.logout, color: cs.primary, size: 20),
                   label: Text(
-                    'Logout',
+                    FaceVerificationLocalization.localized(context,
+                        i18.faceVerification.logout, 'Logout'),
                     style: TextStyle(
                       color: cs.primary,
                       fontWeight: FontWeight.w600,
@@ -232,7 +237,8 @@ class _IntroScreen extends StatelessWidget {
           margin: EdgeInsets.zero,
           children: [
             DigitButton(
-              label: 'Continue',
+              label: FaceVerificationLocalization.localized(context,
+                  i18.common.coreCommonContinue, 'Continue'),
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -268,7 +274,8 @@ class _IntroScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 Text(
-                  'Face Enrollment',
+                  FaceVerificationLocalization.localized(context,
+                      i18.faceVerification.enrollmentTitle, 'Face Enrollment'),
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
@@ -277,9 +284,12 @@ class _IntroScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'We need to capture your face from 5 angles and '
-                  'verify liveness to set up secure Face verification. '
-                  'A backup PIN will also be generated for you.',
+                  FaceVerificationLocalization.localized(
+                      context,
+                      i18.faceVerification.enrollmentDescription,
+                      'We need to capture your face from 5 angles and '
+                      'verify liveness to set up secure Face verification. '
+                      'A backup PIN will also be generated for you.'),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
@@ -288,17 +298,39 @@ class _IntroScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                _StepRow(number: '1', label: 'Look straight at the camera'),
+                _StepRow(
+                    number: '1',
+                    label: FaceVerificationLocalization.localized(context,
+                        i18.faceVerification.angleStraight,
+                        'Look straight at the camera')),
                 const SizedBox(height: 10),
-                _StepRow(number: '2', label: 'Complete liveness check'),
+                _StepRow(
+                    number: '2',
+                    label: FaceVerificationLocalization.localized(context,
+                        i18.faceVerification.stepLiveness,
+                        'Complete liveness check')),
                 const SizedBox(height: 10),
-                _StepRow(number: '3', label: 'Turn slightly to the left'),
+                _StepRow(
+                    number: '3',
+                    label: FaceVerificationLocalization.localized(context,
+                        i18.faceVerification.angleLeft,
+                        'Turn slightly to the left')),
                 const SizedBox(height: 10),
-                _StepRow(number: '4', label: 'Turn slightly to the right'),
+                _StepRow(
+                    number: '4',
+                    label: FaceVerificationLocalization.localized(context,
+                        i18.faceVerification.angleRight,
+                        'Turn slightly to the right')),
                 const SizedBox(height: 10),
-                _StepRow(number: '5', label: 'Look slightly up'),
+                _StepRow(
+                    number: '5',
+                    label: FaceVerificationLocalization.localized(context,
+                        i18.faceVerification.angleUp, 'Look slightly up')),
                 const SizedBox(height: 10),
-                _StepRow(number: '6', label: 'Look slightly down'),
+                _StepRow(
+                    number: '6',
+                    label: FaceVerificationLocalization.localized(context,
+                        i18.faceVerification.angleDown, 'Look slightly down')),
                 const SizedBox(height: 24),
               ],
             ),
@@ -606,7 +638,7 @@ class _LivenessScreenState extends State<_LivenessScreen> {
             faceModelService: widget.faceModelService,
             onFaceCaptured: (_, __, {faceImageBytes}) {},
             captureEnabled: false,
-            guidanceText: 'Blink your eyes',
+            guidanceText: i18.faceVerification.livenessBlink,
             onFaceDetected: (face) {
               context.read<LivenessBloc>().add(
                     LivenessEvent.faceFrame(face: face),
@@ -777,12 +809,13 @@ class _PinDisplayScreenState extends State<_PinDisplayScreen> {
                                 padding: const EdgeInsets.all(8),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
-                                  children: const [
-                                    Icon(Icons.content_copy,
+                                  children: [
+                                    const Icon(Icons.content_copy,
                                         size: 20, color: _primaryOrange),
-                                    SizedBox(width: 4),
+                                    const SizedBox(width: 4),
                                     Text(
-                                      'Copy',
+                                      FaceVerificationLocalization.localized(context,
+                                          i18.faceVerification.copy, 'Copy'),
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -813,14 +846,16 @@ class _PinDisplayScreenState extends State<_PinDisplayScreen> {
                                 child: Column(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     Row(
                                       children: [
-                                        Icon(Icons.info,
+                                        const Icon(Icons.info,
                                             color: _infoBlue, size: 24),
-                                        SizedBox(width: 8),
+                                        const SizedBox(width: 8),
                                         Text(
-                                          'Info',
+                                          FaceVerificationLocalization.localized(context,
+                                              i18.faceVerification.info,
+                                              'Info'),
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -881,9 +916,10 @@ class _PinDisplayScreenState extends State<_PinDisplayScreen> {
                     debugPrint('PIN Continue pressed');
                     widget.onConfirm();
                   },
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(
+                  child: Text(
+                    FaceVerificationLocalization.localized(context,
+                        i18.common.coreCommonContinue, 'Continue'),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                       height: 1.14,
@@ -902,9 +938,10 @@ class _PinDisplayScreenState extends State<_PinDisplayScreen> {
     await Clipboard.setData(ClipboardData(text: widget.pin));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('PIN copied to clipboard'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text(FaceVerificationLocalization.localized(context,
+            i18.faceVerification.pinCopied, 'PIN copied to clipboard')),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -970,7 +1007,9 @@ class _MaxUsersScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'Device capacity reached',
+                FaceVerificationLocalization.localized(context,
+                    i18.faceVerification.maxUsersTitle,
+                    'Device capacity reached'),
                 style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -979,8 +1018,11 @@ class _MaxUsersScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'This device has reached its maximum number of enrolled users. '
-                'Please contact your supervisor.',
+                FaceVerificationLocalization.localized(
+                    context,
+                    i18.faceVerification.maxUsersBody,
+                    'This device has reached its maximum number of enrolled users. '
+                    'Please contact your supervisor.'),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 15,
@@ -998,7 +1040,8 @@ class _MaxUsersScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Go Back'),
+                  child: Text(FaceVerificationLocalization.localized(
+                      context, i18.faceVerification.goBack, 'Go Back')),
                 ),
               ),
             ],
@@ -1038,15 +1081,16 @@ class BeforeWeBeginPage extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () => Navigator.of(context).maybePop(),
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.arrow_left,
+                        const Icon(Icons.arrow_left,
                             size: 24, color: primaryTeal),
                         Padding(
-                          padding: EdgeInsets.all(2),
+                          padding: const EdgeInsets.all(2),
                           child: Text(
-                            'Back',
+                            FaceVerificationLocalization.localized(context,
+                                i18.faceVerification.back, 'Back'),
                             style: TextStyle(
                               fontSize: 16,
                               color: primaryTeal,
@@ -1065,8 +1109,10 @@ class BeforeWeBeginPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Before We Begin',
+                    Text(
+                      FaceVerificationLocalization.localized(context,
+                          i18.faceVerification.beforeWeBegin,
+                          'Before We Begin'),
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         fontSize: 32,
@@ -1077,8 +1123,11 @@ class BeforeWeBeginPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Follow these instructions for smooth capture',
+                    Text(
+                      FaceVerificationLocalization.localized(
+                          context,
+                          i18.faceVerification.instructionsSubtitle,
+                          'Follow these instructions for smooth capture'),
                       style: TextStyle(
                         fontSize: 16,
                         color: secondaryText,
@@ -1090,9 +1139,14 @@ class BeforeWeBeginPage extends StatelessWidget {
                       iconBgColor: Color(0xFFFFFBEB),
                       icon: Icons.wb_sunny_outlined,
                       iconColor: Color(0xFFB45309),
-                      title: 'Good Lighting',
-                      body: 'Avoid sitting near a bright window or '
-                          'light source.',
+                      title: FaceVerificationLocalization.localized(context,
+                          i18.faceVerification.tipGoodLighting,
+                          'Good Lighting'),
+                      body: FaceVerificationLocalization.localized(
+                          context,
+                          i18.faceVerification.tipGoodLightingBody,
+                          'Avoid sitting near a bright window or '
+                          'light source.'),
                       titleColor: primaryTeal,
                       bodyColor: secondaryText,
                       borderColor: divider,
@@ -1102,9 +1156,14 @@ class BeforeWeBeginPage extends StatelessWidget {
                       iconBgColor: Color(0xFFEFF6FF),
                       icon: Icons.face_retouching_natural,
                       iconColor: Color(0xFF1D4ED8),
-                      title: 'Clear Face Visibility',
-                      body: 'Remove glasses, masks, or anything '
-                          'covering your face.',
+                      title: FaceVerificationLocalization.localized(context,
+                          i18.faceVerification.tipClearFace,
+                          'Clear Face Visibility'),
+                      body: FaceVerificationLocalization.localized(
+                          context,
+                          i18.faceVerification.tipClearFaceBody,
+                          'Remove glasses, masks, or anything '
+                          'covering your face.'),
                       titleColor: primaryTeal,
                       bodyColor: secondaryText,
                       borderColor: divider,
@@ -1114,8 +1173,13 @@ class BeforeWeBeginPage extends StatelessWidget {
                       iconBgColor: Color(0xFFF0FDF4),
                       icon: Icons.straighten_rounded,
                       iconColor: Color(0xFF15803D),
-                      title: 'Correct Distance',
-                      body: 'Keep your face 30–40 cm from the camera.',
+                      title: FaceVerificationLocalization.localized(context,
+                          i18.faceVerification.tipCorrectDistance,
+                          'Correct Distance'),
+                      body: FaceVerificationLocalization.localized(
+                          context,
+                          i18.faceVerification.tipCorrectDistanceBody,
+                          'Keep your face 30–40 cm from the camera.'),
                       titleColor: primaryTeal,
                       bodyColor: secondaryText,
                       borderColor: divider,
@@ -1125,9 +1189,14 @@ class BeforeWeBeginPage extends StatelessWidget {
                       iconBgColor: Color(0xFFFAF5FF),
                       icon: Icons.smartphone_outlined,
                       iconColor: Color(0xFF7E22CE),
-                      title: 'Keep Your Phone Steady',
-                      body: 'Hold your phone steady while the scan is '
-                          'in progress.',
+                      title: FaceVerificationLocalization.localized(context,
+                          i18.faceVerification.tipSteadyPhone,
+                          'Keep Your Phone Steady'),
+                      body: FaceVerificationLocalization.localized(
+                          context,
+                          i18.faceVerification.tipSteadyPhoneBody,
+                          'Hold your phone steady while the scan is '
+                          'in progress.'),
                       titleColor: primaryTeal,
                       bodyColor: secondaryText,
                       borderColor: divider,
@@ -1137,9 +1206,14 @@ class BeforeWeBeginPage extends StatelessWidget {
                       iconBgColor: Color(0xFFFEF2F2),
                       icon: Icons.compare_arrows_rounded,
                       iconColor: Color(0xFFB91C1C),
-                      title: 'Follow Onscreen Guidance',
-                      body: 'Turn left or right as prompted during '
-                          'capture.',
+                      title: FaceVerificationLocalization.localized(context,
+                          i18.faceVerification.tipFollowGuidance,
+                          'Follow Onscreen Guidance'),
+                      body: FaceVerificationLocalization.localized(
+                          context,
+                          i18.faceVerification.tipFollowGuidanceBody,
+                          'Turn left or right as prompted during '
+                          'capture.'),
                       titleColor: primaryTeal,
                       bodyColor: secondaryText,
                       borderColor: divider,
@@ -1167,9 +1241,11 @@ class BeforeWeBeginPage extends StatelessWidget {
                     Navigator.of(context).pop();
                     onContinue();
                   },
-                  child: const Text(
-                    'Got it! Continue',
-                    style: TextStyle(
+                  child: Text(
+                    FaceVerificationLocalization.localized(context,
+                        i18.faceVerification.gotItContinue,
+                        'Got it! Continue'),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                       height: 1.14,
@@ -1306,7 +1382,8 @@ class _PhotoTipsSheet extends StatelessWidget {
               Icon(Icons.tips_and_updates_outlined, color: cs.primary, size: 22),
               const SizedBox(width: 10),
               Text(
-                'Tips for best photo',
+                FaceVerificationLocalization.localized(context,
+                    i18.faceVerification.tipsTitle, 'Tips for best photo'),
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -1319,25 +1396,37 @@ class _PhotoTipsSheet extends StatelessWidget {
           _TipRow(
             icon: Icons.wb_sunny_outlined,
             color: Colors.amber.shade700,
-            text: 'Brightness — move to a well-lit area and face the light source. Avoid sitting with a bright window behind you.',
+            text: FaceVerificationLocalization.localized(
+                context,
+                i18.faceVerification.photoTipBrightness,
+                'Brightness — move to a well-lit area and face the light source. Avoid sitting with a bright window behind you.'),
           ),
           const SizedBox(height: 12),
           _TipRow(
             icon: Icons.straighten_rounded,
             color: cs.primary,
-            text: 'Distance — hold the phone 30–40 cm from your face. Too close or too far reduces quality.',
+            text: FaceVerificationLocalization.localized(
+                context,
+                i18.faceVerification.photoTipDistance,
+                'Distance — hold the phone 30–40 cm from your face. Too close or too far reduces quality.'),
           ),
           const SizedBox(height: 12),
           _TipRow(
             icon: Icons.face_outlined,
             color: Colors.teal,
-            text: 'Clarity — remove glasses, hats, masks, or anything covering your face. Keep your eyes open and face centred.',
+            text: FaceVerificationLocalization.localized(
+                context,
+                i18.faceVerification.photoTipClarity,
+                'Clarity — remove glasses, hats, masks, or anything covering your face. Keep your eyes open and face centred.'),
           ),
           const SizedBox(height: 12),
           _TipRow(
             icon: Icons.crop_free_rounded,
             color: Colors.deepPurple,
-            text: 'Stay still — hold the phone steady and keep your face within the oval guide.',
+            text: FaceVerificationLocalization.localized(
+                context,
+                i18.faceVerification.photoTipStayStill,
+                'Stay still — hold the phone steady and keep your face within the oval guide.'),
           ),
           const SizedBox(height: 24),
           SizedBox(
@@ -1357,7 +1446,11 @@ class _PhotoTipsSheet extends StatelessWidget {
                 elevation: 0,
               ),
               child: Text(
-                onContinue != null ? 'Continue' : 'Got it',
+                onContinue != null
+                    ? FaceVerificationLocalization.localized(context,
+                        i18.common.coreCommonContinue, 'Continue')
+                    : FaceVerificationLocalization.localized(
+                        context, i18.faceVerification.gotIt, 'Got it'),
                 style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
               ),
             ),
@@ -1416,8 +1509,12 @@ class _QualityTipsSheet extends StatelessWidget {
               Expanded(
                 child: Text(
                   errorMessage != null
-                      ? 'Capture failed'
-                      : 'Image quality too low',
+                      ? FaceVerificationLocalization.localized(context,
+                          i18.faceVerification.captureFailed, 'Capture failed')
+                      : FaceVerificationLocalization.localized(
+                          context,
+                          i18.faceVerification.qualityLow,
+                          'Image quality too low'),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -1450,25 +1547,37 @@ class _QualityTipsSheet extends StatelessWidget {
           _TipRow(
             icon: Icons.wb_sunny_outlined,
             color: Colors.amber.shade700,
-            text: 'Brightness — move to a well-lit area and face the light source directly. Avoid sitting with a bright window behind you.',
+            text: FaceVerificationLocalization.localized(
+                context,
+                i18.faceVerification.photoTipBrightness,
+                'Brightness — move to a well-lit area and face the light source directly. Avoid sitting with a bright window behind you.'),
           ),
           const SizedBox(height: 10),
           _TipRow(
             icon: Icons.straighten_rounded,
             color: cs.primary,
-            text: 'Distance — hold the phone 30–40 cm from your face. Too close or too far reduces quality.',
+            text: FaceVerificationLocalization.localized(
+                context,
+                i18.faceVerification.photoTipDistance,
+                'Distance — hold the phone 30–40 cm from your face. Too close or too far reduces quality.'),
           ),
           const SizedBox(height: 10),
           _TipRow(
             icon: Icons.face_outlined,
             color: Colors.teal,
-            text: 'Clarity — remove glasses, hats, masks, or anything covering your face. Keep your eyes open and face centred.',
+            text: FaceVerificationLocalization.localized(
+                context,
+                i18.faceVerification.photoTipClarity,
+                'Clarity — remove glasses, hats, masks, or anything covering your face. Keep your eyes open and face centred.'),
           ),
           const SizedBox(height: 10),
           _TipRow(
             icon: Icons.crop_free_rounded,
             color: Colors.deepPurple,
-            text: 'Stay still — hold the phone steady and keep your face within the oval guide.',
+            text: FaceVerificationLocalization.localized(
+                context,
+                i18.faceVerification.photoTipStayStill,
+                'Stay still — hold the phone steady and keep your face within the oval guide.'),
           ),
           const SizedBox(height: 24),
           SizedBox(
@@ -1561,7 +1670,8 @@ class _DuplicateScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Go Back'),
+                  child: Text(FaceVerificationLocalization.localized(
+                      context, i18.faceVerification.goBack, 'Go Back')),
                 ),
               ),
             ],

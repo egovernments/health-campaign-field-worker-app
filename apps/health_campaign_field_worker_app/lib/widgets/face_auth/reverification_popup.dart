@@ -20,7 +20,12 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
+import '../../blocs/localization/app_localization.dart';
+import '../../data/remote_client.dart';
+import '../../data/repositories/remote/mdms.dart';
 import '../../services/location_service.dart';
+import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/environment_config.dart';
 
 import '../../blocs/face_auth/reverification_bloc.dart';
 import '../../router/app_router.dart';
@@ -415,6 +420,12 @@ Future<void> _runCoWorkerVerificationSequence(
             create: (_) => FaceVerificationBloc(
               faceModelService: faceModelService,
               embeddingRepository: repository,
+              thresholdLoader: () async => (await MdmsRepository(DioClient().dio)
+                      .searchFaceAuthConfig(
+                    envConfig.variables.mdmsApiPath,
+                    envConfig.variables.tenantId,
+                  ))
+                  ?.faceMatchThreshold,
             ),
           ),
         ],
@@ -986,7 +997,8 @@ class _ReVerificationSheetState extends State<_ReVerificationSheet> {
               const SizedBox(height: 16),
 
               Text(
-                'Scan your face to Proceed',
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.scanToProceed),
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -997,7 +1009,8 @@ class _ReVerificationSheetState extends State<_ReVerificationSheet> {
               const SizedBox(height: 8),
 
               Text(
-                'Please verify your identity to continue working',
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.verifyToContinueWorking),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -1041,7 +1054,8 @@ class _ReVerificationSheetState extends State<_ReVerificationSheet> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'System user must verify their face first before co-workers can proceed.',
+                        AppLocalizations.of(context)
+                            .translate(i18.faceAuth.systemUserVerifyFirst),
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.orange.shade900,
@@ -1056,7 +1070,8 @@ class _ReVerificationSheetState extends State<_ReVerificationSheet> {
 
               // Verify button — pops sheet with `true` to signal "open dialog"
               DigitButton(
-                label: 'Verify Now',
+                label: AppLocalizations.of(context)
+                    .translate(i18.faceAuth.verifyNow),
                 onPressed: () => _pop(true),
                 type: DigitButtonType.primary,
                 size: DigitButtonSize.large,
@@ -1068,7 +1083,8 @@ class _ReVerificationSheetState extends State<_ReVerificationSheet> {
 
               // Dismiss — just close the sheet; countdown keeps running
               DigitButton(
-                label: 'Remind me later',
+                label: AppLocalizations.of(context)
+                    .translate(i18.faceAuth.remindMeLater),
                 onPressed: () => _pop(false),
                 type: DigitButtonType.tertiary,
                 size: DigitButtonSize.medium,
@@ -1201,7 +1217,8 @@ class _CoWorkerPendingSheet extends StatelessWidget {
           const SizedBox(height: 16),
 
           Text(
-            'Co-worker Face Verification',
+            AppLocalizations.of(context)
+                .translate(i18.faceAuth.coWorkerVerification),
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -1260,7 +1277,8 @@ class _CoWorkerPendingSheet extends StatelessWidget {
 
           // Primary: scan each face inline
           DigitButton(
-            label: 'Scan Each Face Now',
+            label: AppLocalizations.of(context)
+                .translate(i18.faceAuth.scanEachFace),
             onPressed: onVerifyInline,
             type: DigitButtonType.primary,
             size: DigitButtonSize.large,
@@ -1275,7 +1293,8 @@ class _CoWorkerPendingSheet extends StatelessWidget {
             children: [
               Expanded(
                 child: DigitButton(
-                  label: 'Later',
+                  label: AppLocalizations.of(context)
+                      .translate(i18.faceAuth.later),
                   onPressed: () => Navigator.of(context).pop(),
                   type: DigitButtonType.tertiary,
                   size: DigitButtonSize.medium,
@@ -1285,7 +1304,8 @@ class _CoWorkerPendingSheet extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: DigitButton(
-                  label: 'View All',
+                  label: AppLocalizations.of(context)
+                      .translate(i18.faceAuth.viewAll),
                   onPressed: onGoToList,
                   type: DigitButtonType.secondary,
                   size: DigitButtonSize.medium,

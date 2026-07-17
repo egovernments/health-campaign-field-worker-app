@@ -8,12 +8,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../blocs/localization/app_localization.dart';
 import '../../blocs/project/project.dart';
 import '../../data/remote_client.dart';
 import '../../services/face_auth_event_logger.dart';
 import '../../services/worker_registry_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/extensions/extensions.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/face_auth/reverification_popup.dart';
 
 /// Full-screen face enrollment page for non-mobile users (beneficiaries).
@@ -180,10 +182,12 @@ class _NonMobileFaceEnrollPageState extends State<NonMobileFaceEnrollPage> {
         barrierDismissible: false,
         builder: (ctx) => AlertDialog(
           title: Row(
-            children: const [
-              Icon(Icons.wifi_off, color: Colors.orange),
-              SizedBox(width: 8),
-              Expanded(child: Text('Internet Required')),
+            children: [
+              const Icon(Icons.wifi_off, color: Colors.orange),
+              const SizedBox(width: 8),
+              Expanded(
+                  child: Text(AppLocalizations.of(context)
+                      .translate(i18.faceAuth.internetRequired))),
             ],
           ),
           content: Text(
@@ -215,11 +219,13 @@ class _NonMobileFaceEnrollPageState extends State<NonMobileFaceEnrollPage> {
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
-        title: const Text('Enrollment Successful'),
+        title: Text(AppLocalizations.of(context)
+            .translate(i18.faceAuth.enrollmentSuccessful)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Face enrolled for ${widget.individualName}.'),
+            Text(
+                '${AppLocalizations.of(context).translate(i18.faceAuth.enrolledFor)} ${widget.individualName}.'),
             const SizedBox(height: 16),
             const Text(
               'Backup PIN:',
@@ -236,10 +242,11 @@ class _NonMobileFaceEnrollPageState extends State<NonMobileFaceEnrollPage> {
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Please note this PIN. It can be used as a backup for face verification.',
+            Text(
+              AppLocalizations.of(context)
+                  .translate(i18.faceAuth.enrollmentPinNote),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: Colors.grey),
+              style: const TextStyle(fontSize: 13, color: Colors.grey),
             ),
           ],
         ),
@@ -249,7 +256,8 @@ class _NonMobileFaceEnrollPageState extends State<NonMobileFaceEnrollPage> {
               Navigator.of(context).pop(); // close dialog
               if (mounted) context.router.maybePop(true);
             },
-            child: const Text('Done'),
+            child: Text(
+                AppLocalizations.of(context).translate(i18.faceAuth.doneButton)),
           ),
         ],
       ),
@@ -259,7 +267,8 @@ class _NonMobileFaceEnrollPageState extends State<NonMobileFaceEnrollPage> {
   void _showSuccessAndPop() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Face enrolled for ${widget.individualName}'),
+        content: Text(
+            '${AppLocalizations.of(context).translate(i18.faceAuth.enrolledFor)} ${widget.individualName}'),
         backgroundColor: Colors.green,
       ),
     );
@@ -340,7 +349,8 @@ class _LocationFetchingView extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Please wait while we capture GPS coordinates.',
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.capturingGps),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,

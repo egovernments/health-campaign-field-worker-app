@@ -5,9 +5,11 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/localization/app_localization.dart';
 import '../../router/app_router.dart';
 import '../../services/face_auth_event_logger.dart';
 import '../../utils/extensions/extensions.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 
 /// A card displayed on the home page showing face auth session status.
 /// Shows: active session indicator, last verification details, history link.
@@ -94,7 +96,8 @@ class _FaceAuthSessionCardState extends State<FaceAuthSessionCard> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Active Session',
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.activeSession),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -109,7 +112,8 @@ class _FaceAuthSessionCardState extends State<FaceAuthSessionCard> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'History',
+                      AppLocalizations.of(context)
+                          .translate(i18.faceAuth.historyLabel),
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -162,8 +166,10 @@ class _FaceAuthSessionCardState extends State<FaceAuthSessionCard> {
                   ),
                   child: Text(
                     _lastEvent!.outcome == 'FACE_SUCCESS'
-                        ? 'Face'
-                        : 'PIN',
+                        ? AppLocalizations.of(context)
+                            .translate(i18.faceAuth.methodFaceShort)
+                        : AppLocalizations.of(context)
+                            .translate(i18.faceAuth.methodPinShort),
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,

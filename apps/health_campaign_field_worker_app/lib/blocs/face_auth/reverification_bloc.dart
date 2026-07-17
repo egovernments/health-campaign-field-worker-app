@@ -163,20 +163,9 @@ class ReVerificationBloc
       }
     }
 
-    // Compute adaptive threshold based on enrollment quality
-    double effectiveThreshold = config.faceMatchThreshold;
-    if (bestMatchId != null) {
-      final bestStored = allEmbeddings.firstWhere(
-        (e) => e.individualId == bestMatchId,
-      );
-      if (bestStored.angleEmbeddings.length >= 2) {
-        effectiveThreshold = DistanceMetrics.adaptiveThreshold(
-          averagedEmbedding: bestStored.embedding,
-          angleEmbeddings: bestStored.angleEmbeddings,
-          baseThreshold: config.faceMatchThreshold,
-        );
-      }
-    }
+    // Hard cutoff: the config threshold is authoritative (no adaptive
+    // adjustment), consistent with the login gate.
+    final double effectiveThreshold = config.faceMatchThreshold;
 
     if (bestSimilarity >= effectiveThreshold && bestMatchId != null) {
       await repository.updateLastVerified(bestMatchId);

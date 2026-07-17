@@ -7,7 +7,9 @@ import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/localization/app_localization.dart';
 import '../utils/extensions/extensions.dart';
+import '../utils/i18_key_constants.dart' as i18;
 
 /// Page that displays face authentication event history matching the
 /// HCM "Verification History" design.
@@ -170,13 +172,14 @@ class _FaceAuthHistoryPageState extends State<FaceAuthHistoryPage> {
         child: Column(
           children: [
             _buildTopBar(),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Verification History',
-                  style: TextStyle(
+                  AppLocalizations.of(context)
+                      .translate(i18.faceAuth.historyTitle),
+                  style: const TextStyle(
                     fontFamily: 'Roboto',
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -205,15 +208,16 @@ class _FaceAuthHistoryPageState extends State<FaceAuthHistoryPage> {
         children: [
           InkWell(
             onTap: () => Navigator.of(context).maybePop(),
-            child: const Padding(
-              padding: EdgeInsets.all(2),
+            child: Padding(
+              padding: const EdgeInsets.all(2),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.arrow_left, size: 24, color: _primaryTeal),
+                  const Icon(Icons.arrow_left, size: 24, color: _primaryTeal),
                   Text(
-                    'Back',
-                    style: TextStyle(fontSize: 16, color: _primaryTeal),
+                    AppLocalizations.of(context)
+                        .translate(i18.common.coreCommonBack),
+                    style: const TextStyle(fontSize: 16, color: _primaryTeal),
                   ),
                 ],
               ),
@@ -269,14 +273,16 @@ class _FaceAuthHistoryPageState extends State<FaceAuthHistoryPage> {
             children: [
               Expanded(
                 child: _buildTabButton(
-                  label: 'Verification',
+                  label: AppLocalizations.of(context)
+                      .translate(i18.faceAuth.historyTabVerification),
                   selected: _selectedTab == 0,
                   onTap: () => setState(() => _selectedTab = 0),
                 ),
               ),
               Expanded(
                 child: _buildTabButton(
-                  label: 'Enrollment',
+                  label: AppLocalizations.of(context)
+                      .translate(i18.faceAuth.historyTabEnrollment),
                   selected: _selectedTab == 1,
                   onTap: () => setState(() => _selectedTab = 1),
                 ),
@@ -345,9 +351,9 @@ class _FaceAuthHistoryPageState extends State<FaceAuthHistoryPage> {
                   color: _textPrimary,
                   height: 1.37,
                 ),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   isDense: true,
-                  contentPadding: EdgeInsets.symmetric(vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -355,7 +361,8 @@ class _FaceAuthHistoryPageState extends State<FaceAuthHistoryPage> {
                   errorBorder: InputBorder.none,
                   focusedErrorBorder: InputBorder.none,
                   filled: false,
-                  hintText: 'Search',
+                  hintText: AppLocalizations.of(context)
+                      .translate(i18.faceAuth.searchHint),
                   hintStyle: TextStyle(
                     fontSize: 14,
                     color: Color(0xFFB1B4B6),
@@ -407,12 +414,12 @@ class _FaceAuthHistoryPageState extends State<FaceAuthHistoryPage> {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Icon(Icons.history_rounded, size: 64, color: _divider),
-          SizedBox(height: 16),
+        children: [
+          const Icon(Icons.history_rounded, size: 64, color: _divider),
+          const SizedBox(height: 16),
           Text(
-            'No verification events yet',
-            style: TextStyle(fontSize: 16, color: _secondaryText),
+            AppLocalizations.of(context).translate(i18.faceAuth.historyEmpty),
+            style: const TextStyle(fontSize: 16, color: _secondaryText),
           ),
         ],
       ),
@@ -503,7 +510,8 @@ class _VerificationCard extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
-                                      _eventTypeLabel(event.eventType),
+                                      AppLocalizations.of(context).translate(
+                                          _eventTypeLabel(event.eventType)),
                                       style: const TextStyle(
                                         fontFamily: 'Roboto',
                                         fontSize: 12,
@@ -517,7 +525,8 @@ class _VerificationCard extends StatelessWidget {
                                 ),
                               ),
                               _StatusPill(
-                                label: outcome.label,
+                                label: AppLocalizations.of(context)
+                                    .translate(outcome.label),
                                 fg: outcome.color,
                                 bg: outcome.bg,
                                 icon: outcome.icon,
@@ -527,7 +536,8 @@ class _VerificationCard extends StatelessWidget {
                           const SizedBox(height: 16),
                           _MethodTile(
                             icon: methodInfo.icon,
-                            leadingText: methodInfo.label,
+                            leadingText: AppLocalizations.of(context)
+                                .translate(methodInfo.label),
                             trailingText: methodInfo.trailing,
                             trailingColor: methodInfo.trailingColor,
                           ),
@@ -623,16 +633,18 @@ class _VerificationCard extends StatelessWidget {
 
   /// Maps the FaceAuthEventModel.eventType to a human-readable label so the
   /// card can distinguish LOGIN, RE_VERIFY, CHECK_IN, ENROLLMENT visually.
+  /// Returns the i18 CODE for the event type; the caller translates it
+  /// (the card has a BuildContext, this static helper does not).
   static String _eventTypeLabel(String eventType) {
     switch (eventType) {
       case 'LOGIN':
-        return 'Login Verification';
+        return i18.faceAuth.eventLoginVerification;
       case 'RE_VERIFY':
-        return 'Re-verification';
+        return i18.faceAuth.eventReverification;
       case 'CHECK_IN':
-        return 'Check-in';
+        return i18.faceAuth.eventCheckIn;
       case 'ENROLLMENT':
-        return 'Face Enrollment';
+        return i18.faceAuth.eventEnrollment;
       default:
         return eventType;
     }
@@ -675,28 +687,28 @@ class _VerificationCard extends StatelessWidget {
     switch (e.outcome) {
       case 'FACE_SUCCESS':
         return _OutcomeInfo(
-          label: 'Verified',
+          label: i18.faceAuth.outcomeVerified,
           color: _FaceAuthHistoryPageState._successColor,
           bg: _FaceAuthHistoryPageState._successBg,
           icon: Icons.check_circle,
         );
       case 'PIN_FALLBACK':
         return _OutcomeInfo(
-          label: 'PIN Used',
+          label: i18.faceAuth.outcomePinUsed,
           color: _FaceAuthHistoryPageState._warningColor,
           bg: _FaceAuthHistoryPageState._warningBg,
           icon: Icons.warning_amber_rounded,
         );
       case 'HCM_FALLBACK':
         return _OutcomeInfo(
-          label: 'HCM Fallback',
+          label: i18.faceAuth.outcomeHcmFallback,
           color: _FaceAuthHistoryPageState._warningColor,
           bg: _FaceAuthHistoryPageState._warningBg,
           icon: Icons.warning_amber_rounded,
         );
       case 'MISSED':
         return _OutcomeInfo(
-          label: 'Missed',
+          label: i18.faceAuth.outcomeMissed,
           color: _FaceAuthHistoryPageState._warningColor,
           bg: _FaceAuthHistoryPageState._warningBg,
           icon: Icons.schedule,
@@ -704,7 +716,7 @@ class _VerificationCard extends StatelessWidget {
       case 'FACE_REJECTED':
       default:
         return _OutcomeInfo(
-          label: 'Failed',
+          label: i18.faceAuth.outcomeFailed,
           color: _FaceAuthHistoryPageState._errorColor,
           bg: _FaceAuthHistoryPageState._errorBg,
           icon: Icons.error,
@@ -714,9 +726,9 @@ class _VerificationCard extends StatelessWidget {
 
   _MethodInfo _resolveMethod(FaceAuthEventModel e) {
     if (e.outcome == 'PIN_FALLBACK' || e.outcome == 'HCM_FALLBACK') {
-      return const _MethodInfo(
+      return _MethodInfo(
         icon: Icons.dialpad,
-        label: 'Enrollment Pin Verification',
+        label: i18.faceAuth.methodEnrollmentPin,
         trailing: null,
         trailingColor: null,
       );
@@ -725,7 +737,7 @@ class _VerificationCard extends StatelessWidget {
     final isFail = e.outcome == 'FACE_REJECTED';
     return _MethodInfo(
       icon: Icons.face_retouching_natural,
-      label: 'Facial Recognition',
+      label: i18.faceAuth.methodFacialRecognition,
       trailing: percent > 0
           ? '${percent.toStringAsFixed(0)}% Match'
           : null,

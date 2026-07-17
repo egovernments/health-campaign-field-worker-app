@@ -18,6 +18,12 @@ typedef FaceGateEmitter = Emitter<FaceGateState>;
 class FaceGateBloc extends Bloc<FaceGateEvent, FaceGateState> {
   final FaceEmbeddingRepository repository;
   final WorkerRegistryService workerRegistryService;
+
+  /// Loads the face-auth config from its independent MDMS call. Invoked once
+  /// (lazily, on the first checkEnrollment) so the server threshold/attempts
+  /// are applied BEFORE any verification. Null → keep compile-time defaults.
+  final Future<FaceAuthConfig?> Function()? configLoader;
+  bool _configLoaded = false;
   // Non-final so AuthenticatedPage can push the MDMS-derived threshold and
   // maxAttempts into a live bloc when those values resolve AFTER the
   // BlocProvider has constructed this bloc. Without this the bloc stays on
@@ -36,6 +42,7 @@ class FaceGateBloc extends Bloc<FaceGateEvent, FaceGateState> {
   FaceGateBloc({
     required this.repository,
     required this.workerRegistryService,
+    this.configLoader,
     this.similarityThreshold = FaceAuthConfig.defaultFaceMatchThreshold,
     this.maxAttempts = FaceAuthConfig.defaultMaxFaceAttempts,
   }) : super(const FaceGateState.initial()) {
@@ -58,12 +65,39 @@ class FaceGateBloc extends Bloc<FaceGateEvent, FaceGateState> {
     if (maxAttempts != null) this.maxAttempts = maxAttempts;
   }
 
+  /// Fetches the face-auth config via [configLoader] and applies the server
+  /// threshold / max-attempts. Runs at most once per bloc (retries on the
+  /// next checkEnrollment only if the previous attempt failed).
+  Future<void> _ensureConfigLoaded() async {
+    if (_configLoaded || configLoader == null) return;
+    try {
+      final config = await configLoader!();
+      if (config != null) {
+        updateConfig(
+          threshold: config.faceMatchThreshold,
+          maxAttempts: config.maxFaceAttempts,
+        );
+        _configLoaded = true;
+        debugPrint('FaceGateBloc: applied MDMS config '
+            'threshold=${config.faceMatchThreshold} '
+            'maxAttempts=${config.maxFaceAttempts}');
+      }
+    } catch (e) {
+      debugPrint('FaceGateBloc: config load failed, using defaults: $e');
+    }
+  }
+
   FutureOr<void> _onCheckEnrollment(
     FaceGateCheckEnrollmentEvent event,
     FaceGateEmitter emit,
   ) async {
     try {
       debugPrint('FaceGateBloc: checking enrollment for ${event.individualId}...');
+
+      // Step 0: Load the face-auth config from its independent MDMS call
+      // before any verification, so the server threshold/attempts apply to
+      // this session's scans (falls back to defaults on failure).
+      await _ensureConfigLoaded();
 
       // Step 1: Check if worker exists in the server registry.
       // Skipped for re-verification and for login gate (user is already
@@ -171,22 +205,11 @@ class FaceGateBloc extends Bloc<FaceGateEvent, FaceGateState> {
         }
       }
 
-      // Compute adaptive threshold for best match based on enrollment quality
-      double effectiveThreshold = similarityThreshold;
-      if (bestMatchId != null) {
-        final bestStored = allEmbeddings.firstWhere(
-          (e) => e.individualId == bestMatchId,
-        );
-        if (bestStored.angleEmbeddings.length >= 2) {
-          effectiveThreshold = DistanceMetrics.adaptiveThreshold(
-            averagedEmbedding: bestStored.embedding,
-            angleEmbeddings: bestStored.angleEmbeddings,
-            baseThreshold: similarityThreshold,
-          );
-        }
-      }
+      // Hard cutoff: the (MDMS-driven) similarityThreshold is authoritative.
+      // No adaptive/per-enrollment adjustment.
+      final double effectiveThreshold = similarityThreshold;
       debugPrint('FaceGateBloc: bestSimilarity=$bestSimilarity, '
-          'effectiveThreshold=$effectiveThreshold (base=$similarityThreshold)');
+          'threshold=$effectiveThreshold');
 
       if (bestSimilarity >= effectiveThreshold && bestMatchId != null) {
         await repository.updateLastVerified(bestMatchId);

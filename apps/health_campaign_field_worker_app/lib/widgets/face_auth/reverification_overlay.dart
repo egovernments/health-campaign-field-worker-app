@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/face_auth/reverification_bloc.dart';
+import '../../blocs/localization/app_localization.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 
 /// Modal overlay for random re-verification.
 /// Cannot be back-pressed away. Shows camera + countdown timer.
@@ -126,9 +128,10 @@ class _ScanView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Scan your face to Proceed',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)
+                    .translate(i18.faceAuth.scanToProceed),
+                style: const TextStyle(
                   color: Colors.black87,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -159,7 +162,8 @@ class _ScanView extends StatelessWidget {
             onFaceCaptured: (embedding, quality, {faceImageBytes}) {
               onCaptured(embedding, quality, faceImageBytes: faceImageBytes);
             },
-            guidanceText: 'Verify your identity to continue',
+            guidanceText: AppLocalizations.of(context)
+                .translate(i18.faceAuth.verifyToContinue),
           ),
         ),
         // PIN fallback button
@@ -167,9 +171,10 @@ class _ScanView extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: TextButton(
             onPressed: onUsePinInstead,
-            child: const Text(
-              'Use PIN instead',
-              style: TextStyle(color: Colors.black54),
+            child: Text(
+              AppLocalizations.of(context)
+                  .translate(i18.faceAuth.reVerificationUsePinInstead),
+              style: const TextStyle(color: Colors.black54),
             ),
           ),
         ),
@@ -197,9 +202,9 @@ class _PinInputView extends StatelessWidget {
           children: [
             const Icon(Icons.lock, size: 48, color: Colors.black54),
             const SizedBox(height: 16),
-            const Text(
-              'Enter your PIN',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context).translate(i18.faceAuth.pinEnter),
+              style: const TextStyle(
                 color: Colors.black87,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -239,7 +244,8 @@ class _PinInputView extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
               ),
-              child: const Text('Verify'),
+              child: Text(
+                  AppLocalizations.of(context).translate(i18.faceAuth.verify)),
             ),
           ],
         ),
@@ -255,15 +261,15 @@ class _SuccessView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.check_circle, size: 80, color: Colors.green),
-          SizedBox(height: 16),
+          const Icon(Icons.check_circle, size: 80, color: Colors.green),
+          const SizedBox(height: 16),
           Text(
-            'Face Verified',
-            style: TextStyle(
+            AppLocalizations.of(context).translate(i18.faceAuth.gateVerified),
+            style: const TextStyle(
               color: Colors.black87,
               fontSize: 24,
               fontWeight: FontWeight.bold,

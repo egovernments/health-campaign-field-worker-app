@@ -36,6 +36,29 @@ class FaceAuthConfig {
     this.faceMatchThreshold = 0.70,
   });
 
+  /// Builds a config from a FACE_AUTH_CONFIG MDMS record. Any missing key
+  /// falls back to the corresponding compile-time default, so a partial or
+  /// empty server record still yields a usable config.
+  factory FaceAuthConfig.fromMdms(Map<String, dynamic> data) {
+    const d = FaceAuthConfig();
+    return FaceAuthConfig(
+      faceMatchThreshold:
+          (data['FACE_MATCH_THRESHOLD'] as num?)?.toDouble() ??
+              d.faceMatchThreshold,
+      maxFaceAttempts:
+          (data['MAX_FACE_ATTEMPTS'] as num?)?.toInt() ?? d.maxFaceAttempts,
+      startHour: (data['START_HOUR'] as num?)?.toInt() ?? d.startHour,
+      endHour: (data['END_HOUR'] as num?)?.toInt() ?? d.endHour,
+      promptCount: (data['PROMPT_COUNT'] as num?)?.toInt() ?? d.promptCount,
+      minGapMinutes:
+          (data['MIN_GAP_MINUTES'] as num?)?.toInt() ?? d.minGapMinutes,
+      countdownDuration: Duration(
+        minutes: (data['COUNTDOWN_DURATION_MINUTES'] as num?)?.toInt() ??
+            d.countdownDuration.inMinutes,
+      ),
+    );
+  }
+
   /// Total minutes in the verification window.
   int get windowMinutes => (endHour - startHour) * 60;
 }

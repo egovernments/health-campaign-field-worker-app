@@ -5,6 +5,8 @@ import 'package:attendance_management/blocs/app_localization.dart'
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_dss/blocs/app_localization.dart'
     as digit_dss_localization;
+import 'package:digit_face_verification/blocs/app_localization.dart'
+    as face_verification_localization;
 import 'package:digit_flow_builder/blocs/app_localization.dart'
     as flow_builder_localization;
 import 'package:digit_forms_engine/blocs/app_localization.dart'
@@ -65,6 +67,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     flow_builder_localization.FlowBuilderLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    face_verification_localization.FaceVerificationLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),

@@ -3,7 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/app_localization.dart';
 import '../blocs/face_verification_bloc.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../data/face_model_service.dart';
 import 'face_capture_view.dart';
 
@@ -115,7 +117,9 @@ class _FaceAttendanceWrapperState extends State<FaceAttendanceWrapper> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(widget.title ?? 'Verify Identity'),
+            Text(widget.title ??
+                FaceVerificationLocalization.localized(context,
+                    i18.faceVerification.verifyIdentity, 'Verify Identity')),
             if (widget.subtitle != null)
               Text(
                 widget.subtitle!,
@@ -163,7 +167,8 @@ class _FaceAttendanceWrapperState extends State<FaceAttendanceWrapper> {
               _playError();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(message),
+                  content: Text(FaceVerificationLocalization.localized(
+                      context, message)),
                   backgroundColor: Colors.red,
                   duration: const Duration(seconds: 3),
                 ),
@@ -208,17 +213,18 @@ class _FaceAttendanceWrapperState extends State<FaceAttendanceWrapper> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.cancel, color: Colors.red, size: 28),
-            SizedBox(width: 8),
-            Text('Verification Failed'),
+            const Icon(Icons.cancel, color: Colors.red, size: 28),
+            const SizedBox(width: 8),
+            Text(FaceVerificationLocalization.localized(context,
+                i18.faceVerification.verificationFailedTitle,
+                'Verification Failed')),
           ],
         ),
         content: Text(
-          'Face did not match '
-          '(${(confidence * 100).toStringAsFixed(1)}%). '
-          'Please try again.',
+          '${FaceVerificationLocalization.localized(context, i18.faceVerification.rejectedMessage, 'Face does not match. Please try again.')} '
+          '(${(confidence * 100).toStringAsFixed(1)}%)',
         ),
         actions: [
           TextButton(
@@ -226,7 +232,8 @@ class _FaceAttendanceWrapperState extends State<FaceAttendanceWrapper> {
               Navigator.of(dialogContext).pop();
               _reset(context);
             },
-            child: const Text('Try Again'),
+            child: Text(FaceVerificationLocalization.localized(
+                context, i18.faceVerification.tryAgain, 'Try Again')),
           ),
           TextButton(
             onPressed: () {
@@ -235,7 +242,8 @@ class _FaceAttendanceWrapperState extends State<FaceAttendanceWrapper> {
               widget.onFailed?.call(confidence,
                   faceImageBytes: _lastRejectedImageBytes);
             },
-            child: const Text('Cancel'),
+            child: Text(FaceVerificationLocalization.localized(
+                context, i18.common.coreCommonCancel, 'Cancel')),
           ),
         ],
       ),

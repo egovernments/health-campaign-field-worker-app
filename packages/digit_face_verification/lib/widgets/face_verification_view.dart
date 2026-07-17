@@ -3,7 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/app_localization.dart';
 import '../blocs/face_verification_bloc.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../data/face_model_service.dart';
 import 'face_capture_view.dart';
 
@@ -110,8 +112,11 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
               _showResultDialog(
                 context,
                 success: true,
-                title: 'Face  Enrolled',
-                message: 'Face Enrolled successfully.',
+                title: FaceVerificationLocalization.localized(context,
+                    i18.faceVerification.enrolledTitle, 'Face Enrolled'),
+                message: FaceVerificationLocalization.localized(context,
+                    i18.faceVerification.enrolledMessage,
+                    'Face Enrolled successfully.'),
               );
             },
             verified: (confidence, faceImageBytes) {
@@ -120,9 +125,10 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
               _showResultDialog(
                 context,
                 success: true,
-                title: 'Verified',
+                title: FaceVerificationLocalization.localized(context,
+                    i18.faceVerification.verifiedTitle, 'Verified'),
                 message:
-                    'Face verified (${(confidence * 100).toStringAsFixed(1)}% match).',
+                    '${FaceVerificationLocalization.localized(context, i18.faceVerification.verifiedMessage, 'Face verified')} (${(confidence * 100).toStringAsFixed(1)}%).',
               );
             },
             rejected: (confidence, faceImageBytes) {
@@ -131,17 +137,19 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
               _showResultDialog(
                 context,
                 success: false,
-                title: 'Verification Failed',
+                title: FaceVerificationLocalization.localized(context,
+                    i18.faceVerification.verificationFailedTitle,
+                    'Verification Failed'),
                 message:
-                    'Face does not match (${(confidence * 100).toStringAsFixed(1)}% similarity). '
-                    'Please try again.',
+                    '${FaceVerificationLocalization.localized(context, i18.faceVerification.rejectedMessage, 'Face does not match. Please try again.')} (${(confidence * 100).toStringAsFixed(1)}%)',
               );
             },
             error: (message) {
               _playError();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(message),
+                  content: Text(FaceVerificationLocalization.localized(
+                      context, message)),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -196,7 +204,8 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
             Text(title),
           ],
         ),
-        content: Text(message),
+        content: Text(FaceVerificationLocalization.localized(
+                      context, message)),
         actions: [
           if (!success)
             TextButton(
@@ -206,7 +215,8 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
                       const FaceVerificationEvent.reset(),
                     );
               },
-              child: const Text('Try Again'),
+              child: Text(FaceVerificationLocalization.localized(
+                  context, i18.faceVerification.tryAgain, 'Try Again')),
             ),
           TextButton(
             onPressed: () {

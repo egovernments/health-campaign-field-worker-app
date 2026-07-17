@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
+import '../blocs/app_localization.dart';
 import '../blocs/face_verification_bloc.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../data/face_model_service.dart';
 import '../utils/dashed_oval_painter.dart';
 import '../utils/lighting_assessment.dart';
@@ -70,7 +72,7 @@ class FaceCaptureView extends StatefulWidget {
     super.key,
     required this.faceModelService,
     required this.onFaceCaptured,
-    this.guidanceText = 'Position your face in the circle',
+    this.guidanceText = 'FACE_AUTH_POSITION_FACE',
     this.minQuality = 0.3,
     this.onFaceDetected,
     this.compact = false,
@@ -531,15 +533,20 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
 
     switch (expected) {
       case ExpectedAngle.front:
-        return 'Look straight at the camera';
+        return FaceVerificationLocalization.localized(context,
+            i18.faceVerification.angleStraight, 'Look straight at the camera');
       case ExpectedAngle.left:
-        return 'Turn your head to the left';
+        return FaceVerificationLocalization.localized(context,
+            i18.faceVerification.livenessTurnLeft, 'Turn your head to the left');
       case ExpectedAngle.right:
-        return 'Turn your head to the right';
+        return FaceVerificationLocalization.localized(context, i18.faceVerification.livenessTurnRight,
+            'Turn your head to the right');
       case ExpectedAngle.up:
-        return 'Tilt your head slightly up';
+        return FaceVerificationLocalization.localized(context,
+            i18.faceVerification.tiltUp, 'Tilt your head slightly up');
       case ExpectedAngle.down:
-        return 'Tilt your head slightly down';
+        return FaceVerificationLocalization.localized(context,
+            i18.faceVerification.tiltDown, 'Tilt your head slightly down');
     }
   }
 
@@ -555,8 +562,12 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
     if (_detectedFace == null) return null;
     final ratio = _latestResult?.faceFillRatio;
     if (ratio == null) return null;
-    if (ratio < 0.18) return 'Move closer';
-    if (ratio > 0.60) return 'Move back';
+    if (ratio < 0.18) {
+      return FaceVerificationLocalization.localized(context, i18.faceVerification.moveCloser, 'Move closer');
+    }
+    if (ratio > 0.60) {
+      return FaceVerificationLocalization.localized(context, i18.faceVerification.moveBack, 'Move back');
+    }
     return null;
   }
 
@@ -585,22 +596,31 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
                   : const Color(0xFF78909C);
 
   String get _statusText => _isCaptured
-      ? 'Processing...'
+      ? FaceVerificationLocalization.localized(context, i18.faceVerification.processing, 'Processing...')
       : _isCollectingFrames
-          ? 'Scanning ${_collectedEmbeddings.length}/${widget.multiFrameCount}...'
+          ? '${FaceVerificationLocalization.localized(context, i18.faceVerification.scanning, 'Scanning')} ${_collectedEmbeddings.length}/${widget.multiFrameCount}...'
           : (_lightingResult != null && !_lightingResult!.isSufficient)
-              ? _lightingResult!.guidance
+              ? FaceVerificationLocalization.localized(context, _lightingResult!.guidance)
               : (_angleGuidance != null)
                   ? _angleGuidance!
                   : (_distanceGuidance != null)
                       ? _distanceGuidance!
                       : _faceReady
                           ? (widget.autoCapture
-                              ? 'Hold still, capturing...'
-                              : 'Face detected — tap capture')
+                              ? FaceVerificationLocalization.localized(
+                                  context,
+                                  i18.faceVerification.holdStillCapturing,
+                                  'Hold still, capturing...')
+                              : FaceVerificationLocalization.localized(
+                                  context,
+                                  i18.faceVerification.tapCapture,
+                                  'Face detected — tap capture'))
                           : _detectedFace != null
-                              ? 'Scanning — hold steady'
-                              : widget.guidanceText;
+                              ? FaceVerificationLocalization.localized(
+                                  context,
+                                  i18.faceVerification.scanningHoldSteady,
+                                  'Scanning — hold steady')
+                              : FaceVerificationLocalization.localized(context, widget.guidanceText);
 
   @override
   Widget build(BuildContext context) {
@@ -939,16 +959,22 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
                 const SizedBox(width: 8),
                 Text(
                   _isCaptured
-                      ? 'Scanning...'
+                      ? FaceVerificationLocalization.localized(context,
+                          i18.faceVerification.scanning, 'Scanning...')
                       : (_angleGuidance != null)
                           ? _angleGuidance!
                           : (_distanceGuidance != null)
                               ? _distanceGuidance!
                               : _faceReady
-                                  ? 'Hold still...'
+                                  ? FaceVerificationLocalization.localized(context,
+                                      i18.faceVerification.holdStill,
+                                      'Hold still...')
                                   : _detectedFace != null
-                                      ? 'Hold steady'
-                                      : widget.guidanceText,
+                                      ? FaceVerificationLocalization.localized(context,
+                                          i18.faceVerification.holdSteady,
+                                          'Hold steady')
+                                      : FaceVerificationLocalization.localized(
+                                          context, widget.guidanceText),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 13,
@@ -1073,7 +1099,7 @@ class _LightingIndicator extends StatelessWidget {
             Icon(icon, color: color, size: 16),
             const SizedBox(width: 6),
             Text(
-              result.guidance,
+              FaceVerificationLocalization.localized(context, result.guidance),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 11,

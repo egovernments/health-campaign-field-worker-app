@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -16,11 +17,21 @@ class FaceVerificationBloc
     extends Bloc<FaceVerificationEvent, FaceVerificationState> {
   final FaceModelService faceModelService;
   final FaceEmbeddingRepository embeddingRepository;
-  final double similarityThreshold;
+
+  /// Hard match cutoff. Overridden by [thresholdLoader] (e.g. MDMS) on the
+  /// first verify; non-final so the resolved value can be applied.
+  double similarityThreshold;
+
+  /// Loads the authoritative threshold (e.g. from the independent MDMS call).
+  /// Applied once, lazily, before the first verification. Null → keep the
+  /// constructor value.
+  final Future<double?> Function()? thresholdLoader;
+  bool _thresholdLoaded = false;
 
   FaceVerificationBloc({
     required this.faceModelService,
     required this.embeddingRepository,
+    this.thresholdLoader,
     this.similarityThreshold = DistanceMetrics.defaultThreshold,
   }) : super(const FaceVerificationState.idle()) {
     on(_onInitialize);
@@ -31,19 +42,34 @@ class FaceVerificationBloc
     on(_onReset);
   }
 
+  /// Loads the authoritative threshold once (retries next verify on failure).
+  Future<void> _ensureThreshold() async {
+    if (_thresholdLoaded || thresholdLoader == null) return;
+    try {
+      final t = await thresholdLoader!();
+      if (t != null) {
+        similarityThreshold = t;
+        _thresholdLoaded = true;
+      }
+    } catch (_) {
+      // Keep the constructor/default threshold on failure.
+    }
+  }
+
   FutureOr<void> _onInitialize(
     FaceVerificationInitializeEvent event,
     FaceVerificationEmitter emit,
   ) async {
     try {
       emit(const FaceVerificationState.processing(
-        message: 'Initializing face recognition...',
+        message: 'FACE_AUTH_INITIALIZING',
       ));
       await faceModelService.initialize();
       emit(const FaceVerificationState.idle());
     } catch (e) {
-      emit(FaceVerificationState.error(
-        message: 'Failed to initialize: $e',
+      debugPrint('FaceVerificationBloc: init failed: $e');
+      emit(const FaceVerificationState.error(
+        message: 'FACE_AUTH_INIT_FAILED',
       ));
     }
   }
@@ -54,7 +80,7 @@ class FaceVerificationBloc
   ) async {
     try {
       emit(const FaceVerificationState.processing(
-        message: 'Processing face...',
+        message: 'FACE_AUTH_PROCESSING',
       ));
 
       if (event.embedding.isEmpty) {
@@ -72,7 +98,9 @@ class FaceVerificationBloc
         confidence: event.quality,
       ));
     } catch (e) {
-      emit(FaceVerificationState.error(message: 'Registration failed: $e'));
+      debugPrint('FaceVerificationBloc: registration failed: $e');
+      emit(const FaceVerificationState.error(
+          message: 'FACE_AUTH_REGISTRATION_FAILED'));
     }
   }
 
@@ -82,8 +110,11 @@ class FaceVerificationBloc
   ) async {
     try {
       emit(const FaceVerificationState.processing(
-        message: 'Verifying face...',
+        message: 'FACE_AUTH_VERIFYING',
       ));
+
+      // Apply the authoritative (e.g. MDMS) threshold before matching.
+      await _ensureThreshold();
 
       final stored = await embeddingRepository.getEmbedding(
         event.individualId,
@@ -91,7 +122,7 @@ class FaceVerificationBloc
 
       if (stored == null) {
         emit(const FaceVerificationState.error(
-          message: 'No registered face found. Please register first.',
+          message: 'FACE_AUTH_NO_REGISTERED_FACE',
         ));
         return;
       }
@@ -117,7 +148,9 @@ class FaceVerificationBloc
         ));
       }
     } catch (e) {
-      emit(FaceVerificationState.error(message: 'Verification failed: $e'));
+      debugPrint('FaceVerificationBloc: verification failed: $e');
+      emit(const FaceVerificationState.error(
+          message: 'FACE_AUTH_VERIFICATION_FAILED'));
     }
   }
 
@@ -129,7 +162,9 @@ class FaceVerificationBloc
       await embeddingRepository.deleteEmbedding(event.individualId);
       emit(const FaceVerificationState.idle());
     } catch (e) {
-      emit(FaceVerificationState.error(message: 'Delete failed: $e'));
+      debugPrint('FaceVerificationBloc: delete failed: $e');
+      emit(const FaceVerificationState.error(
+          message: 'FACE_AUTH_DELETE_FAILED'));
     }
   }
 

@@ -1609,6 +1609,73 @@ class FaceAuth {
   String get lightingTooLow => 'FACE_AUTH_LIGHTING_TOO_LOW';
   String get lightingGood => 'FACE_AUTH_LIGHTING_GOOD';
   String get noGpsAvailable => 'FACE_AUTH_NO_GPS_AVAILABLE';
+
+  // Gate / dialog
+  String get logoutConfirm => 'FACE_AUTH_LOGOUT_CONFIRM';
+  String get positionFace => 'FACE_AUTH_POSITION_FACE';
+  String get verificationFailed => 'FACE_AUTH_VERIFICATION_FAILED';
+  String get faceMatch => 'FACE_AUTH_FACE_MATCH';
+  String get pinVerified => 'FACE_AUTH_PIN_VERIFIED';
+  String get workerNotFound => 'FACE_AUTH_WORKER_NOT_FOUND';
+  String get workerNotFoundMessage => 'FACE_AUTH_WORKER_NOT_FOUND_MESSAGE';
+  String get somethingWentWrong => 'FACE_AUTH_SOMETHING_WENT_WRONG';
+  String get capturingGps => 'FACE_AUTH_CAPTURING_GPS';
+  String get deviceCapacityReached => 'FACE_AUTH_DEVICE_CAPACITY_REACHED';
+  String get deviceCapacityMessage => 'FACE_AUTH_DEVICE_CAPACITY_MESSAGE';
+  String get continueAnyway => 'FACE_AUTH_CONTINUE_ANYWAY';
+  String get enterYourPin => 'FACE_AUTH_ENTER_YOUR_PIN';
+  String get pinSubtitle => 'FACE_AUTH_PIN_SUBTITLE';
+  String get tryAgainLookCamera => 'FACE_AUTH_TRY_AGAIN_LOOK_CAMERA';
+  String get later => 'FACE_AUTH_LATER';
+  String get remindMeLater => 'FACE_AUTH_REMIND_ME_LATER';
+  String get enrolledFor => 'FACE_AUTH_ENROLLED_FOR';
+  String get verifyNow => 'FACE_AUTH_VERIFY_NOW';
+  String get verify => 'FACE_AUTH_VERIFY';
+
+  // PIN fallback
+  String get pinVerificationTitle => 'FACE_AUTH_PIN_VERIFICATION_TITLE';
+  String get pinFallbackEnter => 'FACE_AUTH_PIN_FALLBACK_ENTER';
+  String get selectProfileLabel => 'FACE_AUTH_SELECT_PROFILE_LABEL';
+
+  // History
+  String get historyTitle => 'FACE_AUTH_HISTORY_TITLE';
+  String get historyLabel => 'FACE_AUTH_HISTORY_LABEL';
+  String get historyTabVerification => 'FACE_AUTH_HISTORY_TAB_VERIFICATION';
+  String get historyTabEnrollment => 'FACE_AUTH_HISTORY_TAB_ENROLLMENT';
+  String get searchHint => 'FACE_AUTH_SEARCH_HINT';
+  String get historyEmpty => 'FACE_AUTH_HISTORY_EMPTY';
+  String get unknown => 'FACE_AUTH_UNKNOWN';
+  String get eventLoginVerification => 'FACE_AUTH_EVENT_LOGIN_VERIFICATION';
+  String get eventReverification => 'FACE_AUTH_EVENT_REVERIFICATION';
+  String get eventCheckIn => 'FACE_AUTH_EVENT_CHECK_IN';
+  String get eventEnrollment => 'FACE_AUTH_EVENT_ENROLLMENT';
+  String get outcomeVerified => 'FACE_AUTH_OUTCOME_VERIFIED';
+  String get outcomePinUsed => 'FACE_AUTH_OUTCOME_PIN_USED';
+  String get outcomeHcmFallback => 'FACE_AUTH_OUTCOME_HCM_FALLBACK';
+  String get outcomeMissed => 'FACE_AUTH_OUTCOME_MISSED';
+  String get outcomeFailed => 'FACE_AUTH_OUTCOME_FAILED';
+  String get methodEnrollmentPin => 'FACE_AUTH_METHOD_ENROLLMENT_PIN';
+  String get methodFacialRecognition => 'FACE_AUTH_METHOD_FACIAL_RECOGNITION';
+  String get methodFaceShort => 'FACE_AUTH_METHOD_FACE_SHORT';
+  String get methodPinShort => 'FACE_AUTH_METHOD_PIN_SHORT';
+  String get justNow => 'FACE_AUTH_JUST_NOW';
+  String get activeSession => 'FACE_AUTH_ACTIVE_SESSION';
+
+  // Non-mobile enrollment
+  String get internetRequired => 'FACE_AUTH_INTERNET_REQUIRED';
+  String get enrollmentOfflineNote => 'FACE_AUTH_ENROLLMENT_OFFLINE_NOTE';
+  String get enrollmentSuccessful => 'FACE_AUTH_ENROLLMENT_SUCCESSFUL';
+  String get doneButton => 'FACE_AUTH_DONE';
+
+  // Re-verification popup / overlay
+  String get scanToProceed => 'FACE_AUTH_SCAN_TO_PROCEED';
+  String get verifyToContinue => 'FACE_AUTH_VERIFY_TO_CONTINUE';
+  String get verifyToContinueWorking =>
+      'FACE_AUTH_VERIFY_TO_CONTINUE_WORKING';
+  String get systemUserVerifyFirst => 'FACE_AUTH_SYSTEM_USER_VERIFY_FIRST';
+  String get coWorkerVerification => 'FACE_AUTH_COWORKER_VERIFICATION';
+  String get scanEachFace => 'FACE_AUTH_SCAN_EACH_FACE';
+  String get viewAll => 'FACE_AUTH_VIEW_ALL';
 }
 
 class DatabaseError {

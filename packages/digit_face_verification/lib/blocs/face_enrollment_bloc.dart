@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -215,7 +216,9 @@ class FaceEnrollmentBloc
         emit(const FaceEnrollmentState.completed());
       }
     } catch (e) {
-      emit(FaceEnrollmentState.error(message: 'Enrollment failed: $e'));
+      debugPrint('FaceEnrollmentBloc: enrollment failed: $e');
+      emit(const FaceEnrollmentState.error(
+          message: 'FACE_AUTH_ENROLLMENT_FAILED'));
     }
   }
 
@@ -253,11 +256,11 @@ class FaceEnrollmentBloc
 
   String _getAngleInstruction(int index) {
     const instructions = [
-      'Look straight at the camera',
-      'Turn slightly to the left',
-      'Turn slightly to the right',
-      'Look slightly up',
-      'Look slightly down',
+      'FACE_AUTH_ANGLE_STRAIGHT',
+      'FACE_AUTH_ANGLE_LEFT',
+      'FACE_AUTH_ANGLE_RIGHT',
+      'FACE_AUTH_ANGLE_UP',
+      'FACE_AUTH_ANGLE_DOWN',
     ];
     return index < instructions.length ? instructions[index] : instructions[0];
   }

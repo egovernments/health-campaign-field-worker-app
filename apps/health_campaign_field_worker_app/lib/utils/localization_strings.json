@@ -1234,5 +1234,1853 @@
     "locale": "pt_MZ",
     "message": "Redose Concluída",
     "module": "hcm-delivery"
+  },
+  {
+    "code": "FACE_AUTH_GATE_VERIFIED",
+    "locale": "en_MZ",
+    "message": "Face Verified",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_VERIFIED",
+    "locale": "pt_MZ",
+    "message": "Rosto verificado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFY",
+    "locale": "en_MZ",
+    "message": "Verify PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFY",
+    "locale": "pt_MZ",
+    "message": "Verificar PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_ENTER",
+    "locale": "en_MZ",
+    "message": "Enter your PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_ENTER",
+    "locale": "pt_MZ",
+    "message": "Introduza o seu PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_INVALID",
+    "locale": "en_MZ",
+    "message": "Invalid PIN. Please try again.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_INVALID",
+    "locale": "pt_MZ",
+    "message": "PIN inválido. Tente novamente.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_SELECT_PROFILE",
+    "locale": "en_MZ",
+    "message": "Please select a profile",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_SELECT_PROFILE",
+    "locale": "pt_MZ",
+    "message": "Selecione um perfil",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_PIN_NOTE",
+    "locale": "en_MZ",
+    "message": "Please note this PIN. It can be used as a backup for face verification.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_PIN_NOTE",
+    "locale": "pt_MZ",
+    "message": "Anote este PIN. Pode ser usado como alternativa à verificação facial.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_USE_PIN",
+    "locale": "en_MZ",
+    "message": "Use PIN Instead",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_USE_PIN",
+    "locale": "pt_MZ",
+    "message": "Usar PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LOGOUT_CONFIRM",
+    "locale": "en_MZ",
+    "message": "Are you sure you want to logout?",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LOGOUT_CONFIRM",
+    "locale": "pt_MZ",
+    "message": "Tem a certeza de que deseja terminar sessão?",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_POSITION_FACE",
+    "locale": "en_MZ",
+    "message": "Position your face to verify identity",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_POSITION_FACE",
+    "locale": "pt_MZ",
+    "message": "Posicione o seu rosto para verificar a identidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFICATION_FAILED",
+    "locale": "en_MZ",
+    "message": "Face Verification Failed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFICATION_FAILED",
+    "locale": "pt_MZ",
+    "message": "Falha na verificação facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_FACE_MATCH",
+    "locale": "en_MZ",
+    "message": "Face match",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_FACE_MATCH",
+    "locale": "pt_MZ",
+    "message": "Rosto correspondente",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFIED",
+    "locale": "en_MZ",
+    "message": "PIN verified",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFIED",
+    "locale": "pt_MZ",
+    "message": "PIN verificado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_WORKER_NOT_FOUND",
+    "locale": "en_MZ",
+    "message": "Worker Not Found",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_WORKER_NOT_FOUND",
+    "locale": "pt_MZ",
+    "message": "Trabalhador não encontrado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_WORKER_NOT_FOUND_MESSAGE",
+    "locale": "en_MZ",
+    "message": "Your worker record was not found in the registry. Please contact your supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_WORKER_NOT_FOUND_MESSAGE",
+    "locale": "pt_MZ",
+    "message": "O seu registo de trabalhador não foi encontrado. Contacte o seu supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SOMETHING_WENT_WRONG",
+    "locale": "en_MZ",
+    "message": "Something Went Wrong",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SOMETHING_WENT_WRONG",
+    "locale": "pt_MZ",
+    "message": "Ocorreu um erro",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CAPTURING_GPS",
+    "locale": "en_MZ",
+    "message": "Please wait while we capture your GPS coordinates.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CAPTURING_GPS",
+    "locale": "pt_MZ",
+    "message": "Aguarde enquanto capturamos as suas coordenadas de GPS.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DEVICE_CAPACITY_REACHED",
+    "locale": "en_MZ",
+    "message": "Device capacity reached",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DEVICE_CAPACITY_REACHED",
+    "locale": "pt_MZ",
+    "message": "Capacidade do dispositivo atingida",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DEVICE_CAPACITY_MESSAGE",
+    "locale": "en_MZ",
+    "message": "This device has reached its maximum number of enrolled users. Please contact your supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DEVICE_CAPACITY_MESSAGE",
+    "locale": "pt_MZ",
+    "message": "Este dispositivo atingiu o número máximo de utilizadores registados. Contacte o seu supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CONTINUE_ANYWAY",
+    "locale": "en_MZ",
+    "message": "Continue Anyway",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CONTINUE_ANYWAY",
+    "locale": "pt_MZ",
+    "message": "Continuar mesmo assim",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENTER_YOUR_PIN",
+    "locale": "en_MZ",
+    "message": "Enter Your PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENTER_YOUR_PIN",
+    "locale": "pt_MZ",
+    "message": "Introduza o seu PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_SUBTITLE",
+    "locale": "en_MZ",
+    "message": "Enter the 4-digit backup PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_SUBTITLE",
+    "locale": "pt_MZ",
+    "message": "Introduza o PIN de reserva de 4 dígitos",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TRY_AGAIN_LOOK_CAMERA",
+    "locale": "en_MZ",
+    "message": "Try again — look at the camera",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TRY_AGAIN_LOOK_CAMERA",
+    "locale": "pt_MZ",
+    "message": "Tente novamente — olhe para a câmara",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LATER",
+    "locale": "en_MZ",
+    "message": "Later",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LATER",
+    "locale": "pt_MZ",
+    "message": "Mais tarde",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_NOW",
+    "locale": "en_MZ",
+    "message": "Verify Now",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_NOW",
+    "locale": "pt_MZ",
+    "message": "Verificar agora",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY",
+    "locale": "en_MZ",
+    "message": "Verify",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY",
+    "locale": "pt_MZ",
+    "message": "Verificar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFICATION_TITLE",
+    "locale": "en_MZ",
+    "message": "PIN Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFICATION_TITLE",
+    "locale": "pt_MZ",
+    "message": "Verificação por PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_FALLBACK_ENTER",
+    "locale": "en_MZ",
+    "message": "Enter your fallback PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_FALLBACK_ENTER",
+    "locale": "pt_MZ",
+    "message": "Introduza o seu PIN de reserva",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SELECT_PROFILE_LABEL",
+    "locale": "en_MZ",
+    "message": "Select Profile",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SELECT_PROFILE_LABEL",
+    "locale": "pt_MZ",
+    "message": "Selecionar perfil",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TITLE",
+    "locale": "en_MZ",
+    "message": "Verification History",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TITLE",
+    "locale": "pt_MZ",
+    "message": "Histórico de verificação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_LABEL",
+    "locale": "en_MZ",
+    "message": "History",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_LABEL",
+    "locale": "pt_MZ",
+    "message": "Histórico",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TAB_VERIFICATION",
+    "locale": "en_MZ",
+    "message": "Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TAB_VERIFICATION",
+    "locale": "pt_MZ",
+    "message": "Verificação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TAB_ENROLLMENT",
+    "locale": "en_MZ",
+    "message": "Enrollment",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TAB_ENROLLMENT",
+    "locale": "pt_MZ",
+    "message": "Registo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SEARCH_HINT",
+    "locale": "en_MZ",
+    "message": "Search",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SEARCH_HINT",
+    "locale": "pt_MZ",
+    "message": "Pesquisar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_EMPTY",
+    "locale": "en_MZ",
+    "message": "No verification events yet",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_EMPTY",
+    "locale": "pt_MZ",
+    "message": "Ainda não existem eventos de verificação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_UNKNOWN",
+    "locale": "en_MZ",
+    "message": "Unknown",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_UNKNOWN",
+    "locale": "pt_MZ",
+    "message": "Desconhecido",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_LOGIN_VERIFICATION",
+    "locale": "en_MZ",
+    "message": "Login Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_LOGIN_VERIFICATION",
+    "locale": "pt_MZ",
+    "message": "Verificação de início de sessão",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_REVERIFICATION",
+    "locale": "en_MZ",
+    "message": "Re-verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_REVERIFICATION",
+    "locale": "pt_MZ",
+    "message": "Reverificação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_CHECK_IN",
+    "locale": "en_MZ",
+    "message": "Check-in",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_CHECK_IN",
+    "locale": "pt_MZ",
+    "message": "Registo de entrada",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_ENROLLMENT",
+    "locale": "en_MZ",
+    "message": "Face Enrollment",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_ENROLLMENT",
+    "locale": "pt_MZ",
+    "message": "Registo facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_VERIFIED",
+    "locale": "en_MZ",
+    "message": "Verified",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_VERIFIED",
+    "locale": "pt_MZ",
+    "message": "Verificado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_PIN_USED",
+    "locale": "en_MZ",
+    "message": "PIN Used",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_PIN_USED",
+    "locale": "pt_MZ",
+    "message": "PIN utilizado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_HCM_FALLBACK",
+    "locale": "en_MZ",
+    "message": "HCM Fallback",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_HCM_FALLBACK",
+    "locale": "pt_MZ",
+    "message": "Alternativa HCM",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_MISSED",
+    "locale": "en_MZ",
+    "message": "Missed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_MISSED",
+    "locale": "pt_MZ",
+    "message": "Perdido",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_FAILED",
+    "locale": "en_MZ",
+    "message": "Failed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_FAILED",
+    "locale": "pt_MZ",
+    "message": "Falhou",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_ENROLLMENT_PIN",
+    "locale": "en_MZ",
+    "message": "Enrollment Pin Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_ENROLLMENT_PIN",
+    "locale": "pt_MZ",
+    "message": "Verificação por PIN de registo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_FACIAL_RECOGNITION",
+    "locale": "en_MZ",
+    "message": "Facial Recognition",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_FACIAL_RECOGNITION",
+    "locale": "pt_MZ",
+    "message": "Reconhecimento facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_FACE_SHORT",
+    "locale": "en_MZ",
+    "message": "Face",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_FACE_SHORT",
+    "locale": "pt_MZ",
+    "message": "Rosto",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_PIN_SHORT",
+    "locale": "en_MZ",
+    "message": "PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_PIN_SHORT",
+    "locale": "pt_MZ",
+    "message": "PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_JUST_NOW",
+    "locale": "en_MZ",
+    "message": "Just now",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_JUST_NOW",
+    "locale": "pt_MZ",
+    "message": "Agora mesmo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ACTIVE_SESSION",
+    "locale": "en_MZ",
+    "message": "Active Session",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ACTIVE_SESSION",
+    "locale": "pt_MZ",
+    "message": "Sessão ativa",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INTERNET_REQUIRED",
+    "locale": "en_MZ",
+    "message": "Internet Required",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INTERNET_REQUIRED",
+    "locale": "pt_MZ",
+    "message": "Internet necessária",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_OFFLINE_NOTE",
+    "locale": "en_MZ",
+    "message": "The enrollment is saved on this device and will sync to the worker registry automatically when internet returns.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_OFFLINE_NOTE",
+    "locale": "pt_MZ",
+    "message": "O registo é guardado neste dispositivo e será sincronizado automaticamente com o registo de trabalhadores quando a Internet regressar.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_SUCCESSFUL",
+    "locale": "en_MZ",
+    "message": "Enrollment Successful",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_SUCCESSFUL",
+    "locale": "pt_MZ",
+    "message": "Registo concluído com sucesso",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DONE",
+    "locale": "en_MZ",
+    "message": "Done",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DONE",
+    "locale": "pt_MZ",
+    "message": "Concluído",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCAN_TO_PROCEED",
+    "locale": "en_MZ",
+    "message": "Scan your face to Proceed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCAN_TO_PROCEED",
+    "locale": "pt_MZ",
+    "message": "Digitalize o seu rosto para continuar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_TO_CONTINUE",
+    "locale": "en_MZ",
+    "message": "Verify your identity to continue",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_TO_CONTINUE",
+    "locale": "pt_MZ",
+    "message": "Verifique a sua identidade para continuar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_TO_CONTINUE_WORKING",
+    "locale": "en_MZ",
+    "message": "Please verify your identity to continue working",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_TO_CONTINUE_WORKING",
+    "locale": "pt_MZ",
+    "message": "Verifique a sua identidade para continuar a trabalhar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SYSTEM_USER_VERIFY_FIRST",
+    "locale": "en_MZ",
+    "message": "System user must verify their face first before co-workers can proceed.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SYSTEM_USER_VERIFY_FIRST",
+    "locale": "pt_MZ",
+    "message": "O utilizador do sistema deve verificar o seu rosto antes de os colegas poderem continuar.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_COWORKER_VERIFICATION",
+    "locale": "en_MZ",
+    "message": "Co-worker Face Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_COWORKER_VERIFICATION",
+    "locale": "pt_MZ",
+    "message": "Verificação facial de colegas",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCAN_EACH_FACE",
+    "locale": "en_MZ",
+    "message": "Scan Each Face Now",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCAN_EACH_FACE",
+    "locale": "pt_MZ",
+    "message": "Digitalize cada rosto agora",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VIEW_ALL",
+    "locale": "en_MZ",
+    "message": "View All",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VIEW_ALL",
+    "locale": "pt_MZ",
+    "message": "Ver tudo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "SYNC_DIALOG_SESSION_EXPIRED",
+    "locale": "en_MZ",
+    "message": "Your session has expired. Please verify again.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "SYNC_DIALOG_SESSION_EXPIRED",
+    "locale": "pt_MZ",
+    "message": "A sua sessão expirou. Verifique novamente.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_DOWN",
+    "locale": "en_MZ",
+    "message": "Look slightly down",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_DOWN",
+    "locale": "pt_MZ",
+    "message": "Olhe ligeiramente para baixo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_LEFT",
+    "locale": "en_MZ",
+    "message": "Turn slightly to the left",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_LEFT",
+    "locale": "pt_MZ",
+    "message": "Vire ligeiramente para a esquerda",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_RIGHT",
+    "locale": "en_MZ",
+    "message": "Turn slightly to the right",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_RIGHT",
+    "locale": "pt_MZ",
+    "message": "Vire ligeiramente para a direita",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_STRAIGHT",
+    "locale": "en_MZ",
+    "message": "Look straight at the camera",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_STRAIGHT",
+    "locale": "pt_MZ",
+    "message": "Olhe diretamente para a câmara",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_UP",
+    "locale": "en_MZ",
+    "message": "Look slightly up",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_UP",
+    "locale": "pt_MZ",
+    "message": "Olhe ligeiramente para cima",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_BACK",
+    "locale": "en_MZ",
+    "message": "Back",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_BACK",
+    "locale": "pt_MZ",
+    "message": "Voltar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_BEFORE_WE_BEGIN",
+    "locale": "en_MZ",
+    "message": "Before We Begin",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_BEFORE_WE_BEGIN",
+    "locale": "pt_MZ",
+    "message": "Antes de Começar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CAPTURE_FAILED",
+    "locale": "en_MZ",
+    "message": "Capture failed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CAPTURE_FAILED",
+    "locale": "pt_MZ",
+    "message": "Falha na captura",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_COPY",
+    "locale": "en_MZ",
+    "message": "Copy",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_COPY",
+    "locale": "pt_MZ",
+    "message": "Copiar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DELETE_FAILED",
+    "locale": "en_MZ",
+    "message": "Failed to delete face registration",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DELETE_FAILED",
+    "locale": "pt_MZ",
+    "message": "Falha ao eliminar o registo facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_MESSAGE",
+    "locale": "en_MZ",
+    "message": "Face enrolled successfully.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_MESSAGE",
+    "locale": "pt_MZ",
+    "message": "Rosto registado com sucesso.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_TITLE",
+    "locale": "en_MZ",
+    "message": "Face Enrolled",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_TITLE",
+    "locale": "pt_MZ",
+    "message": "Rosto Registado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_ANGLE_INSTRUCTION",
+    "locale": "en_MZ",
+    "message": "Follow the on-screen instructions for each angle",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_ANGLE_INSTRUCTION",
+    "locale": "pt_MZ",
+    "message": "Siga as instruções no ecrã para cada ângulo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_COMPLETE",
+    "locale": "en_MZ",
+    "message": "Enrollment complete",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_COMPLETE",
+    "locale": "pt_MZ",
+    "message": "Registo concluído",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_DESCRIPTION",
+    "locale": "en_MZ",
+    "message": "We need to capture your face from 5 angles and verify liveness to set up secure Face verification. A backup PIN will also be generated for you.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_DESCRIPTION",
+    "locale": "pt_MZ",
+    "message": "Precisamos de capturar o seu rosto em 5 ângulos e verificar a vivacidade para configurar a verificação facial segura. Um PIN de reserva também será gerado para si.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_DUPLICATE_DETECTED",
+    "locale": "en_MZ",
+    "message": "This face is already enrolled for another user",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_DUPLICATE_DETECTED",
+    "locale": "pt_MZ",
+    "message": "Este rosto já está registado para outro utilizador",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_FAILED",
+    "locale": "en_MZ",
+    "message": "Enrollment failed. Please try again.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_FAILED",
+    "locale": "pt_MZ",
+    "message": "Falha no registo. Por favor, tente novamente.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_LIVENESS_CHECK",
+    "locale": "en_MZ",
+    "message": "Liveness check",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_LIVENESS_CHECK",
+    "locale": "pt_MZ",
+    "message": "Verificação de vivacidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_MAX_USERS",
+    "locale": "en_MZ",
+    "message": "This device has reached its maximum number of enrolled users. Please contact your supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_MAX_USERS",
+    "locale": "pt_MZ",
+    "message": "Este dispositivo atingiu o número máximo de utilizadores registados. Por favor, contacte o seu supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_PIN_ASSIGNED",
+    "locale": "en_MZ",
+    "message": "Your backup PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_PIN_ASSIGNED",
+    "locale": "pt_MZ",
+    "message": "O seu PIN de reserva",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_QUALITY_LOW",
+    "locale": "en_MZ",
+    "message": "Image quality too low",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_QUALITY_LOW",
+    "locale": "pt_MZ",
+    "message": "Qualidade de imagem demasiado baixa",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_START",
+    "locale": "en_MZ",
+    "message": "Start enrollment",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_START",
+    "locale": "pt_MZ",
+    "message": "Iniciar registo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_TITLE",
+    "locale": "en_MZ",
+    "message": "Face Enrollment",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_TITLE",
+    "locale": "pt_MZ",
+    "message": "Registo Facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_ATTEMPT_COUNTER",
+    "locale": "en_MZ",
+    "message": "Attempt",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_ATTEMPT_COUNTER",
+    "locale": "pt_MZ",
+    "message": "Tentativa",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_FALLBACK_REQUIRED",
+    "locale": "en_MZ",
+    "message": "Maximum attempts reached. Use your PIN to continue.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_FALLBACK_REQUIRED",
+    "locale": "pt_MZ",
+    "message": "Número máximo de tentativas atingido. Use o seu PIN para continuar.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_REJECTED",
+    "locale": "en_MZ",
+    "message": "Face not recognised",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_REJECTED",
+    "locale": "pt_MZ",
+    "message": "Rosto não reconhecido",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_SCANNING",
+    "locale": "en_MZ",
+    "message": "Scanning...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_SCANNING",
+    "locale": "pt_MZ",
+    "message": "A digitalizar...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_TITLE",
+    "locale": "en_MZ",
+    "message": "Face Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_TITLE",
+    "locale": "pt_MZ",
+    "message": "Verificação Facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GO_BACK",
+    "locale": "en_MZ",
+    "message": "Go Back",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GO_BACK",
+    "locale": "pt_MZ",
+    "message": "Voltar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GOT_IT",
+    "locale": "en_MZ",
+    "message": "Got it",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GOT_IT",
+    "locale": "pt_MZ",
+    "message": "Entendi",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GOT_IT_CONTINUE",
+    "locale": "en_MZ",
+    "message": "Got it! Continue",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GOT_IT_CONTINUE",
+    "locale": "pt_MZ",
+    "message": "Entendi! Continuar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STEADY",
+    "locale": "en_MZ",
+    "message": "Hold steady",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STEADY",
+    "locale": "pt_MZ",
+    "message": "Mantenha-se firme",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STILL",
+    "locale": "en_MZ",
+    "message": "Hold still...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STILL",
+    "locale": "pt_MZ",
+    "message": "Não se mexa...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STILL_CAPTURING",
+    "locale": "en_MZ",
+    "message": "Hold still, capturing...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STILL_CAPTURING",
+    "locale": "pt_MZ",
+    "message": "Não se mexa, a capturar...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INFO",
+    "locale": "en_MZ",
+    "message": "Info",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INFO",
+    "locale": "pt_MZ",
+    "message": "Informação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INIT_FAILED",
+    "locale": "en_MZ",
+    "message": "Failed to initialise face recognition",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INIT_FAILED",
+    "locale": "pt_MZ",
+    "message": "Falha ao inicializar o reconhecimento facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INITIALIZING",
+    "locale": "en_MZ",
+    "message": "Initializing face recognition...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INITIALIZING",
+    "locale": "pt_MZ",
+    "message": "A inicializar o reconhecimento facial...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INSTRUCTIONS_SUBTITLE",
+    "locale": "en_MZ",
+    "message": "Follow these instructions for smooth capture",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INSTRUCTIONS_SUBTITLE",
+    "locale": "pt_MZ",
+    "message": "Siga estas instruções para uma captura fácil",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_GOOD",
+    "locale": "en_MZ",
+    "message": "Good lighting",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_GOOD",
+    "locale": "pt_MZ",
+    "message": "Boa iluminação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_TOO_BRIGHT",
+    "locale": "en_MZ",
+    "message": "Avoid direct bright light",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_TOO_BRIGHT",
+    "locale": "pt_MZ",
+    "message": "Evite luz direta forte",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_TOO_LOW",
+    "locale": "en_MZ",
+    "message": "Move to a brighter area",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_TOO_LOW",
+    "locale": "pt_MZ",
+    "message": "Vá para um local mais iluminado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_UNKNOWN",
+    "locale": "en_MZ",
+    "message": "Unable to assess lighting",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_UNKNOWN",
+    "locale": "pt_MZ",
+    "message": "Não foi possível avaliar a iluminação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_BLINK",
+    "locale": "en_MZ",
+    "message": "Please blink your eyes",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_BLINK",
+    "locale": "pt_MZ",
+    "message": "Por favor, pisque os olhos",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_FAILED",
+    "locale": "en_MZ",
+    "message": "Liveness check failed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_FAILED",
+    "locale": "pt_MZ",
+    "message": "Falha na verificação de vivacidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_PASSED",
+    "locale": "en_MZ",
+    "message": "Liveness check passed!",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_PASSED",
+    "locale": "pt_MZ",
+    "message": "Verificação de vivacidade concluída!",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TIMEOUT",
+    "locale": "en_MZ",
+    "message": "Challenge timed out",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TIMEOUT",
+    "locale": "pt_MZ",
+    "message": "Tempo esgotado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TURN_LEFT",
+    "locale": "en_MZ",
+    "message": "Turn your head to the left",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TURN_LEFT",
+    "locale": "pt_MZ",
+    "message": "Vire a cabeça para a esquerda",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TURN_RIGHT",
+    "locale": "en_MZ",
+    "message": "Turn your head to the right",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TURN_RIGHT",
+    "locale": "pt_MZ",
+    "message": "Vire a cabeça para a direita",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LOGOUT",
+    "locale": "en_MZ",
+    "message": "Logout",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LOGOUT",
+    "locale": "pt_MZ",
+    "message": "Terminar sessão",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MAX_USERS_TITLE",
+    "locale": "en_MZ",
+    "message": "Device capacity reached",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MAX_USERS_TITLE",
+    "locale": "pt_MZ",
+    "message": "Capacidade do dispositivo atingida",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MOVE_BACK",
+    "locale": "en_MZ",
+    "message": "Move back",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MOVE_BACK",
+    "locale": "pt_MZ",
+    "message": "Afaste-se",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MOVE_CLOSER",
+    "locale": "en_MZ",
+    "message": "Move closer",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MOVE_CLOSER",
+    "locale": "pt_MZ",
+    "message": "Aproxime-se",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_NO_GPS_AVAILABLE",
+    "locale": "en_MZ",
+    "message": "GPS not available",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_NO_GPS_AVAILABLE",
+    "locale": "pt_MZ",
+    "message": "GPS não disponível",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_NO_REGISTERED_FACE",
+    "locale": "en_MZ",
+    "message": "No registered face found. Please register first.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_NO_REGISTERED_FACE",
+    "locale": "pt_MZ",
+    "message": "Nenhum rosto registado. Por favor, registe-se primeiro.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_BRIGHTNESS",
+    "locale": "en_MZ",
+    "message": "Brightness — move to a well-lit area and face the light source. Avoid sitting with a bright window behind you.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_BRIGHTNESS",
+    "locale": "pt_MZ",
+    "message": "Luminosidade — vá para um local bem iluminado e fique de frente para a fonte de luz. Evite ficar com uma janela clara atrás de si.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_CLARITY",
+    "locale": "en_MZ",
+    "message": "Clarity — remove glasses, hats, masks, or anything covering your face. Keep your eyes open and face centred.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_CLARITY",
+    "locale": "pt_MZ",
+    "message": "Nitidez — retire óculos, chapéus, máscaras ou qualquer coisa que cubra o rosto. Mantenha os olhos abertos e o rosto centrado.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_DISTANCE",
+    "locale": "en_MZ",
+    "message": "Distance — hold the phone 30–40 cm from your face. Too close or too far reduces quality.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_DISTANCE",
+    "locale": "pt_MZ",
+    "message": "Distância — segure o telemóvel a 30–40 cm do rosto. Muito perto ou muito longe reduz a qualidade.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_STAY_STILL",
+    "locale": "en_MZ",
+    "message": "Stay still — hold the phone steady and keep your face within the oval guide.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_STAY_STILL",
+    "locale": "pt_MZ",
+    "message": "Fique quieto — segure o telemóvel com firmeza e mantenha o rosto dentro da guia oval.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_COPIED",
+    "locale": "en_MZ",
+    "message": "PIN copied to clipboard",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_COPIED",
+    "locale": "pt_MZ",
+    "message": "PIN copiado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_TITLE",
+    "locale": "en_MZ",
+    "message": "Enter Your PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_TITLE",
+    "locale": "pt_MZ",
+    "message": "Introduza o Seu PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PROCESSING",
+    "locale": "en_MZ",
+    "message": "Processing face...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PROCESSING",
+    "locale": "pt_MZ",
+    "message": "A processar o rosto...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REGISTRATION_FAILED",
+    "locale": "en_MZ",
+    "message": "Registration failed. Please try again.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REGISTRATION_FAILED",
+    "locale": "pt_MZ",
+    "message": "Falha no registo. Por favor, tente novamente.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REJECTED_MESSAGE",
+    "locale": "en_MZ",
+    "message": "Face does not match. Please try again.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REJECTED_MESSAGE",
+    "locale": "pt_MZ",
+    "message": "O rosto não corresponde. Por favor, tente novamente.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_MISSED",
+    "locale": "en_MZ",
+    "message": "Re-verification missed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_MISSED",
+    "locale": "pt_MZ",
+    "message": "Reverificação perdida",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_PROMPT",
+    "locale": "en_MZ",
+    "message": "Please verify your identity to continue",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_PROMPT",
+    "locale": "pt_MZ",
+    "message": "Por favor, verifique a sua identidade para continuar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_TITLE",
+    "locale": "en_MZ",
+    "message": "Identity Re-verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_TITLE",
+    "locale": "pt_MZ",
+    "message": "Reverificação de Identidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_VERIFIED",
+    "locale": "en_MZ",
+    "message": "Identity verified",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_VERIFIED",
+    "locale": "pt_MZ",
+    "message": "Identidade verificada",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCANNING",
+    "locale": "en_MZ",
+    "message": "Scanning",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCANNING",
+    "locale": "pt_MZ",
+    "message": "A digitalizar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCANNING_HOLD_STEADY",
+    "locale": "en_MZ",
+    "message": "Scanning — hold steady",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCANNING_HOLD_STEADY",
+    "locale": "pt_MZ",
+    "message": "A digitalizar — mantenha-se firme",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SETTING_UP_PROFILE",
+    "locale": "en_MZ",
+    "message": "Setting up your profile...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SETTING_UP_PROFILE",
+    "locale": "pt_MZ",
+    "message": "A configurar o seu perfil...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_STEP_LIVENESS",
+    "locale": "en_MZ",
+    "message": "Complete liveness check",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_STEP_LIVENESS",
+    "locale": "pt_MZ",
+    "message": "Conclua a verificação de vivacidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TAP_CAPTURE",
+    "locale": "en_MZ",
+    "message": "Face detected — tap capture",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TAP_CAPTURE",
+    "locale": "pt_MZ",
+    "message": "Rosto detetado — toque em capturar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TILT_DOWN",
+    "locale": "en_MZ",
+    "message": "Tilt your head slightly down",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TILT_DOWN",
+    "locale": "pt_MZ",
+    "message": "Incline ligeiramente a cabeça para baixo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TILT_UP",
+    "locale": "en_MZ",
+    "message": "Tilt your head slightly up",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TILT_UP",
+    "locale": "pt_MZ",
+    "message": "Incline ligeiramente a cabeça para cima",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CLEAR_FACE",
+    "locale": "en_MZ",
+    "message": "Clear Face Visibility",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CLEAR_FACE",
+    "locale": "pt_MZ",
+    "message": "Rosto Bem Visível",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CLEAR_FACE_BODY",
+    "locale": "en_MZ",
+    "message": "Remove glasses, masks, or anything covering your face.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CLEAR_FACE_BODY",
+    "locale": "pt_MZ",
+    "message": "Retire óculos, máscaras ou qualquer coisa que cubra o rosto.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CORRECT_DISTANCE",
+    "locale": "en_MZ",
+    "message": "Correct Distance",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CORRECT_DISTANCE",
+    "locale": "pt_MZ",
+    "message": "Distância Correta",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CORRECT_DISTANCE_BODY",
+    "locale": "en_MZ",
+    "message": "Keep your face 30–40 cm from the camera.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CORRECT_DISTANCE_BODY",
+    "locale": "pt_MZ",
+    "message": "Mantenha o rosto a 30–40 cm da câmara.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_FOLLOW_GUIDANCE",
+    "locale": "en_MZ",
+    "message": "Follow Onscreen Guidance",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_FOLLOW_GUIDANCE",
+    "locale": "pt_MZ",
+    "message": "Siga as Instruções no Ecrã",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_FOLLOW_GUIDANCE_BODY",
+    "locale": "en_MZ",
+    "message": "Turn left or right as prompted during capture.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_FOLLOW_GUIDANCE_BODY",
+    "locale": "pt_MZ",
+    "message": "Vire à esquerda ou à direita conforme indicado durante a captura.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_GOOD_LIGHTING",
+    "locale": "en_MZ",
+    "message": "Good Lighting",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_GOOD_LIGHTING",
+    "locale": "pt_MZ",
+    "message": "Boa Iluminação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_GOOD_LIGHTING_BODY",
+    "locale": "en_MZ",
+    "message": "Avoid sitting near a bright window or light source.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_GOOD_LIGHTING_BODY",
+    "locale": "pt_MZ",
+    "message": "Evite ficar perto de uma janela clara ou fonte de luz.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_STEADY_PHONE",
+    "locale": "en_MZ",
+    "message": "Keep Your Phone Steady",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_STEADY_PHONE",
+    "locale": "pt_MZ",
+    "message": "Mantenha o Telemóvel Firme",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_STEADY_PHONE_BODY",
+    "locale": "en_MZ",
+    "message": "Hold your phone steady while the scan is in progress.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_STEADY_PHONE_BODY",
+    "locale": "pt_MZ",
+    "message": "Segure o telemóvel com firmeza durante a digitalização.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIPS_TITLE",
+    "locale": "en_MZ",
+    "message": "Tips for best photo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIPS_TITLE",
+    "locale": "pt_MZ",
+    "message": "Dicas para a melhor foto",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TRY_AGAIN",
+    "locale": "en_MZ",
+    "message": "Try Again",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TRY_AGAIN",
+    "locale": "pt_MZ",
+    "message": "Tentar Novamente",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFICATION_FAILED_TITLE",
+    "locale": "en_MZ",
+    "message": "Verification Failed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFICATION_FAILED_TITLE",
+    "locale": "pt_MZ",
+    "message": "Falha na Verificação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFIED_MESSAGE",
+    "locale": "en_MZ",
+    "message": "Face verified",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFIED_MESSAGE",
+    "locale": "pt_MZ",
+    "message": "Rosto verificado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_IDENTITY",
+    "locale": "en_MZ",
+    "message": "Verify Identity",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_IDENTITY",
+    "locale": "pt_MZ",
+    "message": "Verificar Identidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFYING",
+    "locale": "en_MZ",
+    "message": "Verifying face...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFYING",
+    "locale": "pt_MZ",
+    "message": "A verificar o rosto...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REMIND_ME_LATER",
+    "locale": "en_MZ",
+    "message": "Remind me later",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REMIND_ME_LATER",
+    "locale": "pt_MZ",
+    "message": "Lembrar-me mais tarde",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_FOR",
+    "locale": "en_MZ",
+    "message": "Face enrolled for",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_FOR",
+    "locale": "pt_MZ",
+    "message": "Rosto registado para",
+    "module": "hcm-common"
   }
 ]
