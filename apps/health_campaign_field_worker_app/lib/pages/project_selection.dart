@@ -247,49 +247,49 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void navigateToBoundary(String boundary) async {
-    // Boundary-hierarchy localization was deferred from app-boot until now
-    // because hierarchyType only becomes known after project selection. The
-    // module key uses the stripped hierarchy (e.g. `CONSOLEHCM`, not
-    // `CONSOLEHCM_NI`) to match the server-side module naming.
-    //
-    // Await the load before continuing so boundary labels are present by the
-    // time the boundary picker renders.
-    final localizationBloc = context.read<LocalizationBloc>();
-    localizationBloc.add(
-      LocalizationEvent.onLoadLocalization(
-        module:
-            'hcm-boundary-${runtimeHierarchyType().toLowerCase()}',
-        tenantId: envConfig.variables.tenantId,
-        locale: AppSharedPreferences().getSelectedLocale!,
-        path: Constants.localizationApiPath,
-      ),
-    );
-    await localizationBloc.stream.firstWhere((s) => !s.loading);
+    final projectReferenceId = context.selectedProject.referenceID ?? '';
+    final selectedLocale = AppSharedPreferences().getSelectedLocale!;
+    final locBloc = context.read<LocalizationBloc>();
 
-    // todo : will change module name later with dynamic keys and add a try catch to throw error if api fails
-    await triggerLocalizationIfUpdated(
-      context: context,
-      locale: AppSharedPreferences().getSelectedLocale!,
-      moduleKey:
-          'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,CLOSEHOUSEHOLD,COMPLAINTS,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,CHECKLIST',
-      /// TODO: NEED TO MOVE CONSTANT FILE
-      projectReferenceId: context.selectedProject.referenceID ?? '',
-    );
+    // Build module string for campaign localizations
+    const moduleKey =
+        'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,CLOSEHOUSEHOLD,COMPLAINTS,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,CHECKLIST,STOCK,LQA,INSIDEMONITORING';
+    final keys = moduleKey.split(',').map((e) => e.trim()).toList();
+    final moduleNames =
+        keys.map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId');
+    final fullModuleString = moduleNames.join(',');
+
+    // Load campaign localizations for the selected locale only (with DB caching)
+    locBloc.add(LocalizationEvent.onLoadLocalization(
+      module: fullModuleString,
+      tenantId: envConfig.variables.tenantId,
+      locale: selectedLocale,
+      path: Constants.localizationApiPath,
+    ));
+
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
 
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);
-      context
-          .read<LocalizationBloc>()
-          .add(LocalizationEvent.onLoadLocalization(
-        module: 'hcm-permissionhandler-${context.selectedProject.referenceID}',
+
+      // Load permission handler localizations for selected locale (with DB caching)
+      locBloc.add(LocalizationEvent.onLoadLocalization(
+        module: 'hcm-permissionhandler-$projectReferenceId',
         tenantId: envConfig.variables.tenantId,
-        locale: AppSharedPreferences()
-            .getSelectedLocale!,
+        locale: selectedLocale,
         path: Constants.localizationApiPath,
       ));
+
+      // Load boundary localizations for selected locale (with DB caching)
+      locBloc.add(LocalizationEvent.onLoadLocalization(
+        module: 'hcm-boundary-${runtimeHierarchyType().toLowerCase()}',
+        tenantId: envConfig.variables.tenantId,
+        locale: selectedLocale,
+        path: Constants.localizationApiPath,
+      ));
+
       if (mounted) {
         context.router.replaceAll([
           const PermissionsRoute(),

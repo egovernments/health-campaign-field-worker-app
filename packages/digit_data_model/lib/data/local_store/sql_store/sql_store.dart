@@ -144,7 +144,22 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 6; // Increment schema version
+  int get schemaVersion => 11; // Increment schema version
+
+  Future<void> _createTaskSearchIndexes() async {
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS task_search_project_created_status
+      ON task (project_id, client_created_by, status);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS task_search_project_created_status_modifiedtime
+      ON task (project_id, client_created_by, status, client_modified_time);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS task_search_project_created_status_plannedstart
+      ON task (project_id, client_created_by, status, planned_start_date);
+    ''');
+  }
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -326,8 +341,98 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               }
             }
           }
+
+          if (from < 10) {
+            try {
+              await _createTaskSearchIndexes();
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to create task search indexes");
+              }
+            }
+            try {
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS identifier_identifierid ON identifier (identifier_id)');
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS identifier_individualclientref ON identifier (individual_client_reference_id)');
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS address_localityboundarycode ON address (locality_boundary_code)');
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS address_relatedclientref ON address (related_client_reference_id)');
+              await customStatement('ANALYZE');
+            } catch (e) {
+              if (kDebugMode) {
+                print(
+                    "Failed to create identifier/address indexes in v10 migration: $e");
+              }
+            }
+          }
+
+          if (from < 11) {
+            try {
+              await _createTaskSearchIndexes();
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to create planned start task search index");
+              }
+            }
+            try {
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS task_status ON task (status)');
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS task_project_status ON task (project_id, status, is_deleted)');
+              await customStatement(
+                  'CREATE INDEX IF NOT EXISTS task_clientmodifiedtime ON task (client_modified_time)');
+              await customStatement('ANALYZE');
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to create task indexes in v11 migration: $e");
+              }
+            }
+            // Drift only emits @TableIndex statements on fresh schema
+            // creation. Existing users upgrading from v6..v10 reach v11
+            // without the name/individual/household search indexes that
+            // newly-installed users get for free — leaving the search-path
+            // perf work in f15d81697 ineffective for the upgrade path.
+            // Issue the same indexes here so upgraders catch up.
+            try {
+              await _createNameAndEntityClientRefIndexes();
+              await customStatement('ANALYZE');
+            } catch (e) {
+              if (kDebugMode) {
+                print(
+                    "Failed to create name/individual/household search indexes in v11 migration: $e");
+              }
+            }
+          }
         },
       );
+
+  /// Indexes that were originally declared via `@TableIndex` on the
+  /// Name, Individual, and Household tables. Idempotent — safe to call on
+  /// both fresh-installs (no-op via IF NOT EXISTS) and upgrades.
+  Future<void> _createNameAndEntityClientRefIndexes() async {
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS name_givenname
+      ON name (given_name);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS name_familyname
+      ON name (family_name);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS name_individualclientref
+      ON name (individual_client_reference_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS individual_clientref
+      ON individual (client_reference_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS household_self_clientref
+      ON household (client_reference_id);
+    ''');
+  }
 
   /// Flag to track if SQLCipher library has been initialized
   static bool _sqlCipherInitialized = false;
@@ -357,17 +462,24 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       // Return a `NativeDatabase` that uses the file for storage.
       return NativeDatabase(
         file,
-        logStatements: kDebugMode,
+        // Statement logging is very expensive when queries carry large
+        // IN(...) clauses. Opt-in via dart-define rather than auto-on in debug.
+        logStatements: const bool.fromEnvironment('DRIFT_LOG_STATEMENTS',
+            defaultValue: false),
         setup: (database) {
           // If an encryption key is provided, set it using SQLCipher's PRAGMA key
           if (encryptionKey != null && encryptionKey.isNotEmpty) {
-            // Use SQLCipher encryption with the provided key
-            database.execute("PRAGMA key = '$encryptionKey';");
+            database.execute(_sqlCipherKeyPragma(encryptionKey));
           }
           // Enable WAL mode for concurrent reads/writes across isolates
           database.execute('PRAGMA journal_mode = WAL;');
           // Wait up to 5 seconds when the DB is locked by another isolate
           database.execute('PRAGMA busy_timeout = 5000;');
+          // Read-path tuning for large local datasets (120K+ rows).
+          database.execute('PRAGMA cache_size = -20000;'); // ~20 MB page cache
+          database.execute('PRAGMA temp_store = MEMORY;');
+          database.execute('PRAGMA mmap_size = 30000000;'); // 30 MB mmap
+          database.execute('PRAGMA synchronous = NORMAL;');
         },
       );
     });
@@ -442,7 +554,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       sqlite3.Database? testEncDb;
       try {
         testEncDb = sqlite3.sqlite3.open(dbFile.path);
-        testEncDb.execute("PRAGMA key = '$encryptionKey';");
+        testEncDb.execute(_sqlCipherKeyPragma(encryptionKey));
         // Verify we can read with this key
         testEncDb.execute('SELECT count(*) FROM sqlite_master;');
         testEncDb.dispose();
@@ -476,9 +588,15 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
         await tempEncryptedFile.delete();
       }
 
-      // Use SQLCipher's ATTACH with KEY to create encrypted copy
+      // Use SQLCipher's ATTACH with KEY to create encrypted copy.
+      // The key is passed as a SQLCipher hex-blob literal (x'..') and the
+      // input is pre-asserted hex-only by _assertHexKey, so the value can
+      // never break out of the literal regardless of caller input. The path
+      // is sourced from getApplicationDocumentsDirectory() — internal app
+      // sandbox, not user input.
+      _assertHexKey(encryptionKey);
       plainDb.execute(
-          "ATTACH DATABASE '${tempEncryptedFile.path}' AS encrypted KEY '$encryptionKey';");
+          "ATTACH DATABASE '${tempEncryptedFile.path}' AS encrypted KEY \"x'$encryptionKey'\";");
       plainDb.execute("SELECT sqlcipher_export('encrypted');");
 
       // Explicitly set the schema version in the encrypted database
@@ -533,4 +651,23 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       return false;
     }
   }
+}
+
+final RegExp _hexKeyPattern = RegExp(r'^[0-9a-fA-F]+$');
+
+// Throws if [key] contains anything but hex chars — defends every PRAGMA key
+// / KEY-clause callsite against caller-controlled input ever reaching raw SQL.
+void _assertHexKey(String key) {
+  if (key.isEmpty || !_hexKeyPattern.hasMatch(key)) {
+    throw ArgumentError(
+        'SQLCipher key must be a non-empty hex string; refusing to interpolate');
+  }
+}
+
+// Builds a SQLCipher `PRAGMA key = "x'<hex>'"` statement. The hex-blob form is
+// SQLCipher's recommended way to pass a raw key and removes any quote-escape
+// surface area for the key value itself.
+String _sqlCipherKeyPragma(String hexKey) {
+  _assertHexKey(hexKey);
+  return 'PRAGMA key = "x\'$hexKey\'";';
 }

@@ -1,6 +1,6 @@
 final dynamic sampleCloseHouseholdFlows = {
   "name": "CLOSEDHOUSEHOLD",
-  "initialPage": "CLOSEHOUSEHOLD",
+  "initialPage": "closeHouseholdRegistration",
   "order": 7,
   "project": "LLIN-mz",
   "version": 1,
@@ -8,35 +8,38 @@ final dynamic sampleCloseHouseholdFlows = {
   "isSelected": true,
   "flows": [
     {
-      "screenType": "FORM",
-      "name": "CLOSEHOUSEHOLD",
-      "project": "LLIN-mz",
-      "version": 1,
-      "disabled": false,
-      "isSelected": true,
+      "name": "closeHouseholdRegistration",
       "pages": [
         {
           "page": "closeHouseholdDetails",
-          "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
-          "order": 1,
           "type": "object",
-          "description": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
-          "actionLabel": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
+          "label": "HCM_CLOSE_HOUSEHOLD_MISSED_CHILDREN_LABEL",
+          "order": 1,
+          "value": null,
+          "hidden": null,
+          "endDate": null,
+          "tooltip": null,
+          "helpText": null,
+          "readOnly": null,
+          "required": null,
+          "charCount": null,
+          "startDate": null,
+          "autoEnable": null,
+          "innerLabel": null,
           "properties": [
             {
               "type": "string",
-              "label":
-                  "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+              "label": "HCM_CLOSE_HOUSEHOLD_VILLAGE_NAME_LABEL",
               "order": 1,
               "value": "",
               "format": "locality",
               "hidden": false,
               "tooltip": "",
-              "helpText":
-                  "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "administrativeArea",
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -44,8 +47,7 @@ final dynamic sampleCloseHouseholdFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR"
+                  "message": "HCM_VALIDATION_REQUIRED_NOT_EMPTY"
                 }
               ],
               "errorMessage": "",
@@ -53,7 +55,7 @@ final dynamic sampleCloseHouseholdFlows = {
             },
             {
               "type": "string",
-              "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
+              "label": "HCM_CLOSE_HOUSEHOLD_GPS_LABEL",
               "order": 2,
               "value": "",
               "format": "latLng",
@@ -63,6 +65,7 @@ final dynamic sampleCloseHouseholdFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "latLng",
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -70,16 +73,17 @@ final dynamic sampleCloseHouseholdFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR"
+                  "message": "HCM_VALIDATION_REQUIRED_NOT_EMPTY"
                 }
               ],
               "errorMessage": "",
+              "includeInForm": true,
               "isMultiSelect": false
             },
             {
               "type": "string",
-              "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
+              "enums": [],
+              "label": "HCM_CLOSE_HOUSEHOLD_HEAD_NAME_LABEL",
               "order": 3,
               "value": "",
               "format": "text",
@@ -89,25 +93,39 @@ final dynamic sampleCloseHouseholdFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "headName",
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "includeInForm": true,
               "validations": [
                 {
                   "type": "minLength",
-                  "value": "3",
-                  "message":
-                      "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR"
+                  "value": "2",
+                  "message": "HCM_VALIDATION_LENGTH_2_TO_200"
                 },
+                {
+                  "type": "maxLength",
+                  "value": "200",
+                  "message": "HCM_VALIDATION_LENGTH_2_TO_200"
+                },
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD_DOT"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
+                }
               ],
               "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": []
+              "includeInForm": true,
+              "isMultiSelect": false
             },
             {
               "type": "string",
-              "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
+              "label": "HCM_CLOSE_HOUSEHOLD_SCAN_VOUCHER_LABEL",
               "order": 4,
               "value": "",
               "format": "scanner",
@@ -122,40 +140,205 @@ final dynamic sampleCloseHouseholdFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "ABSENT", "name": "HCM_CLOSE_HOUSEHOLD_REASON_ABSENT"},
+                {
+                  "code": "REFUSAL",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REASON_REFUSAL"
+                },
+                {
+                  "code": "NOT_VISITED",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REASON_NOT_VISITED"
+                },
+                {
+                  "code": "HOUSE_NOT_REVISITED",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REASON_HOUSE_NOT_REVISITED"
+                },
+                {"code": "ASLEEP", "name": "HCM_CLOSE_HOUSEHOLD_REASON_ASLEEP"},
+                {
+                  "code": "CHILD_VACCINATED_IN_ROUTINE",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REASON_CHILD_VACCINATED_ROUTINE"
+                },
+                {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
+              ],
+              "label": "HCM_CLOSE_HOUSEHOLD_REASON_NOT_VACCINATED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotVaccinated",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_NOT_EMPTY"
+                }
+              ],
+              "errorMessage": "",
               "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "PLAY_AREAS",
+                  "name": "HCM_CLOSE_HOUSEHOLD_WHERE_PLAY_AREAS"
+                },
+                {"code": "MARKET", "name": "HCM_CLOSE_HOUSEHOLD_WHERE_MARKET"},
+                {"code": "SCHOOL", "name": "HCM_CLOSE_HOUSEHOLD_WHERE_SCHOOL"},
+                {"code": "FARM", "name": "HCM_CLOSE_HOUSEHOLD_WHERE_FARM"},
+                {
+                  "code": "SOCIAL_EVENT",
+                  "name": "HCM_CLOSE_HOUSEHOLD_WHERE_SOCIAL_EVENT"
+                },
+                {
+                  "code": "TRAVELLING",
+                  "name": "HCM_CLOSE_HOUSEHOLD_WHERE_TRAVELLING"
+                },
+                {
+                  "code": "PARENT_NOT_AT_HOME",
+                  "name": "HCM_CLOSE_HOUSEHOLD_WHERE_PARENT_NOT_HOME"
+                }
+              ],
+              "label": "HCM_CLOSE_HOUSEHOLD_WHERE_WAS_CHILD_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "whereWasChild",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_NOT_EMPTY"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "closeHouseholdDetails.reasonNotVaccinated=='ABSENT'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "RELIGIOUS_BELIEFS",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_RELIGIOUS"
+                },
+                {
+                  "code": "VACCINE_SIDE_EFFECTS",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_SIDE_EFFECTS"
+                },
+                {
+                  "code": "TOO_MANY_DOSES",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_TOO_MANY"
+                },
+                {
+                  "code": "CHILD_WAS_SICK",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CHILD_SICK"
+                },
+                {
+                  "code": "NOT_DECISION_MAKER",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_NOT_DECISION_MAKER"
+                },
+                {
+                  "code": "AFRICA_IS_POLIO_FREE",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_AFRICA_POLIO_FREE"
+                },
+                {
+                  "code": "CONCERNS_ABOUT_NOPV",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CONCERNS_NOPV"
+                },
+                {
+                  "code": "CONCERNS_ABOUT_COVID19",
+                  "name": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CONCERNS_COVID"
+                }
+              ],
+              "label": "HCM_CLOSE_HOUSEHOLD_REASON_REFUSAL_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonForRefusal",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_NOT_EMPTY"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "closeHouseholdDetails.reasonNotVaccinated=='REFUSAL'"
+                  }
+                ]
+              }
             }
           ],
-          "value": null,
-          "required": null,
-          "hidden": null,
-          "helpText": null,
-          "innerLabel": null,
-          "validations": null,
-          "tooltip": null,
-          "startDate": null,
-          "endDate": null,
-          "readOnly": null,
-          "charCount": null,
           "systemDate": null,
-          "isMultiSelect": null,
+          "actionLabel": "HCM_COMMON_NEXT_BUTTON",
+          "description": "HCM_CLOSE_HOUSEHOLD_DETAILS_DESCRIPTION",
+          "validations": null,
           "includeInForm": null,
-          "includeInSummary": null,
-          "autoEnable": null
+          "isMultiSelect": null,
+          "includeInSummary": null
         }
       ],
       "summary": true,
+      "version": 1,
+      "category": "CLOSE_HOUSEHOLD",
+      "disabled": false,
       "onAction": [
         {
           "actionType": "FETCH_TRANSFORMER_CONFIG",
           "properties": {
-            "configName": "closeHouseholdRegistration",
             "data": [],
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {"message": "HCM_ERROR_FETCH_CONFIG"}
               }
-            ]
+            ],
+            "configName": "closeHouseholdRegistration"
           }
         },
         {
@@ -165,7 +348,7 @@ final dynamic sampleCloseHouseholdFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create stock."}
+                "properties": {"message": "HCM_ERROR_CREATE_STOCK"}
               }
             ]
           }
@@ -173,46 +356,57 @@ final dynamic sampleCloseHouseholdFlows = {
         {
           "actionType": "NAVIGATION",
           "properties": {
-            "type": "TEMPLATE",
+            "data": [],
             "name": "closeHouseholdSuccess",
+            "type": "TEMPLATE",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
-              }
-            ],
-            "data": []
-          }
-        }
-      ]
-    },
-    {
-      "screenType": "TEMPLATE",
-      "name": "closeHouseholdSuccess",
-      "heading": "",
-      "description": "",
-      "header": [],
-      "footer": [],
-      "initActions": [],
-      "body": [
-        {
-          "type": "template",
-          "format": "panelCard",
-          "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
-          "description": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
-          "properties": {"type": "success"},
-          "primaryAction": {
-            "label":
-                "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
-            "onAction": [
-              {
-                "actionType": "NAVIGATION",
-                "properties": {"type": "HOME"}
+                "properties": {"message": "HCM_ERROR_NAVIGATION"}
               }
             ]
           }
         }
-      ]
+      ],
+      "isSelected": true,
+      "screenType": "FORM"
+    },
+    {
+      "body": [
+        {
+          "type": "template",
+          "label": "HCM_CLOSE_HOUSEHOLD_SUCCESS_HEADING",
+          "format": "panelCard",
+          "heading": "HCM_CLOSE_HOUSEHOLD_SUCCESS_HEADING",
+          "fieldName": "closeHouseholdSuccess",
+          "mandatory": true,
+          "properties": {"type": "success"},
+          "description": "HCM_CLOSE_HOUSEHOLD_SUCCESS_DESCRIPTION",
+          "primaryAction": {
+            "type": "template",
+            "label": "HCM_CLOSE_HOUSEHOLD_SUCCESS_GO_BACK_BUTTON",
+            "format": "button",
+            "hidden": false,
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {"name": "Home", "type": "HOME"}
+              }
+            ],
+            "fieldName": "GoHome",
+            "mandatory": true,
+            "properties": {"type": "primary"}
+          }
+        }
+      ],
+      "name": "closeHouseholdSuccess",
+      "footer": [],
+      "header": [],
+      "heading": "",
+      "category": "CLOSE_HOUSEHOLD",
+      "screenType": "TEMPLATE",
+      "description": "",
+      "initActions": []
     }
   ]
 };

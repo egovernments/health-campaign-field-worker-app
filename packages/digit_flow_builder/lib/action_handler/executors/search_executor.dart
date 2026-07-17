@@ -84,8 +84,15 @@ class SearchExecutor extends ActionExecutor {
 
     // Build context data that includes entities, form values, widgetData, and navigation params
     // widgetData is included at root level so templates like {{selectedStatus}} resolve directly
-    final resolveContext = {
-      if (contexts != null) ...contexts,
+    //
+    // `contextData['entities']` may be either a `Map<String, dynamic>` (model
+    // map keyed by entity name) or a `List<EntityModel>` (raw entity list
+    // from CRUD blocs). Only spread when it's a Map; for lists, expose the
+    // list under a named key so resolvers using `{{entities.0.field}}` style
+    // paths still work without crashing the map-literal spread.
+    final resolveContext = <String, dynamic>{
+      if (contexts is Map<String, dynamic>) ...contexts,
+      if (contexts is List) 'entities': contexts,
       ...formData,
       ...widgetData, // Include widgetData at root for direct access
       'widgetData': widgetData, // Also include with prefix for explicit access
@@ -107,8 +114,6 @@ class SearchExecutor extends ActionExecutor {
           screenKey: screenKey,
         );
 
-        debugPrint('SEARCH_EVENT: Evaluating applyIf resolved="$expression"');
-
         // Build context for formula parser
         final parserContext = <String, dynamic>{
           ...formData,
@@ -126,17 +131,10 @@ class SearchExecutor extends ActionExecutor {
           final conditionMet =
               result["isSuccess"] == true && result["value"] == true;
 
-          debugPrint(
-              'SEARCH_EVENT: applyIf result=$result, conditionMet=$conditionMet');
-
           if (!conditionMet) {
-            debugPrint(
-                'SEARCH_EVENT: Skipping filter ${filterData['key']} - applyIf condition not met');
             continue;
           }
         } catch (e) {
-          debugPrint(
-              'SEARCH_EVENT: Error evaluating applyIf for ${filterData['key']}: $e');
           continue;
         }
       }
@@ -268,15 +266,16 @@ class SearchExecutor extends ActionExecutor {
       ));
     }
 
-    // Early return if no filters are applicable
-    if (filters.isEmpty) {
-      debugPrint(
-          'SEARCH_EVENT: No filters to apply - all filters were skipped or empty. Returning early.');
+    // Early return only when the config declared NO filter entries at all.
+    // If entries existed in `data.data` but every applyIf returned false
+    // (e.g. complaints filter with ASSIGN_TO_ALL and no complaintType /
+    // locality picked), the user intent is "load everything" — so fall
+    // through to the search with an empty filter set instead of leaving
+    // the screen stuck on the prior result (or blank, if CLEAR_STATE just
+    // dropped the wrapper).
+    if (filters.isEmpty && filtersList.isEmpty) {
       return contextData;
     }
-
-    debugPrint(
-        'SEARCH_EVENT: Executing with ${filters.length} accumulated filters for $searchName');
 
     final config = FlowRegistry.getByName(screenKey ?? '');
 
@@ -318,9 +317,6 @@ class SearchExecutor extends ActionExecutor {
           final valueIfTrue = ternaryMatch.group(2)!;
           final valueIfFalse = ternaryMatch.group(3)!;
 
-          debugPrint(
-              'SEARCH_EVENT: Ternary condition="$condition", ifTrue=$valueIfTrue, ifFalse=$valueIfFalse');
-
           // Evaluate condition with formula parser
           try {
             final parserContext = <String, dynamic>{
@@ -338,13 +334,9 @@ class SearchExecutor extends ActionExecutor {
 
             resolvedOrderBy[entry.key] =
                 conditionMet ? valueIfTrue : valueIfFalse;
-            debugPrint(
-                'SEARCH_EVENT: Ternary result=$result, resolved to: ${resolvedOrderBy[entry.key]}');
           } catch (e) {
             // Fallback to valueIfFalse on error
             resolvedOrderBy[entry.key] = valueIfFalse;
-            debugPrint(
-                'SEARCH_EVENT: Ternary evaluation failed: $e, using default: $valueIfFalse');
           }
         } else {
           // No ternary, use resolved value directly
@@ -363,16 +355,12 @@ class SearchExecutor extends ActionExecutor {
       }
 
       orderBy = SearchOrderBy.fromJson(resolvedOrderBy);
-      debugPrint(
-          'SEARCH_EVENT: OrderBy resolved - field: ${orderBy.field}, order: ${orderBy.order}');
     } else if (compositeKey != null) {
       // Check for accumulated orderBy from previous search events
       final accumulatedOrderBy =
           SearchStateManager().getOrderBy(compositeKey, searchName);
       if (accumulatedOrderBy != null) {
         orderBy = SearchOrderBy.fromJson(accumulatedOrderBy);
-        debugPrint(
-            'SEARCH_EVENT: Using accumulated orderBy - field: ${orderBy.field}, order: ${orderBy.order}');
       }
     }
 
@@ -398,9 +386,6 @@ class SearchExecutor extends ActionExecutor {
 
         // Initialize pagination window for bidirectional support
         if (compositeKey != null) {
-          debugPrint(
-              'SEARCH_EVENT: Initializing pagination window with compositeKey=$compositeKey');
-
           // Legacy pagination state (for backwards compatibility)
           SearchStateManager().updatePagination(
             compositeKey,
@@ -419,16 +404,12 @@ class SearchExecutor extends ActionExecutor {
 
           // Set pagination info in registry so FlowCrudBloc can update window after data loads
           final registryKey = screenKey?.split('::').last ?? '';
-          debugPrint(
-              'SEARCH_EVENT: Setting paginationInfo with registryKey=$registryKey');
           FlowCrudStateRegistry().setPaginationInfo(
             registryKey,
             limit: limit,
             maxItems: maxItems,
           );
         }
-        debugPrint(
-            'SEARCH_EVENT: Using pagination - offset=0, limit=$limit, maxItems=$maxItems');
       }
     }
 
@@ -440,7 +421,6 @@ class SearchExecutor extends ActionExecutor {
 
     // If no config available (e.g., on form pages), skip the search
     if (primaryModel == null || select.isEmpty) {
-      debugPrint('SEARCH_EVENT: No searchConfig in config, skipping search. primaryModel=$primaryModel, select=$select');
       return contextData;
     }
 
@@ -475,8 +455,6 @@ class SearchExecutor extends ActionExecutor {
             entities.addAll(entityList);
           }
 
-          debugPrint('SEARCH_EVENT: Found ${entities.length} entities');
-
           // Update FlowCrudStateRegistry with search results
           if (compositeKey != null) {
             final currentState = FlowCrudStateRegistry().get(compositeKey);
@@ -507,7 +485,6 @@ class SearchExecutor extends ActionExecutor {
           });
         } else if (state is CrudStateError) {
           subscription.cancel();
-          debugPrint('SEARCH_EVENT: Error - ${state.message}');
           completer.complete({
             ...contextData,
             'errorType': 'searchError',
@@ -543,8 +520,6 @@ class SearchExecutor extends ActionExecutor {
         SearchStateManager().getOrderBy(compositeKey, searchName);
 
     if (accumulatedFilters.isEmpty) {
-      debugPrint(
-          'SearchCallback: No accumulated filters for $compositeKey, skipping');
       return;
     }
 
@@ -588,9 +563,6 @@ class SearchExecutor extends ActionExecutor {
       orderBy: orderBy,
       filterLogic: MultiTableFilterLogic.and,
     );
-
-    debugPrint(
-        'SearchCallback: Executing search with ${filters.length} accumulated filters for $searchName');
 
     // Execute search
     crudBloc.add(CrudEventSearch(searchParams));

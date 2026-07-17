@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 
 import '../../../../../models/entities/household_type.dart';
 
+@TableIndex(name: 'household_self_clientref', columns: {#clientReferenceId})
 class Household extends Table {
   TextColumn get id => text().nullable()();
   IntColumn get memberCount => integer().nullable()();

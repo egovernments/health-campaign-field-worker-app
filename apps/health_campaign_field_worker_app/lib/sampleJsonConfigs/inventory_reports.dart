@@ -350,6 +350,11 @@ final dynamic inventoryReportFlows = {
                             "{{fn:getSenderOrReceiver(navigation.reportType)}}",
                         "value": "{{selectedFacility}}",
                         "operation": "equals"
+                      },
+                      {
+                        "key": "clientCreatedBy",
+                        "value": "{{singleton.loggedInUserUuid}}",
+                        "operation": "equalsAny"
                       }
                     ]
                   }
@@ -393,6 +398,11 @@ final dynamic inventoryReportFlows = {
                             "{{fn:getSenderOrReceiver(navigation.reportType)}}",
                         "value": "{{selectedFacility}}",
                         "operation": "equals"
+                      },
+                      {
+                        "key": "clientCreatedBy",
+                        "value": "{{singleton.loggedInUserUuid}}",
+                        "operation": "equalsAny"
                       }
                     ]
                   }

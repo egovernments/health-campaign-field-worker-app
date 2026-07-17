@@ -1,0 +1,1507 @@
+final dynamic samplePolioLqaDataCollectionFlows = {
+  "name": "LQA",
+  "initialPage": "lqaClusterEntry",
+  "project": "POLIO",
+  "version": 1,
+  "disabled": false,
+  "isSelected": true,
+  "flows": [
+    {
+      "name": "lqaClusterEntry",
+      "order": 1,
+      "pages": [
+        {
+          "page": "clusterInfo",
+          "type": "object",
+          "label": "LQA_CLUSTER_INFO_LABEL",
+          "order": 1,
+          "value": null,
+          "hidden": null,
+          "endDate": null,
+          "tooltip": null,
+          "helpText": null,
+          "readOnly": null,
+          "required": null,
+          "charCount": null,
+          "startDate": null,
+          "autoEnable": null,
+          "innerLabel": null,
+          "properties": [
+            {
+              "type": "string",
+              "label": "LQA_SURVEY_DATE_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "surveyDate",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_SURVEY_DATE_REQUIRED"
+                }
+              ],
+              "errorMessage": "LQA_LQACLUSTERENTRY_surveyDate_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "LQA_SETTLEMENT_AREA_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "locality",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "settlementArea",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "LQA_LOT_NUMBER_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "lotNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_LOT_NUMBER_REQUIRED"
+                }
+              ],
+              "errorMessage": "LQA_LQACLUSTERENTRY_lotNumber_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "1", "name": "LQA_ENUM_CLUSTER_1"},
+                {"code": "2", "name": "LQA_ENUM_CLUSTER_2"},
+                {"code": "3", "name": "LQA_ENUM_CLUSTER_3"},
+                {"code": "4", "name": "LQA_ENUM_CLUSTER_4"},
+                {"code": "5", "name": "LQA_ENUM_CLUSTER_5"},
+                {"code": "6", "name": "LQA_ENUM_CLUSTER_6"}
+              ],
+              "label": "LQA_CLUSTER_NUMBER_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "clusterNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_CLUSTER_NUMBER_REQUIRED"
+                }
+              ],
+              "errorMessage": "LQA_LQACLUSTERENTRY_clusterNumber_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "LQA_SURVEYOR_NAME_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_SURVEYOR_NAME_HELPTEXT",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "surveyorName",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_SURVEYOR_NAME_REQUIRED"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage": "LQA_LQACLUSTERENTRY_surveyorName_ERROR",
+              "isMultiSelect": false,
+              "autoFillCondition": [
+                {"value": "{{loggedInUserName}}", "expression": "true==true"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_SURVEYOR_PHONE_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "phone",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_SURVEYOR_PHONE_HELPTEXT",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "surveyorPhone",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_PHONE_REQUIRED"
+                }
+              ],
+              "errorMessage": "LQA_LQACLUSTERENTRY_surveyorPhone_ERROR",
+              "isMultiSelect": false,
+              "autoFillCondition": [
+                {
+                  "value": "{{loggedInUserMobileNumber}}",
+                  "expression": "true==true"
+                }
+              ]
+            },
+            {
+              "type": "string",
+              "label": "LQA_COORDINATOR_NAME_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "pattern": "^[a-zA-Z0-9 ]+\$",
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "lqasCoordinatorName",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_COORDINATOR_NAME_REQUIRED"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VALIDATION_ALPHANUMERIC_ONLY"
+                },
+                {
+                  "type": "minLength",
+                  "value": 2,
+                  "message": "LQA_VALIDATION_NAME_MIN_2_CHARS"
+                }
+              ],
+              "errorMessage": "LQA_LQACLUSTERENTRY_lqasCoordinatorName_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "URBAN", "name": "LQA_ENUM_URBAN"},
+                {"code": "RURAL", "name": "LQA_ENUM_RURAL"},
+                {"code": "SLUMS", "name": "LQA_ENUM_SLUMS"},
+                {"code": "REFUGEES_IDPS", "name": "LQA_ENUM_REFUGEES_IDPS"},
+                {"code": "HARD_TO_REACH", "name": "LQA_ENUM_HARD_TO_REACH"},
+                {
+                  "code": "NOMADS_PASTORALISTS",
+                  "name": "LQA_ENUM_NOMADS_PASTORALISTS"
+                },
+                {
+                  "code": "SECURITY_COMPROMISED",
+                  "name": "LQA_ENUM_SECURITY_COMPROMISED"
+                },
+                {"code": "IMMIGRANTS", "name": "LQA_ENUM_IMMIGRANTS"},
+                {"code": "CROSS_BORDER", "name": "LQA_ENUM_CROSS_BORDER"}
+              ],
+              "label": "LQA_SETTLEMENT_TYPE_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "settlementType",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_SETTLEMENT_TYPE_REQUIRED"
+                }
+              ],
+              "errorMessage": "LQA_LQACLUSTERENTRY_settlementType_ERROR",
+              "isMultiSelect": false,
+              "autoFillCondition": [
+                {
+                  "value": "{{singleton.settlementType}}",
+                  "expression": "true==true"
+                }
+              ]
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ],
+              "label": "LQA_SETTLEMENT_SMALL_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "settlementSmall",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "LQA_LQACLUSTERENTRY_settlementSmall_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "LQA_GPS_START_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_GPS_START_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "gpsStart",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_GPS_REQUIRED"
+                }
+              ],
+              "errorMessage": "LQA_LQACLUSTERENTRY_gpsStart_ERROR",
+              "isMultiSelect": false
+            }
+          ],
+          "systemDate": null,
+          "actionLabel": "LQA_ACTION_NEXT",
+          "description": "LQA_CLUSTER_INFO_DESCRIPTION",
+          "validations": null,
+          "includeInForm": null,
+          "isMultiSelect": null,
+          "includeInSummary": null
+        }
+      ],
+      "version": 1,
+      "category": "LQA",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "LQA_ERROR_FETCH_CONFIG"}
+              }
+            ],
+            "configName": "lqaClusterData"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "USERACTION",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "LQA_ERROR_RECORD_DATA"}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "data": [
+              {
+                "key": "ClusterClientReferenceId",
+                "value":
+                    "{{contextData.entities.UserActionModel.clientReferenceId}}"
+              }
+            ],
+            "name": "clusterOverview",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "LQA_ERROR_NAVIGATION"}
+              }
+            ]
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {}
+    },
+    {
+      "body": [
+        {
+          "type": "template",
+          "format": "card",
+          "children": [
+            {
+              "data": [
+                {
+                  "key": "LQA_SURVEY_DATE_LABEL",
+                  "value":
+                      "{{contextData.0.cluster.UserActionModel.additionalFields.fields.surveyDate}}",
+                  "isActive": true
+                },
+                {
+                  "key": "LQA_SETTLEMENT_AREA_LABEL",
+                  "value":
+                      "{{contextData.0.cluster.UserActionModel.additionalFields.fields.settlementArea}}",
+                  "isActive": true
+                },
+                {
+                  "key": "LQA_LOT_NUMBER_LABEL",
+                  "value":
+                      "{{contextData.0.cluster.UserActionModel.additionalFields.fields.lotNumber}}",
+                  "isActive": true
+                },
+                {
+                  "key": "LQA_CLUSTER_NUMBER_LABEL",
+                  "value":
+                      "{{contextData.0.cluster.UserActionModel.additionalFields.fields.clusterNumber}}",
+                  "isActive": true
+                },
+                {
+                  "key": "LQA_SURVEYOR_NAME_LABEL",
+                  "value":
+                      "{{contextData.0.cluster.UserActionModel.additionalFields.fields.surveyorName}}",
+                  "isActive": true
+                }
+              ],
+              "type": "template",
+              "format": "labelPairList",
+              "fieldName": "clusterDetails"
+            }
+          ],
+          "fieldName": "clusterCard",
+          "properties": {"type": "primary"}
+        },
+        {
+          "type": "template",
+          "child": {
+            "type": "template",
+            "format": "card",
+            "children": [
+              {
+                "data": [
+                  {
+                    "key": "LQA_CHILDREN_UNDER_5_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.childrenUnder5 }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_CHILD_AGE_MONTHS_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.childAgeMonths }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_CHILD_SEX_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.childSex }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_FINGER_MARKED_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.fingerMarked }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_REASON_NOT_MARKED_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.reasonNotMarked }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_OTHER_REASON_SPECIFY_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.reasonNotMarkedOther }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_REFUSAL_REASON_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.refusalReason }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_OTHER_REFUSAL_REASON_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.refusalReasonOther }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_ABSENCE_REASON_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.absenceReason }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_OTHER_ABSENCE_REASON_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.absenceReasonOther }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_CAREGIVER_INFORMED_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.caregiverInformed }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_CAMPAIGN_AWARENESS_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.campaignAwareness }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_AWARENESS_OTHER_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.awarenessOther }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_OPV_DOSES_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.opvDosesFromBirth }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_AFP_AWARENESS_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.afpAwareness }}",
+                    "isActive": true
+                  },
+                  {
+                    "key": "LQA_AFP_CASE_COUNT_LABEL",
+                    "value":
+                        "{{ item.child.0.additionalFields.fields.afpCaseCount }}",
+                    "isActive": true
+                  }
+                ],
+                "type": "template",
+                "format": "labelPairList",
+                "fieldName": "childDetails"
+              }
+            ],
+            "fieldName": "childCard",
+            "properties": {
+              "type": "secondary",
+              "spacing": 0,
+              "cardType": "secondary"
+            }
+          },
+          "format": "listView",
+          "fieldName": "listViewChildren",
+          "dataSource": "children",
+          "properties": {"spacing": "spacer4"}
+        },
+        {
+          "type": "template",
+          "label": "LQA_ADD_CHILD_BUTTON",
+          "format": "button",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ClusterClientReferenceId",
+                    "value":
+                        "{{contextData.0.cluster.UserActionModel.clientReferenceId}}"
+                  }
+                ],
+                "name": "ADD_LQA_CHILD",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "addChildDetails",
+          "properties": {
+            "icon": "AddIcon",
+            "size": "medium",
+            "type": "tertiary"
+          }
+        }
+      ],
+      "name": "clusterOverview",
+      "order": 2,
+      "canPop": false,
+      "footer": [
+        {
+          "type": "template",
+          "label": "LQA_CLOSE_CLUSTER_BUTTON",
+          "format": "button",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ClusterClientReferenceId",
+                    "value":
+                        "{{contextData.0.cluster.UserActionModel.clientReferenceId}}"
+                  }
+                ],
+                "name": "lqaCloseout",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "closeCluster",
+          "properties": {
+            "size": "large",
+            "type": "primary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          }
+        }
+      ],
+      "header": [],
+      "heading": "LQA_CLUSTER_OVERVIEW_HEADING",
+      "category": "LQA",
+      "screenType": "TEMPLATE",
+      "description": "LQA_CLUSTER_OVERVIEW_DESCRIPTION",
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "resourceTag",
+                "root": "userAction",
+                "value": "{{navigation.ClusterClientReferenceId}}",
+                "operation": "equals"
+              }
+            ],
+            "name": "cluster",
+            "type": "SEARCH_EVENT"
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "filters": [
+          {"field": "action", "equals": "LOCATION_CAPTURE"},
+          {"field": "additionalFields.fields.form", "equals": "POLIO_LQA"}
+        ],
+        "relations": [
+          {
+            "name": "cluster",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "UserActionModel"
+          },
+          {
+            "name": "children",
+            "match": {
+              "field": "resourceTag",
+              "equalsFrom": "clientReferenceId"
+            },
+            "entity": "UserActionModel",
+            "filters": [
+              {"field": "additionalFields.fields.formType", "equals": "LQA_CHILD_DATA"}
+            ],
+            "relations": [
+              {
+                "name": "child",
+                "match": {
+                  "field": "clientReferenceId",
+                  "equalsFrom": "clientReferenceId"
+                },
+                "entity": "UserActionModel"
+              }
+            ]
+          }
+        ],
+        "rootEntity": "UserActionModel",
+        "wrapperName": "ClusterWrapper",
+        "searchConfig": {
+          "select": ["userAction"],
+          "primary": "userAction"
+        }
+      }
+    },
+    {
+      "name": "ADD_LQA_CHILD",
+      "order": 3,
+      "pages": [
+        {
+          "page": "childDetails",
+          "type": "object",
+          "label": "LQA_CHILD_PAGE_LABEL",
+          "order": 1,
+          "value": null,
+          "hidden": null,
+          "endDate": null,
+          "tooltip": null,
+          "helpText": null,
+          "readOnly": null,
+          "required": null,
+          "charCount": null,
+          "startDate": null,
+          "autoEnable": null,
+          "innerLabel": null,
+          "properties": [
+            {
+              "type": "integer",
+              "label": "LQA_CHILDREN_UNDER_5_LABEL",
+              "order": 1,
+              "value": "0",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_CHILDREN_UNDER_5_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenUnder5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_childrenUnder5_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "LQA_CHILD_AGE_MONTHS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childAgeMonths",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message": "LQA_VALIDATION_MAX_59_MONTHS"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_childAgeMonths_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "MALE", "name": "LQA_ENUM_MALE"},
+                {"code": "FEMALE", "name": "LQA_ENUM_FEMALE"}
+              ],
+              "label": "LQA_CHILD_SEX_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childSex",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_childSex_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ],
+              "label": "LQA_FINGER_MARKED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "fingerMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_fingerMarked_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "CHILD_ABSENT", "name": "LQA_ENUM_CHILD_ABSENT"},
+                {"code": "NON_COMPLIANCE", "name": "LQA_ENUM_NON_COMPLIANCE"},
+                {
+                  "code": "HOUSE_NOT_VISITED",
+                  "name": "LQA_ENUM_HOUSE_NOT_VISITED"
+                },
+                {
+                  "code": "VACCINATED_NOT_MARKED",
+                  "name": "LQA_ENUM_VACCINATED_NOT_MARKED"
+                },
+                {"code": "CHILD_ASLEEP", "name": "LQA_ENUM_CHILD_ASLEEP"},
+                {"code": "CHILD_VISITOR", "name": "LQA_ENUM_CHILD_VISITOR"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "label": "LQA_REASON_NOT_MARKED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarked",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "childDetails.fingerMarked=='NO'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REASON_SPECIFY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "pattern": "^[a-zA-Z0-9 ]+\$",
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonNotMarkedOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_reasonNotMarkedOther_ERROR",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "childDetails.reasonNotMarked=='OTHER'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "RELIGIOUS_CULTURAL",
+                  "name": "LQA_ENUM_RELIGIOUS_CULTURAL"
+                },
+                {
+                  "code": "VACCINE_NOT_SAFE",
+                  "name": "LQA_ENUM_VACCINE_NOT_SAFE"
+                },
+                {"code": "NO_FELT_NEED", "name": "LQA_ENUM_NO_FELT_NEED"},
+                {"code": "TOO_MANY_ROUNDS", "name": "LQA_ENUM_TOO_MANY_ROUNDS"},
+                {
+                  "code": "NO_CAREGIVER_CONSENT",
+                  "name": "LQA_ENUM_NO_CAREGIVER_CONSENT"
+                },
+                {"code": "CHILD_SICK", "name": "LQA_ENUM_CHILD_SICK"},
+                {"code": "COVID_RELATED", "name": "LQA_ENUM_COVID_RELATED"},
+                {
+                  "code": "AFRICA_POLIO_FREE",
+                  "name": "LQA_ENUM_AFRICA_POLIO_FREE"
+                },
+                {"code": "NOPV_CONCERNS", "name": "LQA_ENUM_NOPV_CONCERNS"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "label": "LQA_REFUSAL_REASON_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition":
+                        "childDetails.reasonNotMarked=='NON_COMPLIANCE'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_REFUSAL_REASON_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "pattern": "^[a-zA-Z0-9 ]+\$",
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "refusalReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_refusalReasonOther_ERROR",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "childDetails.refusalReason=='OTHERS'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "AT_FARM", "name": "LQA_ENUM_AT_FARM"},
+                {"code": "IN_MARKET", "name": "LQA_ENUM_IN_MARKET"},
+                {"code": "AT_SCHOOL", "name": "LQA_ENUM_AT_SCHOOL"},
+                {"code": "IN_PLAYGROUND", "name": "LQA_ENUM_IN_PLAYGROUND"},
+                {"code": "TRAVELLED", "name": "LQA_ENUM_TRAVELLED"},
+                {"code": "OTHER", "name": "LQA_ENUM_OTHER"}
+              ],
+              "label": "LQA_ABSENCE_REASON_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "childDetails.reasonNotMarked=='CHILD_ABSENT'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_OTHER_ABSENCE_REASON_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "pattern": "^[a-zA-Z0-9 ]+\$",
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "absenceReasonOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-Z0-9 ]+\$",
+                  "message": "VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_absenceReasonOther_ERROR",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "childDetails.absenceReason=='OTHER'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ],
+              "label": "LQA_CAREGIVER_INFORMED_LABEL",
+              "order": 11,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "caregiverInformed",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_caregiverInformed_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "TV", "name": "LQA_ENUM_TV"},
+                {"code": "RADIO", "name": "LQA_ENUM_RADIO"},
+                {"code": "MOB_VAN", "name": "LQA_ENUM_MOB_VAN"},
+                {"code": "HEALTH_WORKER", "name": "LQA_ENUM_HEALTH_WORKER"},
+                {"code": "VOLUNTEER_CHW", "name": "LQA_ENUM_VOLUNTEER_CHW"},
+                {
+                  "code": "RELIGIOUS_LEADER",
+                  "name": "LQA_ENUM_RELIGIOUS_LEADER"
+                },
+                {
+                  "code": "COMMUNITY_LEADER",
+                  "name": "LQA_ENUM_COMMUNITY_LEADER"
+                },
+                {"code": "SOCIAL_MEDIA", "name": "LQA_ENUM_SOCIAL_MEDIA"},
+                {"code": "SCHOOL", "name": "LQA_ENUM_SCHOOL"},
+                {"code": "IEC_MATERIALS", "name": "LQA_ENUM_IEC_MATERIALS"},
+                {
+                  "code": "SOCIAL_MOBILIZER",
+                  "name": "LQA_ENUM_SOCIAL_MOBILIZER"
+                },
+                {"code": "NEIGHBOUR", "name": "LQA_ENUM_NEIGHBOUR"},
+                {"code": "NEWSPAPER", "name": "LQA_ENUM_NEWSPAPER"},
+                {"code": "OTHERS", "name": "LQA_ENUM_OTHERS"}
+              ],
+              "label": "LQA_CAMPAIGN_AWARENESS_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "campaignAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "childDetails.caregiverInformed=='YES'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "LQA_AWARENESS_OTHER_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "awarenessOther",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "contains(childDetails.campaignAwareness, 'OTHERS')"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "LQA_OPV_DOSES_LABEL",
+              "order": 14,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "opvDosesFromBirth",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_opvDosesFromBirth_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "LQA_ENUM_YES"},
+                {"code": "NO", "name": "LQA_ENUM_NO"}
+              ],
+              "label": "LQA_AFP_AWARENESS_LABEL",
+              "order": 15,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpAwareness",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "LQA_VALIDATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_afpAwareness_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "LQA_AFP_CASE_COUNT_LABEL",
+              "order": 16,
+              "value": "",
+              "format": "numeric",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "afpCaseCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "isEditable": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "LQA_VALIDATION_MIN_ZERO"
+                }
+              ],
+              "errorMessage": "LQA_ADD_LQA_CHILD_afpCaseCount_ERROR",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "childDetails.afpAwareness=='YES'"
+                  }
+                ]
+              }
+            }
+          ],
+          "systemDate": null,
+          "actionLabel": "LQA_ACTION_SUBMIT",
+          "description": "LQA_CHILD_PAGE_DESCRIPTION",
+          "validations": null,
+          "includeInForm": null,
+          "isMultiSelect": null,
+          "includeInSummary": null
+        }
+      ],
+      "version": 1,
+      "category": "LQA",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [
+              {
+                "key": "ClusterClientReferenceId",
+                "value": "{{navigation.ClusterClientReferenceId}}"
+              }
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "LQA_ERROR_FETCH_CONFIG"}
+              }
+            ],
+            "configName": "lqaChildData"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "USERACTION",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "LQA_ERROR_RECORD_DATA"}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "data": [
+              {
+                "key": "ClusterClientReferenceId",
+                "value": "{{navigation.ClusterClientReferenceId}}"
+              }
+            ],
+            "name": "clusterOverview",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "LQA_ERROR_NAVIGATION"}
+              }
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "lqaClusterEntry"
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {}
+    },
+    {
+      "name": "lqaCloseout",
+      "order": 4,
+      "pages": [
+        {
+          "page": "closeout",
+          "type": "object",
+          "label": "LQA_CLOSEOUT_LABEL",
+          "order": 1,
+          "value": null,
+          "hidden": null,
+          "endDate": null,
+          "tooltip": null,
+          "helpText": null,
+          "readOnly": null,
+          "required": null,
+          "charCount": null,
+          "startDate": null,
+          "autoEnable": null,
+          "innerLabel": null,
+          "properties": [
+            {
+              "type": "string",
+              "label": "LQA_GPS_FINAL_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_GPS_FINAL_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "gpsFinal",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "LQA_FINAL_COMMENTS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "textArea",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "LQA_FINAL_COMMENTS_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "finalComments",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "maxLength",
+                  "value": 500,
+                  "message": "LQA_VALIDATION_MAX_500_CHARS"
+                }
+              ],
+              "errorMessage": "LQA_LQACLOSEOUT_finalComments_ERROR",
+              "isMultiSelect": false
+            }
+          ],
+          "systemDate": null,
+          "actionLabel": "LQA_ACTION_SUBMIT",
+          "description": "LQA_CLOSEOUT_DESCRIPTION",
+          "validations": null,
+          "includeInForm": null,
+          "isMultiSelect": null,
+          "includeInSummary": null
+        }
+      ],
+      "version": 1,
+      "category": "LQA",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [
+              {
+                "key": "ClusterClientReferenceId",
+                "value": "{{navigation.ClusterClientReferenceId}}"
+              }
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "LQA_ERROR_FETCH_CONFIG"}
+              }
+            ],
+            "configName": "lqaCloseoutData"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "USERACTION",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "LQA_ERROR_RECORD_DATA"}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "name": "lqaSuccess",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "LQA_ERROR_NAVIGATION"}
+              }
+            ]
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {}
+    },
+    {
+      "body": [
+        {
+          "type": "template",
+          "label": "LQA_SUCCESS_HEADING",
+          "format": "panelCard",
+          "fieldName": "lqaSuccessHeading",
+          "properties": {"type": "success"},
+          "description": "LQA_SUCCESS_DESCRIPTION",
+          "primaryAction": {
+            "type": "template",
+            "label": "LQA_SUCCESS_ADD_ANOTHER",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {"name": "lqaClusterEntry", "type": "FORM"}
+              }
+            ],
+            "fieldName": "addLqaEntry",
+            "properties": {"type": "primary"}
+          },
+          "secondaryAction": {
+            "type": "template",
+            "label": "LQA_SUCCESS_BACK_HOME",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {"name": "HOME", "type": "HOME"}
+              }
+            ],
+            "fieldName": "goBack",
+            "properties": {"type": "secondary"}
+          }
+        }
+      ],
+      "name": "lqaSuccess",
+      "order": 5,
+      "canPop": false,
+      "footer": [],
+      "header": [],
+      "heading": "",
+      "category": "LQA",
+      "screenType": "TEMPLATE",
+      "description": "",
+      "initActions": []
+    }
+  ]
+};

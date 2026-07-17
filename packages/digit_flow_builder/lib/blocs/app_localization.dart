@@ -25,13 +25,17 @@ class FlowBuilderLocalization {
 
   // Method to load localized strings
   Future<bool> load() async {
-    _localizedStrings.clear();
-    // Iterate over localized strings and filter based on locale
+    // Collect new strings first, then replace atomically to avoid a window
+    // where _localizedStrings is empty during the await (which causes
+    // translate() to return raw keys instead of translated values).
+    final newStrings = <dynamic>[];
     for (var element in await localizedStrings) {
       if (element.locale == '${locale.languageCode}_${locale.countryCode}') {
-        _localizedStrings.add(element);
+        newStrings.add(element);
       }
     }
+    _localizedStrings.clear();
+    _localizedStrings.addAll(newStrings);
 
     return true;
   }
@@ -47,5 +51,15 @@ class FlowBuilderLocalization {
 
       return index != -1 ? _localizedStrings[index].message : localizedValues;
     }
+  }
+
+  /// Static translate that does not require a [BuildContext].
+  /// Uses the already-loaded [_localizedStrings] list.
+  static String translateStatic(String key) {
+    if (_localizedStrings.isEmpty) return key;
+    final index = _localizedStrings.indexWhere(
+      (medium) => medium.code == key,
+    );
+    return index != -1 ? _localizedStrings[index].message : key;
   }
 }

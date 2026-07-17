@@ -9,6 +9,7 @@ import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_crud_bloc/repositories/helpers/query_builder.dart';
 import 'package:digit_crud_bloc/repositories/helpers/relationship_graph_helper.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart' hide OrderBy;
 import 'package:flutter/foundation.dart';
 
 /// Result of multi-table filter resolution containing the resolved constraints
@@ -163,6 +164,154 @@ class MultiTableFilterResolver {
     );
   }
 
+  /// Builds Drift `Expression<bool>` constraints for each related-table
+  /// filter group, returning them alongside the primary-only filters.
+  ///
+  /// Unlike [resolveFilters], this path does NOT materialize primary-key
+  /// sets in Dart. Instead, each related-table filter group is turned into
+  /// a `primary_pk IN (SELECT ... FROM related JOIN ...)` subquery that the
+  /// SQLite query planner can execute together with the primary query —
+  /// so pagination is applied at the primary-table grain and indexes on
+  /// each joined column get used.
+  Future<({List<SearchFilter> primaryTableFilters,
+          List<Expression<bool>> crossTableConstraints})>
+      buildCrossTableConstraintExpressions({
+    required List<SearchFilter> filters,
+    required String primaryTable,
+    required String primaryKeyField,
+    MultiTableFilterLogic filterLogic = MultiTableFilterLogic.and,
+  }) async {
+    if (filters.isEmpty) {
+      return (
+        primaryTableFilters: const <SearchFilter>[],
+        crossTableConstraints: const <Expression<bool>>[],
+      );
+    }
+
+    final filtersByTable = _groupFiltersByTable(filters);
+    final primaryTableFilters = filtersByTable[primaryTable] ?? const [];
+
+    final relatedTablesWithFilters = filtersByTable.keys
+        .where((table) => table != primaryTable)
+        .toList();
+
+    if (relatedTablesWithFilters.isEmpty) {
+      return (
+        primaryTableFilters: primaryTableFilters,
+        crossTableConstraints: const <Expression<bool>>[],
+      );
+    }
+
+    // Locate the primary table + key once.
+    final primaryKeySnake = QueryBuilder.camelToSnake(primaryKeyField);
+    final primaryTableInfo = _sql.allTables.firstWhere(
+      (t) => t.actualTableName == QueryBuilder.camelToSnake(primaryTable),
+      orElse: () =>
+          throw StateError('Primary table $primaryTable not found in schema'),
+    );
+    final primaryKeyColumn = primaryTableInfo.$columns.firstWhere(
+      (c) => c.$name == primaryKeySnake,
+      orElse: () => throw StateError(
+          'Primary key column $primaryKeyField not found on $primaryTable'),
+    );
+
+    // Resolve each related table's path to primary once. Paths feed both the
+    // combined-subquery path (AND, shared pivot) and the fallback per-table
+    // path (OR, or diverging pivots).
+    final pathFilterPairs =
+        <({List<RelationshipMapping> path, List<SearchFilter> filters})>[];
+    for (final relatedTable in relatedTablesWithFilters) {
+      final relatedFilters = filtersByTable[relatedTable]!;
+      final path = await RelationshipGraphHelper.findShortestPath(
+        fromModels: {relatedTable},
+        toModel: primaryTable,
+        graph: _relationshipGraph,
+      );
+      if (path.isEmpty) {
+        throw StateError(
+          'No relationship path found from "$relatedTable" to "$primaryTable". '
+          'Ensure RelationshipMapping is configured for these tables.',
+        );
+      }
+      pathFilterPairs.add((path: path, filters: relatedFilters));
+    }
+
+    // Fast path: AND across multiple cross-table filter groups whose paths
+    // share the same pivot (table directly connected to primary). Combine
+    // them into one subquery so SQLite plans the whole thing as a single
+    // statement instead of materializing N independent IN-sets.
+    if (filterLogic == MultiTableFilterLogic.and &&
+        pathFilterPairs.length > 1) {
+      final combined = QueryBuilder.buildCombinedSubqueryExpression(
+        sql: _sql,
+        pathFilterPairs: pathFilterPairs,
+        primaryKeyColumn: primaryKeyColumn,
+      );
+      if (combined != null) {
+        _log(
+          'Built COMBINED subquery constraint: $primaryTable.$primaryKeyField IN '
+          '(SELECT ... FROM <combined joins>) covering '
+          '${pathFilterPairs.length} related tables.',
+        );
+        return (
+          primaryTableFilters: primaryTableFilters,
+          crossTableConstraints: <Expression<bool>>[combined],
+        );
+      }
+      // Paths don't share a pivot; fall through to per-table subqueries.
+    }
+
+    // Fallback: one subquery per related table (current behaviour).
+    final exprs = <Expression<bool>>[];
+    for (final pair in pathFilterPairs) {
+      // Separate notExists filters from regular ones. notExists filters
+      // produce a NOT IN subquery (find primary records that have NO related
+      // record matching the inner condition).
+      final notExistsFilters =
+          pair.filters.where((f) => f.operator == 'notExists').toList();
+      final regularFilters =
+          pair.filters.where((f) => f.operator != 'notExists').toList();
+
+      if (regularFilters.isNotEmpty) {
+        final expr = QueryBuilder.buildPrimaryKeySubqueryExpression(
+          sql: _sql,
+          path: pair.path,
+          filtersOnFirstTable: regularFilters,
+          primaryKeyColumn: primaryKeyColumn,
+        );
+        exprs.add(expr);
+
+        _log(
+          'Built subquery constraint: $primaryTable.$primaryKeyField IN '
+          '(SELECT ... FROM ${pair.path.first.from} -> ${pair.path.last.from}) with '
+          '${regularFilters.length} filter(s).',
+        );
+      }
+
+      if (notExistsFilters.isNotEmpty) {
+        final expr = QueryBuilder.buildPrimaryKeySubqueryExpression(
+          sql: _sql,
+          path: pair.path,
+          filtersOnFirstTable: notExistsFilters,
+          primaryKeyColumn: primaryKeyColumn,
+          negate: true,
+        );
+        exprs.add(expr);
+
+        _log(
+          'Built NOT IN subquery constraint: $primaryTable.$primaryKeyField NOT IN '
+          '(SELECT ... FROM ${pair.path.first.from} -> ${pair.path.last.from}) with '
+          '${notExistsFilters.length} notExists filter(s).',
+        );
+      }
+    }
+
+    return (
+      primaryTableFilters: primaryTableFilters,
+      crossTableConstraints: exprs,
+    );
+  }
+
   /// Groups filters by their root table name.
   Map<String, List<SearchFilter>> _groupFiltersByTable(
     List<SearchFilter> filters,
@@ -186,23 +335,7 @@ class MultiTableFilterResolver {
     required String primaryTable,
     required String primaryKeyField,
   }) async {
-    // Step 1: Query the related table with its filters
-    final relatedRows = await QueryBuilder.queryRawTable(
-      sql: _sql,
-      table: relatedTable,
-      filters: relatedFilters,
-      select: ['*'],
-      isPrimaryTable: false,
-    );
-
-    if (relatedRows.isEmpty) {
-      _log('No rows found in $relatedTable matching filters');
-      return {};
-    }
-
-    _log('Found ${relatedRows.length} rows in $relatedTable matching filters');
-
-    // Step 2: Find relationship path from related table to primary table
+    // Find relationship path first so we know which FK we need to project.
     final pathToPrimary = await RelationshipGraphHelper.findShortestPath(
       fromModels: {relatedTable},
       toModel: primaryTable,
@@ -215,6 +348,26 @@ class MultiTableFilterResolver {
         'Ensure RelationshipMapping is configured for these tables.',
       );
     }
+
+    // Project only the FK column needed for the first hop instead of `*`.
+    final firstHopFk = pathToPrimary.first.localKey;
+
+    // Step 1: Query the related table with its filters
+    final relatedRows = await QueryBuilder.queryRawTable(
+      sql: _sql,
+      table: relatedTable,
+      filters: relatedFilters,
+      select: ['*'],
+      isPrimaryTable: false,
+      selectColumns: [firstHopFk],
+    );
+
+    if (relatedRows.isEmpty) {
+      _log('No rows found in $relatedTable matching filters');
+      return {};
+    }
+
+    _log('Found ${relatedRows.length} rows in $relatedTable matching filters');
 
     _log(
       'Relationship path: ${_formatPath(relatedTable, pathToPrimary, primaryTable)}',
@@ -261,6 +414,12 @@ class MultiTableFilterResolver {
         return {};
       }
 
+      // Only project the column needed for the next hop (or the primary
+      // key on the last hop). Avoids loading full rows when traversing.
+      final nextStepProjection = isLastStep
+          ? primaryKeyField
+          : path[i + 1].localKey;
+
       // Query next table in the path
       final nextRows = await QueryBuilder.queryRawTable(
         sql: _sql,
@@ -275,6 +434,7 @@ class MultiTableFilterResolver {
         ],
         select: ['*'],
         isPrimaryTable: false,
+        selectColumns: [nextStepProjection],
       );
 
       if (nextRows.isEmpty) {

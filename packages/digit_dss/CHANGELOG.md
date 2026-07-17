@@ -1,3 +1,9 @@
+## 1.0.5+1
+
+* Updated `attendance_management` imports in dashboard bloc to reflect the package's re-export shape
+* Moved stock down-sync into a separate file and added a new home-screen card for stock sync
+* Bumped `digit_ui_components` and locked file dependencies
+
 ## 1.0.5
 
 * Updated to latest packages

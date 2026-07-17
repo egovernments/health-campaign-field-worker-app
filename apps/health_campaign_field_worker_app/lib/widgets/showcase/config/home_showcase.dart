@@ -126,5 +126,25 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.home.transitPostLabel,
   );
 
+  final polioRegistration = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.polioRegistrationLabel,
+  );
+
+  final polioMissedChildren = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.polioMissedChildrenLabel,
+  );
+
+  final polioStockDetails = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.polioStockDetailsLabel,
+  );
+
+  final polioLqaDataCollection = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.polioLqaDataCollectionLabel,
+  );
+
+  final polioInsideMonitoring = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.polioInsideMonitoringLabel,
+  );
+
   final clf = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.clf);
 }

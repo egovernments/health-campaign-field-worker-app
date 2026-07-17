@@ -276,9 +276,13 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         }
 
         // After stock download, downsync stock balance user actions
-        await downSyncStockBalances(event.projectModel.id);
+        await downSyncStockBalances(
+          event.projectModel.id,
+          projectReferenceID: event.projectModel.referenceID,
+        );
         await _reconcileRejectedOutgoingStocks(
           projectId: event.projectModel.id,
+          projectReferenceID: event.projectModel.referenceID,
           stockEntries: downsyncedStocks.values.toList(),
         );
 
@@ -292,7 +296,10 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
   /// Fetches stock balance UserAction records from the server
   /// using balance keys (stock_balance_{facilityId}_{productVariantId})
   /// and creates or updates them locally.
-  Future<void> downSyncStockBalances(String projectId) async {
+  Future<void> downSyncStockBalances(
+    String projectId, {
+    String? projectReferenceID,
+  }) async {
     try {
       final userObject = await localSecureStore.userRequestModel;
       final userRoles = userObject?.roles.map((e) => e.code) ?? [];
@@ -337,17 +344,36 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
           productVariantIds.isEmpty ||
           facilityIds.first.isEmpty) return;
 
-      // Build balance keys for all facility × product variant combinations
-      final balanceKeys = <String>[];
+      // Build balance keys for all facility × product variant combinations.
+      // Includes the active compact shape, the intermediate readable shape
+      // (pre-compaction, post-suffix), and the legacy shape (pre-suffix) so
+      // server rows written by any prior version are not missed during
+      // downsync.
+      // projectReferenceID is passed explicitly: this code path runs during
+      // project bloc startup, before FlowBuilderSingleton().selectedProject
+      // is populated, so the singleton fallback would yield an empty suffix
+      // and silently degrade the new-shape key to the legacy shape.
+      final balanceKeys = <String>{};
       for (final facilityId in facilityIds) {
         for (final productVariantId in productVariantIds) {
-          balanceKeys.add(generateBalanceKey(facilityId, productVariantId));
+          balanceKeys.add(generateBalanceKey(
+            facilityId,
+            productVariantId,
+            projectReferenceID: projectReferenceID,
+          ));
+          balanceKeys.add(readableBalanceKey(
+            facilityId,
+            productVariantId,
+            projectReferenceID: projectReferenceID,
+          ));
+          balanceKeys
+              .add(legacyBalanceKey(facilityId, productVariantId));
         }
       }
 
       // Fetch from server
       final remoteBalances = await userActionRemoteRepository.search(
-        UserActionSearchModel(clientReferenceId: balanceKeys),
+        UserActionSearchModel(clientReferenceId: balanceKeys.toList()),
       );
 
       if (remoteBalances.isEmpty) return;
@@ -361,6 +387,34 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         );
 
         if (existing.isNotEmpty) {
+          final localRow = existing.first;
+          if (localRow.isSync != true) {
+            // Local has a pending (unsynced) balance — usually a fresh
+            // post-transaction value the user just produced. Two things must
+            // happen:
+            //  1. Do NOT overwrite the local balance — that would revert the
+            //     user's transactions to the stale server value.
+            //  2. Adopt the server's `id` and `rowVersion` so the queued
+            //     upsync op becomes an UPDATE rather than a CREATE — without
+            //     this, the upsync collides with the existing server row at
+            //     the same clientReferenceId, the local change never reaches
+            //     the server, and a permanent local/server drift remains.
+            //
+            // The local balance, timestamp, and isSync=false are preserved
+            // so the upsync pipeline still picks up the row.
+            if (localRow.id != remoteBalance.id ||
+                localRow.rowVersion != remoteBalance.rowVersion) {
+              await userActionLocalRepository.update(
+                localRow.copyWith(
+                  id: remoteBalance.id,
+                  rowVersion: remoteBalance.rowVersion,
+                ),
+                createOpLog: false,
+              );
+            }
+            continue;
+          }
+
           await userActionLocalRepository.update(
             remoteBalance,
             createOpLog: false,
@@ -380,6 +434,7 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
   Future<void> _reconcileRejectedOutgoingStocks({
     required String projectId,
     required List<StockModel> stockEntries,
+    String? projectReferenceID,
   }) async {
     if (stockEntries.isEmpty) return;
 
@@ -412,6 +467,10 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
       facilityIds.removeWhere((element) => element.isEmpty);
       if (facilityIds.isEmpty) return;
 
+      // Accumulator keyed by "<senderId>|<productVariantId>" so the increase
+      // path can look up both the new and legacy balance row shapes from the
+      // same (facility, productVariant) pair. The `|` separator is safe
+      // because neither id contains it.
       final rejectedDeltas = <String, double>{};
 
       for (final stock in stockEntries) {
@@ -431,25 +490,54 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         final quantity = double.tryParse(stock.quantity ?? '0') ?? 0;
         if (quantity <= 0) continue;
 
-        final balanceKey = generateBalanceKey(senderId, productVariantId);
-        rejectedDeltas[balanceKey] =
-            (rejectedDeltas[balanceKey] ?? 0) + quantity;
+        final pairKey = '$senderId|$productVariantId';
+        rejectedDeltas[pairKey] = (rejectedDeltas[pairKey] ?? 0) + quantity;
       }
 
       for (final entry in rejectedDeltas.entries) {
-        await _increaseBalance(entry.key, entry.value);
+        final parts = entry.key.split('|');
+        await _increaseBalance(
+          parts[0],
+          parts[1],
+          entry.value,
+          projectReferenceID: projectReferenceID,
+        );
       }
     } catch (e) {
       debugPrint('Rejected stock balance reconciliation error: $e');
     }
   }
 
-  Future<void> _increaseBalance(String balanceKey, double quantity) async {
+  /// Applies a positive delta to the (facility, productVariant) balance row.
+  /// Looks up the new campaign-suffixed key first; if no row exists, falls
+  /// back to the legacy key shape so a downsync that lands before the user
+  /// has triggered the copy-on-first-touch migration still updates the
+  /// correct row.
+  Future<void> _increaseBalance(
+    String facilityId,
+    String productVariantId,
+    double quantity, {
+    String? projectReferenceID,
+  }) async {
     if (quantity <= 0) return;
 
-    final existing = await userActionLocalRepository.search(
-      UserActionSearchModel(clientReferenceId: [balanceKey]),
+    final newKey = generateBalanceKey(
+      facilityId,
+      productVariantId,
+      projectReferenceID: projectReferenceID,
     );
+    var existing = await userActionLocalRepository.search(
+      UserActionSearchModel(clientReferenceId: [newKey]),
+    );
+
+    if (existing.isEmpty) {
+      final oldKey = legacyBalanceKey(facilityId, productVariantId);
+      if (oldKey != newKey) {
+        existing = await userActionLocalRepository.search(
+          UserActionSearchModel(clientReferenceId: [oldKey]),
+        );
+      }
+    }
 
     if (existing.isEmpty) return;
 

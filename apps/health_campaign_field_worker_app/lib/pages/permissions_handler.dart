@@ -466,7 +466,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => Popup(
-        title: '${localizations.translate(i18.common.accessRequired)} !',
+        title: localizations.translate(i18.common.accessRequired),
         type: PopUpType.alert,
         titleIcon: Icon(
           Icons.warning,

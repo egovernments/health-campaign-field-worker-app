@@ -49,7 +49,13 @@ class ApiLoggerInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    if (options.data is Map || options.data is List) {
+    // Skip request-body logging for the same paths whose responses we
+    // silence below — the request bodies for these are large auto-generated
+    // payloads (module lists, boundary codes) that don't add debug value.
+    final path = options.path;
+    final isNoisyEndpoint =
+        path.contains('boundarys') || path.contains(Constants.localizationApiPath);
+    if (!isNoisyEndpoint && (options.data is Map || options.data is List)) {
       AppLogger.instance.info(
         _getIndentedJson(json.encode(options.data)),
         title: '[REQUEST] ${options.uri.toString()}',
@@ -62,7 +68,15 @@ class ApiLoggerInterceptor extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     super.onResponse(response, handler);
 
-    if (response.requestOptions.path.contains('boundarys')) return;
+    final path = response.requestOptions.path;
+    if (path.contains('boundarys')) return;
+    // Localization responses carry the full translation payload for every
+    // requested module (often thousands of entries) — pretty-printing that
+    // JSON on every app-open cache miss floods the logs and slows the UI
+    // thread doing the encode/decode/indent. The response is already
+    // persisted to the local DB by LocalizationLocalRepository.create(),
+    // so tracing it in the interceptor adds no debug value.
+    if (path.contains(Constants.localizationApiPath)) return;
 
     try {
       AppLogger.instance.info(

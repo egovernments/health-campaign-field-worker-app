@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:flutter/material.dart';
@@ -815,6 +816,7 @@ String getEntityTypeName(EntityModel entity) {
   if (entity is ProjectTypeModel) return 'ProjectTypeModel';
   if (entity is PgrComplaintModel) return 'PgrComplaintModel';
   if (entity is PgrAddressModel) return 'PgrAddressModel';
+  if (entity is UserActionModel) return 'UserActionModel';
   // Fallback for unknown types - use runtimeType (may not work with obfuscation)
   return entity.runtimeType.toString();
 }

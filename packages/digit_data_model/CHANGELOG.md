@@ -1,3 +1,20 @@
+## 1.4.0
+
+* Multi-hierarchy support
+    * Moved `hierarchyType` from build-time env to per-project runtime (added `hierarchyType` field to `Project` and its mapper)
+    * Centralized country-suffix stripping in `setHierarchyType`
+    * Stopped splitting `hierarchyType` on first underscore
+* Search improvements
+    * Added `within`, `equalsAny`, and `containsAll` operators in SQL store
+    * Added indexes for `name`, `individual`, `household`, `address`, and `identifier` tables
+    * Backfilled the same indexes in the schemaVersion 11 migration so upgrades get the perf benefit
+* Hardened SQLCipher `PRAGMA key` / `ATTACH DATABASE KEY` callsites via `_sqlCipherKeyPragma`/`_assertHexKey` helpers and hex-blob literal form
+* Added migration script for stock table
+* Added stock and referral API additions (`hf_referral` fields + mapper, stock model fields + mapper)
+* Added `listen` support and update-operation handling to UserAction oplog
+* Added notification unregister flow (oplog entry field)
+* Data repository `search` gained `lastChangedSince` propagation across attendance, hf_referral, pgr_service, stock, attendance_register remote repositories
+
 ## 1.3.0
 
 * Implemented database encryption using SQLCipher

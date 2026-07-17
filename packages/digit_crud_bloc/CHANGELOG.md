@@ -1,3 +1,15 @@
+## 0.1.0
+
+- Added `matches` operator for JSON substring lookups
+- Added `within`, `equalsAny`, and `containsAll` operators
+- Hardened `containsAll`, `in`, and `notIn` against NULL and empty inputs
+- Fixed `in:[]` to be match-none (was incorrectly match-all)
+- Routed geo count queries through Drift
+- Preserved search wrapper state on clear/persisted transitions
+- Added table indexes for improved search performance
+- Improved primary key inference logic and enhanced error logging
+- Gated `IndexDiag` behind debug so it no longer blocks first search
+
 ## 0.0.1
 
 - Added OR condition support to SQL query builder
