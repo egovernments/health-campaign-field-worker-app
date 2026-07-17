@@ -6,12 +6,10 @@ import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
-
 import '../../blocs/localization/app_localization.dart';
 import '../../blocs/unique_beneficiary_id/unique_id.dart';
-import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../widgets/download_progress/download_progress_content.dart';
 
 void showLowIdsAlert(
     {required BuildContext context,
@@ -167,85 +165,30 @@ class ProgressDialog {
               type: PopUpType.simple,
               title: '',
               additionalWidgets: [
-                progressValue == 1.0
-                    ? Center(
-                  child: Lottie.asset(
-                    Constants.downloadSuccessAnimation,
-                    repeat: false,
-                    height: MediaQuery.of(context).size.height * 0.1,
+                DownloadProgressContent(
+                  title: _localizations!.translate(
+                    i18.beneficiaryId.downloadBeneficiaryIds,
                   ),
-                )
-                    : Center(
-                  child: Lottie.asset(
-                    Constants.downloadAnimation,
-                    height: MediaQuery.of(context).size.height * 0.1,
-                  ),
-                ),
-                Center(
-                  child: Text(
-                    _localizations!.translate(
-                      i18.beneficiaryId.downloadBeneficiaryIds,
-                    ),
-                    style: _theme?.digitTextTheme(context).headingM.copyWith(
-                      color: theme.colorTheme.primary.primary2,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: spacer2 * 2),
-                LinearProgressIndicator(
-                  value: progressValue,
-                  minHeight: spacer1,
-                  color: _theme!.colorTheme.alert.success,
-                  borderRadius:
-                  const BorderRadius.all(Radius.circular(spacer2)),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    progressValue == 1.0
-                        ? Text(
-                      _localizations!.translate(
-                          i18.beneficiaryDetails.downloadcompleted),
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: _theme!.colorTheme.text.primary,
-                      ),
-                    )
-                        : Text(
-                      _localizations!
-                          .translate(i18.common.coreCommonDownloading),
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: _theme!.colorTheme.text.primary,
-                      ),
-                    ),
-                    Text(
-                      '$_currentCount/$_totalCount',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: _theme!.colorTheme.text.primary,
-                      ),
-                    ),
-                  ],
+                  progress: progressValue,
+                  countLabel: '$_currentCount/$_totalCount',
                 ),
                 progressValue == 1.0
                     ? DigitButton(
-                  capitalizeLetters: false,
-                  type: DigitButtonType.secondary,
-                  size: DigitButtonSize.large,
-                  mainAxisSize: MainAxisSize.max,
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                    context
-                        .read<UniqueIdBloc>()
-                        .add(const UniqueIdEvent.fetchIdCount());
-                  },
-                  label: localizations.translate(
-                    i18.common.corecommonclose,
-                  ),
-                )
-                    : const Offstage()
+                        capitalizeLetters: false,
+                        type: DigitButtonType.secondary,
+                        size: DigitButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                          context
+                              .read<UniqueIdBloc>()
+                              .add(const UniqueIdEvent.fetchIdCount());
+                        },
+                        label: localizations.translate(
+                          i18.common.corecommonclose,
+                        ),
+                      )
+                    : const Offstage(),
               ],
             );
           },

@@ -1,4 +1,4 @@
-final dynamic sampleFlows = {
+﻿final dynamic sampleFlows = {
   "id": "9d3a901b-d831-427b-8aeb-4bbda9ec2018",
   "tenantId": "mz",
   "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
@@ -1564,17 +1564,19 @@ final dynamic sampleFlows = {
       "body": [
         {
           "type": "template",
-          "label": "HCM_SEARCH_NEARBY_HOUSEHOLDS_LABEL",
+          "label": "PROXIMITY_SEARCH_REGISTRATION",
           "format": "proximitySearch",
           "onAction": [
             {
               "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
               "properties": {
                 "data": [
+                  {"key": "", "value": 5, "operation": "within"},
                   {
-                    "key": "",
-                    "value": 5,
-                    "operation": "within"
+                    "key": "localityBoundaryCode",
+                    "root": "address",
+                    "value": "{{singleton.boundary.code}}",
+                    "operation": "equals"
                   }
                 ],
                 "name": "address",
@@ -1582,7 +1584,7 @@ final dynamic sampleFlows = {
               }
             }
           ],
-          "fieldName": "searchNearbyHouseholdS",
+          "fieldName": "proximitySearch",
           "mandatory": true,
           "schemaCode": null,
           "validations": [
@@ -1595,7 +1597,26 @@ final dynamic sampleFlows = {
         },
         {
           "type": "template",
-          "label": "HCM_SEARCH_NAME_LABEL",
+          "label": "ID_SEARCH_REGISTRATION",
+          "format": "switch",
+          "onAction": [
+            {
+              "actionType": "CLEAR_STATE",
+              "properties": {
+                "widgetKeys": ["searchBar"],
+                "filterKeys": ["givenName", "identifierId"],
+                "triggerSearch": true
+              }
+            }
+          ],
+          "fieldName": "idSearch",
+          "mandatory": true,
+          "schemaCode": null,
+          "validations": []
+        },
+        {
+          "type": "template",
+          "label": "NAME_OF_INDIVIDUAL",
           "format": "searchBar",
           "onAction": [
             {
@@ -1626,7 +1647,7 @@ final dynamic sampleFlows = {
         {
           "icon": "FilterAlt",
           "type": "template",
-          "label": "HCM_SEARCH_FILTER_LABEL",
+          "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_LABEL",
           "format": "actionPopup",
           "fieldName": "filterPopUp",
           "properties": {
@@ -1641,23 +1662,20 @@ final dynamic sampleFlows = {
                   "enums": [
                     {
                       "code": "ADMINISTRATION_SUCCESS",
-                      "name": "HCM_SEARCH_FILTER_ADMINISTRATION_SUCCESS"
+                      "name": "REGISTRATION_ADMINISTRATION_SUCCESS"
                     },
                     {
+                      "code": "BENEFICIARY_REFERRED",
+                      "name": "REGISTRATION_BENEFICIARY_REFERRED"
+                    },
+                    {"code": "INELIGIBLE", "name": "REGISTRATION_INELIGIBLE"},
+                    {
                       "code": "CLOSED_HOUSEHOLD",
-                      "name": "HCM_SEARCH_FILTER_MISSED_CHILDREN"
+                      "name": "REGISTRATION_CLOSED_HOUSEHOLD"
                     },
                     {
                       "code": "NOT_ADMINISTERED",
-                      "name": "HCM_SEARCH_FILTER_NOT_ADMINISTERED"
-                    },
-                    {
-                      "code": "ADMINISTRATION_FAILED",
-                      "name": "HCM_SEARCH_FILTER_ADMINISTRATION_FAILED"
-                    },
-                    {
-                      "code": "VISITED",
-                      "name": "HCM_SEARCH_FILTER_REVISITED"
+                      "name": "REGISTRATION_NOT_ADMINISTERED"
                     }
                   ],
                   "format": "selectionCard",
@@ -1665,12 +1683,12 @@ final dynamic sampleFlows = {
                 }
               ],
               "type": "default",
-              "title": "HCM_SEARCH_FILTER_LABEL",
+              "title": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_TITLE_LABEL",
               "titleIcon": "FilterAlt",
               "footerActions": [
                 {
                   "type": "template",
-                  "label": "HCM_SEARCH_FILTER_CLEAR_ALL_BUTTON",
+                  "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_CLEAR_LABEL",
                   "format": "button",
                   "onAction": [
                     {
@@ -1680,12 +1698,9 @@ final dynamic sampleFlows = {
                         "filterKeys": [
                           "status",
                           "projectBeneficiary",
-                          "projectId",
-                          "clientReferenceId"
+                          "projectId"
                         ],
-                        "widgetKeys": [
-                          "selectedStatus"
-                        ],
+                        "widgetKeys": ["selectedStatus"],
                         "triggerSearch": true
                       }
                     }
@@ -1699,14 +1714,13 @@ final dynamic sampleFlows = {
                 },
                 {
                   "type": "template",
-                  "label": "HCM_SEARCH_FILTER_APPLY_BUTTON",
+                  "label":
+                  "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL",
                   "format": "button",
                   "onAction": [
                     {
                       "actionType": "CLOSE_POPUP",
-                      "properties": {
-                        "parentScreenKey": "searchBeneficiary"
-                      }
+                      "properties": {"parentScreenKey": "searchBeneficiary"}
                     },
                     {
                       "actionType": "CLEAR_STATE",
@@ -1715,9 +1729,9 @@ final dynamic sampleFlows = {
                         "filterKeys": [
                           "status",
                           "projectBeneficiary",
-                          "projectId",
-                          "clientReferenceId"
-                        ]
+                          "projectId"
+                        ],
+                        "triggerSearch": false
                       }
                     },
                     {
@@ -1728,33 +1742,14 @@ final dynamic sampleFlows = {
                             "data": [
                               {
                                 "key": "status",
-                                "scope": "latest",
-                                "value": [
-                                  "ADMINISTRATION_SUCCESS",
-                                  "VISITED"
-                                ],
-                                "operation": "in"
-                              }
-                            ],
-                            "name": "task"
-                          }
-                        }
-                      ],
-                      "condition": {
-                        "expression": "selectedStatus == ADMINISTRATION_SUCCESS"
-                      }
-                    },
-                    {
-                      "actions": [
-                        {
-                          "actionType": "SEARCH_EVENT",
-                          "properties": {
-                            "data": [
-                              {
-                                "key": "status",
-                                "scope": "latest",
                                 "value": "{{selectedStatus}}",
                                 "operation": "in"
+                              },
+                              {
+                                "key": "localityBoundaryCode",
+                                "root": "address",
+                                "value": "{{singleton.boundary.code}}",
+                                "operation": "equals"
                               }
                             ],
                             "name": "task"
@@ -1762,46 +1757,8 @@ final dynamic sampleFlows = {
                         }
                       ],
                       "condition": {
-                        "expression": "selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == INELIGIBLE || selectedStatus == VISITED"
-                      }
-                    },
-                    {
-                      "actions": [
-                        {
-                          "actionType": "SEARCH_EVENT",
-                          "properties": {
-                            "data": [
-                              {
-                                "key": "status",
-                                "value": ["ADMINISTRATION_FAILED"],
-                                "operation": "in"
-                              }
-                            ],
-                            "name": "task"
-                          }
-                        },
-                        {
-                          "actionType": "SEARCH_EVENT",
-                          "properties": {
-                            "data": [
-                              {
-                                "key": "status",
-                                "root": "task",
-                                "value": {
-                                  "values": [
-                                    "VISITED",
-                                    "ADMINISTRATION_SUCCESS"
-                                  ]
-                                },
-                                "operation": "notExists"
-                              }
-                            ],
-                            "name": "taskExclude"
-                          }
-                        }
-                      ],
-                      "condition": {
-                        "expression": "selectedStatus == ADMINISTRATION_FAILED"
+                        "expression":
+                        "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE"
                       }
                     },
                     {
@@ -1814,6 +1771,12 @@ final dynamic sampleFlows = {
                                 "key": "projectId",
                                 "value": "{{singleton.selectedProject.id}}",
                                 "operation": "notEqual"
+                              },
+                              {
+                                "key": "localityBoundaryCode",
+                                "root": "address",
+                                "value": "{{singleton.boundary.code}}",
+                                "operation": "equals"
                               }
                             ],
                             "name": "projectBeneficiary"
@@ -1832,17 +1795,29 @@ final dynamic sampleFlows = {
                             "data": [
                               {
                                 "key": "projectId",
-                                "root": "hFReferral",
+                                "root": "projectBeneficiary",
                                 "value": "{{singleton.selectedProject.id}}",
+                                "operation": "notEqual"
+                              },
+                              {
+                                "key": "status",
+                                "root": "task",
+                                "value": "NOT_ADMINISTERED",
+                                "operation": "equals"
+                              },
+                              {
+                                "key": "localityBoundaryCode",
+                                "root": "address",
+                                "value": "{{singleton.boundary.code}}",
                                 "operation": "equals"
                               }
                             ],
-                            "name": "task"
+                            "filterLogic": "or"
                           }
                         }
                       ],
                       "condition": {
-                        "expression": "selectedStatus == BENEFICIARY_REFERRED"
+                        "expression": "selectedStatus == NOT_ADMINISTERED"
                       }
                     },
                     {
@@ -1852,24 +1827,23 @@ final dynamic sampleFlows = {
                           "properties": {
                             "data": [
                               {
-                                "key": "status",
-                                "root": "task",
-                                "value": {
-                                  "scope": "projectBeneficiary",
-                                  "values": [
-                                    "ADMINISTRATION_SUCCESS",
-                                    "VISITED"
-                                  ]
-                                },
-                                "operation": "notExists"
+                                "key": "projectId",
+                                "root": "hFReferral",
+                                "value": "{{singleton.selectedProject.id}}",
+                                "operation": "equals"
+                              },
+                              {
+                                "key": "localityBoundaryCode",
+                                "root": "address",
+                                "value": "{{singleton.boundary.code}}",
+                                "operation": "equals"
                               }
-                            ],
-                            "name": "task"
+                            ]
                           }
                         }
                       ],
                       "condition": {
-                        "expression": "selectedStatus == NOT_ADMINISTERED"
+                        "expression": "selectedStatus == BENEFICIARY_REFERRED"
                       }
                     }
                   ],
@@ -1889,6 +1863,14 @@ final dynamic sampleFlows = {
           },
           "schemaCode": null,
           "suffixIcon": "FilterAlt"
+        },
+        {
+         "type": "template",
+         "label": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
+         "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
+         "format": "noResultCard",
+         "fieldName": "beneficiaryNotFound",
+         "showOnEmptySearch": true
         },
         {
           "data": "members",
@@ -2243,7 +2225,7 @@ final dynamic sampleFlows = {
           ]
         }
       ],
-      "heading": "HCM_SEARCH_BENEFICIARY_HEADING",
+      "heading": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",

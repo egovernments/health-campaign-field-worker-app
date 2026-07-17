@@ -25,6 +25,9 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:recase/recase.dart';
@@ -80,6 +83,7 @@ import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/inventory/custom_facility_widgets.dart';
 import '../widgets/inventory/custom_product_selection_card.dart';
+import '../widgets/download_progress/download_spinner_content.dart';
 import '../widgets/localized.dart';
 import '../widgets/progress_bar/beneficiary_progress.dart';
 import '../widgets/progress_bar/hf_referral_progress.dart';
@@ -1569,13 +1573,18 @@ class _HomePageState extends LocalizedState<HomePage> {
               Navigator.of(context, rootNavigator: true)
                   .popUntil((route) => route is! PopupRoute);
             }
-            DigitSyncDialog.show(
-              context,
-              type: DialogType.inProgress,
-              label: localizations.translate(
-                i18.home.stockSyncDataLabel,
-              ),
+            showCustomPopup(
+              context: context,
               barrierDismissible: false,
+              builder: (ctx) => Popup(
+                type: PopUpType.simple,
+                title: "",
+                additionalWidgets: [
+                  DownloadSpinnerContent(
+                    title: localizations.translate(i18.home.stockSyncDataLabel),
+                  ),
+                ],
+              ),
             );
           },
           getBatchSize: (batchSize, projectModel) {
@@ -1607,13 +1616,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 primaryButtonLabel: localizations.translate(
                   initialServerCount > 0
                       ? i18.common.coreCommonDownload
-                      : i18.acknowledgementSuccess.goToHome,
+                      : i18.common.proceed,
                 ),
-                secondaryButtonLabel: initialServerCount > 0
-                    ? localizations.translate(
-                        i18.common.coreCommonGoback,
-                      )
-                    : null,
+                secondaryButtonLabel: localizations.translate(
+                  i18.common.coreCommonGoback,
+                ),
               ),
               dialogType: DigitProgressDialogType.dataFound,
               isPop: true,
@@ -1830,13 +1837,20 @@ class _HomePageState extends LocalizedState<HomePage> {
                     syncInProgress: () async {
                       await localSecureStore.setManualSyncTrigger(false);
                       if (context.mounted) {
-                        DigitSyncDialog.show(
-                          context,
-                          type: DialogType.inProgress,
-                          label: localizations.translate(
-                            i18.syncDialog.syncInProgressTitle,
-                          ),
+                        showCustomPopup(
+                          context: context,
                           barrierDismissible: false,
+                          builder: (ctx) => Popup(
+                            type: PopUpType.simple,
+                            title: "",
+                            additionalWidgets: [
+                              DownloadSpinnerContent(
+                                title: localizations.translate(
+                                  i18.syncDialog.syncInProgressTitle,
+                                ),
+                              ),
+                            ],
+                          ),
                         );
                       }
                     },

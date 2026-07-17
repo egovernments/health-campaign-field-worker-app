@@ -1234,5 +1234,11 @@
     "locale": "pt_MZ",
     "message": "Redose Concluída",
     "module": "hcm-delivery"
+  },
+  {
+    "code": "CAPTURING_LOCATION",
+    "locale": "en_MZ",
+    "message": "Capturing Location",
+    "module": "hcm-common"
   }
 ]

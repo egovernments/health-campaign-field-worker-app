@@ -425,21 +425,101 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                   iconLabelGap: spacer1),
                             ),
                             const SizedBox(height: spacer2),
-                            DigitTextBlock(
-                              padding: EdgeInsets.zero,
-                              heading: _resolveHeading(
-                                  widget.config['heading'], screenKey),
-                              headingStyle: Theme.of(context)
+                            Builder(builder: (context) {
+                              final headingActionsConfig =
+                                  (widget.config['headingActions'] as List?) ??
+                                      [];
+                              final resolvedHeading = _resolveHeading(
+                                  widget.config['heading'], screenKey);
+                              final resolvedDescription = _resolveDescription(
+                                  widget.config['description'], screenKey);
+                              final headingStyle = Theme.of(context)
                                   .digitTextTheme(context)
                                   .headingXl
                                   .copyWith(
                                       color: Theme.of(context)
                                           .colorTheme
                                           .primary
-                                          .primary2),
-                              description: _resolveDescription(
-                                  widget.config['description'], screenKey),
-                            ),
+                                          .primary2);
+
+                              if (headingActionsConfig.isEmpty) {
+                                return DigitTextBlock(
+                                  padding: EdgeInsets.zero,
+                                  heading: resolvedHeading,
+                                  headingStyle: headingStyle,
+                                  description: resolvedDescription,
+                                );
+                              }
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.end,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          resolvedHeading ?? '',
+                                          style: headingStyle,
+                                        ),
+                                      ),
+                                      const SizedBox(width: spacer2),
+                                      ...headingActionsConfig.map((e) =>
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: spacer2),
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .colorTheme
+                                                  .paper
+                                                  .primary,
+                                              border: Border.all(
+                                                color: Theme.of(context)
+                                                    .colorTheme
+                                                    .primary
+                                                    .primary1,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: LayoutMapper.map(
+                                              preprocessConfigWithState(
+                                                  e, stateData),
+                                              stateData,
+                                              context,
+                                              screenKey: screenKey,
+                                              (action) {
+                                                ActionHandler.execute(
+                                                    action, context, {
+                                                  'wrappers': const [],
+                                                  '_compositeKey':
+                                                      compositeKey,
+                                                });
+                                              },
+                                            ),
+                                          )),
+                                    ],
+                                  ),
+                                  if (resolvedDescription?.isNotEmpty ==
+                                      true) ...[
+                                    const SizedBox(height: spacer1),
+                                    Text(
+                                      resolvedDescription!,
+                                      style: Theme.of(context)
+                                          .digitTextTheme(context)
+                                          .bodyS
+                                          .copyWith(
+                                            color: Theme.of(context)
+                                                .colorTheme
+                                                .text
+                                                .secondary,
+                                          ),
+                                    ),
+                                  ],
+                                ],
+                              );
+                            }),
                             const SizedBox(height: spacer4),
                             // Build body widgets with trailing spacers, then
                             // drop the last spacer ONLY when the visible list

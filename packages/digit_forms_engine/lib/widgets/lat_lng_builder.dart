@@ -83,7 +83,10 @@ class _LatLngBuilderStatefulWrapperState
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _isDialogOpen = true;
         _isFetchingLocation = true;
-        DigitComponentsUtils.showDialog(context, '', DialogType.inProgress);
+        DigitLoaders.overlayLoader(
+          context: context,
+          label: FormLocalization.of(context).translate(common.locationCapturing),
+        );
 
         // Give dialog time to appear before dispatching fetch
         Future.delayed(const Duration(milliseconds: 200), () {
@@ -108,7 +111,10 @@ class _LatLngBuilderStatefulWrapperState
       // If a dialog is already open, avoid reopening; otherwise show it
       if (!_isDialogOpen) {
         _isDialogOpen = true;
-        DigitComponentsUtils.showDialog(context, '', DialogType.inProgress);
+        DigitLoaders.overlayLoader(
+          context: context,
+          label: FormLocalization.of(context).translate(common.locationCapturing),
+        );
       }
 
       // Small delay to ensure dialog has time to mount
@@ -158,7 +164,7 @@ class _LatLngBuilderStatefulWrapperState
           // Hide loader dialog if visible
           if (_isDialogOpen && Navigator.canPop(context)) {
             _isDialogOpen = false;
-            DigitComponentsUtils.hideDialog(context);
+            DigitLoaders.hideLoaderDialog(context);
           }
         }
       },

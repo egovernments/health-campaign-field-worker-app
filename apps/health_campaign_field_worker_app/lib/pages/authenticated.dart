@@ -53,6 +53,7 @@ import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/runtime_hierarchy.dart';
 import '../utils/utils.dart';
+import '../widgets/download_progress/download_spinner_content.dart';
 import '../widgets/error_screen.dart';
 import '../widgets/root_detection_wrapper.dart';
 import 'error_boundary.dart';
@@ -725,10 +726,10 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                       context: context,
                       builder: (ctx) => Popup(
                         title: AppLocalizations.of(context).translate(
-                          i18.common.coreCommonWarning,
+                          i18.common.logoutConfirmationHeading,
                         ),
                         description: AppLocalizations.of(context).translate(
-                          i18.common.logOutWarningMsg,
+                          i18.common.logoutConfirmationDescription,
                         ),
                         onOutsideTap: () {
                           Navigator.of(ctx).pop();

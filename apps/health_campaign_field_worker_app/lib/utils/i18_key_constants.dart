@@ -226,10 +226,14 @@ const databaseError = DatabaseError();
 class Common {
   const Common();
 
+  String get proceed => 'PROCEED_BUTTON';
+
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get permissionContinue => 'PERMISSION_CONTINUE';
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
   String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
+  String get logoutConfirmationHeading => 'HCM_LOGOUT_CONFIRMATION_HEADING';
+  String get logoutConfirmationDescription => 'HCM_LOGOUT_CONFIRMATION_DESCRIPTION';
 
   String get coreCommonOr => 'CORE_COMMON_OR';
   String get commentKey => 'COMMENT_KEY';
@@ -351,6 +355,10 @@ class Common {
       'CORE_COMMON_WANT_TO_CHOOSE_ANOTHER_BOUNDARY';
 
   String get chooseAnotherBoundary => 'CORE_COMMON_CHOOSE_ANOTHER_BOUNDARY';
+
+  String get chooseBoundaries => 'CORE_COMMON_CHOOSE_BOUNDARIES';
+
+  String get noValue => 'CORE_COMMON_NO_VALUE';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
 
