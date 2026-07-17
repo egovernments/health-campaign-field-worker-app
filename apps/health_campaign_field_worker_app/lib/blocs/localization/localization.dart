@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'package:digit_flow_builder/blocs/app_localization.dart' as flow_builder;
+import 'package:digit_forms_engine/blocs/app_localization.dart' as forms_engine;
+
 import '../../data/local_store/app_shared_preferences.dart';
 import '../../data/repositories/local/localization.dart';
 import '../../data/repositories/remote/localization.dart';
@@ -173,9 +176,46 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     emit(state.copyWith(index: event.index));
   }
 
+  /// Refreshes the flow-builder + forms-engine caches from the current SQL
+  /// snapshot without any MaterialApp rebuild. Awaitable so callers can
+  /// guarantee on-demand codes (e.g. boundary "Administrative Area") are
+  /// localized before a JSON-driven flow renders.
+  Future<void> refreshFlowBuilderLocalization(String locale) async {
+    await _loadLocale(locale.split('_'));
+  }
+
   FutureOr<void> _loadLocale(List codes) async {
-    LocalizationParams().setLocale(Locale(codes.first, codes.last));
-    await AppLocalizations(Locale(codes.first, codes.last), sql).load();
+    final loc = Locale(codes.first, codes.last);
+    LocalizationParams().setLocale(loc);
+    await AppLocalizations(loc, sql).load();
+
+    // Keep the flow-builder (JSON-driven flows) and forms-engine (field
+    // labels + helptexts) static localization snapshots in sync. Both are
+    // captured once when the MaterialApp delegates first build (at login)
+    // and only refresh on a full MaterialApp rebuild — which is
+    // intentionally gated to language changes to avoid login flicker. So
+    // on-demand localizations loaded later (e.g. hcm-boundary-admin for the
+    // stock flow) never reach these caches and render as raw codes. Rehydrate
+    // both here from the same fresh SQL source AppLocalizations just used,
+    // so they stay consistent without any MaterialApp rebuild.
+    try {
+      final fbRows = await LocalizationLocalRepository().fetchAllForLocale(
+        sql: sql,
+        locale: '${codes.first}_${codes.last}',
+      );
+      await flow_builder.FlowBuilderLocalization(
+        loc,
+        Future.value(fbRows),
+        const [],
+      ).load();
+      await forms_engine.FormLocalization(
+        loc,
+        Future.value(fbRows),
+        const [],
+      ).load();
+    } catch (e) {
+      debugPrint('flow/forms localization refresh skipped: $e');
+    }
   }
 }
 
