@@ -387,6 +387,21 @@ class FlowCrudStateRegistry {
   final Map<String, String> _instanceIds =
       {}; // screenKey -> current instanceId
 
+  /// Composite keys whose most recent state has `isLoading == true`. Used to
+  /// drive [_loadingCount] so app-level code can watch a single ValueListenable
+  /// instead of iterating the per-key notifier map.
+  final Set<String> _loadingKeys = {};
+
+  /// Global count of composite keys currently in the loading state. Emits on
+  /// every load-state transition (loading <-> not-loading) across ANY key.
+  /// Apps can hook a loader overlay to this to keep it visible until every
+  /// in-flight CRUD operation settles.
+  final ValueNotifier<int> _loadingCount = ValueNotifier<int>(0);
+
+  /// Read-only view of [_loadingCount]. Non-zero means at least one
+  /// FlowCrudBloc has an in-flight loading state somewhere in the app.
+  ValueListenable<int> get loadingCount => _loadingCount;
+
   static final FlowCrudStateRegistry _instance =
       FlowCrudStateRegistry._internal();
 
@@ -440,6 +455,11 @@ class FlowCrudStateRegistry {
     _navParams.remove(compositeKey);
     _scrollDirection.remove(compositeKey);
     _paginationInfo.remove(compositeKey);
+    // If we're disposing a key that was mid-load, drop it from the loading
+    // set so [_loadingCount] doesn't stay stuck above 0 forever.
+    if (_loadingKeys.remove(compositeKey)) {
+      _loadingCount.value = _loadingKeys.length;
+    }
   }
 
   /// Dispose state directly using a composite key (pageName::instanceId)
@@ -455,6 +475,28 @@ class FlowCrudStateRegistry {
     _map
         .putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null))
         .value = state;
+
+    // Keep [_loadingCount] in sync with the per-key isLoading flag. Using a
+    // Set of currently-loading keys (not raw increments) makes this robust
+    // against duplicate loading emissions from consecutive CrudEvents on the
+    // same key — the count only changes on actual loading transitions.
+    final wasLoading = _loadingKeys.contains(compositeKey);
+    final isLoading = state.isLoading;
+    if (isLoading && !wasLoading) {
+      _loadingKeys.add(compositeKey);
+      _loadingCount.value = _loadingKeys.length;
+      if (kDebugMode) {
+        debugPrint(
+            '[LoadingCoord] +$compositeKey -> count=${_loadingCount.value}');
+      }
+    } else if (!isLoading && wasLoading) {
+      _loadingKeys.remove(compositeKey);
+      _loadingCount.value = _loadingKeys.length;
+      if (kDebugMode) {
+        debugPrint(
+            '[LoadingCoord] -$compositeKey -> count=${_loadingCount.value}');
+      }
+    }
   }
 
   /// Get state using composite key directly
