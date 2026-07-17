@@ -825,7 +825,7 @@ class _BoundarySelectionPageState
                                                                   DropdownItem(
                                                                     name: localizations.translate(
                                                                         e.code ??
-                                                                            'No Value'),
+                                                                            i18.common.noValue),
                                                                     code:
                                                                         e.code ??
                                                                             '',
@@ -842,7 +842,7 @@ class _BoundarySelectionPageState
                                                                   DropdownItem(
                                                                     name: localizations.translate(
                                                                         e.code ??
-                                                                            'No Value'),
+                                                                            i18.common.noValue),
                                                                     code:
                                                                         e.code ??
                                                                             '',
@@ -913,7 +913,7 @@ class _BoundarySelectionPageState
                                                                   DropdownItem(
                                                                     name: localizations.translate(
                                                                         e.code ??
-                                                                            'No Value'),
+                                                                            i18.common.noValue),
                                                                     code:
                                                                         e.code ??
                                                                             '',
@@ -933,7 +933,7 @@ class _BoundarySelectionPageState
                                                                               .selectedLastLevelBoundaries
                                                                               .first
                                                                               .code ??
-                                                                          'No Value'),
+                                                                          i18.common.noValue),
                                                                   code: state
                                                                           .selectedLastLevelBoundaries
                                                                           .first
@@ -1007,7 +1007,7 @@ class _BoundarySelectionPageState
                                                               name: localizations
                                                                   .translate(e
                                                                           .code ??
-                                                                      'No Value'),
+                                                                      i18.common.noValue),
                                                               code:
                                                                   e.code ?? ''))
                                                           .toList(),

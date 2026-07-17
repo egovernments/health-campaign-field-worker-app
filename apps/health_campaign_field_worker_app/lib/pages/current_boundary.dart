@@ -93,7 +93,7 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
                               Expanded(
                                 child: Text(
                                   localizations.translate(
-                                    boundary.code ?? 'No Value',
+                                    boundary.code ?? i18.common.noValue,
                                   ),
                                   style: theme
                                       .digitTextTheme(context)
