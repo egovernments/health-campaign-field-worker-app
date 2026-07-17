@@ -85,7 +85,7 @@ class _LatLngBuilderStatefulWrapperState
         _isFetchingLocation = true;
         DigitLoaders.overlayLoader(
           context: context,
-          label: FormLocalization.of(context).translate('CAPTURING_LOCATION'),
+          label: FormLocalization.of(context).translate(common.locationCapturing),
         );
 
         // Give dialog time to appear before dispatching fetch
@@ -113,7 +113,7 @@ class _LatLngBuilderStatefulWrapperState
         _isDialogOpen = true;
         DigitLoaders.overlayLoader(
           context: context,
-          label: FormLocalization.of(context).translate('CAPTURING_LOCATION'),
+          label: FormLocalization.of(context).translate(common.locationCapturing),
         );
       }
 
