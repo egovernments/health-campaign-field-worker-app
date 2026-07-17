@@ -88,6 +88,62 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     _hasInitializedProtection = true;
   }
 
+  /// Resolves a page-level label: translates, then applies named placeholders.
+  String _resolvePageLabel(PropertySchema schema) {
+    final translated = localizations.translate(schema.label!);
+    final phs = schema.labelPlaceHolders;
+    if (phs == null || phs.isEmpty) return translated;
+    return _applyPlaceHolders(translated, phs);
+  }
+
+  /// Resolves a page-level description: translates, then applies named placeholders.
+  String _resolvePageDescription(PropertySchema schema) {
+    final translated = localizations.translate(schema.description!);
+    final phs = schema.descriptionPlaceHolders;
+    if (phs == null || phs.isEmpty) return translated;
+    return _applyPlaceHolders(translated, phs);
+  }
+
+  /// Replaces `{KEY}` tokens with resolved placeholder values.
+  String _applyPlaceHolders(String text, List<LabelPlaceHolder> placeholders) {
+    String result = text;
+    for (final ph in placeholders) {
+      final resolved = _resolvePlaceholderValue(ph.value);
+      result = result.replaceAll('{${ph.key}}', resolved);
+    }
+    return result;
+  }
+
+  /// Resolves `{{navigation.fieldName}}` from widget.navigationParams
+  /// and defaultValues Provider.
+  String _resolvePlaceholderValue(String template) {
+    final regex = RegExp(r'\{\{\s*navigation\.(.+?)\s*\}\}');
+    return template.replaceAllMapped(regex, (match) {
+      final fieldName = match.group(1)!;
+      final navParams = widget.navigationParams;
+
+      if (navParams != null && navParams.containsKey(fieldName)) {
+        return navParams[fieldName]?.toString() ?? '';
+      }
+
+      if (navParams != null) {
+        final nested = navParams['navigation'];
+        if (nested is Map && nested.containsKey(fieldName)) {
+          return nested[fieldName]?.toString() ?? '';
+        }
+      }
+
+      try {
+        final defaultValues = context.read<Map<String, dynamic>>();
+        if (defaultValues.containsKey(fieldName)) {
+          return defaultValues[fieldName]?.toString() ?? '';
+        }
+      } catch (_) {}
+
+      return match.group(0)!;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,13 +243,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               await Future.delayed(
                                   const Duration(milliseconds: 200));
 
-                              // 1. Get visible keys only (skip hidden fields and fields with visibility conditions)
+                              // 1. Get visible keys only for validation (skip hidden fields and fields with visibility conditions)
+                              // Note: hidden+includeInForm fields are excluded from validation here
+                              // but are still captured by JsonForms.getFormValues() for data submission
                               final currentKeys = schema.properties?.entries
                                       .where((entry) {
                                         final isStaticHidden =
                                             isHidden(entry.value);
-                                        final includeInForm =
-                                            entry.value.includeInForm == true;
 
                                         // Check if field is hidden by visibility condition
                                         final hasDynamicVisibility =
@@ -231,7 +287,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                                         final isVisible = !isStaticHidden &&
                                             !isDynamicallyHidden;
-                                        return isVisible || includeInForm;
+                                        return isVisible;
                                       })
                                       .map((entry) => entry.key)
                                       // Filter out keys that don't have a corresponding form control
@@ -738,7 +794,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               ),
                               if (schema.label != null) ...[
                                 Text(
-                                  localizations.translate(schema.label!),
+                                  _resolvePageLabel(schema),
                                   style: Theme.of(context)
                                       .digitTextTheme(context)
                                       .headingXl
@@ -752,16 +808,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     translateIfPresent(schema.description,
                                             localizations) !=
                                         null &&
-                                    localizations
-                                        .translate(schema.description!)
+                                    _resolvePageDescription(schema)
                                         .trim()
                                         .isNotEmpty) ...[
                                   const SizedBox(
                                     height: spacer1,
                                   ),
                                   Text(
-                                    localizations
-                                        .translate(schema.description!),
+                                    _resolvePageDescription(schema),
                                     style: Theme.of(context)
                                         .digitTextTheme(context)
                                         .bodyS
@@ -1116,7 +1170,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       children: [
                         if (schema.label != null) ...[
                           Text(
-                            localizations.translate(schema.label!),
+                            _resolvePageLabel(schema),
                             style: Theme.of(context)
                                 .digitTextTheme(context)
                                 .headingXl
@@ -1127,7 +1181,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           if (schema.description != null) ...[
                             const SizedBox(height: spacer1),
                             Text(
-                              localizations.translate(schema.description!),
+                              _resolvePageDescription(schema),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
@@ -1653,7 +1707,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         LabelValueSummary(
           padding: EdgeInsets.zero,
           heading: schema.label != null
-              ? localizations.translate(schema.label!)
+              ? _resolvePageLabel(schema)
               : null,
           headingStyle:
               Theme.of(context).digitTextTheme(context).headingXl.copyWith(

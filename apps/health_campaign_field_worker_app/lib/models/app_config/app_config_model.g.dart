@@ -23,46 +23,20 @@ _$MdmsCriteriaModelImpl _$$MdmsCriteriaModelImplFromJson(
         Map<String, dynamic> json) =>
     _$MdmsCriteriaModelImpl(
       tenantId: json['tenantId'] as String,
-      moduleDetails: (json['moduleDetails'] as List<dynamic>)
-          .map((e) => MdmsModuleDetailModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      schemaCode: json['schemaCode'] as String,
+      filters: json['filters'] as Map<String, dynamic>?,
+      limit: (json['limit'] as num?)?.toInt(),
+      isActive: json['isActive'] as bool?,
     );
 
 Map<String, dynamic> _$$MdmsCriteriaModelImplToJson(
         _$MdmsCriteriaModelImpl instance) =>
     <String, dynamic>{
       'tenantId': instance.tenantId,
-      'moduleDetails': instance.moduleDetails,
-    };
-
-_$MdmsModuleDetailModelImpl _$$MdmsModuleDetailModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$MdmsModuleDetailModelImpl(
-      moduleName: json['moduleName'] as String,
-      masterDetails: (json['masterDetails'] as List<dynamic>)
-          .map((e) => MdmsMasterDetailModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$$MdmsModuleDetailModelImplToJson(
-        _$MdmsModuleDetailModelImpl instance) =>
-    <String, dynamic>{
-      'moduleName': instance.moduleName,
-      'masterDetails': instance.masterDetails,
-    };
-
-_$MdmsMasterDetailModelImpl _$$MdmsMasterDetailModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$MdmsMasterDetailModelImpl(
-      json['name'] as String,
-      filter: json['filter'] as String?,
-    );
-
-Map<String, dynamic> _$$MdmsMasterDetailModelImplToJson(
-        _$MdmsMasterDetailModelImpl instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'filter': instance.filter,
+      'schemaCode': instance.schemaCode,
+      'filters': instance.filters,
+      'limit': instance.limit,
+      'isActive': instance.isActive,
     };
 
 _$AppConfigPrimaryWrapperModelImpl _$$AppConfigPrimaryWrapperModelImplFromJson(
@@ -180,9 +154,6 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       transitPostType: (json['TRANSIT_POST_TYPE'] as List<dynamic>?)
           ?.map((e) => TransitPostType.fromJson(e as Map<String, dynamic>))
           .toList(),
-      boundaryRelationship: (json['BOUNDARY_RELATIONSHIP'] as List<dynamic>?)
-          ?.map((e) => BoundaryRelationship.fromJson(e as Map<String, dynamic>))
-          .toList(),
     );
 
 Map<String, dynamic> _$$HCMWrapperModelImplToJson(
@@ -215,7 +186,6 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'REFUSAL_REASONS': instance.refusalReasons,
       'FIREBASE_CONFIG': instance.firebaseConfig,
       'TRANSIT_POST_TYPE': instance.transitPostType,
-      'BOUNDARY_RELATIONSHIP': instance.boundaryRelationship,
     };
 
 _$AppConfigSecondaryWrapperModelImpl
@@ -645,42 +615,4 @@ Map<String, dynamic> _$$FirebaseConfigImplToJson(
     <String, dynamic>{
       'enableCrashlytics': instance.enableCrashlytics,
       'enableAnalytics': instance.enableAnalytics,
-    };
-
-_$BoundaryRelationshipImpl _$$BoundaryRelationshipImplFromJson(
-        Map<String, dynamic> json) =>
-    _$BoundaryRelationshipImpl(
-      boundaryType: json['boundaryType'] as String,
-      order: (json['order'] as num).toInt(),
-      parent: json['parent'] == null
-          ? null
-          : BoundaryRelationshipRef.fromJson(
-              json['parent'] as Map<String, dynamic>),
-      children: (json['children'] as List<dynamic>?)
-          ?.map((e) =>
-              BoundaryRelationshipRef.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$$BoundaryRelationshipImplToJson(
-        _$BoundaryRelationshipImpl instance) =>
-    <String, dynamic>{
-      'boundaryType': instance.boundaryType,
-      'order': instance.order,
-      'parent': instance.parent,
-      'children': instance.children,
-    };
-
-_$BoundaryRelationshipRefImpl _$$BoundaryRelationshipRefImplFromJson(
-        Map<String, dynamic> json) =>
-    _$BoundaryRelationshipRefImpl(
-      boundaryType: json['boundaryType'] as String,
-      order: (json['order'] as num).toInt(),
-    );
-
-Map<String, dynamic> _$$BoundaryRelationshipRefImplToJson(
-        _$BoundaryRelationshipRefImpl instance) =>
-    <String, dynamic>{
-      'boundaryType': instance.boundaryType,
-      'order': instance.order,
     };

@@ -23,7 +23,24 @@ class ScannerComparisonRegistry {
 
   String? Function(String fieldName)? duplicateErrorMessage;
 
-  /// Registers callbacks and records [owner] as the current owner.
+  /// Validates a parsed identity-QR payload after
+  /// [JsonSchemaScannerBuilder]'s strict `userId` shape gate. Return null
+  /// to accept the scan; return a non-null (already-localized) string to
+  /// reject it — the scanner will clear the form value, reset the scanner
+  /// bloc state, and surface the returned string as a snackbar.
+  ///
+  /// **App-wide policy, set once at app boot.** Deliberately excluded
+  /// from [register] / [clearIfOwner] so per-screen [ScannerComparisonProvider]
+  /// mounts (which only pass duplicateCheckFn / duplicateErrorMessage)
+  /// don't clobber it with null. Boundary / project / role rules apply
+  /// everywhere, not per-screen, so the ownership dance the duplicate
+  /// check needs is inappropriate here.
+  String? Function(Map<String, dynamic> payload)? identityPayloadValidator;
+
+  /// Registers per-screen callbacks and records [owner] as the current
+  /// owner. Intentionally does NOT touch [identityPayloadValidator] —
+  /// that's an app-wide policy field assigned directly by the app at
+  /// startup.
   void register({
     required Object owner,
     required Future<bool> Function(
@@ -38,7 +55,9 @@ class ScannerComparisonRegistry {
     this.duplicateErrorMessage = duplicateErrorMessage;
   }
 
-  /// Clears callbacks only if [owner] is still the current owner.
+  /// Clears per-screen callbacks only if [owner] is still the current
+  /// owner. Leaves [identityPayloadValidator] alone for the same reason
+  /// [register] does.
   void clearIfOwner(Object owner) {
     if (_owner == owner) {
       _owner = null;

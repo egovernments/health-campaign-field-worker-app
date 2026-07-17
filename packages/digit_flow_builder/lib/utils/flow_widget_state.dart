@@ -58,6 +58,12 @@ class WidgetStateContext {
   /// The raw CrudStateData object (for advanced use cases).
   final CrudStateData? stateData;
 
+  /// Navigation params for the current screen, fetched from
+  /// `FlowCrudStateRegistry().getNavigationParams(compositeKey)`. Surfaces
+  /// as `'navigation'` in [evalContext] so templates like
+  /// `{{navigation.fieldName}}` resolve on destination pages.
+  final Map<String, dynamic>? navigationParams;
+
   /// Cached evaluation context map for use with resolveValue/resolveTemplate.
   /// This is the primary way to pass context to template resolution functions.
   ///
@@ -88,6 +94,7 @@ class WidgetStateContext {
     this.compositeKey,
     this.listIndex,
     this.stateData,
+    this.navigationParams,
   });
 
   /// Builds the evaluation context map.
@@ -98,6 +105,11 @@ class WidgetStateContext {
       'contextData': contextData,
       'formData': formData,
       'widgetData': widgetData,
+      // Surface navigation params so `{{navigation.field}}` templates
+      // resolve on destination pages (e.g. labels on stockScanConfirm
+      // reading {{navigation.senderId}}). Was previously missing — the
+      // `of()` factory fetched the params but never exposed them.
+      'navigation': navigationParams ?? const <String, dynamic>{},
       // Spread modelMap so {{ModelName.field}} works directly
       ...modelMap,
       // Legacy support for existing templates using 'item'
@@ -168,6 +180,7 @@ class WidgetStateContext {
       compositeKey: compositeKey,
       listIndex: crudCtx?.listIndex,
       stateData: crudCtx?.stateData,
+      navigationParams: navigationParams,
     );
   }
 

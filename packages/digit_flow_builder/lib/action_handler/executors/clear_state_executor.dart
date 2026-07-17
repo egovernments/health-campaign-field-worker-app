@@ -108,12 +108,23 @@ class ClearStateExecutor extends ActionExecutor {
           triggerSearch: true,
         );
       } else {
-        SearchStateManager().updateFilters(
-          compositeKey,
-          searchName,
-          [],
-          triggerSearch: false,
-        );
+        // No filters remain to drive a search. Drop the prior result wrapper
+        // so stale rows from the last query (e.g. proximity-filtered list when
+        // proximity was the sole filter) don't linger on screen. Preserve
+        // widgetData / formData so other widgets retain their state.
+        final currentState = FlowCrudStateRegistry().get(compositeKey);
+        if (currentState != null && currentState.stateWrapper != null) {
+          FlowCrudStateRegistry().update(
+            compositeKey,
+            FlowCrudState(
+              base: currentState.base,
+              stateWrapper: null,
+              formData: currentState.formData,
+              widgetData: currentState.widgetData,
+              isLoading: false,
+            ),
+          );
+        }
       }
     }
 

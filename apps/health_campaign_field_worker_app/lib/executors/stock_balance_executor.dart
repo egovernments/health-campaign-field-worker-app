@@ -124,6 +124,23 @@ class StockBalanceExecutor extends ActionExecutor {
 
     if (facilityId == null || facilityId.isEmpty) return;
 
+    // Set of inbound DISPATCHED clientReferenceIds already "claimed" by a
+    // RECEIVED row in this batch via additionalFields.dispatchClientReferenceId.
+    // Used to skip the legacy `isReceiver && DISPATCHED && status=ACCEPTED`
+    // delta when the new two-write Accept (or CDD scan) has already produced
+    // the receiver-owned RECEIVED row.
+    //
+    // Rollout bridge — remove when every campaign's `manage_stock` config has
+    // been rotated to include the `CREATE_EVENT` on Accept. At that point the
+    // legacy DISPATCHED-status-ACCEPTED branch below and this set can be
+    // deleted together. See `stock-receive-flow.html` for the steady-state
+    // design.
+    final dispatchRefsClaimedByReceived = stockEntities
+        .where((s) => (s.transactionType?.toUpperCase() ?? '') == 'RECEIVED')
+        .map((s) => _getAdditionalField(s, 'dispatchClientReferenceId'))
+        .where((v) => v.isNotEmpty)
+        .toSet();
+
     // Calculate the delta for each product variant based on transaction type
     final productDeltas = <String, double>{};
     for (final stock in stockEntities) {
@@ -163,8 +180,14 @@ class StockBalanceExecutor extends ActionExecutor {
                     ?.firstWhere((f) => f.key == 'status',
                         orElse: () => const AdditionalField('', ''))
                     .value ==
-                'ACCEPTED') {
-          delta = quantity; // Add accepted stock from dispatch
+                'ACCEPTED' &&
+            !dispatchRefsClaimedByReceived
+                .contains(stock.clientReferenceId)) {
+          // Legacy receiver-balance path: only counted when no RECEIVED row
+          // in this batch already claims this inbound via
+          // dispatchClientReferenceId. Prevents double-counting under the new
+          // two-write Accept + CDD scan flows.
+          delta = quantity;
         } else if (isSender && transactionType == 'DISPATCHED') {
           delta = -quantity; // Subtract issued/dispatched stock
         } else if (isSender && stockEntryType == 'RETURNED') {
@@ -203,6 +226,81 @@ class StockBalanceExecutor extends ActionExecutor {
       }
     }
     return '';
+  }
+
+  /// Case-preserving additionalFields accessor. Used for identifier values
+  /// like `dispatchClientReferenceId` where uppercasing would corrupt the
+  /// data.
+  String _getAdditionalField(StockModel stock, String key) {
+    final fields = stock.additionalFields?.fields;
+    if (fields == null) return '';
+    for (final field in fields) {
+      if (field.key == key) {
+        return field.value?.toString() ?? '';
+      }
+    }
+    return '';
+  }
+
+  /// Looks up an existing STOCK_BALANCE UserAction for (facility, product)
+  /// supporting copy-on-first-touch migration from older key shapes.
+  ///
+  /// Migration order (most-recent first):
+  ///   1. Active compact key (`bal_<compactFacility><product>_<suffix>`).
+  ///      When found, [_BalanceLookup.existing] is set — normal update path.
+  ///   2. Readable key (`bal_<fullFacility><product>_<suffix>`). For
+  ///      distributors this only existed locally — server rejected it as
+  ///      >64 chars. When found, its balance value flows into
+  ///      [_BalanceLookup.legacySeed] for the first write under the new key.
+  ///   3. Legacy key (`bal_<fullFacility><product>`, no suffix). Same
+  ///      handling as readable.
+  ///   4. Nothing — both fields null; the executor's seed-from-StockCalc
+  ///      branch produces the initial balance.
+  Future<_BalanceLookup> _findOrSeedBalance(
+    UserActionLocalRepository repo,
+    String facilityId,
+    String productVariantId,
+  ) async {
+    Future<UserActionModel?> findByKey(String key) async {
+      final results = await repo.search(
+        UserActionSearchModel(clientReferenceId: [key]),
+      );
+      return results.isEmpty ? null : results.first;
+    }
+
+    final compactKey = generateBalanceKey(facilityId, productVariantId);
+    final compactRow = await findByKey(compactKey);
+    if (compactRow != null) return _BalanceLookup(existing: compactRow);
+
+    // Migration: probe readable shape (pre-compaction, post-suffix). Only
+    // meaningful when facilityId is a UUID — otherwise compactKey ==
+    // readableKey and we'd be re-issuing the same query.
+    final readableKey = readableBalanceKey(facilityId, productVariantId);
+    if (readableKey != compactKey) {
+      final readableRow = await findByKey(readableKey);
+      if (readableRow != null) {
+        final balance = _extractBalance(readableRow);
+        return _BalanceLookup(legacySeed: balance);
+      }
+    }
+
+    final legacyKey = legacyBalanceKey(facilityId, productVariantId);
+    if (legacyKey == compactKey || legacyKey == readableKey) {
+      return const _BalanceLookup();
+    }
+    final legacyRow = await findByKey(legacyKey);
+    if (legacyRow == null) return const _BalanceLookup();
+    return _BalanceLookup(legacySeed: _extractBalance(legacyRow));
+  }
+
+  double _extractBalance(UserActionModel row) {
+    return double.tryParse(
+          row.additionalFields?.fields
+                  ?.firstWhereOrNull((f) => f.key == 'balance')
+                  ?.value ??
+              '0',
+        ) ??
+        0.0;
   }
 
   Future<void> _handleTaskEntity(
@@ -298,12 +396,13 @@ class StockBalanceExecutor extends ActionExecutor {
     final loggedInUserUuid = _getLoggedInUserUuid(context);
     final balanceKey = generateBalanceKey(facilityId, productVariantId);
 
-    final existingBalances = await userActionRepo.search(
-      UserActionSearchModel(clientReferenceId: [balanceKey]),
+    final lookup = await _findOrSeedBalance(
+      userActionRepo,
+      facilityId,
+      productVariantId,
     );
-
-    final existing =
-        existingBalances.isNotEmpty ? existingBalances.first : null;
+    final existing = lookup.existing;
+    final legacySeed = lookup.legacySeed;
 
     // Get the current balance from UserAction (reflects all previous transactions including deliveries/returns)
     double currentBalance = 0.0;
@@ -312,6 +411,21 @@ class StockBalanceExecutor extends ActionExecutor {
           ?.firstWhereOrNull((f) => f.key == 'balance');
       currentBalance =
           double.tryParse(existingBalanceField?.value ?? '0') ?? 0.0;
+    } else if (legacySeed != null) {
+      // Copy-on-first-touch migration from the pre-campaign-suffix key shape.
+      currentBalance = legacySeed;
+    } else {
+      // No prior STOCK_BALANCE UserAction row exists. Seeding to 0 would
+      // ignore previously downsynced stock and produce a negative balance
+      // on the first delivery. Delivery TaskModel rows do not show up in
+      // StockCalculationUtils, so this baseline is pre-delivery — the
+      // `- deliveredQuantity` below correctly deducts on top.
+      currentBalance = await _computeBalanceFromLocalStocks(
+        context: context,
+        facilityId: facilityId,
+        productVariantId: productVariantId,
+        isDistributor: isDistributor,
+      );
     }
 
     // deliveredQuantity can be positive (delivery) or negative (return)
@@ -368,6 +482,55 @@ class StockBalanceExecutor extends ActionExecutor {
     );
   }
 
+  /// Calculates stockInHand for (facility × product) from local StockModel
+  /// rows. Used to seed the first STOCK_BALANCE UserAction write when no
+  /// prior balance row (new or legacy-key) exists locally — so previously
+  /// downsynced stock is not silently treated as zero.
+  Future<double> _computeBalanceFromLocalStocks({
+    required BuildContext context,
+    required String facilityId,
+    required String productVariantId,
+    required bool isDistributor,
+  }) async {
+    final stockRepo =
+        context.read<LocalRepository<StockModel, StockSearchModel>>();
+
+    // Scope the seed to the current project via `referenceId`. Stocks
+    // carry the project id there (with `referenceIdType = 'Project'`);
+    // without it a distributor seed would sum stocks from every project
+    // the user has ever been in and inflate the first-touch balance for
+    // a fresh project.
+    final projectId = FlowBuilderSingleton().projectId;
+    final receivedStocks = await stockRepo.search(
+      StockSearchModel(
+        receiverId: facilityId,
+        referenceId: projectId,
+      ),
+    );
+    final sentStocks = await stockRepo.search(
+      StockSearchModel(
+        senderId: facilityId,
+        referenceId: projectId,
+      ),
+    );
+
+    final allStocksMap = <String, StockModel>{};
+    for (final s in receivedStocks) {
+      allStocksMap[s.clientReferenceId] = s;
+    }
+    for (final s in sentStocks) {
+      allStocksMap[s.clientReferenceId] = s;
+    }
+
+    return StockCalculationUtils.getStockBalance(
+      stockList: allStocksMap.values.toList(),
+      facilityId: facilityId,
+      productId: productVariantId,
+      loggedInUserUuid: _getLoggedInUserUuid(context),
+      isDistributor: isDistributor,
+    );
+  }
+
   Future<void> _updateStockBalanceFromStock({
     required BuildContext context,
     required UserActionLocalRepository userActionRepo,
@@ -381,24 +544,41 @@ class StockBalanceExecutor extends ActionExecutor {
     final loggedInUserUuid = _getLoggedInUserUuid(context);
     final balanceKey = generateBalanceKey(facilityId, productVariantId);
 
-    final existingBalances = await userActionRepo.search(
-      UserActionSearchModel(clientReferenceId: [balanceKey]),
+    final lookup = await _findOrSeedBalance(
+      userActionRepo,
+      facilityId,
+      productVariantId,
     );
+    final existing = lookup.existing;
+    final legacySeed = lookup.legacySeed;
 
-    final existing =
-        existingBalances.isNotEmpty ? existingBalances.first : null;
-
-    // Always use the UserAction balance as the authoritative source
     double currentBalance = 0.0;
+    double newBalance;
     if (existing != null) {
       final existingBalanceField = existing.additionalFields?.fields
           ?.firstWhereOrNull((f) => f.key == 'balance');
       currentBalance =
           double.tryParse(existingBalanceField?.value ?? '0') ?? 0.0;
+      newBalance = currentBalance + quantityDelta;
+    } else if (legacySeed != null) {
+      // Copy-on-first-touch migration from the pre-campaign-suffix key shape.
+      currentBalance = legacySeed;
+      newBalance = currentBalance + quantityDelta;
+    } else {
+      // No prior STOCK_BALANCE UserAction row exists for this
+      // facility × product. Seeding to 0 and applying the delta would
+      // ignore previously downsynced stock and produce a negative balance
+      // for a sender's first dispatch (since delta = -quantity). The local
+      // StockModel rows already include the just-written transaction, so
+      // calculate stockInHand from them and use it as the authoritative
+      // new balance — applying the delta on top would double-count.
+      newBalance = await _computeBalanceFromLocalStocks(
+        context: context,
+        facilityId: facilityId,
+        productVariantId: productVariantId,
+        isDistributor: isDistributor,
+      );
     }
-
-    // Apply the transaction delta to the current balance
-    final newBalance = currentBalance + quantityDelta;
 
     final now = DateTime.now().millisecondsSinceEpoch;
 
@@ -444,4 +624,12 @@ class StockBalanceExecutor extends ActionExecutor {
       'UPDATE_STOCK_BALANCE: Updated balance for $facilityId/$productVariantId = $newBalance (previous: $currentBalance, delta: $quantityDelta, existing record: ${existing != null})',
     );
   }
+}
+
+/// Result of looking up an existing STOCK_BALANCE UserAction with
+/// copy-on-first-touch migration support. See [StockBalanceExecutor._findOrSeedBalance].
+class _BalanceLookup {
+  final UserActionModel? existing;
+  final double? legacySeed;
+  const _BalanceLookup({this.existing, this.legacySeed});
 }

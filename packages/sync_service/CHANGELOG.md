@@ -1,3 +1,14 @@
+## 1.0.5
+
+* Added background sync lock check in `SyncService` to prevent overlapping runs
+* Updated background service stop to route through `invoke`
+* Improved sync bloc, `sync_down`, `sync_up`, and utils with extensive fixes; added tests
+* Removed unused test package dependency
+
+## 1.0.4
+
+* Updated `digit_data_model` to latest version
+
 ## 1.0.3
 
 * Updated sync error to return runtime type and error message

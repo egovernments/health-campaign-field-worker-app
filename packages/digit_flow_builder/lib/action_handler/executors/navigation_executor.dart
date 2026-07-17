@@ -125,19 +125,15 @@ class NavigationExecutor extends ActionExecutor {
           if (state?.stateWrapper != null &&
               (state!.stateWrapper as List).isNotEmpty) {
             existingWrapper = List<dynamic>.from(state.stateWrapper as List);
-            debugPrint(
-                'NAVIGATION: Found existing wrapper with key=$targetCompositeKey, items=${existingWrapper.length}');
           }
 
           if (existingWrapper.isEmpty) {
-            debugPrint(
-                'NAVIGATION: No existing wrapper found, building new wrapper');
             // Fall back to building new wrapper
             final wrapper = WrapperBuilder(
               (entities is List
                   ? entities.whereType<EntityModel>().toList()
                   : <EntityModel>[]),
-              config!['wrapperConfig'],
+              Map<String, dynamic>.from(config!['wrapperConfig'] as Map),
               screenKey: targetCompositeKey,
             ).build();
             final flowState = const FlowCrudState().copyWith(
@@ -149,8 +145,6 @@ class NavigationExecutor extends ActionExecutor {
             // The wrapper items are Map<String, dynamic> with entity types as keys
             final updatedEntities =
                 (entities as List).whereType<EntityModel>().toList();
-            debugPrint(
-                'NAVIGATION: Updating ${updatedEntities.length} entities in existing wrapper');
 
             for (int i = 0; i < existingWrapper.length; i++) {
               final wrapperItem = existingWrapper[i];
@@ -160,14 +154,10 @@ class NavigationExecutor extends ActionExecutor {
                   final entityType = getEntityTypeName(updatedEntity);
                   if (wrapperItem.containsKey(entityType)) {
                     wrapperItem[entityType] = updatedEntity;
-                    debugPrint('NAVIGATION: Updated $entityType in wrapper');
                   }
                 }
               }
             }
-
-            debugPrint(
-                'NAVIGATION: Edit mode - updated wrapper with ${updatedEntities.length} entities');
 
             final flowState = const FlowCrudState().copyWith(
               stateWrapper: existingWrapper,
@@ -178,7 +168,7 @@ class NavigationExecutor extends ActionExecutor {
           // For create mode, build wrapper from entities as before
           final wrapper = WrapperBuilder(
             entities,
-            config?['wrapperConfig'],
+            Map<String, dynamic>.from(config?['wrapperConfig'] as Map),
             screenKey: targetCompositeKey,
           ).build();
           final flowState = const FlowCrudState().copyWith(
@@ -191,8 +181,6 @@ class NavigationExecutor extends ActionExecutor {
 
     // Determine which form data to use
     Map<String, dynamic>? formValuesToUse = contextData['formData'];
-    debugPrint('NAVIGATION: contextData formData: $formValuesToUse');
-    debugPrint('NAVIGATION: targetScreenKey: $targetScreenKey');
 
     final formDataConfig = action.properties['formDataConfig'];
     if (formDataConfig != null) {
@@ -206,31 +194,22 @@ class NavigationExecutor extends ActionExecutor {
 
     // Get existing state to preserve stateWrapper and other data
     final existingState = FlowCrudStateRegistry().get(targetCompositeKey);
-    debugPrint(
-        'NAVIGATION: existingState formData: ${existingState?.formData}');
 
     final mergedFormData = {
       ...?existingState?.formData,
       ...?formValuesToUse,
     };
-    debugPrint('NAVIGATION: merged formData: $mergedFormData');
 
     final flowState = (existingState ?? const FlowCrudState()).copyWith(
       formData: mergedFormData,
     );
 
     FlowCrudStateRegistry().update(targetCompositeKey, flowState);
-    debugPrint(
-        'NAVIGATION: Updated registry with formData for $targetCompositeKey');
 
     // Store existingModels in navigation params for edit mode
     // This allows FETCH_TRANSFORMER_CONFIG to use updateEntitiesFromForm
     final existingModels = contextData['existingModels'];
     if (existingModels != null) {
-      final modelsList = existingModels as List;
-      debugPrint(
-          'NAVIGATION: Storing existingModels (${modelsList.length} models)');
-
       // Store with composite key
       final currentNavParams =
           FlowCrudStateRegistry().getNavigationParams(targetCompositeKey) ?? {};
@@ -238,7 +217,6 @@ class NavigationExecutor extends ActionExecutor {
         ...currentNavParams,
         'existingModels': existingModels,
       });
-      debugPrint('NAVIGATION: Stored existingModels for $targetCompositeKey');
     }
 
     return contextData;

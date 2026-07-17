@@ -146,7 +146,7 @@ class ComputedListEvaluator {
   }
 
   /// Infers the expected type of a variable from the condition and returns default value.
-  static dynamic _getDefaultValueForMissingKey(
+  static dynamic getDefaultValueForMissingKey(
     String key,
     String resolvedCondition,
   ) {
@@ -161,7 +161,7 @@ class ComputedListEvaluator {
     // Check if it's a boolean comparison
     for (final pattern in patterns) {
       if (pattern.hasMatch(resolvedCondition)) {
-        return 'false'; // Default boolean value as string
+        return false; // Default boolean value
       }
     }
 
@@ -173,7 +173,7 @@ class ComputedListEvaluator {
 
     for (final pattern in numericPatterns) {
       if (pattern.hasMatch(resolvedCondition)) {
-        return '0'; // Default numeric value as string
+        return 0; // Default numeric value
       }
     }
 
@@ -255,10 +255,8 @@ class ComputedListEvaluator {
     for (final key in requiredKeys) {
       if (!contextMap.containsKey(key)) {
         final defaultValue =
-            _getDefaultValueForMissingKey(key, resolvedCondition);
+            getDefaultValueForMissingKey(key, resolvedCondition);
         contextMap[key] = defaultValue;
-        debugPrint(
-            'Missing key "$key" in context, using default: $defaultValue');
       }
     }
 
@@ -291,10 +289,7 @@ class ComputedListEvaluator {
       if (resolvedCondition == null || resolvedCondition.isEmpty) continue;
 
       try {
-        // TODO: Fix condition format in configuration files - replace 'and' with '&&' for proper formula parser syntax
-        final sanitizedCondition = resolvedCondition
-            .replaceAll(' and ', ' && ')
-            .replaceAll('and', '&&');
+        final sanitizedCondition = sanitizeCondition(resolvedCondition);
         final parser = FormulaParser(sanitizedCondition, flatContext);
         final result = parser.parse;
 
@@ -320,6 +315,28 @@ class ComputedListEvaluator {
     }
 
     return results;
+  }
+
+  /// Sanitizes a condition string for FormulaParser:
+  /// 1. Replaces `and` with `&&`
+  /// 2. Expands chained comparisons like `60<=age<=180` into
+  ///    `60<=age&&age<=180` since FormulaParser does not support
+  ///    Python-style chained comparisons.
+  static String sanitizeCondition(String condition) {
+    var sanitized = condition
+        .replaceAll(' and ', ' && ')
+        .replaceAll('and', '&&');
+
+    // Expand chained comparisons: "60<=age<=180" → "60<=age&&age<=180"
+    // Pattern: number op variable op number
+    final chainedPattern = RegExp(
+      r'(\d+(?:\.\d+)?)\s*(<=|>=|<|>)\s*([a-zA-Z_]\w*)\s*(<=|>=|<|>)\s*(\d+(?:\.\d+)?)',
+    );
+    sanitized = sanitized.replaceAllMapped(chainedPattern, (m) {
+      return '${m[1]}${m[2]}${m[3]}&&${m[3]}${m[4]}${m[5]}';
+    });
+
+    return sanitized;
   }
 
   static Iterable<T> _takeWhile<T>(

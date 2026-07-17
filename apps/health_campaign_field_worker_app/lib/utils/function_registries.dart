@@ -8,6 +8,7 @@ import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/entities/roles_type.dart';
 import 'extensions/extensions.dart';
@@ -205,6 +206,26 @@ class FunctionRegistries {
   }
 
   void _registerFacilityFunctions() {
+    // Returns 'STAFF' when getUserFacilityId() returns the user's UUID
+    // (distributor / CDD path — there's no actual facility, the userUuid
+    // stands in for one) and 'WAREHOUSE' otherwise. Use this for the
+    // receiverType / senderType field on Stock records so server-side
+    // type validation matches the id that's being sent.
+    FunctionRegistry.register('getUserFacilityType', (args, stateData) {
+      final isDistributor = context.loggedInUserRoles.any(
+        (role) =>
+            role.code == RolesType.distributor.toValue() ||
+            role.code == RolesType.communityDistributor.toValue(),
+      );
+      final isWareHouseMgr = context.loggedInUserRoles.any(
+        (role) => role.code == RolesType.warehouseManager.toValue(),
+      );
+      if (isDistributor && !isWareHouseMgr) {
+        return 'STAFF';
+      }
+      return 'WAREHOUSE';
+    });
+
     FunctionRegistry.register('getUserFacilityId', (args, stateData) {
       final isDistributor = context.loggedInUserRoles
           .where((role) => role.code == RolesType.distributor.toValue())
@@ -396,10 +417,30 @@ class FunctionRegistries {
   }
 
   void _registerStockFunctions() {
+    // Stock sufficiency check covering the full cycle:
+    //   args[0] eligibleProductVariants — current dose's product variants
+    //           (each entry has a ProductVariants list with productVariantId,
+    //           name, quantity).
+    //   args[1] futureDoses (optional) — list of future-dose entries; each
+    //           contributes its `doseCriteria[0].ProductVariants[*].quantity`
+    //           to the cycle-wide required total. Pass to gate the cycle
+    //           entry point (recordCycle button) so the worker can't start
+    //           an indirect cycle when stock for later doses won't fit.
+    //   args[2] resourceCard (optional) — the user's per-product entries
+    //           from ProductSelectionCard (`resourceDelivered.productId` +
+    //           `quantityDistributed`). When present, OVERRIDES the
+    //           current-dose config quantity with the user's value so the
+    //           pre-submit check reflects what will actually be debited.
+    // Cumulative required per productVariantId is compared against
+    // StockBalanceCache; insufficient products are reported via the same
+    // INSUFFICIENT_STOCK contract `getInsufficientStockMessage` consumes.
     FunctionRegistry.register('hasStockForDelivery', (args, stateData) {
       if (args.isEmpty) return true;
-      final eligibleProducts = args.first;
+      final eligibleProducts = args[0];
       if (eligibleProducts == null) return true;
+      final futureDoses = args.length > 1 ? args[1] : null;
+      final resourceCard = args.length > 2 ? args[2] : null;
+
       List<dynamic> productList = [];
       if (eligibleProducts is List) {
         productList = eligibleProducts;
@@ -409,30 +450,84 @@ class FunctionRegistries {
       if (productList.isEmpty) return true;
       final cache = StockBalanceCache.instance;
       if (cache.facilityId.isEmpty) return true;
-      final List<Map<String, dynamic>> insufficientProducts = [];
-      for (final product in productList) {
-        if (product is! Map) continue;
-        final productVariantsList = product['ProductVariants'];
-        if (productVariantsList is! List) continue;
-        for (final variant in productVariantsList) {
-          if (variant is! Map) continue;
-          final productId = variant['productVariantId']?.toString();
-          final productName =
-              variant['name']?.toString() ?? productId ?? 'Unknown';
-          if (productId == null || productId.isEmpty) continue;
-          final quantity =
-              double.tryParse(variant['quantity']?.toString() ?? '1') ?? 1.0;
-          final key = productId;
-          final balance = cache.cache[key] ?? 0.0;
-          if (balance < quantity) {
-            insufficientProducts.add({
-              'name': productName,
-              'required': quantity,
-              'available': balance,
-            });
+
+      // User-modified quantities keyed by productVariantId. Empty when the
+      // caller doesn't pass resourceCard (e.g. pre-DeliveryDetails gate).
+      final Map<String, double> userQty = {};
+      if (resourceCard is List) {
+        for (final entry in resourceCard) {
+          if (entry is! Map) continue;
+          final rd = entry['resourceDelivered'];
+          final productId = (rd is Map ? rd['productId'] : null)?.toString();
+          final qty =
+              double.tryParse(entry['quantityDistributed']?.toString() ?? '');
+          if (productId != null && productId.isNotEmpty && qty != null) {
+            userQty[productId] = qty;
           }
         }
       }
+
+      final Map<String, double> requiredQty = {};
+      final Map<String, String> productNames = {};
+
+      // Current dose contribution: prefer the user's entered qty when
+      // available, else fall back to the doseCriteria default.
+      for (final product in productList) {
+        if (product is! Map) continue;
+        final variants = product['ProductVariants'];
+        if (variants is! List) continue;
+        for (final variant in variants) {
+          if (variant is! Map) continue;
+          final productId = variant['productVariantId']?.toString();
+          if (productId == null || productId.isEmpty) continue;
+          final name = variant['name']?.toString() ?? productId;
+          final configQty =
+              double.tryParse(variant['quantity']?.toString() ?? '1') ?? 1.0;
+          final qty = userQty[productId] ?? configQty;
+          requiredQty[productId] = (requiredQty[productId] ?? 0.0) + qty;
+          productNames[productId] = name;
+        }
+      }
+
+      // Future-dose contribution: each indirect dose adds its own
+      // doseCriteria[0].ProductVariants[*].quantity. User's dose-1 edit
+      // does NOT propagate forward — matches indirectBulkDelivery semantics
+      // (bulk task qty comes from each future dose's own doseCriteria).
+      if (futureDoses is List) {
+        for (final dose in futureDoses) {
+          if (dose is! Map) continue;
+          final doseCriteria = dose['doseCriteria'];
+          if (doseCriteria is! List || doseCriteria.isEmpty) continue;
+          final criteriaZero = doseCriteria[0];
+          if (criteriaZero is! Map) continue;
+          final variants = criteriaZero['ProductVariants'];
+          if (variants is! List) continue;
+          for (final variant in variants) {
+            if (variant is! Map) continue;
+            final productId = variant['productVariantId']?.toString();
+            if (productId == null || productId.isEmpty) continue;
+            final name = variant['name']?.toString() ?? productId;
+            final configQty =
+                double.tryParse(variant['quantity']?.toString() ?? '1') ?? 1.0;
+            requiredQty[productId] =
+                (requiredQty[productId] ?? 0.0) + configQty;
+            productNames[productId] = productNames[productId] ?? name;
+          }
+        }
+      }
+
+      final List<Map<String, dynamic>> insufficientProducts = [];
+      requiredQty.forEach((productId, required) {
+        final balance = cache.cache[productId] ?? 0.0;
+        if (balance < required) {
+          insufficientProducts.add({
+            'name': productNames[productId] ?? productId,
+            'required': required,
+            'available': balance,
+          });
+        }
+      });
+
       if (insufficientProducts.isEmpty) {
         cache.setStockCheckResult(null);
         return true;
@@ -462,6 +557,123 @@ class FunctionRegistries {
         }
       }
       return '';
+    });
+
+    // Encodes a stock item into the JSON payload the CDD-side scan flow
+    // expects on parseJson. Single source of truth for the QR contract:
+    // keys here MUST match the navigation params consumed by
+    // stockScanConfirm in manage_stock.dart and the __context: mappings
+    // of the stockScanReceipt transformer in transformer_config.dart.
+    // jsonEncode handles quote/backslash escaping so free-text fields
+    // (e.g. comments) can't produce malformed QR payloads.
+    FunctionRegistry.register('stockToScanQr', (args, stateData) {
+      if (args.isEmpty || args.first == null) return '';
+
+      Map<String, dynamic>? itemMap;
+      final item = args.first;
+      if (item is Map<String, dynamic>) {
+        itemMap = item;
+      } else if (item is Map) {
+        itemMap = Map<String, dynamic>.from(item);
+      } else {
+        try {
+          itemMap = (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          try {
+            itemMap = (item as dynamic).toJson() as Map<String, dynamic>;
+          } catch (_) {
+            return '';
+          }
+        }
+      }
+      if (itemMap == null) return '';
+
+      // Returns null when the additionalField is absent OR present-but-empty
+      // so the encoded QR payload carries `null` instead of `""` for missing
+      // optional fields (waybillNumber, batchNumber, expiryDate, comments).
+      // Downstream validators reject empty strings on optional fields but
+      // accept null/missing.
+      String? getAdditionalField(String key) {
+        final additionalFields = itemMap?['additionalFields'];
+        List? fields;
+        if (additionalFields is Map) {
+          fields = additionalFields['fields'] as List?;
+        } else if (additionalFields is List) {
+          fields = additionalFields;
+        }
+        if (fields == null) return null;
+        for (final field in fields) {
+          if (field is Map && field['key'] == key) {
+            final v = field['value']?.toString();
+            return (v == null || v.isEmpty) ? null : v;
+          }
+        }
+        return null;
+      }
+
+      String? blankToNull(String? v) =>
+          (v == null || v.isEmpty) ? null : v;
+
+      final payload = <String, dynamic>{
+        // Identity fields stay as required strings — these are always set on
+        // a dispatched StockModel and the receiver side asserts on them.
+        'clientReferenceId': itemMap['clientReferenceId']?.toString() ?? '',
+        'senderId': itemMap['senderId']?.toString() ?? '',
+        'receiverId': itemMap['receiverId']?.toString() ?? '',
+        'productVariantId': itemMap['productVariantId']?.toString() ?? '',
+        'quantity': itemMap['quantity']?.toString() ?? '',
+        // Boundary code of the dispatched row — receiver side runs
+        // `fn:isScanBoundaryOutOfScope` against this to block scans from
+        // outside the scanning user's mapped boundary hierarchy.
+        'boundaryCode': blankToNull(itemMap['boundaryCode']?.toString()),
+        // Optional fields: null when blank so jsonEncode emits `null` rather
+        // than `""`. The labelPairList widget renders null as `--`, and
+        // CREATE_EVENT validators treat null as missing instead of invalid.
+        'waybillNumber': blankToNull(itemMap['waybillNumber']?.toString()),
+        'sku': getAdditionalField('sku'),
+        'batchNumber': getAdditionalField('batchNumber'),
+        'expiryDate': getAdditionalField('expiryDate'),
+        'comments': getAdditionalField('comments'),
+      };
+
+      return jsonEncode(payload);
+    });
+
+    // True when the scanned boundaryCode (from a dispatched stock QR) is
+    // neither equal to nor a descendant of any of the current user's
+    // mapped boundaries. Mirrors the reject-at-scan check the WM side
+    // uses (`ScannerComparisonRegistry.identityPayloadValidator` in
+    // AuthenticatedPageWrapper) so the receive-side gate uses the same
+    // ancestor/descendant semantics — a strict-equality check would
+    // false-positive whenever the WM dispatches from a level above the
+    // CDD's leaf.
+    //
+    // Empty guards mirror the config-side isEmpty pattern: return false
+    // when the input is missing or when BoundaryBloc hasn't hydrated the
+    // user's mapped list yet, so a legitimate scan isn't blocked by
+    // half-loaded state.
+    FunctionRegistry.register('isScanBoundaryOutOfScope', (args, stateData) {
+      if (args.isEmpty || args.first == null) return false;
+      final scannedBoundary = args.first.toString();
+      if (scannedBoundary.isEmpty) return false;
+
+      final BoundaryBloc boundaryBloc;
+      try {
+        boundaryBloc = context.read<BoundaryBloc>();
+      } catch (_) {
+        return false;
+      }
+      final mappedCodes = boundaryBloc.state.boundaryList
+          .map((b) => b.code)
+          .whereType<String>()
+          .where((c) => c.isNotEmpty)
+          .toSet();
+      if (mappedCodes.isEmpty) return false;
+
+      final withinScope = mappedCodes.any((code) =>
+          scannedBoundary == code ||
+          scannedBoundary.startsWith('${code}_'));
+      return !withinScope;
     });
   }
 

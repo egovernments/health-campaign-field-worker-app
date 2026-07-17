@@ -96,7 +96,14 @@ mixin _$PropertySchema {
   String? get secondaryActionLabel =>
       throw _privateConstructorUsedError; // Comparison config for scanner fields - enables duplicate detection against historical data
   @JsonKey(fromJson: _comparisonConfigOrNull)
-  ComparisonConfig? get comparisonConfig => throw _privateConstructorUsedError;
+  ComparisonConfig? get comparisonConfig =>
+      throw _privateConstructorUsedError; // Named placeholder substitution for labels (e.g., {ID}, {NAME})
+  @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+  List<LabelPlaceHolder>? get labelPlaceHolders =>
+      throw _privateConstructorUsedError; // Named placeholder substitution for descriptions
+  @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+  List<LabelPlaceHolder>? get descriptionPlaceHolders =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -165,7 +172,11 @@ abstract class $PropertySchemaCopyWith<$Res> {
       VisibilityCondition? submitCondition,
       String? secondaryActionLabel,
       @JsonKey(fromJson: _comparisonConfigOrNull)
-      ComparisonConfig? comparisonConfig});
+      ComparisonConfig? comparisonConfig,
+      @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+      List<LabelPlaceHolder>? labelPlaceHolders,
+      @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+      List<LabelPlaceHolder>? descriptionPlaceHolders});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
@@ -236,6 +247,8 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? submitCondition = freezed,
     Object? secondaryActionLabel = freezed,
     Object? comparisonConfig = freezed,
+    Object? labelPlaceHolders = freezed,
+    Object? descriptionPlaceHolders = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -422,6 +435,14 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.comparisonConfig
           : comparisonConfig // ignore: cast_nullable_to_non_nullable
               as ComparisonConfig?,
+      labelPlaceHolders: freezed == labelPlaceHolders
+          ? _value.labelPlaceHolders
+          : labelPlaceHolders // ignore: cast_nullable_to_non_nullable
+              as List<LabelPlaceHolder>?,
+      descriptionPlaceHolders: freezed == descriptionPlaceHolders
+          ? _value.descriptionPlaceHolders
+          : descriptionPlaceHolders // ignore: cast_nullable_to_non_nullable
+              as List<LabelPlaceHolder>?,
     ) as $Val);
   }
 
@@ -587,7 +608,11 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       VisibilityCondition? submitCondition,
       String? secondaryActionLabel,
       @JsonKey(fromJson: _comparisonConfigOrNull)
-      ComparisonConfig? comparisonConfig});
+      ComparisonConfig? comparisonConfig,
+      @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+      List<LabelPlaceHolder>? labelPlaceHolders,
+      @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+      List<LabelPlaceHolder>? descriptionPlaceHolders});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -664,6 +689,8 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? submitCondition = freezed,
     Object? secondaryActionLabel = freezed,
     Object? comparisonConfig = freezed,
+    Object? labelPlaceHolders = freezed,
+    Object? descriptionPlaceHolders = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -850,6 +877,14 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.comparisonConfig
           : comparisonConfig // ignore: cast_nullable_to_non_nullable
               as ComparisonConfig?,
+      labelPlaceHolders: freezed == labelPlaceHolders
+          ? _value._labelPlaceHolders
+          : labelPlaceHolders // ignore: cast_nullable_to_non_nullable
+              as List<LabelPlaceHolder>?,
+      descriptionPlaceHolders: freezed == descriptionPlaceHolders
+          ? _value._descriptionPlaceHolders
+          : descriptionPlaceHolders // ignore: cast_nullable_to_non_nullable
+              as List<LabelPlaceHolder>?,
     ));
   }
 }
@@ -909,13 +944,19 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull) this.submitCondition,
       this.secondaryActionLabel,
-      @JsonKey(fromJson: _comparisonConfigOrNull) this.comparisonConfig})
+      @JsonKey(fromJson: _comparisonConfigOrNull) this.comparisonConfig,
+      @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+      final List<LabelPlaceHolder>? labelPlaceHolders,
+      @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+      final List<LabelPlaceHolder>? descriptionPlaceHolders})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
         _validations = validations,
         _conditionalNavigateTo = conditionalNavigateTo,
-        _autoFillCondition = autoFillCondition;
+        _autoFillCondition = autoFillCondition,
+        _labelPlaceHolders = labelPlaceHolders,
+        _descriptionPlaceHolders = descriptionPlaceHolders;
 
   factory _$PropertySchemaImpl.fromJson(Map<String, dynamic> json) =>
       _$$PropertySchemaImplFromJson(json);
@@ -1091,10 +1132,37 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   @JsonKey(fromJson: _comparisonConfigOrNull)
   final ComparisonConfig? comparisonConfig;
+// Named placeholder substitution for labels (e.g., {ID}, {NAME})
+  final List<LabelPlaceHolder>? _labelPlaceHolders;
+// Named placeholder substitution for labels (e.g., {ID}, {NAME})
+  @override
+  @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+  List<LabelPlaceHolder>? get labelPlaceHolders {
+    final value = _labelPlaceHolders;
+    if (value == null) return null;
+    if (_labelPlaceHolders is EqualUnmodifiableListView)
+      return _labelPlaceHolders;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+// Named placeholder substitution for descriptions
+  final List<LabelPlaceHolder>? _descriptionPlaceHolders;
+// Named placeholder substitution for descriptions
+  @override
+  @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+  List<LabelPlaceHolder>? get descriptionPlaceHolders {
+    final value = _descriptionPlaceHolders;
+    if (value == null) return null;
+    if (_descriptionPlaceHolders is EqualUnmodifiableListView)
+      return _descriptionPlaceHolders;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, textCapitalization: $textCapitalization, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, showSecondaryAlertPopUp: $showSecondaryAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, textCapitalization: $textCapitalization, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, showSecondaryAlertPopUp: $showSecondaryAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig, labelPlaceHolders: $labelPlaceHolders, descriptionPlaceHolders: $descriptionPlaceHolders)';
   }
 
   @override
@@ -1183,7 +1251,11 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.secondaryActionLabel, secondaryActionLabel) ||
                 other.secondaryActionLabel == secondaryActionLabel) &&
             (identical(other.comparisonConfig, comparisonConfig) ||
-                other.comparisonConfig == comparisonConfig));
+                other.comparisonConfig == comparisonConfig) &&
+            const DeepCollectionEquality()
+                .equals(other._labelPlaceHolders, _labelPlaceHolders) &&
+            const DeepCollectionEquality().equals(
+                other._descriptionPlaceHolders, _descriptionPlaceHolders));
   }
 
   @JsonKey(ignore: true)
@@ -1235,7 +1307,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
         preventScreenCapture,
         submitCondition,
         secondaryActionLabel,
-        comparisonConfig
+        comparisonConfig,
+        const DeepCollectionEquality().hash(_labelPlaceHolders),
+        const DeepCollectionEquality().hash(_descriptionPlaceHolders)
       ]);
 
   @JsonKey(ignore: true)
@@ -1310,7 +1384,12 @@ abstract class _PropertySchema implements PropertySchema {
       final VisibilityCondition? submitCondition,
       final String? secondaryActionLabel,
       @JsonKey(fromJson: _comparisonConfigOrNull)
-      final ComparisonConfig? comparisonConfig}) = _$PropertySchemaImpl;
+      final ComparisonConfig? comparisonConfig,
+      @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+      final List<LabelPlaceHolder>? labelPlaceHolders,
+      @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+      final List<LabelPlaceHolder>?
+          descriptionPlaceHolders}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -1427,6 +1506,12 @@ abstract class _PropertySchema implements PropertySchema {
   @override // Comparison config for scanner fields - enables duplicate detection against historical data
   @JsonKey(fromJson: _comparisonConfigOrNull)
   ComparisonConfig? get comparisonConfig;
+  @override // Named placeholder substitution for labels (e.g., {ID}, {NAME})
+  @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+  List<LabelPlaceHolder>? get labelPlaceHolders;
+  @override // Named placeholder substitution for descriptions
+  @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+  List<LabelPlaceHolder>? get descriptionPlaceHolders;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
@@ -4039,6 +4124,161 @@ abstract class _ComparisonConfig implements ComparisonConfig {
   @override
   @JsonKey(ignore: true)
   _$$ComparisonConfigImplCopyWith<_$ComparisonConfigImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+LabelPlaceHolder _$LabelPlaceHolderFromJson(Map<String, dynamic> json) {
+  return _LabelPlaceHolder.fromJson(json);
+}
+
+/// @nodoc
+mixin _$LabelPlaceHolder {
+  String get key => throw _privateConstructorUsedError;
+  String get value => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $LabelPlaceHolderCopyWith<LabelPlaceHolder> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $LabelPlaceHolderCopyWith<$Res> {
+  factory $LabelPlaceHolderCopyWith(
+          LabelPlaceHolder value, $Res Function(LabelPlaceHolder) then) =
+      _$LabelPlaceHolderCopyWithImpl<$Res, LabelPlaceHolder>;
+  @useResult
+  $Res call({String key, String value});
+}
+
+/// @nodoc
+class _$LabelPlaceHolderCopyWithImpl<$Res, $Val extends LabelPlaceHolder>
+    implements $LabelPlaceHolderCopyWith<$Res> {
+  _$LabelPlaceHolderCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? key = null,
+    Object? value = null,
+  }) {
+    return _then(_value.copyWith(
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$LabelPlaceHolderImplCopyWith<$Res>
+    implements $LabelPlaceHolderCopyWith<$Res> {
+  factory _$$LabelPlaceHolderImplCopyWith(_$LabelPlaceHolderImpl value,
+          $Res Function(_$LabelPlaceHolderImpl) then) =
+      __$$LabelPlaceHolderImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String key, String value});
+}
+
+/// @nodoc
+class __$$LabelPlaceHolderImplCopyWithImpl<$Res>
+    extends _$LabelPlaceHolderCopyWithImpl<$Res, _$LabelPlaceHolderImpl>
+    implements _$$LabelPlaceHolderImplCopyWith<$Res> {
+  __$$LabelPlaceHolderImplCopyWithImpl(_$LabelPlaceHolderImpl _value,
+      $Res Function(_$LabelPlaceHolderImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? key = null,
+    Object? value = null,
+  }) {
+    return _then(_$LabelPlaceHolderImpl(
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$LabelPlaceHolderImpl implements _LabelPlaceHolder {
+  const _$LabelPlaceHolderImpl({required this.key, required this.value});
+
+  factory _$LabelPlaceHolderImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LabelPlaceHolderImplFromJson(json);
+
+  @override
+  final String key;
+  @override
+  final String value;
+
+  @override
+  String toString() {
+    return 'LabelPlaceHolder(key: $key, value: $value)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LabelPlaceHolderImpl &&
+            (identical(other.key, key) || other.key == key) &&
+            (identical(other.value, value) || other.value == value));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, key, value);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LabelPlaceHolderImplCopyWith<_$LabelPlaceHolderImpl> get copyWith =>
+      __$$LabelPlaceHolderImplCopyWithImpl<_$LabelPlaceHolderImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$LabelPlaceHolderImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _LabelPlaceHolder implements LabelPlaceHolder {
+  const factory _LabelPlaceHolder(
+      {required final String key,
+      required final String value}) = _$LabelPlaceHolderImpl;
+
+  factory _LabelPlaceHolder.fromJson(Map<String, dynamic> json) =
+      _$LabelPlaceHolderImpl.fromJson;
+
+  @override
+  String get key;
+  @override
+  String get value;
+  @override
+  @JsonKey(ignore: true)
+  _$$LabelPlaceHolderImplCopyWith<_$LabelPlaceHolderImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

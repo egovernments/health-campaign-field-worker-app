@@ -12,11 +12,9 @@ import 'package:recase/recase.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
-import '../../models/app_config/app_config_model.dart';
 import '../../models/entities/mdms_master_enums.dart';
 import '../../models/entities/mdms_module_enums.dart';
 import '../../utils/environment_config.dart';
-import '../../utils/utils.dart';
 import '../../widgets/network_manager_provider_wrapper.dart';
 
 part 'app_initialization.freezed.dart';
@@ -62,94 +60,19 @@ class AppInitializationBloc
       try {
         final result = await mdmsRepository.searchServiceRegistry(
           envConfig.variables.mdmsApiPath,
-          MdmsRequestModel(
-            mdmsCriteria: MdmsCriteriaModel(
-              tenantId: envConfig.variables.tenantId,
-              moduleDetails: [
-                const MdmsModuleDetailModel(
-                  moduleName: 'HCM-SERVICE-REGISTRY',
-                  masterDetails: [
-                    MdmsMasterDetailModel('serviceRegistry'),
-                  ],
-                ),
-              ],
-            ),
-          ).toJson(),
+          envConfig.variables.tenantId,
         );
         await mdmsRepository.writeToRegistryDB(result, isar);
 
         final configResult = await mdmsRepository.searchAppConfig(
           envConfig.variables.mdmsApiPath,
-          MdmsRequestModel(
-            mdmsCriteria: MdmsCriteriaModel(
-              tenantId: envConfig.variables.tenantId,
-              moduleDetails: [
-                MdmsModuleDetailModel(
-                  moduleName: ModuleEnums.hcm.toValue(),
-                  masterDetails: getMasterDetailsModel([
-                    MasterEnums.appConfig.toValue(),
-                    MasterEnums.symptomTypes.toValue(),
-                    MasterEnums.referralReasons.toValue(),
-                    MasterEnums.manualAttendanceReasons.toValue(),
-                    MasterEnums.houseStructureTypes.toValue(),
-                    MasterEnums.refusalReasons.toValue(),
-                    MasterEnums.bandWidthBatchSize.toValue(),
-                    MasterEnums.beneficiaryIdConfig.toValue(),
-                    MasterEnums.downSyncBandwidthBatchSize.toValue(),
-                    MasterEnums.hhDelReasons.toValue(),
-                    MasterEnums.hhMemberDelReasons.toValue(),
-                    MasterEnums.backgroundServiceConfig.toValue(),
-                    MasterEnums.checklistTypes.toValue(),
-                    MasterEnums.idTypes.toValue(),
-                    MasterEnums.relationShipTypeOptions.toValue(),
-                    MasterEnums.deliveryComments.toValue(),
-                    MasterEnums.backendInterface.toValue(),
-                    MasterEnums.callSupport.toValue(),
-                    MasterEnums.transportTypes.toValue(),
-                    MasterEnums.firebaseConfig.toValue(),
-                    MasterEnums.searchHouseHoldFilters.toValue(),
-                    MasterEnums.transitPostType.toValue(),
-                    MasterEnums.searchCLFFilters.toValue(),
-                    MasterEnums.boundaryRelationShip.toValue(),
-                    MasterEnums.deviceChangeReasons.toValue(),
-                    MasterEnums.singleUserLogin.toValue(),
-                  ]),
-                ),
-                MdmsModuleDetailModel(
-                  moduleName: ModuleEnums.commonMasters.toValue(),
-                  masterDetails: getMasterDetailsModel([
-                    MasterEnums.stateInfo.toValue(),
-                    MasterEnums.genderType.toValue(),
-                    MasterEnums.privacyPolicy.toValue(),
-                  ]),
-                ),
-                MdmsModuleDetailModel(
-                  moduleName: ModuleEnums.moduleVersion.toValue(),
-                  masterDetails:
-                      getMasterDetailsModel([MasterEnums.rowVersion.toValue()]),
-                ),
-              ],
-            ),
-          ).toJson(),
+          envConfig.variables.tenantId,
         );
 
         final pgrServiceDefinitions =
             await mdmsRepository.searchPGRServiceDefinitions(
           envConfig.variables.mdmsApiPath,
-          MdmsRequestModel(
-            mdmsCriteria: MdmsCriteriaModel(
-              tenantId: envConfig.variables.tenantId,
-              moduleDetails: [
-                MdmsModuleDetailModel(
-                  moduleName: ModuleEnums.rainmakerPgr.toValue(),
-                  masterDetails: [
-                    MdmsMasterDetailModel(
-                        MasterEnums.serviceDefinitions.toValue()),
-                  ],
-                ),
-              ],
-            ),
-          ).toJson(),
+          envConfig.variables.tenantId,
         );
 
         await mdmsRepository.writeToAppConfigDB(
@@ -158,29 +81,15 @@ class AppInitializationBloc
           isar,
         );
         try {
-          final dashboardMdmsRes = await mdmsRepository.searchMDMS(
+          final dashboardDataList = await mdmsRepository.searchMDMS(
             envConfig.variables.mdmsApiPath,
-            MdmsRequestModel(
-              mdmsCriteria: MdmsCriteriaModel(
-                tenantId: envConfig.variables.tenantId,
-                moduleDetails: [
-                  MdmsModuleDetailModel(
-                    moduleName: ModuleEnums.hcm.toValue(),
-                    masterDetails: [
-                      MdmsMasterDetailModel(
-                        MasterEnums.dashboardConfig.toValue(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ).toJson(),
+            tenantId: envConfig.variables.tenantId,
+            schemaCode: '${ModuleEnums.hcm.toValue()}.${MasterEnums.dashboardConfig.toValue()}',
           );
-          final hcmModule =
-              dashboardMdmsRes?[ModuleEnums.hcm.toValue().toString()];
-          if (hcmModule != null) {
+          if (dashboardDataList.isNotEmpty) {
+            final String dashboardKey = MasterEnums.dashboardConfig.toValue() as String;
             final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
-              Map<String, dynamic>.from(hcmModule),
+              {dashboardKey: dashboardDataList},
             ).dashboardConfigWrapper;
 
             if (dashboardConfigs.isNotEmpty) {

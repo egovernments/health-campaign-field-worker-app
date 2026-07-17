@@ -14,15 +14,13 @@ import 'package:isar/isar.dart';
 import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'app.dart';
+import 'app_security.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'notification_service.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/secure_store/secure_store.dart';
 import 'data/remote_client.dart';
-import 'notification_service.dart';
 import 'pages/error_boundary.dart';
 import 'router/app_router.dart';
 import 'utils/background_service.dart';
@@ -53,6 +51,9 @@ void main() async {
   }
 
   await envConfig.initialize();
+  AppSecurity.instance.setSecurityLevel = _securityLevelForEnv(
+    envConfig.variables.envType,
+  );
 
   // Security checks - enforce exit only in production environment
   if (!kDebugMode) {
@@ -69,6 +70,13 @@ void main() async {
     }
   }
   WidgetsBinding.instance.addObserver(AppLifecycleObserver());
+  if (envConfig.variables.envType == EnvType.prod) {
+    try {
+      await DioClient().enableSSLPinning();
+    } catch (e) {
+      debugPrint('SSL pinning failed: $e');
+    }
+  }
   _dio = DioClient().dio;
 
   DigitUi.instance.initThemeComponents();
@@ -113,6 +121,21 @@ void main() async {
   ));
 
 
+}
+
+// Default every env to low. enableSSLPinning() only activates at medium+,
+// and the bundled cert doesn't match the current server, so any bump above
+// low breaks HTTPS. Flip a specific case here (e.g. prod → high) once the
+// cert story is sorted per env.
+AppSecurityLevel _securityLevelForEnv(EnvType env) {
+  switch (env) {
+    case EnvType.prod:
+    case EnvType.uat:
+    case EnvType.demo:
+    case EnvType.dev:
+    case EnvType.qa:
+      return AppSecurityLevel.low;
+  }
 }
 
 class AppLifecycleObserver extends WidgetsBindingObserver {

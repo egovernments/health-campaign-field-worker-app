@@ -96,8 +96,14 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
         // Register form submission handler
         _registerFormHandler();
 
+        debugPrint('ScreenBuilder: initActions for $_schemaKey, compositeKey=$_compositeKey');
+        debugPrint('ScreenBuilder: navigationParams=${widget.navigationParams}');
+        debugPrint('ScreenBuilder: initActions count=${initActions.length}');
+
         final resolvedActions =
             resolveTemplates(initActions, widget.navigationParams ?? {});
+
+        debugPrint('ScreenBuilder: resolvedActions=$resolvedActions');
 
         for (final action in resolvedActions) {
           final parsed = ActionConfig.fromJson(

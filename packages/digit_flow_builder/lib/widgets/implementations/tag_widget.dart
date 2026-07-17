@@ -20,7 +20,10 @@ class TagWidget extends ResolvedFlowWidget {
     ResolvedWidgetContext resolved,
   ) {
     final properties = json['properties'] as Map<String, dynamic>?;
-    final resolveValue = resolved.resolveText(json['label']);
+    final resolveValue = json['labelPlaceHolders'] != null
+        ? resolved.resolveTextWithPlaceHolders(
+            json['label'], json['labelPlaceHolders'])
+        : resolved.resolveTextWithArgs(json['label'], json['labelArgs']);
     final tagTypeStr = properties?['tagType'] as String? ?? '';
     final theme = Theme.of(context);
     final iconKey = properties?['icon'] as String?;

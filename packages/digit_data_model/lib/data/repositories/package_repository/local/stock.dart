@@ -23,6 +23,8 @@ class StockLocalRepository
               tbl.productVariantId.isIn(query.productVariantId!),
             if (query.transactionType != null)
               tbl.transactionType.isIn(query.transactionType!),
+            if (query.referenceId != null)
+              tbl.referenceId.equals(query.referenceId!),
           ]),
         );
 
@@ -126,6 +128,8 @@ class StockLocalRepository
                     sql.stock.transactionReason.isIn(
                       query.transactionReason!,
                     ),
+                  if (query.referenceId != null)
+                    sql.stock.referenceId.equals(query.referenceId!),
                 ],
               ),
             ))

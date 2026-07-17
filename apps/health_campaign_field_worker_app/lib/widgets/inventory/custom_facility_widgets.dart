@@ -222,15 +222,26 @@ class _FacilityCardContent extends StatelessWidget {
     // Build facility dropdown items
     var facilities = <DropdownItem>[];
 
-    final showDeliveryTeam = hasDeliveryTeamInConfig &&
-        ((isToField &&
-                !isReturnFlow &&
-                (transactionType == 'DISPATCHED' ||
-                    transactionType == 'ISSUED') &&
-                (!isWareHouseMgr || hasNoChildFacilities)) ||
-            (isFromField &&
-                !isWareHouseMgr &&
-                (isReturnFlow || isLessExcessFlow)));
+    // Show Delivery Team for the to-field on outbound flows when:
+    //   - the user is dist/CDD (`hasDeliveryTeamInConfig`) — they only ever
+    //     deliver to teams, or
+    //   - the user is a WHM and no `child` ProjectFacility rows exist for
+    //     the next level (they're at the last facility level, so the only
+    //     destination left is a Delivery Team).
+    //
+    // Previously both cases were gated by `hasDeliveryTeamInConfig &&`, but
+    // that check only matches dist/CDD — so the WHM-no-children branch
+    // (`!isWareHouseMgr || hasNoChildFacilities` inside) was unreachable.
+    final showDeliveryTeam = (isToField &&
+            !isReturnFlow &&
+            (transactionType == 'DISPATCHED' ||
+                transactionType == 'ISSUED') &&
+            (hasDeliveryTeamInConfig ||
+                (isWareHouseMgr && hasNoChildFacilities))) ||
+        (isFromField &&
+            hasDeliveryTeamInConfig &&
+            !isWareHouseMgr &&
+            (isReturnFlow || isLessExcessFlow));
     if (showDeliveryTeam) {
       facilities.add(DropdownItem(
         code: deliveryTeamCode!,

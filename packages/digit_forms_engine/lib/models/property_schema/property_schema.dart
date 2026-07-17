@@ -82,6 +82,12 @@ class PropertySchema with _$PropertySchema {
     // Comparison config for scanner fields - enables duplicate detection against historical data
     @JsonKey(fromJson: _comparisonConfigOrNull)
     ComparisonConfig? comparisonConfig,
+    // Named placeholder substitution for labels (e.g., {ID}, {NAME})
+    @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+    List<LabelPlaceHolder>? labelPlaceHolders,
+    // Named placeholder substitution for descriptions
+    @JsonKey(fromJson: _labelPlaceHoldersOrNull)
+    List<LabelPlaceHolder>? descriptionPlaceHolders,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -259,6 +265,17 @@ class ComparisonConfig with _$ComparisonConfig {
 }
 
 @freezed
+class LabelPlaceHolder with _$LabelPlaceHolder {
+  const factory LabelPlaceHolder({
+    required String key,
+    required String value,
+  }) = _LabelPlaceHolder;
+
+  factory LabelPlaceHolder.fromJson(Map<String, dynamic> json) =>
+      _$LabelPlaceHolderFromJson(json);
+}
+
+@freezed
 class ComparisonFilter with _$ComparisonFilter {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory ComparisonFilter({
@@ -368,6 +385,17 @@ ShowSecondaryAlertPopUp? _showSecondaryAlertOrNull(dynamic value) {
 MultiEntityConfig? _multiEntityConfigOrNull(dynamic value) {
   if (value is Map && value.isNotEmpty) {
     return MultiEntityConfig.fromJson(Map<String, dynamic>.from(value));
+  }
+  return null;
+}
+
+List<LabelPlaceHolder>? _labelPlaceHoldersOrNull(dynamic value) {
+  if (value is List) {
+    if (value.isEmpty) return null;
+    return value
+        .whereType<Map<String, dynamic>>()
+        .map((map) => LabelPlaceHolder.fromJson(map))
+        .toList();
   }
   return null;
 }

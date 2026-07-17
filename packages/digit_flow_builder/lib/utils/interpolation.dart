@@ -6,6 +6,35 @@ import '../router/flow_builder_routes.gm.dart';
 import 'function_registry.dart';
 import 'utils.dart';
 
+/// Splits a `{{fn:..(...)}}` argument expression on commas that sit OUTSIDE
+/// of single- or double-quoted string literals. Plain `String.split(',')`
+/// breaks payloads like `formatDate('dd, MMM yyyy', value)` because it
+/// splits inside the format string. Backslash escapes are intentionally
+/// not supported — the config-driven use case doesn't need them and adding
+/// escape handling would expand the surface for typos.
+List<String> _splitArgsRespectingQuotes(String input) {
+  final result = <String>[];
+  final current = StringBuffer();
+  String? activeQuote;
+  for (var i = 0; i < input.length; i++) {
+    final ch = input[i];
+    if (activeQuote != null) {
+      current.write(ch);
+      if (ch == activeQuote) activeQuote = null;
+    } else if (ch == '"' || ch == "'") {
+      activeQuote = ch;
+      current.write(ch);
+    } else if (ch == ',') {
+      result.add(current.toString());
+      current.clear();
+    } else {
+      current.write(ch);
+    }
+  }
+  result.add(current.toString());
+  return result;
+}
+
 /// Recursively walks a dynamic structure (Map, List, String, etc.)
 /// and applies [transform] to every String value.
 Map<String, dynamic> deepMapStrings(
@@ -212,7 +241,7 @@ String interpolateWithCrudStates({
 
     final resolvedArgs = argsExpr.trim().isEmpty
         ? <dynamic>[]
-        : argsExpr.split(',').map((rawArg) {
+        : _splitArgsRespectingQuotes(argsExpr).map((rawArg) {
             final trimmed = rawArg.trim();
 
             // Check if it's a quoted literal (string)

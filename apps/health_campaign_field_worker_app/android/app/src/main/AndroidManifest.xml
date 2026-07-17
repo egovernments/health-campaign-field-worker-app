@@ -42,12 +42,28 @@
         android:fullBackupContent="false"
         android:fullBackupOnly="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="HCM">
+        android:label="HCM"
+        android:networkSecurityConfig="@xml/network_security_config">
         <service
             android:name=".LocationService"
             android:exported="false"
             android:foregroundServiceType="location" />
 
+        <!-- LauncherActivity: Exported entry point for app launch (Android 12+ requirement).
+             android:taskAffinity="" prevents StrandHogg task-hijacking: a malicious app
+             cannot inject itself into this app's back-stack by matching task affinity. -->
+        <activity
+            android:name=".LauncherActivity"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- MainActivity: Non-exported for security, accessed only internally -->
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -69,14 +85,36 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!-- MAIN/LAUNCHER intent-filter intentionally removed:
+                 LauncherActivity is the single advertised entry point.
+                 Leaving a second MAIN/LAUNCHER here causes two launcher
+                 icons to appear in the app drawer. -->
         </activity>
         <service
             android:name="id.flutter.flutter_background_service.BackgroundService"
-            android:foregroundServiceType="dataSync" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            tools:replace="android:exported" />
+        
+        <!-- Secure Broadcast Receivers - Override insecure plugin defaults -->
+        <receiver
+            android:name="id.flutter.flutter_background_service.WatchdogReceiver"
+            android:enabled="true"
+            android:exported="false"
+            tools:replace="android:exported" />
+        
+        <receiver
+            android:name="id.flutter.flutter_background_service.BootReceiver"
+            android:enabled="true"
+            android:exported="false"
+            tools:replace="android:exported">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+        
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

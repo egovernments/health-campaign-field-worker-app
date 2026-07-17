@@ -1,3 +1,8 @@
+## 1.0.7+2
+
+* Added duplicate-scanner check based on stock entry type, product variant, sender id and receiver id (`qr_scanner.dart`, `scanner_utils.dart`)
+* Surface duplicate-check errors via `debugPrint` instead of swallowing exceptions
+
 ## 1.0.7+1
 
 * Updated digit_ui_components package version

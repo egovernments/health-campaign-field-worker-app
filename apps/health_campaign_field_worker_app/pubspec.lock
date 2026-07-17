@@ -79,7 +79,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.5+2"
+    version: "1.0.6+1"
   audioplayers:
     dependency: transitive
     description:
@@ -459,11 +459,9 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "packages/dart_mappable_builder"
-      ref: master
-      resolved-ref: fa446e8582bba65a88894844ead567f4955e1487
-      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
-    source: git
+      path: "../../packages/dart_mappable_builder"
+      relative: true
+    source: path
     version: "4.2.3"
   dart_style:
     dependency: transitive
@@ -527,28 +525,28 @@ packages:
       path: "../../packages/digit_crud_bloc"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.1.0"
   digit_data_converter:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_converter"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.2"
   digit_data_model:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.2.0-dev.2-console"
+    version: "1.4.0"
   digit_dss:
     dependency: "direct main"
     description:
       path: "../../packages/digit_dss"
       relative: true
     source: path
-    version: "1.0.4+2"
+    version: "1.0.5+1"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -563,16 +561,16 @@ packages:
       path: "../../packages/digit_flow_builder"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.1.0"
   digit_forms_engine:
     dependency: "direct main"
     description:
       path: "../../packages/digit_forms_engine"
       relative: true
     source: path
-    version: "0.0.2-dev"
+    version: "0.1.0"
   digit_formula_parser:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../../packages/digit_formula_parser"
       relative: true
@@ -581,10 +579,9 @@ packages:
   digit_location_tracker:
     dependency: "direct main"
     description:
-      name: digit_location_tracker
-      sha256: a93bda5b07db112210e08c7a76f0627957d931d5106c8a7db8876503cc2fd06f
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_location_tracker"
+      relative: true
+    source: path
     version: "1.0.0"
   digit_scanner:
     dependency: "direct main"
@@ -592,22 +589,23 @@ packages:
       path: "../../packages/digit_scanner"
       relative: true
     source: path
-    version: "0.0.2-console"
+    version: "1.0.7+2"
   digit_showcase:
     dependency: "direct main"
     description:
       path: "../../packages/digit_showcase"
       relative: true
     source: path
-    version: "1.0.2+1"
+    version: "1.0.3"
   digit_ui_components:
     dependency: "direct main"
     description:
-      name: digit_ui_components
-      sha256: dca1305d280dd65250beb0a9bbb9d6d04cc8f848e7134c5ebc5839ec75acd785
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.0+3"
+      path: "flutter/digit-ui-components/digit_components"
+      ref: digit-infinite-date-timeline-fix
+      resolved-ref: d473ff94200b4bb604073e26654e7b3ae12557af
+      url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES/"
+    source: git
+    version: "0.3.0+2"
   dio:
     dependency: "direct main"
     description:
@@ -657,7 +655,7 @@ packages:
     source: hosted
     version: "2.18.0"
   drift_db_viewer:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: drift_db_viewer
       sha256: "5ea77858c52b55460a1e8f34ab5f88324621d486717d876fd745765fbc227f3f"
@@ -732,10 +730,10 @@ packages:
     dependency: "direct overridden"
     description:
       name: file_selector_linux
-      sha256: "54cbbd957e1156d29548c7d9b9ec0c0ebb6de0a90452198683a7d23aed617a33"
+      sha256: "045d372bf19b02aeb69cacf8b4009555fb5f6f0b7ad8016e5f46dd1387ddd492"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.3+2"
+    version: "0.9.2+1"
   file_selector_macos:
     dependency: transitive
     description:
@@ -918,10 +916,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_keyboard_visibility
-      sha256: "4983655c26ab5b959252ee204c2fffa4afeb4413cd030455194ec0caa3b8e7cb"
+      sha256: "98664be7be0e3ffca00de50f7f6a287ab62c763fc8c762e0a21584584a3ff4f8"
       url: "https://pub.dev"
     source: hosted
-    version: "5.4.1"
+    version: "6.0.0"
   flutter_keyboard_visibility_linux:
     dependency: transitive
     description:
@@ -2111,7 +2109,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.0.4"
   sync_http:
     dependency: transitive
     description:
@@ -2126,7 +2124,7 @@ packages:
       path: "../../packages/sync_service"
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.0.5"
   synchronized:
     dependency: transitive
     description:
@@ -2197,7 +2195,7 @@ packages:
       path: "../../packages/transit_post"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.2"
   type_plus:
     dependency: transitive
     description:

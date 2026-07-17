@@ -23,12 +23,6 @@ final dynamic permission_handler_config = {
       ],
       "footer": [
         {
-          "format": "checkbox",
-          "label": "PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY",
-          "required": true,
-          "fieldName": "backgroundActivityConfirmed"
-        },
-        {
           "format": "button",
           "label": "CORE_COMMON_ALLOW_ACCESS",
           "properties": {

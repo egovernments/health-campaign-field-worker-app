@@ -40,8 +40,7 @@ class _FakeMdmsV2Adapter implements HttpClientAdapter {
   void close({bool force = false}) {}
 }
 
-// Sample records in the real v2 response shape shared from
-// unified-dev (HCM-ADMIN-CONSOLE.targetConfigs).
+// Sample records in the real v2 response shape.
 Map<String, dynamic> _v2Record({
   required String schemaCode,
   required Map<String, dynamic> data,
@@ -58,8 +57,8 @@ Map<String, dynamic> _v2Record({
     };
 
 void main() {
-  group('MdmsRepository v2 adapter', () {
-    test('reassembles flat v2 mdms list into v1 MdmsRes nesting', () async {
+  group('MdmsRepository v2 native', () {
+    test('searchMDMS returns flat data list from v2 response', () async {
       final adapter = _FakeMdmsV2Adapter({
         'HCM-ADMIN-CONSOLE.targetConfigs': [
           _v2Record(
@@ -72,75 +71,35 @@ void main() {
             isActive: false,
           ),
         ],
-        'common-masters.GenderType': [
-          _v2Record(
-            schemaCode: 'common-masters.GenderType',
-            data: {'code': 'MALE', 'name': 'Male'},
-          ),
-        ],
       });
       final dio = Dio()..httpClientAdapter = adapter;
       final repository = MdmsRepository(dio);
 
       final result = await repository.searchMDMS(
         'egov-mdms-service/v2/_search',
-        {
-          'MdmsCriteria': {
-            'tenantId': 'mz',
-            'moduleDetails': [
-              {
-                'moduleName': 'HCM-ADMIN-CONSOLE',
-                'masterDetails': [
-                  {'name': 'targetConfigs'},
-                ],
-              },
-              {
-                'moduleName': 'common-masters',
-                'masterDetails': [
-                  {'name': 'GenderType'},
-                ],
-              },
-            ],
-          },
-        },
+        tenantId: 'mz',
+        schemaCode: 'HCM-ADMIN-CONSOLE.targetConfigs',
       );
 
-      // One v2 call per module.master schemaCode.
-      expect(adapter.capturedRequests, hasLength(2));
+      // One v2 call made.
+      expect(adapter.capturedRequests, hasLength(1));
       expect(
-        adapter.capturedRequests.first['MdmsCriteria'],
-        equals({
-          'tenantId': 'mz',
-          'schemaCode': 'HCM-ADMIN-CONSOLE.targetConfigs',
-          'limit': 2000,
-        }),
+        adapter.capturedRequests.first['MdmsCriteria']['schemaCode'],
+        equals('HCM-ADMIN-CONSOLE.targetConfigs'),
       );
 
-      // v1-shaped nesting, inactive records dropped.
-      final targetConfigs = result['HCM-ADMIN-CONSOLE']['targetConfigs'];
-      expect(targetConfigs, hasLength(1));
-      expect(targetConfigs.first['campaignType'], 'Co-delivery');
-      expect(
-        result['common-masters']['GenderType'].first['code'],
-        'MALE',
-      );
+      // Returns flat list of data objects, inactive records dropped.
+      expect(result, hasLength(1));
+      expect(result.first['campaignType'], 'Co-delivery');
     });
 
-    test('applies v1 JSONPath filter client-side', () async {
+    test('searchMDMS passes filters to v2 request', () async {
       final adapter = _FakeMdmsV2Adapter({
         'HCM-ADMIN-CONSOLE.FormConfig': [
           _v2Record(
             schemaCode: 'HCM-ADMIN-CONSOLE.FormConfig',
             data: {'project': 'P-1', 'isSelected': true, 'name': 'match'},
           ),
-          _v2Record(
-            schemaCode: 'HCM-ADMIN-CONSOLE.FormConfig',
-            data: {'project': 'P-1', 'isSelected': false, 'name': 'no-1'},
-          ),
-          _v2Record(
-            schemaCode: 'HCM-ADMIN-CONSOLE.FormConfig',
-            data: {'project': 'P-2', 'isSelected': true, 'name': 'no-2'},
-          ),
         ],
       });
       final dio = Dio()..httpClientAdapter = adapter;
@@ -148,31 +107,22 @@ void main() {
 
       final result = await repository.searchMDMS(
         'egov-mdms-service/v2/_search',
-        {
-          'MdmsCriteria': {
-            'tenantId': 'mz',
-            'moduleDetails': [
-              {
-                'moduleName': 'HCM-ADMIN-CONSOLE',
-                'masterDetails': [
-                  {
-                    'name': 'FormConfig',
-                    'filter': "[?(@.project=='P-1' && @.isSelected==true)]",
-                  },
-                ],
-              },
-            ],
-          },
-        },
+        tenantId: 'mz',
+        schemaCode: 'HCM-ADMIN-CONSOLE.FormConfig',
+        filters: {'project': 'P-1'},
       );
 
-      final formConfigs = result['HCM-ADMIN-CONSOLE']['FormConfig'];
-      expect(formConfigs, hasLength(1));
-      expect(formConfigs.first['name'], 'match');
+      // Verify filters were sent in the request.
+      expect(
+        adapter.capturedRequests.first['MdmsCriteria']['filters'],
+        equals({'project': 'P-1'}),
+      );
+
+      expect(result, hasLength(1));
+      expect(result.first['name'], 'match');
     });
 
-    test('parses service registry wrapper from reassembled response',
-        () async {
+    test('parses service registry wrapper from v2 response', () async {
       final adapter = _FakeMdmsV2Adapter({
         'HCM-SERVICE-REGISTRY.serviceRegistry': [
           _v2Record(
@@ -195,25 +145,41 @@ void main() {
 
       final result = await repository.searchServiceRegistry(
         'egov-mdms-service/v2/_search',
-        {
-          'MdmsCriteria': {
-            'tenantId': 'mz',
-            'moduleDetails': [
-              {
-                'moduleName': 'HCM-SERVICE-REGISTRY',
-                'masterDetails': [
-                  {'name': 'serviceRegistry'},
-                ],
-              },
-            ],
-          },
-        },
+        'mz',
       );
 
       final registry = result.serviceRegistry?.serviceRegistryList;
       expect(registry, hasLength(1));
       expect(registry!.first.service, 'Project');
       expect(registry.first.actions.first.path, '/project/v1/_search');
+    });
+
+    test('searchProjectType parses v2 response', () async {
+      final adapter = _FakeMdmsV2Adapter({
+        'HCM-PROJECT-TYPES.projectTypes': [
+          _v2Record(
+            schemaCode: 'HCM-PROJECT-TYPES.projectTypes',
+            data: {
+              'id': 'pt-1',
+              'code': 'LLIN',
+              'name': 'LLIN Distribution',
+              'group': 'MALARIA',
+              'beneficiaryType': 'HOUSEHOLD',
+            },
+          ),
+        ],
+      });
+      final dio = Dio()..httpClientAdapter = adapter;
+      final repository = MdmsRepository(dio);
+
+      final result = await repository.searchProjectType(
+        'egov-mdms-service/v2/_search',
+        'mz',
+      );
+
+      final types = result.projectTypeWrapper?.projectTypes;
+      expect(types, hasLength(1));
+      expect(types!.first.code, 'LLIN');
     });
   });
 }

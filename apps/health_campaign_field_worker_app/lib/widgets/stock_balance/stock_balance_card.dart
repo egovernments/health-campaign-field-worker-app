@@ -66,9 +66,15 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
 
   Future<void> _loadData() async {
     try {
-      // Check if user is a distributor
-      final isDistributor = context.loggedInUserRoles
-          .any((role) => role.code == RolesType.distributor.toValue());
+      // Include communityDistributor here — StockBalanceExecutor treats both
+      // roles as "distributor" (executor lines 320-322) and writes balances
+      // under the user's UUID. If the card checked only `distributor`, a CDD
+      // would look up balances under a facility ID while the executor stored
+      // them under the user UUID, and every CDD would silently see empty
+      // stock balances.
+      final isDistributor = context.loggedInUserRoles.any((role) =>
+          role.code == RolesType.distributor.toValue() ||
+          role.code == RolesType.communityDistributor.toValue());
 
       // Get project facilities
       final projectFacilityRepo = context.read<
@@ -167,9 +173,17 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         .map((pv) => generateBalanceKey(effectiveFacilityId, pv.id))
         .toList();
 
-    // Listen to StockModel changes
+    // Listen to StockModel changes for this facility, scoped to the
+    // current project via `referenceId`. Without the project scope this
+    // listener — keyed by the stable user UUID for distributors — would
+    // fire on every project's stock changes and pull cross-project rows
+    // into the balance calculation.
+    final projectId = context.projectId;
     stockRepo.listenToChanges(
-      query: StockSearchModel(receiverId: facilityId),
+      query: StockSearchModel(
+        receiverId: facilityId,
+        referenceId: projectId,
+      ),
       listener: (receivedStocks) async {
         if (!mounted) return;
         await _refreshBalances(stockRepo, userActionRepo, effectiveFacilityId);
@@ -204,12 +218,25 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
   ) async {
     if (!mounted) return;
 
-    // Fetch all stocks for this facility
+    // Scope stock reads to the current project via `referenceId`. Stock
+    // rows carry the project id in that field (with `referenceIdType =
+    // 'Project'`). Distributor queries use the stable user UUID as
+    // `receiverId` / `senderId`, so without the project scope every
+    // project's stocks would sum into the current-project balance and
+    // Project B would show Project A's data on cross-project product
+    // variants.
+    final projectId = context.projectId;
     final receivedStocks = await stockRepo.search(
-      StockSearchModel(receiverId: effectiveFacilityId),
+      StockSearchModel(
+        receiverId: effectiveFacilityId,
+        referenceId: projectId,
+      ),
     );
     final sentStocks = await stockRepo.search(
-      StockSearchModel(senderId: effectiveFacilityId),
+      StockSearchModel(
+        senderId: effectiveFacilityId,
+        referenceId: projectId,
+      ),
     );
 
     // Deduplicate by clientReferenceId

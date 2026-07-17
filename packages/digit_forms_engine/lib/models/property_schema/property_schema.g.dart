@@ -70,6 +70,9 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       submitCondition: _visibilityConditionOrNull(json['submitCondition']),
       secondaryActionLabel: json['secondaryActionLabel'] as String?,
       comparisonConfig: _comparisonConfigOrNull(json['comparisonConfig']),
+      labelPlaceHolders: _labelPlaceHoldersOrNull(json['labelPlaceHolders']),
+      descriptionPlaceHolders:
+          _labelPlaceHoldersOrNull(json['descriptionPlaceHolders']),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -134,6 +137,10 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('submitCondition', instance.submitCondition?.toJson());
   writeNotNull('secondaryActionLabel', instance.secondaryActionLabel);
   writeNotNull('comparisonConfig', instance.comparisonConfig?.toJson());
+  writeNotNull('labelPlaceHolders',
+      instance.labelPlaceHolders?.map((e) => e.toJson()).toList());
+  writeNotNull('descriptionPlaceHolders',
+      instance.descriptionPlaceHolders?.map((e) => e.toJson()).toList());
   return val;
 }
 
@@ -407,6 +414,20 @@ Map<String, dynamic> _$$ComparisonConfigImplToJson(
   writeNotNull('errorMessage', instance.errorMessage);
   return val;
 }
+
+_$LabelPlaceHolderImpl _$$LabelPlaceHolderImplFromJson(
+        Map<String, dynamic> json) =>
+    _$LabelPlaceHolderImpl(
+      key: json['key'] as String,
+      value: json['value'] as String,
+    );
+
+Map<String, dynamic> _$$LabelPlaceHolderImplToJson(
+        _$LabelPlaceHolderImpl instance) =>
+    <String, dynamic>{
+      'key': instance.key,
+      'value': instance.value,
+    };
 
 _$ComparisonFilterImpl _$$ComparisonFilterImplFromJson(
         Map<String, dynamic> json) =>

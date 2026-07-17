@@ -1,3 +1,7 @@
+## 0.0.2
+
+- Added transformer support for the HF-Referral feature
+
 ## 0.0.1
 
 - Fixed mapping for update flow

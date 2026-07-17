@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart' hide OrderBy;
 import 'package:flutter/foundation.dart';
 
 import '../../utils/utils.dart';
@@ -20,6 +21,60 @@ import '../helpers/relationship_graph_helper.dart';
 /// - Pagination and ordering
 class SearchEntityRepository extends LocalRepository {
   SearchEntityRepository(super.sql, super.opLogManager);
+
+  static bool _indexDiagLogged = false;
+
+  /// One-shot diagnostic: log indexes on suspect tables and the SQLite
+  /// query plan for a representative IN-lookup. Confirms whether the
+  /// expected indexes exist and whether SQLite is actually using them.
+  ///
+  /// Gated behind kDebugMode because in release builds it would still run
+  /// two synchronous SQL queries plus ~25 sequential debugPrint syscalls
+  /// on the first search of a session — enough to produce a visible UI
+  /// stall on slower devices. Everything the caller cares about (whether
+  /// indexes exist, whether SQLite uses them) is a dev-time question that
+  /// doesn't need to fire in production.
+  Future<void> _logIndexDiagnostics() async {
+    if (!kDebugMode) return;
+    if (_indexDiagLogged) return;
+    _indexDiagLogged = true;
+    try {
+      final idx = await sql
+          .customSelect(
+            "SELECT tbl_name, name FROM sqlite_master "
+            "WHERE type='index' AND tbl_name IN "
+            "('identifier','address','name','individual','household',"
+            "'household_member','project_beneficiary') "
+            "ORDER BY tbl_name, name",
+          )
+          .get();
+      // Coalesce the per-row prints into a single buffer so we make one
+      // debugPrint call instead of N+1. debugPrint on Android is a logcat
+      // syscall; batching cuts the syscall overhead materially even in
+      // debug mode.
+      final buf = StringBuffer('[IndexDiag] indexes found:\n');
+      for (final row in idx) {
+        buf.writeln(
+            '  ${row.read<String>("tbl_name")}.${row.read<String>("name")}');
+      }
+      debugPrint(buf.toString());
+
+      final plan = await sql
+          .customSelect(
+            "EXPLAIN QUERY PLAN "
+            "SELECT * FROM identifier "
+            "WHERE individual_client_reference_id = 'PROBE_VALUE_SHOULD_NOT_EXIST'",
+          )
+          .get();
+      final planBuf = StringBuffer('[IndexDiag] plan for identifier lookup:\n');
+      for (final row in plan) {
+        planBuf.writeln('  ${row.data}');
+      }
+      debugPrint(planBuf.toString());
+    } catch (e) {
+      debugPrint('[IndexDiag] failed: $e');
+    }
+  }
 
   @override
   FutureOr<List<EntityModel>> search(EntitySearchModel query) {
@@ -129,38 +184,52 @@ class SearchEntityRepository extends LocalRepository {
     required PaginationParams? pagination,
     required SearchOrderBy? orderBy,
   }) async {
+    // Fire-and-forget — running two SQL queries + prints in front of the
+    // real search adds tens of ms of blocking on the first tap of a
+    // session (the diagnostic guard ensures it only runs once anyway).
+    // Detach with unawaited so the actual search proceeds immediately.
+    unawaited(_logIndexDiagnostics());
+    final overallSw = Stopwatch()..start();
     final queriedModels = <String>{};
     final modelToResults = <String, List<Map<String, dynamic>>>{};
     var totalCount = 0;
 
-    // Step 1: Resolve multi-table filters to primary table constraints
+    // Step 1: Build SQL-level subquery constraints for cross-table filters.
+    final stepSw = Stopwatch()..start();
     final filterResolver = MultiTableFilterResolver(
       sql: sql,
       relationshipGraph: relationshipGraph,
     );
 
-    final filterResult = await filterResolver.resolveFilters(
+    final constraints =
+        await filterResolver.buildCrossTableConstraintExpressions(
       filters: filters,
       primaryTable: primaryTable,
       primaryKeyField: primaryKeyField,
       filterLogic: filterLogic,
     );
 
-    // If filter resolution resulted in empty set, return empty results
-    if (filterResult.isEmptyResult) {
-      _log('Filter resolution resulted in empty set, returning no results.');
-      return (<String, List<EntityModel>>{}, 0);
+    final primaryFilters = constraints.primaryTableFilters;
+    var crossTableConstraints = constraints.crossTableConstraints;
+
+    if (filterLogic == MultiTableFilterLogic.or &&
+        crossTableConstraints.length > 1) {
+      crossTableConstraints = [
+        crossTableConstraints.reduce((a, b) => a | b)
+      ];
+    }
+    debugPrint(
+        '[SearchPerf] buildConstraints=${stepSw.elapsedMilliseconds}ms '
+        '(primaryFilters=${primaryFilters.length}, crossTable=${crossTableConstraints.length})');
+
+    if (primaryFilters.isEmpty && crossTableConstraints.isEmpty) {
+      throw ArgumentError('No applicable filters for primary table query.');
     }
 
-    // Step 2: Build combined filters for primary table query
-    final primaryFilters = _buildPrimaryTableFilters(
-      primaryTableFilters: filterResult.primaryTableFilters,
-      resolvedConstraints: filterResult.resolvedPrimaryKeyConstraints,
-      primaryTable: primaryTable,
-      primaryKeyField: primaryKeyField,
-    );
-
-    // Step 3: Query the primary table with combined filters
+    // Step 2: Primary table query (data + count)
+    stepSw
+      ..reset()
+      ..start();
     final primaryResults = await QueryBuilder.queryRawTable(
       sql: sql,
       table: primaryTable,
@@ -172,11 +241,16 @@ class SearchEntityRepository extends LocalRepository {
         totalCount = count;
       },
       orderBy: orderBy,
+      extraConstraints: crossTableConstraints,
     );
+    debugPrint(
+        '[SearchPerf] primaryQuery=${stepSw.elapsedMilliseconds}ms '
+        '(rows=${primaryResults.length}, totalCount=$totalCount)');
 
-    _log('Primary table query returned ${primaryResults.length} rows.');
-
-    // Step 4: Hydrate primary table results with nested data
+    // Step 3: Hydrate primary table results with nested data
+    stepSw
+      ..reset()
+      ..start();
     final hydratedPrimary = await HydrationHelper.hydrateRawRows(
       sql,
       this,
@@ -184,11 +258,16 @@ class SearchEntityRepository extends LocalRepository {
       nestedModelMapping,
       primaryTable,
     );
+    debugPrint(
+        '[SearchPerf] hydratePrimary=${stepSw.elapsedMilliseconds}ms');
 
     modelToResults[primaryTable] = hydratedPrimary;
     queriedModels.add(primaryTable);
 
-    // Step 5: Expand to other selected models via relationships
+    // Step 4: Expand to other selected models via relationships
+    stepSw
+      ..reset()
+      ..start();
     await _expandToRelatedModels(
       select: select,
       primaryTable: primaryTable,
@@ -197,17 +276,30 @@ class SearchEntityRepository extends LocalRepository {
       relationshipGraph: relationshipGraph,
       nestedModelMapping: nestedModelMapping,
     );
+    debugPrint(
+        '[SearchPerf] expandRelated=${stepSw.elapsedMilliseconds}ms '
+        '(models=${modelToResults.keys.toList()})');
 
-    // Step 6: Convert results to EntityModel instances
+    // Step 5: Convert results to EntityModel instances
+    stepSw
+      ..reset()
+      ..start();
     final groupedResults = _convertToEntityModels(
       modelToResults: modelToResults,
       select: select,
     );
+    debugPrint(
+        '[SearchPerf] convertEntities=${stepSw.elapsedMilliseconds}ms');
+
+    debugPrint(
+        '[SearchPerf] TOTAL=${overallSw.elapsedMilliseconds}ms '
+        'primary=$primaryTable, pageSize=${primaryResults.length}');
 
     return (groupedResults, totalCount);
   }
 
   /// Builds the combined filter list for the primary table query.
+  // ignore: unused_element
   List<SearchFilter> _buildPrimaryTableFilters({
     required List<SearchFilter> primaryTableFilters,
     required Set<dynamic> resolvedConstraints,
@@ -250,29 +342,37 @@ class SearchEntityRepository extends LocalRepository {
   }) async {
     for (final model in select) {
       if (queriedModels.contains(model)) continue;
+      final modelSw = Stopwatch()..start();
 
+      final pathSw = Stopwatch()..start();
       final path = await RelationshipGraphHelper.findShortestPath(
         fromModels: queriedModels,
         toModel: model,
         graph: relationshipGraph,
       );
+      final pathMs = pathSw.elapsedMilliseconds;
 
       if (path.isEmpty) {
         _log('No relationship path found to model: $model. Skipping.');
         continue;
       }
 
+      final traverseSw = Stopwatch()..start();
       final expandedRows = await _traverseRelationshipPath(
         path: path,
         modelToResults: modelToResults,
       );
+      final traverseMs = traverseSw.elapsedMilliseconds;
 
       if (expandedRows.isEmpty) {
+        debugPrint(
+            '[ExpandPerf] $model EMPTY pathHops=${path.length} traverse=${traverseMs}ms');
         _log('No rows found for model: $model after relationship traversal.');
         continue;
       }
 
       // Hydrate the expanded rows
+      final hydrateSw = Stopwatch()..start();
       final hydratedRows = await HydrationHelper.hydrateRawRows(
         sql,
         this,
@@ -280,10 +380,14 @@ class SearchEntityRepository extends LocalRepository {
         nestedModelMapping,
         model,
       );
+      final hydrateMs = hydrateSw.elapsedMilliseconds;
 
       modelToResults[model] = hydratedRows;
       queriedModels.add(model);
 
+      debugPrint(
+          '[ExpandPerf] $model rows=${hydratedRows.length} pathHops=${path.length} '
+          'path=${pathMs}ms traverse=${traverseMs}ms hydrate=${hydrateMs}ms total=${modelSw.elapsedMilliseconds}ms');
       _log('Expanded to model: $model with ${hydratedRows.length} rows.');
     }
   }
@@ -298,7 +402,9 @@ class SearchEntityRepository extends LocalRepository {
     final origin = path.first.from;
     var currentRows = modelToResults[origin] ?? [];
 
-    for (final rel in path) {
+    for (var i = 0; i < path.length; i++) {
+      final rel = path[i];
+      final isLastStep = i == path.length - 1;
       final fromKeySnake = QueryBuilder.camelToSnake(rel.localKey);
       final toTable = rel.to;
 
@@ -314,6 +420,13 @@ class SearchEntityRepository extends LocalRepository {
         return [];
       }
 
+      // For intermediate hops only project the column we'll need to keep
+      // joining on. The final hop needs the full row so hydration + entity
+      // conversion can use it.
+      final List<String>? hopProjection = isLastStep
+          ? null
+          : [path[i + 1].localKey];
+
       // Query the related table
       currentRows = await QueryBuilder.queryRawTable(
         sql: sql,
@@ -328,6 +441,7 @@ class SearchEntityRepository extends LocalRepository {
         ],
         select: ['*'],
         isPrimaryTable: false,
+        selectColumns: hopProjection,
       );
     }
 

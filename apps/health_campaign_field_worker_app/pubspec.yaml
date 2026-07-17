@@ -35,7 +35,6 @@ dependencies:
     sdk: flutter
   provider: ^6.1.2
   recase: ^4.1.0
-  drift_db_viewer: ^2.1.0
   bloc_concurrency: ^0.2.5
   flutter_secure_storage: ^9.2.2
   connectivity_plus: ^6.0.3
@@ -79,6 +78,7 @@ dependencies:
   digit_crud_bloc: ^0.0.2-dev
   digit_data_converter: ^0.0.2-dev
   digit_forms_engine: ^0.0.2-dev
+  digit_formula_parser: ^1.2.0
   digit_flow_builder:
     path: ../../packages/digit_flow_builder
   jailbreak_root_detection: ^1.1.6
@@ -96,6 +96,7 @@ dev_dependencies:
   auto_route_generator: ^8.0.0
   bloc_test: ^9.1.0
   mocktail: ^1.0.2
+  drift_db_viewer: ^2.1.0
   dart_mappable_builder:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
@@ -120,6 +121,7 @@ flutter:
     - assets/images/
     - assets/audio/add.wav
     - assets/audio/buzzer.wav
+    - assets/certificates/
 
   fonts:
     - family: Roboto

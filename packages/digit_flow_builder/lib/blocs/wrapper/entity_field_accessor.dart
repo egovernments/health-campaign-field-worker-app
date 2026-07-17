@@ -22,6 +22,13 @@ class EnhancedEntityFieldAccessor {
   }
 
   static dynamic getFieldValue(EntityModel entity, String fieldName) {
+    // Dotted paths walk Maps/Lists. Handles additionalFields.fields.<key>
+    // specially: looks up the entry where key == <key> and returns its value.
+    // Opt-in: only activates when the caller passes a dotted string.
+    if (fieldName.contains('.')) {
+      return _resolveNestedPath(entity, fieldName);
+    }
+
     // Fast path for common fields - avoid toMap() call
     switch (fieldName) {
       case 'boundaryCode':
@@ -57,6 +64,37 @@ class EnhancedEntityFieldAccessor {
       'Field "$fieldName" not found on entity of type ${entity.runtimeType}. '
       'Available fields: ${map.keys.join(', ')}',
     );
+  }
+
+  // Walk a dotted field path against an entity's toMap() output.
+  // Special-cases the `additionalFields.fields.<key>` pattern so callers can
+  // address individual fields inside the additionalFields List<{key,value}>.
+  static dynamic _resolveNestedPath(EntityModel entity, String path) {
+    final parts = path.split('.');
+    dynamic current = _getCachedMap(entity);
+    for (int i = 0; i < parts.length; i++) {
+      final part = parts[i];
+      if (current == null) return null;
+      if (current is Map) {
+        // additionalFields.fields.<key> → find entry where key == <key>
+        if (part == 'fields' &&
+            i + 1 < parts.length &&
+            current['fields'] is List) {
+          final fieldsList = current['fields'] as List;
+          final key = parts[i + 1];
+          for (final f in fieldsList) {
+            if (f is Map && f['key'] == key) {
+              return f['value'];
+            }
+          }
+          return null;
+        }
+        current = current[part];
+      } else {
+        return null;
+      }
+    }
+    return current;
   }
 
   static String _camelCase(String input) {

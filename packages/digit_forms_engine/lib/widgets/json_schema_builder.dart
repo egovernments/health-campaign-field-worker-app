@@ -1,5 +1,7 @@
 library json_schema_builder;
 
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_forms_engine/blocs/app_localization.dart';

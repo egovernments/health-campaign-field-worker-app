@@ -149,6 +149,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   //_onLogout event logs out the user and deletes the saved user details from local storage
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
+    emit(const AuthLoggingOutState());
     final accessToken = await localSecureStore.accessToken;
     if (accessToken != null) {
       try {
@@ -346,6 +347,11 @@ class AuthState with _$AuthState {
   const factory AuthState.unauthenticated() = AuthUnauthenticatedState;
 
   const factory AuthState.loading() = AuthLoadingState;
+
+  // Distinct from `loading` so the top-level `BlocListener` can drive a
+  // global overlay loader for logout without colliding with the login /
+  // device-switch pages which already handle `loading` themselves.
+  const factory AuthState.loggingOut() = AuthLoggingOutState;
 
   const factory AuthState.authenticated({
     required String accessToken,

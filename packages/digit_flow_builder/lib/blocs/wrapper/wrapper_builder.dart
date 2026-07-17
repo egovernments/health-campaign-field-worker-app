@@ -35,11 +35,24 @@ class WrapperBuilder {
       final groupByType = config['groupByType'] == true;
       final groupByField = config['groupBy'] as String?;
 
+
       if (groupByType) {
         // Return all entities grouped by type
+        final filters = config['filters'] as List<dynamic>?;
+        final hasFilters = filters != null && filters.isNotEmpty;
+
         final Map<String, List<dynamic>> groupedEntities = {};
         for (final type in entityMap.keys) {
-          final typeEntities = entityMap[type]!;
+          List<dynamic> typeEntities = entityMap[type]!;
+
+          // Apply top-level filters to entities of the configured rootEntity
+          // type. Other types pass through untouched so existing configs that
+          // do not declare a rootEntity keep the original behaviour.
+          if (hasFilters && type == rootEntityType) {
+            typeEntities = typeEntities
+                .where((entity) => filter.passesFilters(entity, entityMap, config))
+                .toList();
+          }
 
           // If groupBy field is specified, further group entities by that field
           if (groupByField != null) {
@@ -56,7 +69,9 @@ class WrapperBuilder {
       final roots = entityMap[rootEntityType] ?? [];
 
       for (final root in roots) {
-        if (!filter.passesFilters(root, entityMap, config)) continue;
+        if (!filter.passesFilters(root, entityMap, config)) {
+          continue;
+        }
 
         final wrapperData = <String, dynamic>{rootEntityType: root};
 
@@ -93,13 +108,11 @@ class WrapperBuilder {
         wrappers.add(wrapperData);
       }
     } catch (e, st) {
-      debugPrint('WrapperBuilder.build error: $e\n$st');
+      // Error building wrapper
     } finally {
       // Clear cache after build to free memory
       EnhancedEntityFieldAccessor.clearCache();
     }
-
-    debugPrint(wrappers.toString());
 
     return wrappers;
   }
