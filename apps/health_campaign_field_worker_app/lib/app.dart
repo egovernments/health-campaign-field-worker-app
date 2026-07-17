@@ -211,10 +211,28 @@ class MainApplicationState extends State<MainApplication>
                   child: BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, authState) {
                       if (appConfigState is! AppInitialized) {
-                        return const MaterialApp(
+                        return MaterialApp(
+                          debugShowCheckedModeBanner: false,
                           home: Scaffold(
                             body: Center(
-                              child: Text('Loading'),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    'assets/icons/app_icon.png',
+                                    width: 140,
+                                    height: 140,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  const SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );

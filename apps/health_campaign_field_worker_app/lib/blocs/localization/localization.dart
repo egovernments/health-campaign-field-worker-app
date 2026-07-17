@@ -85,13 +85,13 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
 
     try {
       if (missingModules.isNotEmpty) {
-        final ok = await _fetchAndStoreModules(
+        final fetched = await _fetchAndStoreModules(
           modules: missingModules,
           locale: event.locale,
           tenantId: event.tenantId,
           path: event.path,
         );
-        if (!ok) {
+        if (!fetched) {
           emit(state.copyWith(
               loading: false, retryModule: missingModules.join(',')));
         }
@@ -100,8 +100,8 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
       rethrow;
     } finally {
       LocalizationParams().setModule(event.module, false);
-      final List codes = event.locale.split('_');
-      await _loadLocale(codes);
+      final localeParts = event.locale.split('_');
+      await _loadLocale(localeParts);
       emit(state.copyWith(loading: false, retryModule: null));
     }
   }
@@ -117,20 +117,20 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     required String path,
     int attempts = 3,
   }) async {
-    final joined = modules.join(',');
-    for (var i = 0; i < attempts; i++) {
+    final moduleCsv = modules.join(',');
+    for (var attempt = 1; attempt <= attempts; attempt++) {
       try {
         final results = await localizationRepository.loadLocalization(
           path: path,
           locale: locale,
-          module: joined,
+          module: moduleCsv,
           tenantId: tenantId,
         );
         await LocalizationLocalRepository().create(results, sql);
         return true;
       } catch (error) {
-        debugPrint('localization fetch failed for "$joined" '
-            '(attempt ${i + 1}/$attempts): $error');
+        debugPrint('localization fetch failed for "$moduleCsv" '
+            '(attempt $attempt/$attempts): $error');
       }
     }
     return false;
@@ -145,18 +145,18 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     try {
       final allModules = event.module.split(',');
 
-      final ok = await _fetchAndStoreModules(
+      final fetched = await _fetchAndStoreModules(
         modules: allModules,
         locale: event.locale,
         tenantId: event.tenantId,
         path: event.path,
       );
-      if (!ok) {
+      if (!fetched) {
         emit(state.copyWith(loading: false, retryModule: allModules.join(',')));
       }
 
-      final List codes = event.locale.split('_');
-      await _loadLocale(codes);
+      final localeParts = event.locale.split('_');
+      await _loadLocale(localeParts);
     } catch (error) {
       rethrow;
     } finally {
