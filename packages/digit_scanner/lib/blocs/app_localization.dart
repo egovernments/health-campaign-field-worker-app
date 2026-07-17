@@ -17,6 +17,14 @@ class ScannerLocalization {
 
   static final List<dynamic> _localizedStrings = <dynamic>[];
 
+  // O(1) code → message lookup rebuilt on every load(). translate() used to
+  // indexWhere across _localizedStrings which is O(N) per call — for a
+  // scanner screen rendering hundreds of translated widgets against a
+  // localization table of thousands of rows that's the dominant mount cost
+  // and produced a visible 2–3s UI freeze on module open. Keep the list
+  // around for existing external reads; the fast path is the map.
+  static final Map<String, String> _messagesByCode = <String, String>{};
+
   // Method to get the delegate for localization
   static LocalizationsDelegate<ScannerLocalization> getDelegate(
           Future<dynamic> localizedStrings, List<dynamic> languages) =>
@@ -25,10 +33,12 @@ class ScannerLocalization {
   // Method to load localized strings
   Future<bool> load() async {
     _localizedStrings.clear();
+    _messagesByCode.clear();
     // Iterate over localized strings and filter based on locale
     for (var element in await localizedStrings) {
       if (element.locale == '${locale.languageCode}_${locale.countryCode}') {
         _localizedStrings.add(element);
+        _messagesByCode[element.code] = element.message;
       }
     }
 
@@ -37,14 +47,6 @@ class ScannerLocalization {
 
   // Method to translate a given localized value
   String translate(String localizedValues) {
-    if (_localizedStrings.isEmpty) {
-      return localizedValues;
-    } else {
-      final index = _localizedStrings.indexWhere(
-        (medium) => medium.code == localizedValues,
-      );
-
-      return index != -1 ? _localizedStrings[index].message : localizedValues;
-    }
+    return _messagesByCode[localizedValues] ?? localizedValues;
   }
 }
