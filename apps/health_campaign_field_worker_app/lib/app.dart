@@ -419,9 +419,21 @@ class MainApplicationState extends State<MainApplication>
                               return MaterialApp.router(
                                 debugShowCheckedModeBanner: false,
                                 builder: (context, child) {
+                                  // Wrap the entire app in a global logout
+                                  // loader listener. This has to live in a
+                                  // context that sits BELOW MaterialApp (so
+                                  // MaterialLocalizations + Navigator are in
+                                  // scope for `showDialog` / `Navigator.of`).
+                                  // Handling this at the outer BlocListener
+                                  // above MaterialApp threw
+                                  // `No MaterialLocalizations found`.
+                                  final wrapped = _LogoutLoaderListener(
+                                    child: child ?? const SizedBox.shrink(),
+                                  );
+
                                   final env = envConfig.variables.envType;
                                   if (env == EnvType.prod) {
-                                    return child ?? const SizedBox.shrink();
+                                    return wrapped;
                                   }
 
                                   return Banner(
@@ -437,7 +449,7 @@ class MainApplicationState extends State<MainApplication>
                                           return Colors.red;
                                       }
                                     }(),
-                                    child: child,
+                                    child: wrapped,
                                   );
                                 },
                                 supportedLocales: languages != null
@@ -497,6 +509,44 @@ class MainApplicationState extends State<MainApplication>
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Renders a global loading overlay directly in the widget tree while the
+/// auth bloc is in `AuthLoggingOutState`. Sits inside `MaterialApp.router`'s
+/// `builder`, which is above the app-level `Navigator` — so we can't use
+/// `showDialog` / `Navigator.of` from here. Instead we stack a barrier
+/// widget over `child`, which needs no Navigator context and is torn down
+/// automatically the moment the bloc leaves the `loggingOut` state.
+class _LogoutLoaderListener extends StatelessWidget {
+  final Widget child;
+  const _LogoutLoaderListener({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthBloc, AuthState>(
+      buildWhen: (prev, curr) =>
+          (curr is AuthLoggingOutState) != (prev is AuthLoggingOutState),
+      builder: (context, authState) {
+        final showLoader = authState is AuthLoggingOutState;
+        return Stack(
+          children: [
+            child,
+            if (showLoader)
+              const Positioned.fill(
+                child: ColoredBox(
+                  color: Color(0x99000000),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

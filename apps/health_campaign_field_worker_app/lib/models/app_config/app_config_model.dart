@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../manual_attendance_reasons/manual_attendance_reasons_model.dart';
 import '../privacy_notice/privacy_notice_model.dart';
 import '../referral_reasons/referral_reasons_model.dart';
@@ -97,8 +96,6 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'FIREBASE_CONFIG')
     required List<FirebaseConfig>? firebaseConfig,
     @JsonKey(name: 'TRANSIT_POST_TYPE') List<TransitPostType>? transitPostType,
-    @JsonKey(name: 'BOUNDARY_RELATIONSHIP')
-    List<BoundaryRelationship>? boundaryRelationship,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(
@@ -449,26 +446,3 @@ class FirebaseConfig with _$FirebaseConfig {
       _$FirebaseConfigFromJson(json);
 }
 
-@freezed
-class BoundaryRelationship with _$BoundaryRelationship {
-  factory BoundaryRelationship({
-    required String boundaryType,
-    required int order,
-    BoundaryRelationshipRef? parent,
-    List<BoundaryRelationshipRef>? children,
-  }) = _BoundaryRelationship;
-
-  factory BoundaryRelationship.fromJson(Map<String, dynamic> json) =>
-      _$BoundaryRelationshipFromJson(json);
-}
-
-@freezed
-class BoundaryRelationshipRef with _$BoundaryRelationshipRef {
-  factory BoundaryRelationshipRef({
-    required String boundaryType,
-    required int order,
-  }) = _BoundaryRelationshipRef;
-
-  factory BoundaryRelationshipRef.fromJson(Map<String, dynamic> json) =>
-      _$BoundaryRelationshipRefFromJson(json);
-}
