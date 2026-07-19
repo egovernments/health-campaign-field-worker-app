@@ -500,23 +500,36 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                           context: context,
                                           builder: (BuildContext ctx) => Popup(
                                               title: localizations.translate(
-                                                  _resolveTemplate(
-                                                      schema.showAlertPopUp!
-                                                          .title,
-                                                      schema.showAlertPopUp
-                                                          ?.conditions,
-                                                      contextValue)!),
+                                                  _resolveAlertTemplate(
+                                                template: schema
+                                                    .showAlertPopUp!.title,
+                                                conditions: schema
+                                                    .showAlertPopUp?.conditions,
+                                                contextValues: contextValue,
+                                                conditionTemplate: (condition) =>
+                                                    condition.title,
+                                              )!),
                                               description: localizations
-                                                  .translate(_resolveTemplate(
-                                                          translateIfPresent(
+                                                  .translate(
+                                                      _resolveAlertTemplate(
+                                                            template:
+                                                                translateIfPresent(
                                                               schema
                                                                   .showAlertPopUp
                                                                   ?.description,
-                                                              localizations),
-                                                          schema.showAlertPopUp
-                                                              ?.conditions,
-                                                          contextValue) ??
-                                                      ""),
+                                                              localizations,
+                                                            ),
+                                                            conditions: schema
+                                                                .showAlertPopUp
+                                                                ?.conditions,
+                                                            contextValues:
+                                                                contextValue,
+                                                            conditionTemplate:
+                                                                (condition) =>
+                                                                    condition
+                                                                        .description,
+                                                          ) ??
+                                                          ""),
 
                                               /// FIXME: need to send null as empty string will take space
                                               actions: [
@@ -659,20 +672,30 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                       context: context,
                                       builder: (BuildContext ctx) => Popup(
                                           title: localizations.translate(
-                                              _resolveTemplate(
-                                                  schema.showAlertPopUp!.title,
-                                                  schema.showAlertPopUp
-                                                      ?.conditions,
-                                                  contextValue)!),
+                                              _resolveAlertTemplate(
+                                            template:
+                                                schema.showAlertPopUp!.title,
+                                            conditions: schema
+                                                .showAlertPopUp?.conditions,
+                                            contextValues: contextValue,
+                                            conditionTemplate: (condition) =>
+                                                condition.title,
+                                          )!),
                                           description: localizations.translate(
-                                              _resolveTemplate(
-                                                      translateIfPresent(
-                                                          schema.showAlertPopUp
-                                                              ?.description,
-                                                          localizations),
+                                              _resolveAlertTemplate(
+                                                    template: translateIfPresent(
                                                       schema.showAlertPopUp
-                                                          ?.conditions,
-                                                      contextValue) ??
+                                                          ?.description,
+                                                      localizations,
+                                                    ),
+                                                    conditions: schema
+                                                        .showAlertPopUp
+                                                        ?.conditions,
+                                                    contextValues: contextValue,
+                                                    conditionTemplate:
+                                                        (condition) => condition
+                                                            .description,
+                                                  ) ??
                                                   ""),
 
                                           /// FIXME: need to send null as empty string will take space
@@ -887,33 +910,29 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     );
   }
 
-  String? _resolveTemplate(
-    String? template,
-    List<AlertCondition>? conditions,
-    Map<String, dynamic> contextValues,
-  ) {
+  String? _resolveAlertTemplate({
+    required String? template,
+    required List<AlertCondition>? conditions,
+    required Map<String, dynamic> contextValues,
+    required String? Function(AlertCondition condition) conditionTemplate,
+  }) {
     if (conditions == null || conditions.isEmpty) {
       return template;
     }
 
-    // Find matching condition
     for (final condition in conditions) {
-      // simple check: if contextValues contain a truthy match
       final isConditionTrue =
           evaluateSingleCondition(condition.expression, contextValues);
 
-      if (isConditionTrue) {
-        return template?.replaceAll(
-            "{value}", localizations.translate(condition.value));
-      }
-
-      if (condition.expression == "DEFAULT") {
-        return template?.replaceAll(
-            "{value}", localizations.translate(condition.value));
+      if (isConditionTrue || condition.expression == "DEFAULT") {
+        final selectedTemplate = conditionTemplate(condition);
+        return (selectedTemplate?.isNotEmpty == true
+                ? selectedTemplate
+                : template)
+            ?.replaceAll("{value}", localizations.translate(condition.value));
       }
     }
 
-    // fallback: return template unchanged
     return template;
   }
 

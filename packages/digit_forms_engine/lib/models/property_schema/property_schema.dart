@@ -230,6 +230,8 @@ class AlertCondition with _$AlertCondition {
   const factory AlertCondition({
     required String expression, // e.g., condition or "DEFAULT"
     required String value, // e.g., "To Administer"
+    String? title,
+    String? description,
   }) = _AlertCondition;
 
   factory AlertCondition.fromJson(Map<String, dynamic> json) =>

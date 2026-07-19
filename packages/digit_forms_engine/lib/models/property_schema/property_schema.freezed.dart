@@ -3575,7 +3575,10 @@ AlertCondition _$AlertConditionFromJson(Map<String, dynamic> json) {
 mixin _$AlertCondition {
   String get expression =>
       throw _privateConstructorUsedError; // e.g., condition or "DEFAULT"
-  String get value => throw _privateConstructorUsedError;
+  String get value =>
+      throw _privateConstructorUsedError; // e.g., "To Administer"
+  String? get title => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -3589,7 +3592,8 @@ abstract class $AlertConditionCopyWith<$Res> {
           AlertCondition value, $Res Function(AlertCondition) then) =
       _$AlertConditionCopyWithImpl<$Res, AlertCondition>;
   @useResult
-  $Res call({String expression, String value});
+  $Res call(
+      {String expression, String value, String? title, String? description});
 }
 
 /// @nodoc
@@ -3607,6 +3611,8 @@ class _$AlertConditionCopyWithImpl<$Res, $Val extends AlertCondition>
   $Res call({
     Object? expression = null,
     Object? value = null,
+    Object? title = freezed,
+    Object? description = freezed,
   }) {
     return _then(_value.copyWith(
       expression: null == expression
@@ -3617,6 +3623,14 @@ class _$AlertConditionCopyWithImpl<$Res, $Val extends AlertCondition>
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as String,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -3629,7 +3643,8 @@ abstract class _$$AlertConditionImplCopyWith<$Res>
       __$$AlertConditionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String expression, String value});
+  $Res call(
+      {String expression, String value, String? title, String? description});
 }
 
 /// @nodoc
@@ -3645,6 +3660,8 @@ class __$$AlertConditionImplCopyWithImpl<$Res>
   $Res call({
     Object? expression = null,
     Object? value = null,
+    Object? title = freezed,
+    Object? description = freezed,
   }) {
     return _then(_$AlertConditionImpl(
       expression: null == expression
@@ -3655,6 +3672,14 @@ class __$$AlertConditionImplCopyWithImpl<$Res>
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as String,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -3662,7 +3687,11 @@ class __$$AlertConditionImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$AlertConditionImpl implements _AlertCondition {
-  const _$AlertConditionImpl({required this.expression, required this.value});
+  const _$AlertConditionImpl(
+      {required this.expression,
+      required this.value,
+      this.title,
+      this.description});
 
   factory _$AlertConditionImpl.fromJson(Map<String, dynamic> json) =>
       _$$AlertConditionImplFromJson(json);
@@ -3672,10 +3701,15 @@ class _$AlertConditionImpl implements _AlertCondition {
 // e.g., condition or "DEFAULT"
   @override
   final String value;
+// e.g., "To Administer"
+  @override
+  final String? title;
+  @override
+  final String? description;
 
   @override
   String toString() {
-    return 'AlertCondition(expression: $expression, value: $value)';
+    return 'AlertCondition(expression: $expression, value: $value, title: $title, description: $description)';
   }
 
   @override
@@ -3685,12 +3719,16 @@ class _$AlertConditionImpl implements _AlertCondition {
             other is _$AlertConditionImpl &&
             (identical(other.expression, expression) ||
                 other.expression == expression) &&
-            (identical(other.value, value) || other.value == value));
+            (identical(other.value, value) || other.value == value) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.description, description) ||
+                other.description == description));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, expression, value);
+  int get hashCode =>
+      Object.hash(runtimeType, expression, value, title, description);
 
   @JsonKey(ignore: true)
   @override
@@ -3710,7 +3748,9 @@ class _$AlertConditionImpl implements _AlertCondition {
 abstract class _AlertCondition implements AlertCondition {
   const factory _AlertCondition(
       {required final String expression,
-      required final String value}) = _$AlertConditionImpl;
+      required final String value,
+      final String? title,
+      final String? description}) = _$AlertConditionImpl;
 
   factory _AlertCondition.fromJson(Map<String, dynamic> json) =
       _$AlertConditionImpl.fromJson;
@@ -3719,6 +3759,10 @@ abstract class _AlertCondition implements AlertCondition {
   String get expression;
   @override // e.g., condition or "DEFAULT"
   String get value;
+  @override // e.g., "To Administer"
+  String? get title;
+  @override
+  String? get description;
   @override
   @JsonKey(ignore: true)
   _$$AlertConditionImplCopyWith<_$AlertConditionImpl> get copyWith =>

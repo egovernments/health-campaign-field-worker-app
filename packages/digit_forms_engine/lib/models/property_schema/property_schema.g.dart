@@ -360,6 +360,8 @@ _$AlertConditionImpl _$$AlertConditionImplFromJson(Map<String, dynamic> json) =>
     _$AlertConditionImpl(
       expression: json['expression'] as String,
       value: json['value'] as String,
+      title: json['title'] as String?,
+      description: json['description'] as String?,
     );
 
 Map<String, dynamic> _$$AlertConditionImplToJson(
@@ -367,6 +369,8 @@ Map<String, dynamic> _$$AlertConditionImplToJson(
     <String, dynamic>{
       'expression': instance.expression,
       'value': instance.value,
+      'title': instance.title,
+      'description': instance.description,
     };
 
 _$MultiEntityConfigImpl _$$MultiEntityConfigImplFromJson(

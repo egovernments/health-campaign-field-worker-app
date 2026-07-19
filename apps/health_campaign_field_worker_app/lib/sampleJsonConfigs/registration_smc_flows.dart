@@ -4253,16 +4253,28 @@ final dynamic sampleSMCFlows = {
             "title": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
             "conditions": [
               {
+                "title": "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_TITLE",
+                "description":
+                    "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_DESCRIPTION",
                 "value": "To Administer",
                 "expression":
                     "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==NO"
               },
               {
+                "title": "APPONE_ELIGIBILITYCHECKLIST_INELIGIBLE_ALERT_TITLE",
+                "description":
+                    "APPONE_ELIGIBILITYCHECKLIST_INELIGIBLE_ALERT_DESCRIPTION",
                 "value": "Ineligible flow",
                 "expression":
                     "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==YES"
               },
-              {"value": "referral flow", "expression": "DEFAULT"}
+              {
+                "title": "APPONE_ELIGIBILITYCHECKLIST_REFERRAL_ALERT_TITLE",
+                "description":
+                    "APPONE_ELIGIBILITYCHECKLIST_REFERRAL_ALERT_DESCRIPTION",
+                "value": "referral flow",
+                "expression": "DEFAULT"
+              }
             ],
             "description": "APPONE_ELIGIBILITYCHECKLIST_ALERT_DESCRIPTION",
             "primaryActionLabel": "ACTION_SUBMIT",
