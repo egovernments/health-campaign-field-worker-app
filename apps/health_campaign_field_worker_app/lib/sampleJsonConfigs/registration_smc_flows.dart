@@ -1936,7 +1936,6 @@ final dynamic sampleSMCFlows = {
           "fieldName": "searchBar",
           "mandatory": true,
           "textCapitalization": "words",
-          "pattern": "[a-zA-Z ]",
           "debounceMs": 300,
           "validations": [
             {"type": "minSearchChars", "value": 2}
