@@ -42,7 +42,7 @@ final dynamic sampleSMCFlows = {
           },
           "secondaryAction": {
             "type": "template",
-            "label": "GO_BACK",
+            "label": "HCM_DELIVERY_SUCCESS_BACK_TO_SEARCH_BENEFICIARY",
             "format": "button",
             "hidden": false,
             "onAction": [
@@ -56,7 +56,8 @@ final dynamic sampleSMCFlows = {
             "properties": {"type": "secondary"}
           },
           "primaryActionLabel": "VIEW_HOUSEHOLD_DETAILS",
-          "secondaryActionLabel": "GO_BACK"
+          "secondaryActionLabel":
+              "HCM_DELIVERY_SUCCESS_BACK_TO_SEARCH_BENEFICIARY"
         }
       ],
       "name": "deliverySuccess",
@@ -910,53 +911,45 @@ final dynamic sampleSMCFlows = {
       "body": [
         {
           "type": "template",
+          "label": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
+          "format": "button",
+          "onAction": [
+            {
+              "actionType": "REVERSE_TRANSFORM",
+              "properties": {
+                "configName": "beneficiaryRegistration",
+                "entityTypes": ["HouseholdModel"]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{ context.household.clientReferenceId }}"
+                  },
+                  {"key": "isEdit", "value": "true"}
+                ],
+                "name": "HOUSEHOLD",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "householdEditButton",
+          "properties": {
+            "prefixIcon": "Edit",
+            "size": "medium",
+            "type": "secondary",
+            "mainAxisSize": "min",
+            "mainAxisAlignment": "center",
+            "horizontalPadding": "spacer5"
+          }
+        },
+        {
+          "type": "template",
           "format": "card",
           "children": [
-            {
-              "type": "template",
-              "format": "row",
-              "children": [
-                {
-                  "type": "template",
-                  "label": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
-                  "format": "button",
-                  "onAction": [
-                    {
-                      "actionType": "REVERSE_TRANSFORM",
-                      "properties": {
-                        "configName": "beneficiaryRegistration",
-                        "entityTypes": ["HouseholdModel"]
-                      }
-                    },
-                    {
-                      "actionType": "NAVIGATION",
-                      "properties": {
-                        "data": [
-                          {
-                            "key": "HouseholdClientReferenceId",
-                            "value": "{{ context.household.clientReferenceId }}"
-                          },
-                          {"key": "isEdit", "value": "true"}
-                        ],
-                        "name": "HOUSEHOLD",
-                        "type": "FORM"
-                      }
-                    }
-                  ],
-                  "fieldName": "householdEditButton",
-                  "prefixIcon": "Edit",
-                  "properties": {
-                    "icon": "Edit",
-                    "size": "large",
-                    "type": "tertiary",
-                    "mainAxisSize": "min",
-                    "mainAxisAlignment": "center"
-                  }
-                }
-              ],
-              "fieldName": "row",
-              "properties": {"mainAxisAlignment": "end"}
-            },
             {
               "data": [
                 {
@@ -1042,13 +1035,15 @@ final dynamic sampleSMCFlows = {
                           }
                         ],
                         "fieldName": "editIndividualButton",
-                        "prefixIcon": "Edit",
                         "properties": {
-                          "icon": "Edit",
-                          "size": "large",
+                          "prefixIcon": "Edit",
+                          "size": "medium",
                           "type": "tertiary",
                           "mainAxisSize": "min",
-                          "mainAxisAlignment": "center"
+                          "mainAxisAlignment": "center",
+                          "iconSize": "spacer4",
+                          "fontFamily": "Roboto",
+                          "lineHeight": "1.0"
                         }
                       }
                     ],
@@ -1180,7 +1175,6 @@ final dynamic sampleSMCFlows = {
                     "properties": {
                       "size": "medium",
                       "type": "primary",
-                      "bottomGap": 16,
                       "mainAxisSize": "max",
                       "mainAxisAlignment": "center"
                     }
@@ -1225,9 +1219,9 @@ final dynamic sampleSMCFlows = {
                     "properties": {
                       "size": "medium",
                       "type": "secondary",
-                      "bottomGap": 16,
                       "mainAxisSize": "max",
-                      "mainAxisAlignment": "center"
+                      "mainAxisAlignment": "center",
+                      "topGap": 16
                     }
                   },
                   {
@@ -1289,7 +1283,6 @@ final dynamic sampleSMCFlows = {
                       "icon": "add",
                       "size": "medium",
                       "type": "secondary",
-                      "bottomGap": 16,
                       "mainAxisSize": "max",
                       "mainAxisAlignment": "center"
                     }
@@ -1386,10 +1379,10 @@ final dynamic sampleSMCFlows = {
                     "mandatory": true,
                     "properties": {
                       "size": "medium",
-                      "type": "secondary",
-                      "bottomGap": 16,
+                      "type": "primary",
                       "mainAxisSize": "max",
-                      "mainAxisAlignment": "center"
+                      "mainAxisAlignment": "center",
+                      "topGap": 16
                     }
                   }
                 ],
@@ -1407,6 +1400,7 @@ final dynamic sampleSMCFlows = {
               "properties": {"spacing": "spacer4"}
             },
             {
+              "icon": "AddCircle",
               "type": "template",
               "label": "ADD_MEMBER",
               "format": "actionPopup",
@@ -1416,7 +1410,8 @@ final dynamic sampleSMCFlows = {
               "properties": {
                 "size": "medium",
                 "type": "tertiary",
-                "prefixIcon": "PersonAdd",
+                "prefixIcon": "AddCircle",
+                "align": "center",
                 "popupConfig": {
                   "body": [],
                   "type": "alert",
@@ -1521,7 +1516,8 @@ final dynamic sampleSMCFlows = {
               "properties": {
                 "size": "medium",
                 "type": "tertiary",
-                "prefixIcon": "PersonAdd",
+                "prefixIcon": "AddCircle",
+                "align": "center",
                 "mainAxisSize": "min",
                 "mainAxisAlignment": "center"
               }
@@ -1883,84 +1879,64 @@ final dynamic sampleSMCFlows = {
       "body": [
         {
           "type": "template",
-          "label": "PROXIMITY_SEARCH_REGISTRATION",
-          "format": "proximitySearch",
-          "onAction": [
-            {
-              "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
-              "properties": {
-                "data": [
-                  {"key": "", "value": 5, "operation": "within"},
-                  {
-                    "key": "localityBoundaryCode",
-                    "root": "address",
-                    "value": "{{singleton.boundary.code}}",
-                    "operation": "equals"
-                  }
-                ],
-                "name": "address",
-                "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
-              }
-            }
-          ],
-          "fieldName": "proximitySearchRegistration",
-          "mandatory": true,
-          "schemaCode": null,
-          "validations": [
-            {
-              "key": "proximityRadius",
-              "value": 5,
-              "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
-            }
-          ]
-        },
-        {
-          "type": "template",
-          "label": "ID_SEARCH_REGISTRATION",
-          "format": "switch",
-          "onAction": [
-            {
-              "actionType": "CLEAR_STATE",
-              "properties": {
-                "filterKeys": ["givenName", "identifierId"],
-                "widgetKeys": ["searchBar"],
-                "triggerSearch": true
-              }
-            }
-          ],
-          "fieldName": "idSearch",
-          "mandatory": true,
-          "schemaCode": null,
-          "validations": []
-        },
-        {
-          "type": "template",
-          "label": "SEARCH_BY_NAME",
+          "label": "REGISTRATION_INDIVIDUAL_SEARCH_BENEFICIARY_NAME_HINT",
           "format": "searchBar",
           "onAction": [
             {
-              "actionType": "SEARCH_EVENT",
-              "properties": {
-                "data": [
-                  {
-                    "key": "givenName",
-                    "value": "field.value",
-                    "operation": "containsAll"
-                  },
-                  {
-                    "key": "localityBoundaryCode",
-                    "root": "address",
-                    "value": "{{singleton.boundary.code}}",
-                    "operation": "equals"
+              "actions": [
+                {
+                  "actionType": "SEARCH_EVENT",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "identifierId",
+                        "value": "field.value",
+                        "operation": "containsAll"
+                      },
+                      {
+                        "key": "localityBoundaryCode",
+                        "root": "address",
+                        "value": "{{singleton.boundary.code}}",
+                        "operation": "equals"
+                      }
+                    ],
+                    "name": "identifier",
+                    "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
                   }
-                ],
-                "name": "name",
-                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
-              }
+                }
+              ],
+              "condition": {"expression": "{{idSearch}}==true"}
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "SEARCH_EVENT",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "givenName",
+                        "value": "field.value",
+                        "operation": "containsAll"
+                      },
+                      {
+                        "key": "localityBoundaryCode",
+                        "root": "address",
+                        "value": "{{singleton.boundary.code}}",
+                        "operation": "equals"
+                      }
+                    ],
+                    "name": "name",
+                    "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+                  }
+                }
+              ],
+              "condition": {"expression": "DEFAULT"}
             }
           ],
-          "fieldName": "searchByName",
+          "fieldName": "searchBar",
           "mandatory": true,
+          "textCapitalization": "words",
+          "pattern": "[a-zA-Z ]",
           "debounceMs": 300,
           "validations": [
             {"type": "minSearchChars", "value": 2}
@@ -1969,38 +1945,390 @@ final dynamic sampleSMCFlows = {
         },
         {
           "type": "template",
-          "label": "SEARCH_BY_ID",
-          "format": "searchBar",
-          "visible": "{{idSearch}} == true",
-          "onAction": [
-            {
-              "actionType": "SEARCH_EVENT",
-              "properties": {
-                "data": [
+          "label": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
+          "format": "noResultCard",
+          "fieldName": "beneficiaryNotFound",
+          "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
+          "showOnEmptySearch": true
+        },
+        {
+          "data": "members",
+          "type": "template",
+          "child": {
+            "type": "template",
+            "format": "card",
+            "children": [
+              {
+                "type": "template",
+                "format": "row",
+                "children": [
                   {
-                    "key": "identifierId",
-                    "value": "field.value",
-                    "operation": "containsAll"
+                    "type": "template",
+                    "value": "{{ item.headIndividual.0.name.givenName }}",
+                    "format": "textTemplate",
+                    "fieldName": "headOfHousehold",
+                    "properties": {
+                      "style": "headingM",
+                      "color": "textSecondary"
+                    }
                   },
                   {
-                    "key": "localityBoundaryCode",
-                    "root": "address",
-                    "value": "{{singleton.boundary.code}}",
-                    "operation": "equals"
+                    "type": "template",
+                    "label": "OPEN",
+                    "format": "button",
+                    "onAction": [
+                      {
+                        "actions": [
+                          {
+                            "actionType": "FETCH_TRANSFORMER_CONFIG",
+                            "properties": {
+                              "data": [
+                                {
+                                  "key": "individuals",
+                                  "value": "{{item.individuals}}"
+                                }
+                              ],
+                              "configName": "bulkProjectBeneficiaryFromMembers"
+                            }
+                          },
+                          {
+                            "actionType": "CREATE_EVENT",
+                            "properties": {"entity": "ProjectBeneficiaryModel"}
+                          },
+                          {
+                            "actionType": "NAVIGATION",
+                            "properties": {
+                              "data": [
+                                {
+                                  "key": "HouseholdClientReferenceId",
+                                  "value":
+                                      "{{ item.HouseholdModel.clientReferenceId }}"
+                                }
+                              ],
+                              "name": "householdOverview",
+                              "type": "TEMPLATE"
+                            }
+                          }
+                        ],
+                        "condition": {
+                          "expression":
+                              "{{fn:length(item.projectBeneficiaries)}}<=0"
+                        }
+                      },
+                      {
+                        "actions": [
+                          {
+                            "actionType": "NAVIGATION",
+                            "properties": {
+                              "data": [
+                                {
+                                  "key": "HouseholdClientReferenceId",
+                                  "value":
+                                      "{{ item.HouseholdModel.clientReferenceId }}"
+                                }
+                              ],
+                              "name": "householdOverview",
+                              "type": "TEMPLATE"
+                            }
+                          }
+                        ],
+                        "condition": {
+                          "expression":
+                              "{{item.tasks.0.status}} != CLOSED_HOUSEHOLD"
+                        }
+                      },
+                      {
+                        "actions": [
+                          {
+                            "actionType": "REVERSE_TRANSFORM",
+                            "properties": {
+                              "data": [
+                                {"key": "entities", "value": "{{item}}"}
+                              ],
+                              "configName": "beneficiaryRegistration",
+                              "entityTypes": ["HouseholdModel", "TaskModel"]
+                            }
+                          },
+                          {
+                            "actionType": "NAVIGATION",
+                            "properties": {
+                              "data": [
+                                {
+                                  "key": "HouseholdClientReferenceId",
+                                  "value":
+                                      "{{ item.HouseholdModel.clientReferenceId }}"
+                                },
+                                {"key": "isEdit", "value": "true"},
+                                {"key": "isClosedHousehold", "value": "true"}
+                              ],
+                              "name": "HOUSEHOLD",
+                              "type": "FORM"
+                            }
+                          }
+                        ],
+                        "condition": {
+                          "expression":
+                              "{{item.tasks.0.status}} == CLOSED_HOUSEHOLD"
+                        }
+                      }
+                    ],
+                    "fieldName": "openMemberCard",
+                    "properties": {"size": "small", "type": "secondary"}
                   }
                 ],
-                "name": "identifier",
-                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+                "fieldName": "detailsRow",
+                "properties": {
+                  "mainAxisSize": "max",
+                  "mainAxisAlignment": "spaceBetween"
+                }
+              },
+              {
+                "data": {
+                  "rows": "{{currentItem.individuals}}",
+                  "source": "individuals",
+                  "columns": [
+                    {
+                      "header": "BENEFICIARY",
+                      "hidden": false,
+                      "isActive": true,
+                      "cellValue": "{{item.name.givenName}}"
+                    },
+                    {
+                      "header": "AGE_OF_BENEFICIARY",
+                      "hidden": false,
+                      "isActive": true,
+                      "cellValue": "{{fn:formatDate(item.dateOfBirth, 'age')}}"
+                    },
+                    {
+                      "header": "GENDER",
+                      "hidden": false,
+                      "isActive": true,
+                      "cellValue": "{{item.gender}}"
+                    },
+                    {
+                      "header": "UNIQUE_BENEFICIARY_ID",
+                      "hidden": false,
+                      "isActive": true,
+                      "cellValue":
+                          "{{fn:getUniqueBeneficiaryId(item.identifiers.0)}}"
+                    }
+                  ]
+                },
+                "type": "template",
+                "format": "table",
+                "fieldName": "memberTable"
+              }
+            ],
+            "fieldName": "memberCard"
+          },
+          "format": "listView",
+          "hidden": false,
+          "fieldName": "listView",
+          "properties": {"spacing": "spacer4"},
+          "schemaCode": null
+        }
+      ],
+      "name": "searchBeneficiary",
+      "order": 1,
+      "footer": [
+        {
+          "icon": "FilterAlt",
+          "type": "template",
+          "label": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
+          "format": "actionPopup",
+          "visible":
+              "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
+          "fieldName": "beneficiaryIdMinCheck",
+          "properties": {
+            "icon": "FilterAlt",
+            "size": "large",
+            "type": "primary",
+            "popupConfig": {
+              "body": [],
+              "type": "alert",
+              "title":
+                  "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
+              "description":
+                  "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
+              "footerActions": [
+                {
+                  "type": "template",
+                  "label":
+                      "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {"parentScreenKey": "searchBeneficiary"}
+                    },
+                    {
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "data": [
+                          {"key": "nameOfIndividual", "value": "{{searchBar}}"},
+                          {
+                            "key": "UNIQUE_BENEFICIARY_ID",
+                            "value": "{{latestBeneficiaryId}}"
+                          },
+                          {
+                            "key": "uniqueBeneficiaryIdModel",
+                            "value": "{{latestBeneficiaryIdModel}}"
+                          }
+                        ],
+                        "name": "HOUSEHOLD",
+                        "type": "FORM"
+                      }
+                    }
+                  ],
+                  "fieldName": "clearFilter2",
+                  "properties": {
+                    "size": "large",
+                    "type": "secondary",
+                    "mainAxisSize": "max"
+                  }
+                },
+                {
+                  "type": "template",
+                  "label": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {"parentScreenKey": "searchBeneficiary"}
+                    },
+                    {
+                      "actionType": "NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC",
+                      "properties": {}
+                    }
+                  ],
+                  "fieldName": "saveFilter2",
+                  "properties": {
+                    "size": "large",
+                    "type": "primary",
+                    "mainAxisSize": "max"
+                  }
+                }
+              ],
+              "showCloseButton": true,
+              "barrierDismissible": true
+            },
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "schemaCode": null
+        },
+        {
+          "type": "template",
+          "label": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
+          "format": "button",
+          "visible":
+              "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
+          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {"key": "nameOfIndividual", "value": "{{searchBar}}"},
+                  {
+                    "key": "UNIQUE_BENEFICIARY_ID",
+                    "value": "{{latestBeneficiaryId}}"
+                  },
+                  {
+                    "key": "uniqueBeneficiaryIdModel",
+                    "value": "{{latestBeneficiaryIdModel}}"
+                  }
+                ],
+                "name": "HOUSEHOLD",
+                "type": "FORM"
               }
             }
           ],
-          "fieldName": "idSearchBar",
+          "fieldName": "registerBeneficiary",
           "mandatory": true,
-          "validations": [
-            {"type": "minSearchChars", "value": 3}
-          ],
-          "minSearchChars": 3
+          "properties": {
+            "size": "large",
+            "type": "primary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          }
         },
+        {
+          "type": "template",
+          "isGS1": false,
+          "label": "SCAN_BENEFICIARY",
+          "format": "qrScanner",
+          "onAction": [
+            {
+              "actionType": "OPEN_SCANNER",
+              "properties": {
+                "isGS1": false,
+                "scanType": "qr",
+                "fieldName": "beneficiaryTag",
+                "onSuccess": [
+                  {
+                    "actionType": "SEARCH_EVENT",
+                    "properties": {
+                      "data": [
+                        {
+                          "key": "tag",
+                          "value": "{{beneficiaryTag}}",
+                          "operation": "equals"
+                        },
+                        {
+                          "key": "localityBoundaryCode",
+                          "root": "address",
+                          "value": "{{singleton.boundary.code}}",
+                          "operation": "equals"
+                        }
+                      ],
+                      "name": "projectBeneficiary",
+                      "type": "SEARCH_EVENT",
+                      "awaitResults": true
+                    }
+                  }
+                ],
+                "scanLimit": 1,
+                "singleValue": true
+              }
+            }
+          ],
+          "fieldName": "scanBeneficiary",
+          "scanLimit": 1,
+          "showLabel": false,
+          "properties": {
+            "icon": "QrCodeScanner",
+            "size": "large",
+            "type": "secondary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "validations": [
+            {
+              "type": "scanLimit",
+              "value": 1,
+              "message": "SCANLIMIT_ERROR_MESSAGE"
+            },
+            {"type": "isGS1", "value": false}
+          ],
+          "scanLimit.message": "SCANLIMIT_ERROR_MESSAGE"
+        }
+      ],
+      "header": [
+        {
+          "label": "BACK",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"name": "HOME", "type": "HOME"}
+            }
+          ]
+        }
+      ],
+      "heading": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
+      "headingActions": [
         {
           "icon": "FilterAlt",
           "type": "template",
@@ -2009,11 +2337,80 @@ final dynamic sampleSMCFlows = {
           "fieldName": "filterPopUp",
           "properties": {
             "icon": "FilterAlt",
-            "size": "medium",
+            "size": "large",
             "type": "tertiary",
+            "radius": "spacer1",
             "suffixIcon": "FilterAlt",
             "popupConfig": {
               "body": [
+                {
+                  "type": "template",
+                  "format": "card",
+                  "properties": {"type": "secondary"},
+                  "children": [
+                    {
+                      "type": "template",
+                      "label": "PROXIMITY_SEARCH_REGISTRATION",
+                      "format": "proximitySearch",
+                      "fieldName": "proximitySearch",
+                      "mandatory": true,
+                      "schemaCode": null,
+                      "validations": [
+                        {
+                          "key": "proximityRadius",
+                          "value": 5,
+                          "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
+                        }
+                      ],
+                      "onAction": [
+                        {
+                          "actionType":
+                              "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
+                          "properties": {
+                            "data": [
+                              {"key": "", "value": 5, "operation": "within"},
+                              {
+                                "key": "localityBoundaryCode",
+                                "root": "address",
+                                "value": "{{singleton.boundary.code}}",
+                                "operation": "equals"
+                              }
+                            ],
+                            "name": "address",
+                            "type":
+                                "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "template",
+                  "format": "card",
+                  "properties": {"type": "secondary"},
+                  "children": [
+                    {
+                      "type": "template",
+                      "label": "ID_SEARCH_REGISTRATION",
+                      "format": "switch",
+                      "fieldName": "idSearch",
+                      "mandatory": true,
+                      "schemaCode": null,
+                      "validations": [],
+                      "onAction": [
+                        {
+                          "actionType": "CLEAR_STATE",
+                          "properties": {
+                            "widgetKeys": ["searchBar"],
+                            "filterKeys": ["givenName", "identifierId"],
+                            "triggerSearch": true
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
                 {
                   "type": "template",
                   "enums": [
@@ -2036,7 +2433,8 @@ final dynamic sampleSMCFlows = {
                     }
                   ],
                   "format": "selectionCard",
-                  "fieldName": "selectedStatus"
+                  "fieldName": "selectedStatus",
+                  "properties": {"fullWidth": true}
                 }
               ],
               "type": "default",
@@ -2055,9 +2453,16 @@ final dynamic sampleSMCFlows = {
                         "filterKeys": [
                           "status",
                           "projectBeneficiary",
-                          "projectId"
+                          "projectId",
+                          "proximitySearch",
+                          "givenName",
+                          "identifierId"
                         ],
-                        "widgetKeys": ["selectedStatus"],
+                        "widgetKeys": [
+                          "selectedStatus",
+                          "proximitySearch",
+                          "idSearch"
+                        ],
                         "triggerSearch": true
                       }
                     }
@@ -2219,388 +2624,8 @@ final dynamic sampleSMCFlows = {
           },
           "schemaCode": null,
           "suffixIcon": "FilterAlt"
-        },
-        {
-          "type": "template",
-          "label": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
-          "format": "noResultCard",
-          "fieldName": "beneficiaryNotFound",
-          "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-          "showOnEmptySearch": true
-        },
-        {
-          "data": "members",
-          "type": "template",
-          "child": {
-            "type": "template",
-            "format": "card",
-            "children": [
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "type": "template",
-                    "value": "{{ item.headIndividual.0.name.givenName }}",
-                    "format": "textTemplate",
-                    "fieldName": "headOfHousehold"
-                  },
-                  {
-                    "type": "template",
-                    "label": "OPEN",
-                    "format": "button",
-                    "onAction": [
-                      {
-                        "actions": [
-                          {
-                            "actionType": "FETCH_TRANSFORMER_CONFIG",
-                            "properties": {
-                              "data": [
-                                {
-                                  "key": "individuals",
-                                  "value": "{{item.individuals}}"
-                                }
-                              ],
-                              "configName": "bulkProjectBeneficiaryFromMembers"
-                            }
-                          },
-                          {
-                            "actionType": "CREATE_EVENT",
-                            "properties": {"entity": "ProjectBeneficiaryModel"}
-                          },
-                          {
-                            "actionType": "NAVIGATION",
-                            "properties": {
-                              "data": [
-                                {
-                                  "key": "HouseholdClientReferenceId",
-                                  "value":
-                                      "{{ item.HouseholdModel.clientReferenceId }}"
-                                }
-                              ],
-                              "name": "householdOverview",
-                              "type": "TEMPLATE"
-                            }
-                          }
-                        ],
-                        "condition": {
-                          "expression":
-                              "{{fn:length(item.projectBeneficiaries)}}<=0"
-                        }
-                      },
-                      {
-                        "actions": [
-                          {
-                            "actionType": "NAVIGATION",
-                            "properties": {
-                              "data": [
-                                {
-                                  "key": "HouseholdClientReferenceId",
-                                  "value":
-                                      "{{ item.HouseholdModel.clientReferenceId }}"
-                                }
-                              ],
-                              "name": "householdOverview",
-                              "type": "TEMPLATE"
-                            }
-                          }
-                        ],
-                        "condition": {
-                          "expression":
-                              "{{item.tasks.0.status}} != CLOSED_HOUSEHOLD"
-                        }
-                      },
-                      {
-                        "actions": [
-                          {
-                            "actionType": "REVERSE_TRANSFORM",
-                            "properties": {
-                              "data": [
-                                {"key": "entities", "value": "{{item}}"}
-                              ],
-                              "configName": "beneficiaryRegistration",
-                              "entityTypes": ["HouseholdModel", "TaskModel"]
-                            }
-                          },
-                          {
-                            "actionType": "NAVIGATION",
-                            "properties": {
-                              "data": [
-                                {
-                                  "key": "HouseholdClientReferenceId",
-                                  "value":
-                                      "{{ item.HouseholdModel.clientReferenceId }}"
-                                },
-                                {"key": "isEdit", "value": "true"},
-                                {"key": "isClosedHousehold", "value": "true"}
-                              ],
-                              "name": "HOUSEHOLD",
-                              "type": "FORM"
-                            }
-                          }
-                        ],
-                        "condition": {
-                          "expression":
-                              "{{item.tasks.0.status}} == CLOSED_HOUSEHOLD"
-                        }
-                      }
-                    ],
-                    "fieldName": "openMemberCard",
-                    "properties": {"size": "medium", "type": "secondary"}
-                  }
-                ],
-                "fieldName": "detailsRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "spaceBetween"
-                }
-              },
-              {
-                "data": {
-                  "rows": "{{currentItem.individuals}}",
-                  "source": "individuals",
-                  "columns": [
-                    {
-                      "header": "BENEFICIARY",
-                      "hidden": false,
-                      "isActive": true,
-                      "cellValue": "{{item.name.givenName}}"
-                    },
-                    {
-                      "header": "AGE_OF_BENEFICIARY",
-                      "hidden": false,
-                      "isActive": true,
-                      "cellValue": "{{fn:formatDate(item.dateOfBirth, 'age')}}"
-                    },
-                    {
-                      "header": "GENDER",
-                      "hidden": false,
-                      "isActive": true,
-                      "cellValue": "{{item.gender}}"
-                    },
-                    {
-                      "header": "UNIQUE_BENEFICIARY_ID",
-                      "hidden": false,
-                      "isActive": true,
-                      "cellValue":
-                          "{{fn:getUniqueBeneficiaryId(item.identifiers.0)}}"
-                    }
-                  ]
-                },
-                "type": "template",
-                "format": "table",
-                "fieldName": "memberTable"
-              }
-            ],
-            "fieldName": "memberCard"
-          },
-          "format": "listView",
-          "hidden": false,
-          "fieldName": "listView",
-          "properties": {"spacing": "spacer4"},
-          "schemaCode": null
         }
       ],
-      "name": "searchBeneficiary",
-      "order": 1,
-      "footer": [
-        {
-          "icon": "FilterAlt",
-          "type": "template",
-          "label": "DOWNLOAD_BENEFICIARY_IDS",
-          "format": "actionPopup",
-          "visible":
-              "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
-          "fieldName": "beneficiaryIdMinCheck",
-          "properties": {
-            "icon": "FilterAlt",
-            "size": "large",
-            "type": "primary",
-            "popupConfig": {
-              "body": [],
-              "type": "alert",
-              "title":
-                  "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
-              "description":
-                  "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
-              "footerActions": [
-                {
-                  "type": "template",
-                  "label":
-                      "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
-                  "format": "button",
-                  "onAction": [
-                    {
-                      "actionType": "CLOSE_POPUP",
-                      "properties": {"parentScreenKey": "searchBeneficiary"}
-                    },
-                    {
-                      "actionType": "NAVIGATION",
-                      "properties": {
-                        "data": [
-                          {"key": "nameOfIndividual", "value": "{{searchBar}}"},
-                          {
-                            "key": "UNIQUE_BENEFICIARY_ID",
-                            "value": "{{latestBeneficiaryId}}"
-                          },
-                          {
-                            "key": "uniqueBeneficiaryIdModel",
-                            "value": "{{latestBeneficiaryIdModel}}"
-                          }
-                        ],
-                        "name": "HOUSEHOLD",
-                        "type": "FORM"
-                      }
-                    }
-                  ],
-                  "fieldName": "clearFilter2",
-                  "properties": {
-                    "size": "large",
-                    "type": "secondary",
-                    "mainAxisSize": "max"
-                  }
-                },
-                {
-                  "type": "template",
-                  "label": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
-                  "format": "button",
-                  "onAction": [
-                    {
-                      "actionType": "CLOSE_POPUP",
-                      "properties": {"parentScreenKey": "searchBeneficiary"}
-                    },
-                    {
-                      "actionType": "NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC",
-                      "properties": {}
-                    }
-                  ],
-                  "fieldName": "saveFilter2",
-                  "properties": {
-                    "size": "large",
-                    "type": "primary",
-                    "mainAxisSize": "max"
-                  }
-                }
-              ],
-              "showCloseButton": true,
-              "barrierDismissible": true
-            },
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "schemaCode": null
-        },
-        {
-          "type": "template",
-          "label": "REGISTER_BENEFICIARY",
-          "format": "button",
-          "visible":
-              "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
-          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
-          "onAction": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "data": [
-                  {"key": "nameOfIndividual", "value": "{{searchBar}}"},
-                  {
-                    "key": "UNIQUE_BENEFICIARY_ID",
-                    "value": "{{latestBeneficiaryId}}"
-                  },
-                  {
-                    "key": "uniqueBeneficiaryIdModel",
-                    "value": "{{latestBeneficiaryIdModel}}"
-                  }
-                ],
-                "name": "HOUSEHOLD",
-                "type": "FORM"
-              }
-            }
-          ],
-          "fieldName": "registerBeneficiary",
-          "mandatory": true,
-          "properties": {
-            "size": "large",
-            "type": "primary",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          }
-        },
-        {
-          "type": "template",
-          "isGS1": false,
-          "label": "SCAN_BENEFICIARY",
-          "format": "qrScanner",
-          "onAction": [
-            {
-              "actionType": "OPEN_SCANNER",
-              "properties": {
-                "isGS1": false,
-                "scanType": "qr",
-                "fieldName": "beneficiaryTag",
-                "onSuccess": [
-                  {
-                    "actionType": "SEARCH_EVENT",
-                    "properties": {
-                      "data": [
-                        {
-                          "key": "tag",
-                          "value": "{{beneficiaryTag}}",
-                          "operation": "equals"
-                        },
-                        {
-                          "key": "localityBoundaryCode",
-                          "root": "address",
-                          "value": "{{singleton.boundary.code}}",
-                          "operation": "equals"
-                        }
-                      ],
-                      "name": "projectBeneficiary",
-                      "type": "SEARCH_EVENT",
-                      "awaitResults": true
-                    }
-                  }
-                ],
-                "scanLimit": 1,
-                "singleValue": true
-              }
-            }
-          ],
-          "fieldName": "scanBeneficiary",
-          "scanLimit": 1,
-          "showLabel": false,
-          "properties": {
-            "icon": "QrCodeScanner",
-            "size": "large",
-            "type": "secondary",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "validations": [
-            {
-              "type": "scanLimit",
-              "value": 1,
-              "message": "SCANLIMIT_ERROR_MESSAGE"
-            },
-            {"type": "isGS1", "value": false}
-          ],
-          "scanLimit.message": "SCANLIMIT_ERROR_MESSAGE"
-        }
-      ],
-      "header": [
-        {
-          "label": "BACK",
-          "format": "backLink",
-          "onAction": [
-            {
-              "actionType": "BACK_NAVIGATION",
-              "properties": {"name": "HOME", "type": "HOME"}
-            }
-          ]
-        }
-      ],
-      "heading": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
@@ -4082,7 +4107,8 @@ final dynamic sampleSMCFlows = {
               ],
               "includeInSummary": true,
               "required.message":
-                  "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL_REQUIRED_MESSAGE"
+                  "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL_REQUIRED_MESSAGE",
+              "conditions": {"boldLabel": true}
             },
             {
               "type": "string",
@@ -4125,6 +4151,7 @@ final dynamic sampleSMCFlows = {
               "includeInSummary": true,
               "required.message":
                   "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL_REQUIRED_MESSAGE",
+              "conditions": {"wrapInCard": true, "boldLabel": true},
               "visibilityCondition": {
                 "expression": [
                   {"condition": "eligibilityChecklist.ec1==YES"}
@@ -4171,7 +4198,8 @@ final dynamic sampleSMCFlows = {
               ],
               "includeInSummary": true,
               "required.message":
-                  "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL_REQUIRED_MESSAGE"
+                  "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL_REQUIRED_MESSAGE",
+              "conditions": {"boldLabel": true}
             },
             {
               "type": "string",
@@ -4213,12 +4241,14 @@ final dynamic sampleSMCFlows = {
               ],
               "includeInSummary": true,
               "required.message":
-                  "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL_REQUIRED_MESSAGE"
+                  "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL_REQUIRED_MESSAGE",
+              "conditions": {"boldLabel": true}
             }
           ],
           "actionLabel":
               "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
           "description": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_DESCRIPTION",
+          "conditions": {"showDividers": true},
           "showTabView": false,
           "showAlertPopUp": {
             "title": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
@@ -4620,6 +4650,7 @@ final dynamic sampleSMCFlows = {
               "order": 1,
               "value": "",
               "format": "text",
+              "textCapitalization": "words",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
@@ -4646,6 +4677,12 @@ final dynamic sampleSMCFlows = {
                   "value": true,
                   "message":
                       "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message_addmember"
+                },
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ ]+\$",
+                  "message":
+                      "APPONE_REGISTRATION_BENEFICIARYDETAILS_ALPHABETS_ONLY_MESSAGE"
                 },
                 {
                   "type": "minLength",
@@ -5470,7 +5507,8 @@ final dynamic sampleSMCFlows = {
                   "REGISTRATION_REFER_BENEFICIARY_referralReason_ERROR",
               "isMultiSelect": false,
               "required.message":
-                  "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR"
+                  "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
+              "conditions": {"separateCard": true}
             }
           ],
           "actionLabel": "REFER_BENEFICIARY_SUBMIT_BUTTON",
@@ -5850,6 +5888,7 @@ final dynamic sampleSMCFlows = {
               "order": 1,
               "value": "",
               "format": "text",
+              "textCapitalization": "words",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
@@ -5878,6 +5917,12 @@ final dynamic sampleSMCFlows = {
                       "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message"
                 },
                 {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ ]+\$",
+                  "message":
+                      "APPONE_REGISTRATION_BENEFICIARYDETAILS_ALPHABETS_ONLY_MESSAGE"
+                },
+                {
                   "type": "minLength",
                   "value": "2",
                   "message":
@@ -5900,7 +5945,7 @@ final dynamic sampleSMCFlows = {
               "label":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
               "order": 3,
-              "value": "",
+              "value": true,
               "format": "checkbox",
               "hidden": false,
               "isMdms": false,
