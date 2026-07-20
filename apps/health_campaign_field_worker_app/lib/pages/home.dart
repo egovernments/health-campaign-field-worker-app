@@ -121,6 +121,13 @@ class _HomePageState extends LocalizedState<HomePage> {
   // safety net for paths that fire outside `_openModule`.
   OverlayEntry? _localizationLoaderOverlay;
 
+  /// Number of `_openModule` calls currently in flight. Used to make the
+  /// overlay dismiss ownership-aware: nested opens (outer card opens a
+  /// module that itself calls `_openModule` from its own initActions) would
+  /// otherwise let the outer's finally rip the overlay from under the
+  /// still-running inner one.
+  int _openModuleOwners = 0;
+
   @override
   initState() {
     super.initState();
@@ -1564,9 +1571,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     _localizationLoaderOverlay = null;
   }
 
-  /// Runs [work] with the full-screen overlay visible for its entire
-  /// duration, then keeps the overlay visible until the target route's
-  /// initial CRUD search settles (via `FlowCrudStateRegistry.loadingCount`).
+  /// Runs [work] with the full-screen overlay visible for its synchronous
+  /// portion and dismisses the overlay as soon as [work] returns.
   ///
   /// Yields to the framework via `endOfFrame` after inserting the overlay
   /// entry: without this, Dart would run the whole synchronous portion of
@@ -1574,99 +1580,26 @@ class _HomePageState extends LocalizedState<HomePage> {
   /// etc.) before returning to the event loop — meaning the overlay would
   /// only paint AFTER the freeze, defeating the point.
   ///
-  /// After `work` completes the target route is mounted but its initial
-  /// `SEARCH_EVENT` (from initActions) may still be in flight. We wait for
-  /// [FlowCrudStateRegistry.loadingCount] to first tick above zero (a
-  /// search fires) and then back down (search settles). If no search fires
-  /// within [_initialSearchStartWindow] the target route doesn't do an
-  /// initial fetch (e.g. Dashboard, DataShare) and we dismiss immediately.
-  /// If a search fires but never completes we bail after
-  /// [_initialSearchMaxDuration] so the loader can't stay stuck forever.
+  /// The overlay does NOT wait for the target route's initial CRUD search
+  /// to settle. Target routes own their own loading UX; this method only
+  /// guards the router.push transition itself.
   ///
-  /// Safe to call while another `_openModule` is in flight: `_showLoader`
-  /// is idempotent (returns early if the overlay is already up), and the
-  /// outer call owns the dismiss.
+  /// Safe to call while another `_openModule` is in flight: each call
+  /// takes an ownership token (`_openModuleOwners`) and the overlay is
+  /// only dismissed when the last owner releases. Prevents the outer
+  /// call from ripping the overlay from under a nested inner call.
   Future<T> _openModule<T>(Future<T> Function() work) async {
+    _openModuleOwners++;
     _showLoader();
     await WidgetsBinding.instance.endOfFrame;
     try {
-      final result = await work();
-      await _waitForInitialCrudSearch();
-      return result;
+      return await work();
     } finally {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _hideLoader());
-    }
-  }
-
-  /// Grace window for the target route to fire its initial CRUD search.
-  /// If nothing happens within this window we assume the route doesn't do
-  /// an initial fetch and stop waiting.
-  ///
-  /// Set generously (1.5s) because the chain from `router.push` returning
-  /// to `CrudState.loading()` firing involves: router processing the push,
-  /// target route mounting + first build, ScreenBuilder's initActions
-  /// executing (often on `addPostFrameCallback`), and the CRUD event
-  /// dispatch. On slower devices this can easily eat several hundred ms.
-  static const Duration _initialSearchStartWindow =
-      Duration(milliseconds: 1500);
-
-  /// Absolute cap on how long the loader can stay up waiting for the
-  /// initial search to complete. Prevents a stuck loader if the CRUD flow
-  /// never emits a terminal state.
-  static const Duration _initialSearchMaxDuration = Duration(seconds: 8);
-
-  Future<void> _waitForInitialCrudSearch() async {
-    final counter = FlowCrudStateRegistry().loadingCount;
-    final sw = Stopwatch()..start();
-
-    // Phase 1: wait for a search to actually fire (loadingCount > 0). If
-    // none fires within the grace window, this route has no initial fetch
-    // and we're done.
-    if (counter.value == 0) {
-      final started = Completer<void>();
-      void startListener() {
-        if (counter.value > 0 && !started.isCompleted) started.complete();
+      _openModuleOwners--;
+      if (_openModuleOwners <= 0) {
+        _openModuleOwners = 0;
+        WidgetsBinding.instance.addPostFrameCallback((_) => _hideLoader());
       }
-
-      counter.addListener(startListener);
-      try {
-        await started.future.timeout(_initialSearchStartWindow);
-        if (kDebugMode) {
-          debugPrint(
-              '[ModuleOpen] search fired after ${sw.elapsedMilliseconds}ms');
-        }
-      } on TimeoutException {
-        if (kDebugMode) {
-          debugPrint('[ModuleOpen] no initial search within '
-              '${_initialSearchStartWindow.inMilliseconds}ms — dismissing');
-        }
-        return;
-      } finally {
-        counter.removeListener(startListener);
-      }
-    }
-
-    // Phase 2: wait for every in-flight search to settle. Bail after the
-    // hard cap so a stuck query can't lock the UI behind a loader forever.
-    if (counter.value == 0) return;
-    final settled = Completer<void>();
-    void settleListener() {
-      if (counter.value == 0 && !settled.isCompleted) settled.complete();
-    }
-
-    counter.addListener(settleListener);
-    try {
-      await settled.future.timeout(_initialSearchMaxDuration);
-      if (kDebugMode) {
-        debugPrint('[ModuleOpen] settled after ${sw.elapsedMilliseconds}ms');
-      }
-    } on TimeoutException {
-      if (kDebugMode) {
-        debugPrint('[ModuleOpen] TIMEOUT after ${sw.elapsedMilliseconds}ms — '
-            'dismissing anyway');
-      }
-    } finally {
-      counter.removeListener(settleListener);
     }
   }
 
@@ -2970,20 +2903,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           }),
         ),
       ),
-      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
-        child: HomeItemCard(
-          icon: Icons.bar_chart_sharp,
-          label: i18.home.dashboard,
-          onPressed: () => _openModule(() async {
-            const module = "hcm-dashboard";
-            // if (isTriggerLocalisation) {
-            triggerLocalization(module: module);
-            isTriggerLocalisation = false;
-            // };
-            context.router.push(const UserDashboardRoute());
-          }),
-        ),
-      ),
+      // Duplicate i18.home.dashboard entry removed — the earlier gated
+      // handler above is authoritative. Dart map literals let a later entry
+      // silently replace an earlier one with the same key, so this second
+      // definition was making the `isTriggerLocalisation` check on the
+      // earlier entry unreachable and re-fetching dashboard localization on
+      // every tap.
 
       /// TODO: NEED TO PICK CHANGES RELATED TO BENEFICIARY DOWNSYNC
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(

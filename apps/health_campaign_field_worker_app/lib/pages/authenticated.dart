@@ -845,21 +845,26 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     // (project.dart:801). Using the local repo here means switching
     // language pulls translations for every drill-reachable boundary in
     // one shot.
-    final boundaryLocalRepo =
-        context.read<LocalRepository<BoundaryModel, BoundarySearchModel>>();
-    final allBoundaries =
-        await boundaryLocalRepo.search(BoundarySearchModel());
-    final boundaryCodes = allBoundaries
-        .expand((b) => [
-              b.code,
-              if (b.label != null && b.label!.isNotEmpty)
-                '${hierarchyType}_${b.label}',
-            ])
-        .whereType<String>()
-        .where((s) => s.isNotEmpty)
-        .toSet()
-        .join(',');
     try {
+      // Local boundary lookup lives inside the try — a failure here (Isar
+      // error, cast mismatch when the repo isn't wired for this profile,
+      // etc.) must not abort the language switch, otherwise the
+      // non-dismissible overlay stays up and the localization event that
+      // dispatches the actual language change is never fired.
+      final boundaryLocalRepo =
+          context.read<LocalRepository<BoundaryModel, BoundarySearchModel>>();
+      final allBoundaries =
+          await boundaryLocalRepo.search(BoundarySearchModel());
+      final boundaryCodes = allBoundaries
+          .expand((b) => [
+                b.code,
+                if (b.label != null && b.label!.isNotEmpty)
+                  '${hierarchyType}_${b.label}',
+              ])
+          .whereType<String>()
+          .where((s) => s.isNotEmpty)
+          .toSet()
+          .join(',');
       // Always fetch — the local `fetchLocalization` check is coarse
       // (any-row-for-module), so a partially-populated cache from a
       // previous session would silently skip the fetch even when the

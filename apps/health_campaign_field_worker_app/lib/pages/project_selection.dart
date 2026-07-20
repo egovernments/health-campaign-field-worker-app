@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_location_tracker/location_tracker.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -280,12 +282,28 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     // every language up-front at project selection meant N network calls +
     // N large batch inserts blocking the sync flow. Other locales can be
     // lazily fetched on demand when the user actually switches language.
+    //
+    // Only download modules not already in SQL — repeated project entries
+    // used to re-fetch the full campaign bundle every time even when the
+    // local cache already had them, hammering the localization API on
+    // every project selection for no gain.
     final campaignCacheFuture = () async {
       try {
+        final cachedRows = await LocalizationLocalRepository().fetchLocalization(
+          sql: locBloc.sql,
+          locale: selectedLocale,
+          module: fullModuleString,
+        );
+        final cachedModules = cachedRows.map((l) => l.module).toSet();
+        final requestedModules = moduleNames.toList();
+        final missingModules = requestedModules
+            .where((m) => !cachedModules.contains(m))
+            .toList();
+        if (missingModules.isEmpty) return;
         final results = await locBloc.localizationRepository.loadLocalization(
           path: Constants.localizationApiPath,
           locale: selectedLocale,
-          module: fullModuleString,
+          module: missingModules.join(','),
           tenantId: envConfig.variables.tenantId,
         );
         await LocalizationLocalRepository().create(results, locBloc.sql);
@@ -416,10 +434,24 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         ),
       );
 
-      // Wait for both bloc events to complete.
-      await locBloc.stream.firstWhere(
-        (s) => s.index == resolvedIndex && !s.loading,
-      );
+      // Wait for both bloc events to complete — with a defensive timeout
+      // because both handlers can end up as no-ops (onLoadLocalization
+      // bails at its "all modules cached, locale matches" fast path with
+      // no emit, and OnUpdateLocalizationIndexEvent's copyWith yields an
+      // equal state that Bloc suppresses). Without the cap this
+      // `firstWhere` would hang forever behind the sync dialog.
+      final currentState = locBloc.state;
+      final alreadySettled = currentState.index == resolvedIndex &&
+          !currentState.loading;
+      if (!alreadySettled) {
+        try {
+          await locBloc.stream
+              .firstWhere((s) => s.index == resolvedIndex && !s.loading)
+              .timeout(const Duration(seconds: 15));
+        } on TimeoutException {
+          debugPrint('localization state settle timed out — continuing');
+        }
+      }
 
       // Dismiss the loading dialog before navigating
       if (mounted && localizationDialogRoute?.isActive == true) {
