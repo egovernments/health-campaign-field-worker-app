@@ -31,13 +31,12 @@ class LivenessChallengeView extends StatelessWidget {
           passed: () => _StatusOverlay(
             icon: Icons.check_circle,
             color: Colors.green,
-            text: FaceVerificationLocalization.localized(context,
-                i18.faceVerification.livenessPassed, 'Liveness verified!'),
+            text: FaceVerificationLocalization.of(context).translate(i18.faceVerification.livenessPassed),
           ),
           failed: (reason) => _StatusOverlay(
             icon: Icons.error,
             color: Colors.red,
-            text: FaceVerificationLocalization.localized(context, reason),
+            text: FaceVerificationLocalization.of(context).translate(reason),
           ),
           orElse: () => const SizedBox.shrink(),
         );
@@ -77,7 +76,7 @@ class _ChallengeOverlay extends StatelessWidget {
         const SizedBox(height: 12),
         // Instruction text
         Text(
-          FaceVerificationLocalization.localized(context, instruction),
+          FaceVerificationLocalization.of(context).translate(instruction),
           textAlign: TextAlign.center,
           style: const TextStyle(
             color: Colors.white,

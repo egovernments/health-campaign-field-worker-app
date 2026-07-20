@@ -118,8 +118,7 @@ class _FaceAttendanceWrapperState extends State<FaceAttendanceWrapper> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(widget.title ??
-                FaceVerificationLocalization.localized(context,
-                    i18.faceVerification.verifyIdentity, 'Verify Identity')),
+                FaceVerificationLocalization.of(context).translate(i18.faceVerification.verifyIdentity)),
             if (widget.subtitle != null)
               Text(
                 widget.subtitle!,
@@ -167,8 +166,7 @@ class _FaceAttendanceWrapperState extends State<FaceAttendanceWrapper> {
               _playError();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(FaceVerificationLocalization.localized(
-                      context, message)),
+                  content: Text(FaceVerificationLocalization.of(context).translate(message)),
                   backgroundColor: Colors.red,
                   duration: const Duration(seconds: 3),
                 ),
@@ -185,7 +183,7 @@ class _FaceAttendanceWrapperState extends State<FaceAttendanceWrapper> {
             FaceCaptureView(
               key: ValueKey('verify_$_resetTrigger'),
               faceModelService: widget.faceModelService,
-              guidanceText: 'Look straight at the camera',
+              guidanceText: i18.faceVerification.angleStraight,
               expectedAngle: ExpectedAngle.front,
               autoCapture: true,
               minQuality: 0.5,
@@ -217,13 +215,11 @@ class _FaceAttendanceWrapperState extends State<FaceAttendanceWrapper> {
           children: [
             const Icon(Icons.cancel, color: Colors.red, size: 28),
             const SizedBox(width: 8),
-            Text(FaceVerificationLocalization.localized(context,
-                i18.faceVerification.verificationFailedTitle,
-                'Verification Failed')),
+            Text(FaceVerificationLocalization.of(context).translate(i18.faceVerification.verificationFailedTitle)),
           ],
         ),
         content: Text(
-          '${FaceVerificationLocalization.localized(context, i18.faceVerification.rejectedMessage, 'Face does not match. Please try again.')} '
+          '${FaceVerificationLocalization.of(context).translate(i18.faceVerification.rejectedMessage)} '
           '(${(confidence * 100).toStringAsFixed(1)}%)',
         ),
         actions: [
@@ -232,8 +228,7 @@ class _FaceAttendanceWrapperState extends State<FaceAttendanceWrapper> {
               Navigator.of(dialogContext).pop();
               _reset(context);
             },
-            child: Text(FaceVerificationLocalization.localized(
-                context, i18.faceVerification.tryAgain, 'Try Again')),
+            child: Text(FaceVerificationLocalization.of(context).translate(i18.faceVerification.tryAgain)),
           ),
           TextButton(
             onPressed: () {
@@ -242,8 +237,7 @@ class _FaceAttendanceWrapperState extends State<FaceAttendanceWrapper> {
               widget.onFailed?.call(confidence,
                   faceImageBytes: _lastRejectedImageBytes);
             },
-            child: Text(FaceVerificationLocalization.localized(
-                context, i18.common.coreCommonCancel, 'Cancel')),
+            child: Text(FaceVerificationLocalization.of(context).translate(i18.common.coreCommonCancel)),
           ),
         ],
       ),
@@ -276,9 +270,10 @@ class _VerificationSuccessOverlay extends StatelessWidget {
                   color: Colors.white, size: 48),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Verified!',
-              style: TextStyle(
+            Text(
+              FaceVerificationLocalization.of(context)
+                  .translate(i18.faceVerification.verifiedTitle),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
@@ -286,7 +281,7 @@ class _VerificationSuccessOverlay extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Match: $pct%',
+              '${FaceVerificationLocalization.of(context).translate(i18.faceVerification.faceMatch)}: $pct%',
               style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 18,

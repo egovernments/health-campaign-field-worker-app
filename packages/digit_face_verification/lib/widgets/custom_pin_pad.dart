@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../blocs/app_localization.dart';
+import '../utils/i18_key_constants.dart' as i18;
+
 /// A custom PIN pad with number grid and dot indicators.
 /// Designed for face auth fallback PIN entry.
 /// Colors are derived from the app's Theme unless explicitly overridden.
@@ -10,7 +13,7 @@ class CustomPinPad extends StatefulWidget {
   final String? errorMessage;
   final String? title;
   final String? subtitle;
-  final String submitLabel;
+  final String? submitLabel;
   final Color? primaryColor;
 
   const CustomPinPad({
@@ -20,7 +23,7 @@ class CustomPinPad extends StatefulWidget {
     this.errorMessage,
     this.title,
     this.subtitle,
-    this.submitLabel = 'Submit PIN',
+    this.submitLabel,
     this.primaryColor,
   });
 
@@ -209,7 +212,9 @@ class _CustomPinPadState extends State<CustomPinPad>
               elevation: 0,
             ),
             child: Text(
-              widget.submitLabel,
+              widget.submitLabel ??
+                  FaceVerificationLocalization.of(context)
+                      .translate(i18.faceVerification.pinVerify),
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,

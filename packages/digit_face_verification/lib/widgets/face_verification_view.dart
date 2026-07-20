@@ -91,9 +91,11 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
         backgroundColor: cs.surface,
         foregroundColor: cs.onSurface,
         title: Text(
-          widget.mode == FaceVerificationMode.register
-              ? 'Register Face'
-              : 'Verify Identity',
+          FaceVerificationLocalization.of(context).translate(
+            widget.mode == FaceVerificationMode.register
+                ? i18.faceVerification.enrollmentTitle
+                : i18.faceVerification.verifyIdentity,
+          ),
         ),
         leading: IconButton(
           icon: const Icon(Icons.close),
@@ -112,11 +114,8 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
               _showResultDialog(
                 context,
                 success: true,
-                title: FaceVerificationLocalization.localized(context,
-                    i18.faceVerification.enrolledTitle, 'Face Enrolled'),
-                message: FaceVerificationLocalization.localized(context,
-                    i18.faceVerification.enrolledMessage,
-                    'Face Enrolled successfully.'),
+                title: FaceVerificationLocalization.of(context).translate(i18.faceVerification.enrolledTitle),
+                message: FaceVerificationLocalization.of(context).translate(i18.faceVerification.enrolledMessage),
               );
             },
             verified: (confidence, faceImageBytes) {
@@ -125,10 +124,9 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
               _showResultDialog(
                 context,
                 success: true,
-                title: FaceVerificationLocalization.localized(context,
-                    i18.faceVerification.verifiedTitle, 'Verified'),
+                title: FaceVerificationLocalization.of(context).translate(i18.faceVerification.verifiedTitle),
                 message:
-                    '${FaceVerificationLocalization.localized(context, i18.faceVerification.verifiedMessage, 'Face verified')} (${(confidence * 100).toStringAsFixed(1)}%).',
+                    '${FaceVerificationLocalization.of(context).translate(i18.faceVerification.verifiedMessage)} (${(confidence * 100).toStringAsFixed(1)}%).',
               );
             },
             rejected: (confidence, faceImageBytes) {
@@ -137,19 +135,16 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
               _showResultDialog(
                 context,
                 success: false,
-                title: FaceVerificationLocalization.localized(context,
-                    i18.faceVerification.verificationFailedTitle,
-                    'Verification Failed'),
+                title: FaceVerificationLocalization.of(context).translate(i18.faceVerification.verificationFailedTitle),
                 message:
-                    '${FaceVerificationLocalization.localized(context, i18.faceVerification.rejectedMessage, 'Face does not match. Please try again.')} (${(confidence * 100).toStringAsFixed(1)}%)',
+                    '${FaceVerificationLocalization.of(context).translate(i18.faceVerification.rejectedMessage)} (${(confidence * 100).toStringAsFixed(1)}%)',
               );
             },
             error: (message) {
               _playError();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(FaceVerificationLocalization.localized(
-                      context, message)),
+                  content: Text(FaceVerificationLocalization.of(context).translate(message)),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -159,9 +154,7 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
         },
         child: FaceCaptureView(
           faceModelService: widget.faceModelService,
-          guidanceText: widget.mode == FaceVerificationMode.register
-              ? 'Position your face in the oval to register'
-              : 'Position your face in the oval to verify',
+          guidanceText: i18.faceVerification.positionFace,
           onFaceCaptured: (embedding, quality, {faceImageBytes}) {
             final bloc = context.read<FaceVerificationBloc>();
 
@@ -204,8 +197,7 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
             Text(title),
           ],
         ),
-        content: Text(FaceVerificationLocalization.localized(
-                      context, message)),
+        content: Text(FaceVerificationLocalization.of(context).translate(message)),
         actions: [
           if (!success)
             TextButton(
@@ -215,15 +207,18 @@ class _FaceVerificationViewState extends State<FaceVerificationView> {
                       const FaceVerificationEvent.reset(),
                     );
               },
-              child: Text(FaceVerificationLocalization.localized(
-                  context, i18.faceVerification.tryAgain, 'Try Again')),
+              child: Text(FaceVerificationLocalization.of(context).translate(i18.faceVerification.tryAgain)),
             ),
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               Navigator.of(context).pop();
             },
-            child: Text(success ? 'Done' : 'Cancel'),
+            child: Text(FaceVerificationLocalization.of(context).translate(
+              success
+                  ? i18.faceVerification.done
+                  : i18.common.coreCommonCancel,
+            )),
           ),
         ],
       ),

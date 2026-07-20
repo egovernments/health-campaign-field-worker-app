@@ -110,4 +110,13 @@ class FaceVerification {
   String get scanningHoldSteady => 'FACE_AUTH_SCANNING_HOLD_STEADY';
   String get holdStill => 'FACE_AUTH_HOLD_STILL';
   String get holdSteady => 'FACE_AUTH_HOLD_STEADY';
+
+  // ── Results / dialogs / misc ──
+  String get done => 'FACE_AUTH_DONE';
+  String get faceMatch => 'FACE_AUTH_FACE_MATCH';
+  String get enrollmentSuccessful => 'FACE_AUTH_ENROLLMENT_SUCCESSFUL';
+  String get enrollmentPinNote => 'FACE_AUTH_ENROLLMENT_PIN_NOTE';
+  String get duplicateDetected => 'FACE_AUTH_ENROLLMENT_DUPLICATE_DETECTED';
+  String get pinVerify => 'FACE_AUTH_PIN_VERIFY';
+  String get gateScanning => 'FACE_AUTH_GATE_SCANNING';
 }

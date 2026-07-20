@@ -30,6 +30,12 @@ getAppLocalizationDelegates({
   required AppConfiguration appConfig,
   required Locale selectedLocale,
 }) {
+  // Route face-verification screens through the same resolver the rest of
+  // the app uses (AppLocalizations, as on the login screen), so they stay
+  // localized even when the package delegate's row snapshot is stale.
+  face_verification_localization.FaceVerificationLocalization.appTranslate =
+      AppLocalizations(selectedLocale, sql).translate;
+
   return [
     AppLocalizations.getDelegate(appConfig, sql),
     GlobalWidgetsLocalizations.delegate,

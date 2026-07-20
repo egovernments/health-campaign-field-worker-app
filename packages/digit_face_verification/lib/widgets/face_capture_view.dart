@@ -533,20 +533,15 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
 
     switch (expected) {
       case ExpectedAngle.front:
-        return FaceVerificationLocalization.localized(context,
-            i18.faceVerification.angleStraight, 'Look straight at the camera');
+        return FaceVerificationLocalization.of(context).translate(i18.faceVerification.angleStraight);
       case ExpectedAngle.left:
-        return FaceVerificationLocalization.localized(context,
-            i18.faceVerification.livenessTurnLeft, 'Turn your head to the left');
+        return FaceVerificationLocalization.of(context).translate(i18.faceVerification.livenessTurnLeft);
       case ExpectedAngle.right:
-        return FaceVerificationLocalization.localized(context, i18.faceVerification.livenessTurnRight,
-            'Turn your head to the right');
+        return FaceVerificationLocalization.of(context).translate(i18.faceVerification.livenessTurnRight);
       case ExpectedAngle.up:
-        return FaceVerificationLocalization.localized(context,
-            i18.faceVerification.tiltUp, 'Tilt your head slightly up');
+        return FaceVerificationLocalization.of(context).translate(i18.faceVerification.tiltUp);
       case ExpectedAngle.down:
-        return FaceVerificationLocalization.localized(context,
-            i18.faceVerification.tiltDown, 'Tilt your head slightly down');
+        return FaceVerificationLocalization.of(context).translate(i18.faceVerification.tiltDown);
     }
   }
 
@@ -563,10 +558,10 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
     final ratio = _latestResult?.faceFillRatio;
     if (ratio == null) return null;
     if (ratio < 0.18) {
-      return FaceVerificationLocalization.localized(context, i18.faceVerification.moveCloser, 'Move closer');
+      return FaceVerificationLocalization.of(context).translate(i18.faceVerification.moveCloser);
     }
     if (ratio > 0.60) {
-      return FaceVerificationLocalization.localized(context, i18.faceVerification.moveBack, 'Move back');
+      return FaceVerificationLocalization.of(context).translate(i18.faceVerification.moveBack);
     }
     return null;
   }
@@ -596,31 +591,22 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
                   : const Color(0xFF78909C);
 
   String get _statusText => _isCaptured
-      ? FaceVerificationLocalization.localized(context, i18.faceVerification.processing, 'Processing...')
+      ? FaceVerificationLocalization.of(context).translate(i18.faceVerification.processing)
       : _isCollectingFrames
-          ? '${FaceVerificationLocalization.localized(context, i18.faceVerification.scanning, 'Scanning')} ${_collectedEmbeddings.length}/${widget.multiFrameCount}...'
+          ? '${FaceVerificationLocalization.of(context).translate(i18.faceVerification.scanning)} ${_collectedEmbeddings.length}/${widget.multiFrameCount}...'
           : (_lightingResult != null && !_lightingResult!.isSufficient)
-              ? FaceVerificationLocalization.localized(context, _lightingResult!.guidance)
+              ? FaceVerificationLocalization.of(context).translate(_lightingResult!.guidance)
               : (_angleGuidance != null)
                   ? _angleGuidance!
                   : (_distanceGuidance != null)
                       ? _distanceGuidance!
                       : _faceReady
                           ? (widget.autoCapture
-                              ? FaceVerificationLocalization.localized(
-                                  context,
-                                  i18.faceVerification.holdStillCapturing,
-                                  'Hold still, capturing...')
-                              : FaceVerificationLocalization.localized(
-                                  context,
-                                  i18.faceVerification.tapCapture,
-                                  'Face detected — tap capture'))
+                              ? FaceVerificationLocalization.of(context).translate(i18.faceVerification.holdStillCapturing)
+                              : FaceVerificationLocalization.of(context).translate(i18.faceVerification.tapCapture))
                           : _detectedFace != null
-                              ? FaceVerificationLocalization.localized(
-                                  context,
-                                  i18.faceVerification.scanningHoldSteady,
-                                  'Scanning — hold steady')
-                              : FaceVerificationLocalization.localized(context, widget.guidanceText);
+                              ? FaceVerificationLocalization.of(context).translate(i18.faceVerification.scanningHoldSteady)
+                              : FaceVerificationLocalization.of(context).translate(widget.guidanceText);
 
   @override
   Widget build(BuildContext context) {
@@ -637,7 +623,8 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
               ),
               const SizedBox(height: 16),
               Text(
-                'Starting camera...',
+                FaceVerificationLocalization.of(context)
+                    .translate(i18.faceVerification.initializing),
                 style: TextStyle(
                     color: Theme.of(context)
                         .colorScheme
@@ -776,9 +763,11 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
                               ),
                             ),
                             const SizedBox(height: 12),
-                            const Text(
-                              'Scanning...',
-                              style: TextStyle(
+                            Text(
+                              FaceVerificationLocalization.of(context)
+                                  .translate(
+                                      i18.faceVerification.gateScanning),
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
@@ -959,22 +948,16 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
                 const SizedBox(width: 8),
                 Text(
                   _isCaptured
-                      ? FaceVerificationLocalization.localized(context,
-                          i18.faceVerification.scanning, 'Scanning...')
+                      ? FaceVerificationLocalization.of(context).translate(i18.faceVerification.scanning)
                       : (_angleGuidance != null)
                           ? _angleGuidance!
                           : (_distanceGuidance != null)
                               ? _distanceGuidance!
                               : _faceReady
-                                  ? FaceVerificationLocalization.localized(context,
-                                      i18.faceVerification.holdStill,
-                                      'Hold still...')
+                                  ? FaceVerificationLocalization.of(context).translate(i18.faceVerification.holdStill)
                                   : _detectedFace != null
-                                      ? FaceVerificationLocalization.localized(context,
-                                          i18.faceVerification.holdSteady,
-                                          'Hold steady')
-                                      : FaceVerificationLocalization.localized(
-                                          context, widget.guidanceText),
+                                      ? FaceVerificationLocalization.of(context).translate(i18.faceVerification.holdSteady)
+                                      : FaceVerificationLocalization.of(context).translate(widget.guidanceText),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 13,
@@ -1099,7 +1082,7 @@ class _LightingIndicator extends StatelessWidget {
             Icon(icon, color: color, size: 16),
             const SizedBox(width: 6),
             Text(
-              FaceVerificationLocalization.localized(context, result.guidance),
+              FaceVerificationLocalization.of(context).translate(result.guidance),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 11,

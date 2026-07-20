@@ -20,28 +20,13 @@ class FaceVerificationLocalization {
         context, FaceVerificationLocalization)!;
   }
 
-  /// Null-safe variant of [of]: returns null when the host app has not
-  /// registered the delegate (e.g. standalone/test usage).
-  static FaceVerificationLocalization? maybeOf(BuildContext context) {
-    return Localizations.of<FaceVerificationLocalization>(
-        context, FaceVerificationLocalization);
-  }
-
-  /// Translates [code] if the delegate is available, otherwise returns
-  /// [fallback] (or the code itself). Lets package widgets localize without
-  /// hard-depending on the host registering the delegate.
-  static String localized(BuildContext context, String code,
-      [String? fallback]) {
-    final l = maybeOf(context);
-    if (l == null) return fallback ?? code;
-    final translated = l.translate(code);
-    // translate() echoes the code when no row is loaded — prefer the
-    // provided English fallback over showing a raw code to the user.
-    if (translated == code && fallback != null) return fallback;
-    return translated;
-  }
-
   static final List<dynamic> _localizedStrings = <dynamic>[];
+
+  /// App-level resolver consulted when this package's own rows don't
+  /// contain a code. The host app points this at its main
+  /// AppLocalizations.translate so these screens resolve codes the same
+  /// way as the rest of the app (login, home, etc.).
+  static String Function(String code)? appTranslate;
 
   static LocalizationsDelegate<FaceVerificationLocalization> getDelegate(
           Future<dynamic> localizedStrings, List<dynamic> languages) =>
@@ -58,17 +43,16 @@ class FaceVerificationLocalization {
     return true;
   }
 
-  /// Translates a localization code; falls back to the code itself when no
-  /// translation is loaded (same convention as the rest of the app).
+  /// Translates a localization code. Resolves from this package's own rows
+  /// first, then through the host app's resolver ([appTranslate] — the same
+  /// translate the login screen uses), and finally falls back to the code
+  /// itself (same convention as the rest of the app).
   String translate(String localizedValues) {
-    if (_localizedStrings.isEmpty) {
-      return localizedValues;
-    } else {
-      final index = _localizedStrings.indexWhere(
-        (medium) => medium.code == localizedValues,
-      );
+    final index = _localizedStrings.indexWhere(
+      (medium) => medium.code == localizedValues,
+    );
+    if (index != -1) return _localizedStrings[index].message;
 
-      return index != -1 ? _localizedStrings[index].message : localizedValues;
-    }
+    return appTranslate?.call(localizedValues) ?? localizedValues;
   }
 }
