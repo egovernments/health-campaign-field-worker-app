@@ -100,8 +100,20 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
       rethrow;
     } finally {
       LocalizationParams().setModule(event.module, false);
-      final localeParts = event.locale.split('_');
-      await _loadLocale(localeParts);
+      // Skip `_loadLocale` when nothing changed that would invalidate the
+      // static localization caches. Its purpose is to re-sync AppLocalizations
+      // + FlowBuilderLocalization + FormLocalization with the DB after a
+      // write (`missingModules.isNotEmpty`) or a locale switch. On the very
+      // first event of a cold start, the fast path above misses because
+      // `LocalizationParams().module` is null until we set it just above,
+      // even though the data itself has been in SQL since the previous
+      // session AND the caches were already populated by the MaterialApp
+      // delegates. Running `_loadLocale` in that scenario costs ~3s of
+      // localization-table cold decrypt for no observable benefit.
+      if (missingModules.isNotEmpty || !localeMatches) {
+        final localeParts = event.locale.split('_');
+        await _loadLocale(localeParts);
+      }
       // Preserve retryModule when the fetch failed so consumers can retry
       // the missing modules; the unconditional `retryModule: null` here
       // otherwise clobbered the marker set on the !fetched branch and

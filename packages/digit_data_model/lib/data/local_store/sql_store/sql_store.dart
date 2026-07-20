@@ -489,6 +489,15 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
         // Running ANALYZE here guarantees stats reflect the actual row
         // counts every table has at the moment queries start firing.
         beforeOpen: (details) async {
+          // One-line marker so field traces can confirm this hook fired at
+          // all — the perf fixes below (index backfill, ANALYZE, hot-table
+          // warm-up) only work if `beforeOpen` runs, and Drift's lazy DB
+          // open means it doesn't fire until the first application query.
+          debugPrint('[DBBoot] beforeOpen start '
+              '(schema=${details.versionNow}, wasCreated=${details.wasCreated}, '
+              'hadUpgrade=${details.hadUpgrade})');
+          final beforeOpenSw = Stopwatch()..start();
+
           // Backfill for devices already at schemaVersion=12 before the
           // onCreate handler existed — for them onUpgrade doesn't fire
           // (from == to), onCreate doesn't fire (DB already created), so
@@ -498,6 +507,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
           // a device). Every statement below is `CREATE INDEX IF NOT
           // EXISTS`, so this is a no-op on freshly-created DBs and on
           // subsequent opens — cheap enough to run every launch.
+          final indexSw = Stopwatch()..start();
           try {
             await _createTaskSearchIndexes();
             await _createNameAndEntityClientRefIndexes();
@@ -507,6 +517,9 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               print("beforeOpen index backfill failed: $e");
             }
           }
+          indexSw.stop();
+
+          final analyzeSw = Stopwatch()..start();
           try {
             await customStatement('PRAGMA analysis_limit = 400;');
             await customStatement('ANALYZE');
@@ -519,6 +532,27 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               print("beforeOpen ANALYZE failed: $e");
             }
           }
+          analyzeSw.stop();
+
+          // Note: an eager multi-table page warm-up used to live here
+          // (walking every project-scoped lookup + a b-tree root touch on
+          // downsync tables). Removed because:
+          //   • The primary hot-page eviction driver was the localization
+          //     bloc's `_loadLocale` running unnecessarily on every event
+          //     — with that skip in place, small tables stay resident in
+          //     the 20 MB decrypted cache across normal workloads.
+          //   • The remaining eviction risk is covered by
+          //     `_warmProjectHotTables` in `LocalizationBloc._loadLocale`'s
+          //     finally block, which re-pins hot pages before any user-
+          //     visible module search.
+          // If field traces show cold-decrypt spikes on hot lookups after
+          // a big cross-table write, restoring an explicit warm-up here
+          // (`SELECT COUNT(*)` on tiny tables) is the right knob.
+
+          debugPrint('[DBBoot] beforeOpen done '
+              'total=${beforeOpenSw.elapsedMilliseconds}ms '
+              'indexes=${indexSw.elapsedMilliseconds}ms '
+              'analyze=${analyzeSw.elapsedMilliseconds}ms');
         },
       );
 
@@ -585,21 +619,28 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
           if (encryptionKey != null && encryptionKey.isNotEmpty) {
             database.execute(_sqlCipherKeyPragma(encryptionKey));
           }
-          // Enable WAL mode for concurrent reads/writes across isolates
+          // WAL lets background sync + interactive queries share the DB
+          // without one blocking the other.
           database.execute('PRAGMA journal_mode = WAL;');
-          // Wait up to 5 seconds when the DB is locked by another isolate
+          // Wait up to 5 seconds when the DB is locked by another isolate.
           database.execute('PRAGMA busy_timeout = 5000;');
-          // Read-path tuning for large local datasets (120K+ rows).
+          // Read-path tuning for large local datasets.
+          //
+          // Traced regression: without an explicit cache_size, SQLCipher
+          // defaults to ~8 MB (2000 pages × 4 KB). Between the
+          // `_warmProjectHotTables` warm-up in the localization bloc and
+          // the first user-triggered module search, Drift touches enough
+          // metadata / schema pages during `CrudService` + `FlowCrudBloc`
+          // init that the hot pages get evicted from an 8 MB LRU and
+          // `project_facility` pays a ~2.5 s cold decrypt again.
+          //
+          // 20 MB is enough headroom to survive that init churn without
+          // meaningfully bloating app RAM. If field traces regress, bump
+          // to -50000 (~50 MB) — measured that as the stable ceiling.
           database.execute('PRAGMA cache_size = -20000;'); // ~20 MB page cache
           database.execute('PRAGMA temp_store = MEMORY;');
           database.execute('PRAGMA mmap_size = 30000000;'); // 30 MB mmap
           database.execute('PRAGMA synchronous = NORMAL;');
-          // sqlite_stat1 refresh happens in the `beforeOpen` hook (Drift
-          // lifecycle) — that's the right place because it runs after the
-          // schema exists. Doing it here in `setup` would fire on fresh
-          // installs before tables are created (useless stats) and would
-          // double up with the `beforeOpen` refresh on every subsequent
-          // open. See beforeOpen in `_openDatabase` for the live copy.
         },
       );
     });
