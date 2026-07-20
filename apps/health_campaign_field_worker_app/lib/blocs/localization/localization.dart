@@ -83,6 +83,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
 
     emit(state.copyWith(loading: true));
 
+    String? retryModule;
     try {
       if (missingModules.isNotEmpty) {
         final fetched = await _fetchAndStoreModules(
@@ -92,8 +93,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
           path: event.path,
         );
         if (!fetched) {
-          emit(state.copyWith(
-              loading: false, retryModule: missingModules.join(',')));
+          retryModule = missingModules.join(',');
         }
       }
     } catch (error) {
@@ -102,14 +102,24 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
       LocalizationParams().setModule(event.module, false);
       final localeParts = event.locale.split('_');
       await _loadLocale(localeParts);
-      emit(state.copyWith(loading: false, retryModule: null));
+      // Preserve retryModule when the fetch failed so consumers can retry
+      // the missing modules; the unconditional `retryModule: null` here
+      // otherwise clobbered the marker set on the !fetched branch and
+      // presented a false "success" terminal state.
+      emit(state.copyWith(loading: false, retryModule: retryModule));
     }
   }
 
   /// Attempts to fetch a bundle of localization modules and persist them
-  /// locally. Retries up to [attempts] times on transient failures
-  /// (network hiccups, truncated payloads, 5xx). Returns true on the first
-  /// successful attempt, false if every attempt failed.
+  /// locally. Retries up to [attempts] times on transient remote failures
+  /// (network hiccups, truncated payloads, 5xx). Returns true on success,
+  /// false if either every fetch attempt or the persistence step failed.
+  ///
+  /// Split into two phases so a SQL/persistence failure does NOT re-drive
+  /// the remote fetch — earlier a single `try` wrapped both the network
+  /// call and `create()`, so a failing `insertAll` (e.g. lock timeout,
+  /// disk-full) triggered three back-to-back network downloads for the
+  /// same payload.
   Future<bool> _fetchAndStoreModules({
     required List<String> modules,
     required String locale,
@@ -118,22 +128,31 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     int attempts = 3,
   }) async {
     final moduleCsv = modules.join(',');
+    dynamic results;
     for (var attempt = 1; attempt <= attempts; attempt++) {
       try {
-        final results = await localizationRepository.loadLocalization(
+        results = await localizationRepository.loadLocalization(
           path: path,
           locale: locale,
           module: moduleCsv,
           tenantId: tenantId,
         );
-        await LocalizationLocalRepository().create(results, sql);
-        return true;
+        break;
       } catch (error) {
         debugPrint('localization fetch failed for "$moduleCsv" '
             '(attempt $attempt/$attempts): $error');
+        if (attempt == attempts) return false;
       }
     }
-    return false;
+    if (results == null) return false;
+    try {
+      await LocalizationLocalRepository().create(results, sql);
+      return true;
+    } catch (error) {
+      debugPrint(
+          'localization persist failed for "$moduleCsv" (no retry): $error');
+      return false;
+    }
   }
 
   FutureOr<void> _onRemoteLoadLocalization(
