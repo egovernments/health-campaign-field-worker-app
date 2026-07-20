@@ -198,6 +198,30 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
+        // Fresh installs at the current schemaVersion never run onUpgrade,
+        // so any index we only add inside a `from < N` block never appears
+        // on a fresh install. Drift's default onCreate runs
+        // migrator.createAll() which materializes tables + @TableIndex
+        // annotations only — every CREATE INDEX statement we invoke
+        // manually below (task_search_*, name/entity clientRef, v12
+        // hot-path) has to be re-run here too. Symptom without this: a
+        // 2-row lookup on project_facility takes 2+ seconds because
+        // `WHERE project_id = ?` falls back to a full-table SCAN + per-page
+        // SQLCipher decrypt. ANALYZE afterwards seeds sqlite_stat1 with
+        // real row counts so the planner actually picks the new indexes.
+        onCreate: (migrator) async {
+          await migrator.createAll();
+          try {
+            await _createTaskSearchIndexes();
+            await _createNameAndEntityClientRefIndexes();
+            await _createV12HotPathIndexes();
+            await customStatement('ANALYZE');
+          } catch (e) {
+            if (kDebugMode) {
+              print('Failed to seed hot-path indexes onCreate: $e');
+            }
+          }
+        },
         onUpgrade: (migrator, from, to) async {
           if (from < 5) {
             //Add column for projectType in Project Table
@@ -465,6 +489,24 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
         // Running ANALYZE here guarantees stats reflect the actual row
         // counts every table has at the moment queries start firing.
         beforeOpen: (details) async {
+          // Backfill for devices already at schemaVersion=12 before the
+          // onCreate handler existed — for them onUpgrade doesn't fire
+          // (from == to), onCreate doesn't fire (DB already created), so
+          // the v12 hot-path indexes never materialize and hot queries
+          // like `SELECT * FROM project_facility WHERE project_id = ?`
+          // fall to full-table SCAN (measured at 2.5s for 2 rows on such
+          // a device). Every statement below is `CREATE INDEX IF NOT
+          // EXISTS`, so this is a no-op on freshly-created DBs and on
+          // subsequent opens — cheap enough to run every launch.
+          try {
+            await _createTaskSearchIndexes();
+            await _createNameAndEntityClientRefIndexes();
+            await _createV12HotPathIndexes();
+          } catch (e) {
+            if (kDebugMode) {
+              print("beforeOpen index backfill failed: $e");
+            }
+          }
           try {
             await customStatement('PRAGMA analysis_limit = 400;');
             await customStatement('ANALYZE');
@@ -552,19 +594,12 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
           database.execute('PRAGMA temp_store = MEMORY;');
           database.execute('PRAGMA mmap_size = 30000000;'); // 30 MB mmap
           database.execute('PRAGMA synchronous = NORMAL;');
-          // Refresh sqlite_stat1 at connection open. Migrations run
-          // ANALYZE while tables are still empty (before downsync), so
-          // without this the planner keeps thinking every table has
-          // ~0 rows and picks SCAN over our indexes — a 2-row lookup on
-          // an indexed table can end up doing a full-table scan.
-          // `analysis_limit = 1000` caps the per-index sample at
-          // ~50-100 ms so this is cheap to run on every open.
-          try {
-            database.execute('PRAGMA analysis_limit = 1000;');
-            database.execute('ANALYZE;');
-          } catch (_) {
-            // Best-effort — never block DB open on stats refresh.
-          }
+          // sqlite_stat1 refresh happens in the `beforeOpen` hook (Drift
+          // lifecycle) — that's the right place because it runs after the
+          // schema exists. Doing it here in `setup` would fire on fresh
+          // installs before tables are created (useless stats) and would
+          // double up with the `beforeOpen` refresh on every subsequent
+          // open. See beforeOpen in `_openDatabase` for the live copy.
         },
       );
     });
