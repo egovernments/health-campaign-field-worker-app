@@ -33,15 +33,23 @@ class TransitPostLocalization {
 
   // Method to load localized strings
   Future<bool> load() async {
-    _localizedStrings.clear();
-    _messagesByCode.clear();
-    // Iterate over localized strings and filter based on locale
+    // Collect new strings first, then replace atomically to avoid a window
+    // where _localizedStrings is empty during the await (which causes
+    // translate() to return raw keys instead of translated values).
+    final newStrings = <dynamic>[];
+    final newMessages = <String, String>{};
     for (var element in await localizedStrings) {
       if (element.locale == '${locale.languageCode}_${locale.countryCode}') {
-        _localizedStrings.add(element);
-        _messagesByCode[element.code] = element.message;
+        newStrings.add(element);
+        newMessages[element.code] = element.message;
       }
     }
+    _localizedStrings
+      ..clear()
+      ..addAll(newStrings);
+    _messagesByCode
+      ..clear()
+      ..addAll(newMessages);
 
     return true;
   }
