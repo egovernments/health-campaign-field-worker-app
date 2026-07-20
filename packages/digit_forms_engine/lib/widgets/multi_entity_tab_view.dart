@@ -79,6 +79,19 @@ class MultiEntityTabViewState extends State<MultiEntityTabView> {
 
   @override
   Widget build(BuildContext context) {
+    // Build the entity forms once per parent build, not on every tab
+    // selection. The ValueListenableBuilder below rebuilds on every
+    // _selectedIndex change; keeping the map() inside that builder
+    // reconstructed every form widget (and re-ran `_createSchemaForEntity`
+    // for every entity) on each tap. IndexedStack already keeps offstage
+    // children alive, so hoisting the list preserves state and cuts the
+    // rebuild cost to the tab bar only.
+    final entityForms = widget.entities
+        .asMap()
+        .entries
+        .map((entry) => _buildEntityForm(entry.key, entry.value))
+        .toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -92,11 +105,7 @@ class MultiEntityTabViewState extends State<MultiEntityTabView> {
             valueListenable: _selectedIndex,
             builder: (context, selected, _) => IndexedStack(
               index: selected,
-              children: widget.entities.asMap().entries.map((entry) {
-                final index = entry.key;
-                final entity = entry.value;
-                return _buildEntityForm(index, entity);
-              }).toList(),
+              children: entityForms,
             ),
           ),
         ),
@@ -129,16 +138,28 @@ class MultiEntityTabViewState extends State<MultiEntityTabView> {
         tabBarTheme.unselectedTextStyle ?? defaults.unselectedTextStyle!;
     final maxLine = tabBarTheme.maxLine ?? defaults.maxLine!;
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        children: widget.entities.asMap().entries.map((entry) {
-          final index = entry.key;
-          final name = _getEntityName(entry.value);
-          final isSelected = index == selected;
+    // Layout branches on whether the tab strip fits in the available width:
+    //   - fits  → non-scrolling Row with Expanded tabs so 2-3 short labels
+    //             stretch to fill the width instead of leaving a right-side
+    //             gap.
+    //   - overflows → horizontal scroll; unselected tabs get a 96px cap so
+    //             `TextOverflow.ellipsis` can clip long labels while the
+    //             selected tab keeps its full name.
+    // The overflow decision is heuristic (approximate per-tab budget vs.
+    // available width) — precise TextPainter measurement per frame isn't
+    // worth the cost for this UI.
+    return LayoutBuilder(
+      builder: (context, layoutConstraints) {
+        // Rough per-tab budget: 96px label + 24px horizontal padding.
+        const approxUnselectedTabWidth = 120.0;
+        final availableWidth = layoutConstraints.maxWidth;
+        final fits = availableWidth.isFinite &&
+            widget.entities.length * approxUnselectedTabWidth <=
+                availableWidth;
 
+        Widget buildTab(int index, dynamic entity) {
+          final name = _getEntityName(entity);
+          final isSelected = index == selected;
           return GestureDetector(
             onTap: () => _selectedIndex.value = index,
             child: AnimatedContainer(
@@ -182,17 +203,52 @@ class MultiEntityTabViewState extends State<MultiEntityTabView> {
                   ),
                 ),
               ),
-              child: Text(
-                name,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                maxLines: maxLine,
-                style: isSelected ? selectedTextStyle : unselectedTextStyle,
+              // Ellipsis cap only kicks in on the overflow branch. Constraint
+              // lives on the child, not on AnimatedContainer.constraints,
+              // because lerping between finite and unbounded blows up
+              // BoxConstraints.lerp on tab switch.
+              child: ConstrainedBox(
+                constraints: (!fits && !isSelected)
+                    ? const BoxConstraints(maxWidth: 96)
+                    : const BoxConstraints(),
+                child: Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: maxLine,
+                  style: isSelected ? selectedTextStyle : unselectedTextStyle,
+                ),
               ),
             ),
           );
-        }).toList(),
-      ),
+        }
+
+        if (fits) {
+          // Distribute available width across tabs so there's no dead space
+          // on the right when the label count is small.
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: widget.entities
+                .asMap()
+                .entries
+                .map((e) => Expanded(child: buildTab(e.key, e.value)))
+                .toList(),
+          );
+        }
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: widget.entities
+                .asMap()
+                .entries
+                .map((e) => buildTab(e.key, e.value))
+                .toList(),
+          ),
+        );
+      },
     );
   }
 
