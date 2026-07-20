@@ -7,6 +7,7 @@ import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:sync_service/data/repositories/sync/remote_type.dart';
 import 'package:sync_service/data/sync_entity_mapper_listener.dart';
@@ -914,11 +915,14 @@ class SyncServiceMapper extends SyncEntityMapperListener {
       //   break;
 
       case DataModelType.userAction:
+        var projectId = FlowBuilderSingleton().projectId;
+        if (projectId == null) return [];
         responseEntities = await remote.search(UserActionSearchModel(
           clientReferenceId: entities
               .whereType<UserActionModel>()
               .map((e) => e.clientReferenceId)
               .toList(),
+          projectId: projectId,
         ));
 
         for (var element in operationGroupedEntity.value) {
