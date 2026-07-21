@@ -150,16 +150,31 @@ class _BoundarySelectionPageState
       final locBloc = context.read<LocalizationBloc>();
       final boundaryModule = 'hcm-boundary-${hierarchyType.toLowerCase()}';
 
-      // Mark optimistically so a listener fire while we're mid-flight
-      // doesn't refire for the same codes.
+      // Cross-check against SQL so codes that were persisted in a
+      // previous session don't get re-fetched on this session's first
+      // drill-down. `_fetchedBoundaryCodes` is a page-lifetime dedup
+      // guard, not a persistent record — it starts empty every launch
+      // and would otherwise let the drill-down bulk-download a full
+      // subtree that's already sitting in the localization table.
+      final cachedCodes =
+          await LocalizationLocalRepository().fetchCachedCodesForLocale(
+        sql: locBloc.sql,
+        locale: selectedLocale,
+        codes: newCodes,
+      );
+      final missingCodes = newCodes.difference(cachedCodes);
+      // Mark ALL currentCodes-diff as fetched (including those already
+      // in SQL) so a listener fire while we're mid-flight doesn't refire
+      // for the same subtree in this session.
       _fetchedBoundaryCodes.addAll(newCodes);
+      if (missingCodes.isEmpty) return;
       try {
         final results = await locBloc.localizationRepository.loadLocalization(
           path: Constants.localizationApiPath,
           locale: selectedLocale,
           module: boundaryModule,
           tenantId: envConfig.variables.tenantId,
-          codes: newCodes.join(','),
+          codes: missingCodes.join(','),
         );
         await LocalizationLocalRepository().create(results, locBloc.sql);
 

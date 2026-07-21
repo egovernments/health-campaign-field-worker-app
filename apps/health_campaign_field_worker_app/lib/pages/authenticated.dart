@@ -855,7 +855,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
           context.read<LocalRepository<BoundaryModel, BoundarySearchModel>>();
       final allBoundaries =
           await boundaryLocalRepo.search(BoundarySearchModel());
-      final boundaryCodes = allBoundaries
+      final allBoundaryCodes = allBoundaries
           .expand((b) => [
                 b.code,
                 if (b.label != null && b.label!.isNotEmpty)
@@ -863,21 +863,32 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
               ])
           .whereType<String>()
           .where((s) => s.isNotEmpty)
-          .toSet()
-          .join(',');
-      // Always fetch — the local `fetchLocalization` check is coarse
-      // (any-row-for-module), so a partially-populated cache from a
-      // previous session would silently skip the fetch even when the
-      // specific codes we need are missing. `insertAllOnConflictUpdate`
-      // is idempotent.
-      final results = await locBloc.localizationRepository.loadLocalization(
-        path: Constants.localizationApiPath,
+          .toSet();
+      // Only fetch codes that aren't already cached locally for this
+      // locale. Historically this path did an unconditional fetch of
+      // every boundary code (potentially thousands on a large hierarchy)
+      // on every language switch, because the coarser module-level
+      // fetchLocalization check would false-positive on a partially-
+      // populated cache. `fetchCachedCodesForLocale` gives us a precise
+      // code-level delta — an all-cached switch becomes one indexed
+      // SELECT and zero HTTP calls.
+      final cachedCodes =
+          await LocalizationLocalRepository().fetchCachedCodesForLocale(
+        sql: locBloc.sql,
         locale: locale,
-        module: boundaryModule,
-        tenantId: envConfig.variables.tenantId,
-        codes: boundaryCodes,
+        codes: allBoundaryCodes,
       );
-      await LocalizationLocalRepository().create(results, locBloc.sql);
+      final missingCodes = allBoundaryCodes.difference(cachedCodes).toList();
+      if (missingCodes.isNotEmpty) {
+        final results = await locBloc.localizationRepository.loadLocalization(
+          path: Constants.localizationApiPath,
+          locale: locale,
+          module: boundaryModule,
+          tenantId: envConfig.variables.tenantId,
+          codes: missingCodes.join(','),
+        );
+        await LocalizationLocalRepository().create(results, locBloc.sql);
+      }
     } catch (e) {
       debugPrint(
           'error caching boundary localization for $locale on language switch: $e');
