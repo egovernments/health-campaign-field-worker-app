@@ -678,6 +678,7 @@ final dynamic attendanceFlows = {
             }
           ]
         },
+        {"type": "template", "format": "faceAuthEventLegend"},
         {
           "items":
               "{{fn:todayAttendeesList(widgetData, contextData.0.attendees, contextData.0.AttendanceRegisterModel)}}",
@@ -729,6 +730,11 @@ final dynamic attendanceFlows = {
                 "format": "tag",
                 "fieldName": "attendanceStatus",
                 "label": "{{fn:attendanceStatus(widgetData, item)}}"
+              },
+              {
+                "type": "template",
+                "format": "faceAuthEventDots",
+                "individualId": "{{item.entity.individualId}}"
               },
               {
                 "type": "template",

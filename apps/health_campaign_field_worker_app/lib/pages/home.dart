@@ -72,6 +72,7 @@ import '../utils/stock_downsync_utils.dart';
 import '../utils/utils.dart';
 import '../widgets/attendance/attendance_qr_scanner_button.dart';
 import '../widgets/attendance/custom_row_widget.dart';
+import '../widgets/attendance/face_auth_event_dots_widget.dart';
 import '../widgets/attendance/group_list_view_widget.dart';
 import '../widgets/attendance/signature_compare_dialog_widget.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
@@ -229,6 +230,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     FlowWidgetFactory.register(GroupListViewWidget());
     FlowWidgetFactory.register(CustomRowWidget());
     FlowWidgetFactory.register(SignatureCompareWidget());
+    FlowWidgetFactory.register(FaceAuthEventDotsWidget());
+    FlowWidgetFactory.register(FaceAuthEventLegendWidget());
 
     // Register custom action executor for REDOSE eligibility check
     ActionExecutorRegistry().register(

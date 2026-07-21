@@ -7,6 +7,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/digit_dss.dart';
@@ -77,6 +78,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       attendanceLogRemoteRepository;
   final LocalRepository<IndividualModel, IndividualSearchModel>
       individualLocalRepository;
+
+  /// Face Auth Event Repositories (nullable — not all projects expose this endpoint)
+  final RemoteRepository<FaceAuthEventModel, FaceAuthEventSearchModel>?
+      faceAuthEventRemoteRepository;
+  final LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>?
+      faceAuthEventLocalRepository;
 
   /// Project Facility Repositories
   final RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
@@ -157,6 +164,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.downSyncLocalRepository,
     required this.userActionLocalRepository,
     required this.userActionRemoteRepository,
+    this.faceAuthEventRemoteRepository,
+    this.faceAuthEventLocalRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -602,6 +611,57 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     return updatedLogs;
   }
 
+  /// Fetches all face auth events for [projectId] in a single API call and
+  /// upserts them into the local DB so verification status shows offline.
+  ///
+  /// Old-format events where individualId = system user UUID are rewritten to
+  /// the correct HCM UUID before storing, so the attendance dots lookup works.
+  Future<void> _loadFaceAuthEventsForProject(
+      String projectId, List<String> individualIds) async {
+    debugPrint(
+        '[FaceAuth] _loadFaceAuthEventsForProject: projectId=$projectId, ${individualIds.length} attendees');
+
+    if (faceAuthEventRemoteRepository == null ||
+        faceAuthEventLocalRepository == null) {
+      debugPrint(
+          '[FaceAuth] repositories not available for this project — skipping sync');
+      return;
+    }
+
+    // Build reverse map: system user UUID → HCM individual UUID.
+    final individuals = await individualLocalRepository.search(
+      IndividualSearchModel(id: individualIds),
+    );
+    final userUuidToHcm = <String, String>{
+      for (final ind in individuals)
+        if (ind.id != null && ind.userUuid != null && ind.userUuid!.isNotEmpty)
+          ind.userUuid!: ind.id!,
+    };
+    debugPrint('[FaceAuth] userUuid→HCM mapping: $userUuidToHcm');
+
+    try {
+      final allEvents = await faceAuthEventRemoteRepository!.search(
+        FaceAuthEventSearchModel(projectId: projectId),
+      );
+      debugPrint(
+          '[FaceAuth] projectId=$projectId → ${allEvents.length} total events');
+
+      // Rewrite old-format events where individualId is a system user UUID.
+      final normalizedEvents = allEvents.map((e) {
+        final hcmId = userUuidToHcm[e.individualId];
+        return hcmId != null ? e.copyWith(individualId: hcmId) : e;
+      }).toList();
+
+      if (normalizedEvents.isNotEmpty) {
+        await faceAuthEventLocalRepository!.bulkCreate(normalizedEvents);
+        debugPrint(
+            '[FaceAuth] stored ${normalizedEvents.length} events locally');
+      }
+    } catch (e) {
+      debugPrint('[FaceAuth] fetch for projectId=$projectId failed: $e');
+    }
+  }
+
   Future<void> _handleProjectSelection(
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
@@ -698,6 +758,29 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 ));
                 return;
               }
+            }
+          }
+
+          // Face-auth: pull face auth events per-attendee for supervisors so
+          // verification status (attendance dots) shows offline before the
+          // next sync.
+          if (context.loggedInUserRoles.any((role) =>
+              role.code == RolesType.districtSupervisor.toValue() ||
+              role.code == RolesType.teamSupervisor.toValue())) {
+            try {
+              final attendeeIds = attendanceRegisters
+                  .expand((r) => r.attendees ?? [])
+                  .map((a) => a.individualId)
+                  .where((id) => id != null && id.isNotEmpty)
+                  .cast<String>()
+                  .toSet()
+                  .toList();
+              if (attendeeIds.isNotEmpty) {
+                await _loadFaceAuthEventsForProject(
+                    event.model.id!, attendeeIds);
+              }
+            } catch (e) {
+              debugPrint('[FaceAuth] _handleProjectSelection: error: $e');
             }
           }
         }
