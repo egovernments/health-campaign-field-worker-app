@@ -521,7 +521,8 @@ final dynamic samplePolioLqaDataCollectionFlows = {
                     "key": "LQA_CAMPAIGN_AWARENESS_LABEL",
                     "value":
                         "{{ item.child.0.additionalFields.fields.campaignAwareness }}",
-                    "isActive": true
+                    "isActive": true,
+                    "isMultiSelect": true
                   },
                   {
                     "key": "LQA_AWARENESS_OTHER_LABEL",
