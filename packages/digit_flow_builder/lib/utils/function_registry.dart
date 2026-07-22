@@ -657,14 +657,8 @@ void initializeFunctionRegistry() {
     );
     if (currentCycle == null) return false;
 
-    final firstDelivery =
-        (currentCycle.deliveries as List?)?.firstOrNull;
-    if (firstDelivery == null) return false;
-
-    final doseCriteriaList = firstDelivery.doseCriteria as List?;
-    if (doseCriteriaList == null || doseCriteriaList.isEmpty) {
-      return true; // No criteria configured → all eligible
-    }
+    final deliveries = currentCycle.deliveries as List?;
+    if (deliveries == null || deliveries.isEmpty) return false;
 
     // ── 3. Build available variables from all entity maps passed ──────
     // Fully generic: extracts every scalar top-level field and every
@@ -699,41 +693,45 @@ void initializeFunctionRegistry() {
       }
     }
 
-    // ── 4. Evaluate each doseCriteria ─────────────────────────────────
-    for (final dc in doseCriteriaList) {
-      final condition = dc.condition?.toString() ?? '';
-      if (condition.isEmpty) {
-        return true; // No condition → eligible
-      }
+    // ── 4. Evaluate doseCriteria across ALL deliveries ────────────────
+    for (final delivery in deliveries) {
+      final doseCriteriaList = delivery.doseCriteria as List?;
+      if (doseCriteriaList == null || doseCriteriaList.isEmpty) continue;
 
-      final requiredKeys = ComputedListEvaluator.extractKeys(condition);
-      final sanitized = ComputedListEvaluator.sanitizeCondition(condition);
+      for (final dc in doseCriteriaList) {
+        if (dc.condition == null) continue; // No condition on this dose → skip
+        final condition = dc.condition.toString().trim();
+        if (condition.isEmpty) continue; // Blank condition → skip
 
-      final evalContext = <String, dynamic>{};
-      for (final key in requiredKeys) {
-        if (availableVars.containsKey(key)) {
-          evalContext[key] = availableVars[key] ?? 0;
-        } else {
-          // Variable not found in entity data — use type-inferred default
-          evalContext[key] =
-              ComputedListEvaluator.getDefaultValueForMissingKey(
-                      key, sanitized) ??
-                  0;
+        final requiredKeys = ComputedListEvaluator.extractKeys(condition);
+        final sanitized = ComputedListEvaluator.sanitizeCondition(condition);
+
+        final evalContext = <String, dynamic>{};
+        for (final key in requiredKeys) {
+          if (availableVars.containsKey(key)) {
+            evalContext[key] = availableVars[key] ?? 0;
+          } else {
+            // Variable not found in entity data — use type-inferred default
+            evalContext[key] =
+                ComputedListEvaluator.getDefaultValueForMissingKey(
+                        key, sanitized) ??
+                    0;
+          }
         }
-      }
 
-      try {
-        final parser = FormulaParser(sanitized, evalContext);
-        final result = parser.parse;
-        if (result['isSuccess'] == true && result['value'] == true) {
-          return true;
+        try {
+          final parser = FormulaParser(sanitized, evalContext);
+          final result = parser.parse;
+          if (result['isSuccess'] == true && result['value'] == true) {
+            return true;
+          }
+        } catch (e) {
+          debugPrint('hasEligibleProductVariants condition error: $e');
         }
-      } catch (e) {
-        debugPrint('hasEligibleProductVariants condition error: $e');
       }
     }
 
-    return false; // No doseCriteria matched
+    return false; // No delivery's criteria matched
   });
 
   FunctionRegistry.register("getInEligibleStatus", (args, stateData) {
