@@ -2108,12 +2108,12 @@ void initializeFunctionRegistry() {
         ? minCountArg
         : int.tryParse(minCountArg?.toString() ?? '');
 
-    if (minCount == null) return false;
-
     final currentCountArg = args.length > 1 ? args[1] : null;
     final currentCount = currentCountArg is int
         ? currentCountArg
         : int.tryParse(currentCountArg?.toString() ?? '');
+
+    if (minCount == null) return (currentCount ?? 0) > 0;
 
     return (currentCount ?? 0) >= minCount;
   });

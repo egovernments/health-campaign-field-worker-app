@@ -5843,6 +5843,20 @@ final dynamic sampleSMCFlows = {
                   }
                 },
                 {
+                  "actionType": "UPDATE_IDENTIFIER_STATUS",
+                  "properties": {
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "Failed to update beneficiary id status."
+                        }
+                      }
+                    ],
+                    "identifierType": "UNIQUE_BENEFICIARY_ID"
+                  }
+                },
+                {
                   "actionType": "CREATE_EVENT",
                   "properties": {
                     "entity":
