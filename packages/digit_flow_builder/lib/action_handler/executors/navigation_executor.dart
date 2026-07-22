@@ -39,8 +39,29 @@ class NavigationExecutor extends ActionExecutor {
 
     // Get composite key for current screen's FlowCrudStateRegistry operations
     final currentCompositeKey = getCompositeKey(context, screenKey: screenKey);
-    final currentState =
+    var currentState =
         FlowCrudStateRegistry().get(currentCompositeKey ?? screenKey);
+
+    // Fallback: getCompositeKey may return a stale/missing key when NAV fires
+    // from a chain triggered outside the current screen's widget tree (e.g.
+    // OPEN_SCANNER onSuccess). Look up the registry's registered instanceId
+    // for the source screenKey and try that composite too.
+    if (currentState?.stateWrapper == null || currentState!.stateWrapper!.isEmpty) {
+      final bareScreenKey = screenKey?.split('::').last;
+      if (bareScreenKey != null) {
+        final registeredInstanceId =
+            FlowCrudStateRegistry().getInstanceId(bareScreenKey);
+        if (registeredInstanceId != null) {
+          final fallbackKey = '$bareScreenKey::$registeredInstanceId';
+          final fallbackState =
+              FlowCrudStateRegistry().getByCompositeKey(fallbackKey);
+          if (fallbackState?.stateWrapper != null &&
+              fallbackState!.stateWrapper!.isNotEmpty) {
+            currentState = fallbackState;
+          }
+        }
+      }
+    }
     final stateFormData = currentState?.formData;
 
     // Get navigation mode and popUntilPageName from action properties
@@ -61,20 +82,56 @@ class NavigationExecutor extends ActionExecutor {
     }
 
     if (navData != null) {
+      // Build an enriched context that ALWAYS exposes the current screen's
+      // stateWrapper (list) and its first item as `item`. This lets templates
+      // like {{stateWrapper.0.X}} or {{item.X}} resolve when the action is
+      // fired outside a list-widget context (e.g. from OPEN_SCANNER's
+      // onSuccess chain, where widget-level resolveActionNavData never ran).
+      final currentStateWrapper = currentState?.stateWrapper;
+      final stateWrapperFirst =
+          (currentStateWrapper?.isNotEmpty == true)
+              ? currentStateWrapper?.first
+              : null;
+      final enrichedContext = <String, dynamic>{
+        ...contextData,
+        if (currentStateWrapper != null) 'stateWrapper': currentStateWrapper,
+        if (stateWrapperFirst != null) 'item': stateWrapperFirst,
+      };
+
       final resolvedData = navData.map((entry) {
         final key = entry['key'];
         final rawValue = entry['value'];
 
-        final stateWrapperFirst =
-            (currentState?.stateWrapper?.isNotEmpty == true)
-                ? currentState?.stateWrapper?.first
-                : null;
-        final resolvedValue = resolveNavigationDataValue(
+        var resolvedValue = resolveNavigationDataValue(
           rawValue: rawValue,
           stateFormData: stateFormData,
           stateWrapperFirst: stateWrapperFirst,
-          contextData: contextData,
+          contextData: enrichedContext,
         );
+
+        // Dart-code fallback: if template resolution failed and the raw value
+        // is a {{item.X…}} or {{stateWrapper.0.X…}} path, walk stateWrapper
+        // directly so nav-data still resolves when this action was fired
+        // outside a list-widget (e.g. from an OPEN_SCANNER onSuccess chain).
+        if ((resolvedValue == null || resolvedValue == rawValue) &&
+            stateWrapperFirst != null &&
+            rawValue is String &&
+            rawValue.startsWith('{{') &&
+            rawValue.endsWith('}}')) {
+          final inner = rawValue.substring(2, rawValue.length - 2).trim();
+          String? subPath;
+          if (inner.startsWith('item.')) {
+            subPath = inner.substring('item.'.length);
+          } else if (inner.startsWith('stateWrapper.0.')) {
+            subPath = inner.substring('stateWrapper.0.'.length);
+          }
+          if (subPath != null) {
+            final walked = _walkWrapperPath(stateWrapperFirst, subPath);
+            if (walked != null) {
+              resolvedValue = walked;
+            }
+          }
+        }
 
         return {
           "key": key,
@@ -220,5 +277,43 @@ class NavigationExecutor extends ActionExecutor {
     }
 
     return contextData;
+  }
+
+  /// Walks a wrapper item (typically the first entry of stateWrapper) along a
+  /// dotted path, handling Map lookups, list indices, EntityModel.toMap()
+  /// conversions, and generic .toJson() fallbacks. Returns null if any step
+  /// fails. Used as a Dart-code fallback when template resolution can't
+  /// dereference a `{{item.X.Y}}` / `{{stateWrapper.0.X.Y}}` expression.
+  dynamic _walkWrapperPath(dynamic root, String path) {
+    if (root == null) return null;
+    dynamic current = root;
+    for (final part in path.split('.')) {
+      if (current == null) return null;
+      if (current is Map) {
+        current = current[part];
+        continue;
+      }
+      if (current is List) {
+        final idx = int.tryParse(part);
+        if (idx == null || idx < 0 || idx >= current.length) return null;
+        current = current[idx];
+        continue;
+      }
+      if (current is EntityModel) {
+        final map = current.toMap();
+        if (!map.containsKey(part)) return null;
+        current = map[part];
+        continue;
+      }
+      try {
+        final json = (current as dynamic).toJson();
+        if (json is Map) {
+          current = json[part];
+          continue;
+        }
+      } catch (_) {}
+      return null;
+    }
+    return current;
   }
 }

@@ -455,20 +455,20 @@ class SearchExecutor extends ActionExecutor {
             entities.addAll(entityList);
           }
 
+          // Build wrapper if config exists (declared outside the
+          // compositeKey block so downstream contextData can reference it)
+          List<dynamic>? wrapper;
+          if (config?['wrapperConfig'] != null && entities.isNotEmpty) {
+            wrapper = WrapperBuilder(
+              entities,
+              config?['wrapperConfig'],
+              screenKey: compositeKey ?? '',
+            ).build();
+          }
+
           // Update FlowCrudStateRegistry with search results
           if (compositeKey != null) {
             final currentState = FlowCrudStateRegistry().get(compositeKey);
-
-            // Build wrapper if config exists
-            List<dynamic>? wrapper;
-            if (config?['wrapperConfig'] != null && entities.isNotEmpty) {
-              wrapper = WrapperBuilder(
-                entities,
-                config?['wrapperConfig'],
-                screenKey: compositeKey,
-              ).build();
-            }
-
             final updatedState =
                 (currentState ?? const FlowCrudState()).copyWith(
               base: state,
@@ -477,11 +477,14 @@ class SearchExecutor extends ActionExecutor {
             FlowCrudStateRegistry().update(compositeKey, updatedState);
           }
 
-          // Return context with entities
+          // Return context with entities and fresh stateWrapper so
+          // downstream actions in an awaitResults chain can reference
+          // the newly-built wrapper (e.g. {{stateWrapper.0.X...}}).
           completer.complete({
             ...contextData,
             'entities': entities,
             'searchResults': results,
+            'stateWrapper': wrapper ?? entities,
           });
         } else if (state is CrudStateError) {
           subscription.cancel();

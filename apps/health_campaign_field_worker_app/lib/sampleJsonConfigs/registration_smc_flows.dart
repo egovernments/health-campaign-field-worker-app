@@ -2286,6 +2286,27 @@ final dynamic sampleSMCFlows = {
                       "type": "SEARCH_EVENT",
                       "awaitResults": true
                     }
+                  },
+                  {
+                    "actions": [
+                      {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "data": [
+                            {
+                              "key": "HouseholdClientReferenceId",
+                              "value": "{{item.HouseholdModel.clientReferenceId}}"
+                            }
+                          ],
+                          "name": "householdOverview",
+                          "type": "TEMPLATE"
+                        }
+                      }
+                    ],
+                    "condition": {
+                      "expression":
+                          "{{length}} == 1 && {{fn:length(0.projectBeneficiaries)}} > 0 && {{0.tasks.0.status}} != CLOSED_HOUSEHOLD"
+                    }
                   }
                 ],
                 "scanLimit": 1,
