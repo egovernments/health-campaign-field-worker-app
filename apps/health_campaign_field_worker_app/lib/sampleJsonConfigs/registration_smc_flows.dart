@@ -1,4 +1,4 @@
-final dynamic sampleSMCFlows = {
+﻿final dynamic sampleSMCFlows = {
   "id": "9d3a901b-d831-427b-8aeb-4bbda9ec2018",
   "tenantId": "mz",
   "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
@@ -989,7 +989,8 @@ final dynamic sampleSMCFlows = {
                         "type": "template",
                         "value": "{{ item.individual.0.name.givenName }}",
                         "format": "textTemplate",
-                        "fieldName": "individualName"
+                        "fieldName": "individualName",
+                        "properties": {"style": "headingM", "color": "inputBorder"}
                       },
                       {
                         "type": "template",
@@ -1879,68 +1880,233 @@ final dynamic sampleSMCFlows = {
       "body": [
         {
           "type": "template",
-          "label": "REGISTRATION_INDIVIDUAL_SEARCH_BENEFICIARY_NAME_HINT",
-          "format": "searchBar",
-          "onAction": [
+          "format": "row",
+          "fieldName": "searchFilterRow",
+          "properties": {
+            "gap": 16,
+            "crossAxisAlignment": "stretch",
+            "intrinsicHeight": true,
+            "mainAxisSize": "max"
+          },
+          "children": [
             {
-              "actions": [
+              "flex": 1,
+              "type": "template",
+              "label": "REGISTRATION_INDIVIDUAL_SEARCH_BENEFICIARY_NAME_HINT",
+              "format": "searchBar",
+              "onAction": [
                 {
-                  "actionType": "SEARCH_EVENT",
-                  "properties": {
-                    "data": [
-                      {
-                        "key": "identifierId",
-                        "value": "field.value",
-                        "operation": "containsAll"
-                      },
-                      {
-                        "key": "localityBoundaryCode",
-                        "root": "address",
-                        "value": "{{singleton.boundary.code}}",
-                        "operation": "equals"
+                  "actions": [
+                    {
+                      "actionType": "SEARCH_EVENT",
+                      "properties": {
+                        "data": [
+                          {
+                            "key": "identifierId",
+                            "value": "field.value",
+                            "operation": "containsAll"
+                          },
+                          {
+                            "key": "localityBoundaryCode",
+                            "root": "address",
+                            "value": "{{singleton.boundary.code}}",
+                            "operation": "equals"
+                          }
+                        ],
+                        "name": "identifier",
+                        "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
                       }
-                    ],
-                    "name": "identifier",
-                    "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
-                  }
+                    }
+                  ],
+                  "condition": {"expression": "{{idSearch}}==true"}
+                },
+                {
+                  "actions": [
+                    {
+                      "actionType": "SEARCH_EVENT",
+                      "properties": {
+                        "data": [
+                          {
+                            "key": "givenName",
+                            "value": "field.value",
+                            "operation": "containsAll"
+                          },
+                          {
+                            "key": "localityBoundaryCode",
+                            "root": "address",
+                            "value": "{{singleton.boundary.code}}",
+                            "operation": "equals"
+                          }
+                        ],
+                        "name": "name",
+                        "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+                      }
+                    }
+                  ],
+                  "condition": {"expression": "DEFAULT"}
                 }
               ],
-              "condition": {"expression": "{{idSearch}}==true"}
+              "fieldName": "searchBar",
+              "mandatory": true,
+              "textCapitalization": "words",
+              "debounceMs": 300,
+              "validations": [
+                {"type": "minSearchChars", "value": 2}
+              ],
+              "minSearchChars": 2
             },
             {
-              "actions": [
-                {
-                  "actionType": "SEARCH_EVENT",
-                  "properties": {
-                    "data": [
-                      {
-                        "key": "givenName",
-                        "value": "field.value",
-                        "operation": "containsAll"
-                      },
-                      {
-                        "key": "localityBoundaryCode",
-                        "root": "address",
-                        "value": "{{singleton.boundary.code}}",
-                        "operation": "equals"
-                      }
-                    ],
-                    "name": "name",
-                    "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
-                  }
+              "type": "template",
+              "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_LABEL",
+              "format": "actionPopup",
+              "fieldName": "filterPopUp",
+              "properties": {
+                "size": "large",
+                "type": "tertiary",
+                "radius": "spacer1",
+                "showBorder": true,
+                "prefixIcon": "FilterAlt",
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "start",
+                "popupConfig": {
+                  "body": [
+                    {
+                      "type": "template",
+                      "format": "card",
+                      "properties": {"type": "secondary"},
+                      "children": [
+                        {
+                          "type": "template",
+                          "label": "PROXIMITY_SEARCH_REGISTRATION",
+                          "format": "proximitySearch",
+                          "fieldName": "proximitySearch",
+                          "mandatory": true,
+                          "schemaCode": null,
+                          "validations": [
+                            {
+                              "key": "proximityRadius",
+                              "value": 5,
+                              "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
+                            }
+                          ],
+                          "onAction": [
+                            {
+                              "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
+                              "properties": {
+                                "data": [
+                                  {"key": "", "value": 5, "operation": "within"},
+                                  {
+                                    "key": "localityBoundaryCode",
+                                    "root": "address",
+                                    "value": "{{singleton.boundary.code}}",
+                                    "operation": "equals"
+                                  }
+                                ],
+                                "name": "address",
+                                "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "template",
+                      "format": "card",
+                      "properties": {"type": "secondary"},
+                      "children": [
+                        {
+                          "type": "template",
+                          "label": "ID_SEARCH_REGISTRATION",
+                          "format": "switch",
+                          "fieldName": "idSearch",
+                          "mandatory": true,
+                          "schemaCode": null,
+                          "validations": [],
+                          "onAction": [
+                            {
+                              "actionType": "CLEAR_STATE",
+                              "properties": {
+                                "widgetKeys": ["searchBar"],
+                                "filterKeys": ["givenName", "identifierId"],
+                                "triggerSearch": true
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "template",
+                      "enums": [
+                        {"code": "ADMINISTRATION_SUCCESS", "name": "REGISTRATION_ADMINISTRATION_SUCCESS"},
+                        {"code": "BENEFICIARY_REFERRED", "name": "REGISTRATION_BENEFICIARY_REFERRED"},
+                        {"code": "INELIGIBLE", "name": "REGISTRATION_INELIGIBLE"},
+                        {"code": "CLOSED_HOUSEHOLD", "name": "REGISTRATION_CLOSED_HOUSEHOLD"},
+                        {"code": "NOT_ADMINISTERED", "name": "REGISTRATION_NOT_ADMINISTERED"}
+                      ],
+                      "format": "selectionCard",
+                      "fieldName": "selectedStatus",
+                      "properties": {"fullWidth": true}
+                    }
+                  ],
+                  "type": "default",
+                  "title": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_TITLE_LABEL",
+                  "titleIcon": "FilterAlt",
+                  "footerActions": [
+                    {
+                      "type": "template",
+                      "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_CLEAR_LABEL",
+                      "format": "button",
+                      "onAction": [
+                        {
+                          "actionType": "CLEAR_STATE",
+                          "properties": {
+                            "name": "task",
+                            "filterKeys": ["status","projectBeneficiary","projectId","proximitySearch","givenName","identifierId"],
+                            "widgetKeys": ["selectedStatus","proximitySearch","idSearch"],
+                            "triggerSearch": true
+                          }
+                        }
+                      ],
+                      "fieldName": "clearFilter",
+                      "properties": {"size": "large", "type": "secondary", "mainAxisSize": "max"}
+                    },
+                    {
+                      "type": "template",
+                      "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL",
+                      "format": "button",
+                      "onAction": [
+                        {"actionType": "CLOSE_POPUP", "properties": {"parentScreenKey": "searchBeneficiary"}},
+                        {"actionType": "CLEAR_STATE", "properties": {"name": "task", "filterKeys": ["status","projectBeneficiary","projectId"], "triggerSearch": false}},
+                        {
+                          "actions": [{"actionType": "SEARCH_EVENT", "properties": {"data": [{"key": "status", "value": "{{selectedStatus}}", "operation": "in"},{"key": "localityBoundaryCode", "root": "address", "value": "{{singleton.boundary.code}}", "operation": "equals"}], "name": "task"}}],
+                          "condition": {"expression": "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE"}
+                        },
+                        {
+                          "actions": [{"actionType": "SEARCH_EVENT", "properties": {"data": [{"key": "projectId", "value": "{{singleton.selectedProject.id}}", "operation": "notEqual"},{"key": "localityBoundaryCode", "root": "address", "value": "{{singleton.boundary.code}}", "operation": "equals"}], "name": "projectBeneficiary"}}],
+                          "condition": {"expression": "selectedStatus == NOT_REGISTERED"}
+                        },
+                        {
+                          "actions": [{"actionType": "SEARCH_EVENT", "properties": {"data": [{"key": "projectId", "root": "projectBeneficiary", "value": "{{singleton.selectedProject.id}}", "operation": "equals"},{"key": "status", "root": "task", "value": {"values": []}, "operation": "notExists"},{"key": "localityBoundaryCode", "root": "address", "value": "{{singleton.boundary.code}}", "operation": "equals"}]}}],
+                          "condition": {"expression": "selectedStatus == NOT_ADMINISTERED"}
+                        },
+                        {
+                          "actions": [{"actionType": "SEARCH_EVENT", "properties": {"data": [{"key": "projectId", "root": "hFReferral", "value": "{{singleton.selectedProject.id}}", "operation": "equals"},{"key": "localityBoundaryCode", "root": "address", "value": "{{singleton.boundary.code}}", "operation": "equals"}]}}],
+                          "condition": {"expression": "selectedStatus == BENEFICIARY_REFERRED"}
+                        }
+                      ],
+                      "fieldName": "saveFilter",
+                      "properties": {"size": "large", "type": "primary", "mainAxisSize": "max"}
+                    }
+                  ],
+                  "showCloseButton": true,
+                  "barrierDismissible": true
                 }
-              ],
-              "condition": {"expression": "DEFAULT"}
+              },
+              "schemaCode": null
             }
-          ],
-          "fieldName": "searchBar",
-          "mandatory": true,
-          "textCapitalization": "words",
-          "debounceMs": 300,
-          "validations": [
-            {"type": "minSearchChars", "value": 2}
-          ],
-          "minSearchChars": 2
+          ]
         },
         {
           "type": "template",
@@ -2348,304 +2514,7 @@ final dynamic sampleSMCFlows = {
         }
       ],
       "heading": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
-      "headingActions": [
-        {
-          "icon": "FilterAlt",
-          "type": "template",
-          "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_LABEL",
-          "format": "actionPopup",
-          "fieldName": "filterPopUp",
-          "properties": {
-            "icon": "FilterAlt",
-            "size": "large",
-            "type": "tertiary",
-            "radius": "spacer1",
-            "suffixIcon": "FilterAlt",
-            "popupConfig": {
-              "body": [
-                {
-                  "type": "template",
-                  "format": "card",
-                  "properties": {"type": "secondary"},
-                  "children": [
-                    {
-                      "type": "template",
-                      "label": "PROXIMITY_SEARCH_REGISTRATION",
-                      "format": "proximitySearch",
-                      "fieldName": "proximitySearch",
-                      "mandatory": true,
-                      "schemaCode": null,
-                      "validations": [
-                        {
-                          "key": "proximityRadius",
-                          "value": 5,
-                          "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
-                        }
-                      ],
-                      "onAction": [
-                        {
-                          "actionType":
-                              "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
-                          "properties": {
-                            "data": [
-                              {"key": "", "value": 5, "operation": "within"},
-                              {
-                                "key": "localityBoundaryCode",
-                                "root": "address",
-                                "value": "{{singleton.boundary.code}}",
-                                "operation": "equals"
-                              }
-                            ],
-                            "name": "address",
-                            "type":
-                                "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "template",
-                  "format": "card",
-                  "properties": {"type": "secondary"},
-                  "children": [
-                    {
-                      "type": "template",
-                      "label": "ID_SEARCH_REGISTRATION",
-                      "format": "switch",
-                      "fieldName": "idSearch",
-                      "mandatory": true,
-                      "schemaCode": null,
-                      "validations": [],
-                      "onAction": [
-                        {
-                          "actionType": "CLEAR_STATE",
-                          "properties": {
-                            "widgetKeys": ["searchBar"],
-                            "filterKeys": ["givenName", "identifierId"],
-                            "triggerSearch": true
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "template",
-                  "enums": [
-                    {
-                      "code": "ADMINISTRATION_SUCCESS",
-                      "name": "REGISTRATION_ADMINISTRATION_SUCCESS"
-                    },
-                    {
-                      "code": "BENEFICIARY_REFERRED",
-                      "name": "REGISTRATION_BENEFICIARY_REFERRED"
-                    },
-                    {"code": "INELIGIBLE", "name": "REGISTRATION_INELIGIBLE"},
-                    {
-                      "code": "CLOSED_HOUSEHOLD",
-                      "name": "REGISTRATION_CLOSED_HOUSEHOLD"
-                    },
-                    {
-                      "code": "NOT_ADMINISTERED",
-                      "name": "REGISTRATION_NOT_ADMINISTERED"
-                    }
-                  ],
-                  "format": "selectionCard",
-                  "fieldName": "selectedStatus",
-                  "properties": {"fullWidth": true}
-                }
-              ],
-              "type": "default",
-              "title": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_TITLE_LABEL",
-              "titleIcon": "FilterAlt",
-              "footerActions": [
-                {
-                  "type": "template",
-                  "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_CLEAR_LABEL",
-                  "format": "button",
-                  "onAction": [
-                    {
-                      "actionType": "CLEAR_STATE",
-                      "properties": {
-                        "name": "task",
-                        "filterKeys": [
-                          "status",
-                          "projectBeneficiary",
-                          "projectId",
-                          "proximitySearch",
-                          "givenName",
-                          "identifierId"
-                        ],
-                        "widgetKeys": [
-                          "selectedStatus",
-                          "proximitySearch",
-                          "idSearch"
-                        ],
-                        "triggerSearch": true
-                      }
-                    }
-                  ],
-                  "fieldName": "clearFilter",
-                  "properties": {
-                    "size": "large",
-                    "type": "secondary",
-                    "mainAxisSize": "max"
-                  }
-                },
-                {
-                  "type": "template",
-                  "label":
-                      "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL",
-                  "format": "button",
-                  "onAction": [
-                    {
-                      "actionType": "CLOSE_POPUP",
-                      "properties": {"parentScreenKey": "searchBeneficiary"}
-                    },
-                    {
-                      "actionType": "CLEAR_STATE",
-                      "properties": {
-                        "name": "task",
-                        "filterKeys": [
-                          "status",
-                          "projectBeneficiary",
-                          "projectId"
-                        ],
-                        "triggerSearch": false
-                      }
-                    },
-                    {
-                      "actions": [
-                        {
-                          "actionType": "SEARCH_EVENT",
-                          "properties": {
-                            "data": [
-                              {
-                                "key": "status",
-                                "value": "{{selectedStatus}}",
-                                "operation": "in"
-                              },
-                              {
-                                "key": "localityBoundaryCode",
-                                "root": "address",
-                                "value": "{{singleton.boundary.code}}",
-                                "operation": "equals"
-                              }
-                            ],
-                            "name": "task"
-                          }
-                        }
-                      ],
-                      "condition": {
-                        "expression":
-                            "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE"
-                      }
-                    },
-                    {
-                      "actions": [
-                        {
-                          "actionType": "SEARCH_EVENT",
-                          "properties": {
-                            "data": [
-                              {
-                                "key": "projectId",
-                                "value": "{{singleton.selectedProject.id}}",
-                                "operation": "notEqual"
-                              },
-                              {
-                                "key": "localityBoundaryCode",
-                                "root": "address",
-                                "value": "{{singleton.boundary.code}}",
-                                "operation": "equals"
-                              }
-                            ],
-                            "name": "projectBeneficiary"
-                          }
-                        }
-                      ],
-                      "condition": {
-                        "expression": "selectedStatus == NOT_REGISTERED"
-                      }
-                    },
-                    {
-                      "actions": [
-                        {
-                          "actionType": "SEARCH_EVENT",
-                          "properties": {
-                            "data": [
-                              {
-                                "key": "projectId",
-                                "root": "projectBeneficiary",
-                                "value": "{{singleton.selectedProject.id}}",
-                                "operation": "equals"
-                              },
-                              {
-                                "key": "status",
-                                "root": "task",
-                                "value": {"values": []},
-                                "operation": "notExists"
-                              },
-                              {
-                                "key": "localityBoundaryCode",
-                                "root": "address",
-                                "value": "{{singleton.boundary.code}}",
-                                "operation": "equals"
-                              }
-                            ]
-                          }
-                        }
-                      ],
-                      "condition": {
-                        "expression": "selectedStatus == NOT_ADMINISTERED"
-                      }
-                    },
-                    {
-                      "actions": [
-                        {
-                          "actionType": "SEARCH_EVENT",
-                          "properties": {
-                            "data": [
-                              {
-                                "key": "projectId",
-                                "root": "hFReferral",
-                                "value": "{{singleton.selectedProject.id}}",
-                                "operation": "equals"
-                              },
-                              {
-                                "key": "localityBoundaryCode",
-                                "root": "address",
-                                "value": "{{singleton.boundary.code}}",
-                                "operation": "equals"
-                              }
-                            ]
-                          }
-                        }
-                      ],
-                      "condition": {
-                        "expression": "selectedStatus == BENEFICIARY_REFERRED"
-                      }
-                    }
-                  ],
-                  "fieldName": "saveFilter",
-                  "properties": {
-                    "size": "large",
-                    "type": "primary",
-                    "mainAxisSize": "max"
-                  }
-                }
-              ],
-              "showCloseButton": true,
-              "barrierDismissible": true
-            },
-            "mainAxisSize": "min",
-            "mainAxisAlignment": "start"
-          },
-          "schemaCode": null,
-          "suffixIcon": "FilterAlt"
-        }
-      ],
+      "headingActions": [],
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
@@ -2964,13 +2833,19 @@ final dynamic sampleSMCFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "ACTION1",
-              "mandatory": false,
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": true,
-              "validations": [],
-              "errorMessage": ""
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "CORE_COMMON_REQUIRED"
+                }
+              ],
+              "errorMessage": "CORE_COMMON_REQUIRED"
             },
             {
               "type": "boolean",
@@ -2985,13 +2860,19 @@ final dynamic sampleSMCFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "ACTION2",
-              "mandatory": false,
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": true,
-              "validations": [],
-              "errorMessage": "",
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "CORE_COMMON_REQUIRED"
+                }
+              ],
+              "errorMessage": "CORE_COMMON_REQUIRED",
               "labelPlaceHolders": [
                 {"key": "ID", "value": "{{navigation.beneficiaryId}}"},
                 {"key": "NAME", "value": "{{navigation.childName}}"}
@@ -3010,13 +2891,19 @@ final dynamic sampleSMCFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "ACTION3",
-              "mandatory": false,
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": true,
-              "validations": [],
-              "errorMessage": ""
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "CORE_COMMON_REQUIRED"
+                }
+              ],
+              "errorMessage": "CORE_COMMON_REQUIRED"
             }
           ],
           "actionLabel":
