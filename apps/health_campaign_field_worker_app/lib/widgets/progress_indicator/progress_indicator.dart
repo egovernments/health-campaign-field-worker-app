@@ -2,6 +2,8 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 
+const Color _progressBarColor = Color(0xFF12AD65);
+
 class ProgressIndicatorContainer extends StatelessWidget {
   final String label;
   final String prefixLabel;
@@ -29,44 +31,47 @@ class ProgressIndicatorContainer extends StatelessWidget {
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           label,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
+          style: theme.digitTextTheme(context).headingS.copyWith(
+                color: theme.colorTheme.primary.primary2,
+              ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: spacer2),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               LinearProgressIndicator(
                 backgroundColor: theme.colorTheme.generic.background,
                 valueColor: valueColor ??
-                    AlwaysStoppedAnimation<Color>(
-                      theme.colorTheme.primary.primary1,
-                    ),
+                    const AlwaysStoppedAnimation<Color>(_progressBarColor),
                 value: value,
-                minHeight: height ?? 7.0,
+                minHeight: height ?? 16.0,
                 borderRadius: BorderRadius.horizontal(
                     right: Radius.circular(radius ?? spacer1),
                     left: Radius.circular(radius ?? spacer1)),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: spacer2 + 4),
+                padding: const EdgeInsets.only(top: spacer2),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       prefixLabel,
-                      style: theme.textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorTheme.alert.success,
+                        fontSize: 14,
+                      ),
                     ),
                     Text(
                       suffixLabel,
-                      style: theme.textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorTheme.alert.success,
+                        fontSize: 14,
+                      ),
                     ),
                   ],
                 ),
