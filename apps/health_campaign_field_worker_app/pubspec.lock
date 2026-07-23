@@ -500,7 +500,7 @@ packages:
     description:
       path: "PES-U/beneficiary-dedup-engine/dedup_engine"
       ref: dedup-engine-sarayu
-      resolved-ref: "15cb66faeb07803993797145a522957f25eda873"
+      resolved-ref: "470c55737455a3af6bc8d4deac4df7a62ebf883e"
       url: "https://github.com/egovernments/pes-university-projects.git"
     source: git
     version: "0.1.0"

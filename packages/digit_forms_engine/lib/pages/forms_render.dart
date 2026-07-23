@@ -92,6 +92,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       context.router.popUntil((route) {
         return route.settings.name != FormsRenderRoute.name;
       });
+    } else {
+      // Pop is deferred to the action chain (screen_builder). Reset the
+      // submitting flag so the user can re-submit if the chain aborts
+      // (e.g. user clicks "Close" on a dedup-check dialog).
+      setState(() {
+        _isSubmitting = false;
+      });
     }
   }
 

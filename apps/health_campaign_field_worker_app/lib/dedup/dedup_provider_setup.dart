@@ -98,11 +98,12 @@ DedupConfig createHcmDedupConfig() {
     shortCircuits: [
       ShortCircuitRule(column: 'mobile_number'),
     ],
-    // NOTE: gender mismatch rule disabled because Drift stores gender as
-    // INTEGER enum (0=MALE, 1=FEMALE, 2=OTHER) but the incoming record
-    // has it as a string. The type mismatch would incorrectly reject
-    // every pair. Re-enable after normalizing gender values.
-    mismatchRules: [],
+    mismatchRules: [
+      MismatchRule(
+        column: 'gender',
+        valueMap: {'0': 'male', '1': 'female', '2': 'other'},
+      ),
+    ],
     siblingGuard: SiblingGuard(
       familyColumn: 'father_name',
       distinguishingColumn: 'given_name',

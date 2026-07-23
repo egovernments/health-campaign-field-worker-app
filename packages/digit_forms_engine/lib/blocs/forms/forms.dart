@@ -172,7 +172,12 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     final updatedSchemas = Map<String, SchemaObject>.from(state.cachedSchemas);
     updatedSchemas[event.schemaKey] = event.schema;
 
-    emit(state.copyWith(
+    // Always emit a base loaded state — never preserve FormsSubmittedState.
+    // Using state.copyWith() on a FormsSubmittedState keeps the submitted
+    // type, which causes FormSubmissionRegistry to treat the update as a
+    // new submission (double-popup) and also prevents BLoC from emitting a
+    // subsequent FormsSubmitEvent with unchanged data (re-submit blocked).
+    emit(FormsState(
       cachedSchemas: updatedSchemas,
       initialSchemas: state.initialSchemas,
     ));
