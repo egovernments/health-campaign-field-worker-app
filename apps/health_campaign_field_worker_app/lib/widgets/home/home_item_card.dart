@@ -39,7 +39,7 @@ class HomeItemCard extends StatelessWidget {
         onPressed: onPressed,
         padding: const EdgeInsets.all(spacer1).copyWith(top: spacer1),
         margin: EdgeInsets.zero,
-        borderRadius: BorderRadius.circular(radius1),
+        borderRadius: BorderRadius.circular(radius4),
         inline: true,
         children: [
           const Padding(padding: EdgeInsets.only(top: spacer1)),

@@ -97,7 +97,13 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
         offstage: !widget.isDataRecordSuccess,
         // Show the bottom navigation bar if `isDataRecordSuccess` is true
         child:
-            DigitCard(margin: const EdgeInsets.only(top: spacer2), children: [
+            DigitCard(
+                margin: const EdgeInsets.only(top: spacer2),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(radius4),
+                  topRight: Radius.circular(radius4),
+                ),
+                children: [
           DigitButton(
             mainAxisSize: MainAxisSize.max,
             label: localizations.translate(i18.acknowledgementSuccess.goToHome),
