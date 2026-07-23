@@ -139,9 +139,9 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                             actions: [
                               DigitButton(
                                 capitalizeLetters: false,
-                                type: DigitButtonType.primary,
-                                size: DigitButtonSize.large,
-                                mainAxisSize: MainAxisSize.max,
+                                type: DigitButtonType.secondary,
+                                size: DigitButtonSize.small,
+                                mainAxisSize: MainAxisSize.min,
                                 onPressed: () {
                                   Navigator.of(ctx).pop();
                                   context.read<UniqueIdBloc>().add(
@@ -200,8 +200,8 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                                     DigitButton(
                                       capitalizeLetters: false,
                                       type: DigitButtonType.secondary,
-                                      size: DigitButtonSize.large,
-                                      mainAxisSize: MainAxisSize.max,
+                                      size: DigitButtonSize.small,
+                                      mainAxisSize: MainAxisSize.min,
                                       onPressed: () {
                                         Navigator.pop(ctx);
                                       },
@@ -381,14 +381,17 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
           padding: const EdgeInsets.only(top: spacer5, left: spacer4),
           child: Text(
               localizations.translate(i18.beneficiaryId.beneficiaryIdsLabel),
-              style: textTheme.headingL.copyWith(
-                  fontSize: 24, color: theme.colorTheme.primary.primary2)),
+              style: textTheme.headingXl.copyWith(
+                  color: theme.colorTheme.primary.primary2)),
         ),
-        DigitCard(margin: const EdgeInsets.only(top: spacer5), children: [
-          Container(
+        DigitCard(
+            margin: const EdgeInsets.only(top: spacer5),
+            padding: const EdgeInsets.only(left: spacer4, right: spacer4, top: 60, bottom: spacer4),
+            children: [
+          Center(
+            child: SizedBox(
             width: gaugeSize,
             height: gaugeSize * 0.6,
-            margin: const EdgeInsets.all(spacer5),
             child: AnimatedBuilder(
               animation: _animation,
               builder: (context, child) {
@@ -426,6 +429,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
               },
             ),
           ),
+          ),
           if (widget.idCount <= widget.beneficiaryMinCount)
             InfoCard(
                 title: localizations
@@ -434,14 +438,14 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                 capitalizedLetter: false,
                 description: localizations
                     .translate(i18.beneficiaryId.lowBeneficiaryIdsText)),
-          DigitCard(margin: const EdgeInsets.all(spacer1), children: [
+          DigitCard(margin: const EdgeInsets.all(spacer1), cardType: CardType.secondary, padding: const EdgeInsets.all(spacer4), children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                     localizations.translate(
                         i18.beneficiaryId.availableBeneficiaryIdsText),
-                    style: textTheme.bodyS
+                    style: textTheme.bodyL
                         .copyWith(color: theme.colorTheme.primary.primary2)),
                 AnimatedBuilder(
                     animation: _animation,
@@ -461,7 +465,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                 Text(
                     localizations
                         .translate(i18.beneficiaryId.totalBeneficiaryIds),
-                    style: textTheme.bodyS
+                    style: textTheme.bodyL
                         .copyWith(color: theme.colorTheme.primary.primary2)),
                 Text(widget.totalCount.toString(),
                     style: textTheme.headingL

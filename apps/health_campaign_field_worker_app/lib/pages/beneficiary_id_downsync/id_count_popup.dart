@@ -19,8 +19,14 @@ void showLowIdsAlert(
   showCustomPopup(
       context: context,
       builder: (ctx) {
+        final theme = Theme.of(ctx);
         return Popup(
           type: PopUpType.alert,
+          titleIcon: Icon(
+            Icons.warning_amber_rounded,
+            color: theme.colorTheme.alert.error,
+            size: 48,
+          ),
           onCrossTap: () {
             Navigator.of(ctx).pop();
           },
@@ -72,8 +78,14 @@ void showNoIdsAlert(
   showCustomPopup(
       context: context,
       builder: (ctx) {
+        final theme = Theme.of(ctx);
         return Popup(
           type: PopUpType.alert,
+          titleIcon: Icon(
+            Icons.warning_amber_rounded,
+            color: theme.colorTheme.alert.error,
+            size: 48,
+          ),
           onCrossTap: () {
             Navigator.of(ctx).pop();
           },
@@ -176,8 +188,8 @@ class ProgressDialog {
                     ? DigitButton(
                         capitalizeLetters: false,
                         type: DigitButtonType.secondary,
-                        size: DigitButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
+                        size: DigitButtonSize.small,
+                        mainAxisSize: MainAxisSize.min,
                         onPressed: () {
                           Navigator.of(ctx).pop();
                           context
