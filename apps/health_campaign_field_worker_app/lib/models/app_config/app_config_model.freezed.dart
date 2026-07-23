@@ -2339,6 +2339,8 @@ mixin _$StateInfoModel {
   @JsonKey(name: 'localizationModules')
   List<Languages>? get localizationModules =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'logoUrl')
+  String? get logoUrl => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -2356,7 +2358,8 @@ abstract class $StateInfoModelCopyWith<$Res> {
       {@JsonKey(name: 'code') String code,
       @JsonKey(name: 'languages') List<Languages> languages,
       @JsonKey(name: 'localizationModules')
-      List<Languages>? localizationModules});
+      List<Languages>? localizationModules,
+      @JsonKey(name: 'logoUrl') String? logoUrl});
 }
 
 /// @nodoc
@@ -2375,6 +2378,7 @@ class _$StateInfoModelCopyWithImpl<$Res, $Val extends StateInfoModel>
     Object? code = null,
     Object? languages = null,
     Object? localizationModules = freezed,
+    Object? logoUrl = freezed,
   }) {
     return _then(_value.copyWith(
       code: null == code
@@ -2389,6 +2393,10 @@ class _$StateInfoModelCopyWithImpl<$Res, $Val extends StateInfoModel>
           ? _value.localizationModules
           : localizationModules // ignore: cast_nullable_to_non_nullable
               as List<Languages>?,
+      logoUrl: freezed == logoUrl
+          ? _value.logoUrl
+          : logoUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -2405,7 +2413,8 @@ abstract class _$$StateInfoModelImplCopyWith<$Res>
       {@JsonKey(name: 'code') String code,
       @JsonKey(name: 'languages') List<Languages> languages,
       @JsonKey(name: 'localizationModules')
-      List<Languages>? localizationModules});
+      List<Languages>? localizationModules,
+      @JsonKey(name: 'logoUrl') String? logoUrl});
 }
 
 /// @nodoc
@@ -2422,6 +2431,7 @@ class __$$StateInfoModelImplCopyWithImpl<$Res>
     Object? code = null,
     Object? languages = null,
     Object? localizationModules = freezed,
+    Object? logoUrl = freezed,
   }) {
     return _then(_$StateInfoModelImpl(
       code: null == code
@@ -2436,6 +2446,10 @@ class __$$StateInfoModelImplCopyWithImpl<$Res>
           ? _value._localizationModules
           : localizationModules // ignore: cast_nullable_to_non_nullable
               as List<Languages>?,
+      logoUrl: freezed == logoUrl
+          ? _value.logoUrl
+          : logoUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -2447,7 +2461,8 @@ class _$StateInfoModelImpl implements _StateInfoModel {
       {@JsonKey(name: 'code') required this.code,
       @JsonKey(name: 'languages') required final List<Languages> languages,
       @JsonKey(name: 'localizationModules')
-      final List<Languages>? localizationModules})
+      final List<Languages>? localizationModules,
+      @JsonKey(name: 'logoUrl') this.logoUrl})
       : _languages = languages,
         _localizationModules = localizationModules;
 
@@ -2479,8 +2494,12 @@ class _$StateInfoModelImpl implements _StateInfoModel {
   }
 
   @override
+  @JsonKey(name: 'logoUrl')
+  final String? logoUrl;
+
+  @override
   String toString() {
-    return 'StateInfoModel(code: $code, languages: $languages, localizationModules: $localizationModules)';
+    return 'StateInfoModel(code: $code, languages: $languages, localizationModules: $localizationModules, logoUrl: $logoUrl)';
   }
 
   @override
@@ -2492,7 +2511,8 @@ class _$StateInfoModelImpl implements _StateInfoModel {
             const DeepCollectionEquality()
                 .equals(other._languages, _languages) &&
             const DeepCollectionEquality()
-                .equals(other._localizationModules, _localizationModules));
+                .equals(other._localizationModules, _localizationModules) &&
+            (identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl));
   }
 
   @JsonKey(ignore: true)
@@ -2501,7 +2521,8 @@ class _$StateInfoModelImpl implements _StateInfoModel {
       runtimeType,
       code,
       const DeepCollectionEquality().hash(_languages),
-      const DeepCollectionEquality().hash(_localizationModules));
+      const DeepCollectionEquality().hash(_localizationModules),
+      logoUrl);
 
   @JsonKey(ignore: true)
   @override
@@ -2523,7 +2544,8 @@ abstract class _StateInfoModel implements StateInfoModel {
       {@JsonKey(name: 'code') required final String code,
       @JsonKey(name: 'languages') required final List<Languages> languages,
       @JsonKey(name: 'localizationModules')
-      final List<Languages>? localizationModules}) = _$StateInfoModelImpl;
+      final List<Languages>? localizationModules,
+      @JsonKey(name: 'logoUrl') final String? logoUrl}) = _$StateInfoModelImpl;
 
   factory _StateInfoModel.fromJson(Map<String, dynamic> json) =
       _$StateInfoModelImpl.fromJson;
@@ -2537,6 +2559,9 @@ abstract class _StateInfoModel implements StateInfoModel {
   @override
   @JsonKey(name: 'localizationModules')
   List<Languages>? get localizationModules;
+  @override
+  @JsonKey(name: 'logoUrl')
+  String? get logoUrl;
   @override
   @JsonKey(ignore: true)
   _$$StateInfoModelImplCopyWith<_$StateInfoModelImpl> get copyWith =>
