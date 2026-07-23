@@ -2,8 +2,6 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 
-const Color _progressBarColor = Color(0xFF12AD65);
-
 class ProgressIndicatorContainer extends StatelessWidget {
   final String label;
   final String prefixLabel;
@@ -47,7 +45,9 @@ class ProgressIndicatorContainer extends StatelessWidget {
               LinearProgressIndicator(
                 backgroundColor: theme.colorTheme.generic.background,
                 valueColor: valueColor ??
-                    const AlwaysStoppedAnimation<Color>(_progressBarColor),
+                    AlwaysStoppedAnimation<Color>(
+                      theme.colorTheme.alert.success,
+                    ),
                 value: value,
                 minHeight: height ?? 16.0,
                 borderRadius: BorderRadius.horizontal(
@@ -56,24 +56,25 @@ class ProgressIndicatorContainer extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: spacer2),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      prefixLabel,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorTheme.alert.success,
-                        fontSize: 14,
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '$prefixLabel / ',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorTheme.alert.success,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    Text(
-                      suffixLabel,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorTheme.alert.success,
-                        fontSize: 14,
+                      TextSpan(
+                        text: suffixLabel,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorTheme.text.primary,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
