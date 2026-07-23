@@ -56,7 +56,7 @@ class TagWidget extends ResolvedFlowWidget {
     }
 
     final tagType = WidgetParsers.parseTagType(properties?['tagType']);
-    final isStroke = properties?['isStroke'] as bool? ?? true;
+    final isStroke = properties?['isStroke'] as bool? ?? false;
     return WidgetParsers.wrapWithBottomGap(
       Tag(
         isIcon: true,
