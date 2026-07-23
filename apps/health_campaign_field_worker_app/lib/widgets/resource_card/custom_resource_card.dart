@@ -245,23 +245,20 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                             .translate(labelFromSchema!)
                             .isNotEmpty) ...[
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: spacer4),
+                        padding: const EdgeInsets.only(top: spacer2),
                         child: Text(
                           localizations.translate(labelFromSchema!),
-                          style: textTheme.bodyL.copyWith(
-                            color: Colors.black,
+                          style: textTheme.headingS.copyWith(
+                            color: theme.colorTheme.text.primary,
                           ),
                         ),
                       ),
                     ],
                     Column(
-                      children: _controllers.isEmpty ? [] : List.generate(_controllers.length * 2 - 1, (i) {
-                        if (i.isOdd) {
-                          return const SizedBox(height: 16); // Middle spacing
-                        }
-                        final index = i ~/ 2;
-                        final controller = _controllers[index];
-                        return ResourceBeneficiaryCard(
+                      children: _controllers.isEmpty ? [] : [
+                        for (int index = 0; index < _controllers.length; index++) ...[
+                          const SizedBox(height: spacer4),
+                          ResourceBeneficiaryCard(
                           maxQuantity: _maxQuantities[index],
                           readOnly: isReadOnlyFromSchema,
                           form: form,
@@ -281,8 +278,9 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                             _controllers.removeAt(index);
                             setState(() {});
                           },
-                        );
-                      }),
+                        ),
+                        ],
+                      ],
                     ),
                     const SizedBox(
                       height: spacer4,
