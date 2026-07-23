@@ -27,7 +27,7 @@ import '../utils/environment_config.dart';
 import '../utils/runtime_hierarchy.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
-import '../widgets/download_progress/download_spinner_content.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import '../widgets/localized.dart';
 
 @RoutePage()
@@ -195,20 +195,10 @@ class _BoundarySelectionPageState
                                             (route) => route is! PopupRoute,
                                           ),
                                         },
-                                      showCustomPopup(
+                                      DigitLoaders.overlayLoader(
                                         context: context,
-                                        barrierDismissible: false,
-                                        builder: (ctx) => Popup(
-                                          type: PopUpType.simple,
-                                          title: "",
-                                          additionalWidgets: [
-                                            DownloadSpinnerContent(
-                                              title: localizations.translate(
-                                                i18.beneficiaryDetails
-                                                    .fetchingData,
-                                              ),
-                                            ),
-                                          ],
+                                        label: localizations.translate(
+                                          i18.beneficiaryDetails.fetchingData,
                                         ),
                                       ),
                                     },
