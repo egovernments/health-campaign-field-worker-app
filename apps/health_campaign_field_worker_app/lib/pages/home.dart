@@ -1807,7 +1807,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                     showcaseFor: showcaseKeys.toSet().toList(),
                   ),
                 ),
-                const FaceAuthSessionCard(),
+                // Face-auth session/history card is distributor-only.
+                if (context.loggedInUserRoles.any((role) =>
+                    role.code == RolesType.distributor.toValue()))
+                  const FaceAuthSessionCard(),
                 // Show stock balance card for users with stock management access (not for Polio)
                 if (!isPolio &&
                     state.actionsWrapper.actions
