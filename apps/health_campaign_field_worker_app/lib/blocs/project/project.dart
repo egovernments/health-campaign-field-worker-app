@@ -34,6 +34,7 @@ import '../../models/entities/mdms_module_enums.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/downsync/downsync.dart';
 import '../../models/entities/roles_type.dart';
+import '../../sampleJsonConfigs/registration_smc_flows.dart';
 import '../../utils/download_image.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
@@ -1410,11 +1411,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     dynamic formConfigs,
   ) async {
     final flows = formConfigs['flows'] ?? [];
+    final sampleFlows = sampleSMCFlows['flows'] ?? [];
 
-    // Collect all unique schemaCodes from every node in every flow
-    // (FORM properties, TEMPLATE bodies, nested popupConfig.body, children, etc.)
+    // Collect unique schemaCodes from every node in MDMS flows AND the local
+    // sample flows the app actually renders (see home.dart FlowRegistry.setConfig).
     final Set<String> schemaCodes = {};
     for (final flow in flows) {
+      _collectSchemaCodes(flow, schemaCodes);
+    }
+    for (final flow in sampleFlows) {
       _collectSchemaCodes(flow, schemaCodes);
     }
 
@@ -1436,6 +1441,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     // Recursively enrich every node whose schemaCode returned non-empty MDMS data
     for (final flow in flows) {
+      _applyEnumsToSchemaCodes(flow, enumsBySchemaCode);
+    }
+    for (final flow in sampleFlows) {
       _applyEnumsToSchemaCodes(flow, enumsBySchemaCode);
     }
 
