@@ -45,7 +45,18 @@ class ResourceBeneficiaryCardState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return DigitCard(cardType: CardType.secondary, children: [
+    return DigitCard(cardType: CardType.secondary, spacing: 12, children: [
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          '${localizations.translate(i18.common.coreCommonResource)} ${widget.cardIndex + 1}',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: theme.colorTheme.primary.primary2,
+          ),
+        ),
+      ),
       Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(spacer4),

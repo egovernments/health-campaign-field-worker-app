@@ -172,6 +172,7 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'preventScreenCapture': pageMap['preventScreenCapture'],
         'submitCondition': pageMap['submitCondition'],
         'secondaryActionLabel': pageMap['secondaryActionLabel'],
+        'showLabelOutsideCard': pageMap['showLabelOutsideCard'],
       };
 
       if (type == 'template') {

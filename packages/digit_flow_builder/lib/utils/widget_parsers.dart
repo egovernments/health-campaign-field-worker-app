@@ -139,6 +139,21 @@ class WidgetParsers {
     }
   }
 
+  static CrossAxisAlignment parseCrossAxisAlignment(String? alignment) {
+    switch (alignment) {
+      case 'start':
+        return CrossAxisAlignment.start;
+      case 'end':
+        return CrossAxisAlignment.end;
+      case 'center':
+        return CrossAxisAlignment.center;
+      case 'stretch':
+        return CrossAxisAlignment.stretch;
+      default:
+        return CrossAxisAlignment.center;
+    }
+  }
+
   // ============================================================================
   // Spacing/Padding helpers
   // ============================================================================
@@ -198,8 +213,18 @@ class WidgetParsers {
         return spacer11;
       case 'spacer12':
         return spacer12;
+      case 'spacer13':
+        return spacer13;
+      case 'spacer14':
+        return spacer14;
+      case 'spacer15':
+        return spacer15;
+      case 'spacer16':
+        return spacer16;
+      case 'spacer17':
+        return spacer17;
       default:
-        return 0;
+        return double.tryParse(size ?? '') ?? 0;
     }
   }
 

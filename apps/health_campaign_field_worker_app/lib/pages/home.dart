@@ -1796,7 +1796,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     : homeShowcaseData.distributorProgressBar.buildWith(
                         child: BeneficiaryProgressBar(
                           label: localizations.translate(
-                            i18.home.progressIndicatorTitle,
+                            i18.home.homeMyProgress,
                           ),
                           prefixLabel: localizations.translate(
                             i18.home.progressIndicatorPrefixLabel,
@@ -1809,7 +1809,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     .contains(i18.home.beneficiaryReferralLabel))
                   HFReferralProgressBar(
                     label: localizations.translate(
-                      i18.home.progressIndicatorTitle,
+                      i18.home.homeMyProgress,
                     ),
                     prefixLabel: localizations.translate(
                       i18.common.progressIndicatorPrefixLabelHFReferral,
@@ -2108,9 +2108,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
-                final prefs = await SharedPreferences.getInstance();
-                final schemaJsonRaw = prefs.getString('app_config_schemas');
-
                 FlowBuilderSingleton().setPersistenceConfiguration(
                     persistenceConfiguration:
                         PersistenceConfiguration.offlineFirst);
@@ -2221,37 +2218,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                   ),
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
-                try {
-                  if (schemaJsonRaw != null) {
-                    final allSchemas =
-                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                    final data = allSchemas['REGISTRATION'];
-
-                    final registrationDeliveryData = data?['data'];
-                    final flowsData = (registrationDeliveryData['flows']
-                                as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                    FlowRegistry.setConfig(flowsData);
-                    NavigationRegistry.setupNavigation(ctx);
-
-                    ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName: registrationDeliveryData["initialPage"]),
-                    );
-                  } else {
-                  FlowRegistry.setConfig(
-                      sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
-                  NavigationRegistry.setupNavigation(ctx);
-                  ctx.router.push(
-                    FlowBuilderHomeRoute(
-                        pageName: sampleSMCFlows["initialPage"]),
-                  );
-                  }
-                } catch (e) {
-                  debugPrint('error $e');
-                }
+                FlowRegistry.setConfig(
+                    sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(ctx);
+                ctx.router.push(
+                  FlowBuilderHomeRoute(pageName: sampleSMCFlows["initialPage"]),
+                );
               },
             ));
           },
@@ -2401,12 +2373,14 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
 
-              await FlowNavigationUtils.navigateToFlowModule(
-                context: context,
-                config: FlowModuleConfig(
-                  schemaKey: 'INVENTORY',
-                  sampleFlows: sampleInventoryFlows,
-                  relationshipMappings: const [
+              FlowBuilderSingleton().setPersistenceConfiguration(
+                  persistenceConfiguration:
+                      PersistenceConfiguration.offlineFirst);
+              WidgetRegistry.initialize();
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: const [
                     RelationshipMapping(
                         from: 'facility',
                         to: 'projectFacility',
@@ -2442,7 +2416,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                       },
                     ),
                   ],
+                  searchEntityRepository: context.read<SearchEntityRepository>(),
                 ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              FlowRegistry.setConfig(
+                  sampleInventoryFlows["flows"] as List<Map<String, dynamic>>);
+              NavigationRegistry.setupNavigation(context);
+              context.router.push(
+                FlowBuilderHomeRoute(
+                    pageName: sampleInventoryFlows["initialPage"]),
               );
             }
           },

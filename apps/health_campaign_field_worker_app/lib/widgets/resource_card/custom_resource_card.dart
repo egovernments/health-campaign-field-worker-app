@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../localized.dart';
 import 'resource_beneficiary_card.dart';
@@ -288,7 +289,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                     Center(
                       child: DigitButton(
                         label: localizations.translate(
-                          'Add items',
+                          i18.common.coreCommonAddResource,
                         ),
                         type: DigitButtonType.tertiary,
                         size: DigitButtonSize.medium,

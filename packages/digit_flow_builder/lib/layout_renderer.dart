@@ -418,6 +418,10 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage>
                     footer: showFooter
                         ? DigitCard(
                             spacing: spacer2,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(radius4),
+                              topRight: Radius.circular(radius4),
+                            ),
                             children: footerWidgets,
                           )
                         : null,

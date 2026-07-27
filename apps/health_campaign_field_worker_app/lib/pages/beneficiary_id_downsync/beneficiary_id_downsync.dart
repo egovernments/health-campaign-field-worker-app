@@ -114,7 +114,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                         showCustomPopup(
                           context: context,
                           builder: (ctx) => Popup(
-                            type: PopUpType.simple,
+                            type: dataFound ? PopUpType.simple : PopUpType.alert,
                             title: localizations.translate(
                               dataFound
                                   ? i18.beneficiaryId.dataFoundBeneficiaryIds
@@ -123,11 +123,11 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                             titleIcon: Icon(
                               dataFound
                                   ? Icons.check_circle_outline
-                                  : Icons.warning_amber_rounded,
+                                  : Icons.warning,
                               color: dataFound
                                   ? theme.colorTheme.alert.success
                                   : theme.colorTheme.alert.error,
-                              size: 40,
+                              size: spacer11,
                             ),
                             description: localizations.translate(
                               dataFound
@@ -278,6 +278,10 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                       ]),
                       footer: DigitCard(
                           margin: const EdgeInsets.only(top: spacer2),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(radius4),
+                            topRight: Radius.circular(radius4),
+                          ),
                           children: [
                             DigitButton(
                               isDisabled:

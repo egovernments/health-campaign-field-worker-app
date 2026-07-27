@@ -217,8 +217,8 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                           if (logoUrl == null || logoUrl.isEmpty) {
                             return const SizedBox.shrink();
                           }
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
+                          return SizedBox(
+                            height: 36,
                             child: Image.network(
                               logoUrl,
                               fit: BoxFit.contain,
@@ -228,7 +228,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                           );
                         },
                       ),
-                      centerTitle: true,
+                      centerTitle: false,
                       actions: null,
                     ),
                     drawer: showDrawer ? drawerWidget(context) : null,
@@ -824,6 +824,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                         titleIcon: Icon(
                           Icons.info,
                           color: Theme.of(context).colorTheme.alert.info,
+                          size: 32,
                         ),
                         inlineActions: true,
                         actions: [

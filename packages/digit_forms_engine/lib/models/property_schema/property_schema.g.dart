@@ -73,6 +73,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       labelPlaceHolders: _labelPlaceHoldersOrNull(json['labelPlaceHolders']),
       descriptionPlaceHolders:
           _labelPlaceHoldersOrNull(json['descriptionPlaceHolders']),
+      showLabelOutsideCard: json['showLabelOutsideCard'] as bool?,
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -141,6 +142,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
       instance.labelPlaceHolders?.map((e) => e.toJson()).toList());
   writeNotNull('descriptionPlaceHolders',
       instance.descriptionPlaceHolders?.map((e) => e.toJson()).toList());
+  writeNotNull('showLabelOutsideCard', instance.showLabelOutsideCard);
   return val;
 }
 

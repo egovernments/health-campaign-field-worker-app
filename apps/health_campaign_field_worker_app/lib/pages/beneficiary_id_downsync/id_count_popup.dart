@@ -23,9 +23,9 @@ void showLowIdsAlert(
         return Popup(
           type: PopUpType.alert,
           titleIcon: Icon(
-            Icons.warning_amber_rounded,
+            Icons.warning,
             color: theme.colorTheme.alert.error,
-            size: 48,
+            size: spacer11,
           ),
           onCrossTap: () {
             Navigator.of(ctx).pop();
@@ -82,9 +82,9 @@ void showNoIdsAlert(
         return Popup(
           type: PopUpType.alert,
           titleIcon: Icon(
-            Icons.warning_amber_rounded,
+            Icons.warning,
             color: theme.colorTheme.alert.error,
-            size: 48,
+            size: spacer11,
           ),
           onCrossTap: () {
             Navigator.of(ctx).pop();

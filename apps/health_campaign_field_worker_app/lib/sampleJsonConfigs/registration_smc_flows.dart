@@ -522,7 +522,6 @@
       "category": "DELIVERY",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "BENEFICIARY_DETAILS_DESC",
       "initActions": [
         {
           "actionType": "SEARCH_EVENT",
@@ -1226,69 +1225,6 @@
                     }
                   },
                   {
-                    "icon": "add",
-                    "type": "template",
-                    "label": "REGISTRATION_VIEW_DETAILS",
-                    "format": "button",
-                    "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
-                    "onAction": [
-                      {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "data": [
-                            {
-                              "key": "selectedIndividualClientReferenceId",
-                              "value": "{{item.individual.0.clientReferenceId}}"
-                            },
-                            {
-                              "key": "selectedIndividualIdentifierId",
-                              "value":
-                                  "{{item.individual.0.identifiers.0.identifierId}}"
-                            },
-                            {
-                              "key": "HouseholdClientReferenceId",
-                              "value":
-                                  "{{item.member.0.householdClientReferenceId}}"
-                            },
-                            {
-                              "key": "ProjectBeneficiaryClientReferenceId",
-                              "value":
-                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
-                            },
-                            {
-                              "key": "selectedIndividualName",
-                              "value": "{{item.individual.0.name.givenName}}"
-                            },
-                            {
-                              "key": "selectedIndividualGender",
-                              "value": "{{item.individual.0.gender}}"
-                            },
-                            {
-                              "key": "selectedIndividualAgeInMonths",
-                              "value":
-                                  "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
-                            },
-                            {
-                              "key": "cycleIndex",
-                              "value": "{{contextData.0.currentRunningCycle}}"
-                            }
-                          ],
-                          "name": "beneficiaryDetails",
-                          "type": "TEMPLATE"
-                        }
-                      }
-                    ],
-                    "fieldName": "viewDetails",
-                    "properties": {
-                      "icon": "add",
-                      "size": "medium",
-                      "type": "secondary",
-                      "mainAxisSize": "max",
-                      "mainAxisAlignment": "center"
-                    }
-                  },
-                  {
                     "type": "template",
                     "label": "REDOSE_ADMINISTRATION",
                     "format": "button",
@@ -1385,6 +1321,70 @@
                       "mainAxisAlignment": "center",
                       "topGap": 16
                     }
+                  },
+                  {
+                    "icon": "add",
+                    "type": "template",
+                    "label": "REGISTRATION_VIEW_DETAILS",
+                    "format": "button",
+                    "visible":
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                    "onAction": [
+                      {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "data": [
+                            {
+                              "key": "selectedIndividualClientReferenceId",
+                              "value": "{{item.individual.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "selectedIndividualIdentifierId",
+                              "value":
+                                  "{{item.individual.0.identifiers.0.identifierId}}"
+                            },
+                            {
+                              "key": "HouseholdClientReferenceId",
+                              "value":
+                                  "{{item.member.0.householdClientReferenceId}}"
+                            },
+                            {
+                              "key": "ProjectBeneficiaryClientReferenceId",
+                              "value":
+                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "selectedIndividualName",
+                              "value": "{{item.individual.0.name.givenName}}"
+                            },
+                            {
+                              "key": "selectedIndividualGender",
+                              "value": "{{item.individual.0.gender}}"
+                            },
+                            {
+                              "key": "selectedIndividualAgeInMonths",
+                              "value":
+                                  "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                            },
+                            {
+                              "key": "cycleIndex",
+                              "value": "{{contextData.0.currentRunningCycle}}"
+                            }
+                          ],
+                          "name": "beneficiaryDetails",
+                          "type": "TEMPLATE"
+                        }
+                      }
+                    ],
+                    "fieldName": "viewDetails",
+                    "properties": {
+                      "icon": "add",
+                      "size": "medium",
+                      "type": "secondary",
+                      "mainAxisSize": "max",
+                      "mainAxisAlignment": "center",
+                      "topGap": 16
+                    }
                   }
                 ],
                 "fieldName": "memberCard",
@@ -1416,6 +1416,7 @@
                 "popupConfig": {
                   "body": [],
                   "type": "alert",
+                  "titleIcon": "Warning",
                   "title":
                       "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
                   "description":
@@ -1961,13 +1962,16 @@
               "format": "actionPopup",
               "fieldName": "filterPopUp",
               "properties": {
-                "size": "large",
+                "size": "small",
                 "type": "tertiary",
                 "radius": "spacer1",
                 "showBorder": true,
                 "prefixIcon": "FilterAlt",
-                "mainAxisSize": "min",
-                "mainAxisAlignment": "start",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center",
+                "width": "spacer17",
+                "height": "40",
+                "borderPadding": "0",
                 "popupConfig": {
                   "body": [
                     {
@@ -2303,7 +2307,6 @@
           "format": "actionPopup",
           "visible":
               "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "fieldName": "beneficiaryIdMinCheck",
           "properties": {
             "icon": "FilterAlt",
@@ -2312,6 +2315,7 @@
             "popupConfig": {
               "body": [],
               "type": "alert",
+              "titleIcon": "Warning",
               "title":
                   "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
               "description":
@@ -2389,7 +2393,6 @@
           "format": "button",
           "visible":
               "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
-          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -2518,7 +2521,6 @@
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "REGISTRATION_SEARCH_BENEFICIARY_DESC",
       "initActions": [
         {"actionType": "LOAD_UNIQUE_ID_POOL"}
       ],
@@ -3117,7 +3119,8 @@
               "errorMessage": "",
               "includeInForm": true,
               "isMultiSelect": false,
-              "includeInSummary": true
+              "includeInSummary": true,
+              "conditions": {"cardGroup": 1}
             },
             {
               "type": "dynamic",
@@ -3127,7 +3130,7 @@
                 {"code": "AQ1", "name": "AQ1"},
                 {"code": "AQ2", "name": "AQ2"}
               ],
-              "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_resource",
+              "label": "",
               "order": 2,
               "value": "",
               "format": "custom",
@@ -3162,7 +3165,8 @@
               ],
               "includeInSummary": true,
               "required.message":
-                  "REGISTRATION_RESOURCE_CARD_SELECTION_REQUIRED"
+                  "REGISTRATION_RESOURCE_CARD_SELECTION_REQUIRED",
+              "conditions": {"cardGroup": 2}
             },
             {
               "type": "string",
@@ -3188,7 +3192,8 @@
               "errorMessage": "",
               "includeInForm": true,
               "isMultiSelect": false,
-              "includeInSummary": true
+              "includeInSummary": true,
+              "conditions": {"cardGroup": 3}
             }
           ],
           "actionLabel":
@@ -3196,6 +3201,7 @@
           "description":
               "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
           "showTabView": false,
+          "showLabelOutsideCard": true,
           "submitCondition": null,
           "preventScreenCapture": false
         }

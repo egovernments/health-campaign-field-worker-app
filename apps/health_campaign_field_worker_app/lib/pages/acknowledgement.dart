@@ -62,19 +62,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
               localizations.translate(
                 i18.acknowledgementSuccess.acknowledgementDescriptionText,
               ),
-          additionWidgets: widget.isDataRecordSuccess
-              ? [
-                  LabelValueSummary(
-                    items: widget.descriptionTableData!.keys
-                        .map((e) => LabelValueItem(
-                            labelFlex: 5,
-                            label: e,
-                            maxLines: 3,
-                            value: widget.descriptionTableData?[e].toString()))
-                        .toList(),
-                  ),
-                ]
-              : null,
+          additionWidgets: null,
           actions: (!widget.isDataRecordSuccess)
               ? [
                   DigitButton(

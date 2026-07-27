@@ -458,7 +458,6 @@ final dynamic sampleBednetFlows = {
       "heading": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "REGISTRATION_SEARCH_BENEFICIARY_DESC",
       "wrapperConfig": {
         "filters": [],
         "relations": [
@@ -1151,7 +1150,6 @@ final dynamic sampleBednetFlows = {
       "heading": "BENEFICIARY_DETAILS_HEADING",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "BENEFICIARY_DETAILS_DESC",
       "initActions": [
         {
           "actionType": "SEARCH_EVENT",

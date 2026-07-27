@@ -281,6 +281,17 @@ class _BoundarySelectionPageState
                                                     .proceedWithoutDownloading
                                                 : i18.common.coreCommonGoback,
                                           ),
+                                          infoCardTitle: initialServerCount > 0
+                                              ? localizations.translate(
+                                                  'CORE_COMMON_INFO',
+                                                )
+                                              : null,
+                                          infoCardDescription:
+                                              initialServerCount > 0
+                                                  ? localizations.translate(
+                                                      'CORE_COMMON_INFO_DESC_INTERNET_CONNECTION',
+                                                    )
+                                                  : null,
                                         ),
                                         dialogType:
                                             DigitProgressDialogType.dataFound,

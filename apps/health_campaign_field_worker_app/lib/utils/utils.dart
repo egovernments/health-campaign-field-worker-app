@@ -248,41 +248,57 @@ void showDownloadDialog(
   switch (dialogType) {
     case DigitProgressDialogType.failed:
     case DigitProgressDialogType.checkFailed:
-      DigitSyncDialog.show(
-        context,
-        type: DialogType.failed,
-        label: model.title,
-        description: dialogType == DigitProgressDialogType.checkFailed
-            ? AppLocalizations.of(context).translate(
-                i18.beneficiaryDetails.unableToCheckDataInServerDescription,
-              )
-            : null,
-        primaryAction: DigitDialogActions(
-          label: model.primaryButtonLabel ?? '',
-          action: (ctx) {
-            if (dialogType == DigitProgressDialogType.failed ||
-                dialogType == DigitProgressDialogType.checkFailed) {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncGetBatchSizeEvent(
-                      appConfiguration: [model.appConfiguartion!],
-                      projectModel: model.projectModel,
-                      boundaries: model.boundaries,
-                      pendingSyncCount: model.pendingSyncCount ?? 0,
-                    ),
-                  );
-            } else {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.router.replaceAll([HomeRoute()]);
-            }
-          },
-        ),
-        secondaryAction: DigitDialogActions(
-          label: model.secondaryButtonLabel ?? '',
-          action: (ctx) {
+      showCustomPopup(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => Popup(
+          type: PopUpType.alert,
+          title: AppLocalizations.of(context)
+              .translate(i18.common.coreCommonFailedToCheckData),
+          titleIcon: Icon(
+            Icons.warning,
+            size: spacer11,
+            color: Theme.of(context).colorTheme.alert.error,
+          ),
+          description: AppLocalizations.of(context)
+              .translate(i18.common.coreCommonFailedToCheckDataDesc),
+          onCrossTap: () {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.replaceAll([HomeRoute()]);
+            context.read<BeneficiaryDownSyncBloc>().add(
+                  const DownSyncResetStateEvent(),
+                );
           },
+          actions: [
+            DigitButton(
+              label: model.primaryButtonLabel ?? '',
+              capitalizeLetters: false,
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
+              mainAxisSize: MainAxisSize.max,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.read<BeneficiaryDownSyncBloc>().add(
+                      DownSyncGetBatchSizeEvent(
+                        appConfiguration: [model.appConfiguartion!],
+                        projectModel: model.projectModel,
+                        boundaries: model.boundaries,
+                        pendingSyncCount: model.pendingSyncCount ?? 0,
+                      ),
+                    );
+              },
+            ),
+            DigitButton(
+              label: model.secondaryButtonLabel ?? '',
+              capitalizeLetters: false,
+              type: DigitButtonType.secondary,
+              size: DigitButtonSize.large,
+              mainAxisSize: MainAxisSize.max,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.replaceAll([HomeRoute()]);
+              },
+            ),
+          ],
         ),
       );
     case DigitProgressDialogType.dataFound:
@@ -351,6 +367,16 @@ void showDownloadDialog(
           ),
           titleIconAlignment: CrossAxisAlignment.center,
           description: model.content,
+          additionalWidgets: (model.infoCardTitle != null &&
+                  model.infoCardDescription != null)
+              ? [
+                  InfoCard(
+                    type: InfoType.info,
+                    title: model.infoCardTitle!,
+                    description: model.infoCardDescription!,
+                  ),
+                ]
+              : null,
           actions: [
             DigitButton(
                 label: model.primaryButtonLabel ?? '',

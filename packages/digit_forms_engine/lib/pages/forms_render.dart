@@ -802,68 +802,138 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           height: spacer4,
                         )
                       ],
-                      DigitCard(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: spacer4,
-                        ),
-                        children: [
-                          Column(
+                      if (schema.showLabelOutsideCard == true &&
+                          schema.label != null) ...[
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: spacer4, right: spacer4, bottom: spacer1),
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: 0,
+                              Text(
+                                _resolvePageLabel(schema),
+                                style: Theme.of(context)
+                                    .digitTextTheme(context)
+                                    .headingXl
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorTheme
+                                            .primary
+                                            .primary2),
                               ),
-                              if (schema.label != null) ...[
+                              if (schema.description != null &&
+                                  translateIfPresent(schema.description,
+                                          localizations) !=
+                                      null &&
+                                  _resolvePageDescription(schema)
+                                      .trim()
+                                      .isNotEmpty) ...[
+                                const SizedBox(height: spacer2),
                                 Text(
-                                  _resolvePageLabel(schema),
+                                  _resolvePageDescription(schema),
                                   style: Theme.of(context)
                                       .digitTextTheme(context)
-                                      .headingXl
+                                      .bodyS
                                       .copyWith(
                                           color: Theme.of(context)
                                               .colorTheme
-                                              .primary
-                                              .primary2),
+                                              .text
+                                              .secondary),
                                 ),
-                                if (schema.description != null &&
-                                    translateIfPresent(schema.description,
-                                            localizations) !=
-                                        null &&
-                                    _resolvePageDescription(schema)
-                                        .trim()
-                                        .isNotEmpty) ...[
-                                  const SizedBox(
-                                    height: spacer1,
-                                  ),
-                                  Text(
-                                    _resolvePageDescription(schema),
-                                    style: Theme.of(context)
-                                        .digitTextTheme(context)
-                                        .bodyS
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorTheme
-                                                .text
-                                                .secondary),
-                                  ),
-                                ],
                               ],
                             ],
                           ),
-                          JsonForms(
-                            propertySchema: _excludeSeparateCardFields(schema),
-                            pageName: widget.pageName,
-                            currentSchemaKey: widget.currentSchemaKey,
-                            childrens: widget.customComponents,
-                            navigationParams: widget.navigationParams,
-                            defaultValues: const {
-                              // 'locality': context.boundary.code,
-                            },
-                          )
+                        ),
+                      ],
+                      if (schema.showLabelOutsideCard != true ||
+                          _hasMainCardFields(
+                              _excludeSeparateCardFields(schema))) ...[
+                        DigitCard(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: spacer4,
+                          ),
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 0,
+                                ),
+                                if (schema.showLabelOutsideCard != true &&
+                                    schema.label != null) ...[
+                                  Text(
+                                    _resolvePageLabel(schema),
+                                    style: Theme.of(context)
+                                        .digitTextTheme(context)
+                                        .headingXl
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorTheme
+                                                .primary
+                                                .primary2),
+                                  ),
+                                  if (schema.description != null &&
+                                      translateIfPresent(schema.description,
+                                              localizations) !=
+                                          null &&
+                                      _resolvePageDescription(schema)
+                                          .trim()
+                                          .isNotEmpty) ...[
+                                    const SizedBox(
+                                      height: spacer1,
+                                    ),
+                                    Text(
+                                      _resolvePageDescription(schema),
+                                      style: Theme.of(context)
+                                          .digitTextTheme(context)
+                                          .bodyS
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorTheme
+                                                  .text
+                                                  .secondary),
+                                    ),
+                                  ],
+                                ],
+                              ],
+                            ),
+                            JsonForms(
+                              propertySchema: _excludeCardGroupFields(
+                                  _excludeSeparateCardFields(schema)),
+                              pageName: widget.pageName,
+                              currentSchemaKey: widget.currentSchemaKey,
+                              childrens: widget.customComponents,
+                              navigationParams: widget.navigationParams,
+                              defaultValues: const {
+                                // 'locality': context.boundary.code,
+                              },
+                            )
+                          ],
+                        ),
+                      ],
+                      if (_cardGroupSchemas(schema) != null)
+                        for (final groupSchema
+                            in _cardGroupSchemas(schema)!) ...[
+                          const SizedBox(height: spacer4),
+                          DigitCard(
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: spacer4,
+                            ),
+                            children: [
+                              JsonForms(
+                                propertySchema: groupSchema,
+                                pageName: widget.pageName,
+                                currentSchemaKey: widget.currentSchemaKey,
+                                childrens: widget.customComponents,
+                                navigationParams: widget.navigationParams,
+                                defaultValues: const {},
+                              )
+                            ],
+                          ),
                         ],
-                      ),
                       if (_separateCardFields(schema) != null) ...[
                         const SizedBox(
                           height: spacer4,
@@ -1649,6 +1719,45 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
             .where((e) => e.value.conditions?['separateCard'] != true),
       ),
     );
+  }
+
+  /// Groups properties by `conditions.cardGroup`. Each unique cardGroup value
+  /// becomes one PropertySchema (one card) in ascending numeric order.
+  /// Returns null if no field defines a cardGroup.
+  List<PropertySchema>? _cardGroupSchemas(PropertySchema schema) {
+    final props = schema.properties;
+    if (props == null) return null;
+    final grouped = <int, List<MapEntry<String, PropertySchema>>>{};
+    for (final entry in props.entries) {
+      final raw = entry.value.conditions?['cardGroup'];
+      if (raw == null) continue;
+      final groupId =
+          raw is int ? raw : int.tryParse(raw.toString());
+      if (groupId == null) continue;
+      grouped.putIfAbsent(groupId, () => []).add(entry);
+    }
+    if (grouped.isEmpty) return null;
+    final sortedKeys = grouped.keys.toList()..sort();
+    return sortedKeys
+        .map((k) => schema.copyWith(properties: Map.fromEntries(grouped[k]!)))
+        .toList();
+  }
+
+  /// Returns a schema with only fields NOT assigned to a cardGroup — these go
+  /// in the "main" (first) card.
+  PropertySchema _excludeCardGroupFields(PropertySchema schema) {
+    final props = schema.properties;
+    if (props == null) return schema;
+    return schema.copyWith(
+      properties: Map.fromEntries(
+        props.entries.where((e) => e.value.conditions?['cardGroup'] == null),
+      ),
+    );
+  }
+
+  bool _hasMainCardFields(PropertySchema schema) {
+    final props = _excludeCardGroupFields(schema).properties;
+    return props != null && props.isNotEmpty;
   }
 
   Widget _buildDisplayOnlyCard(BuildContext context, PropertySchema schema) {

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_management/widgets/localized.dart';
@@ -11,7 +10,6 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../router/app_router.dart';
@@ -88,47 +86,19 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
   /// Initialize the screen config from permission_handler_config
   Future<void> _initializeConfig() async {
-    final prefs = await SharedPreferences.getInstance();
-    final schemaJsonRaw = prefs.getString('app_config_schemas');
-
     try {
-      if (schemaJsonRaw != null) {
-        final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
-        final data = allSchemas['PERMISSIONHANDLER'];
-        if (data?['data']?['disabled'] == true) {
-          _isDisabled = true;
-          if (mounted) {
-            context.router.replace(BoundarySelectionRoute());
-          }
-          return; // Skip loading config when disabled
-        } else {
-          final registrationDeliveryData = data?['data'];
-          final flowsData =
-              (registrationDeliveryData['flows'] as List<dynamic>?)
-                      ?.map((e) => Map<String, dynamic>.from(e as Map))
-                      .toList() ??
-                  [];
-          if (flowsData.isNotEmpty) {
-            screenConfig = flowsData[0];
-            bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
-            footerConfig = screenConfig?['footer'] as List<dynamic>? ?? [];
-          }
+      if (permission_handler_config?['disabled'] == true) {
+        _isDisabled = true;
+        if (mounted) {
+          context.router.replace(BoundarySelectionRoute());
         }
-      } else {
-        if (permission_handler_config?['disabled'] == true) {
-          _isDisabled = true;
-          if (mounted) {
-            context.router.replace(BoundarySelectionRoute());
-          }
-          return; // Skip loading config when disabled
-        } else {
-          final flows = permission_handler_config['flows'] as List<dynamic>?;
-          if (flows != null && flows.isNotEmpty) {
-            screenConfig = flows[0] as Map<String, dynamic>;
-            bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
-            footerConfig = screenConfig?['footer'] as List<dynamic>? ?? [];
-          }
-        }
+        return;
+      }
+      final flows = permission_handler_config['flows'] as List<dynamic>?;
+      if (flows != null && flows.isNotEmpty) {
+        screenConfig = flows[0] as Map<String, dynamic>;
+        bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+        footerConfig = screenConfig?['footer'] as List<dynamic>? ?? [];
       }
     } catch (e) {
       debugPrint('config error $e');
@@ -471,9 +441,9 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         titleIcon: Icon(
           Icons.warning,
           color: Theme.of(context).colorTheme.alert.error,
-          size: spacer12,
+          size: spacer11,
         ),
-        subHeading:
+        description:
             localizations.translate(i18.common.accessPermissionDialogDesc),
         onCrossTap: () => Navigator.pop(context),
         // width: 10,

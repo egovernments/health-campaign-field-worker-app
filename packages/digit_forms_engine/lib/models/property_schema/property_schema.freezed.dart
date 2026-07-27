@@ -103,7 +103,8 @@ mixin _$PropertySchema {
       throw _privateConstructorUsedError; // Named placeholder substitution for descriptions
   @JsonKey(fromJson: _labelPlaceHoldersOrNull)
   List<LabelPlaceHolder>? get descriptionPlaceHolders =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // Render page label/description outside the card (before it)
+  bool? get showLabelOutsideCard => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -176,7 +177,8 @@ abstract class $PropertySchemaCopyWith<$Res> {
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
-      List<LabelPlaceHolder>? descriptionPlaceHolders});
+      List<LabelPlaceHolder>? descriptionPlaceHolders,
+      bool? showLabelOutsideCard});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
@@ -249,6 +251,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? comparisonConfig = freezed,
     Object? labelPlaceHolders = freezed,
     Object? descriptionPlaceHolders = freezed,
+    Object? showLabelOutsideCard = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -443,6 +446,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.descriptionPlaceHolders
           : descriptionPlaceHolders // ignore: cast_nullable_to_non_nullable
               as List<LabelPlaceHolder>?,
+      showLabelOutsideCard: freezed == showLabelOutsideCard
+          ? _value.showLabelOutsideCard
+          : showLabelOutsideCard // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 
@@ -612,7 +619,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
-      List<LabelPlaceHolder>? descriptionPlaceHolders});
+      List<LabelPlaceHolder>? descriptionPlaceHolders,
+      bool? showLabelOutsideCard});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -691,6 +699,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? comparisonConfig = freezed,
     Object? labelPlaceHolders = freezed,
     Object? descriptionPlaceHolders = freezed,
+    Object? showLabelOutsideCard = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -885,6 +894,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value._descriptionPlaceHolders
           : descriptionPlaceHolders // ignore: cast_nullable_to_non_nullable
               as List<LabelPlaceHolder>?,
+      showLabelOutsideCard: freezed == showLabelOutsideCard
+          ? _value.showLabelOutsideCard
+          : showLabelOutsideCard // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -948,7 +961,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       final List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
-      final List<LabelPlaceHolder>? descriptionPlaceHolders})
+      final List<LabelPlaceHolder>? descriptionPlaceHolders,
+      this.showLabelOutsideCard})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
@@ -1160,9 +1174,13 @@ class _$PropertySchemaImpl implements _PropertySchema {
     return EqualUnmodifiableListView(value);
   }
 
+// Render page label/description outside the card (before it)
+  @override
+  final bool? showLabelOutsideCard;
+
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, textCapitalization: $textCapitalization, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, showSecondaryAlertPopUp: $showSecondaryAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig, labelPlaceHolders: $labelPlaceHolders, descriptionPlaceHolders: $descriptionPlaceHolders)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, textCapitalization: $textCapitalization, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, showSecondaryAlertPopUp: $showSecondaryAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig, labelPlaceHolders: $labelPlaceHolders, descriptionPlaceHolders: $descriptionPlaceHolders, showLabelOutsideCard: $showLabelOutsideCard)';
   }
 
   @override
@@ -1255,7 +1273,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
             const DeepCollectionEquality()
                 .equals(other._labelPlaceHolders, _labelPlaceHolders) &&
             const DeepCollectionEquality().equals(
-                other._descriptionPlaceHolders, _descriptionPlaceHolders));
+                other._descriptionPlaceHolders, _descriptionPlaceHolders) &&
+            (identical(other.showLabelOutsideCard, showLabelOutsideCard) ||
+                other.showLabelOutsideCard == showLabelOutsideCard));
   }
 
   @JsonKey(ignore: true)
@@ -1309,7 +1329,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         secondaryActionLabel,
         comparisonConfig,
         const DeepCollectionEquality().hash(_labelPlaceHolders),
-        const DeepCollectionEquality().hash(_descriptionPlaceHolders)
+        const DeepCollectionEquality().hash(_descriptionPlaceHolders),
+        showLabelOutsideCard
       ]);
 
   @JsonKey(ignore: true)
@@ -1388,8 +1409,8 @@ abstract class _PropertySchema implements PropertySchema {
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       final List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
-      final List<LabelPlaceHolder>?
-          descriptionPlaceHolders}) = _$PropertySchemaImpl;
+      final List<LabelPlaceHolder>? descriptionPlaceHolders,
+      final bool? showLabelOutsideCard}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -1512,6 +1533,8 @@ abstract class _PropertySchema implements PropertySchema {
   @override // Named placeholder substitution for descriptions
   @JsonKey(fromJson: _labelPlaceHoldersOrNull)
   List<LabelPlaceHolder>? get descriptionPlaceHolders;
+  @override // Render page label/description outside the card (before it)
+  bool? get showLabelOutsideCard;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>

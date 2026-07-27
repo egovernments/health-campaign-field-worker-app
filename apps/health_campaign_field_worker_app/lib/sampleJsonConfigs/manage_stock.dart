@@ -94,7 +94,7 @@ final dynamic sampleInventoryFlows = {
               "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
           "description":
               "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RECEIVED_AT_THE_WAREHOUSE_DESCRIPTION",
-          "icon": "FileUpload",
+          "icon": "FileDownload",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -129,7 +129,7 @@ final dynamic sampleInventoryFlows = {
               "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
           "description":
               "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION",
-          "icon": 'FileDownload',
+          "icon": 'FileUpload',
           "onAction": [
             {
               "actionType": "NAVIGATION",

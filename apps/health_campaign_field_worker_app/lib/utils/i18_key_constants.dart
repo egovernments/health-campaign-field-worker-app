@@ -260,7 +260,11 @@ class Common {
   String get coreCommonQuantityDistributed =>
       'CORE_COMMON_QUANTITY_DISTRIBUTED';
 
+  String get coreCommonResource => 'CORE_COMMON_RESOURCE';
+
   String get coreCommonDeleteResource => 'CORE_COMMON_DELETE_RESOURCE';
+
+  String get coreCommonAddResource => 'CORE_COMMON_ADD_RESOURCE';
 
   String get coreCommonDeleteResourceConfirmation =>
       'CORE_COMMON_DELETE_RESOURCE_CONFIRMATION';
@@ -343,6 +347,11 @@ class Common {
   String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
 
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
+
+  String get coreCommonFailedToCheckData => 'CORE_COMMON_FAILED_TO_CHECK_DATA';
+
+  String get coreCommonFailedToCheckDataDesc =>
+      'CORE_COMMON_FAILED_TO_CHECK_DATA_DESC';
 
   String get coreCommonDownloadCompleted => 'CORE_COMMON_DOWNLOAD_COMPLETED';
 
@@ -634,6 +643,11 @@ class StockDetailsIssuedShowcase {
   String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
 
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
+
+  String get coreCommonFailedToCheckData => 'CORE_COMMON_FAILED_TO_CHECK_DATA';
+
+  String get coreCommonFailedToCheckDataDesc =>
+      'CORE_COMMON_FAILED_TO_CHECK_DATA_DESC';
 }
 
 class AdverseEvents {
@@ -886,6 +900,8 @@ class Home {
 
   String get progressIndicatorTitle => 'PROGRESS_INDICATOR_TITLE';
 
+  String get homeMyProgress => 'HOME_MY_PROGRESS';
+
   String get progressIndicatorHelp => 'PROGRESS_INDICATOR_HELP';
 
   String get progressIndicatorPrefixLabel => 'PROGRESS_INDICATOR_PREFIX_LABEL';
@@ -1056,7 +1072,7 @@ class AcknowledgementSuccess {
   String get acknowledgementDescriptionText =>
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
 
-  String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
+  String get acknowledgementLabelText => 'CORE_COMMON_DATA_DOWNLOAD_SUCCESS';
 
   String get goToHome => 'GO_TO_HOME_SCREEN';
 
@@ -1502,7 +1518,7 @@ class BeneficiaryDetails {
 
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
-  String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
+  String get proceedWithoutDownloading => 'CORE_COMMON_PROCEED_WITHOUT_DOWNLOAD';
 
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
 
@@ -1515,7 +1531,7 @@ class BeneficiaryDetails {
 
   String get dataFoundContent => 'DATA_FOUND_CONTENT';
 
-  String get noDataFoundContent => 'NO_DATA_FOUND_CONTENT';
+  String get noDataFoundContent => 'BENEFICIARY_NO_DATA_FOUND_DESC';
 
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
 
