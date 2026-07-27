@@ -71,6 +71,10 @@ class VisibilityManager {
 
     if (isVisible) {
       control.setValidators(buildValidators(schema));
+      // Restore boolean controls to false if they were nulled out during hide
+      if (schema.type == PropertySchemaType.boolean && control.value == null) {
+        control.value = false;
+      }
     } else {
       control
         ..clearValidators()
