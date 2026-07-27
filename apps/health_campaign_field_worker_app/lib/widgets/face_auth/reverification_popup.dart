@@ -209,7 +209,20 @@ Future<Set<String>> _getRegisterAttendeeIds(BuildContext context) async {
 
       for (final ind in individuals) {
         if (ind.id != null && ind.id!.isNotEmpty && ind.id != loggedInId) {
-          result.add(ind.id!);
+          // Same role scoping as the non-mobile user list: only co-workers
+          // whose HCM user carries the non-mobile-user role.
+          final rolesValue = ind.additionalFields?.fields
+              .where((f) => f.key == 'userRoles')
+              .map((f) => f.value?.toString())
+              .firstWhere((v) => v != null, orElse: () => null);
+          final hasRole = rolesValue != null &&
+              rolesValue
+                  .split(',')
+                  .map((r) => r.trim().toUpperCase())
+                  .contains(AttendanceBloc.nonMobileUserRole);
+          if (hasRole) {
+            result.add(ind.id!);
+          }
         }
       }
     }

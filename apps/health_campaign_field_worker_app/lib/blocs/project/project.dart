@@ -28,6 +28,7 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../data/remote_client.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/entities/mdms_master_enums.dart';
@@ -611,6 +612,67 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     return updatedLogs;
   }
 
+  /// Fetches the HCM user roles for [individuals] (by userUuid) in a single
+  /// /user/v1/_search call and stamps them into each individual's
+  /// additionalFields under the 'userRoles' key (comma-separated role codes),
+  /// so role-based filters (e.g. the FIELD_SUPPORT non-mobile-user list) work
+  /// offline. Best-effort: on any failure the individuals are returned as-is.
+  Future<List<IndividualModel>> _annotateUserRoles(
+      List<IndividualModel> individuals) async {
+    try {
+      final userUuids = individuals
+          .map((e) => e.userUuid)
+          .where((u) => u != null && u.isNotEmpty)
+          .cast<String>()
+          .toSet()
+          .toList();
+      if (userUuids.isEmpty) return individuals;
+
+      final response = await DioClient().dio.post(
+        '/user/v1/_search',
+        data: {
+          'tenantId': envConfig.variables.tenantId,
+          'uuid': userUuids,
+          'pageSize': userUuids.length,
+        },
+      );
+
+      final users = (response.data as Map<String, dynamic>?)?['user'];
+      if (users is! List) return individuals;
+
+      final rolesByUuid = <String, String>{};
+      for (final u in users) {
+        if (u is! Map) continue;
+        final uuid = u['uuid']?.toString();
+        final roles = u['roles'];
+        if (uuid == null || roles is! List) continue;
+        rolesByUuid[uuid] = roles
+            .map((r) => r is Map ? r['code']?.toString() : null)
+            .whereType<String>()
+            .join(',');
+      }
+      debugPrint('[FaceAuth] userRoles fetched for ${rolesByUuid.length} users');
+
+      return individuals.map((ind) {
+        final roles = ind.userUuid != null ? rolesByUuid[ind.userUuid] : null;
+        if (roles == null) return ind;
+        final existing = ind.additionalFields?.fields
+                .where((f) => f.key != 'userRoles')
+                .toList() ??
+            <AdditionalField>[];
+        return ind.copyWith(
+          additionalFields: IndividualAdditionalFields(
+            version: ind.additionalFields?.version ?? 1,
+            fields: [...existing, AdditionalField('userRoles', roles)],
+          ),
+        );
+      }).toList();
+    } catch (e) {
+      debugPrint('[FaceAuth] _annotateUserRoles failed: $e');
+      return individuals;
+    }
+  }
+
   /// Fetches all face auth events for [projectId] in a single API call and
   /// upserts them into the local DB so verification status shows offline.
   ///
@@ -732,7 +794,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                         .toList(),
                   ),
                 );
-                await individualLocalRepository.bulkCreate(individuals);
+                // Stamp each individual's HCM user roles into
+                // additionalFields so role filters work offline.
+                final annotated = await _annotateUserRoles(individuals);
+                await individualLocalRepository.bulkCreate(annotated);
                 if (context.loggedInUserRoles
                     .where(
                       (role) =>
