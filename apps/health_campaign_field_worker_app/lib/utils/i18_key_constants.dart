@@ -1230,6 +1230,10 @@ class SyncDialog {
 
   String get dataSyncedTitle => 'SYNC_DIALOG_DATA_SYNCED_TITLE';
 
+  String get dataSyncedSuccessTitle => 'DATA_SYNCED_SUCCESS_TITLE';
+
+  String get dataSyncedSuccessDescription => 'DATA_SYNCED_SUCCESS_DESCRIPTION';
+
   String get noDataToSyncTitle => 'SYNC_DIALOG_NO_DATA_TO_SYNC_TITLE';
 
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';

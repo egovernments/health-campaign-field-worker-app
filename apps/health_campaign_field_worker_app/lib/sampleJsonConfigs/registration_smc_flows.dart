@@ -1537,6 +1537,7 @@
         {
           "label": "HOUSEHOLD_BACK",
           "format": "backLink",
+          "properties": {"topPadding": 4},
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -5129,6 +5130,7 @@
           "page": "referBeneficiary",
           "type": "object",
           "label": "REFER_BENEFICIARY_SCREEN_HEADING",
+          "showLabelOutsideCard": true,
           "order": 1,
           "footer": [
             {

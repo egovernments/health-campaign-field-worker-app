@@ -24,8 +24,10 @@ class BackLinkWidget extends ResolvedFlowWidget {
     ResolvedWidgetContext resolved,
   ) {
     final label = resolved.resolvedLabel ?? (json['label'] ?? '');
+    final props = Map<String, dynamic>.from(json['properties'] ?? {});
+    final topPadding = (props['topPadding'] as num?)?.toDouble() ?? 0.0;
 
-    return DigitBackButton(
+    final button = DigitBackButton(
       label: label,
       handleBack: () {
         _handleBack(json, context, onAction, resolved);
@@ -39,6 +41,14 @@ class BackLinkWidget extends ResolvedFlowWidget {
         ),
       ),
     );
+
+    if (topPadding > 0) {
+      return Padding(
+        padding: EdgeInsets.only(top: topPadding),
+        child: button,
+      );
+    }
+    return button;
   }
 
   void _handleBack(

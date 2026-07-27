@@ -141,7 +141,7 @@ class BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
         borderRadius: BorderRadius.circular(radius1),
         children: [
         ProgressIndicatorContainer(
-          label: '${max(target - current, 0).round()} ${widget.label}',
+          label: widget.label,
           prefixLabel: '$current ${widget.prefixLabel}',
           suffixLabel: target.toStringAsFixed(0),
           value: target == 0 ? 0 : min(current / target, 1),

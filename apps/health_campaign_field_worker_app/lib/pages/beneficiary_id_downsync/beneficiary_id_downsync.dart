@@ -274,7 +274,10 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                     body: ScrollableContent(
                       enableFixedDigitButton: true,
                       header: const Column(children: [
-                        BackNavigationHelpHeaderWidget(),
+                        Padding(
+                          padding: EdgeInsets.only(top: 4),
+                          child: BackNavigationHelpHeaderWidget(),
+                        ),
                       ]),
                       footer: DigitCard(
                           margin: const EdgeInsets.only(top: spacer2),
@@ -450,7 +453,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                     localizations.translate(
                         i18.beneficiaryId.availableBeneficiaryIdsText),
                     style: textTheme.bodyL
-                        .copyWith(color: theme.colorTheme.primary.primary2)),
+                        .copyWith(color: theme.colorTheme.text.primary)),
                 AnimatedBuilder(
                     animation: _animation,
                     builder: (context, child) {
@@ -470,7 +473,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                     localizations
                         .translate(i18.beneficiaryId.totalBeneficiaryIds),
                     style: textTheme.bodyL
-                        .copyWith(color: theme.colorTheme.primary.primary2)),
+                        .copyWith(color: theme.colorTheme.text.primary)),
                 Text(widget.totalCount.toString(),
                     style: textTheme.headingL
                         .copyWith(color: theme.colorTheme.primary.primary2)),

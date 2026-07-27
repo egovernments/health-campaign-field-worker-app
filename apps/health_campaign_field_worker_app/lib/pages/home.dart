@@ -1858,7 +1858,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                             additionalWidgets: [
                               DownloadSpinnerContent(
                                 title: localizations.translate(
-                                  i18.syncDialog.syncInProgressTitle,
+                                  i18.projectSelection.syncInProgressTitleText,
                                 ),
                               ),
                             ],
@@ -1868,20 +1868,35 @@ class _HomePageState extends LocalizedState<HomePage> {
                     },
                     nothingPending: () async {
                       if (context.mounted) {
-                        DigitSyncDialog.show(context,
-                            type: DialogType.complete,
-                            label: localizations.translate(
-                              i18.syncDialog.noDataToSyncTitle,
+                        showCustomPopup(
+                          context: context,
+                          builder: (ctx) => Popup(
+                            type: PopUpType.simple,
+                            title: localizations.translate(
+                              i18.syncDialog.dataSyncedSuccessTitle,
                             ),
-                            primaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.syncDialog.closeButtonLabel,
+                            titleIcon: Icon(
+                              Icons.check_circle_outline,
+                              color: theme.colorTheme.alert.success,
+                              size: spacer11,
+                            ),
+                            description: localizations.translate(
+                              i18.syncDialog.dataSyncedSuccessDescription,
+                            ),
+                            actions: [
+                              DigitButton(
+                                capitalizeLetters: false,
+                                type: DigitButtonType.secondary,
+                                size: DigitButtonSize.small,
+                                mainAxisSize: MainAxisSize.min,
+                                onPressed: () => Navigator.of(ctx).pop(),
+                                label: localizations.translate(
+                                  i18.syncDialog.closeButtonLabel,
+                                ),
                               ),
-                              action: (ctx) {
-                                Navigator.pop(ctx);
-                              },
-                            ),
-                            barrierDismissible: true);
+                            ],
+                          ),
+                        );
                       }
                     },
                     completedSync: () async {

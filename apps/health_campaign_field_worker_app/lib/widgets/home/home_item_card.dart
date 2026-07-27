@@ -37,12 +37,11 @@ class HomeItemCard extends StatelessWidget {
 
     return DigitCard(
         onPressed: onPressed,
-        padding: const EdgeInsets.all(spacer1).copyWith(top: spacer1),
+        padding: const EdgeInsets.all(spacer1).copyWith(top: spacer9),
         margin: EdgeInsets.zero,
         borderRadius: BorderRadius.circular(radius4),
         inline: true,
         children: [
-          const Padding(padding: EdgeInsets.only(top: spacer1)),
           if (enableCustomIcon)
             Align(
               alignment: Alignment.center,

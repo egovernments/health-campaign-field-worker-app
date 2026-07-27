@@ -1300,5 +1300,11 @@
     "locale": "pt_MZ",
     "message": "Back To Search Beneficiary",
     "module": "hcm-beneficiary"
+  },
+  {
+    "code": "HOME_MY_PROGRESS",
+    "locale": "en_IN",
+    "message": "My Progress",
+    "module": "hcm-home"
   }
 ]
