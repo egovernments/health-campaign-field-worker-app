@@ -231,6 +231,13 @@ class Common {
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get permissionContinue => 'PERMISSION_CONTINUE';
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
+
+  String get coreCommonInfo => 'CORE_COMMON_INFO';
+
+  String get coreCommonNoValue => 'CORE_COMMON_NO_VALUE';
+
+  String get coreCommonInfoDescInternetConnection =>
+      'CORE_COMMON_INFO_DESC_INTERNET_CONNECTION';
   String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
   String get logoutConfirmationHeading => 'HCM_LOGOUT_CONFIRMATION_HEADING';
   String get logoutConfirmationDescription => 'HCM_LOGOUT_CONFIRMATION_DESCRIPTION';

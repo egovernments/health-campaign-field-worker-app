@@ -2046,12 +2046,11 @@
                       "enums": [
                         {"code": "ADMINISTRATION_SUCCESS", "name": "REGISTRATION_ADMINISTRATION_SUCCESS"},
                         {"code": "BENEFICIARY_REFERRED", "name": "REGISTRATION_BENEFICIARY_REFERRED"},
-                        {"code": "INELIGIBLE", "name": "REGISTRATION_INELIGIBLE"},
-                        {"code": "CLOSED_HOUSEHOLD", "name": "REGISTRATION_CLOSED_HOUSEHOLD"},
-                        {"code": "NOT_ADMINISTERED", "name": "REGISTRATION_NOT_ADMINISTERED"}
                       ],
                       "format": "selectionCard",
                       "fieldName": "selectedStatus",
+                      "isMdms": true,
+                      "schemaCode": "HCM.SEARCH_HOUSEHOLD_FILTERS",
                       "properties": {"fullWidth": true}
                     }
                   ],

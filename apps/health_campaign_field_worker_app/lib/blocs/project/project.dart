@@ -1409,37 +1409,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   Future<void> enrichFormSchemasWithEnumsForForms(
     dynamic formConfigs,
   ) async {
-    // Filter only FORM type screens
-    final formTypeConfigs = formConfigs['flows']
-        .where((config) => config['screenType'] == 'FORM')
-        .toList();
+    final flows = formConfigs['flows'] ?? [];
 
-    // Nothing to enrich
-    if (formTypeConfigs.isEmpty) {
-      await storeSchema(formConfigs);
-      return;
-    }
-
-    // Collect all unique schemaCodes across all form pages
+    // Collect all unique schemaCodes from every node in every flow
+    // (FORM properties, TEMPLATE bodies, nested popupConfig.body, children, etc.)
     final Set<String> schemaCodes = {};
-
-    for (final formConfig in formTypeConfigs) {
-      final pages = formConfig['pages'] ?? [];
-      for (final page in pages) {
-        final properties = page['properties'] ?? [];
-        for (final property in properties) {
-          final schemaCode = property['schemaCode'];
-          if (schemaCode != null && schemaCode.toString().isNotEmpty) {
-            final parts = schemaCode.split('.');
-            if (parts.length == 2) {
-              schemaCodes.add(schemaCode);
-            }
-          }
-        }
-      }
+    for (final flow in flows) {
+      _collectSchemaCodes(flow, schemaCodes);
     }
 
-    // If no schemaCode found, just store as-is
     if (schemaCodes.isEmpty) {
       await storeSchema(formConfigs);
       return;
@@ -1456,31 +1434,58 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       enumsBySchemaCode[schemaCode] = dataList;
     }
 
-    // Now enrich all FORM screens with enums
-    for (final formConfig in formTypeConfigs) {
-      final pages = formConfig['pages'] ?? [];
-      for (final page in pages) {
-        final properties = page['properties'] ?? [];
-        for (final property in properties) {
-          final schemaCode = property['schemaCode'];
-          if (schemaCode != null && schemaCode.toString().isNotEmpty) {
-            final enumValues = enumsBySchemaCode[schemaCode];
-
-            if (enumValues != null) {
-              property['enums'] = enumValues
-                  .map((e) => {
-                        'code': e['code'],
-                        'name': e['name'] ?? e['code'],
-                      })
-                  .toList();
-            }
-          }
-        }
-      }
+    // Recursively enrich every node whose schemaCode returned non-empty MDMS data
+    for (final flow in flows) {
+      _applyEnumsToSchemaCodes(flow, enumsBySchemaCode);
     }
 
-    // Finally, store the full formConfigs (including updated FORM ones)
     await storeSchema(formConfigs);
+  }
+
+  void _collectSchemaCodes(dynamic node, Set<String> schemaCodes) {
+    if (node is Map) {
+      final schemaCode = node['schemaCode'];
+      if (schemaCode is String && schemaCode.isNotEmpty) {
+        final parts = schemaCode.split('.');
+        if (parts.length == 2) {
+          schemaCodes.add(schemaCode);
+        }
+      }
+      for (final value in node.values) {
+        _collectSchemaCodes(value, schemaCodes);
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        _collectSchemaCodes(item, schemaCodes);
+      }
+    }
+  }
+
+  void _applyEnumsToSchemaCodes(
+    dynamic node,
+    Map<String, List<dynamic>> enumsBySchemaCode,
+  ) {
+    if (node is Map) {
+      final schemaCode = node['schemaCode'];
+      if (schemaCode is String && schemaCode.isNotEmpty) {
+        final enumValues = enumsBySchemaCode[schemaCode];
+        if (enumValues != null && enumValues.isNotEmpty) {
+          node['enums'] = enumValues
+              .map((e) => {
+                    'code': e['code'],
+                    'name': e['name'] ?? e['code'],
+                  })
+              .toList();
+        }
+      }
+      for (final value in node.values) {
+        _applyEnumsToSchemaCodes(value, enumsBySchemaCode);
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        _applyEnumsToSchemaCodes(item, enumsBySchemaCode);
+      }
+    }
   }
 
   Future<void> _createUserActionForDeviceSwitch(ProjectModel project) async {
