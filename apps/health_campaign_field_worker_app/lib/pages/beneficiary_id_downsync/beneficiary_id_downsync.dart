@@ -389,7 +389,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                   color: theme.colorTheme.primary.primary2)),
         ),
         DigitCard(
-            margin: const EdgeInsets.only(top: spacer5),
+            margin: const EdgeInsets.only(top: spacer5, left: spacer4, right: spacer4),
             padding: const EdgeInsets.only(left: spacer4, right: spacer4, top: 60, bottom: spacer4),
             children: [
           Center(
