@@ -1527,7 +1527,7 @@
             }
           ],
           "fieldName": "card",
-          "properties": {"type": "primary", "cardType": "primary"},
+          "properties": {"type": "primary", "cardType": "primary", "spacing": 12},
           "schemaCode": null
         }
       ],
