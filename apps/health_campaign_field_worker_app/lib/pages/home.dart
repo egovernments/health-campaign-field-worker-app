@@ -21,6 +21,7 @@ import 'package:digit_flow_builder/widgets/flow_widget_interface.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -113,6 +114,23 @@ class _HomePageState extends LocalizedState<HomePage> {
   final _syncDebouncer = Debouncer(seconds: 5);
   final StreamController<double> stockDownloadProgress =
       StreamController<double>.broadcast();
+  // OverlayEntry-based loader shown while a module-open cascade is running
+  // (localization fetch + schema decode + flow setup + router.push). We use
+  // `OverlayEntry` (inserted into the ROOT `Overlay`) instead of
+  // `DigitLoaders.overlayLoader` — the latter is `showDialog`-based, so any
+  // `context.router.push(...)` fired mid-flight lands on top of it. An
+  // `OverlayEntry` sits above the entire Navigator stack and stays visible
+  // across intermediate route pushes. See `_openModule` for the primary
+  // driver; the `BlocListener<LocalizationBloc>` in `build()` remains as a
+  // safety net for paths that fire outside `_openModule`.
+  OverlayEntry? _localizationLoaderOverlay;
+
+  /// Number of `_openModule` calls currently in flight. Used to make the
+  /// overlay dismiss ownership-aware: nested opens (outer card opens a
+  /// module that itself calls `_openModule` from its own initActions) would
+  /// otherwise let the outer's finally rip the overlay from under the
+  /// still-running inner one.
+  int _openModuleOwners = 0;
 
   @override
   initState() {
@@ -1533,7 +1551,60 @@ class _HomePageState extends LocalizedState<HomePage> {
   dispose() {
     subscription.cancel();
     stockDownloadProgress.close();
+    _hideLoader();
     super.dispose();
+  }
+
+  void _showLoader() {
+    if (_localizationLoaderOverlay != null) return;
+    final overlay = Overlay.maybeOf(context, rootOverlay: true);
+    if (overlay == null) return;
+    _localizationLoaderOverlay = OverlayEntry(
+      builder: (_) => Material(
+        color: Colors.black.withOpacity(0.4),
+        child: Center(
+          child: DigitLoaders.inlineLoader(size: 80),
+        ),
+      ),
+    );
+    overlay.insert(_localizationLoaderOverlay!);
+  }
+
+  void _hideLoader() {
+    _localizationLoaderOverlay?.remove();
+    _localizationLoaderOverlay = null;
+  }
+
+  /// Runs [work] with the full-screen overlay visible for its synchronous
+  /// portion and dismisses the overlay as soon as [work] returns.
+  ///
+  /// Yields to the framework via `endOfFrame` after inserting the overlay
+  /// entry: without this, Dart would run the whole synchronous portion of
+  /// `work` (JSON decode of `app_config_schemas`, `FlowRegistry.setConfig`,
+  /// etc.) before returning to the event loop — meaning the overlay would
+  /// only paint AFTER the freeze, defeating the point.
+  ///
+  /// The overlay does NOT wait for the target route's initial CRUD search
+  /// to settle. Target routes own their own loading UX; this method only
+  /// guards the router.push transition itself.
+  ///
+  /// Safe to call while another `_openModule` is in flight: each call
+  /// takes an ownership token (`_openModuleOwners`) and the overlay is
+  /// only dismissed when the last owner releases. Prevents the outer
+  /// call from ripping the overlay from under a nested inner call.
+  Future<T> _openModule<T>(Future<T> Function() work) async {
+    _openModuleOwners++;
+    _showLoader();
+    await WidgetsBinding.instance.endOfFrame;
+    try {
+      return await work();
+    } finally {
+      _openModuleOwners--;
+      if (_openModuleOwners <= 0) {
+        _openModuleOwners = 0;
+        WidgetsBinding.instance.addPostFrameCallback((_) => _hideLoader());
+      }
+    }
   }
 
   @override
@@ -1564,430 +1635,419 @@ class _HomePageState extends LocalizedState<HomePage> {
       ...(mappedItems?.showcaseKeys ?? []),
     ];
 
-    return BlocListener<StockDownSyncBloc, StockDownSyncState>(
-      listener: (context, stockDownSyncState) {
-        stockDownSyncState.maybeWhen(
-          orElse: () {},
-          loading: (isPop) {
-            if (isPop) {
-              Navigator.of(context, rootNavigator: true)
-                  .popUntil((route) => route is! PopupRoute);
-            }
-            showCustomPopup(
-              context: context,
-              barrierDismissible: false,
-              builder: (ctx) => Popup(
-                type: PopUpType.simple,
-                title: "",
-                additionalWidgets: [
-                  DownloadSpinnerContent(
-                    title: localizations.translate(i18.home.stockSyncDataLabel),
-                  ),
-                ],
-              ),
-            );
-          },
-          getBatchSize: (batchSize, projectModel) {
-            context.read<StockDownSyncBloc>().add(
-                  StockDownSyncCheckTotalCountEvent(
-                    projectModel: projectModel,
-                    batchSize: batchSize,
-                  ),
-                );
-          },
-          dataFound: (initialServerCount, batchSize, offset, lastSyncedTime) {
-            showStockDownloadDialog(
-              context,
-              model: DownloadBeneficiary(
-                title: localizations.translate(
-                  initialServerCount > 0
-                      ? i18.common.stockDataFound
-                      : i18.common.stockNoDataFound,
+    return BlocListener<LocalizationBloc, LocalizationState>(
+      // Safety net: if a localization event fires outside a card handler
+      // wrapped in `_openModule` (e.g. from a package-triggered path we
+      // don't own), still show the loader while the bloc is fetching.
+      //
+      // Only shows — does NOT auto-hide. Auto-hide used to fire when the
+      // bloc transitioned to `loading:false`, which happens as soon as
+      // localization finishes. But `_openModule` keeps waiting for the
+      // target route's initial CRUD search to settle (up to 8s cap), and
+      // an auto-hide here would rip the overlay away in the middle of
+      // that wait — exactly the "loader disappears right after
+      // localization; module opens naked while the primary query runs"
+      // symptom. `_openModule`'s `finally` block is the single owner of
+      // dismiss; the safety-net loader would also be dismissed by that
+      // same post-frame callback if `_openModule` was in flight.
+      //
+      // For pure package-triggered loads (no `_openModule` wrapper),
+      // the overlay stays up until the next `_openModule` tap or app
+      // teardown. That's a rare-enough case that leaving a stray loader
+      // is preferable to killing a real one mid-open.
+      listener: (context, locState) {
+        if (locState.loading) {
+          _showLoader();
+        }
+      },
+      child: BlocListener<StockDownSyncBloc, StockDownSyncState>(
+        listener: (context, stockDownSyncState) {
+          stockDownSyncState.maybeWhen(
+            orElse: () {},
+            loading: (isPop) {
+              if (isPop) {
+                Navigator.of(context, rootNavigator: true)
+                    .popUntil((route) => route is! PopupRoute);
+              }
+              DigitSyncDialog.show(
+                context,
+                type: DialogType.inProgress,
+                label: localizations.translate(
+                  i18.home.stockSyncDataLabel,
                 ),
-                projectModel: context.selectedProject,
-                boundaries: [],
-                batchSize: batchSize,
-                totalCount: initialServerCount,
-                content: localizations.translate(
-                  initialServerCount > 0
-                      ? i18.common.stockDataFoundContent
-                      : i18.common.stockNoDataFoundContent,
-                ),
-                primaryButtonLabel: localizations.translate(
-                  initialServerCount > 0
-                      ? i18.common.coreCommonDownload
-                      : i18.common.proceed,
-                ),
-                secondaryButtonLabel: localizations.translate(
-                  i18.common.coreCommonGoback,
-                ),
-              ),
-              dialogType: DigitProgressDialogType.dataFound,
-              isPop: true,
-            );
-          },
-          inProgress: (syncCount, totalCount) {
-            stockDownloadProgress.add(
-              totalCount > 0 ? syncCount / totalCount : 0,
-            );
-            if (syncCount < 1) {
+                barrierDismissible: false,
+              );
+            },
+            getBatchSize: (batchSize, projectModel) {
+              context.read<StockDownSyncBloc>().add(
+                    StockDownSyncCheckTotalCountEvent(
+                      projectModel: projectModel,
+                      batchSize: batchSize,
+                    ),
+                  );
+            },
+            dataFound: (initialServerCount, batchSize, offset, lastSyncedTime) {
               showStockDownloadDialog(
                 context,
                 model: DownloadBeneficiary(
                   title: localizations.translate(
-                    i18.beneficiaryDetails.dataDownloadInProgress,
+                    initialServerCount > 0
+                        ? i18.common.stockDataFound
+                        : i18.common.stockNoDataFound,
                   ),
                   projectModel: context.selectedProject,
                   boundaries: [],
-                  syncCount: syncCount,
-                  totalCount: totalCount,
-                  prefixLabel: syncCount.toString(),
-                  suffixLabel: totalCount.toString(),
+                  batchSize: batchSize,
+                  totalCount: initialServerCount,
+                  content: localizations.translate(
+                    initialServerCount > 0
+                        ? i18.common.stockDataFoundContent
+                        : i18.common.stockNoDataFoundContent,
+                  ),
+                  primaryButtonLabel: localizations.translate(
+                    initialServerCount > 0
+                        ? i18.common.coreCommonDownload
+                        : i18.acknowledgementSuccess.goToHome,
+                  ),
+                  secondaryButtonLabel: initialServerCount > 0
+                      ? localizations.translate(
+                          i18.common.coreCommonGoback,
+                        )
+                      : null,
                 ),
-                dialogType: DigitProgressDialogType.inProgress,
+                dialogType: DigitProgressDialogType.dataFound,
                 isPop: true,
-                downloadProgressController: stockDownloadProgress,
               );
-            }
-          },
-          success: (syncedCount, totalCount) {
-            Navigator.of(context, rootNavigator: true)
-                .popUntil((route) => route is! PopupRoute);
-            DigitSyncDialog.show(
-              context,
-              type: DialogType.complete,
-              label: localizations.translate(
-                i18.home.stockSyncDataLabel,
-              ),
-              primaryAction: DigitDialogActions(
+            },
+            inProgress: (syncCount, totalCount) {
+              stockDownloadProgress.add(
+                totalCount > 0 ? syncCount / totalCount : 0,
+              );
+              if (syncCount < 1) {
+                showStockDownloadDialog(
+                  context,
+                  model: DownloadBeneficiary(
+                    title: localizations.translate(
+                      i18.beneficiaryDetails.dataDownloadInProgress,
+                    ),
+                    projectModel: context.selectedProject,
+                    boundaries: [],
+                    syncCount: syncCount,
+                    totalCount: totalCount,
+                    prefixLabel: syncCount.toString(),
+                    suffixLabel: totalCount.toString(),
+                  ),
+                  dialogType: DigitProgressDialogType.inProgress,
+                  isPop: true,
+                  downloadProgressController: stockDownloadProgress,
+                );
+              }
+            },
+            success: (syncedCount, totalCount) {
+              Navigator.of(context, rootNavigator: true)
+                  .popUntil((route) => route is! PopupRoute);
+              DigitSyncDialog.show(
+                context,
+                type: DialogType.complete,
                 label: localizations.translate(
-                  i18.acknowledgementSuccess.goToHome,
+                  i18.home.stockSyncDataLabel,
                 ),
-                action: (ctx) {
-                  Navigator.pop(ctx);
-                  context.router.replaceAll([HomeRoute()]);
-                },
-              ),
-              barrierDismissible: true,
-            );
-          },
-          failed: () {
-            context.read<AppInitializationBloc>().state.maybeWhen(
-                  orElse: () {},
-                  initialized: (appConfiguration, _, __) {
-                    showStockDownloadDialog(
-                      context,
-                      model: DownloadBeneficiary(
-                        title: localizations.translate(
-                          i18.common.coreCommonDownloadFailed,
-                        ),
-                        appConfiguartion: appConfiguration,
-                        projectModel: context.selectedProject,
-                        boundaries: [],
-                        primaryButtonLabel: localizations.translate(
-                          i18.syncDialog.retryButtonLabel,
-                        ),
-                        secondaryButtonLabel: localizations.translate(
-                          i18.common.coreCommonGoback,
-                        ),
-                      ),
-                      dialogType: DigitProgressDialogType.failed,
-                      isPop: true,
-                    );
+                primaryAction: DigitDialogActions(
+                  label: localizations.translate(
+                    i18.acknowledgementSuccess.goToHome,
+                  ),
+                  action: (ctx) {
+                    Navigator.pop(ctx);
+                    context.router.replaceAll([HomeRoute()]);
                   },
-                );
-          },
-          totalCountCheckFailed: () {
-            context.read<AppInitializationBloc>().state.maybeWhen(
-                  orElse: () {},
-                  initialized: (appConfiguration, _, __) {
-                    showStockDownloadDialog(
-                      context,
-                      model: DownloadBeneficiary(
-                        title: localizations.translate(
-                          i18.common.coreCommonDownloadFailed,
+                ),
+                barrierDismissible: true,
+              );
+            },
+            failed: () {
+              context.read<AppInitializationBloc>().state.maybeWhen(
+                    orElse: () {},
+                    initialized: (appConfiguration, _, __) {
+                      showStockDownloadDialog(
+                        context,
+                        model: DownloadBeneficiary(
+                          title: localizations.translate(
+                            i18.common.coreCommonDownloadFailed,
+                          ),
+                          appConfiguartion: appConfiguration,
+                          projectModel: context.selectedProject,
+                          boundaries: [],
+                          primaryButtonLabel: localizations.translate(
+                            i18.syncDialog.retryButtonLabel,
+                          ),
+                          secondaryButtonLabel: localizations.translate(
+                            i18.common.coreCommonGoback,
+                          ),
                         ),
-                        appConfiguartion: appConfiguration,
-                        projectModel: context.selectedProject,
-                        boundaries: [],
-                        primaryButtonLabel: localizations.translate(
-                          i18.syncDialog.retryButtonLabel,
+                        dialogType: DigitProgressDialogType.failed,
+                        isPop: true,
+                      );
+                    },
+                  );
+            },
+            totalCountCheckFailed: () {
+              context.read<AppInitializationBloc>().state.maybeWhen(
+                    orElse: () {},
+                    initialized: (appConfiguration, _, __) {
+                      showStockDownloadDialog(
+                        context,
+                        model: DownloadBeneficiary(
+                          title: localizations.translate(
+                            i18.common.coreCommonDownloadFailed,
+                          ),
+                          appConfiguartion: appConfiguration,
+                          projectModel: context.selectedProject,
+                          boundaries: [],
+                          primaryButtonLabel: localizations.translate(
+                            i18.syncDialog.retryButtonLabel,
+                          ),
+                          secondaryButtonLabel: localizations.translate(
+                            i18.common.coreCommonGoback,
+                          ),
                         ),
-                        secondaryButtonLabel: localizations.translate(
-                          i18.common.coreCommonGoback,
-                        ),
-                      ),
-                      dialogType: DigitProgressDialogType.checkFailed,
-                      isPop: true,
-                    );
-                  },
-                );
-          },
-          insufficientStorage: () {
-            showStockDownloadDialog(
-              context,
-              model: DownloadBeneficiary(
-                title: localizations.translate(
-                  i18.beneficiaryDetails.insufficientStorage,
+                        dialogType: DigitProgressDialogType.checkFailed,
+                        isPop: true,
+                      );
+                    },
+                  );
+            },
+            insufficientStorage: () {
+              showStockDownloadDialog(
+                context,
+                model: DownloadBeneficiary(
+                  title: localizations.translate(
+                    i18.beneficiaryDetails.insufficientStorage,
+                  ),
+                  content: localizations.translate(
+                    i18.beneficiaryDetails.insufficientStorageContent,
+                  ),
+                  projectModel: context.selectedProject,
+                  boundaries: [],
+                  primaryButtonLabel: localizations.translate(
+                    i18.common.coreCommonOk,
+                  ),
                 ),
-                content: localizations.translate(
-                  i18.beneficiaryDetails.insufficientStorageContent,
-                ),
-                projectModel: context.selectedProject,
-                boundaries: [],
-                primaryButtonLabel: localizations.translate(
-                  i18.common.coreCommonOk,
-                ),
-              ),
-              dialogType: DigitProgressDialogType.insufficientStorage,
-              isPop: true,
-            );
-          },
-        );
-      },
-      child: Scaffold(
-        backgroundColor: DigitTheme.instance.colorScheme.surface,
-        body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: ScrollableContent(
-            slivers: [
-              SliverPadding(
-                // Each tile is showcase-wrapped (+4px), so spacer2 here puts
-                // the visible tile edge at 12px from the device edge.
-                padding: const EdgeInsets.symmetric(
-                  horizontal: spacer2,
-                  vertical: spacer2,
-                ),
-                sliver: SliverGrid(
+                dialogType: DigitProgressDialogType.insufficientStorage,
+                isPop: true,
+              );
+            },
+          );
+        },
+        child: Scaffold(
+          backgroundColor: DigitTheme.instance.colorScheme.surface,
+          body: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: ScrollableContent(
+              slivers: [
+                SliverGrid(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       return homeItems.elementAt(index);
                     },
                     childCount: homeItems.length,
                   ),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    // 2px tighter than spacer3 to give each tile a bit more
-                    // width; no design token exists for 10px.
-                    crossAxisSpacing: spacer3 - 2,
-                    mainAxisSpacing: spacer4,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 145,
                     childAspectRatio: 104 / 128,
                   ),
                 ),
-              ),
-            ],
-            header: Column(
-              children: [
-                BackNavigationHelpHeaderWidget(
-                  showBackNavigation: false,
-                  showHelp: false,
-                  showcaseButton: ShowcaseButton(
-                    showcaseFor: showcaseKeys.toSet().toList(),
+              ],
+              header: Column(
+                children: [
+                  BackNavigationHelpHeaderWidget(
+                    showBackNavigation: false,
+                    showHelp: false,
+                    showcaseButton: ShowcaseButton(
+                      showcaseFor: showcaseKeys.toSet().toList(),
+                    ),
                   ),
-                ),
-                // Show stock balance card for users with stock management access (not for Polio)
-                if (!isPolio &&
-                    state.actionsWrapper.actions
-                        .map((e) => e.displayName)
-                        .contains(i18.home.manageStockLabel))
-                  const StockBalanceCard(),
-                skipProgressBar
-                    ? const SizedBox.shrink()
-                    : homeShowcaseData.distributorProgressBar.buildWith(
-                        child: BeneficiaryProgressBar(
-                          label: localizations.translate(
-                            i18.home.homeMyProgress,
-                          ),
-                          prefixLabel: localizations.translate(
-                            i18.home.progressIndicatorPrefixLabel,
+                  // Show stock balance card for users with stock management access (not for Polio)
+                  if (!isPolio &&
+                      state.actionsWrapper.actions
+                          .map((e) => e.displayName)
+                          .contains(i18.home.manageStockLabel))
+                    const StockBalanceCard(),
+                  skipProgressBar
+                      ? const SizedBox.shrink()
+                      : homeShowcaseData.distributorProgressBar.buildWith(
+                          child: BeneficiaryProgressBar(
+                            label: localizations.translate(
+                              i18.home.progressIndicatorTitle,
+                            ),
+                            prefixLabel: localizations.translate(
+                              i18.home.progressIndicatorPrefixLabel,
+                            ),
                           ),
                         ),
+                  /////   hfreferral progress matrics
+                  if (state.actionsWrapper.actions
+                      .map((e) => e.displayName)
+                      .contains(i18.home.beneficiaryReferralLabel))
+                    HFReferralProgressBar(
+                      label: localizations.translate(
+                        i18.home.progressIndicatorTitle,
                       ),
-                /////   hfreferral progress matrics
-                if (state.actionsWrapper.actions
-                    .map((e) => e.displayName)
-                    .contains(i18.home.beneficiaryReferralLabel))
-                  HFReferralProgressBar(
-                    label: localizations.translate(
-                      i18.home.homeMyProgress,
+                      prefixLabel: localizations.translate(
+                        i18.common.progressIndicatorPrefixLabelHFReferral,
+                      ),
                     ),
-                    prefixLabel: localizations.translate(
-                      i18.common.progressIndicatorPrefixLabelHFReferral,
-                    ),
-                  ),
-              ],
-            ),
-            footer: Padding(
-              padding: const EdgeInsets.only(bottom: spacer2),
-              child: PoweredByDigit(
-                version: Constants().version,
+                ],
               ),
-            ),
-            children: [
-              const SizedBox(height: spacer2 * 2),
-              // INFO : Need to add sync bloc of package Here
-              BlocConsumer<SyncBloc, SyncState>(
-                listener: (context, state) {
-                  state.maybeWhen(
-                    orElse: () => null,
-                    pendingSync: (count) {
-                      _syncDebouncer.run(() async {
-                        if (count != 0) {
-                          await localSecureStore.setManualSyncTrigger(false);
-                          if (context.mounted) {
-                            await performBackgroundService(
-                              isBackground: false,
-                              stopService: false,
-                              context: context,
-                            );
+              footer: Padding(
+                padding: const EdgeInsets.only(bottom: spacer2),
+                child: PoweredByDigit(
+                  version: Constants().version,
+                ),
+              ),
+              children: [
+                const SizedBox(height: spacer2 * 2),
+                // INFO : Need to add sync bloc of package Here
+                BlocConsumer<SyncBloc, SyncState>(
+                  listener: (context, state) {
+                    state.maybeWhen(
+                      orElse: () => null,
+                      pendingSync: (count) {
+                        _syncDebouncer.run(() async {
+                          if (count != 0) {
+                            await localSecureStore.setManualSyncTrigger(false);
+                            if (context.mounted) {
+                              await performBackgroundService(
+                                isBackground: false,
+                                stopService: false,
+                                context: context,
+                              );
+                            }
+                          } else {
+                            await localSecureStore.setManualSyncTrigger(true);
                           }
-                        } else {
-                          await localSecureStore.setManualSyncTrigger(true);
+                        });
+                      },
+                      syncInProgress: () async {
+                        await localSecureStore.setManualSyncTrigger(false);
+                        if (context.mounted) {
+                          DigitSyncDialog.show(
+                            context,
+                            type: DialogType.inProgress,
+                            label: localizations.translate(
+                              i18.syncDialog.syncInProgressTitle,
+                            ),
+                            barrierDismissible: false,
+                          );
                         }
-                      });
-                    },
-                    syncInProgress: () async {
-                      await localSecureStore.setManualSyncTrigger(false);
-                      if (context.mounted) {
-                        showCustomPopup(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (ctx) => Popup(
-                            type: PopUpType.simple,
-                            title: "",
-                            additionalWidgets: [
-                              DownloadSpinnerContent(
-                                title: localizations.translate(
-                                  i18.projectSelection.syncInProgressTitleText,
-                                ),
+                      },
+                      nothingPending: () async {
+                        if (context.mounted) {
+                          DigitSyncDialog.show(context,
+                              type: DialogType.complete,
+                              label: localizations.translate(
+                                i18.syncDialog.noDataToSyncTitle,
                               ),
-                            ],
-                          ),
-                        );
-                      }
-                    },
-                    nothingPending: () async {
-                      if (context.mounted) {
-                        showCustomPopup(
-                          context: context,
-                          builder: (ctx) => Popup(
-                            type: PopUpType.simple,
-                            title: localizations.translate(
-                              i18.syncDialog.dataSyncedSuccessTitle,
-                            ),
-                            titleIcon: Icon(
-                              Icons.check_circle_outline,
-                              color: theme.colorTheme.alert.success,
-                              size: spacer11,
-                            ),
-                            description: localizations.translate(
-                              i18.syncDialog.dataSyncedSuccessDescription,
-                            ),
-                            actions: [
-                              DigitButton(
-                                capitalizeLetters: false,
-                                type: DigitButtonType.secondary,
-                                size: DigitButtonSize.small,
-                                mainAxisSize: MainAxisSize.min,
-                                onPressed: () => Navigator.of(ctx).pop(),
+                              primaryAction: DigitDialogActions(
                                 label: localizations.translate(
                                   i18.syncDialog.closeButtonLabel,
                                 ),
+                                action: (ctx) {
+                                  Navigator.pop(ctx);
+                                },
                               ),
-                            ],
-                          ),
-                        );
-                      }
-                    },
-                    completedSync: () async {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        DigitSyncDialog.show(context,
-                            type: DialogType.complete,
-                            label: localizations.translate(
-                              i18.syncDialog.dataSyncedTitle,
-                            ),
-                            primaryAction: DigitDialogActions(
+                              barrierDismissible: true);
+                        }
+                      },
+                      completedSync: () async {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        await localSecureStore.setManualSyncTrigger(true);
+                        if (context.mounted) {
+                          DigitSyncDialog.show(context,
+                              type: DialogType.complete,
                               label: localizations.translate(
-                                i18.syncDialog.closeButtonLabel,
+                                i18.syncDialog.dataSyncedTitle,
                               ),
-                              action: (ctx) {
-                                Navigator.pop(ctx);
-                              },
-                            ),
-                            barrierDismissible: true);
-                      }
-                    },
-                    failedSync: (message) async {
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.syncFailedTitle,
-                          ),
-                          errorMessage: message.isNotEmpty
-                              ? localizations.translate(message)
-                              : null,
-                        );
-                      }
-                    },
-                    failedDownSync: (message) async {
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.downSyncFailedTitle,
-                          ),
-                          errorMessage: message.isNotEmpty
-                              ? localizations.translate(message)
-                              : null,
-                        );
-                      }
-                    },
-                    failedUpSync: (message) async {
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.upSyncFailedTitle,
-                          ),
-                          errorMessage: message.isNotEmpty
-                              ? localizations.translate(message)
-                              : null,
-                        );
-                      }
-                    },
-                  );
-                },
-                builder: (context, state) {
-                  return state.maybeWhen(
-                    orElse: () => const Offstage(),
-                    pendingSync: (count) {
-                      return count == 0
-                          ? const Offstage()
-                          : Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: spacer2,
-                              ),
-                              child: InfoCard(
-                                type: InfoType.info,
-                                description: localizations
-                                    .translate(i18.home.dataSyncInfoContent)
-                                    .replaceAll('{}', count.toString()),
-                                title: localizations.translate(
-                                  i18.home.dataSyncInfoLabel,
+                              primaryAction: DigitDialogActions(
+                                label: localizations.translate(
+                                  i18.syncDialog.closeButtonLabel,
                                 ),
+                                action: (ctx) {
+                                  Navigator.pop(ctx);
+                                },
                               ),
-                            );
-                    },
-                  );
-                },
-              ),
-            ],
+                              barrierDismissible: true);
+                        }
+                      },
+                      failedSync: (message) async {
+                        await localSecureStore.setManualSyncTrigger(true);
+                        if (context.mounted) {
+                          _showSyncFailedDialog(
+                            context,
+                            message: localizations.translate(
+                              i18.syncDialog.syncFailedTitle,
+                            ),
+                            errorMessage: message.isNotEmpty
+                                ? localizations.translate(message)
+                                : null,
+                          );
+                        }
+                      },
+                      failedDownSync: (message) async {
+                        await localSecureStore.setManualSyncTrigger(true);
+                        if (context.mounted) {
+                          _showSyncFailedDialog(
+                            context,
+                            message: localizations.translate(
+                              i18.syncDialog.downSyncFailedTitle,
+                            ),
+                            errorMessage: message.isNotEmpty
+                                ? localizations.translate(message)
+                                : null,
+                          );
+                        }
+                      },
+                      failedUpSync: (message) async {
+                        await localSecureStore.setManualSyncTrigger(true);
+                        if (context.mounted) {
+                          _showSyncFailedDialog(
+                            context,
+                            message: localizations.translate(
+                              i18.syncDialog.upSyncFailedTitle,
+                            ),
+                            errorMessage: message.isNotEmpty
+                                ? localizations.translate(message)
+                                : null,
+                          );
+                        }
+                      },
+                    );
+                  },
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      orElse: () => const Offstage(),
+                      pendingSync: (count) {
+                        return count == 0
+                            ? const Offstage()
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: spacer2,
+                                ),
+                                child: InfoCard(
+                                  type: InfoType.info,
+                                  description: localizations
+                                      .translate(i18.home.dataSyncInfoContent)
+                                      .replaceAll('{}', count.toString()),
+                                  title: localizations.translate(
+                                    i18.home.dataSyncInfoLabel,
+                                  ),
+                                ),
+                              );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -2043,7 +2103,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.fileComplaint,
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) async {
+              onBoundarySelected: (ctx) => _openModule(() async {
                 final moduleName =
                     'hcm-complaints-${context.selectedProject.referenceID}';
                 triggerLocalization(module: moduleName);
@@ -2087,7 +2147,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     ],
                   ),
                 );
-              },
+              }),
             ));
           },
         ),
@@ -2097,14 +2157,14 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
-          onPressed: () {
+          onPressed: () => _openModule(() async {
             if (isTriggerLocalisation) {
               const module = "hcm-dashboard";
               triggerLocalization(module: module);
               isTriggerLocalisation = false;
             }
             context.router.push(const UserDashboardRoute());
-          },
+          }),
         ),
       ),
 
@@ -2117,7 +2177,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               : i18.home.beneficiaryLabel,
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) async {
+              onBoundarySelected: (ctx) => _openModule(() async {
                 final moduleName =
                     'hcm-registration-${context.selectedProject.referenceID},hcm-beneficiary';
                 triggerLocalization(module: moduleName);
@@ -2267,7 +2327,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 } catch (e) {
                   debugPrint('error $e');
                 }
-              },
+              }),
             ));
           },
         ),
@@ -2302,7 +2362,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               : i18.home.closedHouseHoldLabel,
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) async {
+              onBoundarySelected: (ctx) => _openModule(() async {
                 final moduleName =
                     'hcm-closehousehold-${context.selectedProject.referenceID}';
                 triggerLocalization(module: moduleName);
@@ -2315,7 +2375,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     sampleFlows: sampleCloseHouseholdFlows,
                   ),
                 );
-              },
+              }),
             ));
           },
         ),
@@ -2333,7 +2393,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             label: i18.home.polioLqaDataCollectionLabel,
             onPressed: () async {
               context.router.push(CurrentBoundaryRoute(
-                onBoundarySelected: (ctx) async {
+                onBoundarySelected: (ctx) => _openModule(() async {
                   final moduleName =
                       'hcm-lqa-${context.selectedProject.referenceID}';
                   triggerLocalization(module: moduleName);
@@ -2346,7 +2406,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       sampleFlows: samplePolioLqaDataCollectionFlows,
                     ),
                   );
-                },
+                }),
               ));
             },
           ),
@@ -2364,7 +2424,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             label: i18.home.polioInsideMonitoringLabel,
             onPressed: () async {
               context.router.push(CurrentBoundaryRoute(
-                onBoundarySelected: (ctx) async {
+                onBoundarySelected: (ctx) => _openModule(() async {
                   final moduleName =
                       'hcm-insidemonitoring-${context.selectedProject.referenceID}';
                   triggerLocalization(module: moduleName);
@@ -2377,7 +2437,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       sampleFlows: samplePolioInsideHouseholdMonitoringFlows,
                     ),
                   );
-                },
+                }),
               ));
             },
           ),
@@ -2391,7 +2451,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             if (isPolio) {
               await context.router.push(CurrentBoundaryRoute(
-                onBoundarySelected: (ctx) async {
+                onBoundarySelected: (ctx) => _openModule(() async {
                   final moduleName =
                       'hcm-stock-${context.selectedProject.referenceID}';
                   triggerLocalization(module: moduleName);
@@ -2404,61 +2464,63 @@ class _HomePageState extends LocalizedState<HomePage> {
                       sampleFlows: samplePolioStockDetailsFlows,
                     ),
                   );
-                },
+                }),
               ));
             } else {
-              FlowBuilderSingleton().setBoundary(
-                  boundary: BoundaryModel(
-                      code: LeastLevelBoundarySingleton().boundary?.first));
+              await _openModule(() async {
+                FlowBuilderSingleton().setBoundary(
+                    boundary: BoundaryModel(
+                        code: LeastLevelBoundarySingleton().boundary?.first));
 
-              final moduleName =
-                  'hcm-inventory-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
-              isTriggerLocalisation = false;
+                final moduleName =
+                    'hcm-inventory-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
 
-              await FlowNavigationUtils.navigateToFlowModule(
-                context: context,
-                config: FlowModuleConfig(
-                  schemaKey: 'INVENTORY',
-                  sampleFlows: sampleInventoryFlows,
-                  relationshipMappings: const [
-                    RelationshipMapping(
-                        from: 'facility',
-                        to: 'projectFacility',
-                        localKey: 'id',
-                        foreignKey: 'facilityId'),
-                    RelationshipMapping(
-                        from: 'projectResource',
-                        to: 'projectFacility',
-                        localKey: 'projectId',
-                        foreignKey: 'projectId'),
-                    RelationshipMapping(
-                        from: 'productVariant',
-                        to: 'projectResource',
-                        localKey: 'id',
-                        foreignKey: 'resource'),
-                  ],
-                  nestedModelMappings: const [
-                    NestedModelMapping(
-                      rootModel: 'projectFacility',
-                      fields: {
-                        'facility': NestedFieldMapping(
-                          table: 'facility',
-                          localKey: 'facilityId',
-                          foreignKey: 'id',
-                          type: NestedMappingType.one,
-                        ),
-                        'projectResources': NestedFieldMapping(
-                          table: 'projectResource',
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: context,
+                  config: FlowModuleConfig(
+                    schemaKey: 'INVENTORY',
+                    sampleFlows: sampleInventoryFlows,
+                    relationshipMappings: const [
+                      RelationshipMapping(
+                          from: 'facility',
+                          to: 'projectFacility',
+                          localKey: 'id',
+                          foreignKey: 'facilityId'),
+                      RelationshipMapping(
+                          from: 'projectResource',
+                          to: 'projectFacility',
                           localKey: 'projectId',
-                          foreignKey: 'projectId',
-                          type: NestedMappingType.many,
-                        ),
-                      },
-                    ),
-                  ],
-                ),
-              );
+                          foreignKey: 'projectId'),
+                      RelationshipMapping(
+                          from: 'productVariant',
+                          to: 'projectResource',
+                          localKey: 'id',
+                          foreignKey: 'resource'),
+                    ],
+                    nestedModelMappings: const [
+                      NestedModelMapping(
+                        rootModel: 'projectFacility',
+                        fields: {
+                          'facility': NestedFieldMapping(
+                            table: 'facility',
+                            localKey: 'facilityId',
+                            foreignKey: 'id',
+                            type: NestedMappingType.one,
+                          ),
+                          'projectResources': NestedFieldMapping(
+                            table: 'projectResource',
+                            localKey: 'projectId',
+                            foreignKey: 'projectId',
+                            type: NestedMappingType.many,
+                          ),
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              });
             }
           },
         ),
@@ -2469,7 +2531,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           child: HomeItemCard(
             icon: Icons.menu_book,
             label: i18.home.stockReconciliationLabel,
-            onPressed: () async {
+            onPressed: () => _openModule(() async {
               FlowBuilderSingleton().setBoundary(
                   boundary: BoundaryModel(
                       code: LeastLevelBoundarySingleton().boundary?.first));
@@ -2527,7 +2589,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   ],
                 ),
               );
-            },
+            }),
           ),
         ),
       i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
@@ -2538,7 +2600,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.checklist,
           customIconSize: spacer8,
           label: i18.home.mySurveyForm,
-          onPressed: () {
+          onPressed: () => _openModule(() async {
             // if (isTriggerLocalisation) {
             final moduleName =
                 'hcm-checklist-${context.selectedProject.referenceID}';
@@ -2546,7 +2608,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             isTriggerLocalisation = false;
             // }
             context.router.push(SurveyFormWrapperRoute());
-          },
+          }),
         ),
       ),
 
@@ -2616,7 +2678,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) async {
+              onBoundarySelected: (ctx) => _openModule(() async {
                 final moduleName =
                     'hcm-hfreferral-${context.selectedProject.referenceID}';
                 triggerLocalization(module: moduleName);
@@ -2629,7 +2691,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     sampleFlows: sampleReferralFlows,
                   ),
                 );
-              },
+              }),
             ));
           },
         ),
@@ -2639,7 +2701,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           child: HomeItemCard(
             icon: Icons.announcement,
             label: i18.home.viewReportsLabel,
-            onPressed: () async {
+            onPressed: () => _openModule(() async {
               FlowBuilderSingleton().setBoundary(
                   boundary: BoundaryModel(
                       code: LeastLevelBoundarySingleton().boundary?.first));
@@ -2702,7 +2764,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   ],
                 ),
               );
-            },
+            }),
           ),
         ),
       i18.home.manageAttendanceLabel:
@@ -2710,7 +2772,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
-          onPressed: () async {
+          onPressed: () => _openModule(() async {
             // Set up CRUD service
             CrudBlocSingleton().setData(
               crudService: DigitCrudService(
@@ -2785,33 +2847,35 @@ class _HomePageState extends LocalizedState<HomePage> {
             WidgetRegistry.initialize();
             try {
               NavigationRegistry.setupNavigation(context);
-              context.router
-                  .push(CurrentBoundaryRoute(onBoundarySelected: (ctx) async {
-                if (isTriggerLocalisation) {
-                  final moduleName =
-                      'hcm-complaints-${context.selectedProject.referenceID}';
-                  const module = "hcm-attendance";
-                  triggerLocalization(module: module);
-                  isTriggerLocalisation = false;
-                }
-                // triggerLocalization(module: moduleName);
-                Map<String, dynamic> attendanceData =
-                    attendanceFlows; // Adding custom attendance flows as the flows are not coming from the server for attendance module
-                List<Map<String, dynamic>> flowsData =
-                    (attendanceData['flows'] as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                FlowRegistry.setConfig(flowsData);
-                NavigationRegistry.setupNavigation(context);
-                context.router.push(
-                  FlowBuilderHomeRoute(pageName: attendanceData["initialPage"]),
-                );
-              }));
+              context.router.push(CurrentBoundaryRoute(
+                  onBoundarySelected: (ctx) => _openModule(() async {
+                        if (isTriggerLocalisation) {
+                          final moduleName =
+                              'hcm-complaints-${context.selectedProject.referenceID}';
+                          const module = "hcm-attendance";
+                          triggerLocalization(module: module);
+                          isTriggerLocalisation = false;
+                        }
+                        // triggerLocalization(module: moduleName);
+                        Map<String, dynamic> attendanceData =
+                            attendanceFlows; // Adding custom attendance flows as the flows are not coming from the server for attendance module
+                        List<Map<String, dynamic>> flowsData =
+                            (attendanceData['flows'] as List<dynamic>?)
+                                    ?.map((e) =>
+                                        Map<String, dynamic>.from(e as Map))
+                                    .toList() ??
+                                [];
+                        FlowRegistry.setConfig(flowsData);
+                        NavigationRegistry.setupNavigation(context);
+                        context.router.push(
+                          FlowBuilderHomeRoute(
+                              pageName: attendanceData["initialPage"]),
+                        );
+                      })));
             } catch (e) {
               debugPrint('error $e');
             }
-          },
+          }),
         ),
       ),
       i18.home.db: homeShowcaseData.db.buildWith(
@@ -2833,43 +2897,35 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.send,
           label: i18.home.dataShare,
-          onPressed: () async {
+          onPressed: () => _openModule(() async {
             const module = "hcm-peer-to-peer";
             // if (isTriggerLocalisation) {
             triggerLocalization(module: module);
             isTriggerLocalisation = false;
             // }
             context.router.push(const DataShareHomeRoute());
-          },
+          }),
         ),
       ),
-      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
-        child: HomeItemCard(
-          icon: Icons.bar_chart_sharp,
-          label: i18.home.dashboard,
-          onPressed: () {
-            const module = "hcm-dashboard";
-            // if (isTriggerLocalisation) {
-            triggerLocalization(module: module);
-            isTriggerLocalisation = false;
-            // };
-            context.router.push(const UserDashboardRoute());
-          },
-        ),
-      ),
+      // Duplicate i18.home.dashboard entry removed — the earlier gated
+      // handler above is authoritative. Dart map literals let a later entry
+      // silently replace an earlier one with the same key, so this second
+      // definition was making the `isTriggerLocalisation` check on the
+      // earlier entry unreachable and re-fetching dashboard localization on
+      // every tap.
 
       /// TODO: NEED TO PICK CHANGES RELATED TO BENEFICIARY DOWNSYNC
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
         child: HomeItemCard(
           label: i18.home.beneficiaryIdLabel,
-          onPressed: () {
+          onPressed: () => _openModule(() async {
             // if (isTriggerLocalisation) {
             const module = "hcm-beneficiary";
             triggerLocalization(module: module);
             isTriggerLocalisation = false;
             // }
             context.router.push(BeneficiaryIdDownSyncRoute());
-          },
+          }),
           icon: Icons.account_box,
           enableCustomIcon: true,
           customIconSize: spacer9,
@@ -2881,12 +2937,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           child: HomeItemCard(
         icon: Icons.local_shipping_outlined,
         label: i18.home.transitPostLabel,
-        onPressed: () {
+        onPressed: () => _openModule(() async {
           const module = "hcm-transit-post";
           // if (isTriggerLocalisation) {
           triggerLocalization(module: module);
           context.router.push(const TransitPostWrapperRoute());
-        },
+        }),
       )),
     };
 

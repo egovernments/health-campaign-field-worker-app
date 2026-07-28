@@ -6,7 +6,13 @@ class ProgressIndicatorContainer extends StatelessWidget {
   final String label;
   final String prefixLabel;
   final String suffixLabel;
-  final double value;
+
+  /// Bar fill fraction (0.0 - 1.0). Pass `null` to render as an
+  /// indeterminate/animated bar — used during the "waiting for the
+  /// first batch" window on a downsync, where the numeric counters
+  /// have nothing to advance yet but the user still needs a visual
+  /// signal that work is in flight.
+  final double? value;
   final String? subLabel;
   final Animation<Color?>? valueColor;
   final double? height;

@@ -21,6 +21,7 @@ import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/repositories/local/localization.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
@@ -53,6 +54,16 @@ class _BoundarySelectionPageState
   Map<String, TextEditingController> dropdownControllers = {};
   late StreamSubscription syncSubscription;
   var leastLevelBoundaries;
+
+  /// Codes we've already pulled localization for during this page's lifetime.
+  /// `project_selection.dart` seeds boundary localization for the initial
+  /// `BoundaryFindEvent` result, but as the user drills into hierarchy
+  /// levels here `BoundarySearchEvent` keeps appending new boundaries to
+  /// `state.boundaryList`. Without a refetch those new codes render as
+  /// raw strings on the picker. We track what's already fetched here so
+  /// each drill only pulls the delta.
+  final Set<String> _fetchedBoundaryCodes = <String>{};
+  Future<void>? _pendingBoundaryLocFetch;
 
   @override
   void initState() {
@@ -92,6 +103,102 @@ class _BoundarySelectionPageState
     syncSubscription.cancel();
     downloadProgress.dispose();
     super.dispose();
+  }
+
+  /// Fetches boundary localizations for any codes in [state.boundaryList]
+  /// that we haven't already pulled during this page's lifetime, then asks
+  /// the LocalizationBloc to reload so the newly-inserted rows show up in
+  /// `AppLocalizations._messagesByCode`.
+  ///
+  /// Only the delta is requested — repeated drill-downs don't re-download
+  /// the same codes. Codes are marked as fetched BEFORE the request so
+  /// concurrent drill-downs while the previous request is still in flight
+  /// don't fire duplicate calls; if the request fails, they're rolled back
+  /// so the next drill can retry.
+  Future<void> _fetchNewBoundaryLocalizations(
+    BoundaryState state,
+    AppConfiguration appConfiguration,
+  ) async {
+    // Serialize concurrent invocations — the second listener fire (from a
+    // rapid drill sequence) waits for the first to finish before diffing.
+    final previous = _pendingBoundaryLocFetch;
+    final completer = Completer<void>();
+    _pendingBoundaryLocFetch = completer.future;
+    try {
+      if (previous != null) {
+        try {
+          await previous;
+        } catch (_) {
+          // ignore: the previous cycle already logged
+        }
+      }
+      final hierarchyType = runtimeHierarchyType();
+      final currentCodes = state.boundaryList
+          .expand((b) => [
+                b.code,
+                if (b.label != null && b.label!.isNotEmpty)
+                  '${hierarchyType}_${b.label}',
+              ])
+          .whereType<String>()
+          .where((s) => s.isNotEmpty)
+          .toSet();
+      final newCodes = currentCodes.difference(_fetchedBoundaryCodes);
+      if (newCodes.isEmpty) return;
+
+      final selectedLocale = AppSharedPreferences().getSelectedLocale;
+      if (selectedLocale == null || selectedLocale.isEmpty) return;
+
+      final locBloc = context.read<LocalizationBloc>();
+      final boundaryModule = 'hcm-boundary-${hierarchyType.toLowerCase()}';
+
+      // Cross-check against SQL so codes that were persisted in a
+      // previous session don't get re-fetched on this session's first
+      // drill-down. `_fetchedBoundaryCodes` is a page-lifetime dedup
+      // guard, not a persistent record — it starts empty every launch
+      // and would otherwise let the drill-down bulk-download a full
+      // subtree that's already sitting in the localization table.
+      final cachedCodes =
+          await LocalizationLocalRepository().fetchCachedCodesForLocale(
+        sql: locBloc.sql,
+        locale: selectedLocale,
+        codes: newCodes,
+      );
+      final missingCodes = newCodes.difference(cachedCodes);
+      // Mark ALL currentCodes-diff as fetched (including those already
+      // in SQL) so a listener fire while we're mid-flight doesn't refire
+      // for the same subtree in this session.
+      _fetchedBoundaryCodes.addAll(newCodes);
+      if (missingCodes.isEmpty) return;
+      try {
+        final results = await locBloc.localizationRepository.loadLocalization(
+          path: Constants.localizationApiPath,
+          locale: selectedLocale,
+          module: boundaryModule,
+          tenantId: envConfig.variables.tenantId,
+          codes: missingCodes.join(','),
+        );
+        await LocalizationLocalRepository().create(results, locBloc.sql);
+
+        if (!mounted) return;
+        // Kick AppLocalizations to reload from DB so the newly-inserted
+        // rows become resolvable by translate(). onUpdateLocalizationIndex
+        // is the existing "reload for this locale" event.
+        final languages = appConfiguration.languages ?? [];
+        final idx =
+            languages.indexWhere((e) => e.value == selectedLocale);
+        locBloc.add(LocalizationEvent.onUpdateLocalizationIndex(
+          index: idx >= 0 ? idx : 0,
+          code: selectedLocale,
+        ));
+      } catch (e) {
+        // Roll back — allow next drill-down to retry this batch.
+        _fetchedBoundaryCodes.removeAll(newCodes);
+        debugPrint(
+            'boundary drill-down localization refetch failed: $e');
+      }
+    } finally {
+      completer.complete();
+    }
   }
 
   @override
@@ -137,6 +244,17 @@ class _BoundarySelectionPageState
                         BlocListener<BoundaryBloc, BoundaryState>(
                       listener: (context, state) {
                         if (state.boundaryList.isNotEmpty) {
+                          // Pull localization for any boundaries the user has
+                          // just drilled into. Fire-and-forget — the local
+                          // refresh below runs on stale data if this hasn't
+                          // completed yet, and we re-emit `onUpdateLocalizationIndex`
+                          // from inside `_fetchNewBoundaryLocalizations` once the
+                          // rows are in the DB.
+                          unawaited(_fetchNewBoundaryLocalizations(
+                            state,
+                            appConfiguration,
+                          ));
+
                           final finalCodes =
                               state.boundaryList.map((e) => e.code!).toList();
 

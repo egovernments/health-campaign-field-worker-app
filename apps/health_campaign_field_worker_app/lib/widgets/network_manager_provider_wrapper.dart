@@ -37,6 +37,7 @@ import 'package:digit_location_tracker/data/oplog/oplog.dart';
 import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
 import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -80,16 +81,37 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         final actionMap = state.entityActionMapping;
         if (actionMap.isEmpty) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             theme: DigitTheme.instance.mobileTheme,
             home: Scaffold(
-              appBar: AppBar(),
+              // AppBar is intentionally omitted for the loading branch so the
+              // pre-init view reads as a splash. Non-loading branches (the
+              // maybeWhen falls through to orElse/failed) get an AppBar via
+              // the per-branch Scaffold below.
+              appBar: state.maybeWhen<PreferredSizeWidget?>(
+                orElse: () => AppBar(),
+                loading: () => null,
+              ),
               body: state.maybeWhen(
                 orElse: () => const Center(
                   child: Text('Unable to initialize the application'),
                 ),
-                /*Returns Loading state while app initialization is in progress*/
-                loading: () => const Center(
-                  child: Text('Loading'),
+                /*Splash-style placeholder while AppInitializationBloc runs —
+                  matches the native splash so the transition doesn't flash
+                  a bare 'Loading' text.*/
+                loading: () => Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'assets/icons/app_icon.png',
+                        width: 140,
+                        height: 140,
+                      ),
+                      const SizedBox(height: 24),
+                      DigitLoaders.inlineLoader(size: 48),
+                    ],
+                  ),
                 ),
                 /*Returns No Internet Connection warning if its failed to initialize after all retries
                   and shows a button to close the app*/
