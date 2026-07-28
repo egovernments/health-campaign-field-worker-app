@@ -298,12 +298,64 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                 // control.updateValueAndValidity();
                               }
 
+                              // Build a display list of currently-invalid
+                              // fields so the toast can name them instead of
+                              // the generic "please fill required fields"
+                              // — a delivery-team scan on the wrong page
+                              // would otherwise leave the user guessing
+                              // which field is blocking submit.
+                              List<String> collectInvalidLabels() {
+                                final labels = <String>[];
+                                for (final key in currentKeys) {
+                                  final control = formGroup.control(key);
+                                  if (control.errors.isEmpty && control.valid) {
+                                    continue;
+                                  }
+                                  final prop = schema.properties?[key];
+                                  final raw = prop?.label ??
+                                      prop?.innerLabel ??
+                                      key;
+                                  final translated =
+                                      localizations.translate(raw);
+                                  labels.add(translated == raw &&
+                                          raw != key
+                                      ? raw
+                                      : translated);
+                                }
+                                return labels;
+                              }
+
+                              String buildValidationToast() {
+                                final labels = collectInvalidLabels();
+                                final base = localizations.translate(
+                                    'CORE_COMMON_VALIDATION_ERROR');
+                                final prefix =
+                                    base == 'CORE_COMMON_VALIDATION_ERROR'
+                                        ? 'Please fill required fields'
+                                        : base;
+                                if (labels.isEmpty) return prefix;
+                                return '$prefix: ${labels.join(", ")}';
+                              }
+
                               final hasErrors = currentKeys.any((key) {
                                 final control = formGroup.control(key);
                                 return control.errors.isNotEmpty;
                               });
 
                               if (hasErrors) {
+                                // Surface the failure — without this, the
+                                // button silently rejects and the user is
+                                // left wondering why nothing happened. The
+                                // per-field error text still renders on
+                                // each invalid widget (all controls were
+                                // just markAsTouched'd above); the toast
+                                // is the app-wide "we heard you, but the
+                                // form isn't ready" signal.
+                                Toast.showToast(
+                                  context,
+                                  message: buildValidationToast(),
+                                  type: ToastType.error,
+                                );
                                 _isSubmitting = false;
                                 setState(() {});
                                 return;
@@ -314,6 +366,11 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   .every((key) => formGroup.control(key).valid);
 
                               if (!isCurrentPageValid) {
+                                Toast.showToast(
+                                  context,
+                                  message: buildValidationToast(),
+                                  type: ToastType.error,
+                                );
                                 _isSubmitting = false;
                                 setState(() {});
                                 return;

@@ -37,6 +37,9 @@ final dynamic attendanceFlows = {
             "data": [
               {
                 "key": "tenantId",
+                // Root on the register so tenantId scoping doesn't gate
+                // registers via a cross-table subquery on `attendee`.
+                "root": "attendanceRegister",
                 "value": "{{singleton.selectedProject.tenantId}}",
                 "operation": "equals"
               },
@@ -47,7 +50,7 @@ final dynamic attendanceFlows = {
                 "root": "attendanceRegister",
                 "value": "{{singleton.selectedProject.id}}",
                 "operation": "equals"
-              }
+              },
             ],
             "name": "attendee",
             "type": "SEARCH_EVENT"
@@ -59,6 +62,10 @@ final dynamic attendanceFlows = {
             "data": [
               {
                 "key": "tenantId",
+                // Root on the register so tenantId scoping doesn't gate
+                // registers via a cross-table subquery on `attendance`
+                // (which would hide registers that have no attendance rows yet).
+                "root": "attendanceRegister",
                 "value": "{{singleton.selectedProject.tenantId}}",
                 "operation": "equals"
               },
@@ -68,8 +75,7 @@ final dynamic attendanceFlows = {
                 "root": "attendanceRegister",
                 "value": "{{singleton.selectedProject.id}}",
                 "operation": "equals"
-              },
-              {"key": "uploadToServer", "value": true, "operation": "equals"}
+              }
             ],
             "name": "attendance",
             "type": "SEARCH_EVENT"

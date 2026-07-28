@@ -365,10 +365,6 @@ final dynamic sampleSMCFlows = {
           "visible":
               "{{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == false",
           "fieldName": "insufficientStockPopUp",
-          "labelPlaceHolders": [
-            {"key": "CYCLE", "value": "{{contextData.0.nextCycleId}}"},
-            {"key": "DOSE", "value": "{{contextData.0.nextDoseId}}"}
-          ],
           "properties": {
             "icon": "Warning",
             "size": "large",
@@ -418,7 +414,11 @@ final dynamic sampleSMCFlows = {
             "mainAxisAlignment": "center"
           },
           "schemaCode": null,
-          "suffixIcon": null
+          "suffixIcon": null,
+          "labelPlaceHolders": [
+            {"key": "CYCLE", "value": "{{contextData.0.nextCycleId}}"},
+            {"key": "DOSE", "value": "{{contextData.0.nextDoseId}}"}
+          ]
         },
         {
           "type": "template",
@@ -455,7 +455,11 @@ final dynamic sampleSMCFlows = {
                     "key": "beneficiaryId",
                     "value": "{{navigation.selectedIndividualIdentifierId}}"
                   },
-                  {"key": "childName", "value": "{{contextData.0.individuals.IndividualModel.name.givenName}}"},
+                  {
+                    "key": "childName",
+                    "value":
+                        "{{contextData.0.individuals.IndividualModel.name.givenName}}"
+                  },
                   {"key": "ageInMonths", "value": "{{navigation.ageInMonths}}"},
                   {"key": "gender", "value": "{{navigation.gender}}"},
                   {"key": "headName", "value": "{{navigation.headName}}"},
@@ -489,16 +493,16 @@ final dynamic sampleSMCFlows = {
           ],
           "fieldName": "recordCycle",
           "mandatory": true,
-          "labelPlaceHolders": [
-            {"key": "CYCLE", "value": "{{contextData.0.nextCycleId}}"},
-            {"key": "DOSE", "value": "{{contextData.0.nextDoseId}}"}
-          ],
           "properties": {
             "size": "large",
             "type": "primary",
             "mainAxisSize": "max",
             "mainAxisAlignment": "center"
-          }
+          },
+          "labelPlaceHolders": [
+            {"key": "CYCLE", "value": "{{contextData.0.nextCycleId}}"},
+            {"key": "DOSE", "value": "{{contextData.0.nextDoseId}}"}
+          ]
         }
       ],
       "header": [
@@ -844,12 +848,6 @@ final dynamic sampleSMCFlows = {
             "properties": {"type": "primary"}
           },
           "descriptionArgs": ["{{navigation.selectedIndividualIdentifierId}}"],
-          "descriptionPlaceHolders": [
-            {
-              "key": "ID",
-              "value": "{{navigation.selectedIndividualIdentifierId}}"
-            }
-          ],
           "secondaryAction": {
             "type": "template",
             "label": "GO_BACK",
@@ -866,7 +864,13 @@ final dynamic sampleSMCFlows = {
             "properties": {"type": "secondary"}
           },
           "primaryActionLabel": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
-          "secondaryActionLabel": "GO_BACK"
+          "secondaryActionLabel": "GO_BACK",
+          "descriptionPlaceHolders": [
+            {
+              "key": "ID",
+              "value": "{{navigation.selectedIndividualIdentifierId}}"
+            }
+          ]
         }
       ],
       "name": "referralSuccess",
@@ -1078,7 +1082,7 @@ final dynamic sampleSMCFlows = {
                     "label": "{{fn:getInEligibleStatus(item.task)}}",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "({{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false || {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==false) && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                     "fieldName": "notEligible",
                     "properties": {"tagType": "error"}
                   },
@@ -1096,7 +1100,7 @@ final dynamic sampleSMCFlows = {
                     "label": "ADMINISTERED_SUCCESS",
                     "format": "tag",
                     "visible":
-                        "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                     "fieldName": "administrationSuccess",
                     "properties": {"tagType": "success", "bottomGap": 16}
                   },
@@ -1105,7 +1109,7 @@ final dynamic sampleSMCFlows = {
                     "label": "REDOSE_COMPLETED",
                     "format": "tag",
                     "visible":
-                        "{{fn:hasRedoseForCurrentCycle(item.task)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "{{fn:hasRedoseForCurrentCycle(item.task)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                     "fieldName": "redoseCompleted",
                     "properties": {"tagType": "success", "bottomGap": 16}
                   },
@@ -1114,7 +1118,7 @@ final dynamic sampleSMCFlows = {
                     "label": "NOT_VISITED",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false",
                     "fieldName": "notVisited",
                     "properties": {"tagType": "info", "bottomGap": 16}
                   },
@@ -1123,7 +1127,7 @@ final dynamic sampleSMCFlows = {
                     "label": "DELIVERY",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1186,7 +1190,7 @@ final dynamic sampleSMCFlows = {
                     "label": "HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}} == true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1232,7 +1236,7 @@ final dynamic sampleSMCFlows = {
                     "label": "REGISTRATION_VIEW_DETAILS",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1295,32 +1299,12 @@ final dynamic sampleSMCFlows = {
                     "label": "REDOSE_ADMINISTRATION",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task,contextData.0.currentRunningCycle)}} == true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}} == true && {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false",
                     "disabled": "{{fn:isRedoseWindowExpired(item.task)}}==true",
                     "onAction": [
                       {
                         "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
                         "properties": {
-                          "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
-                          "eligibilityParams": [
-                            {
-                              "conditionVar": "age",
-                              "navKey": "selectedIndividualAgeInMonths",
-                              "type": "int"
-                            },
-                            {
-                              "conditionVar": "height",
-                              "navKey": "selectedIndividualHeight",
-                              "type": "double",
-                              "default": 0
-                            },
-                            {
-                              "conditionVar": "weight",
-                              "navKey": "selectedIndividualWeight",
-                              "type": "double",
-                              "default": 0
-                            }
-                          ],
                           "data": [
                             {
                               "key": "selectedIndividualClientReferenceId",
@@ -1374,7 +1358,27 @@ final dynamic sampleSMCFlows = {
                             }
                           ],
                           "name": "REDOSE",
-                          "type": "FORM"
+                          "type": "FORM",
+                          "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
+                          "eligibilityParams": [
+                            {
+                              "type": "int",
+                              "navKey": "selectedIndividualAgeInMonths",
+                              "conditionVar": "age"
+                            },
+                            {
+                              "type": "double",
+                              "navKey": "selectedIndividualHeight",
+                              "default": 0,
+                              "conditionVar": "height"
+                            },
+                            {
+                              "type": "double",
+                              "navKey": "selectedIndividualWeight",
+                              "default": 0,
+                              "conditionVar": "weight"
+                            }
+                          ]
                         }
                       }
                     ],
@@ -2219,9 +2223,9 @@ final dynamic sampleSMCFlows = {
         {
           "type": "template",
           "label": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
-          "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
           "format": "noResultCard",
           "fieldName": "beneficiaryNotFound",
+          "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
           "showOnEmptySearch": true
         },
         {
@@ -2944,14 +2948,8 @@ final dynamic sampleSMCFlows = {
               "validations": [],
               "errorMessage": "",
               "labelPlaceHolders": [
-                {
-                  "key": "ID",
-                  "value": "{{navigation.beneficiaryId}}"
-                },
-                {
-                  "key": "NAME",
-                  "value": "{{navigation.childName}}"
-                }
+                {"key": "ID", "value": "{{navigation.beneficiaryId}}"},
+                {"key": "NAME", "value": "{{navigation.childName}}"}
               ]
             },
             {
@@ -3704,10 +3702,6 @@ final dynamic sampleSMCFlows = {
           }
         },
         {
-          // Redose consumes another vial from stock (same pattern as the
-          // DELIVERY flow at line ~2741). Without this the balance stays at
-          // the pre-redose value even though the task+resource carry
-          // isDelivered=true, so StockBalanceExecutor never gets to deduct.
           "actionType": "UPDATE_STOCK_BALANCE",
           "properties": {
             "entity": "TaskModel",

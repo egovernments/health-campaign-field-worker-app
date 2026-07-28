@@ -9,6 +9,7 @@ import 'package:digit_flow_builder/action_handler/action_handler.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -212,10 +213,22 @@ class MainApplicationState extends State<MainApplication>
                   child: BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, authState) {
                       if (appConfigState is! AppInitialized) {
-                        return const MaterialApp(
+                        return MaterialApp(
+                          debugShowCheckedModeBanner: false,
                           home: Scaffold(
                             body: Center(
-                              child: Text('Loading'),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    'assets/icons/app_icon.png',
+                                    width: 140,
+                                    height: 140,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  DigitLoaders.inlineLoader(size: 48),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -553,13 +566,11 @@ class _LogoutLoaderListener extends StatelessWidget {
           children: [
             child,
             if (showLoader)
-              const Positioned.fill(
+              Positioned.fill(
                 child: ColoredBox(
-                  color: Color(0x99000000),
+                  color: const Color(0x99000000),
                   child: Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
+                    child: DigitLoaders.inlineLoader(size: 80),
                   ),
                 ),
               ),

@@ -120,6 +120,7 @@ flutter_icons:
 flutter:
   assets:
     - ./
+    - assets/icons/app_icon.png
     - assets/icons/svg/
     - assets/animated_json/
     - assets/images/

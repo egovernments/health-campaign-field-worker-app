@@ -146,7 +146,7 @@ class ComputedListEvaluator {
   }
 
   /// Infers the expected type of a variable from the condition and returns default value.
-  static dynamic _getDefaultValueForMissingKey(
+  static dynamic getDefaultValueForMissingKey(
     String key,
     String resolvedCondition,
   ) {
@@ -161,7 +161,7 @@ class ComputedListEvaluator {
     // Check if it's a boolean comparison
     for (final pattern in patterns) {
       if (pattern.hasMatch(resolvedCondition)) {
-        return 'false'; // Default boolean value as string
+        return false; // Default boolean value
       }
     }
 
@@ -173,7 +173,7 @@ class ComputedListEvaluator {
 
     for (final pattern in numericPatterns) {
       if (pattern.hasMatch(resolvedCondition)) {
-        return '0'; // Default numeric value as string
+        return 0; // Default numeric value
       }
     }
 
@@ -255,7 +255,7 @@ class ComputedListEvaluator {
     for (final key in requiredKeys) {
       if (!contextMap.containsKey(key)) {
         final defaultValue =
-            _getDefaultValueForMissingKey(key, resolvedCondition);
+            getDefaultValueForMissingKey(key, resolvedCondition);
         contextMap[key] = defaultValue;
       }
     }
