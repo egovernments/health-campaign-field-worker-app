@@ -102,36 +102,12 @@ class NavigationExecutor extends ActionExecutor {
         final key = entry['key'];
         final rawValue = entry['value'];
 
-        var resolvedValue = resolveNavigationDataValue(
+        final resolvedValue = resolveNavigationDataValue(
           rawValue: rawValue,
           stateFormData: stateFormData,
           stateWrapperFirst: stateWrapperFirst,
           contextData: enrichedContext,
         );
-
-        // Dart-code fallback: if template resolution failed and the raw value
-        // is a {{item.X…}} or {{stateWrapper.0.X…}} path, walk stateWrapper
-        // directly so nav-data still resolves when this action was fired
-        // outside a list-widget (e.g. from an OPEN_SCANNER onSuccess chain).
-        if ((resolvedValue == null || resolvedValue == rawValue) &&
-            stateWrapperFirst != null &&
-            rawValue is String &&
-            rawValue.startsWith('{{') &&
-            rawValue.endsWith('}}')) {
-          final inner = rawValue.substring(2, rawValue.length - 2).trim();
-          String? subPath;
-          if (inner.startsWith('item.')) {
-            subPath = inner.substring('item.'.length);
-          } else if (inner.startsWith('stateWrapper.0.')) {
-            subPath = inner.substring('stateWrapper.0.'.length);
-          }
-          if (subPath != null) {
-            final walked = _walkWrapperPath(stateWrapperFirst, subPath);
-            if (walked != null) {
-              resolvedValue = walked;
-            }
-          }
-        }
 
         return {
           "key": key,
@@ -277,43 +253,5 @@ class NavigationExecutor extends ActionExecutor {
     }
 
     return contextData;
-  }
-
-  /// Walks a wrapper item (typically the first entry of stateWrapper) along a
-  /// dotted path, handling Map lookups, list indices, EntityModel.toMap()
-  /// conversions, and generic .toJson() fallbacks. Returns null if any step
-  /// fails. Used as a Dart-code fallback when template resolution can't
-  /// dereference a `{{item.X.Y}}` / `{{stateWrapper.0.X.Y}}` expression.
-  dynamic _walkWrapperPath(dynamic root, String path) {
-    if (root == null) return null;
-    dynamic current = root;
-    for (final part in path.split('.')) {
-      if (current == null) return null;
-      if (current is Map) {
-        current = current[part];
-        continue;
-      }
-      if (current is List) {
-        final idx = int.tryParse(part);
-        if (idx == null || idx < 0 || idx >= current.length) return null;
-        current = current[idx];
-        continue;
-      }
-      if (current is EntityModel) {
-        final map = current.toMap();
-        if (!map.containsKey(part)) return null;
-        current = map[part];
-        continue;
-      }
-      try {
-        final json = (current as dynamic).toJson();
-        if (json is Map) {
-          current = json[part];
-          continue;
-        }
-      } catch (_) {}
-      return null;
-    }
-    return current;
   }
 }
