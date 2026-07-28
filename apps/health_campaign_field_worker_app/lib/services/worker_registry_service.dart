@@ -1,11 +1,15 @@
 import 'dart:convert';
 
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_face_verification/data/face_embedding_repository.dart';
 import 'package:digit_face_verification/models/face_embedding_model.dart';
 import 'package:digit_face_verification/models/face_enrollment_profile.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+
+import '../data/local_store/no_sql/schema/service_registry.dart';
+import '../utils/constants.dart';
 
 /// Service that updates the Worker Registry with face enrollment details
 /// after a successful face enrollment.
@@ -15,15 +19,57 @@ import 'package:flutter/foundation.dart';
 class WorkerRegistryService {
   final Dio _dio;
   final String _tenantId;
+  final String _searchPath;
+  final String _bulkUpdatePath;
 
-  static const _searchPath = '/worker/v1/_search';
-  static const _bulkUpdatePath = '/worker/v1/bulk/_update';
+  /// Fallback paths used only when the ServiceRegistry MDMS entry is
+  /// missing on the server. Kept so older tenants that haven't rolled
+  /// out the mapping keep working.
+  static const _defaultSearchPath = '/worker/v1/_search';
+  static const _defaultBulkUpdatePath = '/worker/v1/bulk/_update';
+
+  /// MDMS ServiceRegistry lookup keys. Ops must configure a `WORKER`
+  /// service with `Worker` entity actions `search` and `bulk_update`
+  /// for the path override to take effect.
+  static const _mdmsService = 'WORKER';
+  static const _mdmsEntity = 'Worker';
 
   WorkerRegistryService({
     required Dio dio,
     required String tenantId,
+    String? searchPath,
+    String? bulkUpdatePath,
   })  : _dio = dio,
-        _tenantId = tenantId;
+        _tenantId = tenantId,
+        _searchPath = searchPath ?? _defaultSearchPath,
+        _bulkUpdatePath = bulkUpdatePath ?? _defaultBulkUpdatePath;
+
+  /// Resolves worker registry paths from the MDMS ServiceRegistry.
+  /// Falls back to compile-time defaults when the registry does not
+  /// contain the `WORKER` service entry.
+  factory WorkerRegistryService.fromServiceRegistry({
+    required Dio dio,
+    required String tenantId,
+    required List<ServiceRegistry> serviceRegistry,
+  }) {
+    String resolve(String action, String fallback) {
+      final path = Constants.getMultiLoginEndPoint(
+        serviceRegistry: serviceRegistry,
+        service: _mdmsService,
+        entityName: _mdmsEntity,
+        action: action,
+      );
+      return path.isEmpty ? fallback : path;
+    }
+
+    return WorkerRegistryService(
+      dio: dio,
+      tenantId: tenantId,
+      searchPath: resolve(ApiOperation.search.toValue(), _defaultSearchPath),
+      bulkUpdatePath:
+          resolve(ApiOperation.bulkUpdate.toValue(), _defaultBulkUpdatePath),
+    );
+  }
 
   /// Returns true if a worker record exists for the given individualId.
   /// Fails open on network/API errors — only returns false when the server

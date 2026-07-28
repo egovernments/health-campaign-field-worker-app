@@ -272,9 +272,13 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper>
 
         if (coWorkerIds.isEmpty) break;
 
-        final service = WorkerRegistryService(
+        final serviceRegistry =
+            await context.read<Isar>().serviceRegistrys.where().findAll();
+        if (!mounted) return;
+        final service = WorkerRegistryService.fromServiceRegistry(
           dio: DioClient().dio,
           tenantId: envConfig.variables.tenantId,
+          serviceRegistry: serviceRegistry,
         );
 
         for (final id in coWorkerIds) {
@@ -307,9 +311,11 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper>
 
       final isar = context.read<Isar>();
       final repository = FaceEmbeddingRepository(isar);
-      final service = WorkerRegistryService(
+      final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+      final service = WorkerRegistryService.fromServiceRegistry(
         dio: DioClient().dio,
         tenantId: envConfig.variables.tenantId,
+        serviceRegistry: serviceRegistry,
       );
 
       final remaining = <String>{};
@@ -699,11 +705,16 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper>
                         ),
                         BlocProvider(
                           create: (ctx) {
+                            final appInit = ctx
+                                .read<AppInitializationBloc>()
+                                .state as AppInitialized;
                             _faceGateBloc = FaceGateBloc(
                               repository: ctx.read<FaceEmbeddingRepository>(),
-                              workerRegistryService: WorkerRegistryService(
+                              workerRegistryService:
+                                  WorkerRegistryService.fromServiceRegistry(
                                 dio: DioClient().dio,
                                 tenantId: envConfig.variables.tenantId,
+                                serviceRegistry: appInit.serviceRegistryList,
                               ),
                               // Independent MDMS fetch, loaded lazily by the bloc
                               // on checkEnrollment so the server threshold applies

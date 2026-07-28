@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/face_auth/face_gate_bloc.dart';
 import '../blocs/project/project.dart';
@@ -147,9 +148,12 @@ class _FaceGatePageState extends State<FaceGatePage> {
 
   void _updateWorkerRegistry(String individualId) {
     final repository = context.read<FaceEmbeddingRepository>();
-    final service = WorkerRegistryService(
+    final appInit =
+        context.read<AppInitializationBloc>().state as AppInitialized;
+    final service = WorkerRegistryService.fromServiceRegistry(
       dio: DioClient().dio,
       tenantId: envConfig.variables.tenantId,
+      serviceRegistry: appInit.serviceRegistryList,
     );
     // Save pending flag before attempting so authenticated page can retry
     // if this call fails while offline.

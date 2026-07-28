@@ -5,11 +5,13 @@ import 'package:digit_face_verification/digit_face_verification.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../blocs/localization/app_localization.dart';
 import '../../blocs/project/project.dart';
+import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/remote_client.dart';
 import '../../services/face_auth_event_logger.dart';
 import '../../services/worker_registry_service.dart';
@@ -85,9 +87,13 @@ class _NonMobileFaceEnrollPageState extends State<NonMobileFaceEnrollPage> {
   /// in the pending-sync queue so AuthenticatedPage retries when online.
   Future<bool> _updateWorkerRegistry(String individualId) async {
     final repository = context.read<FaceEmbeddingRepository>();
-    final service = WorkerRegistryService(
+    final serviceRegistry =
+        await context.read<Isar>().serviceRegistrys.where().findAll();
+    if (!mounted) return false;
+    final service = WorkerRegistryService.fromServiceRegistry(
       dio: DioClient().dio,
       tenantId: envConfig.variables.tenantId,
+      serviceRegistry: serviceRegistry,
     );
     // Queue this individual id as pending BEFORE the call so an offline /
     // network failure leaves a retryable marker. AuthenticatedPage's

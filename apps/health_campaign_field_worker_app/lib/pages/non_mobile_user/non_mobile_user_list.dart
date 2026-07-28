@@ -18,10 +18,12 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/face_auth/reverification_bloc.dart';
+import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/remote_client.dart';
 import '../../router/app_router.dart';
 import '../../services/face_auth_event_logger.dart';
@@ -102,9 +104,13 @@ class _NonMobileUserListPageState
             .where((id) => id.isNotEmpty && !enrolledIds.contains(id))
             .toList();
         if (unenrolled.isNotEmpty) {
-          final service = WorkerRegistryService(
+          final serviceRegistry =
+              await context.read<Isar>().serviceRegistrys.where().findAll();
+          if (!mounted) return;
+          final service = WorkerRegistryService.fromServiceRegistry(
             dio: DioClient().dio,
             tenantId: envConfig.variables.tenantId,
+            serviceRegistry: serviceRegistry,
           );
           await Future.wait(
             unenrolled.map((id) async {

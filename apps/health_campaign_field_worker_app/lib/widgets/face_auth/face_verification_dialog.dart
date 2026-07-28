@@ -8,6 +8,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/face_auth/face_gate_bloc.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../data/remote_client.dart';
@@ -52,6 +53,9 @@ Future<FaceVerificationResult> showFaceVerificationDialog(
   // Default to logged-in user's individual ID so the comparison is always
   // scoped to the distributor only, preventing co-worker face false positives.
   final targetId = individualId ?? context.loggedInIndividualIdOrNull ?? '';
+  final appInitState =
+      context.read<AppInitializationBloc>().state as AppInitialized;
+  final serviceRegistryList = appInitState.serviceRegistryList;
 
   final result = await Navigator.of(context).push<FaceVerificationResult>(
     MaterialPageRoute(
@@ -61,9 +65,11 @@ Future<FaceVerificationResult> showFaceVerificationDialog(
           BlocProvider(
             create: (_) => FaceGateBloc(
               repository: repo,
-              workerRegistryService: WorkerRegistryService(
+              workerRegistryService:
+                  WorkerRegistryService.fromServiceRegistry(
                 dio: DioClient().dio,
                 tenantId: envConfig.variables.tenantId,
+                serviceRegistry: serviceRegistryList,
               ),
               configLoader: () => MdmsRepository(DioClient().dio)
                   .searchFaceAuthConfig(
