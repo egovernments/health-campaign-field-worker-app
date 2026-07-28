@@ -1492,8 +1492,7 @@
               "type": "template",
               "label": "ADD_MEMBER",
               "format": "button",
-              "visible":
-                  "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
+              "visible": "{{latestBeneficiaryId}} != ''",
               "onAction": [
                 {
                   "actionType": "NAVIGATION",
@@ -1521,7 +1520,9 @@
                 "prefixIcon": "AddCircle",
                 "align": "center",
                 "mainAxisSize": "min",
-                "mainAxisAlignment": "center"
+                "mainAxisAlignment": "center",
+                "topGap": 0,
+                "bottomGap": 12
               }
             }
           ],
