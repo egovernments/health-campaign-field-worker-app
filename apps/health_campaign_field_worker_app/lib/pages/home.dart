@@ -1844,16 +1844,21 @@ class _HomePageState extends LocalizedState<HomePage> {
             height: MediaQuery.of(context).size.height,
             child: ScrollableContent(
               slivers: [
-                SliverGrid(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return homeItems.elementAt(index);
-                    },
-                    childCount: homeItems.length,
-                  ),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 145,
-                    childAspectRatio: 104 / 128,
+                SliverPadding(
+                  padding: const EdgeInsets.only(left: spacer2, right: spacer2, top: spacer2),
+                  sliver: SliverGrid(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return homeItems.elementAt(index);
+                      },
+                      childCount: homeItems.length,
+                    ),
+                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 164,
+                      childAspectRatio: 104 / 128,
+                      mainAxisSpacing: spacer3,
+                      crossAxisSpacing: spacer2,
+                    ),
                   ),
                 ),
               ],
@@ -1877,7 +1882,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       : homeShowcaseData.distributorProgressBar.buildWith(
                           child: BeneficiaryProgressBar(
                             label: localizations.translate(
-                              i18.home.progressIndicatorTitle,
+                              i18.home.homeMyProgress,
                             ),
                             prefixLabel: localizations.translate(
                               i18.home.progressIndicatorPrefixLabel,
@@ -2297,7 +2302,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (schemaJsonRaw != null) {
+                  if (false && schemaJsonRaw != null) {
                     final allSchemas =
                         json.decode(schemaJsonRaw) as Map<String, dynamic>;
                     final data = allSchemas['REGISTRATION'];

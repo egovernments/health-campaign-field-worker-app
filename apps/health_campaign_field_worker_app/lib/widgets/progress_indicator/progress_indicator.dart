@@ -44,7 +44,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
               ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: spacer2),
+          padding: const EdgeInsets.only(top: spacer2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
