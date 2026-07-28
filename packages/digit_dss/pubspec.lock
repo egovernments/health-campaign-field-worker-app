@@ -71,7 +71,7 @@ packages:
       path: "../attendance_management"
       relative: true
     source: path
-    version: "1.0.5+2"
+    version: "1.0.6+1"
   audioplayers:
     dependency: transitive
     description:
@@ -439,7 +439,7 @@ packages:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.2.0-dev.2-console"
+    version: "1.4.0"
   digit_scanner:
     dependency: transitive
     description:

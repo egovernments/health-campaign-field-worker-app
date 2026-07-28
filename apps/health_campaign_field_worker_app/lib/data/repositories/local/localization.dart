@@ -120,6 +120,58 @@ class LocalizationLocalRepository {
     });
   }
 
+  /// Returns which of [codes] are already present in the localization table
+  /// for [locale]. Callers use this to compute a missing-code delta before
+  /// hitting the network — historically the caller "always fetch"ed because
+  /// the module-level `fetchLocalization` check is coarse (any-row-for-
+  /// module), but boundary code sets can be thousands strong and repeat
+  /// downloads on every project selection was wasteful. Falls back to an
+  /// empty set on error so the caller conservatively treats everything as
+  /// missing.
+  FutureOr<Set<String>> fetchCachedCodesForLocale({
+    required LocalSqlDataStore sql,
+    required String locale,
+    required Set<String> codes,
+  }) async {
+    if (codes.isEmpty) return const <String>{};
+    return retryLocalCallOperation(() async {
+      final query = sql.selectOnly(sql.localization)
+        ..addColumns([sql.localization.code])
+        ..where(sql.localization.locale.equals(locale) &
+            sql.localization.code.isIn(codes));
+      final rows = await query.get();
+      return rows.map((r) => r.read(sql.localization.code)!).toSet();
+    });
+  }
+
+  /// Returns every localization row for [locale] regardless of module. Used
+  /// to prime the flow-builder / forms-engine static caches in `_loadLocale`
+  /// so on-demand modules (e.g. hcm-boundary-admin loaded after app startup)
+  /// are reflected without a MaterialApp rebuild.
+  FutureOr<List<Localization>> fetchAllForLocale({
+    required LocalSqlDataStore sql,
+    required String locale,
+  }) async {
+    return retryLocalCallOperation(() async {
+      final query = sql.select(sql.localization).join([])
+        ..where(sql.localization.locale.equals(locale));
+
+      final results = await query.get();
+
+      return results.map((e) {
+        final data = e.readTableOrNull(sql.localization);
+        if (data == null) {
+          throw StateError('No data found for localization');
+        }
+        return Localization()
+          ..code = data.code
+          ..locale = data.locale
+          ..module = data.module
+          ..message = data.message;
+      }).toList();
+    });
+  }
+
   FutureOr create(
       List<LocalizationCompanion> result, LocalSqlDataStore sql) async {
     if (result.isEmpty) return;

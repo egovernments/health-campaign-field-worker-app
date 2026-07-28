@@ -432,14 +432,14 @@ packages:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.2.0-dev.2-console"
+    version: "1.4.0"
   digit_scanner:
     dependency: "direct main"
     description:
       path: "../digit_scanner"
       relative: true
     source: path
-    version: "0.0.2-console"
+    version: "1.0.7+2"
   digit_ui_components:
     dependency: "direct main"
     description:

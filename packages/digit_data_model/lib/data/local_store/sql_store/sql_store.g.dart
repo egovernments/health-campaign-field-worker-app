@@ -42437,6 +42437,8 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
       'name_familyname', 'CREATE INDEX name_familyname ON name (family_name)');
   late final Index nameIndividualclientref = Index('name_individualclientref',
       'CREATE INDEX name_individualclientref ON name (individual_client_reference_id)');
+  late final Index productVariantProductid = Index('product_variant_productid',
+      'CREATE INDEX product_variant_productid ON product_variant (product_id)');
   late final Index projectClinetref = Index('project_clinetref',
       'CREATE INDEX project_clinetref ON project_beneficiary (client_reference_id)');
   late final Index projectProjectid = Index('project_projectid',
@@ -42444,6 +42446,15 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final Index projectProjectbeneficiaryclientref = Index(
       'project_projectbeneficiaryclientref',
       'CREATE INDEX project_projectbeneficiaryclientref ON project_beneficiary (beneficiary_client_reference_id)');
+  late final Index projectFacilityProjectid = Index(
+      'project_facility_projectid',
+      'CREATE INDEX project_facility_projectid ON project_facility (project_id)');
+  late final Index projectFacilityFacilityid = Index(
+      'project_facility_facilityid',
+      'CREATE INDEX project_facility_facilityid ON project_facility (facility_id)');
+  late final Index projectResourceProjectid = Index(
+      'project_resource_projectid',
+      'CREATE INDEX project_resource_projectid ON project_resource (project_id)');
   late final Index individualClientref = Index('individual_clientref',
       'CREATE INDEX individual_clientref ON individual (client_reference_id)');
   late final Index identifierIdentifierid = Index('identifier_identifierid',
@@ -42464,6 +42475,8 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final Index stockreconProductvariantid = Index(
       'stockrecon_productvariantid',
       'CREATE INDEX stockrecon_productvariantid ON stock_reconciliation (product_variant_id)');
+  late final Index pgrServiceTenantid = Index('pgr_service_tenantid',
+      'CREATE INDEX pgr_service_tenantid ON pgr_service (tenant_id)');
   late final Index hfreferralClientref = Index('hfreferral_clientref',
       'CREATE INDEX hfreferral_clientref ON h_f_referral (client_reference_id)');
   late final Index hfreferralProjectid = Index('hfreferral_projectid',
@@ -42524,6 +42537,9 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
       'CREATE INDEX referral_projectbeneficiaryclientref ON referral (project_beneficiary_client_reference_id)');
   late final Index localizationModule = Index('localization_module',
       'CREATE INDEX localization_module ON localization (module)');
+  late final Index localizationLocaleModule = Index(
+      'localization_locale_module',
+      'CREATE INDEX localization_locale_module ON localization (locale, module)');
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -42580,9 +42596,13 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         nameGivenname,
         nameFamilyname,
         nameIndividualclientref,
+        productVariantProductid,
         projectClinetref,
         projectProjectid,
         projectProjectbeneficiaryclientref,
+        projectFacilityProjectid,
+        projectFacilityFacilityid,
+        projectResourceProjectid,
         individualClientref,
         identifierIdentifierid,
         identifierIndividualclientref,
@@ -42592,6 +42612,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         stockreconClientref,
         stockreconFacilityid,
         stockreconProductvariantid,
+        pgrServiceTenantid,
         hfreferralClientref,
         hfreferralProjectid,
         householdSelfClientref,
@@ -42617,7 +42638,8 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         referralClinetref,
         referralProjectid,
         referralProjectbeneficiaryclientref,
-        localizationModule
+        localizationModule,
+        localizationLocaleModule
       ];
 }
 

@@ -819,33 +819,76 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     });
   }
 
-  /// Fetches and caches the boundary localization for [locale] if it isn't
-  /// already in the local store. Mirrors the cache loop in
-  /// `project_selection.dart` but runs at language-switch time so a previously
-  /// failed seed for this locale doesn't leave boundary labels blank. Any
+  /// Fetches and caches the boundary localization for [locale] in the main
+  /// `localization` table. Runs at language-switch time so a locale we
+  /// haven't fetched yet doesn't leave the boundary dropdown blank. Any
   /// failure here is non-fatal — the language switch always proceeds.
   Future<void> _ensureBoundaryLocalizationCached(
     BuildContext context,
     String locale,
   ) async {
     final locBloc = context.read<LocalizationBloc>();
-    final boundaryModule =
-        'hcm-boundary-${runtimeHierarchyType().toLowerCase()}';
+    final hierarchyType = runtimeHierarchyType();
+    final boundaryModule = 'hcm-boundary-${hierarchyType.toLowerCase()}';
+    // Two kinds of code go in:
+    //   1. Boundary code (e.g. IN_KA_BLR) — the raw `b.code`.
+    //   2. Hierarchy-level LABEL code (e.g. HCM-MOZ-HIERARCHY_District) —
+    //      not the bare `b.label`. The boundary selection page looks up
+    //      level labels as `${runtimeHierarchyType()}_$label`
+    //      (boundary_selection.dart:142-145), so the localization row for
+    //      the label lives under that composite code, not the bare label.
+    //
+    // Reading from `boundaryLocalRepository`, NOT from
+    // `boundaryBloc.state.boundaryList`. The bloc's list only holds the
+    // partial slice `BoundaryFindEvent` returned; the full tree the user
+    // can drill into was downsynced into the local DB at project selection
+    // (project.dart:801). Using the local repo here means switching
+    // language pulls translations for every drill-reachable boundary in
+    // one shot.
     try {
-      final localResults =
-          await LocalizationLocalRepository().fetchLocalization(
+      // Local boundary lookup lives inside the try — a failure here (Isar
+      // error, cast mismatch when the repo isn't wired for this profile,
+      // etc.) must not abort the language switch, otherwise the
+      // non-dismissible overlay stays up and the localization event that
+      // dispatches the actual language change is never fired.
+      final boundaryLocalRepo =
+          context.read<LocalRepository<BoundaryModel, BoundarySearchModel>>();
+      final allBoundaries =
+          await boundaryLocalRepo.search(BoundarySearchModel());
+      final allBoundaryCodes = allBoundaries
+          .expand((b) => [
+                b.code,
+                if (b.label != null && b.label!.isNotEmpty)
+                  '${hierarchyType}_${b.label}',
+              ])
+          .whereType<String>()
+          .where((s) => s.isNotEmpty)
+          .toSet();
+      // Only fetch codes that aren't already cached locally for this
+      // locale. Historically this path did an unconditional fetch of
+      // every boundary code (potentially thousands on a large hierarchy)
+      // on every language switch, because the coarser module-level
+      // fetchLocalization check would false-positive on a partially-
+      // populated cache. `fetchCachedCodesForLocale` gives us a precise
+      // code-level delta — an all-cached switch becomes one indexed
+      // SELECT and zero HTTP calls.
+      final cachedCodes =
+          await LocalizationLocalRepository().fetchCachedCodesForLocale(
         sql: locBloc.sql,
         locale: locale,
-        module: boundaryModule,
+        codes: allBoundaryCodes,
       );
-      if (localResults.isNotEmpty) return;
-      final results = await locBloc.localizationRepository.loadLocalization(
-        path: Constants.localizationApiPath,
-        locale: locale,
-        module: boundaryModule,
-        tenantId: envConfig.variables.tenantId,
-      );
-      await LocalizationLocalRepository().create(results, locBloc.sql);
+      final missingCodes = allBoundaryCodes.difference(cachedCodes).toList();
+      if (missingCodes.isNotEmpty) {
+        final results = await locBloc.localizationRepository.loadLocalization(
+          path: Constants.localizationApiPath,
+          locale: locale,
+          module: boundaryModule,
+          tenantId: envConfig.variables.tenantId,
+          codes: missingCodes.join(','),
+        );
+        await LocalizationLocalRepository().create(results, locBloc.sql);
+      }
     } catch (e) {
       debugPrint(
           'error caching boundary localization for $locale on language switch: $e');

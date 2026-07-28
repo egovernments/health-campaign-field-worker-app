@@ -356,13 +356,21 @@ void showDownloadDialog(
               final currentIndex = data?.currentIndex ?? 0;
               final totalBoundaries = data?.totalBoundaries ?? 1;
 
+              // The first inProgress event fires with syncedCount=0 *before*
+              // the first batch API call returns. On a batch size of 100-200
+              // that leaves the bar frozen at 0% for the entire round-trip,
+              // which reads as "hung". Feed a null value while nothing is
+              // downloaded yet so LinearProgressIndicator animates in its
+              // indeterminate mode; flip to determinate once records land.
+              final barValue = syncedCount > 0 ? progress : null;
+
               return ProgressIndicatorContainer(
                 label: boundaryName.isNotEmpty
                     ? '$boundaryName (${currentIndex + 1}/$totalBoundaries)'
                     : '',
                 prefixLabel: '$syncedCount',
                 suffixLabel: '$totalCount',
-                value: progress,
+                value: barValue,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   Theme.of(context).colorTheme.primary.primary1,
                 ),
