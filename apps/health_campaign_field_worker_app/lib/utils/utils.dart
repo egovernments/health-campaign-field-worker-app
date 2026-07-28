@@ -458,6 +458,9 @@ void showDownloadDialog(
               final progress = data?.progress ?? 0;
               final totalCount = data?.totalCount ?? model.totalCount ?? 0;
               final syncedCount = data?.syncedCount ?? 0;
+              final boundaryName = data?.boundaryName ?? '';
+              final currentIndex = data?.currentIndex ?? 0;
+              final totalBoundaries = data?.totalBoundaries ?? 1;
 
               // The first inProgress event fires with syncedCount=0 *before*
               // the first batch API call returns. On a batch size of 100-200

@@ -1405,8 +1405,7 @@
               "type": "template",
               "label": "ADD_MEMBER",
               "format": "actionPopup",
-              "visible":
-                  "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
+              "visible": "{{latestBeneficiaryId}} == ''",
               "fieldName": "beneficiaryIdMinCheck",
               "properties": {
                 "size": "medium",
@@ -1521,7 +1520,7 @@
                 "align": "center",
                 "mainAxisSize": "min",
                 "mainAxisAlignment": "center",
-                "topGap": 0,
+                "topGap": 12,
                 "bottomGap": 12
               }
             }
@@ -1951,7 +1950,6 @@
               ],
               "fieldName": "searchBar",
               "mandatory": true,
-              "textCapitalization": "words",
               "debounceMs": 300,
               "validations": [
                 {"type": "minSearchChars", "value": 2}
