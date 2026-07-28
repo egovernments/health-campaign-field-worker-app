@@ -208,27 +208,27 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                     appBar: AppBar(
                       backgroundColor: theme.colorTheme.primary.primary2,
                       foregroundColor: theme.colorTheme.paper.primary,
-                      title: BlocBuilder<AppInitializationBloc,
-                          AppInitializationState>(
-                        builder: (context, state) {
-                          final logoUrl = state is AppInitialized
-                              ? state.appConfiguration.stateLogoUrl
-                              : null;
-                          if (logoUrl == null || logoUrl.isEmpty) {
-                            return const SizedBox.shrink();
-                          }
-                          return SizedBox(
-                            height: 36,
-                            child: Image.network(
-                              logoUrl,
-                              fit: BoxFit.contain,
-                              errorBuilder: (_, __, ___) =>
-                                  const SizedBox.shrink(),
-                            ),
-                          );
-                        },
-                      ),
-                      centerTitle: false,
+                      // TODO: show state logo once logoUrl is confirmed from MDMS
+                      // title: BlocBuilder<AppInitializationBloc,
+                      //     AppInitializationState>(
+                      //   builder: (context, state) {
+                      //     final logoUrl = state is AppInitialized
+                      //         ? state.appConfiguration.stateLogoUrl
+                      //         : null;
+                      //     if (logoUrl == null || logoUrl.isEmpty) {
+                      //       return const SizedBox.shrink();
+                      //     }
+                      //     return SizedBox(
+                      //       height: 36,
+                      //       child: Image.network(
+                      //         logoUrl,
+                      //         fit: BoxFit.contain,
+                      //         errorBuilder: (_, __, ___) =>
+                      //             const SizedBox.shrink(),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
                       actions: null,
                     ),
                     drawer: showDrawer ? drawerWidget(context) : null,
