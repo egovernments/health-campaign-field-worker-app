@@ -62,7 +62,6 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
               localizations.translate(
                 i18.acknowledgementSuccess.acknowledgementDescriptionText,
               ),
-          additionWidgets: null,
           actions: (!widget.isDataRecordSuccess)
               ? [
                   DigitButton(
