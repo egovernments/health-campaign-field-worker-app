@@ -192,7 +192,12 @@ class ReVerificationBloc
     _windowTimer?.cancel();
     _countdownTimer?.cancel();
 
-    final profile = await repository.getProfile(event.individualId);
+    if (currentUserIndividualId.isEmpty) {
+      emit(const ReVerificationState.idle());
+      return;
+    }
+
+    final profile = await repository.getProfile(currentUserIndividualId);
     if (profile == null) {
       emit(const ReVerificationState.idle());
       return;
@@ -203,7 +208,7 @@ class ReVerificationBloc
         pinService.verifyPin(event.pin, profile.pinHash, profile.pinSalt);
 
     if (isValid) {
-      await repository.updateLastVerified(event.individualId);
+      await repository.updateLastVerified(currentUserIndividualId);
       emit(const ReVerificationState.verified(
         confidence: 0.0,
         elapsedMs: 0,
@@ -353,7 +358,6 @@ class ReVerificationEvent with _$ReVerificationEvent {
 
   const factory ReVerificationEvent.pinUsed({
     required String pin,
-    required String individualId,
   }) = ReVerificationPinUsedEvent;
 
   const factory ReVerificationEvent.dismissed() =

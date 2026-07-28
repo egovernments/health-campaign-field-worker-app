@@ -76,12 +76,8 @@ class _ReVerificationOverlayState extends State<ReVerificationOverlay> {
                     ? _PinInputView(
                         pinController: _pinController,
                         onSubmit: (pin) {
-                          // TODO: Get individualId from current session
                           context.read<ReVerificationBloc>().add(
-                                ReVerificationEvent.pinUsed(
-                                  pin: pin,
-                                  individualId: '',
-                                ),
+                                ReVerificationEvent.pinUsed(pin: pin),
                               );
                         },
                       )

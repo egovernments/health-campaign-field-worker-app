@@ -21,7 +21,7 @@ mixin _$ReVerificationEvent {
     required TResult Function(ReVerificationTrigger trigger) triggered,
     required TResult Function() tick,
     required TResult Function(List<double> embedding) faceScanned,
-    required TResult Function(String pin, String individualId) pinUsed,
+    required TResult Function(String pin) pinUsed,
     required TResult Function() dismissed,
     required TResult Function() paused,
     required TResult Function() resumed,
@@ -34,7 +34,7 @@ mixin _$ReVerificationEvent {
     TResult? Function(ReVerificationTrigger trigger)? triggered,
     TResult? Function()? tick,
     TResult? Function(List<double> embedding)? faceScanned,
-    TResult? Function(String pin, String individualId)? pinUsed,
+    TResult? Function(String pin)? pinUsed,
     TResult? Function()? dismissed,
     TResult? Function()? paused,
     TResult? Function()? resumed,
@@ -47,7 +47,7 @@ mixin _$ReVerificationEvent {
     TResult Function(ReVerificationTrigger trigger)? triggered,
     TResult Function()? tick,
     TResult Function(List<double> embedding)? faceScanned,
-    TResult Function(String pin, String individualId)? pinUsed,
+    TResult Function(String pin)? pinUsed,
     TResult Function()? dismissed,
     TResult Function()? paused,
     TResult Function()? resumed,
@@ -192,7 +192,7 @@ class _$ReVerificationTriggeredEventImpl
     required TResult Function(ReVerificationTrigger trigger) triggered,
     required TResult Function() tick,
     required TResult Function(List<double> embedding) faceScanned,
-    required TResult Function(String pin, String individualId) pinUsed,
+    required TResult Function(String pin) pinUsed,
     required TResult Function() dismissed,
     required TResult Function() paused,
     required TResult Function() resumed,
@@ -208,7 +208,7 @@ class _$ReVerificationTriggeredEventImpl
     TResult? Function(ReVerificationTrigger trigger)? triggered,
     TResult? Function()? tick,
     TResult? Function(List<double> embedding)? faceScanned,
-    TResult? Function(String pin, String individualId)? pinUsed,
+    TResult? Function(String pin)? pinUsed,
     TResult? Function()? dismissed,
     TResult? Function()? paused,
     TResult? Function()? resumed,
@@ -224,7 +224,7 @@ class _$ReVerificationTriggeredEventImpl
     TResult Function(ReVerificationTrigger trigger)? triggered,
     TResult Function()? tick,
     TResult Function(List<double> embedding)? faceScanned,
-    TResult Function(String pin, String individualId)? pinUsed,
+    TResult Function(String pin)? pinUsed,
     TResult Function()? dismissed,
     TResult Function()? paused,
     TResult Function()? resumed,
@@ -351,7 +351,7 @@ class _$ReVerificationTickEventImpl implements ReVerificationTickEvent {
     required TResult Function(ReVerificationTrigger trigger) triggered,
     required TResult Function() tick,
     required TResult Function(List<double> embedding) faceScanned,
-    required TResult Function(String pin, String individualId) pinUsed,
+    required TResult Function(String pin) pinUsed,
     required TResult Function() dismissed,
     required TResult Function() paused,
     required TResult Function() resumed,
@@ -367,7 +367,7 @@ class _$ReVerificationTickEventImpl implements ReVerificationTickEvent {
     TResult? Function(ReVerificationTrigger trigger)? triggered,
     TResult? Function()? tick,
     TResult? Function(List<double> embedding)? faceScanned,
-    TResult? Function(String pin, String individualId)? pinUsed,
+    TResult? Function(String pin)? pinUsed,
     TResult? Function()? dismissed,
     TResult? Function()? paused,
     TResult? Function()? resumed,
@@ -383,7 +383,7 @@ class _$ReVerificationTickEventImpl implements ReVerificationTickEvent {
     TResult Function(ReVerificationTrigger trigger)? triggered,
     TResult Function()? tick,
     TResult Function(List<double> embedding)? faceScanned,
-    TResult Function(String pin, String individualId)? pinUsed,
+    TResult Function(String pin)? pinUsed,
     TResult Function()? dismissed,
     TResult Function()? paused,
     TResult Function()? resumed,
@@ -539,7 +539,7 @@ class _$ReVerificationFaceScannedEventImpl
     required TResult Function(ReVerificationTrigger trigger) triggered,
     required TResult Function() tick,
     required TResult Function(List<double> embedding) faceScanned,
-    required TResult Function(String pin, String individualId) pinUsed,
+    required TResult Function(String pin) pinUsed,
     required TResult Function() dismissed,
     required TResult Function() paused,
     required TResult Function() resumed,
@@ -555,7 +555,7 @@ class _$ReVerificationFaceScannedEventImpl
     TResult? Function(ReVerificationTrigger trigger)? triggered,
     TResult? Function()? tick,
     TResult? Function(List<double> embedding)? faceScanned,
-    TResult? Function(String pin, String individualId)? pinUsed,
+    TResult? Function(String pin)? pinUsed,
     TResult? Function()? dismissed,
     TResult? Function()? paused,
     TResult? Function()? resumed,
@@ -571,7 +571,7 @@ class _$ReVerificationFaceScannedEventImpl
     TResult Function(ReVerificationTrigger trigger)? triggered,
     TResult Function()? tick,
     TResult Function(List<double> embedding)? faceScanned,
-    TResult Function(String pin, String individualId)? pinUsed,
+    TResult Function(String pin)? pinUsed,
     TResult Function()? dismissed,
     TResult Function()? paused,
     TResult Function()? resumed,
@@ -660,7 +660,7 @@ abstract class _$$ReVerificationPinUsedEventImplCopyWith<$Res> {
           $Res Function(_$ReVerificationPinUsedEventImpl) then) =
       __$$ReVerificationPinUsedEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String pin, String individualId});
+  $Res call({String pin});
 }
 
 /// @nodoc
@@ -677,16 +677,11 @@ class __$$ReVerificationPinUsedEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? pin = null,
-    Object? individualId = null,
   }) {
     return _then(_$ReVerificationPinUsedEventImpl(
       pin: null == pin
           ? _value.pin
           : pin // ignore: cast_nullable_to_non_nullable
-              as String,
-      individualId: null == individualId
-          ? _value.individualId
-          : individualId // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -695,17 +690,14 @@ class __$$ReVerificationPinUsedEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$ReVerificationPinUsedEventImpl implements ReVerificationPinUsedEvent {
-  const _$ReVerificationPinUsedEventImpl(
-      {required this.pin, required this.individualId});
+  const _$ReVerificationPinUsedEventImpl({required this.pin});
 
   @override
   final String pin;
-  @override
-  final String individualId;
 
   @override
   String toString() {
-    return 'ReVerificationEvent.pinUsed(pin: $pin, individualId: $individualId)';
+    return 'ReVerificationEvent.pinUsed(pin: $pin)';
   }
 
   @override
@@ -713,13 +705,11 @@ class _$ReVerificationPinUsedEventImpl implements ReVerificationPinUsedEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ReVerificationPinUsedEventImpl &&
-            (identical(other.pin, pin) || other.pin == pin) &&
-            (identical(other.individualId, individualId) ||
-                other.individualId == individualId));
+            (identical(other.pin, pin) || other.pin == pin));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, pin, individualId);
+  int get hashCode => Object.hash(runtimeType, pin);
 
   @JsonKey(ignore: true)
   @override
@@ -734,14 +724,14 @@ class _$ReVerificationPinUsedEventImpl implements ReVerificationPinUsedEvent {
     required TResult Function(ReVerificationTrigger trigger) triggered,
     required TResult Function() tick,
     required TResult Function(List<double> embedding) faceScanned,
-    required TResult Function(String pin, String individualId) pinUsed,
+    required TResult Function(String pin) pinUsed,
     required TResult Function() dismissed,
     required TResult Function() paused,
     required TResult Function() resumed,
     required TResult Function() externalVerified,
     required TResult Function() timeout,
   }) {
-    return pinUsed(pin, individualId);
+    return pinUsed(pin);
   }
 
   @override
@@ -750,14 +740,14 @@ class _$ReVerificationPinUsedEventImpl implements ReVerificationPinUsedEvent {
     TResult? Function(ReVerificationTrigger trigger)? triggered,
     TResult? Function()? tick,
     TResult? Function(List<double> embedding)? faceScanned,
-    TResult? Function(String pin, String individualId)? pinUsed,
+    TResult? Function(String pin)? pinUsed,
     TResult? Function()? dismissed,
     TResult? Function()? paused,
     TResult? Function()? resumed,
     TResult? Function()? externalVerified,
     TResult? Function()? timeout,
   }) {
-    return pinUsed?.call(pin, individualId);
+    return pinUsed?.call(pin);
   }
 
   @override
@@ -766,7 +756,7 @@ class _$ReVerificationPinUsedEventImpl implements ReVerificationPinUsedEvent {
     TResult Function(ReVerificationTrigger trigger)? triggered,
     TResult Function()? tick,
     TResult Function(List<double> embedding)? faceScanned,
-    TResult Function(String pin, String individualId)? pinUsed,
+    TResult Function(String pin)? pinUsed,
     TResult Function()? dismissed,
     TResult Function()? paused,
     TResult Function()? resumed,
@@ -775,7 +765,7 @@ class _$ReVerificationPinUsedEventImpl implements ReVerificationPinUsedEvent {
     required TResult orElse(),
   }) {
     if (pinUsed != null) {
-      return pinUsed(pin, individualId);
+      return pinUsed(pin);
     }
     return orElse();
   }
@@ -837,12 +827,10 @@ class _$ReVerificationPinUsedEventImpl implements ReVerificationPinUsedEvent {
 }
 
 abstract class ReVerificationPinUsedEvent implements ReVerificationEvent {
-  const factory ReVerificationPinUsedEvent(
-      {required final String pin,
-      required final String individualId}) = _$ReVerificationPinUsedEventImpl;
+  const factory ReVerificationPinUsedEvent({required final String pin}) =
+      _$ReVerificationPinUsedEventImpl;
 
   String get pin;
-  String get individualId;
   @JsonKey(ignore: true)
   _$$ReVerificationPinUsedEventImplCopyWith<_$ReVerificationPinUsedEventImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -894,7 +882,7 @@ class _$ReVerificationDismissedEventImpl
     required TResult Function(ReVerificationTrigger trigger) triggered,
     required TResult Function() tick,
     required TResult Function(List<double> embedding) faceScanned,
-    required TResult Function(String pin, String individualId) pinUsed,
+    required TResult Function(String pin) pinUsed,
     required TResult Function() dismissed,
     required TResult Function() paused,
     required TResult Function() resumed,
@@ -910,7 +898,7 @@ class _$ReVerificationDismissedEventImpl
     TResult? Function(ReVerificationTrigger trigger)? triggered,
     TResult? Function()? tick,
     TResult? Function(List<double> embedding)? faceScanned,
-    TResult? Function(String pin, String individualId)? pinUsed,
+    TResult? Function(String pin)? pinUsed,
     TResult? Function()? dismissed,
     TResult? Function()? paused,
     TResult? Function()? resumed,
@@ -926,7 +914,7 @@ class _$ReVerificationDismissedEventImpl
     TResult Function(ReVerificationTrigger trigger)? triggered,
     TResult Function()? tick,
     TResult Function(List<double> embedding)? faceScanned,
-    TResult Function(String pin, String individualId)? pinUsed,
+    TResult Function(String pin)? pinUsed,
     TResult Function()? dismissed,
     TResult Function()? paused,
     TResult Function()? resumed,
@@ -1046,7 +1034,7 @@ class _$ReVerificationPausedEventImpl implements ReVerificationPausedEvent {
     required TResult Function(ReVerificationTrigger trigger) triggered,
     required TResult Function() tick,
     required TResult Function(List<double> embedding) faceScanned,
-    required TResult Function(String pin, String individualId) pinUsed,
+    required TResult Function(String pin) pinUsed,
     required TResult Function() dismissed,
     required TResult Function() paused,
     required TResult Function() resumed,
@@ -1062,7 +1050,7 @@ class _$ReVerificationPausedEventImpl implements ReVerificationPausedEvent {
     TResult? Function(ReVerificationTrigger trigger)? triggered,
     TResult? Function()? tick,
     TResult? Function(List<double> embedding)? faceScanned,
-    TResult? Function(String pin, String individualId)? pinUsed,
+    TResult? Function(String pin)? pinUsed,
     TResult? Function()? dismissed,
     TResult? Function()? paused,
     TResult? Function()? resumed,
@@ -1078,7 +1066,7 @@ class _$ReVerificationPausedEventImpl implements ReVerificationPausedEvent {
     TResult Function(ReVerificationTrigger trigger)? triggered,
     TResult Function()? tick,
     TResult Function(List<double> embedding)? faceScanned,
-    TResult Function(String pin, String individualId)? pinUsed,
+    TResult Function(String pin)? pinUsed,
     TResult Function()? dismissed,
     TResult Function()? paused,
     TResult Function()? resumed,
@@ -1197,7 +1185,7 @@ class _$ReVerificationResumedEventImpl implements ReVerificationResumedEvent {
     required TResult Function(ReVerificationTrigger trigger) triggered,
     required TResult Function() tick,
     required TResult Function(List<double> embedding) faceScanned,
-    required TResult Function(String pin, String individualId) pinUsed,
+    required TResult Function(String pin) pinUsed,
     required TResult Function() dismissed,
     required TResult Function() paused,
     required TResult Function() resumed,
@@ -1213,7 +1201,7 @@ class _$ReVerificationResumedEventImpl implements ReVerificationResumedEvent {
     TResult? Function(ReVerificationTrigger trigger)? triggered,
     TResult? Function()? tick,
     TResult? Function(List<double> embedding)? faceScanned,
-    TResult? Function(String pin, String individualId)? pinUsed,
+    TResult? Function(String pin)? pinUsed,
     TResult? Function()? dismissed,
     TResult? Function()? paused,
     TResult? Function()? resumed,
@@ -1229,7 +1217,7 @@ class _$ReVerificationResumedEventImpl implements ReVerificationResumedEvent {
     TResult Function(ReVerificationTrigger trigger)? triggered,
     TResult Function()? tick,
     TResult Function(List<double> embedding)? faceScanned,
-    TResult Function(String pin, String individualId)? pinUsed,
+    TResult Function(String pin)? pinUsed,
     TResult Function()? dismissed,
     TResult Function()? paused,
     TResult Function()? resumed,
@@ -1349,7 +1337,7 @@ class _$ReVerificationExternalVerifiedEventImpl
     required TResult Function(ReVerificationTrigger trigger) triggered,
     required TResult Function() tick,
     required TResult Function(List<double> embedding) faceScanned,
-    required TResult Function(String pin, String individualId) pinUsed,
+    required TResult Function(String pin) pinUsed,
     required TResult Function() dismissed,
     required TResult Function() paused,
     required TResult Function() resumed,
@@ -1365,7 +1353,7 @@ class _$ReVerificationExternalVerifiedEventImpl
     TResult? Function(ReVerificationTrigger trigger)? triggered,
     TResult? Function()? tick,
     TResult? Function(List<double> embedding)? faceScanned,
-    TResult? Function(String pin, String individualId)? pinUsed,
+    TResult? Function(String pin)? pinUsed,
     TResult? Function()? dismissed,
     TResult? Function()? paused,
     TResult? Function()? resumed,
@@ -1381,7 +1369,7 @@ class _$ReVerificationExternalVerifiedEventImpl
     TResult Function(ReVerificationTrigger trigger)? triggered,
     TResult Function()? tick,
     TResult Function(List<double> embedding)? faceScanned,
-    TResult Function(String pin, String individualId)? pinUsed,
+    TResult Function(String pin)? pinUsed,
     TResult Function()? dismissed,
     TResult Function()? paused,
     TResult Function()? resumed,
@@ -1502,7 +1490,7 @@ class _$ReVerificationTimeoutEventImpl implements ReVerificationTimeoutEvent {
     required TResult Function(ReVerificationTrigger trigger) triggered,
     required TResult Function() tick,
     required TResult Function(List<double> embedding) faceScanned,
-    required TResult Function(String pin, String individualId) pinUsed,
+    required TResult Function(String pin) pinUsed,
     required TResult Function() dismissed,
     required TResult Function() paused,
     required TResult Function() resumed,
@@ -1518,7 +1506,7 @@ class _$ReVerificationTimeoutEventImpl implements ReVerificationTimeoutEvent {
     TResult? Function(ReVerificationTrigger trigger)? triggered,
     TResult? Function()? tick,
     TResult? Function(List<double> embedding)? faceScanned,
-    TResult? Function(String pin, String individualId)? pinUsed,
+    TResult? Function(String pin)? pinUsed,
     TResult? Function()? dismissed,
     TResult? Function()? paused,
     TResult? Function()? resumed,
@@ -1534,7 +1522,7 @@ class _$ReVerificationTimeoutEventImpl implements ReVerificationTimeoutEvent {
     TResult Function(ReVerificationTrigger trigger)? triggered,
     TResult Function()? tick,
     TResult Function(List<double> embedding)? faceScanned,
-    TResult Function(String pin, String individualId)? pinUsed,
+    TResult Function(String pin)? pinUsed,
     TResult Function()? dismissed,
     TResult Function()? paused,
     TResult Function()? resumed,
