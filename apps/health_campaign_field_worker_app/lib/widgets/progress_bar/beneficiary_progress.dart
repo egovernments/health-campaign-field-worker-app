@@ -56,7 +56,6 @@ class BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
 
     taskRepository.listenToChanges(
       query: TaskSearchModel(
-        status: 'ADMINISTRATION_SUCCESS',
         projectId: projectId,
         createdBy: loggedInUserUuid,
         plannedEndDate: lte.millisecondsSinceEpoch,
@@ -79,32 +78,39 @@ class BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
             59,
             999,
           );
-          TaskSearchModel taskSearchQuery = TaskSearchModel(
+
+          final successTasks = await taskRepository.search(TaskSearchModel(
             status: 'ADMINISTRATION_SUCCESS',
             createdBy: loggedInUserUuid,
             plannedEndDate: lte.millisecondsSinceEpoch,
             plannedStartDate: gte.millisecondsSinceEpoch,
             projectId: projectId,
-          );
+          ));
 
-          List<TaskModel> allTasks =
-              await taskRepository.search(taskSearchQuery);
+          final visitedTasks = await taskRepository.search(TaskSearchModel(
+            status: 'VISITED',
+            createdBy: loggedInUserUuid,
+            plannedEndDate: lte.millisecondsSinceEpoch,
+            plannedStartDate: gte.millisecondsSinceEpoch,
+            projectId: projectId,
+          ));
+
+          final allTasks = [...successTasks, ...visitedTasks];
           List<TaskModel> results = allTasks.where((task) {
             final additionalFields = task?.additionalFields?.fields;
             if (additionalFields == null || additionalFields.isEmpty) {
               return false;
             }
             else return true;
-
-            
           }).toList();
-          final groupedEntries = results.groupListsBy(
-            (element) => element.projectBeneficiaryClientReferenceId,
-          );
+          final uniqueBeneficiaries = results
+              .map((e) => e.projectBeneficiaryClientReferenceId)
+              .whereNotNull()
+              .toSet();
           if (mounted) {
             setState(() {
               if (mounted) {
-                current = groupedEntries.entries.length;
+                current = uniqueBeneficiaries.length;
               }
             });
           }

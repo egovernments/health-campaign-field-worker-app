@@ -1964,7 +1964,6 @@ final jsonConfig = {
           "additionalFields": {
             "form": "__value:POLIO_INSIDE_MONITORING",
             "formType": "__value:INSIDE_HOUSEHOLD_DATA",
-            "settlementType": "__context:settlementType",
             "gpsFirstHouseholdLat":
                 "firstHouseholdLocation.gpsFirstHousehold[0]",
             "gpsFirstHouseholdLng":
