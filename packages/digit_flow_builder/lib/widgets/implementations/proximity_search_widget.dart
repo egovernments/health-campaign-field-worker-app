@@ -94,14 +94,12 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
         }
       },
       builder: (context, state) {
-        /// Don't show switch unless we have location
-        if (_lat == null || _long == null) {
-          return const SizedBox.shrink();
-        }
+        final locationReady = _lat != null && _long != null;
 
         return DigitSwitch(
           label: localization?.translate(widget.json['label'] ?? ''),
           value: _value,
+          disabled: !locationReady,
           onChanged: (newValue) {
             setState(() => _value = newValue);
             final fieldKey =
