@@ -1401,7 +1401,6 @@
               "properties": {"spacing": "spacer4"}
             },
             {
-              "icon": "AddCircle",
               "type": "template",
               "label": "ADD_MEMBER",
               "format": "actionPopup",
@@ -1907,6 +1906,11 @@
                             "key": "identifierId",
                             "value": "field.value",
                             "operation": "containsAll"
+                          },
+                          {
+                            "key": "identifierType",
+                            "value": "UNIQUE_BENEFICIARY_ID",
+                            "operation": "equals"
                           },
                           {
                             "key": "localityBoundaryCode",
