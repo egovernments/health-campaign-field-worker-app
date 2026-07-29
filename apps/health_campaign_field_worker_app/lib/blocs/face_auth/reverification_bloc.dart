@@ -84,9 +84,10 @@ class ReVerificationBloc
 
   /// Starts (or restarts) the countdown timer and emits a prompted state.
   void _startCountdown(ReVerificationEmitter emit) {
-    final popupTime = DateTime.now().millisecondsSinceEpoch;
+    // Use the trigger time captured in _onTriggered so all iterations of the
+    // same cycle share the same popupTime — audit-trail elapsed-time is consistent.
     emit(ReVerificationState.prompted(
-      popupTime: popupTime,
+      popupTime: _triggerPopupTime,
       remainingSeconds: config.countdownDuration.inSeconds,
       iteration: _currentIteration,
       maxIterations: maxIterations,
@@ -133,17 +134,13 @@ class ReVerificationBloc
     _countdownTimer?.cancel();
 
     // Scope verification to the logged-in user's embedding only.
-    // Comparing against all embeddings would allow another enrolled user on the
-    // same device (or a co-worker) to satisfy this user's re-verification check.
-    List<FaceEmbedding> allEmbeddings;
-    if (currentUserIndividualId.isNotEmpty) {
-      final target = await repository.getEmbedding(currentUserIndividualId);
-      allEmbeddings = target != null ? [target] : [];
-    } else {
-      allEmbeddings = (await repository.getAllEmbeddings())
-          .where((e) => e.isSystemUser)
-          .toList();
+    // Fail closed when the ID is unknown rather than widening to all embeddings.
+    if (currentUserIndividualId.isEmpty) {
+      emit(const ReVerificationState.idle());
+      return;
     }
+    final target = await repository.getEmbedding(currentUserIndividualId);
+    final List<FaceEmbedding> allEmbeddings = target != null ? [target] : [];
     double bestSimilarity = -1.0;
     String? bestMatchId;
 

@@ -244,43 +244,40 @@ class FaceGateBloc extends Bloc<FaceGateEvent, FaceGateState> {
     try {
       final pinService = PinService();
 
-      // Check PIN only against the target individual's profile.
-      // Checking all profiles would allow a co-worker's PIN to pass login.
-      final profileToCheck = _targetIndividualId.isNotEmpty
-          ? await repository.getProfile(_targetIndividualId)
-          : null;
+      // Always verify against the specific profile the caller selected via
+      // event.individualId. Falling back to getAllProfiles() would allow any
+      // co-worker's 4-digit PIN to pass login due to high collision probability.
+      if (_targetIndividualId.isNotEmpty &&
+          _targetIndividualId != event.individualId) {
+        emit(const FaceGateState.error(
+            message: 'Cannot verify a different user for this session.'));
+        emit(const FaceGateState.pinEntry());
+        return;
+      }
 
-      if (profileToCheck == null && _targetIndividualId.isNotEmpty) {
+      final selectedProfile = await repository.getProfile(event.individualId);
+      if (selectedProfile == null) {
         emit(const FaceGateState.error(message: 'No enrolled profile found'));
         emit(const FaceGateState.pinEntry());
         return;
       }
 
-      final profilesToCheck = profileToCheck != null
-          ? [profileToCheck]
-          : await repository.getAllProfiles();
-      debugPrint('FaceGateBloc: pinFallback checking ${profilesToCheck.length} profiles');
+      debugPrint('FaceGateBloc: pinFallback verifying ${event.individualId}');
 
-      if (profilesToCheck.isEmpty) {
-        emit(const FaceGateState.error(message: 'No enrolled profiles found'));
+      final isValid = pinService.verifyPin(
+        event.pin,
+        selectedProfile.pinHash,
+        selectedProfile.pinSalt,
+      );
+
+      if (isValid) {
+        await repository.updateLastVerified(selectedProfile.individualId);
+        emit(FaceGateState.passed(
+          individualId: selectedProfile.individualId,
+          method: 'PIN_FALLBACK',
+          confidence: 0.0,
+        ));
         return;
-      }
-
-      for (final profile in profilesToCheck) {
-        final isValid = pinService.verifyPin(
-          event.pin,
-          profile.pinHash,
-          profile.pinSalt,
-        );
-        if (isValid) {
-          await repository.updateLastVerified(profile.individualId);
-          emit(FaceGateState.passed(
-            individualId: profile.individualId,
-            method: 'PIN_FALLBACK',
-            confidence: 0.0,
-          ));
-          return;
-        }
       }
 
       emit(const FaceGateState.error(message: 'Invalid PIN'));

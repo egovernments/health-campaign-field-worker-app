@@ -179,6 +179,7 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
     if (state == AppLifecycleState.inactive) {
       _stopImageStream();
       _cameraController?.dispose();
+      _cameraController = null;
     } else if (state == AppLifecycleState.resumed) {
       _initializeCamera(_currentLens);
     }
@@ -276,6 +277,10 @@ class _FaceCaptureViewState extends State<FaceCaptureView>
         }
       });
       widget.onLensChanged?.call(newLens);
+      while (_isInitializingCamera) {
+        await Future.delayed(const Duration(milliseconds: 16));
+        if (!mounted) return;
+      }
       await _initializeCamera(newLens);
     } finally {
       _isSwitchingCamera = false;

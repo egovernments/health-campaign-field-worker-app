@@ -60,7 +60,7 @@ class _FaceAuthSessionCardState extends State<FaceAuthSessionCard> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_loaded) return const SizedBox.shrink();
+    if (!_loaded || _lastEvent == null) return const SizedBox.shrink();
 
     final theme = Theme.of(context);
     final colorTheme = theme.colorTheme;

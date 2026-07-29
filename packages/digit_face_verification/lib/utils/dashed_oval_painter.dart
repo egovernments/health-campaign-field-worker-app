@@ -147,7 +147,14 @@ class DashedOvalPainter extends CustomPainter {
     return old.borderColor != borderColor ||
         old.scanProgress != scanProgress ||
         old.ovalWidth != ovalWidth ||
-        old.ovalHeight != ovalHeight;
+        old.ovalHeight != ovalHeight ||
+        old.centerYOffset != centerYOffset ||
+        old.strokeWidth != strokeWidth ||
+        old.dashWidth != dashWidth ||
+        old.dashGap != dashGap ||
+        old.scanColor != scanColor ||
+        old.showOverlay != showOverlay ||
+        old.overlayColor != overlayColor;
   }
 }
 

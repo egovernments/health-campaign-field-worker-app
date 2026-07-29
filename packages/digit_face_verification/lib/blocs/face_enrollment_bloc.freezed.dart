@@ -160,7 +160,9 @@ class __$$FaceEnrollmentStartEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FaceEnrollmentStartEventImpl implements FaceEnrollmentStartEvent {
+class _$FaceEnrollmentStartEventImpl
+    with DiagnosticableTreeMixin
+    implements FaceEnrollmentStartEvent {
   const _$FaceEnrollmentStartEventImpl(
       {required this.individualId,
       required this.isSystemUser,
@@ -174,8 +176,18 @@ class _$FaceEnrollmentStartEventImpl implements FaceEnrollmentStartEvent {
   final String enrolledBy;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentEvent.start(individualId: $individualId, isSystemUser: $isSystemUser, enrolledBy: $enrolledBy)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceEnrollmentEvent.start'))
+      ..add(DiagnosticsProperty('individualId', individualId))
+      ..add(DiagnosticsProperty('isSystemUser', isSystemUser))
+      ..add(DiagnosticsProperty('enrolledBy', enrolledBy));
   }
 
   @override
@@ -361,6 +373,7 @@ class __$$FaceEnrollmentCaptureAngleEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentCaptureAngleEventImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentCaptureAngleEvent {
   const _$FaceEnrollmentCaptureAngleEventImpl(
       {required final List<double> embedding, required this.quality})
@@ -378,8 +391,17 @@ class _$FaceEnrollmentCaptureAngleEventImpl
   final double quality;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentEvent.captureAngle(embedding: $embedding, quality: $quality)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceEnrollmentEvent.captureAngle'))
+      ..add(DiagnosticsProperty('embedding', embedding))
+      ..add(DiagnosticsProperty('quality', quality));
   }
 
   @override
@@ -542,12 +564,20 @@ class __$$FaceEnrollmentLivenessCompletedEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentLivenessCompletedEventImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentLivenessCompletedEvent {
   const _$FaceEnrollmentLivenessCompletedEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentEvent.livenessCompleted()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty('type', 'FaceEnrollmentEvent.livenessCompleted'));
   }
 
   @override
@@ -691,12 +721,20 @@ class __$$FaceEnrollmentRetryAngleEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentRetryAngleEventImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentRetryAngleEvent {
   const _$FaceEnrollmentRetryAngleEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentEvent.retryAngle()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'FaceEnrollmentEvent.retryAngle'));
   }
 
   @override
@@ -839,12 +877,20 @@ class __$$FaceEnrollmentConfirmPinEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentConfirmPinEventImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentConfirmPinEvent {
   const _$FaceEnrollmentConfirmPinEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentEvent.confirmPin()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'FaceEnrollmentEvent.confirmPin'));
   }
 
   @override
@@ -986,12 +1032,20 @@ class __$$FaceEnrollmentCompleteEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FaceEnrollmentCompleteEventImpl implements FaceEnrollmentCompleteEvent {
+class _$FaceEnrollmentCompleteEventImpl
+    with DiagnosticableTreeMixin
+    implements FaceEnrollmentCompleteEvent {
   const _$FaceEnrollmentCompleteEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentEvent.complete()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'FaceEnrollmentEvent.complete'));
   }
 
   @override
@@ -1133,12 +1187,20 @@ class __$$FaceEnrollmentCancelEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FaceEnrollmentCancelEventImpl implements FaceEnrollmentCancelEvent {
+class _$FaceEnrollmentCancelEventImpl
+    with DiagnosticableTreeMixin
+    implements FaceEnrollmentCancelEvent {
   const _$FaceEnrollmentCancelEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentEvent.cancel()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'FaceEnrollmentEvent.cancel'));
   }
 
   @override
@@ -1401,12 +1463,20 @@ class __$$FaceEnrollmentInitialStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FaceEnrollmentInitialStateImpl implements FaceEnrollmentInitialState {
+class _$FaceEnrollmentInitialStateImpl
+    with DiagnosticableTreeMixin
+    implements FaceEnrollmentInitialState {
   const _$FaceEnrollmentInitialStateImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentState.initial()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'FaceEnrollmentState.initial'));
   }
 
   @override
@@ -1595,6 +1665,7 @@ class __$$FaceEnrollmentCapturingAngleStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentCapturingAngleStateImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentCapturingAngleState {
   const _$FaceEnrollmentCapturingAngleStateImpl(
       {required this.current, required this.total, required this.instruction});
@@ -1607,8 +1678,18 @@ class _$FaceEnrollmentCapturingAngleStateImpl
   final String instruction;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentState.capturingAngle(current: $current, total: $total, instruction: $instruction)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceEnrollmentState.capturingAngle'))
+      ..add(DiagnosticsProperty('current', current))
+      ..add(DiagnosticsProperty('total', total))
+      ..add(DiagnosticsProperty('instruction', instruction));
   }
 
   @override
@@ -1797,12 +1878,20 @@ class __$$FaceEnrollmentLivenessCheckStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentLivenessCheckStateImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentLivenessCheckState {
   const _$FaceEnrollmentLivenessCheckStateImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentState.livenessCheck()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'FaceEnrollmentState.livenessCheck'));
   }
 
   @override
@@ -1967,12 +2056,20 @@ class __$$FaceEnrollmentProcessingStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentProcessingStateImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentProcessingState {
   const _$FaceEnrollmentProcessingStateImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentState.processing()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'FaceEnrollmentState.processing'));
   }
 
   @override
@@ -2152,6 +2249,7 @@ class __$$FaceEnrollmentPinAssignedStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentPinAssignedStateImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentPinAssignedState {
   const _$FaceEnrollmentPinAssignedStateImpl({required this.pin});
 
@@ -2159,8 +2257,16 @@ class _$FaceEnrollmentPinAssignedStateImpl
   final String pin;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentState.pinAssigned(pin: $pin)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceEnrollmentState.pinAssigned'))
+      ..add(DiagnosticsProperty('pin', pin));
   }
 
   @override
@@ -2340,12 +2446,20 @@ class __$$FaceEnrollmentCompletedStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentCompletedStateImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentCompletedState {
   const _$FaceEnrollmentCompletedStateImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentState.completed()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'FaceEnrollmentState.completed'));
   }
 
   @override
@@ -2510,12 +2624,20 @@ class __$$FaceEnrollmentQualityInsufficientStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentQualityInsufficientStateImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentQualityInsufficientState {
   const _$FaceEnrollmentQualityInsufficientStateImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentState.qualityInsufficient()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty('type', 'FaceEnrollmentState.qualityInsufficient'));
   }
 
   @override
@@ -2701,6 +2823,7 @@ class __$$FaceEnrollmentDuplicateDetectedStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentDuplicateDetectedStateImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentDuplicateDetectedState {
   const _$FaceEnrollmentDuplicateDetectedStateImpl(
       {required this.matchedId, required this.similarity});
@@ -2711,8 +2834,18 @@ class _$FaceEnrollmentDuplicateDetectedStateImpl
   final double similarity;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentState.duplicateDetected(matchedId: $matchedId, similarity: $similarity)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+          DiagnosticsProperty('type', 'FaceEnrollmentState.duplicateDetected'))
+      ..add(DiagnosticsProperty('matchedId', matchedId))
+      ..add(DiagnosticsProperty('similarity', similarity));
   }
 
   @override
@@ -2898,12 +3031,20 @@ class __$$FaceEnrollmentMaxUsersReachedStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceEnrollmentMaxUsersReachedStateImpl
+    with DiagnosticableTreeMixin
     implements FaceEnrollmentMaxUsersReachedState {
   const _$FaceEnrollmentMaxUsersReachedStateImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentState.maxUsersReached()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty('type', 'FaceEnrollmentState.maxUsersReached'));
   }
 
   @override
@@ -3083,15 +3224,25 @@ class __$$FaceEnrollmentErrorStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FaceEnrollmentErrorStateImpl implements FaceEnrollmentErrorState {
+class _$FaceEnrollmentErrorStateImpl
+    with DiagnosticableTreeMixin
+    implements FaceEnrollmentErrorState {
   const _$FaceEnrollmentErrorStateImpl({required this.message});
 
   @override
   final String message;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceEnrollmentState.error(message: $message)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceEnrollmentState.error'))
+      ..add(DiagnosticsProperty('message', message));
   }
 
   @override

@@ -5,8 +5,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
-import 'package:isar/isar.dart';
-
 class FaceAuthEventLocalRepository
     extends LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel> {
   FaceAuthEventLocalRepository(super.sql, super.opLogManager);
@@ -18,6 +16,11 @@ class FaceAuthEventLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     return retryLocalCallOperation(() async {
+      // Oplog written first: if the SQL write later fails, the oplog entry can
+      // be retried on the next call. The reverse order leaves the entity in
+      // Drift with no oplog, permanently orphaning it from sync.
+      await super.create(entity,
+          createOpLog: createOpLog, dataOperation: dataOperation);
       await sql.batch((batch) {
         batch.insert(
           sql.faceAuthEvent,
@@ -25,40 +28,6 @@ class FaceAuthEventLocalRepository
           mode: InsertMode.insertOrReplace,
         );
       });
-
-      try {
-        debugPrint(
-          'FaceAuthEventRepo: calling super.create '
-          'id=${entity.clientReferenceId} '
-          'auditDetails=${entity.auditDetails != null} '
-          'createdBy=${entity.clientAuditDetails?.lastModifiedBy} '
-          'createOpLog=$createOpLog',
-        );
-        await super.create(entity, createOpLog: createOpLog);
-        debugPrint('FaceAuthEventRepo: super.create succeeded');
-
-        try {
-          final isar = (opLogManager as dynamic).isar as Isar;
-          final all = await isar.opLogs
-              .filter()
-              .entityTypeEqualTo(DataModelType.faceAuthEvent)
-              .findAll();
-          debugPrint(
-            'FaceAuthEventRepo: AFTER write — total faceAuthEvent oplogs=${all.length}',
-          );
-          for (final o in all) {
-            debugPrint(
-              'FaceAuthEventRepo: row id=${o.id} clientRef=${o.clientReferenceId} '
-              'createdBy=${o.createdBy} syncedUp=${o.syncedUp}',
-            );
-          }
-        } catch (e) {
-          debugPrint('FaceAuthEventRepo: post-write verify error: $e');
-        }
-      } catch (e, st) {
-        debugPrint('FaceAuthEventRepo: super.create FAILED: $e\n$st');
-        rethrow;
-      }
     });
   }
 
@@ -69,6 +38,8 @@ class FaceAuthEventLocalRepository
     DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
+      await super.update(entity,
+          createOpLog: createOpLog, dataOperation: dataOperation);
       await sql.batch((batch) {
         batch.insert(
           sql.faceAuthEvent,
@@ -76,8 +47,6 @@ class FaceAuthEventLocalRepository
           mode: InsertMode.insertOrReplace,
         );
       });
-
-      return super.update(entity, createOpLog: createOpLog);
     });
   }
 
@@ -86,8 +55,8 @@ class FaceAuthEventLocalRepository
     List<FaceAuthEventModel> entities,
   ) async {
     return retryLocalCallOperation(() async {
+      await super.bulkCreate(entities);
       final companions = entities.map((e) => e.companion).toList();
-
       await sql.batch((batch) {
         batch.insertAll(
           sql.faceAuthEvent,
@@ -141,7 +110,9 @@ class FaceAuthEventLocalRepository
               additionalFields =
                   FaceAuthEventAdditionalFieldsMapper.fromMap(decoded);
             }
-          } catch (_) {}
+          } catch (e) {
+            debugPrint('FaceAuthEventRepo: additionalFields parse failed: $e');
+          }
         }
 
         return FaceAuthEventModel(

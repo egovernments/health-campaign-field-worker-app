@@ -135,7 +135,6 @@ class WorkerRegistryService {
               .toList()
           : <List<double>>[];
 
-      final angleCount = int.tryParse(_field(fields, 'angleCount') ?? '') ?? 1;
       final modelVersion = _field(fields, 'modelVersion') ?? '';
       final isSystemUser = _field(fields, 'isSystemUser') == 'true';
       final enrolledBy = _field(fields, 'enrolledBy') ?? '';
@@ -148,7 +147,6 @@ class WorkerRegistryService {
         individualId: individualId,
         embedding: embedding,
         angleEmbeddings: angleEmbeddings,
-        angleCount: angleCount,
         isSystemUser: isSystemUser,
         enrolledBy: enrolledBy,
         modelVersion: modelVersion,

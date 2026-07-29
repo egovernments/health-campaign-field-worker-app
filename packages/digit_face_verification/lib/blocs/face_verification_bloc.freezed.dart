@@ -135,12 +135,20 @@ class __$$FaceVerificationInitializeEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceVerificationInitializeEventImpl
+    with DiagnosticableTreeMixin
     implements FaceVerificationInitializeEvent {
   const _$FaceVerificationInitializeEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationEvent.initialize()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'FaceVerificationEvent.initialize'));
   }
 
   @override
@@ -307,6 +315,7 @@ class __$$FaceVerificationRegisterEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceVerificationRegisterEventImpl
+    with DiagnosticableTreeMixin
     implements FaceVerificationRegisterEvent {
   const _$FaceVerificationRegisterEventImpl(
       {required this.individualId,
@@ -329,8 +338,18 @@ class _$FaceVerificationRegisterEventImpl
   final double quality;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationEvent.registerFace(individualId: $individualId, embedding: $embedding, quality: $quality)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceVerificationEvent.registerFace'))
+      ..add(DiagnosticsProperty('individualId', individualId))
+      ..add(DiagnosticsProperty('embedding', embedding))
+      ..add(DiagnosticsProperty('quality', quality));
   }
 
   @override
@@ -520,7 +539,9 @@ class __$$FaceVerificationVerifyEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FaceVerificationVerifyEventImpl implements FaceVerificationVerifyEvent {
+class _$FaceVerificationVerifyEventImpl
+    with DiagnosticableTreeMixin
+    implements FaceVerificationVerifyEvent {
   const _$FaceVerificationVerifyEventImpl(
       {required this.individualId,
       required final List<double> embedding,
@@ -541,8 +562,18 @@ class _$FaceVerificationVerifyEventImpl implements FaceVerificationVerifyEvent {
   final Uint8List? faceImageBytes;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationEvent.verifyFace(individualId: $individualId, embedding: $embedding, faceImageBytes: $faceImageBytes)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceVerificationEvent.verifyFace'))
+      ..add(DiagnosticsProperty('individualId', individualId))
+      ..add(DiagnosticsProperty('embedding', embedding))
+      ..add(DiagnosticsProperty('faceImageBytes', faceImageBytes));
   }
 
   @override
@@ -723,15 +754,26 @@ class __$$FaceVerificationDeleteEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FaceVerificationDeleteEventImpl implements FaceVerificationDeleteEvent {
+class _$FaceVerificationDeleteEventImpl
+    with DiagnosticableTreeMixin
+    implements FaceVerificationDeleteEvent {
   const _$FaceVerificationDeleteEventImpl({required this.individualId});
 
   @override
   final String individualId;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationEvent.deleteRegistration(individualId: $individualId)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'FaceVerificationEvent.deleteRegistration'))
+      ..add(DiagnosticsProperty('individualId', individualId));
   }
 
   @override
@@ -906,6 +948,7 @@ class __$$FaceVerificationFaceDetectedEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceVerificationFaceDetectedEventImpl
+    with DiagnosticableTreeMixin
     implements FaceVerificationFaceDetectedEvent {
   const _$FaceVerificationFaceDetectedEventImpl(
       {required this.faceCount, this.quality = 0.0});
@@ -917,8 +960,17 @@ class _$FaceVerificationFaceDetectedEventImpl
   final double quality;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationEvent.faceDetected(faceCount: $faceCount, quality: $quality)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceVerificationEvent.faceDetected'))
+      ..add(DiagnosticsProperty('faceCount', faceCount))
+      ..add(DiagnosticsProperty('quality', quality));
   }
 
   @override
@@ -1078,12 +1130,20 @@ class __$$FaceVerificationResetEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FaceVerificationResetEventImpl implements FaceVerificationResetEvent {
+class _$FaceVerificationResetEventImpl
+    with DiagnosticableTreeMixin
+    implements FaceVerificationResetEvent {
   const _$FaceVerificationResetEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationEvent.reset()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'FaceVerificationEvent.reset'));
   }
 
   @override
@@ -1331,12 +1391,20 @@ class __$$FaceVerificationIdleStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FaceVerificationIdleStateImpl implements FaceVerificationIdleState {
+class _$FaceVerificationIdleStateImpl
+    with DiagnosticableTreeMixin
+    implements FaceVerificationIdleState {
   const _$FaceVerificationIdleStateImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationState.idle()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'FaceVerificationState.idle'));
   }
 
   @override
@@ -1501,6 +1569,7 @@ class __$$FaceVerificationDetectingStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceVerificationDetectingStateImpl
+    with DiagnosticableTreeMixin
     implements FaceVerificationDetectingState {
   const _$FaceVerificationDetectingStateImpl({this.quality = 0.0});
 
@@ -1509,8 +1578,16 @@ class _$FaceVerificationDetectingStateImpl
   final double quality;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationState.detecting(quality: $quality)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceVerificationState.detecting'))
+      ..add(DiagnosticsProperty('quality', quality));
   }
 
   @override
@@ -1691,6 +1768,7 @@ class __$$FaceVerificationProcessingStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceVerificationProcessingStateImpl
+    with DiagnosticableTreeMixin
     implements FaceVerificationProcessingState {
   const _$FaceVerificationProcessingStateImpl({this.message = ''});
 
@@ -1699,8 +1777,16 @@ class _$FaceVerificationProcessingStateImpl
   final String message;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationState.processing(message: $message)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceVerificationState.processing'))
+      ..add(DiagnosticsProperty('message', message));
   }
 
   @override
@@ -1887,6 +1973,7 @@ class __$$FaceVerificationRegisteredStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceVerificationRegisteredStateImpl
+    with DiagnosticableTreeMixin
     implements FaceVerificationRegisteredState {
   const _$FaceVerificationRegisteredStateImpl(
       {required this.individualId, required this.confidence});
@@ -1897,8 +1984,17 @@ class _$FaceVerificationRegisteredStateImpl
   final double confidence;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationState.registered(individualId: $individualId, confidence: $confidence)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceVerificationState.registered'))
+      ..add(DiagnosticsProperty('individualId', individualId))
+      ..add(DiagnosticsProperty('confidence', confidence));
   }
 
   @override
@@ -2091,6 +2187,7 @@ class __$$FaceVerificationVerifiedStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceVerificationVerifiedStateImpl
+    with DiagnosticableTreeMixin
     implements FaceVerificationVerifiedState {
   const _$FaceVerificationVerifiedStateImpl(
       {required this.confidence, this.faceImageBytes});
@@ -2101,8 +2198,17 @@ class _$FaceVerificationVerifiedStateImpl
   final Uint8List? faceImageBytes;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationState.verified(confidence: $confidence, faceImageBytes: $faceImageBytes)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceVerificationState.verified'))
+      ..add(DiagnosticsProperty('confidence', confidence))
+      ..add(DiagnosticsProperty('faceImageBytes', faceImageBytes));
   }
 
   @override
@@ -2294,6 +2400,7 @@ class __$$FaceVerificationRejectedStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceVerificationRejectedStateImpl
+    with DiagnosticableTreeMixin
     implements FaceVerificationRejectedState {
   const _$FaceVerificationRejectedStateImpl(
       {required this.confidence, this.faceImageBytes});
@@ -2304,8 +2411,17 @@ class _$FaceVerificationRejectedStateImpl
   final Uint8List? faceImageBytes;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationState.rejected(confidence: $confidence, faceImageBytes: $faceImageBytes)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceVerificationState.rejected'))
+      ..add(DiagnosticsProperty('confidence', confidence))
+      ..add(DiagnosticsProperty('faceImageBytes', faceImageBytes));
   }
 
   @override
@@ -2476,12 +2592,21 @@ class __$$FaceVerificationNoFaceStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FaceVerificationNoFaceStateImpl implements FaceVerificationNoFaceState {
+class _$FaceVerificationNoFaceStateImpl
+    with DiagnosticableTreeMixin
+    implements FaceVerificationNoFaceState {
   const _$FaceVerificationNoFaceStateImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationState.noFaceDetected()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty('type', 'FaceVerificationState.noFaceDetected'));
   }
 
   @override
@@ -2632,12 +2757,20 @@ class __$$FaceVerificationMultipleFacesStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FaceVerificationMultipleFacesStateImpl
+    with DiagnosticableTreeMixin
     implements FaceVerificationMultipleFacesState {
   const _$FaceVerificationMultipleFacesStateImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationState.multipleFacesDetected()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty(
+        'type', 'FaceVerificationState.multipleFacesDetected'));
   }
 
   @override
@@ -2803,15 +2936,25 @@ class __$$FaceVerificationErrorStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FaceVerificationErrorStateImpl implements FaceVerificationErrorState {
+class _$FaceVerificationErrorStateImpl
+    with DiagnosticableTreeMixin
+    implements FaceVerificationErrorState {
   const _$FaceVerificationErrorStateImpl({required this.message});
 
   @override
   final String message;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FaceVerificationState.error(message: $message)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FaceVerificationState.error'))
+      ..add(DiagnosticsProperty('message', message));
   }
 
   @override

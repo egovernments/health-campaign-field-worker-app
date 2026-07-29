@@ -1676,6 +1676,7 @@ class FaceAuth {
   String get coWorkerVerification => 'FACE_AUTH_COWORKER_VERIFICATION';
   String get scanEachFace => 'FACE_AUTH_SCAN_EACH_FACE';
   String get viewAll => 'FACE_AUTH_VIEW_ALL';
+  String get gateMatchLabel => 'FACE_AUTH_GATE_MATCH_LABEL';
 }
 
 class DatabaseError {

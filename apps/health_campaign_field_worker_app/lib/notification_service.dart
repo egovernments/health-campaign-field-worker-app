@@ -170,6 +170,14 @@ class NotificationService {
   void _onNotificationTapped(NotificationResponse response) {
     final payload = response.payload;
     if (payload != null && payload.isNotEmpty) {
+      if (payload.startsWith(reVerifyPayloadPrefix)) {
+        final indexStr = payload.substring(reVerifyPayloadPrefix.length);
+        final index = int.tryParse(indexStr);
+        if (index != null) {
+          onReVerificationTap?.call(index);
+          return;
+        }
+      }
       final data = _decodePayload(payload);
       onNotificationTap?.call(data);
     }

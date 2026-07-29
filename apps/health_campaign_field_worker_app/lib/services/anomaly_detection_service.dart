@@ -117,7 +117,8 @@ class AnomalyDetectionService {
         .millisecondsSinceEpoch;
 
     final todayEvents = recent.where((e) => e.timestamp >= startOfDay);
-    final hasMissed = todayEvents.any((e) => e.outcome == 'MISSED');
+    final hasMissed = newEvent.outcome == 'MISSED' ||
+        todayEvents.any((e) => e.outcome == 'MISSED');
 
     if (hasMissed) {
       return AnomalyFlags.missedReVerification;

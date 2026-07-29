@@ -47,7 +47,7 @@ class FaceVerificationBloc
     if (_thresholdLoaded || thresholdLoader == null) return;
     try {
       final t = await thresholdLoader!();
-      if (t != null) {
+      if (t != null && t.isFinite && t >= 0.70 && t <= 1.0) {
         similarityThreshold = t;
         _thresholdLoaded = true;
       }
@@ -88,9 +88,12 @@ class FaceVerificationBloc
         return;
       }
 
+      // This path is for non-system (co-worker) face registration — no PIN
+      // profile is created here because co-workers authenticate by face only.
       await embeddingRepository.saveEmbedding(
         individualId: event.individualId,
         embedding: event.embedding,
+        isSystemUser: false,
       );
 
       emit(FaceVerificationState.registered(

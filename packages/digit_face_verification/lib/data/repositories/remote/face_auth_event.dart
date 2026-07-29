@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:digit_data_model/utils/constants.dart';
+import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:transit_post/utils/utils.dart';
 
 class FaceAuthEventRemoteRepository
     extends RemoteRepository<FaceAuthEventModel, FaceAuthEventSearchModel> {
@@ -28,7 +28,7 @@ class FaceAuthEventRemoteRepository
 
     final requestBody = {
       'faceAuthEventSearchCriteria': {
-        'tenantId': TransitPostSingleton().tenantId,
+        'tenantId': DigitDataModelSingleton().tenantId,
         if (query.clientReferenceId != null &&
             query.clientReferenceId!.isNotEmpty)
           'clientReferenceId': query.clientReferenceId,
@@ -40,7 +40,7 @@ class FaceAuthEventRemoteRepository
     };
     debugPrint(
       'FaceAuthEventRemote.search: POST $searchPath '
-      'tenantId=${TransitPostSingleton().tenantId} '
+      'tenantId=${DigitDataModelSingleton().tenantId} '
       'body=$requestBody',
     );
 
@@ -50,7 +50,7 @@ class FaceAuthEventRemoteRepository
           return await dio.post(
             searchPath,
             queryParameters: {
-              'tenantId': TransitPostSingleton().tenantId,
+              'tenantId': DigitDataModelSingleton().tenantId,
               'limit': limit ?? 100,
               'offset': offSet ?? 0,
             },
@@ -145,7 +145,7 @@ class FaceAuthEventRemoteRepository
           return await dio.post(
             bulkCreatePath,
             queryParameters: {
-              'tenantId': TransitPostSingleton().tenantId,
+              'tenantId': DigitDataModelSingleton().tenantId,
             },
             options: Options(headers: {
               'content-type': 'application/json',
@@ -202,11 +202,6 @@ class FaceAuthEventRemoteRepository
       if (e.responseTime != null) 'responseTime': e.responseTime,
       if (e.responseType != null) 'responseType': e.responseType,
       if (e.anomalyFlags != null) 'anomalyFlags': e.anomalyFlags,
-      // base64-encoded JPEG of the cropped face captured at verification time.
-      // Field is optional; we only send when present so we don't override the
-      // server-side default with an empty string.
-      if (e.faceImage != null && e.faceImage!.isNotEmpty)
-        'faceImage': e.faceImage,
       if (e.isDeleted != null) 'isDeleted': e.isDeleted,
       if (e.auditDetails != null)
         'auditDetails': {

@@ -38,11 +38,11 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
-import 'package:transit_post/data/repositories/local/face_auth_event.dart';
+import 'package:digit_face_verification/data/repositories/local/face_auth_event.dart';
+import 'package:digit_face_verification/data/repositories/oplog/face_auth_event_oplog.dart';
+import 'package:digit_face_verification/data/repositories/remote/face_auth_event.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
-import 'package:transit_post/data/repositories/oplog/face_auth_event_oplog.dart';
 import 'package:transit_post/data/repositories/oplog/oplog.dart';
-import 'package:transit_post/data/repositories/remote/face_auth_event.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 import 'package:transit_post/utils/utils.dart';
 

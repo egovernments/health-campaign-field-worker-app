@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/app_localization.dart';
@@ -784,31 +783,6 @@ class _PinDisplayScreenState extends State<_PinDisplayScreen> {
                               if (i > 0) const SizedBox(width: 12),
                               _PinDigitBox(digit: pinDigits[i]),
                             ],
-                            const Spacer(),
-                            InkWell(
-                              borderRadius: BorderRadius.circular(4),
-                              onTap: _copyPin,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(Icons.content_copy,
-                                        size: 20, color: _primaryOrange),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      FaceVerificationLocalization.of(context).translate(i18.faceVerification.copy),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: _primaryOrange,
-                                        height: 20 / 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -915,16 +889,6 @@ class _PinDisplayScreenState extends State<_PinDisplayScreen> {
     );
   }
 
-  Future<void> _copyPin() async {
-    await Clipboard.setData(ClipboardData(text: widget.pin));
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(FaceVerificationLocalization.of(context).translate(i18.faceVerification.pinCopied)),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
 }
 
 class _PinDigitBox extends StatelessWidget {
@@ -1276,109 +1240,6 @@ class _BeginTipCard extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-// ── Photo Tips Sheet ──
-
-class _PhotoTipsSheet extends StatelessWidget {
-  final VoidCallback? onContinue;
-
-  const _PhotoTipsSheet({this.onContinue});
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
-    return SafeArea(
-      top: false,
-      child: Container(
-      decoration: BoxDecoration(
-        color: cs.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: cs.onSurface.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Icon(Icons.tips_and_updates_outlined, color: cs.primary, size: 22),
-              const SizedBox(width: 10),
-              Text(
-                FaceVerificationLocalization.of(context).translate(i18.faceVerification.tipsTitle),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: cs.onSurface,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          _TipRow(
-            icon: Icons.wb_sunny_outlined,
-            color: Colors.amber.shade700,
-            text: FaceVerificationLocalization.of(context).translate(i18.faceVerification.photoTipBrightness),
-          ),
-          const SizedBox(height: 12),
-          _TipRow(
-            icon: Icons.straighten_rounded,
-            color: cs.primary,
-            text: FaceVerificationLocalization.of(context).translate(i18.faceVerification.photoTipDistance),
-          ),
-          const SizedBox(height: 12),
-          _TipRow(
-            icon: Icons.face_outlined,
-            color: Colors.teal,
-            text: FaceVerificationLocalization.of(context).translate(i18.faceVerification.photoTipClarity),
-          ),
-          const SizedBox(height: 12),
-          _TipRow(
-            icon: Icons.crop_free_rounded,
-            color: Colors.deepPurple,
-            text: FaceVerificationLocalization.of(context).translate(i18.faceVerification.photoTipStayStill),
-          ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                onContinue?.call();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: cs.primary,
-                foregroundColor: cs.onPrimary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: Text(
-                onContinue != null
-                    ? FaceVerificationLocalization.of(context).translate(i18.common.coreCommonContinue)
-                    : FaceVerificationLocalization.of(context).translate(i18.faceVerification.gotIt),
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ));
   }
 }
 

@@ -17,7 +17,6 @@ class FaceEmbeddingRepository {
     required String individualId,
     required List<double> embedding,
     List<List<double>> angleEmbeddings = const [],
-    int angleCount = 1,
     bool isSystemUser = true,
     String enrolledBy = '',
     String modelVersion = 'mobilefacenet_african_v2',
@@ -26,7 +25,8 @@ class FaceEmbeddingRepository {
       individualId: individualId,
       embedding: embedding,
       angleEmbeddingsList: angleEmbeddings,
-      angleCount: angleCount,
+      // Derive from list length to prevent caller-supplied mismatch.
+      angleCount: angleEmbeddings.isEmpty ? 1 : angleEmbeddings.length,
       isSystemUser: isSystemUser,
       enrolledBy: enrolledBy,
       createdAt: DateTime.now(),
@@ -35,6 +35,35 @@ class FaceEmbeddingRepository {
 
     await _isar.writeTxn(() async {
       await _isar.faceEmbeddings.put(faceEmbedding);
+    });
+  }
+
+  /// Atomically saves both the embedding and enrollment profile in one transaction.
+  /// Use instead of calling [saveEmbedding] + [saveProfile] separately, so a failure
+  /// between the two writes cannot leave the account in an un-enrollable state.
+  Future<void> saveEmbeddingAndProfile({
+    required String individualId,
+    required List<double> embedding,
+    List<List<double>> angleEmbeddings = const [],
+    bool isSystemUser = true,
+    String enrolledBy = '',
+    String modelVersion = 'mobilefacenet_african_v2',
+    required FaceEnrollmentProfile profile,
+  }) async {
+    final faceEmbedding = FaceEmbedding(
+      individualId: individualId,
+      embedding: embedding,
+      angleEmbeddingsList: angleEmbeddings,
+      angleCount: angleEmbeddings.isEmpty ? 1 : angleEmbeddings.length,
+      isSystemUser: isSystemUser,
+      enrolledBy: enrolledBy,
+      createdAt: DateTime.now(),
+      modelVersion: modelVersion,
+    );
+
+    await _isar.writeTxn(() async {
+      await _isar.faceEmbeddings.put(faceEmbedding);
+      await _isar.faceEnrollmentProfiles.put(profile);
     });
   }
 
@@ -85,11 +114,14 @@ class FaceEmbeddingRepository {
   }
 
   /// Returns the count of locally enrolled profiles.
-  /// Uses the faceEnrollmentProfiles table, which only contains profiles
-  /// created by local enrollment — not ones synced from the worker registry
-  /// (registry-synced workers only save an embedding, not a profile).
+  /// Excludes phantom profiles created by [updateLastVerified] for registry-synced
+  /// co-workers (those have an empty pinHash).
   Future<int> getProfileCount() async {
-    return _isar.faceEnrollmentProfiles.count();
+    return _isar.faceEnrollmentProfiles
+        .filter()
+        .not()
+        .pinHashEqualTo('')
+        .count();
   }
 
   // ── Enrollment Profile CRUD ──

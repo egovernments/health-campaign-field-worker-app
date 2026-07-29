@@ -78,6 +78,7 @@ class FaceAuthEventOpLogManager extends OpLogManager<FaceAuthEventModel> {
         .filter()
         .entityTypeEqualTo(type)
         .operationEqualTo(DataOperation.update)
+        .serverGeneratedIdIsNull()
         .syncedUpEqualTo(false)
         .syncedDownEqualTo(false)
         .createdByEqualTo(createdBy)

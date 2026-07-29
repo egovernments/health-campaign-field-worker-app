@@ -29,6 +29,10 @@ class LivenessDetectionService {
   static const double _blinkClosedThreshold = 0.3;
   static const double _blinkOpenThreshold = 0.7;
   static const double _headTurnAngleThreshold = 25.0;
+  static const List<LivenessChallenge> _defaultChallenges = [
+    LivenessChallenge.blink,
+    LivenessChallenge.turnLeft,
+  ];
 
   final List<LivenessChallenge> _challenges;
   int _currentChallengeIndex = 0;
@@ -37,7 +41,9 @@ class LivenessDetectionService {
 
   LivenessDetectionService({
     List<LivenessChallenge>? challenges,
-  }) : _challenges = challenges ?? [LivenessChallenge.blink];
+  }) : _challenges = (challenges != null && challenges.length >= 2)
+            ? challenges
+            : _defaultChallenges;
 
   /// Reset state for a new liveness session.
   void reset() {

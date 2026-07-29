@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:intl/intl.dart';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
@@ -673,14 +675,9 @@ class _VerificationCard extends StatelessWidget {
 
   static String _formatDate(int millis) {
     final t = DateTime.fromMillisecondsSinceEpoch(millis);
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-    ];
-    final month = months[t.month - 1];
-    final hh = t.hour.toString().padLeft(2, '0');
-    final mm = t.minute.toString().padLeft(2, '0');
-    return '$month ${t.day}, ${t.year} | $hh:$mm';
+    final date = DateFormat.yMMMd().format(t);
+    final time = DateFormat.Hm().format(t);
+    return '$date | $time';
   }
 
   _OutcomeInfo _resolveOutcome(FaceAuthEventModel e) {

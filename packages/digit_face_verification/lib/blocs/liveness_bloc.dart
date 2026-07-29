@@ -68,6 +68,10 @@ class LivenessBloc extends Bloc<LivenessEvent, LivenessState> {
     LivenessTimeoutEvent event,
     LivenessEmitter emit,
   ) {
+    // A queued timeout event can fire after the challenge already passed or
+    // the flow was reset. Ignore it outside an active challenge so the timeout
+    // can't overwrite a completed/reset state.
+    if (state is! LivenessChallengingState) return null;
     _cancelTimer();
     _service.reset();
     emit(const LivenessState.failed(reason: 'FACE_AUTH_LIVENESS_TIMEOUT'));

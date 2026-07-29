@@ -77,6 +77,7 @@ import '../widgets/attendance/group_list_view_widget.dart';
 import '../widgets/attendance/signature_compare_dialog_widget.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
 import '../widgets/face_auth/face_auth_session_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
@@ -120,9 +121,11 @@ class _HomePageState extends LocalizedState<HomePage> {
       final individualId = await LocalSecureStore.instance.userIndividualId;
       if (individualId == null || !mounted) return;
 
-      final isEnrollmentComplete =
-          await LocalSecureStore.instance.isFaceEnrollmentComplete;
-      if (isEnrollmentComplete || !mounted) return;
+      // Scope to this specific user's embedding so a flag set by a previously
+      // enrolled user on a shared device doesn't skip this user's enrollment.
+      final repository = context.read<FaceEmbeddingRepository>();
+      final embedding = await repository.getEmbedding(individualId);
+      if (embedding != null || !mounted) return;
 
       _faceGateActive = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {

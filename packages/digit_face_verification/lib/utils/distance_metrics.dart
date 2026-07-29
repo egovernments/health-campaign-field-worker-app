@@ -61,7 +61,9 @@ class DistanceMetrics {
     double minThreshold = 0.70,
     double maxThreshold = 0.88,
   }) {
-    if (angleEmbeddings.length < 2) return baseThreshold;
+    if (angleEmbeddings.length < 2) {
+      return baseThreshold.clamp(minThreshold, maxThreshold).toDouble();
+    }
 
     // Compute average pairwise cosine similarity among angle embeddings
     double totalSim = 0.0;

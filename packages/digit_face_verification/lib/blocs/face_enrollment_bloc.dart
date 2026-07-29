@@ -27,6 +27,7 @@ class FaceEnrollmentBloc
   String? _individualId;
   bool? _isSystemUser;
   String? _enrolledBy;
+  bool _cancelled = false;
 
   FaceEnrollmentBloc({
     required this.repository,
@@ -65,8 +66,10 @@ class FaceEnrollmentBloc
     _isSystemUser = event.isSystemUser;
     _enrolledBy = event.enrolledBy;
 
-    // Block re-enrollment of the same individual
-    final alreadyEnrolled = await repository.hasEmbedding(_individualId!);
+    // Block re-enrollment only when both embedding AND profile exist (fully enrolled).
+    // hasEmbedding alone returns true for partial writes (embedding saved, profile failed).
+    final alreadyEnrolled = await repository.hasEmbedding(_individualId!) &&
+        await repository.getProfile(_individualId!) != null;
     if (alreadyEnrolled) {
       emit(const FaceEnrollmentState.completed());
       return;
@@ -162,7 +165,15 @@ class FaceEnrollmentBloc
     emit(const FaceEnrollmentState.initial());
   }
 
+  @override
+  Future<void> close() {
+    _cancelled = true;
+    _capturedEmbeddings.clear();
+    return super.close();
+  }
+
   Future<void> _processEnrollment(FaceEnrollmentEmitter emit) async {
+    if (_cancelled) return;
     emit(const FaceEnrollmentState.processing());
 
     try {
@@ -189,17 +200,8 @@ class FaceEnrollmentBloc
       final salt = pinService.generateSalt();
       final hash = pinService.hashPin(pin, salt);
 
-      // Save embedding with angle data
-      await repository.saveEmbedding(
-        individualId: _individualId!,
-        embedding: averaged,
-        angleEmbeddings: List.from(_capturedEmbeddings),
-        angleCount: _capturedEmbeddings.length,
-        isSystemUser: _isSystemUser ?? true,
-        enrolledBy: _enrolledBy ?? '',
-      );
-
-      // Save enrollment profile
+      // Save embedding and profile atomically so a mid-write failure cannot
+      // leave the account with an embedding but no PIN (un-enrollable state).
       final profile = FaceEnrollmentProfile(
         individualId: _individualId!,
         pinHash: hash,
@@ -208,7 +210,14 @@ class FaceEnrollmentBloc
         enrolledByUserId: _enrolledBy ?? '',
         enrolledAt: DateTime.now(),
       );
-      await repository.saveProfile(profile);
+      await repository.saveEmbeddingAndProfile(
+        individualId: _individualId!,
+        embedding: averaged,
+        angleEmbeddings: List.from(_capturedEmbeddings),
+        isSystemUser: _isSystemUser ?? true,
+        enrolledBy: _enrolledBy ?? '',
+        profile: profile,
+      );
 
       if (_isSystemUser ?? true) {
         emit(FaceEnrollmentState.pinAssigned(pin: pin));
@@ -217,6 +226,7 @@ class FaceEnrollmentBloc
       }
     } catch (e) {
       debugPrint('FaceEnrollmentBloc: enrollment failed: $e');
+      _capturedEmbeddings.clear();
       emit(const FaceEnrollmentState.error(
           message: 'FACE_AUTH_ENROLLMENT_FAILED'));
     }
@@ -228,15 +238,21 @@ class FaceEnrollmentBloc
     if (embeddings.length == 1) return List.from(embeddings.first);
 
     final dim = embeddings.first.length;
+    // Discard any embedding with the wrong dimension so a short-circuit return
+    // from the ML model on an error frame cannot cause a RangeError.
+    final valid = embeddings.where((e) => e.length == dim).toList();
+    if (valid.isEmpty) return [];
+    if (valid.length == 1) return List.from(valid.first);
+
     final averaged = List<double>.filled(dim, 0.0);
 
-    for (final emb in embeddings) {
+    for (final emb in valid) {
       for (int i = 0; i < dim; i++) {
         averaged[i] += emb[i];
       }
     }
 
-    final count = embeddings.length.toDouble();
+    final count = valid.length.toDouble();
     for (int i = 0; i < dim; i++) {
       averaged[i] /= count;
     }

@@ -256,19 +256,18 @@ Future<bool> _checkAndShowCoWorkerPending(BuildContext context) async {
     // from other registers or past sessions are not included.
     final registerAttendeeIds = await _getRegisterAttendeeIds(context);
     debugPrint('_checkAndShowCoWorkerPending: registerAttendeeIds=$registerAttendeeIds, allEmbeddings=${allCoWorkerEmbeddings.map((e) => e.individualId).toList()}');
-    var coWorkerEmbeddings = registerAttendeeIds.isEmpty
-        ? allCoWorkerEmbeddings
-        : allCoWorkerEmbeddings
-            .where((e) => registerAttendeeIds.contains(e.individualId))
-            .toList();
-    // If the register filter excluded everything (likely an ID format mismatch),
-    // fall back to all non-system embeddings so co-workers are never silently skipped.
-    if (coWorkerEmbeddings.isEmpty && allCoWorkerEmbeddings.isNotEmpty) {
-      debugPrint('_checkAndShowCoWorkerPending: register filter yielded empty — falling back to all ${allCoWorkerEmbeddings.length} non-system embeddings');
-      coWorkerEmbeddings = allCoWorkerEmbeddings;
+    // Only verify co-workers who are in the current register.
+    // Never fall back to all embeddings — an empty or failed register lookup
+    // must not expand the verification scope to unrelated users.
+    if (registerAttendeeIds.isEmpty) {
+      debugPrint('_checkAndShowCoWorkerPending: register lookup returned empty — skipping co-worker check');
+      return true;
     }
+    final coWorkerEmbeddings = allCoWorkerEmbeddings
+        .where((e) => registerAttendeeIds.contains(e.individualId))
+        .toList();
     if (coWorkerEmbeddings.isEmpty) {
-      debugPrint('_checkAndShowCoWorkerPending: all embeddings filtered out (register filter + fallback exhausted)');
+      debugPrint('_checkAndShowCoWorkerPending: no enrolled co-workers found in this register');
       return true;
     }
 

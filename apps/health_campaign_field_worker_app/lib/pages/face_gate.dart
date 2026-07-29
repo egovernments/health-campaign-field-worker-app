@@ -347,7 +347,7 @@ class _FaceGatePageState extends State<FaceGatePage> {
                 context.read<FaceGateBloc>().add(
                       FaceGateEvent.pinFallback(
                         pin: pin,
-                        individualId: '',
+                        individualId: context.loggedInIndividualIdOrNull ?? '',
                       ),
                     );
               },
@@ -513,7 +513,7 @@ class _ScanningView extends StatelessWidget {
                           color: colorTheme.paper.primary, size: 18),
                       const SizedBox(width: 8),
                       Text(
-                        'Attempt $attemptNumber of $maxAttempts',
+                        '${AppLocalizations.of(context).translate(i18.faceAuth.gateAttemptCounter)} $attemptNumber/$maxAttempts',
                         style: TextStyle(
                           color: colorTheme.paper.primary,
                           fontSize: 14,
@@ -526,7 +526,7 @@ class _ScanningView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        'Match: ${(lastConfidence! * 100).toStringAsFixed(1)}%',
+                        '${AppLocalizations.of(context).translate(i18.faceAuth.gateMatchLabel)}: ${(lastConfidence! * 100).toStringAsFixed(1)}%',
                         style: TextStyle(
                           color: colorTheme.paper.primary.withOpacity(0.8),
                           fontSize: 12,

@@ -17,11 +17,13 @@ class PinService {
     return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
   }
 
-  /// Hash a PIN with the given salt using SHA-256.
+  /// Hash a PIN with the given salt using 10,000 rounds of SHA-256.
   String hashPin(String pin, String salt) {
-    final bytes = utf8.encode('$salt:$pin');
-    final digest = sha256.convert(bytes);
-    return digest.toString();
+    List<int> bytes = utf8.encode('$salt:$pin');
+    for (var i = 0; i < 10000; i++) {
+      bytes = sha256.convert(bytes).bytes;
+    }
+    return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
   }
 
   /// Verify a PIN input against a stored hash and salt.

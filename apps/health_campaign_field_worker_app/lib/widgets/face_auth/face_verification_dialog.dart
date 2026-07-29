@@ -154,7 +154,7 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
         body: BlocConsumer<FaceGateBloc, FaceGateState>(
           listener: (context, state) {
             state.maybeWhen(
-              notEnrolled: () => _close(const FaceVerificationResult(passed: true)),
+              notEnrolled: () => _close(const FaceVerificationResult(passed: false)),
               passed: (_, method, confidence, faceImageBytes) {
                 if (!_autoClosePending) {
                   _autoClosePending = true;
@@ -281,7 +281,7 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
                           color: colorTheme.paper.primary, size: 18),
                       const SizedBox(width: 8),
                       Text(
-                        'Attempt $attemptNumber of $maxAttempts',
+                        '${AppLocalizations.of(context).translate(i18.faceAuth.gateAttemptCounter)} $attemptNumber/$maxAttempts',
                         style: TextStyle(
                           color: colorTheme.paper.primary,
                           fontSize: 14,
@@ -294,7 +294,7 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        'Match: ${(lastConfidence! * 100).toStringAsFixed(1)}%',
+                        '${AppLocalizations.of(context).translate(i18.faceAuth.gateMatchLabel)}: ${(lastConfidence! * 100).toStringAsFixed(1)}%',
                         style: TextStyle(
                           color: colorTheme.paper.primary.withOpacity(0.8),
                           fontSize: 12,
@@ -473,7 +473,7 @@ class _FaceVerificationScreenState extends State<_FaceVerificationScreen> {
       onSubmit: (pin) {
         if (mounted) setState(() => _pinErrorMessage = null);
         context.read<FaceGateBloc>().add(
-              FaceGateEvent.pinFallback(pin: pin, individualId: ''),
+              FaceGateEvent.pinFallback(pin: pin, individualId: widget.individualId),
             );
       },
       errorMessage: errorMessage,
