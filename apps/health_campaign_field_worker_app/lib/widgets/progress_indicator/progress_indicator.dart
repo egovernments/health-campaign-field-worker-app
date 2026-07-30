@@ -35,46 +35,52 @@ class ProgressIndicatorContainer extends StatelessWidget {
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           label,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
+          style: theme.digitTextTheme(context).headingS.copyWith(
+                color: theme.colorTheme.primary.primary2,
+              ),
         ),
         Padding(
-          padding: const EdgeInsets.all(spacer2 * 2),
+          padding: const EdgeInsets.only(top: spacer2),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               LinearProgressIndicator(
                 backgroundColor: theme.colorTheme.generic.background,
                 valueColor: valueColor ??
                     AlwaysStoppedAnimation<Color>(
-                      theme.colorTheme.primary.primary1,
+                      theme.colorTheme.alert.success,
                     ),
                 value: value,
-                minHeight: height ?? 7.0,
+                minHeight: height ?? 16.0,
                 borderRadius: BorderRadius.horizontal(
                     right: Radius.circular(radius ?? spacer1),
                     left: Radius.circular(radius ?? spacer1)),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: spacer2 + 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      prefixLabel,
-                      style: theme.textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      suffixLabel,
-                      style: theme.textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                padding: const EdgeInsets.only(top: spacer2),
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '$prefixLabel / ',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorTheme.alert.success,
+                          fontSize: 14,
+                        ),
+                      ),
+                      TextSpan(
+                        text: suffixLabel,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorTheme.text.primary,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

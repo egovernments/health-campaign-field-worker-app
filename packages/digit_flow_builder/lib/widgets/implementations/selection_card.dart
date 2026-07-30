@@ -19,6 +19,7 @@ class SelectionCardWidget extends ResolvedFlowWidget {
   ) {
     final data = json['enums'] as List<dynamic>? ?? [];
     final fieldName = json['fieldName'] as String?;
+    final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final localization = LocalizationContext.maybeOf(context);
 
     final options = data
@@ -80,7 +81,9 @@ class SelectionCardWidget extends ResolvedFlowWidget {
           options: options,
           initialSelection: initialSelection,
           allowMultipleSelection: false,
-          width: MediaQuery.of(context).size.width * 0.6,
+          width: (props['fullWidth'] == true)
+              ? MediaQuery.of(context).size.width
+              : MediaQuery.of(context).size.width * 0.6,
           onSelectionChanged: (selectedOptions) {
             // Update widgetData in flow state
             if (fieldName != null) {

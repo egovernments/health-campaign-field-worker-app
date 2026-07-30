@@ -10,6 +10,8 @@ import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/app_initialization/app_initialization.dart';
@@ -18,6 +20,7 @@ import '../../../models/downsync/downsync.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
+import '../../../widgets/download_progress/download_spinner_content.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 import '../../../widgets/no_result_card/no_result_card.dart';
@@ -36,8 +39,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   List<DownsyncModel> downSyncList = [];
   int pendingSyncCount = 0;
   BoundaryModel? selectedBoundary;
-  StreamController<DownloadProgressData> downloadProgress =
-      StreamController<DownloadProgressData>();
+  final ValueNotifier<DownloadProgressData?> downloadProgress =
+      ValueNotifier(null);
   late StreamSubscription? syncSubscription;
 
   @override
@@ -62,6 +65,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   @override
   void dispose() {
     syncSubscription?.cancel();
+    downloadProgress.dispose();
     super.dispose();
   }
 
@@ -113,11 +117,20 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             Navigator.of(context, rootNavigator: true)
                                 .popUntil((route) => route is! PopupRoute),
                           },
-                        DigitSyncDialog.show(
-                          context,
-                          type: DialogType.inProgress,
-                          label: 'Loading',
+                        showCustomPopup(
+                          context: context,
                           barrierDismissible: false,
+                          builder: (ctx) => Popup(
+                            type: PopUpType.simple,
+                            title: "",
+                            additionalWidgets: [
+                              DownloadSpinnerContent(
+                                title: localizations.translate(
+                                  i18.beneficiaryDetails.dataDownloadInProgress,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       },
                       getBatchSize: (
@@ -184,13 +197,13 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           primaryButtonLabel: localizations.translate(
                             initialServerCount > 0
                                 ? i18.common.coreCommonDownload
-                                : i18.common.coreCommonGoback,
+                                : i18.common.proceed,
                           ),
                           secondaryButtonLabel: localizations.translate(
                             initialServerCount > 0
                                 ? i18.beneficiaryDetails
                                     .proceedWithoutDownloading
-                                : i18.acknowledgementSuccess.goToHome,
+                                : i18.common.coreCommonGoback,
                           ),
                         ),
                         dialogType: DigitProgressDialogType.dataFound,
@@ -226,10 +239,9 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             dialogType: DigitProgressDialogType.inProgress,
                             isPop: true,
                             downloadProgressController: downloadProgress,
-                            initialProgressData: progressData,
                           );
                         }
-                        downloadProgress.add(progressData);
+                        downloadProgress.value = progressData;
                       },
                       success: (result) {
                         int? epochTime = result.lastSyncedTime;
@@ -257,11 +269,6 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             localizations.translate(
                               i18.beneficiaryDetails.boundary,
                             ): localizations.translate(result.locality!),
-                            localizations.translate(
-                              i18.beneficiaryDetails.status,
-                            ): localizations.translate(
-                              i18.beneficiaryDetails.downloadcompleted,
-                            ),
                             localizations.translate(
                               i18.beneficiaryDetails.downloadtime,
                             ): date,

@@ -377,7 +377,8 @@ class MdmsRepository {
         ..minThreshold = 0
         ..maxThreshold = 0)
       ..backgroundServiceConfig = backgroundServiceConfig
-      ..firebaseConfig = firebaseConfig;
+      ..firebaseConfig = firebaseConfig
+      ..stateLogoUrl = commonMasters?.stateInfo.firstOrNull?.logoUrl;
 
     final List<Languages>? languageList =
         commonMasters?.stateInfo.firstOrNull?.languages.map((element) {

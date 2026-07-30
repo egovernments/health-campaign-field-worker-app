@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
@@ -12,8 +14,11 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
 
+import '../../models/entities/roles_type.dart';
 import '../../utils/stock_calculation_utils.dart';
+import '../../utils/utils.dart';
 import '../localized.dart';
 
 class ProductSelectionCard extends LocalizedStatefulWidget {
@@ -52,6 +57,17 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
     // It will be called in build() when localizations is ready
   }
 
+  /// Returns true when the current user should be treated as a distributor
+  /// for stock balance calculation. Mirrors StockBalanceCard which includes
+  /// both `distributor` and `communityDistributor` roles — the
+  /// StockBalanceExecutor stores balances under the user's UUID for both, so
+  /// reading them out has to match.
+  bool _isDistributorForStock(BuildContext context) {
+    return context.loggedInUserRoles.any((role) =>
+        role.code == RolesType.distributor.toValue() ||
+        role.code == RolesType.communityDistributor.toValue());
+  }
+
   /// Gets the facility ID from the previous page's form data (warehouseDetails.facilityToWhich)
   /// Reads from FormsBloc state which stores all page data
   String? _getFacilityIdFromFormData(BuildContext context) {
@@ -68,8 +84,20 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
         transactionType == 'DISPATCHED' || transactionType == 'ISSUED';
     final isReturn = transactionType == 'RETURNED';
 
-    // For issue, use current user's facility directly
+    // For issue/return, if user is a distributor (or community distributor),
+    // stock is stored under the user UUID — match StockBalanceCard's rule
+    // instead of falling back to a project facility id via getUserFacilityId
+    // (which only maps role `distributor`).
     if (isIssue || isReturn) {
+      if (_isDistributorForStock(context)) {
+        final uuid = context.loggedInUserUuid;
+        if (uuid.isNotEmpty) {
+          debugPrint(
+              'ProductSelectionCard: Using loggedInUserUuid for distributor issue/return: $uuid');
+          return uuid;
+        }
+      }
+
       final stateData = widget.stateData is CrudStateData
           ? widget.stateData as CrudStateData
           : CrudStateData({}, []);
@@ -180,16 +208,33 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
       // Calculate stock in hand for selected products
       final loggedInUserUuid = FlowBuilderSingleton().loggedInUserUuid;
       final productIds = _selectedProducts.map((p) => p.id).toList();
+      final isDistributor = _isDistributorForStock(context);
 
-      _stockInHandMap = StockCalculationUtils.calculateStockInHandForProducts(
+      final computedBalances =
+          StockCalculationUtils.calculateStockInHandForProducts(
         stockList: stockList,
         facilityId: facilityId,
         productIds: productIds,
         loggedInUserUuid: loggedInUserUuid,
+        isDistributor: isDistributor,
       );
 
+      // Merge UserAction STOCK_BALANCE records — these carry the authoritative
+      // post-delivery balance written by StockBalanceExecutor / UPDATE_STOCK_BALANCE
+      // and are what StockBalanceCard displays. Without this merge the max-
+      // quantity validation on the next page collapses to 0 while home shows
+      // a non-zero balance.
+      final userActionBalances =
+          await _loadUserActionBalancesFor(facilityId, productIds);
+
+      _stockInHandMap = <String, double>{
+        ...computedBalances,
+        ...userActionBalances,
+      };
+
       debugPrint(
-          'ProductSelectionCard: Calculated stockInHand: $_stockInHandMap');
+          'ProductSelectionCard: Calculated stockInHand: $_stockInHandMap '
+          '(userActionMerged=${userActionBalances.length}, isDistributor=$isDistributor)');
 
       // Update FormsBloc with stock in hand data
       _updateStockInHandInFormsBloc();
@@ -201,6 +246,50 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
       debugPrint('ProductSelectionCard: ERROR in stock search: $e');
       debugPrint('Stack trace: $stackTrace');
     }
+  }
+
+  /// Loads UserAction STOCK_BALANCE records for the given facility+products
+  /// and returns a `{productVariantId: balance}` map. Mirrors
+  /// [_StockBalanceCardState._loadUserActionBalances] so the max-quantity
+  /// validation on the next page matches what the home stock card shows.
+  Future<Map<String, double>> _loadUserActionBalancesFor(
+    String facilityId,
+    List<String> productIds,
+  ) async {
+    final balances = <String, double>{};
+    if (facilityId.isEmpty || productIds.isEmpty) return balances;
+
+    try {
+      final userActionRepo = context.read<UserActionLocalRepository>();
+      final balanceKeys =
+          productIds.map((id) => generateBalanceKey(facilityId, id)).toList();
+
+      final actions = await userActionRepo.search(
+        UserActionSearchModel(clientReferenceId: balanceKeys),
+      );
+
+      for (final action in actions) {
+        final fields = action.additionalFields?.fields;
+        if (fields == null) continue;
+
+        final productVariantId =
+            fields.firstWhereOrNull((f) => f.key == 'productVariantId')?.value;
+        final balanceStr =
+            fields.firstWhereOrNull((f) => f.key == 'balance')?.value;
+
+        if (productVariantId != null && balanceStr != null) {
+          final balance = double.tryParse(balanceStr.toString());
+          if (balance != null) {
+            balances[productVariantId.toString()] = balance;
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint(
+          'ProductSelectionCard: Error loading UserAction balances: $e');
+    }
+
+    return balances;
   }
 
   /// Updates FormsBloc with stock in hand data so it's available to the next page

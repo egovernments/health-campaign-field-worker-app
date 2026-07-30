@@ -79,3 +79,4 @@ flutter:
   assets:
     - assets/audio/add.wav
     - assets/audio/buzzer.wav
+    - assets/svg/flash_on.svg

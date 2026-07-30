@@ -341,7 +341,6 @@ final dynamic sampleFlows = {
       "category": "DELIVERY",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "HCM_DELIVERY_BENEFICIARY_DETAILS_DESCRIPTION",
       "initActions": [
         {
           "actionType": "SEARCH_EVENT",
@@ -1231,6 +1230,7 @@ final dynamic sampleFlows = {
                 "popupConfig": {
                   "body": [],
                   "type": "alert",
+                  "titleIcon": "Warning",
                   "title": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
                   "description": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
                   "footerActions": [
@@ -2106,7 +2106,6 @@ final dynamic sampleFlows = {
           "label": "DOWNLOAD_BENEFICIARY_IDS",
           "format": "actionPopup",
           "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "fieldName": "beneficiaryIdMinCheck",
           "properties": {
             "icon": "FilterAlt",
@@ -2115,6 +2114,7 @@ final dynamic sampleFlows = {
             "popupConfig": {
               "body": [],
               "type": "alert",
+              "titleIcon": "Warning",
               "title": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
               "description": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
               "footerActions": [
@@ -2195,7 +2195,6 @@ final dynamic sampleFlows = {
           "label": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
           "format": "button",
           "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
-          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -2306,7 +2305,6 @@ final dynamic sampleFlows = {
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "HCM_SEARCH_BENEFICIARY_DESCRIPTION",
       "initActions": [
         {
           "actionType": "LOAD_UNIQUE_ID_POOL"
@@ -2842,6 +2840,7 @@ final dynamic sampleFlows = {
           "actionLabel": "HCM_DELIVERY_SAVE_BUTTON",
           "description": "HCM_DELIVERY_DETAILS_DESCRIPTION",
           "showTabView": false,
+          "showLabelOutsideCard": true,
           "submitCondition": null,
           "preventScreenCapture": false
         }

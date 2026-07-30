@@ -524,6 +524,8 @@ class DownloadBeneficiary {
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
   Map<String, int> boundaryCounts;
+  String? infoCardTitle;
+  String? infoCardDescription;
 
   DownloadBeneficiary({
     required this.title,
@@ -540,5 +542,7 @@ class DownloadBeneficiary {
     this.prefixLabel,
     this.suffixLabel,
     this.boundaryCounts = const {},
+    this.infoCardTitle,
+    this.infoCardDescription,
   });
 }

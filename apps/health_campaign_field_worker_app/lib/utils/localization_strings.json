@@ -1236,6 +1236,78 @@
     "module": "hcm-delivery"
   },
   {
+    "code": "CAPTURING_LOCATION",
+    "locale": "en_MZ",
+    "message": "Capturing Location",
+    "module": "hcm-common"
+  },
+  {
+    "code": "HCM_VALIDATION_AGE_3_MONTHS_PLUS",
+    "locale": "en_MZ",
+    "message": "Age must be at least 3 months",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "HCM_VALIDATION_AGE_3_MONTHS_PLUS",
+    "locale": "pt_MZ",
+    "message": "A idade deve ser de pelo menos 3 meses",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "FETCHING_BENEFICIARY_IDS",
+    "locale": "en_MZ",
+    "message": "Fetching Data",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_FETCHING_DATA",
+    "locale": "en_MZ",
+    "message": "Fetching Data",
+    "module": "hcm-common"
+  },
+  {
+    "code": "DATA_FOUND_BENEFICIARY_IDS",
+    "locale": "en_MZ",
+    "message": "Data Found",
+    "module": "hcm-common"
+  },
+  {
+    "code": "DATA_FOUND_BENEFICIARY_IDS_CONTENT",
+    "locale": "en_MZ",
+    "message": "Beneficiary IDs have been downloaded successfully.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "DATA_NOT_FOUND_BENEFICIARY_IDS",
+    "locale": "en_MZ",
+    "message": "No Data Found",
+    "module": "hcm-common"
+  },
+  {
+    "code": "DATA_NOT_FOUND_BENEFICIARY_IDS_CONTENT",
+    "locale": "en_MZ",
+    "message": "No beneficiary IDs are available on the server.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "HCM_DELIVERY_SUCCESS_BACK_TO_SEARCH_BENEFICIARY",
+    "locale": "en_MZ",
+    "message": "Back To Search Beneficiary",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "HCM_DELIVERY_SUCCESS_BACK_TO_SEARCH_BENEFICIARY",
+    "locale": "pt_MZ",
+    "message": "Back To Search Beneficiary",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "HOME_MY_PROGRESS",
+    "locale": "en_IN",
+    "message": "My Progress",
+    "module": "hcm-home"
+  },
+  {
     "code": "FACE_AUTH_GATE_VERIFIED",
     "locale": "en_DEMO",
     "message": "Face Verified",

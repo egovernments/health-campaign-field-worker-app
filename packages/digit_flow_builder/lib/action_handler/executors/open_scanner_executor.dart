@@ -284,13 +284,20 @@ class OpenScannerExecutor extends ActionExecutor {
       final value = entry.value;
 
       if (value is String) {
-        resolved[key] = resolveValue(value, contextData);
+        // Only resolve if the local context can actually satisfy the template;
+        // otherwise keep the original string so downstream executors (which
+        // have richer context, e.g. stateWrapper in NavigationExecutor) can
+        // resolve it themselves. Never let this stage collapse an unresolved
+        // template into `null` and swallow it.
+        final maybeResolved = resolveValue(value, contextData);
+        resolved[key] = maybeResolved ?? value;
       } else if (value is Map<String, dynamic>) {
         resolved[key] = _resolveMapTemplates(value, contextData);
       } else if (value is List) {
         resolved[key] = value.map((item) {
           if (item is String) {
-            return resolveValue(item, contextData);
+            final maybeResolved = resolveValue(item, contextData);
+            return maybeResolved ?? item;
           } else if (item is Map<String, dynamic>) {
             return _resolveMapTemplates(item, contextData);
           }

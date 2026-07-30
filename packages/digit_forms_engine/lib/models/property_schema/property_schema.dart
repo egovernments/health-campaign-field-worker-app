@@ -44,6 +44,9 @@ class PropertySchema with _$PropertySchema {
     String? suffixText,
     String? innerLabel,
     String? label,
+    // Auto-capitalization for text inputs: "words" capitalizes the first
+    // letter of every word as the user types
+    String? textCapitalization,
     bool? isMultiSelect,
     dynamic value,
     DisplayBehavior? displayBehavior,
@@ -85,6 +88,8 @@ class PropertySchema with _$PropertySchema {
     // Named placeholder substitution for descriptions
     @JsonKey(fromJson: _labelPlaceHoldersOrNull)
     List<LabelPlaceHolder>? descriptionPlaceHolders,
+    // Render page label/description outside the card (before it)
+    bool? showLabelOutsideCard,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -227,6 +232,8 @@ class AlertCondition with _$AlertCondition {
   const factory AlertCondition({
     required String expression, // e.g., condition or "DEFAULT"
     required String value, // e.g., "To Administer"
+    String? title,
+    String? description,
   }) = _AlertCondition;
 
   factory AlertCondition.fromJson(Map<String, dynamic> json) =>

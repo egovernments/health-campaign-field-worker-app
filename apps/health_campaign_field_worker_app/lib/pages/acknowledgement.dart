@@ -35,45 +35,62 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: PanelCard(
-        type: PanelType.success,
-        title: widget.label ??
-            localizations.translate(
-              i18.acknowledgementSuccess.acknowledgementLabelText,
+      body: Padding(
+        padding: const EdgeInsets.only(
+            left: spacer4, right: spacer4, top: spacer4),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(radius4),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF000000).withOpacity(.16),
+                offset: const Offset(0, 1),
+                spreadRadius: 0,
+                blurRadius: 2,
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(radius4),
+            child: PanelCard(
+          type: PanelType.success,
+          title: widget.label ??
+              localizations.translate(
+                i18.acknowledgementSuccess.acknowledgementLabelText,
+              ),
+          description: widget.description ??
+              localizations.translate(
+                i18.acknowledgementSuccess.acknowledgementDescriptionText,
+              ),
+          actions: (!widget.isDataRecordSuccess)
+              ? [
+                  DigitButton(
+                    isDisabled: widget.isDataRecordSuccess,
+                    type: DigitButtonType.primary,
+                    size: DigitButtonSize.large,
+                    label: localizations.translate(
+                        i18.acknowledgementSuccess.actionLabelText),
+                    onPressed: () {
+                      context.router.maybePop();
+                    },
+                  ),
+                ]
+              : null,
             ),
-        additionWidgets: widget.isDataRecordSuccess
-            ? [
-                LabelValueSummary(
-                  items: widget.descriptionTableData!.keys
-                      .map((e) => LabelValueItem(
-                          labelFlex: 5,
-                          label: e,
-                          maxLines: 3,
-                          value: widget.descriptionTableData?[e].toString()))
-                      .toList(),
-                ),
-              ]
-            : null,
-        actions: (!widget.isDataRecordSuccess)
-            ? [
-                DigitButton(
-                  isDisabled: widget.isDataRecordSuccess,
-                  type: DigitButtonType.primary,
-                  size: DigitButtonSize.large,
-                  label: localizations
-                      .translate(i18.acknowledgementSuccess.actionLabelText),
-                  onPressed: () {
-                    context.router.maybePop();
-                  },
-                ),
-              ]
-            : null,
+          ),
+        ),
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
         // Show the bottom navigation bar if `isDataRecordSuccess` is true
         child:
-            DigitCard(margin: const EdgeInsets.only(top: spacer2), children: [
+            DigitCard(
+                margin: const EdgeInsets.only(top: spacer2),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(radius4),
+                  topRight: Radius.circular(radius4),
+                ),
+                children: [
           DigitButton(
             mainAxisSize: MainAxisSize.max,
             label: localizations.translate(i18.acknowledgementSuccess.goToHome),
@@ -90,8 +107,8 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
             onPressed: () {
               context.router.popAndPush(BoundarySelectionRoute());
             },
-            label: localizations
-                .translate(i18.acknowledgementSuccess.downloadmoredata),
+            label: localizations.translate(
+                i18.acknowledgementSuccess.backToBoundarySelection),
           ),
         ]),
       ),

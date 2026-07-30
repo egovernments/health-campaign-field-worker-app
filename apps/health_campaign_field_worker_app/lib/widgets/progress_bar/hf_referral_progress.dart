@@ -1,6 +1,7 @@
 import 'package:digit_data_model/data/repositories/package_repository/local/hf_referral.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
+import 'package:digit_ui_components/theme/radius.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,13 @@ class _HFReferralProgressBarState extends State<HFReferralProgressBar> {
 
   @override
   Widget build(BuildContext context) {
-    return DigitCard(margin: const EdgeInsets.all(spacer2), children: [
+    return DigitCard(
+        // Aligned with home tiles' visible edge at 12px from the device edge
+        // (tiles: spacer2 grid padding + 4px showcase wrapper).
+        margin: const EdgeInsets.symmetric(horizontal: spacer3, vertical: spacer2),
+        padding: const EdgeInsets.all(spacer4),
+        borderRadius: BorderRadius.circular(radius1),
+        children: [
       ProgressIndicatorContainer(
         label: '${totalCount - completedCount} ${widget.label}',
         prefixLabel: '$completedCount ${widget.prefixLabel}',

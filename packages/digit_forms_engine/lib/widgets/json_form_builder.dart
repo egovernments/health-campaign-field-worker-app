@@ -507,6 +507,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         );
 
       case PropertySchemaFormat.radio:
+        final boldLabel = widget.schema.conditions?['boldLabel'] == true;
+        final separateCard = widget.schema.conditions?['separateCard'] == true;
         return JsonSchemaRadioBuilder(
           form: form,
           formControlName: widget.formControlName,
@@ -514,6 +516,16 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           label: _resolveLabel(widget.schema.label),
           enums: widget.schema.enums ?? [],
+          labelStyle: separateCard
+              ? Theme.of(context).digitTextTheme(context).headingS.copyWith(
+                    color: Theme.of(context).colorTheme.text.primary,
+                  )
+              : boldLabel
+                  ? Theme.of(context).digitTextTheme(context).label.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorTheme.text.primary,
+                      )
+                  : null,
         );
 
       case PropertySchemaFormat.custom:
@@ -581,6 +593,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
+          capitalizeWords: widget.schema.textCapitalization == 'words',
         );
     }
   }
@@ -715,6 +728,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
+          capitalizeWords: widget.schema.textCapitalization == 'words',
         );
     }
   }
@@ -750,6 +764,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       return !_shouldHideField(form, subSchema, entry.key);
     }).toList();
 
+    final bool showDividers = widget.schema.conditions?['showDividers'] == true;
+    final dividerColor =
+        Theme.of(context).colorTheme.generic.divider;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -770,13 +788,41 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           navigationParams: widget.navigationParams,
         );
 
+        final bool wrapInCard = subSchema.conditions?['wrapInCard'] == true;
+        final Widget fieldWidget = wrapInCard
+            ? DigitCard(
+                cardType: CardType.secondary,
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(
+                    spacer4 - 2, spacer4, spacer4 - 2, spacer4 - 2),
+                children: [field],
+              )
+            : field;
+
         final isLast = index == visibleEntries.length - 1;
+        final nextIsDependent = !isLast &&
+            visibleEntries[index + 1].value.visibilityCondition != null;
+
+        if (showDividers && !isLast && !nextIsDependent) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: spacer4),
+                child: fieldWidget,
+              ),
+              Divider(height: 1, thickness: 1, color: dividerColor),
+              const SizedBox(height: spacer4),
+            ],
+          );
+        }
 
         return isLast
-            ? field
+            ? fieldWidget
             : Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
-                child: field,
+                child: fieldWidget,
               );
       }).toList(),
     );

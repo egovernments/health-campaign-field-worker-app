@@ -157,71 +157,76 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'SingleUserLogin',
     ),
-    r'STOCK_THRESHOLD_CONFIG': PropertySchema(
+    r'STATE_LOGO_URL': PropertySchema(
       id: 24,
+      name: r'STATE_LOGO_URL',
+      type: IsarType.string,
+    ),
+    r'STOCK_THRESHOLD_CONFIG': PropertySchema(
+      id: 25,
       name: r'STOCK_THRESHOLD_CONFIG',
       type: IsarType.object,
       target: r'StockThresholdConfig',
     ),
     r'SYNC_METHOD': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSIT_POST_TYPE': PropertySchema(
-      id: 28,
+      id: 29,
       name: r'TRANSIT_POST_TYPE',
       type: IsarType.objectList,
       target: r'TransitPostType',
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 29,
+      id: 30,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 30,
+      id: 31,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'manualAttendanceReasons': PropertySchema(
-      id: 31,
+      id: 32,
       name: r'manualAttendanceReasons',
       type: IsarType.objectList,
       target: r'ManualAttendanceReasons',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 32,
+      id: 33,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 33,
+      id: 34,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 34,
+      id: 35,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 35,
+      id: 36,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -557,6 +562,12 @@ int _appConfigurationEstimateSize(
     }
   }
   {
+    final value = object.stateLogoUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.stockThresholdConfig;
     if (value != null) {
       bytesCount += 3 +
@@ -821,59 +832,60 @@ void _appConfigurationSerialize(
     SingleUserLoginSchema.serialize,
     object.singleUserLogin,
   );
+  writer.writeString(offsets[24], object.stateLogoUrl);
   writer.writeObject<StockThresholdConfig>(
-    offsets[24],
+    offsets[25],
     allOffsets,
     StockThresholdConfigSchema.serialize,
     object.stockThresholdConfig,
   );
-  writer.writeString(offsets[25], object.syncMethod);
-  writer.writeString(offsets[26], object.syncTrigger);
-  writer.writeString(offsets[27], object.tenantId);
+  writer.writeString(offsets[26], object.syncMethod);
+  writer.writeString(offsets[27], object.syncTrigger);
+  writer.writeString(offsets[28], object.tenantId);
   writer.writeObjectList<TransitPostType>(
-    offsets[28],
+    offsets[29],
     allOffsets,
     TransitPostTypeSchema.serialize,
     object.transitPostType,
   );
   writer.writeObjectList<TransportTypes>(
-    offsets[29],
+    offsets[30],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[30],
+    offsets[31],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObjectList<ManualAttendanceReasons>(
-    offsets[31],
+    offsets[32],
     allOffsets,
     ManualAttendanceReasonsSchema.serialize,
     object.manualAttendanceReasons,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[32],
+    offsets[33],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[33],
+    offsets[34],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[34],
+    offsets[35],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[35],
+    offsets[36],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -1012,28 +1024,29 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     SingleUserLogin(),
   );
+  object.stateLogoUrl = reader.readStringOrNull(offsets[24]);
   object.stockThresholdConfig = reader.readObjectOrNull<StockThresholdConfig>(
-    offsets[24],
+    offsets[25],
     StockThresholdConfigSchema.deserialize,
     allOffsets,
   );
-  object.syncMethod = reader.readStringOrNull(offsets[25]);
-  object.syncTrigger = reader.readStringOrNull(offsets[26]);
-  object.tenantId = reader.readStringOrNull(offsets[27]);
+  object.syncMethod = reader.readStringOrNull(offsets[26]);
+  object.syncTrigger = reader.readStringOrNull(offsets[27]);
+  object.tenantId = reader.readStringOrNull(offsets[28]);
   object.transitPostType = reader.readObjectList<TransitPostType>(
-    offsets[28],
+    offsets[29],
     TransitPostTypeSchema.deserialize,
     allOffsets,
     TransitPostType(),
   );
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[29],
+    offsets[30],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[30],
+    offsets[31],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
@@ -1041,30 +1054,30 @@ AppConfiguration _appConfigurationDeserialize(
   object.id = id;
   object.manualAttendanceReasons =
       reader.readObjectList<ManualAttendanceReasons>(
-    offsets[31],
+    offsets[32],
     ManualAttendanceReasonsSchema.deserialize,
     allOffsets,
     ManualAttendanceReasons(),
   );
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[32],
+    offsets[33],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[33],
+    offsets[34],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[34],
+    offsets[35],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[35],
+    offsets[36],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -1225,66 +1238,68 @@ P _appConfigurationDeserializeProp<P>(
         SingleUserLogin(),
       )) as P;
     case 24:
+      return (reader.readStringOrNull(offset)) as P;
+    case 25:
       return (reader.readObjectOrNull<StockThresholdConfig>(
         offset,
         StockThresholdConfigSchema.deserialize,
         allOffsets,
       )) as P;
-    case 25:
-      return (reader.readStringOrNull(offset)) as P;
     case 26:
       return (reader.readStringOrNull(offset)) as P;
     case 27:
       return (reader.readStringOrNull(offset)) as P;
     case 28:
+      return (reader.readStringOrNull(offset)) as P;
+    case 29:
       return (reader.readObjectList<TransitPostType>(
         offset,
         TransitPostTypeSchema.deserialize,
         allOffsets,
         TransitPostType(),
       )) as P;
-    case 29:
+    case 30:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 30:
+    case 31:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 31:
+    case 32:
       return (reader.readObjectList<ManualAttendanceReasons>(
         offset,
         ManualAttendanceReasonsSchema.deserialize,
         allOffsets,
         ManualAttendanceReasons(),
       )) as P;
-    case 32:
+    case 33:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 33:
+    case 34:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 34:
+    case 35:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 35:
+    case 36:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -3730,6 +3745,160 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'STATE_LOGO_URL',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'STATE_LOGO_URL',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'STATE_LOGO_URL',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'STATE_LOGO_URL',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'STATE_LOGO_URL',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'STATE_LOGO_URL',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'STATE_LOGO_URL',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'STATE_LOGO_URL',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'STATE_LOGO_URL',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'STATE_LOGO_URL',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'STATE_LOGO_URL',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      stateLogoUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'STATE_LOGO_URL',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       stockThresholdConfigIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -5303,6 +5472,20 @@ extension AppConfigurationQuerySortBy
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      sortByStateLogoUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'STATE_LOGO_URL', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      sortByStateLogoUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'STATE_LOGO_URL', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
       sortBySyncMethod() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'SYNC_METHOD', Sort.asc);
@@ -5404,6 +5587,20 @@ extension AppConfigurationQuerySortThenBy
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      thenByStateLogoUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'STATE_LOGO_URL', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      thenByStateLogoUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'STATE_LOGO_URL', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
       thenBySyncMethod() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'SYNC_METHOD', Sort.asc);
@@ -5488,6 +5685,14 @@ extension AppConfigurationQueryWhereDistinct
       distinctByMaxRadius() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'PROXIMITY_SEARCH_RANGE');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QDistinct>
+      distinctByStateLogoUrl({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'STATE_LOGO_URL',
+          caseSensitive: caseSensitive);
     });
   }
 
@@ -5686,6 +5891,13 @@ extension AppConfigurationQueryProperty
       singleUserLoginProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'SINGLE_USER_LOGIN');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, String?, QQueryOperations>
+      stateLogoUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'STATE_LOGO_URL');
     });
   }
 
