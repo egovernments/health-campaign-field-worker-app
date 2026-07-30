@@ -72,7 +72,8 @@ class _BoundarySelectionPageState
     LocalizationParams().setCode([
       i18.common.coreCommonContinue,
       i18.common.coreCommonSubmit,
-      i18.common.maxBoundarySelectionReached
+      i18.common.maxBoundarySelectionReached,
+      i18.common.chooseBoundaries
     ]);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
@@ -263,11 +264,22 @@ class _BoundarySelectionPageState
                                   '${runtimeHierarchyType()}_$key')
                               .toList();
 
+                          // Every entry in this list must include *every* i18
+                          // key the page renders that lives outside the
+                          // `common` module rows this filter matches — the
+                          // BLoC handler below clears `_messagesByCode` on
+                          // reload, so any key omitted here disappears from
+                          // in-memory translation even if it was loaded on
+                          // initial page entry. `chooseBoundaries` was
+                          // missing, which is why it flashed correctly on
+                          // first frame (initState's setCode included it)
+                          // and then went raw on the boundary-state emit.
                           final combinedCodes = [
                             ...finalCodes,
                             ...labelCodeList,
                             i18.common.coreCommonSubmit,
-                            i18.common.maxBoundarySelectionReached
+                            i18.common.maxBoundarySelectionReached,
+                            i18.common.chooseBoundaries,
                           ];
 
                           LocalizationParams().setCode(combinedCodes);
@@ -1265,11 +1277,17 @@ class _BoundarySelectionPageState
           .map((key) => '${runtimeHierarchyType()}_$key')
           .toList();
 
+      // Must include every i18 key rendered outside the modules this filter
+      // captures — otherwise the reload below clears `_messagesByCode` and
+      // refills without them. `buildForm` runs on the first build (before the
+      // BlocListener has any chance to correct the code list), so any
+      // omission here is what renders as a raw i18 key on landing.
       final combinedCodes = [
         ...finalCodes,
         ...labelCodeList,
         i18.common.coreCommonSubmit,
-        i18.common.maxBoundarySelectionReached
+        i18.common.maxBoundarySelectionReached,
+        i18.common.chooseBoundaries,
       ];
 
       LocalizationParams().setCode(combinedCodes);

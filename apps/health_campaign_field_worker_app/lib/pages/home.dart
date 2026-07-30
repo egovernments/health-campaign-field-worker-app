@@ -1757,7 +1757,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       ? localizations.translate(
                           i18.common.coreCommonGoback,
                         )
-                      : null,
+                      : localizations.translate(
+                          i18.common.corecommonclose,
+                        ),
                 ),
                 dialogType: DigitProgressDialogType.dataFound,
                 isPop: true,
@@ -1889,7 +1891,8 @@ class _HomePageState extends LocalizedState<HomePage> {
             child: ScrollableContent(
               slivers: [
                 SliverPadding(
-                  padding: const EdgeInsets.only(left: spacer2, right: spacer2, top: spacer2),
+                  padding: const EdgeInsets.only(
+                      left: spacer2, right: spacer2, top: spacer2),
                   sliver: SliverGrid(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
@@ -1897,7 +1900,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                       },
                       childCount: homeItems.length,
                     ),
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 164,
                       childAspectRatio: 104 / 128,
                       mainAxisSpacing: spacer3,
@@ -1915,9 +1919,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       showcaseFor: showcaseKeys.toSet().toList(),
                     ),
                   ),
-                   if (context.loggedInUserRoles.any((role) =>
-                    role.code == RolesType.distributor.toValue()))
-                  const FaceAuthSessionCard(),
+                  if (context.loggedInUserRoles.any(
+                      (role) => role.code == RolesType.distributor.toValue()))
+                    const FaceAuthSessionCard(),
                   // Show stock balance card for users with stock management access (not for Polio)
                   if (!isPolio &&
                       state.actionsWrapper.actions
@@ -2235,8 +2239,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
-                 final prefs = await SharedPreferences.getInstance();
-                 final schemaJsonRaw = prefs.getString('app_config_schemas');
+                final prefs = await SharedPreferences.getInstance();
+                final schemaJsonRaw = prefs.getString('app_config_schemas');
 
                 FlowBuilderSingleton().setPersistenceConfiguration(
                     persistenceConfiguration:
@@ -2349,7 +2353,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (false && schemaJsonRaw != null) {
+                  if (schemaJsonRaw != null) {
                     final allSchemas =
                         json.decode(schemaJsonRaw) as Map<String, dynamic>;
                     final data = allSchemas['REGISTRATION'];
@@ -2368,8 +2372,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                           pageName: registrationDeliveryData["initialPage"]),
                     );
                   } else {
-                    FlowRegistry.setConfig(sampleSMCFlows["flows"]
-                        as List<Map<String, dynamic>>);
+                    FlowRegistry.setConfig(
+                        sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
                       FlowBuilderHomeRoute(
