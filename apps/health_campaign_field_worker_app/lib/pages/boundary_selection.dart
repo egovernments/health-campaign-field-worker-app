@@ -401,15 +401,18 @@ class _BoundarySelectionPageState
                                           primaryButtonLabel:
                                               localizations.translate(
                                             initialServerCount > 0
-                                                ? i18.common.coreCommonDownload
-                                                : i18.common.proceed,
+                                                ? i18.beneficiaryDetails
+                                                    .downloadBeneficiaryData
+                                                : i18.beneficiaryDetails
+                                                    .continueWithoutDownloading,
                                           ),
                                           secondaryButtonLabel:
                                               localizations.translate(
                                             initialServerCount > 0
                                                 ? i18.beneficiaryDetails
                                                     .proceedWithoutDownloading
-                                                : i18.common.coreCommonGoback,
+                                                : i18.beneficiaryDetails
+                                                    .changeBoundaries,
                                           ),
                                           infoCardTitle: initialServerCount > 0
                                               ? localizations.translate(

@@ -489,7 +489,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
         type: PopUpType.alert,
         titleIcon: Icon(
           Icons.check_circle,
-          size: spacer12,
+          size: spacer8,
           color: const DigitColors().light.alertSuccess,
         ),
         onCrossTap: () => Navigator.of(ctx).pop(),

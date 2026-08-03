@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../blocs/unique_beneficiary_id/unique_id.dart';
+import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -111,37 +112,42 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                         Navigator.of(context, rootNavigator: true)
                             .popUntil((route) => route is! PopupRoute);
                         final bool dataFound = ids.isNotEmpty;
+                        if (dataFound) {
+                          context.read<UniqueIdBloc>().add(
+                                const UniqueIdEvent.fetchIdCount(),
+                              );
+                          context.router.push(AcknowledgementRoute(
+                            label: localizations.translate(
+                              i18.beneficiaryId.dataFoundBeneficiaryIds,
+                            ),
+                            description: localizations.translate(
+                              i18.beneficiaryId.dataFoundBeneficiaryIdsContent,
+                            ),
+                          ));
+                          return;
+                        }
                         showCustomPopup(
                           context: context,
                           builder: (ctx) => Popup(
-                            type: dataFound ? PopUpType.simple : PopUpType.alert,
+                            type: PopUpType.alert,
                             title: localizations.translate(
-                              dataFound
-                                  ? i18.beneficiaryId.dataFoundBeneficiaryIds
-                                  : i18.beneficiaryId.dataNotFoundBeneficiaryIds,
+                              i18.beneficiaryId.dataNotFoundBeneficiaryIds,
                             ),
                             titleIcon: Icon(
-                              dataFound
-                                  ? Icons.check_circle_outline
-                                  : Icons.warning,
-                              color: dataFound
-                                  ? theme.colorTheme.alert.success
-                                  : theme.colorTheme.alert.error,
-                              size: spacer11,
+                              Icons.warning,
+                              color: theme.colorTheme.alert.error,
+                              size: spacer8,
                             ),
                             description: localizations.translate(
-                              dataFound
-                                  ? i18.beneficiaryId
-                                      .dataFoundBeneficiaryIdsContent
-                                  : i18.beneficiaryId
-                                      .dataNotFoundBeneficiaryIdsContent,
+                              i18.beneficiaryId
+                                  .dataNotFoundBeneficiaryIdsContent,
                             ),
                             actions: [
                               DigitButton(
                                 capitalizeLetters: false,
                                 type: DigitButtonType.secondary,
-                                size: DigitButtonSize.small,
-                                mainAxisSize: MainAxisSize.min,
+                                size: DigitButtonSize.large,
+                                mainAxisSize: MainAxisSize.max,
                                 onPressed: () {
                                   Navigator.of(ctx).pop();
                                   context.read<UniqueIdBloc>().add(

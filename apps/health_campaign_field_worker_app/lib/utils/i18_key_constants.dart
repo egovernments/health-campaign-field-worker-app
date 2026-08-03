@@ -1244,6 +1244,8 @@ class SyncDialog {
 
   String get noDataToSyncTitle => 'SYNC_DIALOG_NO_DATA_TO_SYNC_TITLE';
 
+  String get allSyncedDescription => 'SYNC_DIALOG_ALL_SYNCED_DESCRIPTION';
+
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
@@ -1540,6 +1542,12 @@ class BeneficiaryDetails {
       'FAILED_TO_CHECK_DATA_IN_SERVER_DESCRIPTION';
 
   String get dataFound => 'DATA_FOUND';
+
+  String get downloadBeneficiaryData => 'DOWNLOAD_BENEFICIARY_DATA';
+
+  String get continueWithoutDownloading => 'CONTINUE_WITHOUT_DOWNLOADING';
+
+  String get changeBoundaries => 'CHANGE_BOUNDARIES';
 
   String get noDataFound => 'NO_DATA_FOUND';
 

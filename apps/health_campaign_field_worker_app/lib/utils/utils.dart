@@ -258,7 +258,7 @@ void showDownloadDialog(
               .translate(i18.common.coreCommonFailedToCheckData),
           titleIcon: Icon(
             Icons.warning,
-            size: spacer11,
+            size: spacer8,
             color: Theme.of(context).colorTheme.alert.error,
           ),
           description: AppLocalizations.of(context)
@@ -319,7 +319,7 @@ void showDownloadDialog(
             },
             titleIcon: Icon(
               Icons.warning,
-              size: spacer12,
+              size: spacer8,
               color: Theme.of(context).colorTheme.alert.error,
             ),
             actions: [
@@ -367,6 +367,12 @@ void showDownloadDialog(
             color: Theme.of(context).colorTheme.alert.error,
           ),
           titleIconAlignment: CrossAxisAlignment.center,
+          onCrossTap: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            context.read<BeneficiaryDownSyncBloc>().add(
+                  const DownSyncResetStateEvent(),
+                );
+          },
           description: model.content,
           additionalWidgets: (model.infoCardTitle != null &&
                   model.infoCardDescription != null)
@@ -459,29 +465,11 @@ void showDownloadDialog(
               final progress = data?.progress ?? 0;
               final totalCount = data?.totalCount ?? model.totalCount ?? 0;
               final syncedCount = data?.syncedCount ?? 0;
-              final boundaryName = data?.boundaryName ?? '';
-              final currentIndex = data?.currentIndex ?? 0;
-              final totalBoundaries = data?.totalBoundaries ?? 1;
 
-              // The first inProgress event fires with syncedCount=0 *before*
-              // the first batch API call returns. On a batch size of 100-200
-              // that leaves the bar frozen at 0% for the entire round-trip,
-              // which reads as "hung". Feed a null value while nothing is
-              // downloaded yet so LinearProgressIndicator animates in its
-              // indeterminate mode; flip to determinate once records land.
-              final barValue = syncedCount > 0 ? progress : null;
-
-              return ProgressIndicatorContainer(
-                label: boundaryName.isNotEmpty
-                    ? '$boundaryName (${currentIndex + 1}/$totalBoundaries)'
-                    : '',
-                prefixLabel: '$syncedCount',
-                suffixLabel: '$totalCount',
-                value: barValue,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).colorTheme.primary.primary1,
-                ),
-                subLabel: model.title,
+              return DownloadProgressContent(
+                title: model.title,
+                progress: progress,
+                countLabel: '$syncedCount/$totalCount',
               );
             },
           ),

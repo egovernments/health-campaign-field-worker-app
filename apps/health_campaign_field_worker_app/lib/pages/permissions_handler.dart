@@ -470,7 +470,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         titleIcon: Icon(
           Icons.warning,
           color: Theme.of(context).colorTheme.alert.error,
-          size: spacer11,
+          size: spacer8,
         ),
         description:
             localizations.translate(i18.common.accessPermissionDialogDesc),

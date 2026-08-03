@@ -1713,13 +1713,20 @@ class _HomePageState extends LocalizedState<HomePage> {
                 Navigator.of(context, rootNavigator: true)
                     .popUntil((route) => route is! PopupRoute);
               }
-              DigitSyncDialog.show(
-                context,
-                type: DialogType.inProgress,
-                label: localizations.translate(
-                  i18.home.stockSyncDataLabel,
-                ),
+              showCustomPopup(
+                context: context,
                 barrierDismissible: false,
+                builder: (ctx) => Popup(
+                  type: PopUpType.simple,
+                  title: "",
+                  additionalWidgets: [
+                    DownloadSpinnerContent(
+                      title: localizations.translate(
+                        i18.projectSelection.syncInProgressTitleText,
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
             getBatchSize: (batchSize, projectModel) {
@@ -1731,6 +1738,30 @@ class _HomePageState extends LocalizedState<HomePage> {
                   );
             },
             dataFound: (initialServerCount, batchSize, offset, lastSyncedTime) {
+              if (initialServerCount <= 0) {
+                // Nothing new to download — treat it as the all-synced
+                // success state, mirroring the Sync Data tile.
+                Navigator.of(context, rootNavigator: true)
+                    .popUntil((route) => route is! PopupRoute);
+                DigitSyncDialog.show(
+                  context,
+                  type: DialogType.complete,
+                  label: localizations.translate(
+                    i18.syncDialog.noDataToSyncTitle,
+                  ),
+                  description: localizations.translate(
+                    i18.syncDialog.allSyncedDescription,
+                  ),
+                  primaryAction: DigitDialogActions(
+                    label: localizations.translate(
+                      i18.syncDialog.closeButtonLabel,
+                    ),
+                    action: (ctx) => Navigator.pop(ctx),
+                  ),
+                  barrierDismissible: true,
+                );
+                return;
+              }
               showStockDownloadDialog(
                 context,
                 model: DownloadBeneficiary(
@@ -1796,7 +1827,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context,
                 type: DialogType.complete,
                 label: localizations.translate(
-                  i18.home.stockSyncDataLabel,
+                  i18.acknowledgementSuccess.dataDownloadedSuccessLabel,
+                ),
+                description: localizations.translate(
+                  i18.acknowledgementSuccess.dataDownloadedSuccessDesc,
                 ),
                 primaryAction: DigitDialogActions(
                   label: localizations.translate(
@@ -1905,7 +1939,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       maxCrossAxisExtent: 164,
                       childAspectRatio: 104 / 128,
                       mainAxisSpacing: spacer3,
-                      crossAxisSpacing: spacer2,
+                      crossAxisSpacing: spacer3,
                     ),
                   ),
                 ),
@@ -1986,13 +2020,20 @@ class _HomePageState extends LocalizedState<HomePage> {
                       syncInProgress: () async {
                         await localSecureStore.setManualSyncTrigger(false);
                         if (context.mounted) {
-                          DigitSyncDialog.show(
-                            context,
-                            type: DialogType.inProgress,
-                            label: localizations.translate(
-                              i18.syncDialog.syncInProgressTitle,
-                            ),
+                          showCustomPopup(
+                            context: context,
                             barrierDismissible: false,
+                            builder: (ctx) => Popup(
+                              type: PopUpType.simple,
+                              title: "",
+                              additionalWidgets: [
+                                DownloadSpinnerContent(
+                                  title: localizations.translate(
+                                    i18.projectSelection.syncInProgressTitleText,
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
                         }
                       },
@@ -2002,6 +2043,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                               type: DialogType.complete,
                               label: localizations.translate(
                                 i18.syncDialog.noDataToSyncTitle,
+                              ),
+                              description: localizations.translate(
+                                i18.syncDialog.allSyncedDescription,
                               ),
                               primaryAction: DigitDialogActions(
                                 label: localizations.translate(
@@ -2021,7 +2065,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                           DigitSyncDialog.show(context,
                               type: DialogType.complete,
                               label: localizations.translate(
-                                i18.syncDialog.dataSyncedTitle,
+                                i18.syncDialog.noDataToSyncTitle,
+                              ),
+                              description: localizations.translate(
+                                i18.syncDialog.allSyncedDescription,
                               ),
                               primaryAction: DigitDialogActions(
                                 label: localizations.translate(
