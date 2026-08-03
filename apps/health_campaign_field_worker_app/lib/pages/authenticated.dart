@@ -1376,11 +1376,6 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper>
                           Navigator.of(ctx).pop(false);
                         },
                         type: PopUpType.simple,
-                        titleIcon: Icon(
-                          Icons.info,
-                          color: Theme.of(context).colorTheme.alert.info,
-                          size: 32,
-                        ),
                         inlineActions: true,
                         actions: [
                           DigitButton(

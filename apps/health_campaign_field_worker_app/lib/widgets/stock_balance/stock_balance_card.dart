@@ -318,8 +318,8 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
     return balances;
   }
 
-  Color _getColorForBalance(double balance) {
-    if (balance < _minThreshold) return Colors.red;
+  Color _getColorForBalance(double balance, Color errorColor) {
+    if (balance < _minThreshold) return errorColor;
     if (balance > _maxThreshold) return const Color(0xFF0B6623);
     return Colors.blue;
   }
@@ -374,21 +374,19 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         // Title
         Padding(
           padding: const EdgeInsets.only(bottom: spacer1),
-          child: Center(
-            child: Text(
-              localizations.translate(i18.home.stockBalanceLabel),
-              style: theme
-                  .digitTextTheme(context)
-                  .bodyL
-                  .copyWith(color: theme.colorTheme.text.primary),
-            ),
+          child: Text(
+            localizations.translate(i18.home.stockBalanceLabel),
+            style: theme
+                .digitTextTheme(context)
+                .headingS
+                .copyWith(color: theme.colorTheme.primary.primary2),
           ),
         ),
 
         // Per-commodity stock balance bars
         ..._productVariants.map((product) {
           final balance = max(_stockBalances[product.id] ?? 0.0, 0.0);
-          final color = _getColorForBalance(balance);
+          final color = _getColorForBalance(balance, theme.colorTheme.alert.error);
           final progress =
               _maxThreshold > 0 ? min(balance / _maxThreshold, 1.0) : 0.0;
           final displayName =
