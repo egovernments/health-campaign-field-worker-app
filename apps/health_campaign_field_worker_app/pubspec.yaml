@@ -160,8 +160,12 @@ dependency_overrides:
 
   survey_form:
     path: ../../packages/survey_form
-#  
-#  digit_ui_components: ^0.2.4+1
+
+  digit_ui_components:
+    git:
+      url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
+      path: flutter/digit-ui-components/digit_components
+      ref: UI/ux-audit-hcm-app-2005
 
 
 flutter_icons:

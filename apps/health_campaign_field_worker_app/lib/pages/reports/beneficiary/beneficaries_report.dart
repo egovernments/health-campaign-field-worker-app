@@ -197,13 +197,18 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           primaryButtonLabel: localizations.translate(
                             initialServerCount > 0
                                 ? i18.common.coreCommonDownload
-                                : i18.common.proceed,
+                                // No-data case mirrors boundary selection: the
+                                // primary action continues on to Home, the
+                                // secondary returns here to pick a different
+                                // boundary.
+                                : i18.beneficiaryDetails
+                                    .continueWithoutDownloading,
                           ),
                           secondaryButtonLabel: localizations.translate(
                             initialServerCount > 0
                                 ? i18.beneficiaryDetails
                                     .proceedWithoutDownloading
-                                : i18.common.coreCommonGoback,
+                                : i18.beneficiaryDetails.changeBoundaries,
                           ),
                         ),
                         dialogType: DigitProgressDialogType.dataFound,

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../utils/interpolation.dart';
+import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
@@ -76,7 +77,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
           }
 
           await _showActionPopup(context, popupConfig, onAction, screenKey,
-              stateData, item, listIndex, compositeKey);
+              stateData, item, listIndex, compositeKey, resolved.evalContext);
         }
       },
       type: type,
@@ -161,11 +162,43 @@ class ActionPopupWidget extends ResolvedFlowWidget {
     Map<String, dynamic>? item,
     int? listIndex,
     String? compositeKey,
+    Map<String, dynamic> evalContext,
   ) {
     final localization = LocalizationContext.maybeOf(context);
     final title = popupConfig['title'] as String? ?? 'Popup';
-    final description = popupConfig['description'] as String?;
+
+    // Resolve the description as a template so configs can interpolate live
+    // values (e.g. {{fn:...}}) and named {KEY} placeholders, matching what
+    // panelCard already supports. Popup renders **bold** spans, so a value
+    // wrapped in ** in the copy comes through emphasised.
+    String? description = popupConfig['description'] as String?;
+    if (description != null) {
+      description = resolveTemplate(
+        description,
+        evalContext,
+        localization: localization,
+        screenKey: screenKey,
+        stateData: stateData,
+      );
+      final placeHolders =
+          popupConfig['descriptionPlaceHolders'] as List<dynamic>?;
+      if (placeHolders != null) {
+        for (final ph in placeHolders) {
+          if (ph is! Map) continue;
+          final key = ph['key']?.toString();
+          if (key == null || key.isEmpty) continue;
+          final resolved = resolveTemplate(
+            ph['value']?.toString() ?? '',
+            evalContext,
+            screenKey: screenKey,
+            stateData: stateData,
+          );
+          description = description!.replaceAll('{$key}', resolved);
+        }
+      }
+    }
     final titleIconName = popupConfig['titleIcon'] as String?;
+    final titleIconColor = popupConfig['titleIconColor'] as String?;
     final showCloseButton = popupConfig['showCloseButton'] as bool? ?? true;
     final barrierDismissible =
         popupConfig['barrierDismissible'] as bool? ?? true;
@@ -180,18 +213,17 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         return Popup(
           type: _parsePopupType(popupType),
           title: localization?.translate(title) ?? title,
-          description: description != null &&
-                  localization!.translate(description).trim().isNotEmpty
-              ? localization.translate(description)
+          description: (description?.trim().isNotEmpty ?? false)
+              ? description
               : null,
           titleIcon: titleIconName != null
               ? Icon(
                   DigitIconMapping.getIcon(titleIconName),
-                  // Alert popups carry the error color; simple popups (e.g.
-                  // filter) use the primary orange.
-                  color: _parsePopupType(popupType) == PopUpType.alert
-                      ? Theme.of(ctx).colorTheme.alert.error
-                      : Theme.of(ctx).colorTheme.primary.primary1,
+                  // Defaults to the type-aware colour: alert popups carry the
+                  // error red, simple popups (e.g. filter) the primary orange.
+                  // `titleIconColor` overrides it for cases like Insufficient
+                  // Stock, which uses the simple layout but an error icon.
+                  color: _resolveTitleIconColor(ctx, titleIconColor, popupType),
                   size: spacer8,
                 )
               : null,
@@ -296,6 +328,31 @@ class ActionPopupWidget extends ResolvedFlowWidget {
       default:
         return MainAxisAlignment.start;
     }
+  }
+
+  /// Resolves the popup's title-icon colour. An explicit `titleIconColor`
+  /// wins; otherwise fall back to the type-aware default.
+  Color _resolveTitleIconColor(
+    BuildContext context,
+    String? named,
+    String? popupType,
+  ) {
+    final colorTheme = Theme.of(context).colorTheme;
+    switch (named) {
+      case 'error':
+        return colorTheme.alert.error;
+      case 'warning':
+        return colorTheme.alert.warning;
+      case 'success':
+        return colorTheme.alert.success;
+      case 'info':
+        return colorTheme.alert.info;
+      case 'primary':
+        return colorTheme.primary.primary1;
+    }
+    return _parsePopupType(popupType) == PopUpType.alert
+        ? colorTheme.alert.error
+        : colorTheme.primary.primary1;
   }
 
   PopUpType _parsePopupType(String? type) {

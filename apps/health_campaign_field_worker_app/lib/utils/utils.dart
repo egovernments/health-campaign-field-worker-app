@@ -381,6 +381,11 @@ void showDownloadDialog(
                     type: InfoType.info,
                     title: model.infoCardTitle!,
                     description: model.infoCardDescription!,
+                    // The description is already sentence-cased server-side and
+                    // spans two sentences; InfoCard's default sentence-case
+                    // transform lowercases every word after the first, which
+                    // would turn "... records. Keep the app open" into "keep".
+                    capitalizedLetter: false,
                   ),
                 ]
               : null,

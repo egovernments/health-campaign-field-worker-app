@@ -58,6 +58,13 @@ class TagWidget extends ResolvedFlowWidget {
           themeData: TagThemeData(
             monochromeBackgroundColor: backgroundColor,
             monochromeColor: textColor,
+            // Identifier chips (e.g. the Beneficiary ID) carry the bold body
+            // weight so the ID reads as the primary value on the card. Scoped
+            // to this branch so status tags keep the regular Tag weight.
+            textStyle: theme
+                .digitTextTheme(context)
+                .bodyS
+                .copyWith(fontWeight: FontWeight.w700),
           ),
         ),
         properties,

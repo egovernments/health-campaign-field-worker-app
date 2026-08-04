@@ -208,9 +208,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                     enableFixedDigitButton: true,
                     header: const Column(
                       children: [
+                        // No top inset: the header widget already carries
+                        // spacer4 top/bottom, so this matches the back button
+                        // placement on the template (flow-builder) screens,
+                        // which sit at 16dp from both the app bar and the left
+                        // edge. The left/right spacer2 plus the widget's own
+                        // spacer2 gives the same 16dp gutter.
                         Padding(
                           padding: EdgeInsets.only(
-                            top: spacer2,
                             left: spacer2,
                             right: spacer2,
                           ),
@@ -966,6 +971,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                         schema.conditions!['infoCardText']
                                             .toString(),
                                       ),
+                                      // The copy is already sentence-cased
+                                      // server-side and spans two sentences;
+                                      // InfoCard's default transform lowercases
+                                      // every word after the first, turning
+                                      // "... village. Your GPS location" into
+                                      // "... village. your gps location".
+                                      capitalizedLetter: false,
                                     ),
                                   ],
                                 ],
@@ -1121,7 +1133,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
-                      top: spacer2,
                       left: spacer2,
                       right: spacer2,
                     ),
@@ -1553,8 +1564,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
     return ScrollableContent(
         enableFixedDigitButton: true,
+        // Same inset as the form pages' back header (no bottom padding), so
+        // the gap between Back and the first card matches the previous page.
         header: const Padding(
-          padding: EdgeInsets.all(spacer2),
+          padding: EdgeInsets.only(
+                      left: spacer2,
+                      right: spacer2,
+                    ),
           child: BackNavigationHelpHeaderWidget(showBackNavigation: true),
         ),
         footer: DigitCard(
@@ -1593,7 +1609,15 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         children: [
           for (final entry in shownPages)
             DigitCard(
-              margin: const EdgeInsets.all(spacer2),
+              // 16px side gutters like the form pages. Vertical spacing is
+              // bottom-only so the first card sits flush under the back header
+              // (as on the form pages) while consecutive summary cards still
+              // get the same 16px separation.
+              margin: const EdgeInsets.only(
+                left: spacer4,
+                right: spacer4,
+                bottom: spacer4,
+              ),
               children: [
                 LabelValueSummary(
                   padding: EdgeInsets.zero,

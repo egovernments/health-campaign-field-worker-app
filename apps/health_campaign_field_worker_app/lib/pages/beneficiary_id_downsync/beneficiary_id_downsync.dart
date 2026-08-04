@@ -145,17 +145,37 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                             actions: [
                               DigitButton(
                                 capitalizeLetters: false,
-                                type: DigitButtonType.secondary,
+                                type: DigitButtonType.primary,
                                 size: DigitButtonSize.large,
                                 mainAxisSize: MainAxisSize.max,
                                 onPressed: () {
                                   Navigator.of(ctx).pop();
                                   context.read<UniqueIdBloc>().add(
-                                        const UniqueIdEvent.fetchIdCount(),
+                                        const UniqueIdEvent
+                                            .fetchUniqueIdsFromServer(
+                                          reFetch: true,
+                                        ),
                                       );
                                 },
+                                label: localizations.translate(
+                                    i18.projectSelection.retryButtonText),
+                              ),
+                              DigitButton(
+                                capitalizeLetters: false,
+                                type: DigitButtonType.secondary,
+                                size: DigitButtonSize.large,
+                                mainAxisSize: MainAxisSize.max,
+                                onPressed: () {
+                                  Navigator.of(ctx).pop();
+                                  // Refresh the count so the page behind is
+                                  // consistent, then leave the screen.
+                                  context.read<UniqueIdBloc>().add(
+                                        const UniqueIdEvent.fetchIdCount(),
+                                      );
+                                  context.router.maybePop();
+                                },
                                 label: localizations
-                                    .translate(i18.common.corecommonclose),
+                                    .translate(i18.common.coreCommonGoback),
                               ),
                             ],
                           ),
