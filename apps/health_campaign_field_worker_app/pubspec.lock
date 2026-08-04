@@ -613,7 +613,7 @@ packages:
     description:
       path: "flutter/digit-ui-components/digit_components"
       ref: "UI/ux-audit-hcm-app-2005"
-      resolved-ref: "0b7881f11624a9e731106cd66272673e4f2e60d1"
+      resolved-ref: "0697e465022c23bb0dc93d00ffcd6457b90ce79f"
       url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
     source: git
     version: "0.3.0+2"

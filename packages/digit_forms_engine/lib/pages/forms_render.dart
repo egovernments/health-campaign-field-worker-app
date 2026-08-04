@@ -869,8 +869,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       if (schema.showLabelOutsideCard == true &&
                           schema.label != null) ...[
                         Padding(
+                          // 16dp below the heading so the card sits at the
+                          // same distance as on screens that render their
+                          // heading inside the card, and as on the template
+                          // screens. This was spacer1, leaving the title
+                          // almost touching the card.
                           padding: const EdgeInsets.only(
-                              left: spacer4, right: spacer4, bottom: spacer1),
+                              left: spacer4, right: spacer4, bottom: spacer4),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
