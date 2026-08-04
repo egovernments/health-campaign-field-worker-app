@@ -32,6 +32,7 @@ class AppLocalizations {
   // "CORE_COMMON_CONTINUE". Real localization always wins — this map is only
   // consulted when the code isn't in _messagesByCode.
   static const Map<String, String> _preLoginEnglishFallbacks = <String, String>{
+    'CORE_COMMON_CHOOSE_LANGUAGE': 'Choose a language',
     'CORE_COMMON_CONTINUE': 'Continue',
     'CORE_COMMON_RETRY': 'Retry',
     'CORE_COMMON_CLOSE': 'Close',

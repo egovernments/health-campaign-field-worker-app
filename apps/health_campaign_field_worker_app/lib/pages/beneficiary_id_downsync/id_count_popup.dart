@@ -25,7 +25,7 @@ void showLowIdsAlert(
           titleIcon: Icon(
             Icons.warning,
             color: theme.colorTheme.alert.error,
-            size: spacer11,
+            size: spacer8,
           ),
           onCrossTap: () {
             Navigator.of(ctx).pop();
@@ -84,7 +84,7 @@ void showNoIdsAlert(
           titleIcon: Icon(
             Icons.warning,
             color: theme.colorTheme.alert.error,
-            size: spacer11,
+            size: spacer8,
           ),
           onCrossTap: () {
             Navigator.of(ctx).pop();

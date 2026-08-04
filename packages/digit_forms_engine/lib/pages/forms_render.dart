@@ -4,6 +4,8 @@ import 'package:digit_forms_engine/json_forms.dart';
 import 'package:digit_forms_engine/router/forms_router.gm.dart';
 import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_header.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/enum/app_enums.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -951,6 +953,19 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                   .colorTheme
                                                   .text
                                                   .secondary),
+                                    ),
+                                  ],
+                                  if (schema.conditions?['infoCardText'] !=
+                                      null) ...[
+                                    const SizedBox(height: spacer2),
+                                    InfoCard(
+                                      type: InfoType.info,
+                                      title: localizations
+                                          .translate('CORE_COMMON_INFO'),
+                                      description: localizations.translate(
+                                        schema.conditions!['infoCardText']
+                                            .toString(),
+                                      ),
                                     ),
                                   ],
                                 ],

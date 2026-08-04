@@ -52,33 +52,51 @@ class HomeItemCard extends StatelessWidget {
               ),
             ],
           ),
-          padding: const EdgeInsets.all(spacer4),
+          padding: const EdgeInsets.symmetric(
+            horizontal: spacer2,
+            vertical: spacer3,
+          ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (enableCustomIcon)
-                Padding(
-                  padding: iconPadding ?? EdgeInsets.zero,
-                  child: SvgPicture.asset(
-                    customIcon,
-                    width: customIconSize ?? 25,
-                    height: customIconSize ?? 25,
+              // Fixed-height icon slot and label zone keep every tile's
+              // icon on a shared axis and every label starting on the same
+              // line, regardless of 1- vs 2-line label text.
+              SizedBox(
+                height: spacer12,
+                child: Center(
+                  child: enableCustomIcon
+                      ? Padding(
+                          padding: iconPadding ?? EdgeInsets.zero,
+                          child: SvgPicture.asset(
+                            customIcon,
+                            width: customIconSize ?? 25,
+                            height: customIconSize ?? 25,
+                          ),
+                        )
+                      : Icon(
+                          icon,
+                          color: onPressed == null
+                              ? theme.disabledColor
+                              : theme.colorTheme.primary.primary1,
+                          size: iconSize ?? 40,
+                        ),
+                ),
+              ),
+              const SizedBox(height: spacer2),
+              SizedBox(
+                height: spacer10,
+                child: Center(
+                  child: Text(
+                    AppLocalizations.of(context).translate(label),
+                    style: textTheme.bodyS,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-              if (!enableCustomIcon)
-                Icon(
-                  icon,
-                  color: onPressed == null
-                      ? theme.disabledColor
-                      : theme.colorTheme.primary.primary1,
-                  size: iconSize ?? 40,
-                ),
-              const SizedBox(height: spacer2),
-              Text(
-                AppLocalizations.of(context).translate(label),
-                style: textTheme.bodyS,
-                textAlign: TextAlign.center,
               ),
             ],
           ),

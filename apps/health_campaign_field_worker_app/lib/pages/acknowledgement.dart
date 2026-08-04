@@ -75,42 +75,31 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                     },
                   ),
                 ]
-              : null,
+              : [
+                  DigitButton(
+                    mainAxisSize: MainAxisSize.max,
+                    label: localizations
+                        .translate(i18.acknowledgementSuccess.goToHome),
+                    type: DigitButtonType.primary,
+                    size: DigitButtonSize.large,
+                    onPressed: () {
+                      context.router.popAndPushAll([HomeRoute()]);
+                    },
+                  ),
+                  DigitButton(
+                    type: DigitButtonType.secondary,
+                    mainAxisSize: MainAxisSize.max,
+                    size: DigitButtonSize.large,
+                    onPressed: () {
+                      context.router.popAndPush(BoundarySelectionRoute());
+                    },
+                    label: localizations.translate(
+                        i18.acknowledgementSuccess.backToBoundarySelection),
+                  ),
+                ],
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: Offstage(
-        offstage: !widget.isDataRecordSuccess,
-        // Show the bottom navigation bar if `isDataRecordSuccess` is true
-        child:
-            DigitCard(
-                margin: const EdgeInsets.only(top: spacer2),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(radius4),
-                  topRight: Radius.circular(radius4),
-                ),
-                children: [
-          DigitButton(
-            mainAxisSize: MainAxisSize.max,
-            label: localizations.translate(i18.acknowledgementSuccess.goToHome),
-            type: DigitButtonType.primary,
-            size: DigitButtonSize.large,
-            onPressed: () {
-              context.router.popAndPushAll([HomeRoute()]);
-            },
-          ),
-          DigitButton(
-            type: DigitButtonType.secondary,
-            mainAxisSize: MainAxisSize.max,
-            size: DigitButtonSize.large,
-            onPressed: () {
-              context.router.popAndPush(BoundarySelectionRoute());
-            },
-            label: localizations.translate(
-                i18.acknowledgementSuccess.backToBoundarySelection),
-          ),
-        ]),
       ),
     );
   }

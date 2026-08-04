@@ -1713,13 +1713,20 @@ class _HomePageState extends LocalizedState<HomePage> {
                 Navigator.of(context, rootNavigator: true)
                     .popUntil((route) => route is! PopupRoute);
               }
-              DigitSyncDialog.show(
-                context,
-                type: DialogType.inProgress,
-                label: localizations.translate(
-                  i18.home.stockSyncDataLabel,
-                ),
+              showCustomPopup(
+                context: context,
                 barrierDismissible: false,
+                builder: (ctx) => Popup(
+                  type: PopUpType.simple,
+                  title: "",
+                  additionalWidgets: [
+                    DownloadSpinnerContent(
+                      title: localizations.translate(
+                        i18.projectSelection.syncInProgressTitleText,
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
             getBatchSize: (batchSize, projectModel) {
@@ -1731,6 +1738,30 @@ class _HomePageState extends LocalizedState<HomePage> {
                   );
             },
             dataFound: (initialServerCount, batchSize, offset, lastSyncedTime) {
+              if (initialServerCount <= 0) {
+                // Nothing new to download — treat it as the all-synced
+                // success state, mirroring the Sync Data tile.
+                Navigator.of(context, rootNavigator: true)
+                    .popUntil((route) => route is! PopupRoute);
+                DigitSyncDialog.show(
+                  context,
+                  type: DialogType.complete,
+                  label: localizations.translate(
+                    i18.syncDialog.noDataToSyncTitle,
+                  ),
+                  description: localizations.translate(
+                    i18.syncDialog.allSyncedDescription,
+                  ),
+                  primaryAction: DigitDialogActions(
+                    label: localizations.translate(
+                      i18.syncDialog.closeButtonLabel,
+                    ),
+                    action: (ctx) => Navigator.pop(ctx),
+                  ),
+                  barrierDismissible: true,
+                );
+                return;
+              }
               showStockDownloadDialog(
                 context,
                 model: DownloadBeneficiary(
@@ -1757,7 +1788,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       ? localizations.translate(
                           i18.common.coreCommonGoback,
                         )
-                      : null,
+                      : localizations.translate(
+                          i18.common.corecommonclose,
+                        ),
                 ),
                 dialogType: DigitProgressDialogType.dataFound,
                 isPop: true,
@@ -1794,7 +1827,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context,
                 type: DialogType.complete,
                 label: localizations.translate(
-                  i18.home.stockSyncDataLabel,
+                  i18.acknowledgementSuccess.dataDownloadedSuccessLabel,
+                ),
+                description: localizations.translate(
+                  i18.acknowledgementSuccess.dataDownloadedSuccessDesc,
                 ),
                 primaryAction: DigitDialogActions(
                   label: localizations.translate(
@@ -1889,7 +1925,8 @@ class _HomePageState extends LocalizedState<HomePage> {
             child: ScrollableContent(
               slivers: [
                 SliverPadding(
-                  padding: const EdgeInsets.only(left: spacer2, right: spacer2, top: spacer2),
+                  padding: const EdgeInsets.only(
+                      left: spacer2, right: spacer2, top: spacer2),
                   sliver: SliverGrid(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
@@ -1897,11 +1934,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                       },
                       childCount: homeItems.length,
                     ),
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 164,
                       childAspectRatio: 104 / 128,
                       mainAxisSpacing: spacer3,
-                      crossAxisSpacing: spacer2,
+                      crossAxisSpacing: spacer3,
                     ),
                   ),
                 ),
@@ -1915,9 +1953,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       showcaseFor: showcaseKeys.toSet().toList(),
                     ),
                   ),
-                   if (context.loggedInUserRoles.any((role) =>
-                    role.code == RolesType.distributor.toValue()))
-                  const FaceAuthSessionCard(),
+                  if (context.loggedInUserRoles.any(
+                      (role) => role.code == RolesType.distributor.toValue()))
+                    const FaceAuthSessionCard(),
                   // Show stock balance card for users with stock management access (not for Polio)
                   if (!isPolio &&
                       state.actionsWrapper.actions
@@ -1982,13 +2020,20 @@ class _HomePageState extends LocalizedState<HomePage> {
                       syncInProgress: () async {
                         await localSecureStore.setManualSyncTrigger(false);
                         if (context.mounted) {
-                          DigitSyncDialog.show(
-                            context,
-                            type: DialogType.inProgress,
-                            label: localizations.translate(
-                              i18.syncDialog.syncInProgressTitle,
-                            ),
+                          showCustomPopup(
+                            context: context,
                             barrierDismissible: false,
+                            builder: (ctx) => Popup(
+                              type: PopUpType.simple,
+                              title: "",
+                              additionalWidgets: [
+                                DownloadSpinnerContent(
+                                  title: localizations.translate(
+                                    i18.projectSelection.syncInProgressTitleText,
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
                         }
                       },
@@ -1998,6 +2043,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                               type: DialogType.complete,
                               label: localizations.translate(
                                 i18.syncDialog.noDataToSyncTitle,
+                              ),
+                              description: localizations.translate(
+                                i18.syncDialog.allSyncedDescription,
                               ),
                               primaryAction: DigitDialogActions(
                                 label: localizations.translate(
@@ -2017,7 +2065,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                           DigitSyncDialog.show(context,
                               type: DialogType.complete,
                               label: localizations.translate(
-                                i18.syncDialog.dataSyncedTitle,
+                                i18.syncDialog.noDataToSyncTitle,
+                              ),
+                              description: localizations.translate(
+                                i18.syncDialog.allSyncedDescription,
                               ),
                               primaryAction: DigitDialogActions(
                                 label: localizations.translate(
@@ -2235,8 +2286,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
-                 final prefs = await SharedPreferences.getInstance();
-                 final schemaJsonRaw = prefs.getString('app_config_schemas');
+                final prefs = await SharedPreferences.getInstance();
+                final schemaJsonRaw = prefs.getString('app_config_schemas');
 
                 FlowBuilderSingleton().setPersistenceConfiguration(
                     persistenceConfiguration:
@@ -2349,7 +2400,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (false && schemaJsonRaw != null) {
+                  if (schemaJsonRaw != null) {
                     final allSchemas =
                         json.decode(schemaJsonRaw) as Map<String, dynamic>;
                     final data = allSchemas['REGISTRATION'];
@@ -2368,8 +2419,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                           pageName: registrationDeliveryData["initialPage"]),
                     );
                   } else {
-                    FlowRegistry.setConfig(sampleSMCFlows["flows"]
-                        as List<Map<String, dynamic>>);
+                    FlowRegistry.setConfig(
+                        sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
                       FlowBuilderHomeRoute(

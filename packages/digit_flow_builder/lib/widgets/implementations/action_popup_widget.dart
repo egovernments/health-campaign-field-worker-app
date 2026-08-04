@@ -103,6 +103,9 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         largeRadius: (size == DigitButtonSize.large && radius != null)
             ? BorderRadius.circular(WidgetParsers.parseSize(radius))
             : DigitButtonThemeData.defaultTheme(context).largeRadius,
+        smallDigitButtonTextStyle:
+            DigitButtonThemeData.defaultTheme(context).mediumDigitButtonTextStyle,
+        padding: const EdgeInsets.symmetric(horizontal: spacer3),
       ),
       suffixIcon: props['suffixIcon'] != null
           ? DigitIconMapping.getIcon(props['suffixIcon'])
@@ -184,10 +187,15 @@ class ActionPopupWidget extends ResolvedFlowWidget {
           titleIcon: titleIconName != null
               ? Icon(
                   DigitIconMapping.getIcon(titleIconName),
-                  color: Theme.of(ctx).colorTheme.alert.error,
-                  size: spacer11,
+                  // Alert popups carry the error color; simple popups (e.g.
+                  // filter) use the primary orange.
+                  color: _parsePopupType(popupType) == PopUpType.alert
+                      ? Theme.of(ctx).colorTheme.alert.error
+                      : Theme.of(ctx).colorTheme.primary.primary1,
+                  size: spacer8,
                 )
               : null,
+          titleIconAlignment: CrossAxisAlignment.center,
           onCrossTap: showCloseButton
               ? () {
                   Navigator.of(ctx, rootNavigator: true).pop();
