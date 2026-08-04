@@ -374,6 +374,11 @@ int getBatchSizeToBandwidth(
   bool isDownSync = false,
 }) {
   int batchSize = 100;
+  // AppConfiguration (MDMS) may not be persisted yet at project-init time.
+  // Fall back to the default batch size instead of throwing "No element".
+  if (appConfiguration.isEmpty) {
+    return batchSize;
+  }
   final bandwidthBatchSizeConfig = isDownSync
       ? appConfiguration.first.downSyncBandwidthBatchSize
       : appConfiguration.first.bandwidthBatchSize;

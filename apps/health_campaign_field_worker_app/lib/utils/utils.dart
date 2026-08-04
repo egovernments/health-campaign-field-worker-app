@@ -32,6 +32,7 @@ import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 import 'package:sync_service/blocs/sync/sync.dart';
 import 'package:sync_service/data/sync_service.dart' show SyncLock;
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
@@ -731,6 +732,9 @@ void attemptSyncUp(BuildContext context) async {
                   LocalRepository<AttendanceLogModel,
                       AttendanceLogSearchModel>>(),
               context.read<UserActionLocalRepository>(),
+              context.read<
+                  LocalRepository<FaceAuthEventModel,
+                      FaceAuthEventSearchModel>>(),
             ],
             remoteRepositories: [
               // INFO : Need to add repo repo of package Here
@@ -763,6 +767,9 @@ void attemptSyncUp(BuildContext context) async {
                   RemoteRepository<AttendanceLogModel,
                       AttendanceLogSearchModel>>(),
               context.read<UserActionRemoteRepository>(),
+              context.read<
+                  RemoteRepository<FaceAuthEventModel,
+                      FaceAuthEventSearchModel>>(),
             ],
           ),
         );

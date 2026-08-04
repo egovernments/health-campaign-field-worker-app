@@ -1,0 +1,39 @@
+sequenceDiagram
+    autonumber
+    participant AW as AuthenticatedPageWrapper
+    participant SCH as ReVerificationScheduler
+    participant SP as SharedPreferences
+    participant RB as ReVerificationBloc
+    participant UI as Banner + bottom sheet
+    actor U as Field worker
+    participant NS as NotificationService
+    participant LOG as FaceAuthEventLogger
+
+    AW->>AW: initState (skip if supervisor)
+    AW->>SCH: start(config from MDMS/register)
+    SCH->>SP: load today's schedule (or generate PROMPT_COUNT times)
+    loop each scheduled time
+        SCH-->>AW: ReVerificationTrigger(idx)
+        AW->>AW: guards: enrollment exists? active register?<br/>not on FaceGate/enroll route?
+        alt guard fails / app backgrounded
+            AW->>SCH: markPending(idx)
+            SCH->>NS: local notification (payload reverify:idx)
+            U->>NS: tap notification
+            NS-->>AW: re-dispatch trigger (cold-start drain supported)
+        end
+        AW->>RB: triggered(trigger)
+        RB-->>UI: PromptedState (countdown COUNTDOWN_DURATION)
+        UI-->>U: banner + "Scan your face to Proceed"
+        alt Verify Now — face match
+            RB->>LOG: RE_VERIFY / FACE_SUCCESS
+            RB-->>AW: terminal → scheduler.markCompleted(idx)
+            Note over UI: co-workers on today's register prompted next
+        else PIN fallback
+            RB->>LOG: RE_VERIFY / PIN_FALLBACK
+        else Remind me later
+            RB->>LOG: responseType DISMISS (re-prompts while countdown lives)
+        else countdown expires
+            RB->>LOG: RE_VERIFY / MISSED
+            RB-->>AW: terminal → markCompleted(idx)
+        end
+    end

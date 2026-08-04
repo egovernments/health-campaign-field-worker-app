@@ -168,6 +168,30 @@ extension ContextUtilityExtensions on BuildContext {
     return individualUUID;
   }
 
+  /// Nullable alias for [loggedInIndividualId], used by the face-auth flow.
+  String? get loggedInIndividualIdOrNull => loggedInIndividualId;
+
+  /// True when the logged-in user holds the team-supervisor role (face-auth
+  /// re-verification of non-mobile co-workers).
+  bool get isTeamSupervisorRole {
+    try {
+      return loggedInUserRoles
+          .any((r) => r.code == RolesType.teamSupervisor.toValue());
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// True when the logged-in user holds the district-supervisor role.
+  bool get isDistrictSupervisorRole {
+    try {
+      return loggedInUserRoles
+          .any((r) => r.code == RolesType.districtSupervisor.toValue());
+    } catch (_) {
+      return false;
+    }
+  }
+
   String? get currentRegisteredToken {
     final authBloc = _get<PushNotificationBloc>();
     final fcmToken = authBloc.state.whenOrNull(

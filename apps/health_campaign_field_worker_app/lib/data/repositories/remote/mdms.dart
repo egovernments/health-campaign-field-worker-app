@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
+import '../../../services/face_auth_config.dart';
 import '../../../models/entities/mdms_master_enums.dart';
 import '../../../models/entities/mdms_module_enums.dart';
 import '../../../models/mdms/service_registry/pgr_service_defenitions.dart';
@@ -186,6 +187,34 @@ class MdmsRepository {
         stackTrace: e.stackTrace,
       );
       rethrow;
+    }
+  }
+
+  /// Independent MDMS call for the face-auth config (hcm.FACE_AUTH_CONFIG).
+  /// Kept separate from [searchAppConfig] so the face gate / re-verification
+  /// thresholds can be fetched on demand without bundling into app config.
+  /// Returns null (callers fall back to compile-time defaults) on any error
+  /// or when the master has no active record.
+  Future<FaceAuthConfig?> searchFaceAuthConfig(
+    String apiEndPoint,
+    String tenantId,
+  ) async {
+    try {
+      final dataList = await _searchV2(
+        apiEndPoint,
+        tenantId: tenantId,
+        schemaCode: '${ModuleEnums.hcm.toValue()}.FACE_AUTH_CONFIG',
+      );
+      if (dataList.isEmpty) return null;
+      final data = dataList.first;
+      if (data is! Map<String, dynamic>) return null;
+      return FaceAuthConfig.fromMdms(data);
+    } catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: 'face-auth config fetch failed: $e',
+      );
+      return null;
     }
   }
 

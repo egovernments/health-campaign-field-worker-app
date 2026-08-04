@@ -58,7 +58,7 @@ FormControl buildFormControl(
     case PropertySchemaType.boolean:
       return FormControl<bool>(
         value:
-            parseBoolValue(getDefaultValue(name)) ?? parseBoolValue(rawValue),
+            parseBoolValue(getDefaultValue(name)) ?? parseBoolValue(rawValue) ?? false,
         validators: validators,
       );
 

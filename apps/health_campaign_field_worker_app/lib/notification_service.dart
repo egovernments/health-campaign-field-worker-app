@@ -6,6 +6,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// SharedPreferences key holding the index of a re-verification notification
+/// the user tapped while the app was backgrounded, consumed on resume by
+/// ReVerificationScheduler.
+const String reVerifyPendingTapKey = 'face_reverification_pending_tap';
+
 /// Top-level background message handler for FCM.
 /// Must be a top-level function (not a class method).
 @pragma('vm:entry-point')
@@ -25,6 +30,13 @@ class NotificationService {
   /// Callback invoked when user taps a notification.
   /// The map contains the FCM data payload.
   void Function(Map<String, dynamic>)? onNotificationTap;
+
+  /// Callback invoked when the user taps a face re-verification local
+  /// notification. The argument is the scheduler trigger index.
+  void Function(int triggerIndex)? onReVerificationTap;
+
+  /// Prefix used by re-verification notification payloads (e.g. "reverify:0").
+  static const String reVerifyPayloadPrefix = 'reverify:';
 
   static const String _fcmTokenKey = 'fcm_device_token';
   static const String _fcmTokenMapKey = 'fcm_device_token_map';
@@ -158,6 +170,14 @@ class NotificationService {
   void _onNotificationTapped(NotificationResponse response) {
     final payload = response.payload;
     if (payload != null && payload.isNotEmpty) {
+      if (payload.startsWith(reVerifyPayloadPrefix)) {
+        final indexStr = payload.substring(reVerifyPayloadPrefix.length);
+        final index = int.tryParse(indexStr);
+        if (index != null) {
+          onReVerificationTap?.call(index);
+          return;
+        }
+      }
       final data = _decodePayload(payload);
       onNotificationTap?.call(data);
     }

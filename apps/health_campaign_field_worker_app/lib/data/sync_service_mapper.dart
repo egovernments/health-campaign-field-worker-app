@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:sync_service/data/repositories/sync/remote_type.dart';
 import 'package:sync_service/data/sync_entity_mapper_listener.dart';
@@ -98,6 +100,11 @@ class SyncServiceMapper extends SyncEntityMapperListener {
             .map((e) => UserActionModelMapper.fromJson(jsonEncode(e)))
             .toList();
         await local.bulkCreate(entity);
+      case "FaceAuthEvents":
+        final entity = entityList
+            .map((e) => FaceAuthEventModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
       default:
         final entity = entityList
             .map((e) => EntityModelMapper.fromJson(jsonEncode(e)))
@@ -123,6 +130,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.hFReferral:
           case DataModelType.attendance:
           case DataModelType.service:
+          case DataModelType.faceAuthEvent:
             // case DataModelType.userAction:
             return true;
           default:
@@ -145,6 +153,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.attendance:
           case DataModelType.userLocation:
           case DataModelType.userAction:
+          case DataModelType.faceAuthEvent:
             return true;
           default:
             return false;
@@ -906,11 +915,14 @@ class SyncServiceMapper extends SyncEntityMapperListener {
       //   break;
 
       case DataModelType.userAction:
+        var projectId = FlowBuilderSingleton().projectId;
+        if (projectId == null) return [];
         responseEntities = await remote.search(UserActionSearchModel(
           clientReferenceId: entities
               .whereType<UserActionModel>()
               .map((e) => e.clientReferenceId)
               .toList(),
+          projectId: projectId,
         ));
 
         for (var element in operationGroupedEntity.value) {
@@ -920,6 +932,48 @@ class SyncServiceMapper extends SyncEntityMapperListener {
               responseEntities.whereType<UserActionModel>().firstWhereOrNull(
                     (e) => e.clientReferenceId == entity.clientReferenceId,
                   );
+
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+          if (serverGeneratedId != null) {
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: entity.clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+              ),
+            );
+          } else {
+            final bool markAsNonRecoverable = await local.opLogManager
+                .updateSyncDownRetry(entity.clientReferenceId);
+            if (markAsNonRecoverable) {
+              await local.update(
+                entity.copyWith(nonRecoverableError: true),
+                createOpLog: false,
+              );
+            }
+          }
+        }
+
+        break;
+
+      case DataModelType.faceAuthEvent:
+        responseEntities = await remote.search(FaceAuthEventSearchModel(
+          clientReferenceId: entities
+              .whereType<FaceAuthEventModel>()
+              .map((e) => e.clientReferenceId)
+              .toList(),
+        ));
+
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as FaceAuthEventModel;
+          final responseEntity = responseEntities
+              .whereType<FaceAuthEventModel>()
+              .firstWhereOrNull(
+                (e) => e.clientReferenceId == entity.clientReferenceId,
+              );
 
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;

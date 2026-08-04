@@ -76,10 +76,13 @@ import '../utils/stock_downsync_utils.dart';
 import '../utils/utils.dart';
 import '../widgets/attendance/attendance_qr_scanner_button.dart';
 import '../widgets/attendance/custom_row_widget.dart';
+import '../widgets/attendance/face_auth_event_dots_widget.dart';
 import '../widgets/attendance/group_list_view_widget.dart';
 import '../widgets/attendance/signature_compare_dialog_widget.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
+import '../widgets/face_auth/face_auth_session_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/inventory/custom_facility_widgets.dart';
@@ -114,6 +117,42 @@ class _HomePageState extends LocalizedState<HomePage> {
   final _syncDebouncer = Debouncer(seconds: 5);
   final StreamController<double> stockDownloadProgress =
       StreamController<double>.broadcast();
+  bool _faceGateActive = false;
+
+  /// Check if the logged-in user needs face enrollment (first time only).
+  /// Routes to the face gate, which handles enrollment + verification.
+  void _checkFaceEnrollment() async {
+    try {
+      final individualId = await LocalSecureStore.instance.userIndividualId;
+      if (individualId == null || !mounted) return;
+
+      // Scope to this specific user's embedding so a flag set by a previously
+      // enrolled user on a shared device doesn't skip this user's enrollment.
+      final repository = context.read<FaceEmbeddingRepository>();
+      final embedding = await repository.getEmbedding(individualId);
+      if (embedding != null || !mounted) return;
+
+      _faceGateActive = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          context.router.push(
+            FaceGateRoute(
+              onVerified: () {
+                _faceGateActive = false;
+                if (mounted) {
+                  context.router.popUntilRouteWithName(HomeRoute.name);
+                }
+              },
+            ),
+          ).then((_) {
+            _faceGateActive = false;
+          });
+        }
+      });
+    } catch (e) {
+      debugPrint('HomePage: _checkFaceEnrollment error: $e');
+    }
+  }
   // OverlayEntry-based loader shown while a module-open cascade is running
   // (localization fetch + schema decode + flow setup + router.push). We use
   // `OverlayEntry` (inserted into the ROOT `Overlay`) instead of
@@ -135,6 +174,9 @@ class _HomePageState extends LocalizedState<HomePage> {
   @override
   initState() {
     super.initState();
+
+    // Check if the user needs face enrollment (first time after login).
+    _checkFaceEnrollment();
 
     // If background service was killed with the app, release orphaned lock
     // and restart the service.
@@ -213,6 +255,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     FlowWidgetFactory.register(GroupListViewWidget());
     FlowWidgetFactory.register(CustomRowWidget());
     FlowWidgetFactory.register(SignatureCompareWidget());
+    FlowWidgetFactory.register(FaceAuthEventDotsWidget());
+    FlowWidgetFactory.register(FaceAuthEventLegendWidget());
 
     // Register custom action executor for REDOSE eligibility check
     ActionExecutorRegistry().register(
@@ -1871,6 +1915,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       showcaseFor: showcaseKeys.toSet().toList(),
                     ),
                   ),
+                   if (context.loggedInUserRoles.any((role) =>
+                    role.code == RolesType.distributor.toValue()))
+                  const FaceAuthSessionCard(),
                   // Show stock balance card for users with stock management access (not for Polio)
                   if (!isPolio &&
                       state.actionsWrapper.actions
