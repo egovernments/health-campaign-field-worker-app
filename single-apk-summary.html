@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Single APK — Summary</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #6b7280;
+    --accent: #0f62fe;
+    --accent-soft: #e8f0fe;
+    --border: #e5e7eb;
+    --code-bg: #f5f5f7;
+    --table-header: #f9fafb;
+    --warn-bg: #fff8e1;
+    --warn-border: #f59e0b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+    line-height: 1.55;
+    font-size: 14.5px;
+  }
+  h1 { font-size: 28px; font-weight: 700; margin: 0 0 6px; letter-spacing: -0.02em; }
+  h1 + p.lead { color: var(--muted); margin: 0 0 28px; font-style: italic; }
+  h2 {
+    font-size: 19px; font-weight: 700; margin: 32px 0 10px;
+    padding-bottom: 6px; border-bottom: 2px solid var(--border);
+    letter-spacing: -0.01em;
+  }
+  h3 { font-size: 15.5px; font-weight: 700; margin: 20px 0 8px; }
+  p { margin: 0 0 10px; }
+  ul, ol { margin: 0 0 12px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  code {
+    font-family: "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+    background: var(--code-bg);
+    padding: 1px 5px; border-radius: 4px; font-size: 12.5px; color: #c0392b;
+  }
+  .diagram {
+    background: var(--code-bg);
+    padding: 12px; border-radius: 6px;
+    font-family: "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 11.5px; line-height: 1.35;
+    white-space: pre; overflow-x: auto;
+    margin: 8px 0 16px;
+  }
+  .doclink {
+    display: inline-block; margin-top: 24px;
+    font-size: 13px; color: var(--accent);
+    text-decoration: none; border-bottom: 1px dotted var(--accent);
+  }
+  .doclink:hover { border-bottom-style: solid; }
+  @media print { body { padding: 24px 20px; font-size: 11pt; } .diagram { font-size: 8.5pt; } }
+</style>
+</head>
+<body>
+
+<h1>Single APK — Summary</h1>
+<p class="lead">What we're delivering, how we approach it, the logout flow, and where the risks are.</p>
+
+<h2>What we're delivering</h2>
+<p>One APK for every deployment — no per-country build. On first launch (or after the app data has been cleared), the app shows a QR scanner. The QR carries a purpose-built <strong>app deeplink</strong> — not a plain URL, not raw JSON. Only QRs that match this deeplink shape are accepted; anything else (WiFi QR, payment QR, random URL) is rejected by the scanner before it reaches the app. Scanning a valid deeplink provisions the device:</p>
+<ul>
+  <li><strong>Server URL</strong> — which server the device talks to</li>
+  <li><strong>Tenant ID</strong> — which tenant on that server</li>
+  <li><strong>MDMS API path</strong> (and other endpoint paths carried alongside it)</li>
+  <li><strong>Branding</strong> — app title and logo URL, rendered inside the app:
+    <ul>
+      <li>Logo shown on the home screen</li>
+      <li>App title shown as the app-bar header</li>
+    </ul>
+  </li>
+</ul>
+<p>After scanning, the app behaves as a normal login-and-work app: credentials-only login (tenant is already resolved from the QR), then straight into the campaign work. Data stays on device across logouts so shift changes on shared devices don't burn network re-downloading everything.</p>
+
+<h2>How we approach it</h2>
+<ul>
+  <li><strong>Extend the runtime-config pattern</strong> that multi-hierarchy already established (PR #866), adding server URL, tenant, and MDMS/action paths as runtime-resolved values rather than build-time env values.</li>
+  <li><strong>QR scanner as the first screen</strong> when the app has no stored config. Scanner is restricted (via the existing pattern-validation in <code>digit_scanner</code>) to accept only QRs whose contents match our provisioning deeplink — nothing else will register as a valid scan. On a valid scan the deeplink is parsed, persisted to secure storage, and the branding is applied.</li>
+  <li><strong>Reuse the upload gate on logout</strong> already merged in PR #864 — no rework, no new gate.</li>
+  <li><strong>Per-user filter on downsync reads</strong> so shared devices don't leak one worker's assignments to another.</li>
+  <li><strong>Re-provisioning is delegated to Android Settings → App info → Storage → Clear storage.</strong> There is no in-app "Reset" button; the OS path is available anyway, so we accept it as the single reset mechanism.</li>
+</ul>
+
+<h2>Flow — a device across its lifetime</h2>
+<div class="diagram">
+  1. DEPLOYMENT (once, per device)
+
+     ┌──────────┐    prints    ┌──────┐    scans    ┌──────────────────────┐
+     │   Ops    │────────────▶ │  QR  │──────────▶  │  Config stored.       │
+     └──────────┘              └──────┘             │  Branding applied.    │
+                                                    │  → Login screen       │
+                                                    └──────────────────────┘
+
+  2. DAILY USE (many logins per day, shared device)
+
+     Worker A ──login──▶ works, syncs ──logout──▶ Worker B ──login──▶ …
+                                                     │
+                                                     └─ Same device. Data stays.
+                                                        Each worker sees only
+                                                        their own tasks.
+
+  3. RE-PROVISIONING (rare — new server, tenant, or campaign)
+
+     Ops: "please sync any pending records, then go to
+           Settings → App info → Storage → Clear storage."
+
+     ──▶ OS wipes app data (including the QR config)
+     ──▶ next launch shows the QR scanner again  (back to step 1)
+</div>
+
+<h2>Logout flow — the one in-app safeguard</h2>
+<p>Logout is the only place inside the app where a user "leaves" a session. It's guarded by a hard block on unsynced records (PR #864, already merged). Data itself is <em>not</em> wiped — master data and cached operational data stay so the next login is instant.</p>
+
+<div class="diagram">
+     User taps Logout
+        │
+        ▼
+     Count pending records for the current user
+     (Isar OpLog where syncedUp = false)
+        │
+        ├──── 0 pending  ────▶ clear auth token
+        │                      → back to Login screen
+        │                      (data stays on device)
+        │
+        └──── > 0 pending ────▶ POPUP: "Sync pending records first"
+                                    │
+                                    ├── [Sync now]  ─▶ upload runs
+                                    │                    │
+                                    │                    └─ once count == 0,
+                                    │                       logout resumes
+                                    │
+                                    └── [Close]    ─▶ stays logged in
+</div>
+
+<h2>Risks</h2>
+<ul>
+  <li><strong>Data loss via OS-level Clear storage (accepted).</strong> Since re-provisioning uses Android Settings → Clear storage, the OS wipes app data without invoking the upload gate. Any pending unsynced records at that moment are lost. Not addressable at the app level. Mitigation is procedural: ops trains users to "sync first, then clear".</li>
+  <li><strong>Cross-user leak on shared devices.</strong> Because downsync data now persists across logouts, a missed per-user read filter would show User A's assignments to User B. The audit + a debug-only warning catch it, but it requires ongoing code-review discipline.</li>
+  <li><strong>Master-data staleness.</strong> Master data persists across logouts, so if server-side MDMS changes are made while the app is closed, users could operate on stale config until the next MDMS refresh runs. Existing refresh-on-login behavior needs to be verified as sufficient.</li>
+</ul>
+
+<h2>Open questions (product)</h2>
+<ol>
+  <li><strong>Same tenant, different campaigns.</strong> Is OS Clear storage the intended reset between campaigns for the same tenant, or do we need a lighter "clear campaign data" flow? Depends on whether campaign switches invalidate boundary hierarchy / module configuration.</li>
+  <li><strong>Ops procedure for the OS clear step.</strong> Is "sync first, then clear" documented anywhere ops-facing?</li>
+  <li><strong>Offline provisioning with logo.</strong> The logo is delivered as a URL fetched after scan. First launch after provisioning must have connectivity long enough to load the logo (which is then cached). Is that acceptable for field deployment realities?</li>
+  <li><strong>One-boundary-per-tenant assumption.</strong> Relevant when geo-fence lands later — do any tenants operate disjoint areas that would need a multi-polygon boundary?</li>
+  <li><strong>Master-data staleness check.</strong> Do we need an explicit version check on next login (since data now persists across logouts) or is the existing MDMS refresh enough?</li>
+</ol>
+
+</body>
+</html>

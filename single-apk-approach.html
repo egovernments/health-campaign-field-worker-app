@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Single APK — Approach (HLD &amp; LLD)</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #6b7280;
+    --accent: #0f62fe;
+    --accent-soft: #e8f0fe;
+    --border: #e5e7eb;
+    --code-bg: #f5f5f7;
+    --table-header: #f9fafb;
+    --warn-bg: #fff8e1;
+    --warn-border: #f59e0b;
+    --ok-bg: #ecfdf5;
+    --ok-border: #10b981;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+    line-height: 1.55;
+    font-size: 14.5px;
+  }
+  h1 { font-size: 28px; font-weight: 700; margin: 0 0 6px; letter-spacing: -0.02em; }
+  h1 + p.lead { color: var(--muted); margin: 0 0 28px; font-style: italic; }
+  h2 {
+    font-size: 19px; font-weight: 700; margin: 32px 0 10px;
+    padding-bottom: 6px; border-bottom: 2px solid var(--border);
+    letter-spacing: -0.01em;
+  }
+  h3 { font-size: 15.5px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 14px 0 4px; color: var(--accent); }
+  p { margin: 0 0 10px; }
+  ul, ol { margin: 0 0 12px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  code {
+    font-family: "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+    background: var(--code-bg);
+    padding: 1px 5px; border-radius: 4px; font-size: 12.5px; color: #c0392b;
+  }
+  pre {
+    background: var(--code-bg);
+    padding: 10px 12px; border-radius: 6px; overflow-x: auto;
+    font-size: 12px; line-height: 1.45; margin: 8px 0 12px;
+  }
+  pre code { background: none; padding: 0; color: inherit; font-size: 12px; }
+  table {
+    border-collapse: collapse; width: 100%;
+    margin: 8px 0 16px; font-size: 13.5px;
+  }
+  th, td {
+    text-align: left; padding: 8px 10px;
+    border-bottom: 1px solid var(--border); vertical-align: top;
+  }
+  th { background: var(--table-header); font-weight: 600; border-bottom: 2px solid var(--border); }
+  .note {
+    border-left: 3px solid var(--warn-border);
+    background: var(--warn-bg);
+    padding: 8px 12px; border-radius: 0 6px 6px 0; margin: 12px 0;
+    font-size: 13.5px;
+  }
+  .diagram {
+    background: var(--code-bg);
+    padding: 12px; border-radius: 6px;
+    font-family: "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 11.5px; line-height: 1.35;
+    white-space: pre; overflow-x: auto;
+    margin: 8px 0 16px;
+  }
+  .have-need {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin: 10px 0 20px;
+  }
+  .have-need > div {
+    padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);
+  }
+  .have { background: var(--ok-bg); border-color: var(--ok-border); }
+  .need { background: var(--warn-bg); border-color: var(--warn-border); }
+  .have h3, .need h3 { margin-top: 0; }
+  .doclink {
+    display: inline-block; margin-top: 24px;
+    font-size: 13px; color: var(--accent);
+    text-decoration: none; border-bottom: 1px dotted var(--accent);
+  }
+  .doclink:hover { border-bottom-style: solid; }
+  @media print { body { padding: 24px 20px; font-size: 11pt; } .diagram { font-size: 8.5pt; } }
+</style>
+</head>
+<body>
+
+<h1>Single APK — Approach</h1>
+<p class="lead">HLD, LLD, what's already possible in the codebase, and what needs to be built.</p>
+
+<h2>1. What exists vs. what we build</h2>
+
+<div class="have-need">
+  <div class="have">
+    <h3>Already possible (leverage)</h3>
+    <ul>
+      <li><code>EnvironmentConfiguration</code> singleton loading <code>.env</code> at startup (<code>envConfig.variables.*</code>)</li>
+      <li>Multi-hierarchy runtime-singleton pattern: <code>DigitDataModelSingleton.hierarchyType</code> + <code>runtimeHierarchyType()</code> resolver (PR #866)</li>
+      <li>Upload-gate-on-logout at widget layer: Isar OpLog count + <em>Sync/Close</em> popup + resume-after-sync (PR #864, branch <code>Single-APK-per-countries-859</code>)</li>
+      <li>Isar <code>OpLog</code> collection with <code>syncedUp</code> / <code>syncedDown</code> / <code>createdBy</code> fields</li>
+      <li>Drift downsync entities carry <code>auditDetails.createdBy</code></li>
+      <li>Existing MDMS v2 pipeline (<code>_searchV2</code> in <code>data/repositories/remote/mdms.dart:172</code>) and Dio DI wiring</li>
+      <li><code>digit_scanner</code> package with regex/pattern validation already built in (<code>QRScannerPage(regex:…, patternMessage:…)</code> → <code>blocs/scanner.dart</code> filters via <code>RegExp.hasMatch</code>). Reused for the provisioning-deeplink shape check.</li>
+    </ul>
+  </div>
+  <div class="need">
+    <h3>Not yet built (this design)</h3>
+    <ul>
+      <li>Runtime fields for tenantId / baseUrl / mdmsApiPath / actionMapApiPath on the singleton + their resolvers</li>
+      <li>Reconfigurable Dio (<code>DioClient.reconfigure(baseUrl)</code>)</li>
+      <li>Provisioning deeplink format + a scanner pattern constant published from <code>digit_scanner</code></li>
+      <li>QR-bootstrap page (wraps <code>QRScannerPage</code>) + bootstrap bloc + secure-store persistence</li>
+      <li>Deeplink URI parser + content validation (<code>https</code>-only baseUrl, version, required params)</li>
+      <li>Branding widgets reading QR-supplied app title + logo (home screen + app bar)</li>
+      <li><code>createdBy</code> filter on user-scoped downsync repository reads</li>
+      <li>Migration of every <code>envConfig.variables.*</code> read to the runtime resolver</li>
+    </ul>
+  </div>
+</div>
+
+<h2>2. High-level design</h2>
+
+<h3>2.1 Flow</h3>
+<div class="diagram">
+    Fresh install / after OS Clear storage             Authenticated session
+   ┌──────────────┐    ┌──────────────┐    ┌──────────┐    ┌──────────────────┐
+   │ QR-SCAN      │───▶│ Configure    │───▶│  LOGIN   │───▶│ Session:         │
+   │ Parse+persist│    │ Dio; populate│    │ (creds   │    │  - runtimeTenantId
+   │  baseUrl,    │    │ singletons;  │    │ only,    │    │  - runtimeBaseUrl│
+   │  tenantId,   │    │ apply branding│   │ tenant   │    │  - branded UI    │
+   │  mdmsApiPath │    │ (home + bar) │    │ from QR) │    │                  │
+   │  branding    │    │              │    │          │    │                  │
+   └──────────────┘    └──────────────┘    └──────────┘    └────────┬─────────┘
+                                                                     │
+                                                             "Logout" (P3)
+                                                                     │
+                                                                     ▼
+                                                       ┌───────────────────────┐
+                                                       │  Upload gate ★        │
+                                                       │  (strict block if any │
+                                                       │   syncedUp=false row) │
+                                                       │  Clear auth + per-    │
+                                                       │  user singleton state │
+                                                       │  → LOGIN              │
+                                                       └───────────────────────┘
+
+    Re-provisioning (P2) is not an in-app action. Ops walks the user through
+    Android Settings → App info → Storage → Clear storage. On next launch the
+    app has no bootstrap_config and lands on QR-SCAN. Residual risk: OS-level
+    clear bypasses the upload gate; pending records are lost if any.
+
+    ★ Strict upload gate — implemented in PR #864. No new work.
+</div>
+
+<h3>2.2 Key decisions</h3>
+<ol>
+  <li><strong>Everything runtime, nothing baked.</strong> <code>baseUrl</code>, <code>tenantId</code>, <code>mdmsApiPath</code>, <code>actionMapApiPath</code>, and branding come from the QR. <code>.env</code> is a dev fallback only.</li>
+  <li><strong>Extend <code>DigitDataModelSingleton</code>.</strong> Same pattern as multi-hierarchy. One resolver family for all runtime values.</li>
+  <li><strong>Dio reconfigurable at bootstrap time.</strong> Built with a mutable base URL; reconfigured after QR capture. (Reset is OS-level, so no reconfigure-on-reset case — after OS clear, the app restarts from scratch.)</li>
+  <li><strong>Tenant bound to the QR</strong>, not chosen at login. Once the platform's multi-instance mode ships, tenantId will be embedded in the URL path — QR's separate field becomes redundant (kept for compat).</li>
+  <li><strong>Logout doesn't wipe.</strong> Data persists across logouts and shift changes.</li>
+  <li><strong>Only one exit flow.</strong> Logout, gated on unsynced records. Re-provisioning is deliberately OS-level.</li>
+  <li><strong>Cross-user isolation via <code>createdBy</code> filter.</strong> User-scoped downsync reads add the filter; master-data reads stay unfiltered.</li>
+  <li><strong>Branding rendered from QR-supplied assets.</strong> Native launcher label/icon stay generic. In-app widgets (home logo, app bar title) read from bootstrap config.</li>
+</ol>
+
+<h2>3. Low-level design</h2>
+
+<h3>3.1 QR bootstrap</h3>
+
+<h4>Payload format — app deeplink</h4>
+<p>The QR encodes a purpose-built app deeplink. Only strings matching this shape are accepted; the scanner rejects everything else.</p>
+<pre><code>digit://provision?v=1
+  &amp;baseUrl=https%3A%2F%2Fhealth-partner-x.example%2F
+  &amp;tenantId=hcm
+  &amp;mdmsApiPath=mdms-v2%2Fv2%2F_search
+  &amp;actionsApiPath=actions%2F_get
+  &amp;appTitle=Partner%20X%20HCM
+  &amp;logoUrl=https%3A%2F%2Fcdn.example%2Flogo.png</code></pre>
+<p>All values are URL-encoded. Because a QR-sized URI is limited (roughly ≤1 KB for a comfortable scan), the logo travels as a URL, not embedded bytes.</p>
+
+<h4>Scanner filtering — reuse digit_scanner's existing pattern validation</h4>
+<p><code>packages/digit_scanner</code> already exposes a validation surface: <code>QRScannerPage</code> accepts a <code>regex</code> (or a <code>List&lt;ScannerValidation&gt;</code>) and the scanner bloc (<code>packages/digit_scanner/lib/blocs/scanner.dart</code>) filters scans via <code>RegExp.hasMatch</code>. The bootstrap flow uses this — no new scanner infrastructure needed.</p>
+<pre><code>// Constant published from digit_scanner for reuse
+const provisionDeeplinkPattern =
+    r'^digit:\/\/provision\?(?=.*\bv=)(?=.*\bbaseUrl=)(?=.*\btenantId=).*$';
+
+// Bootstrap page invokes the scanner with this pattern
+QRScannerPage(
+  regex: provisionDeeplinkPattern,
+  patternMessage: 'This is not a valid provisioning QR.',
+);</code></pre>
+<ul>
+  <li>The scanner never emits a scan result for non-matching content — the app never sees WiFi/payment/marketing QRs.</li>
+  <li>On a match, the bootstrap bloc parses the URI (<code>Uri.parse</code> + <code>queryParameters</code>), then applies content validation: <code>baseUrl</code> is <code>https</code>-only, <code>v</code> is a known version, required params present, URL-decoded values are sane.</li>
+  <li>Persist the validated payload to <code>LocalSecureStore</code> under <code>bootstrap_config</code>.</li>
+</ul>
+
+<h4>New files</h4>
+<ul>
+  <li><code>pages/qr_bootstrap.dart</code> — wraps <code>QRScannerPage</code> with the provisioning pattern; feeds valid scans to the bootstrap bloc.</li>
+  <li><code>blocs/bootstrap/bootstrap.dart</code> — load-from-secure-store on app start or capture-from-scan; emits <code>Uninitialized</code> / <code>Ready</code>.</li>
+</ul>
+<p>Router: <code>Uninitialized → QR</code>, <code>Ready → login</code>. Same <em>Uninitialized</em> branch handles fresh install and post-OS-clear cases.</p>
+
+<h3>3.2 Runtime resolvers</h3>
+<pre><code>class DigitDataModelSingleton {
+  String? _hierarchyType;     // existing
+  String? _tenantId;          // NEW
+  String? _baseUrl;           // NEW
+  String? _mdmsApiPath;       // NEW
+  String? _actionMapApiPath;  // NEW
+  BrandInfo? _brand;          // NEW  { appTitle, logoUrl / logoBytes }
+}
+
+// apps/…/utils/runtime_config.dart (new)
+String runtimeTenantId()       =&gt; _resolve(singleton.tenantId,       envConfig.variables.tenantId);
+String runtimeBaseUrl()        =&gt; _resolve(singleton.baseUrl,        envConfig.variables.baseUrl);
+String runtimeMdmsApiPath()    =&gt; _resolve(singleton.mdmsApiPath,    envConfig.variables.mdmsApiPath);
+String runtimeActionsApiPath() =&gt; _resolve(singleton.actionMapApiPath, envConfig.variables.actionMapApiPath);
+BrandInfo? runtimeBrand()      =&gt; singleton.brand;   // no env fallback for branding</code></pre>
+<p>Debug-only assert if runtime value is missing and env fallback fires — catches un-migrated call sites. Grep audit replaces every <code>envConfig.variables.*</code> read with the matching resolver.</p>
+
+<h3>3.3 Reconfigurable Dio</h3>
+<p>Change <code>DioClient</code> so <code>options.baseUrl</code> is mutable and add <code>reconfigure({required String baseUrl})</code>. Called from the bootstrap bloc after QR capture; in-flight requests at that instant are cancelled via <code>dio.close(force: true)</code>.</p>
+
+<h3>3.4 Login (no discovery)</h3>
+<p><code>pages/login.dart</code> stays a credentials-only form. On submit: <code>POST fetchAuthToken</code> with <code>runtimeTenantId()</code>. No dropdown, no tenant-discovery repo. Populates the per-user singleton state on success.</p>
+
+<h3>3.5 Upload gate — reused from PR #864</h3>
+<p>Widget-layer implementation stays exactly as merged. Gate lives in <code>apps/…/pages/authenticated.dart</code>'s <code>onLogOut</code> handler: <code>isar.opLogs.filter().createdByEqualTo(userId).syncedUpEqualTo(false).count()</code>, <code>Popup(alert)</code> with <em>Sync</em>/<em>Close</em>, resume-after-sync via <code>_pendingSyncLogout</code>. <strong>No new work on the gate.</strong></p>
+
+<h3>3.6 Logout flow</h3>
+<ol>
+  <li>Upload gate (§3.5). Strict block if any <code>syncedUp=false</code> row exists.</li>
+  <li>Server logout call (best-effort, existing).</li>
+  <li>Clear <code>LocalSecureStore</code> credentials only (<em>not</em> <code>bootstrap_config</code>).</li>
+  <li>Clear per-user singleton state: <code>setHierarchyType(null)</code>. <code>tenantId</code>, <code>baseUrl</code>, brand stay populated.</li>
+  <li>Route to login. <strong>No Isar clear, no Drift wipe.</strong></li>
+</ol>
+
+<h3>3.7 Branding rendering</h3>
+<p>Bootstrap bloc exposes the parsed brand info. Widgets consume it via <code>runtimeBrand()</code>:</p>
+<ul>
+  <li><strong>Home screen logo</strong> — <code>brand.logoUrl</code> loaded via <code>NetworkImage</code>. Cache to disk on first successful load so subsequent launches show it offline. Deeplink pragma settles the URL-vs-base64 question: only a URL fits comfortably in the QR.</li>
+  <li><strong>App bar header</strong> — <code>AppBar</code> title widget replaced by <code>brand.appTitle</code> text. Localization keys unaffected.</li>
+  <li><strong>Fallback</strong> — if branding is absent (older QR, offline logo fetch failed), fall back to a neutral title + no logo.</li>
+</ul>
+
+<h3>3.8 Cross-user isolation</h3>
+<p>Devices are shared across workers. Since logout no longer wipes downsync, isolation is enforced at read time.</p>
+<ul>
+  <li><strong>User-scoped (needs <code>createdBy</code> filter):</strong> OpLog (already filtered — PR #864 uses this) and per-user assignment rows in downsync tables (<code>Household</code>, <code>Task</code>, <code>Referral</code>, <code>Attendance</code>, …).</li>
+  <li><strong>Tenant-scoped (safe unfiltered):</strong> <code>AppConfiguration</code>, <code>ServiceRegistry</code>, <code>Localization</code>, <code>RowVersions</code>, <code>Boundary</code>, reference tables like <code>ProductVariant</code>.</li>
+</ul>
+<p>Approach: per-table audit → add <code>createdBy = context.loggedInUserUuid</code> to reads on user-scoped tables → debug-only warning in the repo base when a user-scoped read runs unfiltered.</p>
+
+<h3>3.9 File changes summary</h3>
+<table>
+  <thead><tr><th>File</th><th>Change</th></tr></thead>
+  <tbody>
+    <tr><td><code>packages/digit_data_model/lib/utils/utils.dart</code></td><td>Add tenantId / baseUrl / mdmsApiPath / actionMapApiPath / brand fields + setters/getters</td></tr>
+    <tr><td><code>apps/…/utils/runtime_config.dart</code> <em>(new)</em></td><td>Resolvers with env fallback (brand has no fallback)</td></tr>
+    <tr><td><code>apps/…/data/network/dio_client.dart</code></td><td>Mutable base URL + <code>reconfigure()</code></td></tr>
+    <tr><td><code>packages/digit_scanner/lib/utils/constants.dart</code></td><td>Publish the provisioning deeplink regex constant (<code>provisionDeeplinkPattern</code>) for reuse by the app-side bootstrap page. Optional: add a factory returning a preconfigured <code>ScannerValidation</code>.</td></tr>
+    <tr><td><code>apps/…/pages/qr_bootstrap.dart</code> <em>(new)</em></td><td>Wraps <code>QRScannerPage</code> with the deeplink pattern; parses <code>Uri</code>; hands payload to bootstrap bloc</td></tr>
+    <tr><td><code>apps/…/blocs/bootstrap/bootstrap.dart</code> <em>(new)</em></td><td>Load-from-store / capture-from-scan; content validation (<code>https</code>-only, version, required params); persist to secure store</td></tr>
+    <tr><td>Home widget + <code>AppBar</code> title widget</td><td>Consume <code>runtimeBrand()</code>; fallback if absent</td></tr>
+    <tr><td><code>apps/…/pages/authenticated.dart</code></td><td><em>No change from PR #864.</em> Upload gate stays where it is.</td></tr>
+    <tr><td><code>apps/…/blocs/auth/auth.dart</code></td><td>Populate singleton on login; <code>_onLogout</code> unchanged (no wipe)</td></tr>
+    <tr><td><code>apps/…/pages/login.dart</code></td><td>Swap <code>envConfig.variables.tenantId</code> → <code>runtimeTenantId()</code></td></tr>
+    <tr><td><code>apps/…/main.dart</code> / router</td><td>Route on <code>BootstrapState</code>: <code>Uninitialized</code> → QR, <code>Ready</code> → login</td></tr>
+    <tr><td>Downsync repos / DAOs</td><td>§3.8 audit: add <code>createdBy</code> filter on user-scoped reads</td></tr>
+    <tr><td>All <code>envConfig.variables.*</code> read sites</td><td>Replace with the matching resolver (grep audit)</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Not in this design:</strong> no <code>utils/wipe.dart</code>, no <code>blocs/app_reset/app_reset.dart</code>, no "Reset app" settings entry. Re-provisioning is not an in-app feature.</p>
+
+<h2>4. Sequencing</h2>
+<ol>
+  <li><strong>Phase 0 (merging separately)</strong> — PR #864 upload gate on logout. Consumed as-is.</li>
+  <li><strong>Phase 1</strong> — Runtime resolvers + reconfigurable Dio. Grep-audit-migrate <code>envConfig.variables.*</code>. Env fallback keeps behavior identical. No user-visible change.</li>
+  <li><strong>Phase 2</strong> — Cross-user isolation: per-table audit + <code>createdBy</code> filters on user-scoped reads. Ships without QR.</li>
+  <li><strong>Phase 3</strong> — QR bootstrap + branding widgets. Scanner, bloc, secure-store persist, Dio reconfigure, home logo + app-bar title. Login screen consumes <code>runtimeTenantId()</code>. No geo-fence.</li>
+  <li><strong>Phase 4 (deferred)</strong> — Geo-fence at login. Boundary GeoJSON delivery, point-in-polygon utility, permission handling. Blocks on backend GeoJSON.</li>
+</ol>
+
+<h2>5. Risks (tech)</h2>
+<ul>
+  <li><strong>Accepted residual: OS-level Clear storage.</strong> Bypasses the upload gate; pending records lost. Not addressable at app level. Mitigation is procedural (ops trains "sync first, then clear").</li>
+  <li><strong>Missed <code>envConfig.variables.*</code> read sites.</strong> Debug-only assert in <code>_resolve</code> + grep audit.</li>
+  <li><strong>Missed <code>createdBy</code> filter on a user-scoped read.</strong> Privacy leak on shared devices. Audit-time classification + debug-only warning in repo base + code-review checklist.</li>
+  <li><strong>Dio-reconfigure race at QR capture.</strong> Router blocks non-bootstrap routes until <code>BootstrapState</code> is <code>Ready</code>; <code>dio.close(force: true)</code> before reconfigure.</li>
+  <li><strong>Malicious / phishing QR.</strong> Scanner-level deeplink filtering eliminates false-positive scans (WiFi, payment, marketing QRs never reach the app). What remains is a hostile QR that <em>uses</em> our deeplink scheme. Content validation catches structural failures (<code>https</code>-only, version, required params). Signed-QR verification deferred; slots into the bootstrap bloc's parse step when picked up.</li>
+  <li><strong>Branding logo load failure.</strong> If <code>logoUrl</code> is unreachable on first launch after scan, the app falls back to no-logo. Cache-to-disk after first successful load so offline sessions still see branding.</li>
+</ul>
+
+<h2>6. Open questions (tech)</h2>
+<ol>
+  <li><strong>Downsync table classification.</strong> §3.8 lists tables to audit but doesn't say which specific rows are user-scoped vs. tenant-scoped. Needs a per-table pass with data-owners before Phase 2 starts.</li>
+  <li><strong>Multi-config support</strong> (multiple cached QR configs, switchable without OS clear). Not in Phase 1. If ever adopted: per-tenant DB instance (cleanest, no query changes) vs. single DB with <code>tenantId</code> filter on every read (smaller, risky).</li>
+  <li><strong>Geo-boundary enforcement in the login API.</strong> Client-side point-in-polygon can be bypassed on rooted devices. Should the login API also validate against request IP or a signed device claim? Client design unchanged either way.</li>
+  <li><strong>Signed / verifiable QR payload.</strong> Deferred. Slots between "parse" and "persist" in the bootstrap pipeline without changing other components. Requires backend signing infra + agreed threat model.</li>
+</ol>
+
+</body>
+</html>

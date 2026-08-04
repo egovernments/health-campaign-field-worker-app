@@ -1,4 +1,6 @@
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/privacy_notice/privacy_notice_model.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -18,6 +20,7 @@ import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../router/app_router.dart';
+import '../services/deep_link_service.dart';
 import '../utils/constants.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -267,6 +270,15 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       },
                     ),
                     DigitButton(
+                      label: localizations.translate(i18.login.scanConfigLabel),
+                      capitalizeLetters: false,
+                      prefixIcon: Icons.qr_code_scanner,
+                      mainAxisSize: MainAxisSize.max,
+                      type: DigitButtonType.secondary,
+                      size: DigitButtonSize.medium,
+                      onPressed: () => _openScanner(context),
+                    ),
+                    DigitButton(
                       label: localizations.translate(
                         i18.forgotPassword.actionLabel,
                       ),
@@ -313,14 +325,64 @@ class _LoginPageState extends LocalizedState<LoginPage> {
     );
   }
 
+  Future<void> _openScanner(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    final router = context.router;
+    final scannerBloc = context.read<DigitScannerBloc>();
+
+    // Reset the bloc so we only read codes captured on this scan.
+    scannerBloc.add(
+      const DigitScannerEvent.handleScanner(barCode: [], qrCode: []),
+    );
+
+    await navigator.push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => const DigitScannerPage(
+          quantity: 1,
+          singleValue: true,
+          isGS1code: false,
+        ),
+        fullscreenDialog: true,
+      ),
+    );
+
+    if (!mounted) return;
+
+    final codes = scannerBloc.state.qrCodes;
+    if (codes.isEmpty) return;
+
+    final payload = DeepLinkService.instance.parseString(codes.first);
+    // Clear the bloc so a subsequent scan doesn't reuse this value.
+    scannerBloc.add(
+      const DigitScannerEvent.handleScanner(barCode: [], qrCode: []),
+    );
+
+    if (payload == null || !payload.isValid) {
+      if (!mounted) return;
+      Toast.showToast(
+        context,
+        message: localizations.translate(i18.login.invalidQrCode),
+        type: ToastType.error,
+      );
+      return;
+    }
+
+    router.push(
+      DeepLinkWelcomeRoute(
+        tenantId: payload.tenantId,
+        header: payload.header,
+      ),
+    );
+  }
+
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
-          value: '',
+          value: 'USR-251744',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
-          value: '',
+          value: 'eGov@123',
         ),
         _privacyCheck: FormControl<bool>(
           value: false,
@@ -411,3 +473,4 @@ void _showMultiDeviceLoginPopUp(
     ),
   );
 }
+

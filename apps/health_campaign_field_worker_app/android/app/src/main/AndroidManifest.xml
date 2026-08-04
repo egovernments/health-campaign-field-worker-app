@@ -89,6 +89,14 @@
                  LauncherActivity is the single advertised entry point.
                  Leaving a second MAIN/LAUNCHER here causes two launcher
                  icons to appear in the app drawer. -->
+
+            <!-- Deep link: hcm://open?tenantId=<id>&header=<label> -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="hcm" android:host="open" />
+            </intent-filter>
         </activity>
         <service
             android:name="id.flutter.flutter_background_service.BackgroundService"

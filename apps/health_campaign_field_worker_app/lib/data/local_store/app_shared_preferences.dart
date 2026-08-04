@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppSharedPreferences {
   static const String isFirstLaunchKey = 'isFirstLaunch';
   static const String userSelectedLocale = 'userSelectedLocale';
+  static const String tenantIdOverrideKey = 'tenantIdOverride';
 
   SharedPreferences? _sharedPreferences;
 
@@ -44,5 +45,16 @@ class AppSharedPreferences {
       userSelectedLocale,
       localeString,
     );
+  }
+
+  String? get getTenantIdOverride =>
+      sharedPreferences.getString(tenantIdOverrideKey);
+
+  Future<void> setTenantIdOverride(String tenantId) async {
+    await sharedPreferences.setString(tenantIdOverrideKey, tenantId);
+  }
+
+  Future<void> clearTenantIdOverride() async {
+    await sharedPreferences.remove(tenantIdOverrideKey);
   }
 }

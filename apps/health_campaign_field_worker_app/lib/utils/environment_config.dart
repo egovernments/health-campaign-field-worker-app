@@ -43,11 +43,27 @@ class EnvironmentConfiguration {
 
     return _variables;
   }
+
+  /// Runtime override for the tenantId, populated from a deep link or scanned
+  /// QR after app start. Takes precedence over the value read from .env.
+  void setTenantIdOverride(String? tenantId) {
+    _variables.setTenantIdOverride(tenantId);
+  }
+
+  String? get tenantIdOverride => _variables.tenantIdOverride;
 }
 
 class Variables {
   final DotEnv _dotEnv;
   final bool useFallbackValues;
+
+  String? _tenantIdOverride;
+
+  void setTenantIdOverride(String? value) {
+    _tenantIdOverride = (value != null && value.isNotEmpty) ? value : null;
+  }
+
+  String? get tenantIdOverride => _tenantIdOverride;
 
   static const _connectTimeoutValue = 6000;
   static const _receiveTimeoutValue = 6000;
@@ -125,7 +141,7 @@ class Variables {
     '$_minRamThresholdGbValue',
   );
 
-  const Variables({
+  Variables({
     this.useFallbackValues = false,
     required DotEnv dotEnv,
   }) : _dotEnv = dotEnv;
@@ -150,9 +166,13 @@ class Variables {
       ? _actionMapUrl.value
       : _dotEnv.get(_actionMapUrl.key, fallback: _actionMapUrl.value);
 
-  String get tenantId => useFallbackValues
-      ? _tenantId.value
-      : _dotEnv.get(_tenantId.key, fallback: _tenantId.value);
+  String get tenantId {
+    final override = _tenantIdOverride;
+    if (override != null && override.isNotEmpty) return override;
+    return useFallbackValues
+        ? _tenantId.value
+        : _dotEnv.get(_tenantId.key, fallback: _tenantId.value);
+  }
 
   String get dumpErrorApiPath => useFallbackValues
       ? _dumpErrorApi.value

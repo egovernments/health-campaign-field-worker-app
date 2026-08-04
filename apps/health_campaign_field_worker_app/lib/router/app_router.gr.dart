@@ -131,6 +131,29 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DeepLinkWelcomeRoute.name: (routeData) {
+      final args = routeData.argsAs<DeepLinkWelcomeRouteArgs>(
+          orElse: () => const DeepLinkWelcomeRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DeepLinkWelcomePage(
+          key: args.key,
+          tenantId: args.tenantId,
+          header: args.header,
+        ),
+      );
+    },
+    TenantBootstrapRoute.name: (routeData) {
+      final args = routeData.argsAs<TenantBootstrapRouteArgs>(
+          orElse: () => const TenantBootstrapRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TenantBootstrapPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     DevicesListRoute.name: (routeData) {
       final args = routeData.argsAs<DevicesListRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -667,6 +690,87 @@ class DeviceChangeReasonRouteArgs {
   @override
   String toString() {
     return 'DeviceChangeReasonRouteArgs{key: $key, appLocalizations: $appLocalizations, username: $username, password: $password}';
+  }
+}
+
+/// generated route for
+/// [DeepLinkWelcomePage]
+class DeepLinkWelcomeRoute extends PageRouteInfo<DeepLinkWelcomeRouteArgs> {
+  DeepLinkWelcomeRoute({
+    Key? key,
+    String? tenantId,
+    String? header,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DeepLinkWelcomeRoute.name,
+          args: DeepLinkWelcomeRouteArgs(
+            key: key,
+            tenantId: tenantId,
+            header: header,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DeepLinkWelcomeRoute';
+
+  static const PageInfo<DeepLinkWelcomeRouteArgs> page =
+      PageInfo<DeepLinkWelcomeRouteArgs>(name);
+}
+
+class DeepLinkWelcomeRouteArgs {
+  const DeepLinkWelcomeRouteArgs({
+    this.key,
+    this.tenantId,
+    this.header,
+  });
+
+  final Key? key;
+
+  final String? tenantId;
+
+  final String? header;
+
+  @override
+  String toString() {
+    return 'DeepLinkWelcomeRouteArgs{key: $key, tenantId: $tenantId, header: $header}';
+  }
+}
+
+/// generated route for
+/// [TenantBootstrapPage]
+class TenantBootstrapRoute extends PageRouteInfo<TenantBootstrapRouteArgs> {
+  TenantBootstrapRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TenantBootstrapRoute.name,
+          args: TenantBootstrapRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'TenantBootstrapRoute';
+
+  static const PageInfo<TenantBootstrapRouteArgs> page =
+      PageInfo<TenantBootstrapRouteArgs>(name);
+}
+
+class TenantBootstrapRouteArgs {
+  const TenantBootstrapRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'TenantBootstrapRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

@@ -1234,5 +1234,137 @@
     "locale": "pt_MZ",
     "message": "Redose Concluída",
     "module": "hcm-delivery"
+  },
+  {
+    "code": "LOGIN_SCAN_CONFIG_LABEL",
+    "locale": "en_MZ",
+    "message": "Scan QR to configure",
+    "module": "hcm-login"
+  },
+  {
+    "code": "LOGIN_SCAN_CONFIG_LABEL",
+    "locale": "pt_MZ",
+    "message": "Digitalizar QR para configurar",
+    "module": "hcm-login"
+  },
+  {
+    "code": "LOGIN_INVALID_QR_CODE",
+    "locale": "en_MZ",
+    "message": "Invalid QR code",
+    "module": "hcm-login"
+  },
+  {
+    "code": "LOGIN_INVALID_QR_CODE",
+    "locale": "pt_MZ",
+    "message": "Código QR inválido",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_WELCOME_TITLE",
+    "locale": "en_MZ",
+    "message": "Welcome",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_WELCOME_TITLE",
+    "locale": "pt_MZ",
+    "message": "Bem-vindo",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_TENANT_ID_LABEL",
+    "locale": "en_MZ",
+    "message": "Tenant ID",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_TENANT_ID_LABEL",
+    "locale": "pt_MZ",
+    "message": "ID do inquilino",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_HEADER_LABEL",
+    "locale": "en_MZ",
+    "message": "Campaign",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_HEADER_LABEL",
+    "locale": "pt_MZ",
+    "message": "Campanha",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_CONTINUE_ACTION",
+    "locale": "en_MZ",
+    "message": "Continue",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_CONTINUE_ACTION",
+    "locale": "pt_MZ",
+    "message": "Continuar",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_SCANNER_TITLE",
+    "locale": "en_MZ",
+    "message": "Scan configuration QR",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_SCANNER_TITLE",
+    "locale": "pt_MZ",
+    "message": "Digitalizar QR de configuração",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_BOOTSTRAP_TITLE",
+    "locale": "en_MZ",
+    "message": "Configure Your App",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_BOOTSTRAP_TITLE",
+    "locale": "pt_MZ",
+    "message": "Configure Seu Aplicativo",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_BOOTSTRAP_DESCRIPTION",
+    "locale": "en_MZ",
+    "message": "Scan the setup QR code shared by your organization to get started.",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_BOOTSTRAP_DESCRIPTION",
+    "locale": "pt_MZ",
+    "message": "Digitalize o código QR de configuração compartilhado pela sua organização para começar.",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_BOOTSTRAP_SCAN_ACTION",
+    "locale": "en_MZ",
+    "message": "Scan Configuration QR",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_BOOTSTRAP_SCAN_ACTION",
+    "locale": "pt_MZ",
+    "message": "Digitalizar QR de Configuração",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_INVALID_QR_CODE",
+    "locale": "en_MZ",
+    "message": "Invalid configuration QR code",
+    "module": "hcm-login"
+  },
+  {
+    "code": "DEEP_LINK_INVALID_QR_CODE",
+    "locale": "pt_MZ",
+    "message": "Código QR de configuração inválido",
+    "module": "hcm-login"
   }
 ]

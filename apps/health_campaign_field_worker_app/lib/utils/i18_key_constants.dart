@@ -4,6 +4,7 @@ const common = Common();
 const attendance = Attendance();
 const login = Login();
 const forgotPassword = ForgotPassword();
+const deepLink = DeepLink();
 const home = Home();
 const beneficiaryId = BeneficiaryID();
 const dataShare = DataShare();
@@ -679,6 +680,32 @@ class Login {
   String get switchReasonHeader => 'SWITCH_REASON_HEADER_LABEL';
 
   String get switchReasonContinue => 'SWITCH_REASON_CONTINUE';
+
+  String get scanConfigLabel => 'LOGIN_SCAN_CONFIG_LABEL';
+
+  String get invalidQrCode => 'LOGIN_INVALID_QR_CODE';
+}
+
+class DeepLink {
+  const DeepLink();
+
+  String get welcomeTitle => 'DEEP_LINK_WELCOME_TITLE';
+
+  String get tenantIdLabel => 'DEEP_LINK_TENANT_ID_LABEL';
+
+  String get headerLabel => 'DEEP_LINK_HEADER_LABEL';
+
+  String get continueAction => 'DEEP_LINK_CONTINUE_ACTION';
+
+  String get scannerTitle => 'DEEP_LINK_SCANNER_TITLE';
+
+  String get bootstrapTitle => 'DEEP_LINK_BOOTSTRAP_TITLE';
+
+  String get bootstrapDescription => 'DEEP_LINK_BOOTSTRAP_DESCRIPTION';
+
+  String get bootstrapScanAction => 'DEEP_LINK_BOOTSTRAP_SCAN_ACTION';
+
+  String get invalidQrCode => 'DEEP_LINK_INVALID_QR_CODE';
 }
 
 class SelectSurveyFormShowcase {

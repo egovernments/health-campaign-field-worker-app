@@ -23,6 +23,7 @@ import 'data/local_store/secure_store/secure_store.dart';
 import 'data/remote_client.dart';
 import 'pages/error_boundary.dart';
 import 'router/app_router.dart';
+import 'services/deep_link_service.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';
 import 'utils/utils.dart';
@@ -51,6 +52,14 @@ void main() async {
   }
 
   await envConfig.initialize();
+
+  // Apply persisted tenantId override (set from a prior deep link / QR scan)
+  // before any bloc reads envConfig.variables.tenantId.
+  final storedTenant = AppSharedPreferences().getTenantIdOverride;
+  if (storedTenant != null && storedTenant.isNotEmpty) {
+    envConfig.setTenantIdOverride(storedTenant);
+  }
+
   AppSecurity.instance.setSecurityLevel = _securityLevelForEnv(
     envConfig.variables.envType,
   );
@@ -112,6 +121,9 @@ void main() async {
 
   // Register FCM background message handler
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+  // Capture any deep link that launched the app + start runtime listener.
+  await DeepLinkService.instance.initialize();
 
   runApp(MainApplication(
     appRouter: AppRouter(),

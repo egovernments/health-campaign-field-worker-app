@@ -21,6 +21,7 @@ import '../pages/attendance_qr_scanner.dart';
 import '../pages/authenticated.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/current_boundary.dart';
+import '../pages/deep_link_welcome.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
@@ -35,6 +36,7 @@ import '../pages/profile.dart';
 import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
+import '../pages/tenant_bootstrap.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/beneficiary_id_downsync/beneficiary_id_downsync.dart';
 import '../pages/unauthenticated.dart';
@@ -71,6 +73,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: LoginRoute.page, path: 'login'),
         AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
         AutoRoute(page: DeviceChangeReasonRoute.page, path: 'device-change-reason'),
+        AutoRoute(
+            page: DeepLinkWelcomeRoute.page, path: 'deep-link-welcome'),
+        AutoRoute(
+            page: TenantBootstrapRoute.page, path: 'tenant-bootstrap'),
       ],
     ),
     AutoRoute(
