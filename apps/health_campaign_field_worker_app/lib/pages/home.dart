@@ -1934,9 +1934,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                       },
                       childCount: homeItems.length,
                     ),
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 164,
+                    // Phones always get three tiles per row. The previous
+                    // max-extent delegate derived the count from the width
+                    // (ceil((w - 16) / 176)), which needs > 368dp for three —
+                    // so a 360dp phone fell back to two columns and ~204dp
+                    // tall tiles. Wider screens keep scaling up so tiles
+                    // don't stretch.
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: MediaQuery.of(context).size.width < 600
+                          ? 3
+                          : (MediaQuery.of(context).size.width / 176)
+                              .floor()
+                              .clamp(3, 8),
                       childAspectRatio: 104 / 128,
                       mainAxisSpacing: spacer3,
                       crossAxisSpacing: spacer3,

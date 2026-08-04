@@ -84,6 +84,11 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper>
     with WidgetsBindingObserver {
   final StreamController<bool> _drawerVisibilityController =
       StreamController.broadcast();
+
+  /// The side panel hangs off this outer Scaffold while screens swap inside
+  /// the nested AutoRouter, so the panel has to be closed explicitly on
+  /// navigation — otherwise it stays open over the newly pushed screen.
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   StreamController<HFReferralProgressData> _hfReferralProgress =
       StreamController<HFReferralProgressData>.broadcast();
 
@@ -670,6 +675,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper>
 
                 return Portal(
                   child: Scaffold(
+                    key: _scaffoldKey,
                     backgroundColor: theme.colorTheme.generic.background,
                     appBar: AppBar(
                       backgroundColor: theme.colorTheme.primary.primary2,
@@ -1212,6 +1218,19 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper>
                                   navigatorObservers: () => [
                                     AuthenticatedRouteObserver(
                                       onNavigated: () {
+                                        // Dismiss the side panel on any route
+                                        // change. Deferred to after the frame
+                                        // because onNavigated fires mid
+                                        // navigation.
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          final scaffold =
+                                              _scaffoldKey.currentState;
+                                          if (scaffold?.isDrawerOpen ?? false) {
+                                            scaffold!.closeDrawer();
+                                          }
+                                        });
+
                                         bool shouldShowDrawer;
                                         switch (context.router.topRoute.name) {
                                           case ProjectSelectionRoute.name:
