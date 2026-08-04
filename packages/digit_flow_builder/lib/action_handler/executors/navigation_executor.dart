@@ -39,8 +39,29 @@ class NavigationExecutor extends ActionExecutor {
 
     // Get composite key for current screen's FlowCrudStateRegistry operations
     final currentCompositeKey = getCompositeKey(context, screenKey: screenKey);
-    final currentState =
+    var currentState =
         FlowCrudStateRegistry().get(currentCompositeKey ?? screenKey);
+
+    // Fallback: getCompositeKey may return a stale/missing key when NAV fires
+    // from a chain triggered outside the current screen's widget tree (e.g.
+    // OPEN_SCANNER onSuccess). Look up the registry's registered instanceId
+    // for the source screenKey and try that composite too.
+    if (currentState?.stateWrapper == null || currentState!.stateWrapper!.isEmpty) {
+      final bareScreenKey = screenKey?.split('::').last;
+      if (bareScreenKey != null) {
+        final registeredInstanceId =
+            FlowCrudStateRegistry().getInstanceId(bareScreenKey);
+        if (registeredInstanceId != null) {
+          final fallbackKey = '$bareScreenKey::$registeredInstanceId';
+          final fallbackState =
+              FlowCrudStateRegistry().getByCompositeKey(fallbackKey);
+          if (fallbackState?.stateWrapper != null &&
+              fallbackState!.stateWrapper!.isNotEmpty) {
+            currentState = fallbackState;
+          }
+        }
+      }
+    }
     final stateFormData = currentState?.formData;
 
     // Get navigation mode and popUntilPageName from action properties
@@ -61,19 +82,31 @@ class NavigationExecutor extends ActionExecutor {
     }
 
     if (navData != null) {
+      // Build an enriched context that ALWAYS exposes the current screen's
+      // stateWrapper (list) and its first item as `item`. This lets templates
+      // like {{stateWrapper.0.X}} or {{item.X}} resolve when the action is
+      // fired outside a list-widget context (e.g. from OPEN_SCANNER's
+      // onSuccess chain, where widget-level resolveActionNavData never ran).
+      final currentStateWrapper = currentState?.stateWrapper;
+      final stateWrapperFirst =
+          (currentStateWrapper?.isNotEmpty == true)
+              ? currentStateWrapper?.first
+              : null;
+      final enrichedContext = <String, dynamic>{
+        ...contextData,
+        if (currentStateWrapper != null) 'stateWrapper': currentStateWrapper,
+        if (stateWrapperFirst != null) 'item': stateWrapperFirst,
+      };
+
       final resolvedData = navData.map((entry) {
         final key = entry['key'];
         final rawValue = entry['value'];
 
-        final stateWrapperFirst =
-            (currentState?.stateWrapper?.isNotEmpty == true)
-                ? currentState?.stateWrapper?.first
-                : null;
         final resolvedValue = resolveNavigationDataValue(
           rawValue: rawValue,
           stateFormData: stateFormData,
           stateWrapperFirst: stateWrapperFirst,
-          contextData: contextData,
+          contextData: enrichedContext,
         );
 
         return {

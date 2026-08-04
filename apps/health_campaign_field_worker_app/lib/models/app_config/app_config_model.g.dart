@@ -249,6 +249,7 @@ _$StateInfoModelImpl _$$StateInfoModelImplFromJson(Map<String, dynamic> json) =>
       localizationModules: (json['localizationModules'] as List<dynamic>?)
           ?.map((e) => Languages.fromJson(e as Map<String, dynamic>))
           .toList(),
+      logoUrl: json['logoUrl'] as String?,
     );
 
 Map<String, dynamic> _$$StateInfoModelImplToJson(
@@ -257,6 +258,7 @@ Map<String, dynamic> _$$StateInfoModelImplToJson(
       'code': instance.code,
       'languages': instance.languages,
       'localizationModules': instance.localizationModules,
+      'logoUrl': instance.logoUrl,
     };
 
 _$RowVersionWrapperModelImpl _$$RowVersionWrapperModelImplFromJson(

@@ -151,6 +151,7 @@ class StateInfoModel with _$StateInfoModel {
     @JsonKey(name: 'code') required String code,
     @JsonKey(name: 'languages') required List<Languages> languages,
     @JsonKey(name: 'localizationModules') List<Languages>? localizationModules,
+    @JsonKey(name: 'logoUrl') String? logoUrl,
   }) = _StateInfoModel;
 
   factory StateInfoModel.fromJson(

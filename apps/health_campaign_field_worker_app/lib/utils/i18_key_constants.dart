@@ -227,10 +227,21 @@ const databaseError = DatabaseError();
 class Common {
   const Common();
 
+  String get proceed => 'PROCEED_BUTTON';
+
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get permissionContinue => 'PERMISSION_CONTINUE';
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
+
+  String get coreCommonInfo => 'CORE_COMMON_INFO';
+
+  String get coreCommonNoValue => 'CORE_COMMON_NO_VALUE';
+
+  String get coreCommonInfoDescInternetConnection =>
+      'CORE_COMMON_INFO_DESC_INTERNET_CONNECTION';
   String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
+  String get logoutConfirmationHeading => 'HCM_LOGOUT_CONFIRMATION_HEADING';
+  String get logoutConfirmationDescription => 'HCM_LOGOUT_CONFIRMATION_DESCRIPTION';
 
   String get coreCommonOr => 'CORE_COMMON_OR';
   String get commentKey => 'COMMENT_KEY';
@@ -257,7 +268,11 @@ class Common {
   String get coreCommonQuantityDistributed =>
       'CORE_COMMON_QUANTITY_DISTRIBUTED';
 
+  String get coreCommonResource => 'CORE_COMMON_RESOURCE';
+
   String get coreCommonDeleteResource => 'CORE_COMMON_DELETE_RESOURCE';
+
+  String get coreCommonAddResource => 'CORE_COMMON_ADD_RESOURCE';
 
   String get coreCommonDeleteResourceConfirmation =>
       'CORE_COMMON_DELETE_RESOURCE_CONFIRMATION';
@@ -293,6 +308,8 @@ class Common {
   String get coreCommonViewDownloadedData => 'CORE_COMMON_VIEW_DOWNLOADED_DATA';
 
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
+
+  String get chooseLanguage => 'CORE_COMMON_CHOOSE_LANGUAGE';
 
   String get coreCommonSyncProgress => 'CORE_COMMON_SYNC_PROGRESS';
 
@@ -339,6 +356,11 @@ class Common {
 
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 
+  String get coreCommonFailedToCheckData => 'CORE_COMMON_FAILED_TO_CHECK_DATA';
+
+  String get coreCommonFailedToCheckDataDesc =>
+      'CORE_COMMON_FAILED_TO_CHECK_DATA_DESC';
+
   String get coreCommonDownloadCompleted => 'CORE_COMMON_DOWNLOAD_COMPLETED';
 
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
@@ -352,6 +374,8 @@ class Common {
       'CORE_COMMON_WANT_TO_CHOOSE_ANOTHER_BOUNDARY';
 
   String get chooseAnotherBoundary => 'CORE_COMMON_CHOOSE_ANOTHER_BOUNDARY';
+
+  String get chooseBoundaries => 'CORE_COMMON_CHOOSE_BOUNDARIES';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
 
@@ -627,6 +651,11 @@ class StockDetailsIssuedShowcase {
   String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
 
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
+
+  String get coreCommonFailedToCheckData => 'CORE_COMMON_FAILED_TO_CHECK_DATA';
+
+  String get coreCommonFailedToCheckDataDesc =>
+      'CORE_COMMON_FAILED_TO_CHECK_DATA_DESC';
 }
 
 class AdverseEvents {
@@ -879,6 +908,8 @@ class Home {
 
   String get progressIndicatorTitle => 'PROGRESS_INDICATOR_TITLE';
 
+  String get homeMyProgress => 'HOME_MY_PROGRESS';
+
   String get progressIndicatorHelp => 'PROGRESS_INDICATOR_HELP';
 
   String get progressIndicatorPrefixLabel => 'PROGRESS_INDICATOR_PREFIX_LABEL';
@@ -964,6 +995,16 @@ class BeneficiaryID {
   String get beneficiaryIdsReFetch => 'BENEFICIARY_IDS_RE_FETCH';
 
   String get totalBeneficiaryIds => 'TOTAL_BENEFICIARY_IDS';
+
+  String get fetchingBeneficiaryIds => 'FETCHING_BENEFICIARY_IDS';
+
+  String get dataFoundBeneficiaryIds => 'DATA_FOUND_BENEFICIARY_IDS';
+
+  String get dataFoundBeneficiaryIdsContent => 'DATA_FOUND_BENEFICIARY_IDS_CONTENT';
+
+  String get dataNotFoundBeneficiaryIds => 'DATA_NOT_FOUND_BENEFICIARY_IDS';
+
+  String get dataNotFoundBeneficiaryIdsContent => 'DATA_NOT_FOUND_BENEFICIARY_IDS_CONTENT';
 }
 
 class DataShare {
@@ -1039,13 +1080,17 @@ class AcknowledgementSuccess {
   String get acknowledgementDescriptionText =>
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
 
-  String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
+  String get acknowledgementLabelText => 'CORE_COMMON_DATA_DOWNLOAD_SUCCESS';
 
   String get goToHome => 'GO_TO_HOME_SCREEN';
 
   String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
 
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
+
+  String get dataDownloadedSuccessDesc => 'DATA_DOWNLOADED_SUCCESS_DESC';
+
+  String get backToBoundarySelection => 'BACK_TO_BOUNDARY_SELECTION';
 }
 
 class ProjectSelection {
@@ -1192,6 +1237,10 @@ class SyncDialog {
   String get syncInProgressTitle => 'SYNC_DIALOG_SYNC_IN_PROGRESS_TITLE';
 
   String get dataSyncedTitle => 'SYNC_DIALOG_DATA_SYNCED_TITLE';
+
+  String get dataSyncedSuccessTitle => 'DATA_SYNCED_SUCCESS_TITLE';
+
+  String get dataSyncedSuccessDescription => 'DATA_SYNCED_SUCCESS_DESCRIPTION';
 
   String get noDataToSyncTitle => 'SYNC_DIALOG_NO_DATA_TO_SYNC_TITLE';
 
@@ -1483,9 +1532,12 @@ class BeneficiaryDetails {
 
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
-  String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
+  String get proceedWithoutDownloading => 'CORE_COMMON_PROCEED_WITHOUT_DOWNLOAD';
 
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
+
+  String get unableToCheckDataInServerDescription =>
+      'FAILED_TO_CHECK_DATA_IN_SERVER_DESCRIPTION';
 
   String get dataFound => 'DATA_FOUND';
 
@@ -1493,9 +1545,11 @@ class BeneficiaryDetails {
 
   String get dataFoundContent => 'DATA_FOUND_CONTENT';
 
-  String get noDataFoundContent => 'NO_DATA_FOUND_CONTENT';
+  String get noDataFoundContent => 'BENEFICIARY_NO_DATA_FOUND_DESC';
 
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
+
+  String get fetchingData => 'CORE_COMMON_FETCHING_DATA';
 
   String get insufficientStorage => 'INSUFFICIENT_STORAGE_WARNING';
 

@@ -1,6 +1,7 @@
 import 'package:digit_flow_builder/utils/widget_parsers.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
@@ -37,9 +38,13 @@ class ActionPopupWidget extends ResolvedFlowWidget {
     DigitButtonType type = WidgetParsers.parseButtonType(props['type']);
     DigitButtonSize size = WidgetParsers.parseButtonSize(props['size']);
     String? height = props['height'];
+    String? width = props['width'];
     String? radius = props['radius'];
+    String? borderPadding = props['borderPadding'];
+    final bool alignCenter = props['align'] == 'center';
+    final bool showBorder = props['showBorder'] == true;
 
-    return DigitButton(
+    final button = DigitButton(
       isDisabled: resolved.isDisabled,
       capitalizeLetters: false,
       mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
@@ -106,6 +111,41 @@ class ActionPopupWidget extends ResolvedFlowWidget {
           ? DigitIconMapping.getIcon(props['prefixIcon'])
           : null,
     );
+
+    Widget content = button;
+    if (showBorder) {
+      final borderRadius = radius != null
+          ? BorderRadius.circular(WidgetParsers.parseSize(radius))
+          : BorderRadius.circular(4);
+      content = Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: borderPadding != null
+              ? WidgetParsers.parseSize(borderPadding)
+              : spacer3,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: borderRadius,
+          border: Border.all(
+            color: Theme.of(context).colorTheme.primary.primary1,
+            width: 1,
+          ),
+        ),
+        child: button,
+      );
+    }
+
+    if (width != null) {
+      content = SizedBox(
+        width: WidgetParsers.parseSize(width),
+        child: content,
+      );
+    }
+
+    return WidgetParsers.wrapWithBottomGap(
+      alignCenter ? Center(child: content) : content,
+      props,
+    );
   }
 
   /// Show the action popup based on configuration
@@ -144,7 +184,8 @@ class ActionPopupWidget extends ResolvedFlowWidget {
           titleIcon: titleIconName != null
               ? Icon(
                   DigitIconMapping.getIcon(titleIconName),
-                  color: DigitTheme.instance.colorScheme.primary,
+                  color: Theme.of(ctx).colorTheme.alert.error,
+                  size: spacer11,
                 )
               : null,
           onCrossTap: showCloseButton

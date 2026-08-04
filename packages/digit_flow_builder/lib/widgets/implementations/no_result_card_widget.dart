@@ -50,17 +50,20 @@ class NoResultCardWidget extends ResolvedFlowWidget {
           }
         }
 
-        return NoResultCard(
-          label: json['labelPlaceHolders'] != null
-              ? resolved.resolveTextWithPlaceHolders(
-                  json['label'], json['labelPlaceHolders'])
-              : resolved.resolveTextWithArgs(
-                  json['label'], json['labelArgs']),
-          description: json['descriptionPlaceHolders'] != null
-              ? resolved.resolveTextWithPlaceHolders(
-                  json['description'], json['descriptionPlaceHolders'])
-              : resolved.resolveTextWithArgs(
-                  json['description'], json['descriptionArgs']),
+        return Padding(
+          padding: const EdgeInsets.only(top: spacer12 * 1.7),
+          child: NoResultCard(
+            label: json['labelPlaceHolders'] != null
+                ? resolved.resolveTextWithPlaceHolders(
+                    json['label'], json['labelPlaceHolders'])
+                : resolved.resolveTextWithArgs(
+                    json['label'], json['labelArgs']),
+            description: json['descriptionPlaceHolders'] != null
+                ? resolved.resolveTextWithPlaceHolders(
+                    json['description'], json['descriptionPlaceHolders'])
+                : resolved.resolveTextWithArgs(
+                    json['description'], json['descriptionArgs']),
+          ),
         );
       },
     );

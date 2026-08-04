@@ -26,6 +26,9 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:recase/recase.dart';
@@ -84,6 +87,7 @@ import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/inventory/custom_facility_widgets.dart';
 import '../widgets/inventory/custom_product_selection_card.dart';
+import '../widgets/download_progress/download_spinner_content.dart';
 import '../widgets/localized.dart';
 import '../widgets/progress_bar/beneficiary_progress.dart';
 import '../widgets/progress_bar/hf_referral_progress.dart';
@@ -1884,16 +1888,21 @@ class _HomePageState extends LocalizedState<HomePage> {
             height: MediaQuery.of(context).size.height,
             child: ScrollableContent(
               slivers: [
-                SliverGrid(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return homeItems.elementAt(index);
-                    },
-                    childCount: homeItems.length,
-                  ),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 145,
-                    childAspectRatio: 104 / 128,
+                SliverPadding(
+                  padding: const EdgeInsets.only(left: spacer2, right: spacer2, top: spacer2),
+                  sliver: SliverGrid(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return homeItems.elementAt(index);
+                      },
+                      childCount: homeItems.length,
+                    ),
+                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 164,
+                      childAspectRatio: 104 / 128,
+                      mainAxisSpacing: spacer3,
+                      crossAxisSpacing: spacer2,
+                    ),
                   ),
                 ),
               ],
@@ -1920,7 +1929,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       : homeShowcaseData.distributorProgressBar.buildWith(
                           child: BeneficiaryProgressBar(
                             label: localizations.translate(
-                              i18.home.progressIndicatorTitle,
+                              i18.home.homeMyProgress,
                             ),
                             prefixLabel: localizations.translate(
                               i18.home.progressIndicatorPrefixLabel,
@@ -2226,8 +2235,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
-                final prefs = await SharedPreferences.getInstance();
-                final schemaJsonRaw = prefs.getString('app_config_schemas');
+                 final prefs = await SharedPreferences.getInstance();
+                 final schemaJsonRaw = prefs.getString('app_config_schemas');
 
                 FlowBuilderSingleton().setPersistenceConfiguration(
                     persistenceConfiguration:
@@ -2340,7 +2349,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (schemaJsonRaw != null) {
+                  if (false && schemaJsonRaw != null) {
                     final allSchemas =
                         json.decode(schemaJsonRaw) as Map<String, dynamic>;
                     final data = allSchemas['REGISTRATION'];
@@ -2359,13 +2368,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                           pageName: registrationDeliveryData["initialPage"]),
                     );
                   } else {
-                  FlowRegistry.setConfig(
-                      sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
-                  NavigationRegistry.setupNavigation(ctx);
-                  ctx.router.push(
-                    FlowBuilderHomeRoute(
-                        pageName: sampleSMCFlows["initialPage"]),
-                  );
+                    FlowRegistry.setConfig(sampleSMCFlows["flows"]
+                        as List<Map<String, dynamic>>);
+                    NavigationRegistry.setupNavigation(ctx);
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: sampleSMCFlows["initialPage"]),
+                    );
                   }
                 } catch (e) {
                   debugPrint('error $e');

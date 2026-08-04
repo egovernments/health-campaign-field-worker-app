@@ -8,6 +8,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 
@@ -23,6 +24,7 @@ import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/runtime_hierarchy.dart';
 import '../utils/utils.dart';
+import '../widgets/download_progress/download_spinner_content.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -83,7 +85,11 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               final error = state.syncError;
               final projectSelected = state.selectedProject;
 
-              if (syncDialogRoute?.isActive ?? false) {
+              final willNavigate = error == null &&
+                  !state.loading &&
+                  state.selectedProject?.address?.boundary != null;
+
+              if ((syncDialogRoute?.isActive ?? false) && !willNavigate) {
                 Navigator.of(context, rootNavigator: true).removeRoute(syncDialogRoute!);
               }
 
@@ -142,11 +148,16 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 syncDialogRoute = DialogRoute(
                   context: context,
                   barrierDismissible: false,
-                  builder: (context) => DigitSyncDialogContent(
-                    type: DialogType.inProgress,
-                    label: localizations.translate(
-                      i18.projectSelection.syncInProgressTitleText,
-                    ),
+                  builder: (context) => Popup(
+                    type: PopUpType.simple,
+                    title: "",
+                    additionalWidgets: [
+                      DownloadSpinnerContent(
+                        title: localizations.translate(
+                          i18.projectSelection.syncInProgressTitleText,
+                        ),
+                      ),
+                    ],
                   ),
                 );
 
@@ -261,21 +272,25 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         keys.map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId');
     final fullModuleString = moduleNames.join(',');
 
-    // Show loading dialog while localizations are being cached
-    DialogRoute? localizationDialogRoute;
-    if (mounted) {
-      localizationDialogRoute = DialogRoute(
+    // Reuse the syncDialogRoute already shown by the ProjectBloc listener.
+    // If it's not active (project was pre-loaded), push a fresh one.
+    if (mounted && !(syncDialogRoute?.isActive ?? false)) {
+      syncDialogRoute = DialogRoute(
         context: context,
         barrierDismissible: false,
-        builder: (context) => DigitSyncDialogContent(
-          type: DialogType.inProgress,
-          label: localizations.translate(
-            i18.projectSelection.syncInProgressTitleText,
-          ),
+        builder: (context) => Popup(
+          type: PopUpType.simple,
+          title: "",
+          additionalWidgets: [
+            DownloadSpinnerContent(
+              title: localizations.translate(
+                i18.projectSelection.syncInProgressTitleText,
+              ),
+            ),
+          ],
         ),
       );
-      Navigator.of(context, rootNavigator: true)
-          .push(localizationDialogRoute);
+      Navigator.of(context, rootNavigator: true).push(syncDialogRoute!);
     }
 
     // Cache campaign localizations for the SELECTED locale only. Fetching
@@ -466,10 +481,10 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         }
       }
 
-      // Dismiss the loading dialog before navigating
-      if (mounted && localizationDialogRoute?.isActive == true) {
+      // Dismiss the single sync dialog before navigating
+      if (mounted && syncDialogRoute?.isActive == true) {
         Navigator.of(context, rootNavigator: true)
-            .removeRoute(localizationDialogRoute!);
+            .removeRoute(syncDialogRoute!);
       }
 
       if (mounted) {
@@ -479,10 +494,10 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       }
     } catch (e) {
       debugPrint('error $e');
-      // Dismiss the loading dialog on error too
-      if (mounted && localizationDialogRoute?.isActive == true) {
+      // Dismiss the dialog on error too
+      if (mounted && syncDialogRoute?.isActive == true) {
         Navigator.of(context, rootNavigator: true)
-            .removeRoute(localizationDialogRoute!);
+            .removeRoute(syncDialogRoute!);
       }
     }
   }

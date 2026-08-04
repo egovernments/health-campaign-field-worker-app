@@ -24,6 +24,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/download_progress/download_progress_content.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -239,8 +240,7 @@ void showDownloadDialog(
   required DownloadBeneficiary model,
   required DigitProgressDialogType dialogType,
   bool isPop = true,
-  StreamController<DownloadProgressData>? downloadProgressController,
-  DownloadProgressData? initialProgressData,
+  ValueNotifier<DownloadProgressData?>? downloadProgressController,
 }) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
@@ -249,39 +249,165 @@ void showDownloadDialog(
   switch (dialogType) {
     case DigitProgressDialogType.failed:
     case DigitProgressDialogType.checkFailed:
-      DigitSyncDialog.show(
-        context,
-        type: DialogType.failed,
-        label: model.title,
-        primaryAction: DigitDialogActions(
-          label: model.primaryButtonLabel ?? '',
-          action: (ctx) {
-            if (dialogType == DigitProgressDialogType.failed ||
-                dialogType == DigitProgressDialogType.checkFailed) {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncGetBatchSizeEvent(
-                      appConfiguration: [model.appConfiguartion!],
-                      projectModel: model.projectModel,
-                      boundaries: model.boundaries,
-                      pendingSyncCount: model.pendingSyncCount ?? 0,
-                    ),
-                  );
-            } else {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.router.replaceAll([HomeRoute()]);
-            }
-          },
-        ),
-        secondaryAction: DigitDialogActions(
-          label: model.secondaryButtonLabel ?? '',
-          action: (ctx) {
+      showCustomPopup(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => Popup(
+          type: PopUpType.alert,
+          title: AppLocalizations.of(context)
+              .translate(i18.common.coreCommonFailedToCheckData),
+          titleIcon: Icon(
+            Icons.warning,
+            size: spacer11,
+            color: Theme.of(context).colorTheme.alert.error,
+          ),
+          description: AppLocalizations.of(context)
+              .translate(i18.common.coreCommonFailedToCheckDataDesc),
+          onCrossTap: () {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.replaceAll([HomeRoute()]);
+            context.read<BeneficiaryDownSyncBloc>().add(
+                  const DownSyncResetStateEvent(),
+                );
           },
+          actions: [
+            DigitButton(
+              label: model.primaryButtonLabel ?? '',
+              capitalizeLetters: false,
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
+              mainAxisSize: MainAxisSize.max,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.read<BeneficiaryDownSyncBloc>().add(
+                      DownSyncGetBatchSizeEvent(
+                        appConfiguration: [model.appConfiguartion!],
+                        projectModel: model.projectModel,
+                        boundaries: model.boundaries,
+                        pendingSyncCount: model.pendingSyncCount ?? 0,
+                      ),
+                    );
+              },
+            ),
+            DigitButton(
+              label: model.secondaryButtonLabel ?? '',
+              capitalizeLetters: false,
+              type: DigitButtonType.secondary,
+              size: DigitButtonSize.large,
+              mainAxisSize: MainAxisSize.max,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.replaceAll([HomeRoute()]);
+              },
+            ),
+          ],
         ),
       );
     case DigitProgressDialogType.dataFound:
+      if ((model.totalCount ?? 0) == 0) {
+        showCustomPopup(
+          barrierDismissible: false,
+          context: context,
+          builder: (ctx) => Popup(
+            type: PopUpType.alert,
+            title: model.title,
+            description: model.content,
+            onCrossTap: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.read<BeneficiaryDownSyncBloc>().add(
+                    const DownSyncResetStateEvent(),
+                  );
+            },
+            titleIcon: Icon(
+              Icons.warning,
+              size: spacer12,
+              color: Theme.of(context).colorTheme.alert.error,
+            ),
+            actions: [
+              DigitButton(
+                label: model.primaryButtonLabel ?? '',
+                capitalizeLetters: false,
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () async {
+                  await LocalSecureStore.instance
+                      .setManualSyncTrigger(false);
+                  if (context.mounted) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.replaceAll([HomeRoute()]);
+                  }
+                },
+              ),
+              DigitButton(
+                label: model.secondaryButtonLabel ?? '',
+                capitalizeLetters: false,
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        const DownSyncResetStateEvent(),
+                      );
+                },
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+      showCustomPopup(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => Popup(
+          title: model.title,
+          titleIcon: Icon(
+            Icons.info_outline_rounded,
+            size: spacer8,
+            color: Theme.of(context).colorTheme.alert.error,
+          ),
+          titleIconAlignment: CrossAxisAlignment.center,
+          description: model.content,
+          additionalWidgets: (model.infoCardTitle != null &&
+                  model.infoCardDescription != null)
+              ? [
+                  InfoCard(
+                    type: InfoType.info,
+                    title: model.infoCardTitle!,
+                    description: model.infoCardDescription!,
+                  ),
+                ]
+              : null,
+          actions: [
+            DigitButton(
+                label: model.primaryButtonLabel ?? '',
+                onPressed: () {
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        DownSyncDownloadAllEvent(
+                          projectModel: model.projectModel,
+                          boundaries: model.boundaries,
+                          batchSize: model.batchSize ?? 1,
+                          boundaryCounts: model.boundaryCounts,
+                        ),
+                      );
+                },
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.medium),
+            if (model.secondaryButtonLabel != null)
+              DigitButton(
+                  label: model.secondaryButtonLabel ?? '',
+                  onPressed: () async {
+                    await LocalSecureStore.instance.setManualSyncTrigger(false);
+                    if (context.mounted) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.replaceAll([HomeRoute()]);
+                    }
+                  },
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.medium),
+          ],
+        ),
+      );
     case DigitProgressDialogType.pendingSync:
     case DigitProgressDialogType.insufficientStorage:
       showCustomPopup(
@@ -293,35 +419,17 @@ void showDownloadDialog(
             dialogType == DigitProgressDialogType.insufficientStorage
                 ? Icons.warning
                 : Icons.info_outline_rounded,
-            color: dialogType == DigitProgressDialogType.insufficientStorage
-                ? Theme.of(context).colorTheme.alert.error
-                : Theme.of(context).colorTheme.text.primary,
+            size: spacer8,
+            color: Theme.of(context).colorTheme.alert.error,
           ),
+          titleIconAlignment: CrossAxisAlignment.center,
           description: model.content,
           actions: [
             DigitButton(
                 label: model.primaryButtonLabel ?? '',
                 onPressed: () {
-                  if (dialogType == DigitProgressDialogType.pendingSync) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    context.router.replaceAll([HomeRoute()]);
-                  } else {
-                    if ((model.totalCount ?? 0) > 0) {
-                      context.read<BeneficiaryDownSyncBloc>().add(
-                            DownSyncDownloadAllEvent(
-                              projectModel: model.projectModel,
-                              boundaries: model.boundaries,
-                              batchSize: model.batchSize ?? 1,
-                              boundaryCounts: model.boundaryCounts,
-                            ),
-                          );
-                    } else {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      context.read<BeneficiaryDownSyncBloc>().add(
-                            const DownSyncResetStateEvent(),
-                          );
-                    }
-                  }
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.router.replaceAll([HomeRoute()]);
                 },
                 type: DigitButtonType.primary,
                 size: DigitButtonSize.medium),
@@ -345,11 +453,9 @@ void showDownloadDialog(
         barrierDismissible: false,
         context: context,
         builder: (ctx) => Popup(title: "", additionalWidgets: [
-          StreamBuilder<DownloadProgressData>(
-            stream: downloadProgressController?.stream,
-            initialData: initialProgressData,
-            builder: (context, snapshot) {
-              final data = snapshot.data;
+          ValueListenableBuilder<DownloadProgressData?>(
+            valueListenable: downloadProgressController!,
+            builder: (context, data, _) {
               final progress = data?.progress ?? 0;
               final totalCount = data?.totalCount ?? model.totalCount ?? 0;
               final syncedCount = data?.syncedCount ?? 0;
@@ -408,15 +514,11 @@ void showHFReferralProgressDialog(
           final totalCount = data?.totalCount ?? 0;
           final syncedCount = data?.syncedCount ?? 0;
 
-          return ProgressIndicatorContainer(
-            label: '',
-            prefixLabel: '$syncedCount',
-            suffixLabel: '$totalCount',
-            value: progress,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).colorTheme.primary.primary1,
-            ),
-            subLabel: title,
+          return DownloadProgressContent(
+            title: title,
+            progress: progress,
+            countLabel: '$syncedCount/$totalCount',
+            showProgressBar: false,
           );
         },
       ),

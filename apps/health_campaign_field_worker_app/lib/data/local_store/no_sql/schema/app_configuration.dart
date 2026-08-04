@@ -24,6 +24,9 @@ class AppConfiguration {
   @Name("LANGUAGES")
   late List<Languages>? languages;
 
+  @Name("STATE_LOGO_URL")
+  String? stateLogoUrl;
+
   @Name("BACKEND_INTERFACE")
   late BackendInterface? backendInterface;
 

@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../localized.dart';
 import 'resource_beneficiary_card.dart';
@@ -244,24 +245,21 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                         localizations
                             .translate(labelFromSchema!)
                             .isNotEmpty) ...[
-                      Text(
-                        localizations.translate(labelFromSchema!),
-                        style: textTheme.bodyL.copyWith(
-                          color: theme.colorTheme.text.primary,
+                      Padding(
+                        padding: const EdgeInsets.only(top: spacer2),
+                        child: Text(
+                          localizations.translate(labelFromSchema!),
+                          style: textTheme.headingS.copyWith(
+                            color: theme.colorTheme.text.primary,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: spacer1,
                       ),
                     ],
                     Column(
-                      children: _controllers.isEmpty ? [] : List.generate(_controllers.length * 2 - 1, (i) {
-                        if (i.isOdd) {
-                          return const SizedBox(height: 16); // Middle spacing
-                        }
-                        final index = i ~/ 2;
-                        final controller = _controllers[index];
-                        return ResourceBeneficiaryCard(
+                      children: _controllers.isEmpty ? [] : [
+                        for (int index = 0; index < _controllers.length; index++) ...[
+                          const SizedBox(height: spacer4),
+                          ResourceBeneficiaryCard(
                           maxQuantity: _maxQuantities[index],
                           readOnly: isReadOnlyFromSchema,
                           form: form,
@@ -281,8 +279,9 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                             _controllers.removeAt(index);
                             setState(() {});
                           },
-                        );
-                      }),
+                        ),
+                        ],
+                      ],
                     ),
                     const SizedBox(
                       height: spacer4,
@@ -290,7 +289,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                     Center(
                       child: DigitButton(
                         label: localizations.translate(
-                          'Add items',
+                          i18.common.coreCommonAddResource,
                         ),
                         type: DigitButtonType.tertiary,
                         size: DigitButtonSize.medium,

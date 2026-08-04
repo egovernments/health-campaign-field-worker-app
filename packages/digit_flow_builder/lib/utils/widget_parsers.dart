@@ -43,6 +43,8 @@ class WidgetParsers {
         return TagType.success;
       case 'error':
         return TagType.error;
+      case 'warning':
+        return TagType.warning;
       default:
         return TagType.monochrome;
     }
@@ -137,6 +139,21 @@ class WidgetParsers {
     }
   }
 
+  static CrossAxisAlignment parseCrossAxisAlignment(String? alignment) {
+    switch (alignment) {
+      case 'start':
+        return CrossAxisAlignment.start;
+      case 'end':
+        return CrossAxisAlignment.end;
+      case 'center':
+        return CrossAxisAlignment.center;
+      case 'stretch':
+        return CrossAxisAlignment.stretch;
+      default:
+        return CrossAxisAlignment.center;
+    }
+  }
+
   // ============================================================================
   // Spacing/Padding helpers
   // ============================================================================
@@ -158,13 +175,14 @@ class WidgetParsers {
     if (properties == null) return child;
 
     final bottomGap = properties['bottomGap'];
-    if (bottomGap == null) return child;
+    final topGap = properties['topGap'];
 
-    final double gap = bottomGap is num ? bottomGap.toDouble() : 0;
-    if (gap <= 0) return child;
+    final double bottom = bottomGap is num ? bottomGap.toDouble() : 0;
+    final double top = topGap is num ? topGap.toDouble() : 0;
+    if (bottom <= 0 && top <= 0) return child;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: gap),
+      padding: EdgeInsets.only(top: top, bottom: bottom),
       child: child,
     );
   }
@@ -195,8 +213,18 @@ class WidgetParsers {
         return spacer11;
       case 'spacer12':
         return spacer12;
+      case 'spacer13':
+        return spacer13;
+      case 'spacer14':
+        return spacer14;
+      case 'spacer15':
+        return spacer15;
+      case 'spacer16':
+        return spacer16;
+      case 'spacer17':
+        return spacer17;
       default:
-        return 0;
+        return double.tryParse(size ?? '') ?? 0;
     }
   }
 

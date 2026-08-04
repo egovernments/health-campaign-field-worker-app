@@ -39,6 +39,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       suffixText: json['suffixText'] as String?,
       innerLabel: json['innerLabel'] as String?,
       label: json['label'] as String?,
+      textCapitalization: json['textCapitalization'] as String?,
       isMultiSelect: json['isMultiSelect'] as bool?,
       value: json['value'],
       displayBehavior: json['displayBehavior'] == null
@@ -72,6 +73,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       labelPlaceHolders: _labelPlaceHoldersOrNull(json['labelPlaceHolders']),
       descriptionPlaceHolders:
           _labelPlaceHoldersOrNull(json['descriptionPlaceHolders']),
+      showLabelOutsideCard: json['showLabelOutsideCard'] as bool?,
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -110,6 +112,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('suffixText', instance.suffixText);
   writeNotNull('innerLabel', instance.innerLabel);
   writeNotNull('label', instance.label);
+  writeNotNull('textCapitalization', instance.textCapitalization);
   writeNotNull('isMultiSelect', instance.isMultiSelect);
   writeNotNull('value', instance.value);
   writeNotNull('displayBehavior', instance.displayBehavior?.toJson());
@@ -139,6 +142,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
       instance.labelPlaceHolders?.map((e) => e.toJson()).toList());
   writeNotNull('descriptionPlaceHolders',
       instance.descriptionPlaceHolders?.map((e) => e.toJson()).toList());
+  writeNotNull('showLabelOutsideCard', instance.showLabelOutsideCard);
   return val;
 }
 
@@ -358,6 +362,8 @@ _$AlertConditionImpl _$$AlertConditionImplFromJson(Map<String, dynamic> json) =>
     _$AlertConditionImpl(
       expression: json['expression'] as String,
       value: json['value'] as String,
+      title: json['title'] as String?,
+      description: json['description'] as String?,
     );
 
 Map<String, dynamic> _$$AlertConditionImplToJson(
@@ -365,6 +371,8 @@ Map<String, dynamic> _$$AlertConditionImplToJson(
     <String, dynamic>{
       'expression': instance.expression,
       'value': instance.value,
+      'title': instance.title,
+      'description': instance.description,
     };
 
 _$MultiEntityConfigImpl _$$MultiEntityConfigImplFromJson(

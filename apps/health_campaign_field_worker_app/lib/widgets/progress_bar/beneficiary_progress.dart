@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/project_beneficiary.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/task.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/theme/radius.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -131,13 +132,20 @@ class BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
 
     final target = targetModel?.targetNo ?? 0.0;
 
-    return DigitCard(margin: const EdgeInsets.all(spacer2), children: [
-      ProgressIndicatorContainer(
-        label: '${max(target - current, 0).round()} ${widget.label}',
-        prefixLabel: '$current ${widget.prefixLabel}',
-        suffixLabel: target.toStringAsFixed(0),
-        value: target == 0 ? 0 : min(current / target, 1),
-      ),
-    ]);
+    return DigitCard(
+        // This card's own showcase wrapper adds 4px on all sides; spacer2 +
+        // 4px wrapper = 12px, aligned with the home tiles' visible edge and
+        // with StockBalanceCard / HFReferralProgressBar (spacer3).
+        margin: const EdgeInsets.symmetric(horizontal: spacer2, vertical: spacer1),
+        padding: const EdgeInsets.all(spacer4),
+        borderRadius: BorderRadius.circular(radius1),
+        children: [
+        ProgressIndicatorContainer(
+          label: widget.label,
+          prefixLabel: '$current ${widget.prefixLabel}',
+          suffixLabel: target.toStringAsFixed(0),
+          value: target == 0 ? 0 : min(current / target, 1),
+        ),
+      ]);
   }
 }

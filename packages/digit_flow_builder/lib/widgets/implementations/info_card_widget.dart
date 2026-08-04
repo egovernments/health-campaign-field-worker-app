@@ -57,6 +57,16 @@ class InfoCardWidget extends ResolvedFlowWidget {
           if (!hasSearchCompleted || !hasNoResults) {
             return const SizedBox.shrink();
           }
+          // Vertically center within the viewport by offsetting below the search bar area
+          return SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.20,
+              ),
+              child: Center(child: _buildInfoCard(json, context, resolved)),
+            ),
+          );
         }
 
         // Check hidden condition

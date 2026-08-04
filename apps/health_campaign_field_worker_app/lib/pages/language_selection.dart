@@ -105,6 +105,16 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                   builder: (context, localizationState) {
                     return localizationModulesList != null
                         ? DigitLanguageCard(
+                            appLogo: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                AppLocalizations.of(context)
+                                    .translate(i18.common.chooseLanguage),
+                                style: theme.digitTextTheme(context).headingL.copyWith(
+                                  color: theme.colorTheme.primary.primary2,
+                                ),
+                              ),
+                            ),
                             contentPadding:
                                 const EdgeInsets.symmetric(vertical: spacer2),
                             rowItemWidth:
