@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/models/entities/attendee.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/forms_engine.dart'
@@ -21,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:survey_form/survey_form.dart';
@@ -39,8 +42,18 @@ import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../blocs/push_notification/push_notification.dart';
 import '../data/local_store/app_shared_preferences.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
+import '../blocs/face_auth/face_gate_bloc.dart';
+import '../blocs/face_auth/reverification_bloc.dart';
+import '../notification_service.dart';
+import '../services/face_auth_config.dart';
+import '../services/reverification_scheduler.dart';
+import '../services/worker_registry_service.dart';
+import '../widgets/face_auth/face_verification_dialog.dart';
+import '../widgets/face_auth/reverification_popup.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/remote_client.dart';
+import '../data/repositories/remote/mdms.dart';
 import '../data/repositories/local/localization.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/downsync/downsync.dart';
@@ -66,7 +79,8 @@ class AuthenticatedPageWrapper extends StatefulWidget {
       _AuthenticatedPageWrapperState();
 }
 
-class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
+class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper>
+    with WidgetsBindingObserver {
   final StreamController<bool> _drawerVisibilityController =
       StreamController.broadcast();
   StreamController<HFReferralProgressData> _hfReferralProgress =
@@ -75,13 +89,46 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
   bool _isOfflineDialogShowing = false;
 
+  // ── Face-auth / re-verification state ──
+  FaceAuthConfig _faceAuthConfig = const FaceAuthConfig();
+  bool _configFromRegister = false;
+  bool _coWorkerEmbeddingsPrefetched = false;
+  ReVerificationScheduler? _reVerificationScheduler;
+  StreamSubscription<ReVerificationTrigger>? _reVerificationSubscription;
+  StreamSubscription<ReVerificationState>? _reVerStateSubscription;
+  ReVerificationBloc? _reVerificationBloc;
+  // Held so we can push MDMS-derived threshold/maxAttempts into the live bloc
+  // when config resolves AFTER the BlocProvider has created it.
+  FaceGateBloc? _faceGateBloc;
+  // Index of the trigger currently being prompted; cleared on terminal state.
+  int? _activeTriggerIndex;
+  final StreamController<List<DateTime>> _scheduleController =
+      StreamController<List<DateTime>>.broadcast();
+  final ValueNotifier<ReVerificationState?> _reVerStateNotifier =
+      ValueNotifier(null);
+  bool _lastEnrollmentActive = false;
+  bool _lastConnectivityOnline = true;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_handleConnectivityChange);
+    _startReVerificationScheduler();
+    // When face enrollment finishes (notifier flips true → false) regenerate
+    // the schedule so prompts are relative to enrollment end, not app launch.
+    faceEnrollmentActiveNotifier.addListener(_onEnrollmentActiveChanged);
     _registerScannerIdentityValidator();
   }
+
+  /// The independent MDMS face-auth config fetch, shared by the gate and
+  /// verification blocs so the server threshold is authoritative everywhere.
+  Future<FaceAuthConfig?> _fetchFaceConfig() =>
+      MdmsRepository(DioClient().dio).searchFaceAuthConfig(
+        envConfig.variables.mdmsApiPath,
+        envConfig.variables.tenantId,
+      );
 
   @override
   void dispose() {
@@ -89,10 +136,24 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     // logout → re-login (in which case a fresh AuthenticatedPageWrapper
     // will register a new one).
     ScannerComparisonRegistry().identityPayloadValidator = null;
+    WidgetsBinding.instance.removeObserver(this);
+    faceEnrollmentActiveNotifier.removeListener(_onEnrollmentActiveChanged);
+    _reVerificationSubscription?.cancel();
+    _reVerStateSubscription?.cancel();
+    _reVerStateNotifier.dispose();
+    _reVerificationScheduler?.dispose();
+    _scheduleController.close();
     _connectivitySubscription.cancel();
     _drawerVisibilityController.close();
     _hfReferralProgress.close();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _reVerificationScheduler?.checkNow();
+    }
   }
 
   /// Registers the reject-at-scan payload check for
@@ -148,6 +209,130 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     } else if (!isOffline && _isOfflineDialogShowing && mounted) {
       _dismissNoInternetDialog();
     }
+
+    // Retry the worker-registry queue on every offline → online transition.
+    if (isOnline && !_lastConnectivityOnline && mounted) {
+      debugPrint(
+          'AuthenticatedPage: connectivity restored — retrying pending worker registry sync');
+      _retryPendingWorkerRegistrySync();
+    }
+    _lastConnectivityOnline = isOnline;
+  }
+
+  Future<void> _prefetchCoWorkerEmbeddings(BuildContext context) async {
+    if (_coWorkerEmbeddingsPrefetched) return;
+    try {
+      if (!mounted) return;
+      final individualId = context.loggedInIndividualId;
+      if (individualId == null) return;
+
+      final repository = context.read<FaceEmbeddingRepository>();
+      final registerRepo = context
+          .repository<AttendanceRegisterModel, AttendanceRegisterSearchModel>();
+      final individualRepo =
+          context.repository<IndividualModel, IndividualSearchModel>();
+
+      final registers = await registerRepo
+          .search(AttendanceRegisterSearchModel(attendeeId: individualId));
+      if (!mounted) return;
+
+      final now = DateTime.now();
+      final todayStart =
+          DateTime(now.year, now.month, now.day).millisecondsSinceEpoch;
+      final todayEnd = todayStart + const Duration(days: 1).inMilliseconds - 1;
+
+      for (final r in registers) {
+        final start = r.startDate ?? 0;
+        final end = r.endDate ?? 0;
+        if (!(start <= todayEnd && end >= todayStart)) continue;
+
+        _coWorkerEmbeddingsPrefetched = true;
+
+        final eligibleRawIds = (r.attendees ?? <AttendeeModel>[])
+            .where((a) =>
+                a.denrollmentDate == null ||
+                (a.denrollmentDate ?? now.millisecondsSinceEpoch) >=
+                    now.millisecondsSinceEpoch)
+            .map((a) => a.individualId)
+            .where((id) => id != null && id.isNotEmpty)
+            .cast<String>()
+            .toList();
+
+        if (eligibleRawIds.isEmpty) break;
+
+        final individuals = await individualRepo
+            .search(IndividualSearchModel(id: eligibleRawIds));
+        if (!mounted) return;
+
+        final coWorkerIds = individuals
+            .where(
+                (i) => i.id != null && i.id!.isNotEmpty && i.id != individualId)
+            .map((i) => i.id!)
+            .toList();
+
+        if (coWorkerIds.isEmpty) break;
+
+        final serviceRegistry =
+            await context.read<Isar>().serviceRegistrys.where().findAll();
+        if (!mounted) return;
+        final service = WorkerRegistryService.fromServiceRegistry(
+          dio: DioClient().dio,
+          tenantId: envConfig.variables.tenantId,
+          serviceRegistry: serviceRegistry,
+        );
+
+        for (final id in coWorkerIds) {
+          if (!mounted) return;
+          final hasLocal = await repository.hasEmbedding(id);
+          if (!hasLocal) {
+            await service.syncEnrollmentFromRegistry(
+                individualId: id, repository: repository);
+          }
+        }
+        break;
+      }
+    } catch (e) {
+      debugPrint('AuthenticatedPage: _prefetchCoWorkerEmbeddings failed: $e');
+    }
+  }
+
+  Future<void> _retryPendingWorkerRegistrySync() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final pendingIds = <String>{};
+      final legacySingle = prefs.getString('face_registry_sync_pending');
+      if (legacySingle != null && legacySingle.isNotEmpty) {
+        pendingIds.add(legacySingle);
+      }
+      pendingIds.addAll(
+          prefs.getStringList('face_registry_sync_pending_ids') ?? const []);
+      if (pendingIds.isEmpty) return;
+      if (!mounted) return;
+
+      final isar = context.read<Isar>();
+      final repository = FaceEmbeddingRepository(isar);
+      final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+      final service = WorkerRegistryService.fromServiceRegistry(
+        dio: DioClient().dio,
+        tenantId: envConfig.variables.tenantId,
+        serviceRegistry: serviceRegistry,
+      );
+
+      final remaining = <String>{};
+      for (final id in pendingIds) {
+        final ok = await service.updateWorkerWithFaceEnrollment(
+          individualId: id,
+          repository: repository,
+        );
+        if (!ok) remaining.add(id);
+      }
+
+      await prefs.setStringList(
+          'face_registry_sync_pending_ids', remaining.toList());
+      await prefs.remove('face_registry_sync_pending');
+    } catch (e) {
+      debugPrint('AuthenticatedPage: worker registry sync retry failed: $e');
+    }
   }
 
   void _showNoInternetDialog() {
@@ -186,6 +371,287 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     }
   }
 
+  void _onEnrollmentActiveChanged() async {
+    final now = faceEnrollmentActiveNotifier.value;
+    if (_lastEnrollmentActive == true && now == false) {
+      try {
+        await _reVerificationScheduler?.regenerate();
+        if (mounted && _reVerificationScheduler != null) {
+          _scheduleController.add(_reVerificationScheduler!.currentSchedule);
+        }
+      } catch (e) {
+        debugPrint(
+            'AuthenticatedPage: failed to regenerate schedule after enrollment: $e');
+      }
+    }
+    _lastEnrollmentActive = now;
+  }
+
+  Future<void> _initConfigFromRegister() async {
+    if (_configFromRegister) return;
+    try {
+      if (!mounted) return;
+      final mdmsFaceConfig = await _fetchFaceConfig();
+      if (!mounted) return;
+      final individualId = context.loggedInIndividualId;
+      if (individualId == null) {
+        if (mdmsFaceConfig != null) _faceAuthConfig = mdmsFaceConfig;
+        return;
+      }
+
+      final registerRepo = context
+          .repository<AttendanceRegisterModel, AttendanceRegisterSearchModel>();
+      final now = DateTime.now();
+      final registers = await registerRepo
+          .search(AttendanceRegisterSearchModel(attendeeId: individualId));
+      if (!mounted) return;
+
+      final todayStart =
+          DateTime(now.year, now.month, now.day).millisecondsSinceEpoch;
+      final todayEnd = todayStart + const Duration(days: 1).inMilliseconds - 1;
+
+      for (final r in registers) {
+        final start = r.startDate ?? 0;
+        final end = r.endDate ?? 0;
+        if (start <= todayEnd && end >= todayStart) {
+          _configFromRegister = true;
+          _faceAuthConfig =
+              _buildConfigFromRegister(r, mdmsConfig: mdmsFaceConfig);
+          break;
+        }
+      }
+
+      if (!_configFromRegister && mdmsFaceConfig != null) {
+        _faceAuthConfig = mdmsFaceConfig;
+      }
+    } catch (e) {
+      debugPrint('AuthenticatedPage: _initConfigFromRegister failed: $e');
+    }
+  }
+
+  Future<void> _startReVerificationScheduler(
+      {bool immediateFirstTrigger = false}) async {
+    if (_reVerificationScheduler != null) return;
+
+    try {
+      final isSupervisor = _faceIsSupervisor(context);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('face_reverify_skip', isSupervisor);
+      if (isSupervisor) {
+        return;
+      }
+    } catch (e) {
+      debugPrint('AuthenticatedPage: supervisor flag write failed: $e');
+    }
+
+    await _initConfigFromRegister();
+
+    if (_reVerificationBloc != null && !_reVerificationBloc!.isClosed) {
+      _reVerificationBloc!.updateConfig(_faceAuthConfig);
+    }
+    if (_faceGateBloc != null && !_faceGateBloc!.isClosed) {
+      _faceGateBloc!.updateConfig(
+        threshold: _faceAuthConfig.faceMatchThreshold,
+        maxAttempts: _faceAuthConfig.maxFaceAttempts,
+      );
+    }
+
+    _reVerificationScheduler = ReVerificationScheduler(config: _faceAuthConfig);
+    _reVerificationScheduler!.isForeground = () =>
+        WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
+    _reVerificationScheduler!
+        .start(immediateFirstTrigger: immediateFirstTrigger)
+        .then((_) {
+      if (mounted) {
+        _scheduleController.add(_reVerificationScheduler!.currentSchedule);
+        _checkNotificationLaunch();
+      }
+    }).catchError((e) {
+      debugPrint('AuthenticatedPage: scheduler start failed: $e');
+    });
+    _reVerificationSubscription =
+        _reVerificationScheduler!.triggers.listen((trigger) {
+      _dispatchTrigger(trigger);
+    });
+  }
+
+  Future<void> _checkNotificationLaunch() async {
+    try {
+      final details = await NotificationService()
+          .flutterLocalNotificationsPlugin
+          .getNotificationAppLaunchDetails();
+      if (details == null || !details.didNotificationLaunchApp) return;
+      final payload = details.notificationResponse?.payload;
+      if (payload == null ||
+          !payload.startsWith(NotificationService.reVerifyPayloadPrefix)) {
+        return;
+      }
+      final indexStr =
+          payload.substring(NotificationService.reVerifyPayloadPrefix.length);
+      final index = int.tryParse(indexStr);
+      if (index == null) return;
+      if (mounted) {
+        _dispatchTrigger(ReVerificationTrigger(
+          scheduledTime: DateTime.now(),
+          triggerIndex: index,
+        ));
+      }
+    } catch (e) {
+      debugPrint('AuthenticatedPage: _checkNotificationLaunch failed: $e');
+    }
+  }
+
+  void _markTriggerHandledByApp(int triggerIndex) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final existing =
+          (prefs.getStringList('face_reverification_bg_notified') ?? [])
+              .toSet();
+      existing.add(triggerIndex.toString());
+      await prefs.setStringList(
+          'face_reverification_bg_notified', existing.toList());
+    } catch (e) {
+      debugPrint('_markTriggerHandledByApp: $e');
+    }
+  }
+
+  void _dispatchTrigger(ReVerificationTrigger trigger) async {
+    final now = DateTime.now();
+    try {
+      final isar = context.read<Isar>();
+      final repository = FaceEmbeddingRepository(isar);
+      final enrollmentCount = await repository.count();
+      if (enrollmentCount == 0) {
+        _reVerificationScheduler?.markPending(trigger.triggerIndex);
+        return;
+      }
+    } catch (e) {
+      _reVerificationScheduler?.markPending(trigger.triggerIndex);
+      return;
+    }
+
+    if (!mounted) return;
+
+    try {
+      final individualId = context.loggedInIndividualId;
+      if (individualId != null) {
+        final registerRepo = context.repository<AttendanceRegisterModel,
+            AttendanceRegisterSearchModel>();
+        final registers = await registerRepo.search(
+          AttendanceRegisterSearchModel(attendeeId: individualId),
+        );
+
+        final todayStart =
+            DateTime(now.year, now.month, now.day).millisecondsSinceEpoch;
+        final todayEnd =
+            todayStart + const Duration(days: 1).inMilliseconds - 1;
+
+        AttendanceRegisterModel? activeRegister;
+        for (final r in registers) {
+          final start = r.startDate ?? 0;
+          final end = r.endDate ?? 0;
+          if (start <= todayEnd && end >= todayStart) {
+            activeRegister = r;
+            break;
+          }
+        }
+
+        if (activeRegister == null && registers.isNotEmpty) {
+          _reVerificationScheduler?.markPending(trigger.triggerIndex);
+          return;
+        }
+
+        if (!_configFromRegister && activeRegister != null) {
+          _configFromRegister = true;
+          final mdmsFaceConfig = await _fetchFaceConfig();
+          final newConfig = _buildConfigFromRegister(
+            activeRegister,
+            mdmsConfig: mdmsFaceConfig,
+          );
+          final configChanged =
+              newConfig.startHour != _faceAuthConfig.startHour ||
+                  newConfig.endHour != _faceAuthConfig.endHour ||
+                  newConfig.promptCount != _faceAuthConfig.promptCount ||
+                  newConfig.minGapMinutes != _faceAuthConfig.minGapMinutes;
+          if (!_coWorkerEmbeddingsPrefetched) {
+            _prefetchCoWorkerEmbeddings(context);
+          }
+          if (configChanged) {
+            final newDayEnd =
+                DateTime(now.year, now.month, now.day, newConfig.endHour);
+            if (now.isAfter(newDayEnd)) {
+              _restartSchedulerWithConfig(newConfig,
+                  immediateFirstTrigger: false);
+              return;
+            } else {
+              _restartSchedulerWithConfig(newConfig);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint(
+          'AuthenticatedPage: attendance check threw: $e — failing open');
+    }
+
+    if (!mounted) return;
+
+    final topRoute = context.router.topRoute.name;
+    if (topRoute == FaceGateRoute.name ||
+        topRoute == NonMobileFaceEnrollRoute.name) {
+      _reVerificationScheduler?.markPending(trigger.triggerIndex);
+      return;
+    }
+
+    if (_reVerificationBloc != null && !_reVerificationBloc!.isClosed) {
+      _activeTriggerIndex = trigger.triggerIndex;
+      _reVerificationBloc!.add(
+        ReVerificationEvent.triggered(trigger: trigger),
+      );
+      _markTriggerHandledByApp(trigger.triggerIndex);
+      _reVerificationScheduler?.clearPending();
+    } else {
+      Future.delayed(const Duration(seconds: 1), () {
+        if (mounted) _dispatchTrigger(trigger);
+      });
+    }
+    if (mounted) {
+      _scheduleController.add(_reVerificationScheduler!.currentSchedule);
+    }
+  }
+
+  FaceAuthConfig _buildConfigFromRegister(
+    AttendanceRegisterModel register, {
+    FaceAuthConfig? mdmsConfig,
+  }) {
+    final d = mdmsConfig ?? const FaceAuthConfig();
+    final details = register.additionalDetails;
+    return FaceAuthConfig(
+      startHour: (details?['startHour'] as num?)?.toInt() ?? d.startHour,
+      endHour: (details?['endHour'] as num?)?.toInt() ?? d.endHour,
+      promptCount: d.promptCount,
+      minGapMinutes: d.minGapMinutes,
+      countdownDuration: d.countdownDuration,
+      maxFaceAttempts: d.maxFaceAttempts,
+      faceMatchThreshold: d.faceMatchThreshold,
+    );
+  }
+
+  void _restartSchedulerWithConfig(FaceAuthConfig newConfig,
+      {bool immediateFirstTrigger = true}) {
+    _reVerificationSubscription?.cancel();
+    _reVerificationSubscription = null;
+    _reVerificationScheduler?.dispose();
+    _reVerificationScheduler = null;
+    _faceAuthConfig = newConfig;
+    _reVerificationBloc?.updateConfig(newConfig);
+    _faceGateBloc?.updateConfig(
+      threshold: newConfig.faceMatchThreshold,
+      maxAttempts: newConfig.maxFaceAttempts,
+    );
+    _startReVerificationScheduler(immediateFirstTrigger: immediateFirstTrigger);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -206,11 +672,97 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                     appBar: AppBar(
                       backgroundColor: theme.colorTheme.primary.primary2,
                       foregroundColor: theme.colorTheme.paper.primary,
+                      title: ValueListenableBuilder<ReVerificationState?>(
+                        valueListenable: _reVerStateNotifier,
+                        builder: (context, state, _) {
+                          if (state is! ReVerificationPromptedState) {
+                            return const SizedBox.shrink();
+                          }
+                          return Text(
+                            'Attempt ${state.iteration} of ${state.maxIterations}',
+                            style: TextStyle(
+                              color: theme.colorTheme.paper.primary,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                        },
+                      ),
                       actions: null,
                     ),
                     drawer: showDrawer ? drawerWidget(context) : null,
                     body: MultiBlocProvider(
                       providers: [
+                        // Face-auth: provide the ML service, embedding store,
+                        // and gate/verification blocs so the FaceGate route
+                        // (pushed from Home) can read them.
+                        RepositoryProvider<FaceModelService>(
+                          create: (_) => FaceModelService()..initialize(),
+                        ),
+                        RepositoryProvider<FaceEmbeddingRepository>(
+                          create: (ctx) =>
+                              FaceEmbeddingRepository(ctx.read<Isar>()),
+                        ),
+                        BlocProvider(
+                          create: (ctx) {
+                            final appInit = ctx
+                                .read<AppInitializationBloc>()
+                                .state as AppInitialized;
+                            _faceGateBloc = FaceGateBloc(
+                              repository: ctx.read<FaceEmbeddingRepository>(),
+                              workerRegistryService:
+                                  WorkerRegistryService.fromServiceRegistry(
+                                dio: DioClient().dio,
+                                tenantId: envConfig.variables.tenantId,
+                                serviceRegistry: appInit.serviceRegistryList,
+                              ),
+                              // Independent MDMS fetch, loaded lazily by the bloc
+                              // on checkEnrollment so the server threshold applies
+                              // before the first verification.
+                              configLoader: _fetchFaceConfig,
+                            );
+                            return _faceGateBloc!;
+                          },
+                        ),
+                        BlocProvider(
+                          create: (ctx) => FaceVerificationBloc(
+                            faceModelService: ctx.read<FaceModelService>(),
+                            embeddingRepository:
+                                ctx.read<FaceEmbeddingRepository>(),
+                            similarityThreshold:
+                                FaceAuthConfig.defaultFaceMatchThreshold,
+                            thresholdLoader: () async =>
+                                (await _fetchFaceConfig())?.faceMatchThreshold,
+                          ),
+                        ),
+                        BlocProvider(create: (_) => LivenessBloc()),
+                        BlocProvider(
+                          lazy: false,
+                          create: (ctx) {
+                            _reVerificationBloc = ReVerificationBloc(
+                              repository: ctx.read<FaceEmbeddingRepository>(),
+                              config: _faceAuthConfig,
+                              currentUserIndividualId:
+                                  context.loggedInIndividualId ?? '',
+                            );
+                            _reVerStateSubscription?.cancel();
+                            _reVerStateSubscription =
+                                _reVerificationBloc!.stream.listen((state) {
+                              _reVerStateNotifier.value = state;
+                              final terminal = state.maybeWhen(
+                                verified: (_, __) => true,
+                                missed: (_) => true,
+                                orElse: () => false,
+                              );
+                              if (terminal && _activeTriggerIndex != null) {
+                                final idx = _activeTriggerIndex!;
+                                _reVerificationScheduler?.markCompleted(idx);
+                                _activeTriggerIndex = null;
+                              }
+                            });
+                            return _reVerificationBloc!;
+                          },
+                        ),
                         // INFO : Need to add bloc of package Here
                         BlocProvider(
                           create: (context) {
@@ -589,9 +1141,20 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                           ),
                         ],
                         child: ErrorBoundary(builder: (context, error) {
+                          if (error == null) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _prefetchCoWorkerEmbeddings(context);
+                              _retryPendingWorkerRegistrySync();
+                            });
+                          }
                           return error != null
                               ? const ErrorScreen()
-                              : AutoRouter(
+                              : ReVerificationListener(
+                                  child: Column(
+                                    children: [
+                                      const _ReVerificationCountdownBanner(),
+                                      Expanded(
+                                        child: AutoRouter(
                                   navigatorObservers: () => [
                                     AuthenticatedRouteObserver(
                                       onNavigated: () {
@@ -600,6 +1163,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                           case ProjectSelectionRoute.name:
                                           case BoundarySelectionRoute.name:
                                           case PermissionsRoute.name:
+                                          case FaceGateRoute.name:
                                             shouldShowDrawer = false;
                                             break;
                                           default:
@@ -611,6 +1175,10 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                       },
                                     ),
                                   ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 );
                         }),
                       ),
@@ -711,8 +1279,16 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                       context.router.push(const BeneficiariesReportRoute());
                     },
                   ),
-
-                  // TODO: Non system user
+                  SidebarItem(
+                    title: AppLocalizations.of(context).translate(
+                      i18.nonMobileUser.nonMobileUserLabel,
+                    ),
+                    icon: Icons.people_alt,
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.push(const NonMobileUserListRoute());
+                    },
+                  ),
                 ],
               ],
               logOutDigitButtonLabel: AppLocalizations.of(context)
@@ -1004,5 +1580,368 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   )),
             ))
         .toList();
+  }
+}
+
+// ── Face-auth role helpers (file-private; mirror context extensions) ──
+bool _faceIsSupervisor(BuildContext context) {
+  try {
+    return context.loggedInUserRoles.any((r) =>
+        r.code == RolesType.teamSupervisor.toValue() ||
+        r.code == RolesType.districtSupervisor.toValue());
+  } catch (_) {
+    return false;
+  }
+}
+
+bool _faceIsTeamSupervisor(BuildContext context) {
+  try {
+    return context.loggedInUserRoles
+        .any((r) => r.code == RolesType.teamSupervisor.toValue());
+  } catch (_) {
+    return false;
+  }
+}
+
+class _ReVerificationCountdownBanner extends StatelessWidget {
+  const _ReVerificationCountdownBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    if (_faceIsTeamSupervisor(context)) return const SizedBox.shrink();
+
+    final currentRoute = context.router.topRoute.name;
+    final isOnFaceGate = currentRoute == FaceGateRoute.name;
+
+    return BlocBuilder<ReVerificationBloc, ReVerificationState>(
+      builder: (context, state) {
+        final isPrompted =
+            state is ReVerificationPromptedState && !isOnFaceGate;
+
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 400),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeInCubic,
+          transitionBuilder: (child, animation) {
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, -1),
+                end: Offset.zero,
+              ).animate(animation),
+              child: SizeTransition(
+                sizeFactor: animation,
+                axisAlignment: -1,
+                child: child,
+              ),
+            );
+          },
+          child: isPrompted
+              ? _CountdownContent(
+                  key: const ValueKey('countdown_active'),
+                  remainingSeconds:
+                      (state as ReVerificationPromptedState).remainingSeconds,
+                  totalSeconds: context
+                      .read<ReVerificationBloc>()
+                      .config
+                      .countdownDuration
+                      .inSeconds,
+                  iteration: (state as ReVerificationPromptedState).iteration,
+                  maxIterations:
+                      (state as ReVerificationPromptedState).maxIterations,
+                )
+              : const SizedBox.shrink(key: ValueKey('countdown_hidden')),
+        );
+      },
+    );
+  }
+}
+
+class _CountdownContent extends StatefulWidget {
+  final int remainingSeconds;
+  final int totalSeconds;
+  final int? iteration;
+  final int? maxIterations;
+
+  const _CountdownContent({
+    super.key,
+    required this.remainingSeconds,
+    required this.totalSeconds,
+    this.iteration,
+    this.maxIterations,
+  });
+
+  @override
+  State<_CountdownContent> createState() => _CountdownContentState();
+}
+
+class _CountdownContentState extends State<_CountdownContent>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+  bool _processing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+    _pulseAnimation = Tween<double>(begin: 0.6, end: 1.0).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+    coWorkerPendingNotifier.addListener(_onCoWorkerPendingChanged);
+  }
+
+  void _onCoWorkerPendingChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    coWorkerPendingNotifier.removeListener(_onCoWorkerPendingChanged);
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  String _formatCountdown(int totalSeconds) {
+    final m = totalSeconds ~/ 60;
+    final s = totalSeconds % 60;
+    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorTheme = theme.colorTheme;
+    final progress = widget.remainingSeconds / widget.totalSeconds;
+    final isUrgent = widget.remainingSeconds < 60;
+    final accentColor = colorTheme.primary.primary1;
+    final urgentColor = const Color(0xFFE53935);
+
+    final barColor = isUrgent ? urgentColor : accentColor;
+
+    return Container(
+      width: double.infinity,
+      height: 48,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorTheme.primary.primary2,
+            colorTheme.primary.primary2.withOpacity(0.95),
+          ],
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                children: [
+                  FadeTransition(
+                    opacity: _pulseAnimation,
+                    child: Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: barColor.withOpacity(0.2),
+                      ),
+                      child: Icon(
+                        Icons.face_rounded,
+                        size: 16,
+                        color: barColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Face Verification Required',
+                          style: TextStyle(
+                            color: colorTheme.paper.primary,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.2,
+                          ),
+                        ),
+                        const SizedBox(height: 1),
+                        Text(
+                          isUrgent
+                              ? 'Hurry! Time running out'
+                              : coWorkerPendingNotifier.value
+                                  ? 'Co-worker verification pending'
+                                  : 'System user must verify face first',
+                          style: TextStyle(
+                            color: colorTheme.paper.primary.withOpacity(0.6),
+                            fontSize: 9,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: barColor.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: barColor.withOpacity(0.4),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.timer_outlined, size: 13, color: barColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          _formatCountdown(widget.remainingSeconds),
+                          style: TextStyle(
+                            color: barColor,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                            fontFeatures: const [
+                              FontFeature.tabularFigures(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (widget.iteration != null &&
+                      widget.maxIterations != null) ...[
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: colorTheme.paper.primary.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: colorTheme.paper.primary.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        '${widget.iteration}/${widget.maxIterations}',
+                        style: TextStyle(
+                          color: colorTheme.paper.primary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                  ] else
+                    const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: _processing
+                        ? null
+                        : () async {
+                            if (reVerificationInProgressNotifier.value) return;
+                            setState(() => _processing = true);
+                            reVerificationInProgressNotifier.value = true;
+                            try {
+                              if (coWorkerPendingNotifier.value) {
+                                await verifyCoWorkersPending(context);
+                                return;
+                              }
+                              final result =
+                                  await showFaceVerificationDialog(context);
+                              if (!context.mounted) return;
+                              if (result.passed) {
+                                await logAndCompleteReVerification(
+                                    context, result);
+                              }
+                            } finally {
+                              reVerificationInProgressNotifier.value = false;
+                              if (mounted) setState(() => _processing = false);
+                            }
+                          },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: _processing
+                            ? accentColor.withOpacity(0.6)
+                            : accentColor,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: _processing
+                            ? null
+                            : [
+                                BoxShadow(
+                                  color: accentColor.withOpacity(0.3),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                      ),
+                      child: _processing
+                          ? SizedBox(
+                              width: 14,
+                              height: 14,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: colorTheme.paper.primary,
+                              ),
+                            )
+                          : Text(
+                              'VERIFY',
+                              style: TextStyle(
+                                color: colorTheme.paper.primary,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          TweenAnimationBuilder<double>(
+            tween: Tween<double>(begin: progress, end: progress),
+            duration: const Duration(milliseconds: 900),
+            curve: Curves.linear,
+            builder: (context, value, _) {
+              return Container(
+                height: 3,
+                width: double.infinity,
+                color: Colors.black.withOpacity(0.2),
+                alignment: Alignment.centerLeft,
+                child: FractionallySizedBox(
+                  widthFactor: value.clamp(0.0, 1.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(2),
+                      gradient: LinearGradient(
+                        colors: isUrgent
+                            ? [urgentColor.withOpacity(0.7), urgentColor]
+                            : [accentColor.withOpacity(0.7), accentColor],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: barColor.withOpacity(0.5),
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

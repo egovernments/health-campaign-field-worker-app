@@ -89,6 +89,14 @@ configurations.all {
     exclude module: 'sqlite3_flutter_libs'
 }
 
+dependencies {
+    // Fix: Gradle 7.4 + AGP 7.3.0 cannot resolve lifecycle-process as a
+    // transitive constraint (pulled in by CameraX/ML Kit from the face-auth
+    // packages) — fails with "Corrupt serialized resolution result" on
+    // :app:processDebugResources. Declaring it directly resolves it.
+    implementation 'androidx.lifecycle:lifecycle-process:2.6.2'
+}
+
 flutter {
     source '../..'
 }

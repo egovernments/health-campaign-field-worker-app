@@ -84,7 +84,12 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
             sql.attendanceRegister.referenceId.equals(
               query.referenceId!,
             ),
-          if (targetTag != null) sql.attendee.tag.equals(targetTag),
+          // Scope attendees to the searching attendee's team code (tag).
+          // A null tag is its own group — never fall through to "everyone".
+          if (query.attendeeId != null)
+            targetTag == null
+                ? sql.attendee.tag.isNull()
+                : sql.attendee.tag.equals(targetTag),
         ]));
 
       final results = await selectQuery.get();

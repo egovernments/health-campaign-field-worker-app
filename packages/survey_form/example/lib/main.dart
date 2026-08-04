@@ -53,9 +53,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late Future<dynamic> localizedStrings;
   final languages = [
-    {"label": "PORTUGUÊS", "value": "pt_MZ"},
-    {"label": "FRENCH", "value": "fr_MZ"},
-    {"label": "ENGLISH", "value": "en_MZ"}
+    {"label": "PORTUGUÊS", "value": "pt_DEMO"},
+    {"label": "FRENCH", "value": "fr_DEMO"},
+    {"label": "ENGLISH", "value": "en_DEMO"}
   ];
 
   @override

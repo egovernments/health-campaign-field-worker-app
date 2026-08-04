@@ -1,1238 +1,3086 @@
 [
   {
     "code": "CORE_COMMON_CONTINUE",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Continue",
     "module": "hcm-common"
   },
   {
     "code": "CORE_COMMON_CONTINUE",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Prosseguir",
     "module": "hcm-common"
   },
   {
     "code": "CORE_COMMON_AGE",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Age",
     "module": "hcm-common"
   },
   {
     "code": "CORE_COMMON_AGE",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Era",
     "module": "hcm-common"
   },
   {
     "code": "CORE_COMMON_GENDER",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Gender",
     "module": "hcm-common"
   },
   {
     "code": "CORE_COMMON_GENDER",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Gênero",
     "module": "hcm-common"
   },
   {
     "code": "CORE_COMMON_MOBILE_NUMBER",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Mobile Number",
     "module": "hcm-common"
   },
   {
     "code": "CORE_COMMON_MOBILE_NUMBER",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Número de celular",
     "module": "hcm-common"
   },
   {
     "code": "CORE_COMMON_SUBMIT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Submit",
     "module": "hcm-common"
   },
   {
     "code": "CORE_COMMON_SUBMIT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Enviar",
     "module": "hcm-common"
   },
   {
     "code": "CORE_COMMON_CANCEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Cancel",
     "module": "hcm-common"
   },
   {
     "code": "CORE_COMMON_CANCEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Cancelar",
     "module": "hcm-common"
   },
   {
     "code": "LOGIN_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Login",
     "module": "hcm-login"
   },
   {
     "code": "LOGIN_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Conecte-se",
     "module": "hcm-login"
   },
   {
     "code": "USER_ID_PLACEHOLDER",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "User ID",
     "module": "hcm-login"
   },
   {
     "code": "USER_ID_PLACEHOLDER",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "ID do usuário",
     "module": "hcm-login"
   },
   {
     "code": "PASSWORD_PLACEHOLDER",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Password",
     "module": "hcm-login"
   },
   {
     "code": "PASSWORD_PLACEHOLDER",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Senha",
     "module": "hcm-login"
   },
   {
     "code": "LOGIN_ACTION_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Login",
     "module": "hcm-login"
   },
   {
     "code": "LOGIN_ACTION_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Conecte-se",
     "module": "hcm-login"
   },
   {
     "code": "FORGOT_PASSWORD_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Forgot Password",
     "module": "hcm-forgot-password"
   },
   {
     "code": "FORGOT_PASSWORD_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Esqueceu a senha",
     "module": "hcm-forgot-password"
   },
   {
     "code": "FORGOT_PASSWORD_CONTENT_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Please contact your administrator if you have forgotten your password",
     "module": "hcm-forgot-password"
   },
   {
     "code": "FORGOT_PASSWORD_CONTENT_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Entre em contato com seu administrador se você esqueceu sua senha",
     "module": "hcm-forgot-password"
   },
   {
     "code": "PRIMARY_ACTION_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "OK",
     "module": "hcm-forgot-password"
   },
   {
     "code": "PRIMARY_ACTION_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "OK",
     "module": "hcm-forgot-password"
   },
   {
     "code": "FORGOT_PASSWORD_ACTION_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Forgot Password?",
     "module": "hcm-forgot-password"
   },
   {
     "code": "FORGOT_PASSWORD_ACTION_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Esqueceu a senha?",
     "module": "hcm-forgot-password"
   },
   {
     "code": "HOME_BENEFICIARY_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Beneficiaries",
     "module": "hcm-home"
   },
   {
     "code": "HOME_BENEFICIARY_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Beneficiários",
     "module": "hcm-home"
   },
   {
     "code": "HOME_VIEW_REPORTS_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "View Reports",
     "module": "hcm-home"
   },
   {
     "code": "HOME_VIEW_REPORTS_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Ver relatórios",
     "module": "hcm-home"
   },
   {
     "code": "HOME_SYNC_DATA_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Sync Data",
     "module": "hcm-home"
   },
   {
     "code": "HOME_SYNC_DATA_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Dados de sincronização",
     "module": "hcm-home"
   },
   {
     "code": "HOME_CALL_BACK_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Call Supervisor",
     "module": "hcm-home"
   },
   {
     "code": "HOME_CALL_BACK_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Ligue para o supervisor",
     "module": "hcm-home"
   },
   {
     "code": "HOME_FILE_COMPLAINT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "File Complaint",
     "module": "hcm-home"
   },
   {
     "code": "HOME_FILE_COMPLAINT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Reclamação do arquivo",
     "module": "hcm-home"
   },
   {
     "code": "PROGRESS_INDICATOR_TITLE",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "more to reach target",
     "module": "hcm-home"
   },
   {
     "code": "PROGRESS_INDICATOR_TITLE",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "mais para atingir o alvo",
     "module": "hcm-home"
   },
   {
     "code": "PROGRESS_INDICATOR_PREFIX_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "completed",
     "module": "hcm-home"
   },
   {
     "code": "PROGRESS_INDICATOR_PREFIX_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "concluído",
     "module": "hcm-home"
   },
   {
     "code": "BENEFICIARY_STATISTICS_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Search Households",
     "module": "hcm-beneficiary"
   },
   {
     "code": "BENEFICIARY_STATISTICS_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Pesquise famílias",
     "module": "hcm-beneficiary"
   },
   {
     "code": "NO_OF_HOUSEHOLDS_REGISTERED",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "No. of Households\nRegistered",
     "module": "hcm-beneficiary"
   },
   {
     "code": "NO_OF_HOUSEHOLDS_REGISTERED",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "No. de famílias\nRegistrado",
     "module": "hcm-beneficiary"
   },
   {
     "code": "NO_OF_RESOURCES_DELIVERED",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "No. of Bednets\nDelivered",
     "module": "hcm-beneficiary"
   },
   {
     "code": "NO_OF_RESOURCES_DELIVERED",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "No. de redes de cama\nEntregue",
     "module": "hcm-beneficiary"
   },
   {
     "code": "BENEFICIARY_SEARCH_HINT_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Enter the name of household head",
     "module": "hcm-beneficiary"
   },
   {
     "code": "BENEFICIARY_SEARCH_HINT_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Digite o nome do chefe da família",
     "module": "hcm-beneficiary"
   },
   {
     "code": "BENEFICIARY_INFO_DESCRIPTION",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Click on Register New Household button to add details.",
     "module": "hcm-beneficiary"
   },
   {
     "code": "BENEFICIARY_INFO_DESCRIPTION",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Clique em Registrar um novo botão doméstico para adicionar detalhes.",
     "module": "hcm-beneficiary"
   },
   {
     "code": "BENEFICIARY_INFO_TITLE",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Match not found!",
     "module": "hcm-beneficiary"
   },
   {
     "code": "BENEFICIARY_INFO_TITLE",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Match não encontrado!",
     "module": "hcm-beneficiary"
   },
   {
     "code": "BENEFICIARY_ADD_ACTION_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Register New Household",
     "module": "hcm-beneficiary"
   },
   {
     "code": "BENEFICIARY_ADD_ACTION_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Registrar uma nova família",
     "module": "hcm-beneficiary"
   },
   {
     "code": "ICON_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Open",
     "module": "hcm-beneficiary"
   },
   {
     "code": "ICON_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Abrir",
     "module": "hcm-beneficiary"
   },
   {
     "code": "INDIVIDUAL_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Individual Details",
     "module": "hcm-beneficiary"
   },
   {
     "code": "INDIVIDUAL_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Detalhes individuais",
     "module": "hcm-beneficiary"
   },
   {
     "code": "INDIVIDUAL_NAME_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Name of the Individual*",
     "module": "hcm-beneficiary"
   },
   {
     "code": "INDIVIDUAL_NAME_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Nome do indivíduo*",
     "module": "hcm-beneficiary"
   },
   {
     "code": "HEAD_OF_HOUSEHOLD_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Head of household",
     "module": "hcm-beneficiary"
   },
   {
     "code": "HEAD_OF_HOUSEHOLD_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Chefe de família",
     "module": "hcm-beneficiary"
   },
   {
     "code": "ID_TYPE_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "ID Type",
     "module": "hcm-beneficiary"
   },
   {
     "code": "ID_TYPE_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Tipo de identificação",
     "module": "hcm-beneficiary"
   },
   {
     "code": "ID_NUMBER_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "ID Number*",
     "module": "hcm-beneficiary"
   },
   {
     "code": "ID_NUMBER_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Número de identidade*",
     "module": "hcm-beneficiary"
   },
   {
     "code": "ID_NUMBER_SUGGESTION_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Enter 10 digit ID number",
     "module": "hcm-beneficiary"
   },
   {
     "code": "ID_NUMBER_SUGGESTION_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Insira o número de identificação de 10 dígitos",
     "module": "hcm-beneficiary"
   },
   {
     "code": "DOB_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Date of Birth",
     "module": "hcm-beneficiary"
   },
   {
     "code": "DOB_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Data de nascimento",
     "module": "hcm-beneficiary"
   },
   {
     "code": "AGE_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Age",
     "module": "hcm-common"
   },
   {
     "code": "AGE_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Era",
     "module": "hcm-common"
   },
   {
     "code": "SEPARATOR_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "(or)",
     "module": "hcm-common"
   },
   {
     "code": "SEPARATOR_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "(ou)",
     "module": "hcm-common"
   },
   {
     "code": "GENDER_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Gender",
     "module": "hcm-common"
   },
   {
     "code": "GENDER_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Gênero",
     "module": "hcm-common"
   },
   {
     "code": "MOBILE_NUMBER_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Mobile Number",
     "module": "hcm-common"
   },
   {
     "code": "MOBILE_NUMBER_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Número de celular",
     "module": "hcm-common"
   },
   {
     "code": "SUBMIT_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Submit",
     "module": "hcm-common"
   },
   {
     "code": "SUBMIT_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Enviar",
     "module": "hcm-common"
   },
   {
     "code": "HOUSEHOLD_LOCATION_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Household Location",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_LOCATION_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Localização da família",
     "module": "hcm-household"
   },
   {
     "code": "ADMINISTRATION_AREA_FORM_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Administrative Area",
     "module": "hcm-household"
   },
   {
     "code": "ADMINISTRATION_AREA_FORM_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Área administrativa",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Address Line 1",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Endereço Linha 1",
     "module": "hcm-household"
   },
   {
     "code": "LANDMARK_FORM_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Landmark",
     "module": "hcm-household"
   },
   {
     "code": "LANDMARK_FORM_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Marco",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Address Line 2",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "endereço linha 2",
     "module": "hcm-household"
   },
   {
     "code": "POSTAL_CODE_FORM_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Postal Code",
     "module": "hcm-household"
   },
   {
     "code": "POSTAL_CODE_FORM_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Código postal",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_LOCATION_ACTION_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Next",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_LOCATION_ACTION_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Próximo",
     "module": "hcm-household"
   },
   {
     "code": "ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Data recorded successfully",
     "module": "hcm-acknowledgement"
   },
   {
     "code": "ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Dados registrados com sucesso",
     "module": "hcm-acknowledgement"
   },
   {
     "code": "ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "The data has been recorded successfully.",
     "module": "hcm-acknowledgement"
   },
   {
     "code": "ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Os dados foram registrados com sucesso.",
     "module": "hcm-acknowledgement"
   },
   {
     "code": "ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Back to Search",
     "module": "hcm-acknowledgement"
   },
   {
     "code": "ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "De volta à pesquisa",
     "module": "hcm-acknowledgement"
   },
   {
     "code": "HOUSEHOLD_DETAILS_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Household Details",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_DETAILS_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Detalhes da família",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_ACTION_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Next",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_ACTION_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Próximo",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Date of Registration",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Data de registro",
     "module": "hcm-household"
   },
   {
     "code": "NO_OF_MEMBERS_COUNT_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Number of members living in the household*",
     "module": "hcm-household"
   },
   {
     "code": "NO_OF_MEMBERS_COUNT_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Número de membros que vivem na casa*",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Household",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Doméstico",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Edit household",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Editar família",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Delete Household",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Excluir família",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Edit",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Editar",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Do you want to delete this\nbeneficiary?",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Você quer excluir isso\nbeneficiário?",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_PRIMARY_ACTION_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Delete",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_PRIMARY_ACTION_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Excluir",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_SECONDARY_ACTION_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Cancel",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_SECONDARY_ACTION_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Cancelar",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Delivered",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Entregue",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Not Delivered",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Não entregue",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Household\nHead",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Doméstico\nCabeça",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Household Head Name:",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Nome da cabeça da família:",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_ACTION_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Deliver Intervention",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW_ACTION_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Entregar intervenção",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Add Member",
     "module": "hcm-household"
   },
   {
     "code": "HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Adicionar membro",
     "module": "hcm-household"
   },
   {
     "code": "MEMBER_CARD_ASSIGN_AS_HEAD",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Assign as household head",
     "module": "hcm-member"
   },
   {
     "code": "MEMBER_CARD_ASSIGN_AS_HEAD",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Designe como chefe de família",
     "module": "hcm-member"
   },
   {
     "code": "MEMBER_CARD_EDIT_INDIVIDUALDETAILS",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Edit",
     "module": "hcm-member"
   },
   {
     "code": "MEMBER_CARD_EDIT_INDIVIDUALDETAILS",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Editar",
     "module": "hcm-member"
   },
   {
     "code": "MEMBER_CARD_EDIT_INDIVIDUAL_ACTION_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Edit  Individual Details",
     "module": "hcm-member"
   },
   {
     "code": "MEMBER_CARD_EDIT_INDIVIDUAL_ACTION_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Edite detalhes individuais",
     "module": "hcm-member"
   },
   {
     "code": "MEMBER_CARD_DELIVER_INTERVENTION_SUBMIT_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Submit",
     "module": "hcm-member"
   },
   {
     "code": "MEMBER_CARD_DELIVER_INTERVENTION_SUBMIT_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Enviar",
     "module": "hcm-member"
   },
   {
     "code": "MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Update Delivery Details",
     "module": "hcm-member"
   },
   {
     "code": "MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Atualizar detalhes de entrega",
     "module": "hcm-member"
   },
   {
     "code": "MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "years",
     "module": "hcm-member"
   },
   {
     "code": "MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "anos",
     "module": "hcm-member"
   },
   {
     "code": "DELIVER_INTERVENTION_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Deliver Intervention",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Entregar intervenção",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Date of Registration:",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Data de registro:",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Resource Delivered*",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Recurso entregue*",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Quantity Distributed*",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Quantidade distribuída*",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Delivery Comment",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Comentário de entrega",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_ID_TYPE_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "ID Type:",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_ID_TYPE_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Tipo de identificação:",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_ID_NUMBER_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "ID Number:",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_ID_NUMBER_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Número de identidade:",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_MEMBER_COUNT_TEXT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Member Count:",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_MEMBER_COUNT_TEXT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Contagem de membro:",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Number Of Resources For Delivery:",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Número de recursos para entrega:",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_DIALOG_TITLE",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Ready to Submit?",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_DIALOG_TITLE",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Pronto para enviar?",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_DIALOG_CONTENT",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Make sure you review all details before clicking on the Submit button. Click on the Cancel button to go back to the previous page.",
     "module": "hcm-delivery"
   },
   {
     "code": "DELIVER_INTERVENTION_DIALOG_CONTENT",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Certifique -se de revisar todos os detalhes antes de clicar no botão Enviar. Clique no botão Cancelar para voltar para a página anterior.",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_ADMINISTRATION",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Redose Administration",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_ADMINISTRATION",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Administração de Redose",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_DETAILS_SCREEN_HEADING",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Redose Details",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_DETAILS_SCREEN_HEADING",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Detalhes da Redose",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_DETAILS_SCREEN_DESCRIPTION",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Record the redose administration details",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_DETAILS_SCREEN_DESCRIPTION",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Registar os detalhes da administração de redose",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_SUBMIT_BUTTON_LABEL",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Submit",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_SUBMIT_BUTTON_LABEL",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Submeter",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_DATE_OF_ADMINISTRATION",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Date of Redose Administration",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_DATE_OF_ADMINISTRATION",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Data da Administração de Redose",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_RESOURCE_DELIVERED",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Select the Resource Delivered",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_RESOURCE_DELIVERED",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Selecione o Recurso Entregue",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_QUANTITY",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Redose Quantity",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_QUANTITY",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Quantidade de Redose",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_QUANTITY_REQUIRED",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Redose quantity is required",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_QUANTITY_REQUIRED",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "A quantidade de redose é obrigatória",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_QUANTITY_MIN_ERROR",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Redose quantity must be at least 1",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_QUANTITY_MIN_ERROR",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "A quantidade de redose deve ser pelo menos 1",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_QUANTITY_MAX_ERROR",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Redose quantity exceeds the allowed limit",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_QUANTITY_MAX_ERROR",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "A quantidade de redose excede o limite permitido",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_REASON",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Reason for Redose",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_REASON",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Motivo da Redose",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_REASON_REQUIRED",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Reason for redose is required",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_REASON_REQUIRED",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "O motivo da redose é obrigatório",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_REASON_VOMITTING",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Vomiting",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_REASON_VOMITTING",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Vômito",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_REASON_OTHERS",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Others",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_REASON_OTHERS",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Outros",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_SUCCESSFUL_PANEL_CARD_HEADING",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Redose Recorded Successfully",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_SUCCESSFUL_PANEL_CARD_HEADING",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Redose Registada com Sucesso",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_SUCCESSFUL_PANEL_CARD_DESC",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Redose administration has been recorded successfully",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_SUCCESSFUL_PANEL_CARD_DESC",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "A administração de redose foi registada com sucesso",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_BACK",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Back",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_BACK",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Voltar",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_COMPLETED",
-    "locale": "en_MZ",
+    "locale": "en_DEMO",
     "message": "Redose Completed",
     "module": "hcm-delivery"
   },
   {
     "code": "REDOSE_COMPLETED",
-    "locale": "pt_MZ",
+    "locale": "pt_DEMO",
     "message": "Redose Concluída",
     "module": "hcm-delivery"
+  },
+  {
+    "code": "FACE_AUTH_GATE_VERIFIED",
+    "locale": "en_DEMO",
+    "message": "Face Verified",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_VERIFIED",
+    "locale": "pt_DEMO",
+    "message": "Rosto verificado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFY",
+    "locale": "en_DEMO",
+    "message": "Verify PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFY",
+    "locale": "pt_DEMO",
+    "message": "Verificar PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_ENTER",
+    "locale": "en_DEMO",
+    "message": "Enter your PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_ENTER",
+    "locale": "pt_DEMO",
+    "message": "Introduza o seu PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_INVALID",
+    "locale": "en_DEMO",
+    "message": "Invalid PIN. Please try again.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_INVALID",
+    "locale": "pt_DEMO",
+    "message": "PIN inválido. Tente novamente.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_SELECT_PROFILE",
+    "locale": "en_DEMO",
+    "message": "Please select a profile",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_SELECT_PROFILE",
+    "locale": "pt_DEMO",
+    "message": "Selecione um perfil",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_PIN_NOTE",
+    "locale": "en_DEMO",
+    "message": "Please note this PIN. It can be used as a backup for face verification.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_PIN_NOTE",
+    "locale": "pt_DEMO",
+    "message": "Anote este PIN. Pode ser usado como alternativa à verificação facial.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_USE_PIN",
+    "locale": "en_DEMO",
+    "message": "Use PIN Instead",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_USE_PIN",
+    "locale": "pt_DEMO",
+    "message": "Usar PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LOGOUT_CONFIRM",
+    "locale": "en_DEMO",
+    "message": "Are you sure you want to logout?",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LOGOUT_CONFIRM",
+    "locale": "pt_DEMO",
+    "message": "Tem a certeza de que deseja terminar sessão?",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_POSITION_FACE",
+    "locale": "en_DEMO",
+    "message": "Position your face to verify identity",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_POSITION_FACE",
+    "locale": "pt_DEMO",
+    "message": "Posicione o seu rosto para verificar a identidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFICATION_FAILED",
+    "locale": "en_DEMO",
+    "message": "Face Verification Failed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFICATION_FAILED",
+    "locale": "pt_DEMO",
+    "message": "Falha na verificação facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_FACE_MATCH",
+    "locale": "en_DEMO",
+    "message": "Face match",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_FACE_MATCH",
+    "locale": "pt_DEMO",
+    "message": "Rosto correspondente",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFIED",
+    "locale": "en_DEMO",
+    "message": "PIN verified",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFIED",
+    "locale": "pt_DEMO",
+    "message": "PIN verificado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_WORKER_NOT_FOUND",
+    "locale": "en_DEMO",
+    "message": "Worker Not Found",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_WORKER_NOT_FOUND",
+    "locale": "pt_DEMO",
+    "message": "Trabalhador não encontrado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_WORKER_NOT_FOUND_MESSAGE",
+    "locale": "en_DEMO",
+    "message": "Your worker record was not found in the registry. Please contact your supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_WORKER_NOT_FOUND_MESSAGE",
+    "locale": "pt_DEMO",
+    "message": "O seu registo de trabalhador não foi encontrado. Contacte o seu supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SOMETHING_WENT_WRONG",
+    "locale": "en_DEMO",
+    "message": "Something Went Wrong",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SOMETHING_WENT_WRONG",
+    "locale": "pt_DEMO",
+    "message": "Ocorreu um erro",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CAPTURING_GPS",
+    "locale": "en_DEMO",
+    "message": "Please wait while we capture your GPS coordinates.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CAPTURING_GPS",
+    "locale": "pt_DEMO",
+    "message": "Aguarde enquanto capturamos as suas coordenadas de GPS.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DEVICE_CAPACITY_REACHED",
+    "locale": "en_DEMO",
+    "message": "Device capacity reached",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DEVICE_CAPACITY_REACHED",
+    "locale": "pt_DEMO",
+    "message": "Capacidade do dispositivo atingida",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DEVICE_CAPACITY_MESSAGE",
+    "locale": "en_DEMO",
+    "message": "This device has reached its maximum number of enrolled users. Please contact your supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DEVICE_CAPACITY_MESSAGE",
+    "locale": "pt_DEMO",
+    "message": "Este dispositivo atingiu o número máximo de utilizadores registados. Contacte o seu supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CONTINUE_ANYWAY",
+    "locale": "en_DEMO",
+    "message": "Continue Anyway",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CONTINUE_ANYWAY",
+    "locale": "pt_DEMO",
+    "message": "Continuar mesmo assim",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENTER_YOUR_PIN",
+    "locale": "en_DEMO",
+    "message": "Enter Your PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENTER_YOUR_PIN",
+    "locale": "pt_DEMO",
+    "message": "Introduza o seu PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_SUBTITLE",
+    "locale": "en_DEMO",
+    "message": "Enter the 4-digit backup PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_SUBTITLE",
+    "locale": "pt_DEMO",
+    "message": "Introduza o PIN de reserva de 4 dígitos",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TRY_AGAIN_LOOK_CAMERA",
+    "locale": "en_DEMO",
+    "message": "Try again — look at the camera",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TRY_AGAIN_LOOK_CAMERA",
+    "locale": "pt_DEMO",
+    "message": "Tente novamente — olhe para a câmara",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LATER",
+    "locale": "en_DEMO",
+    "message": "Later",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LATER",
+    "locale": "pt_DEMO",
+    "message": "Mais tarde",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_NOW",
+    "locale": "en_DEMO",
+    "message": "Verify Now",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_NOW",
+    "locale": "pt_DEMO",
+    "message": "Verificar agora",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY",
+    "locale": "en_DEMO",
+    "message": "Verify",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY",
+    "locale": "pt_DEMO",
+    "message": "Verificar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFICATION_TITLE",
+    "locale": "en_DEMO",
+    "message": "PIN Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFICATION_TITLE",
+    "locale": "pt_DEMO",
+    "message": "Verificação por PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_FALLBACK_ENTER",
+    "locale": "en_DEMO",
+    "message": "Enter your fallback PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_FALLBACK_ENTER",
+    "locale": "pt_DEMO",
+    "message": "Introduza o seu PIN de reserva",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SELECT_PROFILE_LABEL",
+    "locale": "en_DEMO",
+    "message": "Select Profile",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SELECT_PROFILE_LABEL",
+    "locale": "pt_DEMO",
+    "message": "Selecionar perfil",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TITLE",
+    "locale": "en_DEMO",
+    "message": "Verification History",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TITLE",
+    "locale": "pt_DEMO",
+    "message": "Histórico de verificação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_LABEL",
+    "locale": "en_DEMO",
+    "message": "History",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_LABEL",
+    "locale": "pt_DEMO",
+    "message": "Histórico",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TAB_VERIFICATION",
+    "locale": "en_DEMO",
+    "message": "Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TAB_VERIFICATION",
+    "locale": "pt_DEMO",
+    "message": "Verificação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TAB_ENROLLMENT",
+    "locale": "en_DEMO",
+    "message": "Enrollment",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TAB_ENROLLMENT",
+    "locale": "pt_DEMO",
+    "message": "Registo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SEARCH_HINT",
+    "locale": "en_DEMO",
+    "message": "Search",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SEARCH_HINT",
+    "locale": "pt_DEMO",
+    "message": "Pesquisar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_EMPTY",
+    "locale": "en_DEMO",
+    "message": "No verification events yet",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_EMPTY",
+    "locale": "pt_DEMO",
+    "message": "Ainda não existem eventos de verificação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_UNKNOWN",
+    "locale": "en_DEMO",
+    "message": "Unknown",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_UNKNOWN",
+    "locale": "pt_DEMO",
+    "message": "Desconhecido",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_LOGIN_VERIFICATION",
+    "locale": "en_DEMO",
+    "message": "Login Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_LOGIN_VERIFICATION",
+    "locale": "pt_DEMO",
+    "message": "Verificação de início de sessão",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_REVERIFICATION",
+    "locale": "en_DEMO",
+    "message": "Re-verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_REVERIFICATION",
+    "locale": "pt_DEMO",
+    "message": "Reverificação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_CHECK_IN",
+    "locale": "en_DEMO",
+    "message": "Check-in",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_CHECK_IN",
+    "locale": "pt_DEMO",
+    "message": "Registo de entrada",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_ENROLLMENT",
+    "locale": "en_DEMO",
+    "message": "Face Enrollment",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_ENROLLMENT",
+    "locale": "pt_DEMO",
+    "message": "Registo facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_VERIFIED",
+    "locale": "en_DEMO",
+    "message": "Verified",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_VERIFIED",
+    "locale": "pt_DEMO",
+    "message": "Verificado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_PIN_USED",
+    "locale": "en_DEMO",
+    "message": "PIN Used",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_PIN_USED",
+    "locale": "pt_DEMO",
+    "message": "PIN utilizado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_HCM_FALLBACK",
+    "locale": "en_DEMO",
+    "message": "HCM Fallback",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_HCM_FALLBACK",
+    "locale": "pt_DEMO",
+    "message": "Alternativa HCM",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_MISSED",
+    "locale": "en_DEMO",
+    "message": "Missed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_MISSED",
+    "locale": "pt_DEMO",
+    "message": "Perdido",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_FAILED",
+    "locale": "en_DEMO",
+    "message": "Failed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_FAILED",
+    "locale": "pt_DEMO",
+    "message": "Falhou",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_ENROLLMENT_PIN",
+    "locale": "en_DEMO",
+    "message": "Enrollment Pin Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_ENROLLMENT_PIN",
+    "locale": "pt_DEMO",
+    "message": "Verificação por PIN de registo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_FACIAL_RECOGNITION",
+    "locale": "en_DEMO",
+    "message": "Facial Recognition",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_FACIAL_RECOGNITION",
+    "locale": "pt_DEMO",
+    "message": "Reconhecimento facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_FACE_SHORT",
+    "locale": "en_DEMO",
+    "message": "Face",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_FACE_SHORT",
+    "locale": "pt_DEMO",
+    "message": "Rosto",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_PIN_SHORT",
+    "locale": "en_DEMO",
+    "message": "PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_PIN_SHORT",
+    "locale": "pt_DEMO",
+    "message": "PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_JUST_NOW",
+    "locale": "en_DEMO",
+    "message": "Just now",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_JUST_NOW",
+    "locale": "pt_DEMO",
+    "message": "Agora mesmo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ACTIVE_SESSION",
+    "locale": "en_DEMO",
+    "message": "Active Session",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ACTIVE_SESSION",
+    "locale": "pt_DEMO",
+    "message": "Sessão ativa",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INTERNET_REQUIRED",
+    "locale": "en_DEMO",
+    "message": "Internet Required",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INTERNET_REQUIRED",
+    "locale": "pt_DEMO",
+    "message": "Internet necessária",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_OFFLINE_NOTE",
+    "locale": "en_DEMO",
+    "message": "The enrollment is saved on this device and will sync to the worker registry automatically when internet returns.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_OFFLINE_NOTE",
+    "locale": "pt_DEMO",
+    "message": "O registo é guardado neste dispositivo e será sincronizado automaticamente com o registo de trabalhadores quando a Internet regressar.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_SUCCESSFUL",
+    "locale": "en_DEMO",
+    "message": "Enrollment Successful",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_SUCCESSFUL",
+    "locale": "pt_DEMO",
+    "message": "Registo concluído com sucesso",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DONE",
+    "locale": "en_DEMO",
+    "message": "Done",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DONE",
+    "locale": "pt_DEMO",
+    "message": "Concluído",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCAN_TO_PROCEED",
+    "locale": "en_DEMO",
+    "message": "Scan your face to Proceed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCAN_TO_PROCEED",
+    "locale": "pt_DEMO",
+    "message": "Digitalize o seu rosto para continuar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_TO_CONTINUE",
+    "locale": "en_DEMO",
+    "message": "Verify your identity to continue",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_TO_CONTINUE",
+    "locale": "pt_DEMO",
+    "message": "Verifique a sua identidade para continuar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_TO_CONTINUE_WORKING",
+    "locale": "en_DEMO",
+    "message": "Please verify your identity to continue working",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_TO_CONTINUE_WORKING",
+    "locale": "pt_DEMO",
+    "message": "Verifique a sua identidade para continuar a trabalhar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SYSTEM_USER_VERIFY_FIRST",
+    "locale": "en_DEMO",
+    "message": "System user must verify their face first before co-workers can proceed.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SYSTEM_USER_VERIFY_FIRST",
+    "locale": "pt_DEMO",
+    "message": "O utilizador do sistema deve verificar o seu rosto antes de os colegas poderem continuar.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_COWORKER_VERIFICATION",
+    "locale": "en_DEMO",
+    "message": "Co-worker Face Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_COWORKER_VERIFICATION",
+    "locale": "pt_DEMO",
+    "message": "Verificação facial de colegas",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCAN_EACH_FACE",
+    "locale": "en_DEMO",
+    "message": "Scan Each Face Now",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCAN_EACH_FACE",
+    "locale": "pt_DEMO",
+    "message": "Digitalize cada rosto agora",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VIEW_ALL",
+    "locale": "en_DEMO",
+    "message": "View All",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VIEW_ALL",
+    "locale": "pt_DEMO",
+    "message": "Ver tudo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "SYNC_DIALOG_SESSION_EXPIRED",
+    "locale": "en_DEMO",
+    "message": "Your session has expired. Please verify again.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "SYNC_DIALOG_SESSION_EXPIRED",
+    "locale": "pt_DEMO",
+    "message": "A sua sessão expirou. Verifique novamente.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_DOWN",
+    "locale": "en_DEMO",
+    "message": "Look slightly down",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_DOWN",
+    "locale": "pt_DEMO",
+    "message": "Olhe ligeiramente para baixo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_LEFT",
+    "locale": "en_DEMO",
+    "message": "Turn slightly to the left",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_LEFT",
+    "locale": "pt_DEMO",
+    "message": "Vire ligeiramente para a esquerda",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_RIGHT",
+    "locale": "en_DEMO",
+    "message": "Turn slightly to the right",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_RIGHT",
+    "locale": "pt_DEMO",
+    "message": "Vire ligeiramente para a direita",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_STRAIGHT",
+    "locale": "en_DEMO",
+    "message": "Look straight at the camera",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_STRAIGHT",
+    "locale": "pt_DEMO",
+    "message": "Olhe diretamente para a câmara",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_UP",
+    "locale": "en_DEMO",
+    "message": "Look slightly up",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_UP",
+    "locale": "pt_DEMO",
+    "message": "Olhe ligeiramente para cima",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_BACK",
+    "locale": "en_DEMO",
+    "message": "Back",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_BACK",
+    "locale": "pt_DEMO",
+    "message": "Voltar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_BEFORE_WE_BEGIN",
+    "locale": "en_DEMO",
+    "message": "Before We Begin",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_BEFORE_WE_BEGIN",
+    "locale": "pt_DEMO",
+    "message": "Antes de Começar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CAPTURE_FAILED",
+    "locale": "en_DEMO",
+    "message": "Capture failed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_CAPTURE_FAILED",
+    "locale": "pt_DEMO",
+    "message": "Falha na captura",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_COPY",
+    "locale": "en_DEMO",
+    "message": "Copy",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_COPY",
+    "locale": "pt_DEMO",
+    "message": "Copiar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DELETE_FAILED",
+    "locale": "en_DEMO",
+    "message": "Failed to delete face registration",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_DELETE_FAILED",
+    "locale": "pt_DEMO",
+    "message": "Falha ao eliminar o registo facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_MESSAGE",
+    "locale": "en_DEMO",
+    "message": "Face enrolled successfully.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_MESSAGE",
+    "locale": "pt_DEMO",
+    "message": "Rosto registado com sucesso.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_TITLE",
+    "locale": "en_DEMO",
+    "message": "Face Enrolled",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_TITLE",
+    "locale": "pt_DEMO",
+    "message": "Rosto Registado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_ANGLE_INSTRUCTION",
+    "locale": "en_DEMO",
+    "message": "Follow the on-screen instructions for each angle",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_ANGLE_INSTRUCTION",
+    "locale": "pt_DEMO",
+    "message": "Siga as instruções no ecrã para cada ângulo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_COMPLETE",
+    "locale": "en_DEMO",
+    "message": "Enrollment complete",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_COMPLETE",
+    "locale": "pt_DEMO",
+    "message": "Registo concluído",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_DESCRIPTION",
+    "locale": "en_DEMO",
+    "message": "We need to capture your face from 5 angles and verify liveness to set up secure Face verification. A backup PIN will also be generated for you.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_DESCRIPTION",
+    "locale": "pt_DEMO",
+    "message": "Precisamos de capturar o seu rosto em 5 ângulos e verificar a vivacidade para configurar a verificação facial segura. Um PIN de reserva também será gerado para si.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_DUPLICATE_DETECTED",
+    "locale": "en_DEMO",
+    "message": "This face is already enrolled for another user",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_DUPLICATE_DETECTED",
+    "locale": "pt_DEMO",
+    "message": "Este rosto já está registado para outro utilizador",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_FAILED",
+    "locale": "en_DEMO",
+    "message": "Enrollment failed. Please try again.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_FAILED",
+    "locale": "pt_DEMO",
+    "message": "Falha no registo. Por favor, tente novamente.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_LIVENESS_CHECK",
+    "locale": "en_DEMO",
+    "message": "Liveness check",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_LIVENESS_CHECK",
+    "locale": "pt_DEMO",
+    "message": "Verificação de vivacidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_MAX_USERS",
+    "locale": "en_DEMO",
+    "message": "This device has reached its maximum number of enrolled users. Please contact your supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_MAX_USERS",
+    "locale": "pt_DEMO",
+    "message": "Este dispositivo atingiu o número máximo de utilizadores registados. Por favor, contacte o seu supervisor.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_PIN_ASSIGNED",
+    "locale": "en_DEMO",
+    "message": "Your backup PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_PIN_ASSIGNED",
+    "locale": "pt_DEMO",
+    "message": "O seu PIN de reserva",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_QUALITY_LOW",
+    "locale": "en_DEMO",
+    "message": "Image quality too low",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_QUALITY_LOW",
+    "locale": "pt_DEMO",
+    "message": "Qualidade de imagem demasiado baixa",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_START",
+    "locale": "en_DEMO",
+    "message": "Start enrollment",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_START",
+    "locale": "pt_DEMO",
+    "message": "Iniciar registo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_TITLE",
+    "locale": "en_DEMO",
+    "message": "Face Enrollment",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_TITLE",
+    "locale": "pt_DEMO",
+    "message": "Registo Facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_ATTEMPT_COUNTER",
+    "locale": "en_DEMO",
+    "message": "Attempt",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_ATTEMPT_COUNTER",
+    "locale": "pt_DEMO",
+    "message": "Tentativa",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_FALLBACK_REQUIRED",
+    "locale": "en_DEMO",
+    "message": "Maximum attempts reached. Use your PIN to continue.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_FALLBACK_REQUIRED",
+    "locale": "pt_DEMO",
+    "message": "Número máximo de tentativas atingido. Use o seu PIN para continuar.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_REJECTED",
+    "locale": "en_DEMO",
+    "message": "Face not recognised",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_REJECTED",
+    "locale": "pt_DEMO",
+    "message": "Rosto não reconhecido",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_SCANNING",
+    "locale": "en_DEMO",
+    "message": "Scanning...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_SCANNING",
+    "locale": "pt_DEMO",
+    "message": "A digitalizar...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_TITLE",
+    "locale": "en_DEMO",
+    "message": "Face Verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GATE_TITLE",
+    "locale": "pt_DEMO",
+    "message": "Verificação Facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GO_BACK",
+    "locale": "en_DEMO",
+    "message": "Go Back",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GO_BACK",
+    "locale": "pt_DEMO",
+    "message": "Voltar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GOT_IT",
+    "locale": "en_DEMO",
+    "message": "Got it",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GOT_IT",
+    "locale": "pt_DEMO",
+    "message": "Entendi",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GOT_IT_CONTINUE",
+    "locale": "en_DEMO",
+    "message": "Got it! Continue",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_GOT_IT_CONTINUE",
+    "locale": "pt_DEMO",
+    "message": "Entendi! Continuar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STEADY",
+    "locale": "en_DEMO",
+    "message": "Hold steady",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STEADY",
+    "locale": "pt_DEMO",
+    "message": "Mantenha-se firme",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STILL",
+    "locale": "en_DEMO",
+    "message": "Hold still...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STILL",
+    "locale": "pt_DEMO",
+    "message": "Não se mexa...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STILL_CAPTURING",
+    "locale": "en_DEMO",
+    "message": "Hold still, capturing...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STILL_CAPTURING",
+    "locale": "pt_DEMO",
+    "message": "Não se mexa, a capturar...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INFO",
+    "locale": "en_DEMO",
+    "message": "Info",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INFO",
+    "locale": "pt_DEMO",
+    "message": "Informação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INIT_FAILED",
+    "locale": "en_DEMO",
+    "message": "Failed to initialise face recognition",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INIT_FAILED",
+    "locale": "pt_DEMO",
+    "message": "Falha ao inicializar o reconhecimento facial",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INITIALIZING",
+    "locale": "en_DEMO",
+    "message": "Initializing face recognition...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INITIALIZING",
+    "locale": "pt_DEMO",
+    "message": "A inicializar o reconhecimento facial...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INSTRUCTIONS_SUBTITLE",
+    "locale": "en_DEMO",
+    "message": "Follow these instructions for smooth capture",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_INSTRUCTIONS_SUBTITLE",
+    "locale": "pt_DEMO",
+    "message": "Siga estas instruções para uma captura fácil",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_GOOD",
+    "locale": "en_DEMO",
+    "message": "Good lighting",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_GOOD",
+    "locale": "pt_DEMO",
+    "message": "Boa iluminação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_TOO_BRIGHT",
+    "locale": "en_DEMO",
+    "message": "Avoid direct bright light",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_TOO_BRIGHT",
+    "locale": "pt_DEMO",
+    "message": "Evite luz direta forte",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_TOO_LOW",
+    "locale": "en_DEMO",
+    "message": "Move to a brighter area",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_TOO_LOW",
+    "locale": "pt_DEMO",
+    "message": "Vá para um local mais iluminado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_UNKNOWN",
+    "locale": "en_DEMO",
+    "message": "Unable to assess lighting",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_UNKNOWN",
+    "locale": "pt_DEMO",
+    "message": "Não foi possível avaliar a iluminação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_BLINK",
+    "locale": "en_DEMO",
+    "message": "Please blink your eyes",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_BLINK",
+    "locale": "pt_DEMO",
+    "message": "Por favor, pisque os olhos",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_FAILED",
+    "locale": "en_DEMO",
+    "message": "Liveness check failed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_FAILED",
+    "locale": "pt_DEMO",
+    "message": "Falha na verificação de vivacidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_PASSED",
+    "locale": "en_DEMO",
+    "message": "Liveness check passed!",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_PASSED",
+    "locale": "pt_DEMO",
+    "message": "Verificação de vivacidade concluída!",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TIMEOUT",
+    "locale": "en_DEMO",
+    "message": "Challenge timed out",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TIMEOUT",
+    "locale": "pt_DEMO",
+    "message": "Tempo esgotado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TURN_LEFT",
+    "locale": "en_DEMO",
+    "message": "Turn your head to the left",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TURN_LEFT",
+    "locale": "pt_DEMO",
+    "message": "Vire a cabeça para a esquerda",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TURN_RIGHT",
+    "locale": "en_DEMO",
+    "message": "Turn your head to the right",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TURN_RIGHT",
+    "locale": "pt_DEMO",
+    "message": "Vire a cabeça para a direita",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LOGOUT",
+    "locale": "en_DEMO",
+    "message": "Logout",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_LOGOUT",
+    "locale": "pt_DEMO",
+    "message": "Terminar sessão",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MAX_USERS_TITLE",
+    "locale": "en_DEMO",
+    "message": "Device capacity reached",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MAX_USERS_TITLE",
+    "locale": "pt_DEMO",
+    "message": "Capacidade do dispositivo atingida",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MOVE_BACK",
+    "locale": "en_DEMO",
+    "message": "Move back",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MOVE_BACK",
+    "locale": "pt_DEMO",
+    "message": "Afaste-se",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MOVE_CLOSER",
+    "locale": "en_DEMO",
+    "message": "Move closer",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_MOVE_CLOSER",
+    "locale": "pt_DEMO",
+    "message": "Aproxime-se",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_NO_GPS_AVAILABLE",
+    "locale": "en_DEMO",
+    "message": "GPS not available",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_NO_GPS_AVAILABLE",
+    "locale": "pt_DEMO",
+    "message": "GPS não disponível",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_NO_REGISTERED_FACE",
+    "locale": "en_DEMO",
+    "message": "No registered face found. Please register first.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_NO_REGISTERED_FACE",
+    "locale": "pt_DEMO",
+    "message": "Nenhum rosto registado. Por favor, registe-se primeiro.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_BRIGHTNESS",
+    "locale": "en_DEMO",
+    "message": "Brightness — move to a well-lit area and face the light source. Avoid sitting with a bright window behind you.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_BRIGHTNESS",
+    "locale": "pt_DEMO",
+    "message": "Luminosidade — vá para um local bem iluminado e fique de frente para a fonte de luz. Evite ficar com uma janela clara atrás de si.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_CLARITY",
+    "locale": "en_DEMO",
+    "message": "Clarity — remove glasses, hats, masks, or anything covering your face. Keep your eyes open and face centred.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_CLARITY",
+    "locale": "pt_DEMO",
+    "message": "Nitidez — retire óculos, chapéus, máscaras ou qualquer coisa que cubra o rosto. Mantenha os olhos abertos e o rosto centrado.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_DISTANCE",
+    "locale": "en_DEMO",
+    "message": "Distance — hold the phone 30–40 cm from your face. Too close or too far reduces quality.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_DISTANCE",
+    "locale": "pt_DEMO",
+    "message": "Distância — segure o telemóvel a 30–40 cm do rosto. Muito perto ou muito longe reduz a qualidade.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_STAY_STILL",
+    "locale": "en_DEMO",
+    "message": "Stay still — hold the phone steady and keep your face within the oval guide.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_STAY_STILL",
+    "locale": "pt_DEMO",
+    "message": "Fique quieto — segure o telemóvel com firmeza e mantenha o rosto dentro da guia oval.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_COPIED",
+    "locale": "en_DEMO",
+    "message": "PIN copied to clipboard",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_COPIED",
+    "locale": "pt_DEMO",
+    "message": "PIN copiado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_TITLE",
+    "locale": "en_DEMO",
+    "message": "Enter Your PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PIN_TITLE",
+    "locale": "pt_DEMO",
+    "message": "Introduza o Seu PIN",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PROCESSING",
+    "locale": "en_DEMO",
+    "message": "Processing face...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_PROCESSING",
+    "locale": "pt_DEMO",
+    "message": "A processar o rosto...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REGISTRATION_FAILED",
+    "locale": "en_DEMO",
+    "message": "Registration failed. Please try again.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REGISTRATION_FAILED",
+    "locale": "pt_DEMO",
+    "message": "Falha no registo. Por favor, tente novamente.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REJECTED_MESSAGE",
+    "locale": "en_DEMO",
+    "message": "Face does not match. Please try again.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REJECTED_MESSAGE",
+    "locale": "pt_DEMO",
+    "message": "O rosto não corresponde. Por favor, tente novamente.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_MISSED",
+    "locale": "en_DEMO",
+    "message": "Re-verification missed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_MISSED",
+    "locale": "pt_DEMO",
+    "message": "Reverificação perdida",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_PROMPT",
+    "locale": "en_DEMO",
+    "message": "Please verify your identity to continue",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_PROMPT",
+    "locale": "pt_DEMO",
+    "message": "Por favor, verifique a sua identidade para continuar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_TITLE",
+    "locale": "en_DEMO",
+    "message": "Identity Re-verification",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_TITLE",
+    "locale": "pt_DEMO",
+    "message": "Reverificação de Identidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_VERIFIED",
+    "locale": "en_DEMO",
+    "message": "Identity verified",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_VERIFIED",
+    "locale": "pt_DEMO",
+    "message": "Identidade verificada",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCANNING",
+    "locale": "en_DEMO",
+    "message": "Scanning",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCANNING",
+    "locale": "pt_DEMO",
+    "message": "A digitalizar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCANNING_HOLD_STEADY",
+    "locale": "en_DEMO",
+    "message": "Scanning — hold steady",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SCANNING_HOLD_STEADY",
+    "locale": "pt_DEMO",
+    "message": "A digitalizar — mantenha-se firme",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SETTING_UP_PROFILE",
+    "locale": "en_DEMO",
+    "message": "Setting up your profile...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_SETTING_UP_PROFILE",
+    "locale": "pt_DEMO",
+    "message": "A configurar o seu perfil...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_STEP_LIVENESS",
+    "locale": "en_DEMO",
+    "message": "Complete liveness check",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_STEP_LIVENESS",
+    "locale": "pt_DEMO",
+    "message": "Conclua a verificação de vivacidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TAP_CAPTURE",
+    "locale": "en_DEMO",
+    "message": "Face detected — tap capture",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TAP_CAPTURE",
+    "locale": "pt_DEMO",
+    "message": "Rosto detetado — toque em capturar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TILT_DOWN",
+    "locale": "en_DEMO",
+    "message": "Tilt your head slightly down",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TILT_DOWN",
+    "locale": "pt_DEMO",
+    "message": "Incline ligeiramente a cabeça para baixo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TILT_UP",
+    "locale": "en_DEMO",
+    "message": "Tilt your head slightly up",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TILT_UP",
+    "locale": "pt_DEMO",
+    "message": "Incline ligeiramente a cabeça para cima",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CLEAR_FACE",
+    "locale": "en_DEMO",
+    "message": "Clear Face Visibility",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CLEAR_FACE",
+    "locale": "pt_DEMO",
+    "message": "Rosto Bem Visível",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CLEAR_FACE_BODY",
+    "locale": "en_DEMO",
+    "message": "Remove glasses, masks, or anything covering your face.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CLEAR_FACE_BODY",
+    "locale": "pt_DEMO",
+    "message": "Retire óculos, máscaras ou qualquer coisa que cubra o rosto.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CORRECT_DISTANCE",
+    "locale": "en_DEMO",
+    "message": "Correct Distance",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CORRECT_DISTANCE",
+    "locale": "pt_DEMO",
+    "message": "Distância Correta",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CORRECT_DISTANCE_BODY",
+    "locale": "en_DEMO",
+    "message": "Keep your face 30–40 cm from the camera.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CORRECT_DISTANCE_BODY",
+    "locale": "pt_DEMO",
+    "message": "Mantenha o rosto a 30–40 cm da câmara.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_FOLLOW_GUIDANCE",
+    "locale": "en_DEMO",
+    "message": "Follow Onscreen Guidance",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_FOLLOW_GUIDANCE",
+    "locale": "pt_DEMO",
+    "message": "Siga as Instruções no Ecrã",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_FOLLOW_GUIDANCE_BODY",
+    "locale": "en_DEMO",
+    "message": "Turn left or right as prompted during capture.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_FOLLOW_GUIDANCE_BODY",
+    "locale": "pt_DEMO",
+    "message": "Vire à esquerda ou à direita conforme indicado durante a captura.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_GOOD_LIGHTING",
+    "locale": "en_DEMO",
+    "message": "Good Lighting",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_GOOD_LIGHTING",
+    "locale": "pt_DEMO",
+    "message": "Boa Iluminação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_GOOD_LIGHTING_BODY",
+    "locale": "en_DEMO",
+    "message": "Avoid sitting near a bright window or light source.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_GOOD_LIGHTING_BODY",
+    "locale": "pt_DEMO",
+    "message": "Evite ficar perto de uma janela clara ou fonte de luz.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_STEADY_PHONE",
+    "locale": "en_DEMO",
+    "message": "Keep Your Phone Steady",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_STEADY_PHONE",
+    "locale": "pt_DEMO",
+    "message": "Mantenha o Telemóvel Firme",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_STEADY_PHONE_BODY",
+    "locale": "en_DEMO",
+    "message": "Hold your phone steady while the scan is in progress.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIP_STEADY_PHONE_BODY",
+    "locale": "pt_DEMO",
+    "message": "Segure o telemóvel com firmeza durante a digitalização.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIPS_TITLE",
+    "locale": "en_DEMO",
+    "message": "Tips for best photo",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TIPS_TITLE",
+    "locale": "pt_DEMO",
+    "message": "Dicas para a melhor foto",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TRY_AGAIN",
+    "locale": "en_DEMO",
+    "message": "Try Again",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_TRY_AGAIN",
+    "locale": "pt_DEMO",
+    "message": "Tentar Novamente",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFICATION_FAILED_TITLE",
+    "locale": "en_DEMO",
+    "message": "Verification Failed",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFICATION_FAILED_TITLE",
+    "locale": "pt_DEMO",
+    "message": "Falha na Verificação",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFIED_MESSAGE",
+    "locale": "en_DEMO",
+    "message": "Face verified",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFIED_MESSAGE",
+    "locale": "pt_DEMO",
+    "message": "Rosto verificado",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_IDENTITY",
+    "locale": "en_DEMO",
+    "message": "Verify Identity",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_IDENTITY",
+    "locale": "pt_DEMO",
+    "message": "Verificar Identidade",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFYING",
+    "locale": "en_DEMO",
+    "message": "Verifying face...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_VERIFYING",
+    "locale": "pt_DEMO",
+    "message": "A verificar o rosto...",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REMIND_ME_LATER",
+    "locale": "en_DEMO",
+    "message": "Remind me later",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_REMIND_ME_LATER",
+    "locale": "pt_DEMO",
+    "message": "Lembrar-me mais tarde",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_FOR",
+    "locale": "en_DEMO",
+    "message": "Face enrolled for",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_FOR",
+    "locale": "pt_DEMO",
+    "message": "Rosto registado para",
+    "module": "hcm-common"
   }
 ]

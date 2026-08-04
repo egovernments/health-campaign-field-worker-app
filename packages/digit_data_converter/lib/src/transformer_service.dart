@@ -382,7 +382,10 @@ class FormEntityMapper {
     updateMapping.forEach((customKey, path) {
       if (containsPathInFormData(path, formValues)) {
         final value = getStrictValueFromFormDataOnly(path, formValues);
-        updatedFields[customKey] = value;
+        // Only include non-null, non-empty values in additionalFields
+        if (value != null && value.toString().trim().isNotEmpty) {
+          updatedFields[customKey] = value;
+        }
 
         // Track the path as used so it's not treated as unmapped
         usedPaths.add(path.split('.').last.split('[').first);

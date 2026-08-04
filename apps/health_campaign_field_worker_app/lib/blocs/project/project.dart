@@ -7,6 +7,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/digit_dss.dart';
@@ -27,6 +28,7 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../data/remote_client.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/entities/mdms_master_enums.dart';
@@ -77,6 +79,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       attendanceLogRemoteRepository;
   final LocalRepository<IndividualModel, IndividualSearchModel>
       individualLocalRepository;
+
+  /// Face Auth Event Repositories (nullable — not all projects expose this endpoint)
+  final RemoteRepository<FaceAuthEventModel, FaceAuthEventSearchModel>?
+      faceAuthEventRemoteRepository;
+  final LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>?
+      faceAuthEventLocalRepository;
 
   /// Project Facility Repositories
   final RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
@@ -157,6 +165,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.downSyncLocalRepository,
     required this.userActionLocalRepository,
     required this.userActionRemoteRepository,
+    this.faceAuthEventRemoteRepository,
+    this.faceAuthEventLocalRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -602,6 +612,118 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     return updatedLogs;
   }
 
+  /// Fetches the HCM user roles for [individuals] (by userUuid) in a single
+  /// /user/v1/_search call and stamps them into each individual's
+  /// additionalFields under the 'userRoles' key (comma-separated role codes),
+  /// so role-based filters (e.g. the FIELD_SUPPORT non-mobile-user list) work
+  /// offline. Best-effort: on any failure the individuals are returned as-is.
+  Future<List<IndividualModel>> _annotateUserRoles(
+      List<IndividualModel> individuals) async {
+    try {
+      final userUuids = individuals
+          .map((e) => e.userUuid)
+          .where((u) => u != null && u.isNotEmpty)
+          .cast<String>()
+          .toSet()
+          .toList();
+      if (userUuids.isEmpty) return individuals;
+
+      final response = await DioClient().dio.post(
+        '/user/v1/_search',
+        data: {
+          'tenantId': envConfig.variables.tenantId,
+          'uuid': userUuids,
+          'pageSize': userUuids.length,
+        },
+      );
+
+      final users = (response.data as Map<String, dynamic>?)?['user'];
+      if (users is! List) return individuals;
+
+      final rolesByUuid = <String, String>{};
+      for (final u in users) {
+        if (u is! Map) continue;
+        final uuid = u['uuid']?.toString();
+        final roles = u['roles'];
+        if (uuid == null || roles is! List) continue;
+        rolesByUuid[uuid] = roles
+            .map((r) => r is Map ? r['code']?.toString() : null)
+            .whereType<String>()
+            .join(',');
+      }
+      debugPrint('[FaceAuth] userRoles fetched for ${rolesByUuid.length} users');
+
+      return individuals.map((ind) {
+        final roles = ind.userUuid != null ? rolesByUuid[ind.userUuid] : null;
+        if (roles == null) return ind;
+        final existing = ind.additionalFields?.fields
+                .where((f) => f.key != 'userRoles')
+                .toList() ??
+            <AdditionalField>[];
+        return ind.copyWith(
+          additionalFields: IndividualAdditionalFields(
+            version: ind.additionalFields?.version ?? 1,
+            fields: [...existing, AdditionalField('userRoles', roles)],
+          ),
+        );
+      }).toList();
+    } catch (e) {
+      debugPrint('[FaceAuth] _annotateUserRoles failed: $e');
+      return individuals;
+    }
+  }
+
+  /// Fetches all face auth events for [projectId] in a single API call and
+  /// upserts them into the local DB so verification status shows offline.
+  ///
+  /// Old-format events where individualId = system user UUID are rewritten to
+  /// the correct HCM UUID before storing, so the attendance dots lookup works.
+  Future<void> _loadFaceAuthEventsForProject(
+      String projectId, List<String> individualIds) async {
+    debugPrint(
+        '[FaceAuth] _loadFaceAuthEventsForProject: projectId=$projectId, ${individualIds.length} attendees');
+
+    if (faceAuthEventRemoteRepository == null ||
+        faceAuthEventLocalRepository == null) {
+      debugPrint(
+          '[FaceAuth] repositories not available for this project — skipping sync');
+      return;
+    }
+
+    // Build reverse map: system user UUID → HCM individual UUID.
+    final individuals = await individualLocalRepository.search(
+      IndividualSearchModel(id: individualIds),
+    );
+    final userUuidToHcm = <String, String>{
+      for (final ind in individuals)
+        if (ind.id != null && ind.userUuid != null && ind.userUuid!.isNotEmpty)
+          ind.userUuid!: ind.id!,
+    };
+    debugPrint('[FaceAuth] userUuid→HCM mapping: $userUuidToHcm');
+
+    try {
+      final allEvents = await faceAuthEventRemoteRepository!.search(
+        FaceAuthEventSearchModel(projectId: projectId),
+      );
+      debugPrint(
+          '[FaceAuth] projectId=$projectId → ${allEvents.length} total events');
+
+      // Rewrite old-format events where individualId is a system user UUID.
+      final normalizedEvents = allEvents.map((e) {
+        final hcmId = userUuidToHcm[e.individualId];
+        return hcmId != null ? e.copyWith(individualId: hcmId) : e;
+      }).toList();
+
+      if (normalizedEvents.isNotEmpty) {
+        await faceAuthEventLocalRepository!.bulkCreate(normalizedEvents);
+        debugPrint(
+            '[FaceAuth] stored ${normalizedEvents.length} events locally');
+      }
+    } catch (e) {
+      debugPrint('[FaceAuth] fetch for projectId=$projectId failed: $e');
+    }
+  }
+
   Future<void> _handleProjectSelection(
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
@@ -672,7 +794,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                         .toList(),
                   ),
                 );
-                await individualLocalRepository.bulkCreate(individuals);
+                // Stamp each individual's HCM user roles into
+                // additionalFields so role filters work offline.
+                final annotated = await _annotateUserRoles(individuals);
+                await individualLocalRepository.bulkCreate(annotated);
                 if (context.loggedInUserRoles
                     .where(
                       (role) =>
@@ -698,6 +823,29 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 ));
                 return;
               }
+            }
+          }
+
+          // Face-auth: pull face auth events per-attendee for supervisors so
+          // verification status (attendance dots) shows offline before the
+          // next sync.
+          if (context.loggedInUserRoles.any((role) =>
+              role.code == RolesType.districtSupervisor.toValue() ||
+              role.code == RolesType.teamSupervisor.toValue())) {
+            try {
+              final attendeeIds = attendanceRegisters
+                  .expand((r) => r.attendees ?? [])
+                  .map((a) => a.individualId)
+                  .where((id) => id != null && id.isNotEmpty)
+                  .cast<String>()
+                  .toSet()
+                  .toList();
+              if (attendeeIds.isNotEmpty) {
+                await _loadFaceAuthEventsForProject(
+                    event.model.id!, attendeeIds);
+              }
+            } catch (e) {
+              debugPrint('[FaceAuth] _handleProjectSelection: error: $e');
             }
           }
         }

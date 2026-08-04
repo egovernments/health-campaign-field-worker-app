@@ -3,6 +3,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_flow_builder/action_handler/action_handler.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -372,6 +373,24 @@ class MainApplicationState extends State<MainApplication>
                                   ctx.read<UserActionLocalRepository>(),
                               userActionRemoteRepository:
                                   ctx.read<UserActionRemoteRepository>(),
+                              faceAuthEventRemoteRepository: (() {
+                                try {
+                                  return ctx.read<
+                                      RemoteRepository<FaceAuthEventModel,
+                                          FaceAuthEventSearchModel>>();
+                                } catch (_) {
+                                  return null;
+                                }
+                              }()),
+                              faceAuthEventLocalRepository: (() {
+                                try {
+                                  return ctx.read<
+                                      LocalRepository<FaceAuthEventModel,
+                                          FaceAuthEventSearchModel>>();
+                                } catch (_) {
+                                  return null;
+                                }
+                              }()),
                               context: context,
                             ),
                           ),
