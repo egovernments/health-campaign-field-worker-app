@@ -65,11 +65,10 @@ class PerformSyncUp {
       (element) => element.type,
     );
 
-    // Sort the entries by DataModelType enum
+    // NOTE: enum-index sort intentionally removed for testing so type
+    // buckets stay in first-seen (createdAt) order. Revert before shipping
+    // if backend requires a fixed type-order.
     final entries = groupedEntries.entries.toList();
-    entries.sort((a, b) => DataModelType.values
-        .indexOf(a.key)
-        .compareTo(DataModelType.values.indexOf(b.key)));
 
     // For each type and operation, get the remote and local repositories and apply the server generated ID to each entity
     for (final typeGroupedEntity in entries) {

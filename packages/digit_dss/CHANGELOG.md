@@ -1,3 +1,9 @@
+## 1.0.5+2
+
+* Atomic localization cache swap to avoid an empty-key window on refresh
+* Switch package `translate()` to O(1) map lookup
+* Included wastage/partial-used fields in dashboard stock aggregations
+
 ## 1.0.5+1
 
 * Updated `attendance_management` imports in dashboard bloc to reflect the package's re-export shape

@@ -130,19 +130,13 @@ enum DatabaseMigrationResult {
   UniqueIdPool
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
-  /// The encryption key for the database.
-  /// If null, the database will not be encrypted.
-  static String? _encryptionKey;
-
   /// The constructor for `LocalSqlDataStore`.
   /// It calls the superclass constructor with `_openConnection()` as the argument.
   ///
   /// [encryptionKey] - Optional encryption key for SQLCipher encryption.
   /// If provided, the database will be encrypted using AES-256.
   LocalSqlDataStore({String? encryptionKey})
-      : super(_openConnection(encryptionKey: encryptionKey)) {
-    _encryptionKey = encryptionKey;
-  }
+      : super(_openConnection(encryptionKey: encryptionKey));
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override

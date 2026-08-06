@@ -7,8 +7,15 @@
 - Routed geo count queries through Drift
 - Preserved search wrapper state on clear/persisted transitions
 - Added table indexes for improved search performance
-- Improved primary key inference logic and enhanced error logging
-- Gated `IndexDiag` behind debug so it no longer blocks first search
+- Refresh `sqlite_stat1` once per session in `SearchEntityRepository`
+- Add hot-path indexes, run post-migration `ANALYZE`, skip redundant COUNTs
+- Gate `IndexDiag` behind debug so it no longer blocks first search
+- Improve primary-key inference; snake_case for primary table; enhanced error logging
+- Enhance `table_widget` with `@condition`-based cell values and structured evaluation contexts (`currentItem`, `contextData`)
+- Fix visibility check support for `button_widget`; visible-property preprocessing with `listIndex` awareness
+- Fix multiple-individual and count-query issues; add OR condition to `query_builder.dart`
+- Add access to navigation data in `search_executor.dart` for search of lists
+- Removed registration package dependency; renamed from `global_bloc`
 
 ## 0.0.1
 

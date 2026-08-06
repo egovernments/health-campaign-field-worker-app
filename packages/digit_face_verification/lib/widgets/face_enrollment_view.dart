@@ -10,7 +10,6 @@ import '../blocs/app_localization.dart';
 import '../blocs/face_enrollment_bloc.dart';
 import '../blocs/liveness_bloc.dart';
 import '../data/face_model_service.dart';
-import '../data/liveness_detection_service.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import 'face_capture_view.dart';
 import 'face_guide_icon.dart';

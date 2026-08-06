@@ -272,9 +272,6 @@ class FormEntityMapper {
             applyUpdate(nestedTarget, formData, sourcePath, fullPath);
             target[targetKey] = nestedTarget;
           } else if (target[targetKey] is List) {
-            // 🔥 handle structured list logic
-            final modelList = target[targetKey] as List;
-
             final listMappingConfig = modelConfig['listMappings']?[targetKey];
             if (listMappingConfig is Map<String, dynamic>) {
               final updatedList = _updateListWithMatchingStrategy(

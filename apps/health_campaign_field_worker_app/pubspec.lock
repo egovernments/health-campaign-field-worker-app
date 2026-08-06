@@ -79,7 +79,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.6+1"
+    version: "1.0.6+2"
   audioplayers:
     dependency: "direct main"
     description:
@@ -534,7 +534,7 @@ packages:
       path: "../../packages/digit_data_converter"
       relative: true
     source: path
-    version: "0.0.2"
+    version: "0.0.4"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -548,7 +548,7 @@ packages:
       path: "../../packages/digit_dss"
       relative: true
     source: path
-    version: "1.0.5+1"
+    version: "1.0.5+2"
   digit_face_verification:
     dependency: "direct main"
     description:
@@ -570,21 +570,21 @@ packages:
       path: "../../packages/digit_flow_builder"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.1.1"
   digit_forms_engine:
     dependency: "direct main"
     description:
       path: "../../packages/digit_forms_engine"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.1.1"
   digit_formula_parser:
     dependency: "direct main"
     description:
       path: "../../packages/digit_formula_parser"
       relative: true
     source: path
-    version: "1.2.0"
+    version: "1.2.1"
   digit_location_tracker:
     dependency: "direct main"
     description:
@@ -2136,7 +2136,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.4"
+    version: "1.0.5"
   sync_http:
     dependency: transitive
     description:

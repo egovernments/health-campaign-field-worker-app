@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:digit_data_model/data_model.dart';
 
 // Singleton class for managing survey_form operations

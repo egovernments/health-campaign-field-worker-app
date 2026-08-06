@@ -68,10 +68,11 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      path: "../attendance_management"
-      relative: true
-    source: path
-    version: "1.0.6+1"
+      name: attendance_management
+      sha256: "3ff18959111cd766595c4a0bcf34b0fe718b31f99a7d6b6bff1f9f21f3402c09"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6+2"
   audioplayers:
     dependency: transitive
     description:
@@ -436,9 +437,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../digit_data_model"
-      relative: true
-    source: path
+      name: digit_data_model
+      sha256: "7ac3ca5eb85ac4a6caa4e7d6680721f1d468914865c6b4c768277408e0725912"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.4.0"
   digit_scanner:
     dependency: transitive
@@ -452,10 +454,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: b82d5636feae0e04111d1e4282945e55865b2586e121583d315f08b4233773de
+      sha256: ec246f96667d01a99d1fe3dd6653298e49bb801c65168b792e49a52f6f04987a
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0+1"
+    version: "0.3.1"
   dio:
     dependency: "direct main"
     description:

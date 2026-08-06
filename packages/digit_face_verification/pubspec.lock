@@ -340,18 +340,19 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../digit_data_model"
-      relative: true
-    source: path
+      name: digit_data_model
+      sha256: "7ac3ca5eb85ac4a6caa4e7d6680721f1d468914865c6b4c768277408e0725912"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.4.0"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: dca1305d280dd65250beb0a9bbb9d6d04cc8f848e7134c5ebc5839ec75acd785
+      sha256: ec246f96667d01a99d1fe3dd6653298e49bb801c65168b792e49a52f6f04987a
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0+3"
+    version: "0.3.1"
   dio:
     dependency: "direct main"
     description:
@@ -377,7 +378,7 @@ packages:
     source: hosted
     version: "2.1.0"
   drift:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: drift
       sha256: "4e0ffee40d23f0b809e6cff1ad202886f51d629649073ed42d9cd1d194ea943e"
