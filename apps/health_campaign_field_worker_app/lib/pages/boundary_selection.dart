@@ -75,7 +75,6 @@ class _BoundarySelectionPageState
       i18.common.maxBoundarySelectionReached,
       i18.common.chooseBoundaries
     ]);
-    context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
         );
@@ -144,10 +143,16 @@ class _BoundarySelectionPageState
           .where((s) => s.isNotEmpty)
           .toSet();
       final newCodes = currentCodes.difference(_fetchedBoundaryCodes);
-      if (newCodes.isEmpty) return;
+      if (newCodes.isEmpty) {
+        _fireLocalizationReload(appConfiguration);
+        return;
+      }
 
       final selectedLocale = AppSharedPreferences().getSelectedLocale;
-      if (selectedLocale == null || selectedLocale.isEmpty) return;
+      if (selectedLocale == null || selectedLocale.isEmpty) {
+        _fireLocalizationReload(appConfiguration);
+        return;
+      }
 
       final locBloc = context.read<LocalizationBloc>();
       final boundaryModule = 'hcm-boundary-${hierarchyType.toLowerCase()}';
@@ -169,7 +174,10 @@ class _BoundarySelectionPageState
       // in SQL) so a listener fire while we're mid-flight doesn't refire
       // for the same subtree in this session.
       _fetchedBoundaryCodes.addAll(newCodes);
-      if (missingCodes.isEmpty) return;
+      if (missingCodes.isEmpty) {
+        _fireLocalizationReload(appConfiguration);
+        return;
+      }
       try {
         final results = await locBloc.localizationRepository.loadLocalization(
           path: Constants.localizationApiPath,
@@ -179,27 +187,31 @@ class _BoundarySelectionPageState
           codes: missingCodes.join(','),
         );
         await LocalizationLocalRepository().create(results, locBloc.sql);
-
-        if (!mounted) return;
-        // Kick AppLocalizations to reload from DB so the newly-inserted
-        // rows become resolvable by translate(). onUpdateLocalizationIndex
-        // is the existing "reload for this locale" event.
-        final languages = appConfiguration.languages ?? [];
-        final idx =
-            languages.indexWhere((e) => e.value == selectedLocale);
-        locBloc.add(LocalizationEvent.onUpdateLocalizationIndex(
-          index: idx >= 0 ? idx : 0,
-          code: selectedLocale,
-        ));
       } catch (e) {
         // Roll back — allow next drill-down to retry this batch.
         _fetchedBoundaryCodes.removeAll(newCodes);
         debugPrint(
             'boundary drill-down localization refetch failed: $e');
       }
+      _fireLocalizationReload(appConfiguration);
     } finally {
       completer.complete();
     }
+  }
+
+  /// Single point for kicking AppLocalizations to reload from DB.
+  void _fireLocalizationReload(AppConfiguration appConfiguration) {
+    if (!mounted) return;
+    final selectedLocale = AppSharedPreferences().getSelectedLocale;
+    if (selectedLocale == null || selectedLocale.isEmpty) return;
+    final languages = appConfiguration.languages ?? [];
+    final idx = languages.indexWhere((e) => e.value == selectedLocale);
+    context.read<LocalizationBloc>().add(
+      LocalizationEvent.onUpdateLocalizationIndex(
+        index: idx >= 0 ? idx : 0,
+        code: selectedLocale,
+      ),
+    );
   }
 
   @override
@@ -245,17 +257,6 @@ class _BoundarySelectionPageState
                         BlocListener<BoundaryBloc, BoundaryState>(
                       listener: (context, state) {
                         if (state.boundaryList.isNotEmpty) {
-                          // Pull localization for any boundaries the user has
-                          // just drilled into. Fire-and-forget — the local
-                          // refresh below runs on stale data if this hasn't
-                          // completed yet, and we re-emit `onUpdateLocalizationIndex`
-                          // from inside `_fetchNewBoundaryLocalizations` once the
-                          // rows are in the DB.
-                          unawaited(_fetchNewBoundaryLocalizations(
-                            state,
-                            appConfiguration,
-                          ));
-
                           final finalCodes =
                               state.boundaryList.map((e) => e.code!).toList();
 
@@ -264,16 +265,6 @@ class _BoundarySelectionPageState
                                   '${runtimeHierarchyType()}_$key')
                               .toList();
 
-                          // Every entry in this list must include *every* i18
-                          // key the page renders that lives outside the
-                          // `common` module rows this filter matches — the
-                          // BLoC handler below clears `_messagesByCode` on
-                          // reload, so any key omitted here disappears from
-                          // in-memory translation even if it was loaded on
-                          // initial page entry. `chooseBoundaries` was
-                          // missing, which is why it flashed correctly on
-                          // first frame (initState's setCode included it)
-                          // and then went raw on the boundary-state emit.
                           final combinedCodes = [
                             ...finalCodes,
                             ...labelCodeList,
@@ -282,16 +273,17 @@ class _BoundarySelectionPageState
                             i18.common.chooseBoundaries,
                           ];
 
+                          // Update the code filter (sync, no I/O). The actual
+                          // _loadLocale reload is deferred to
+                          // _fetchNewBoundaryLocalizations which fires
+                          // OnUpdateLocalizationIndexEvent once — after any
+                          // missing codes have been fetched and written to DB.
                           LocalizationParams().setCode(combinedCodes);
-                          context.read<LocalizationBloc>().add(
-                              LocalizationEvent.onUpdateLocalizationIndex(
-                                  index: appConfiguration.languages!.indexWhere(
-                                      (element) =>
-                                          element.value ==
-                                          AppSharedPreferences()
-                                              .getSelectedLocale),
-                                  code: AppSharedPreferences()
-                                      .getSelectedLocale!));
+
+                          unawaited(_fetchNewBoundaryLocalizations(
+                            state,
+                            appConfiguration,
+                          ));
                         }
                       },
                       child: ReactiveFormBuilder(
@@ -1273,34 +1265,9 @@ class _BoundarySelectionPageState
   FormGroup buildForm(BoundaryState state, AppConfiguration appConfiguration) {
     formControls = {};
     final labelList = state.selectedBoundaryMap.keys.toList();
-    if (state.boundaryList.isNotEmpty) {
-      final finalCodes = state.boundaryList.map((e) => e.code!).toList();
-
-      final labelCodeList = state.selectedBoundaryMap.keys
-          .map((key) => '${runtimeHierarchyType()}_$key')
-          .toList();
-
-      // Must include every i18 key rendered outside the modules this filter
-      // captures — otherwise the reload below clears `_messagesByCode` and
-      // refills without them. `buildForm` runs on the first build (before the
-      // BlocListener has any chance to correct the code list), so any
-      // omission here is what renders as a raw i18 key on landing.
-      final combinedCodes = [
-        ...finalCodes,
-        ...labelCodeList,
-        i18.common.coreCommonSubmit,
-        i18.common.maxBoundarySelectionReached,
-        i18.common.chooseBoundaries,
-      ];
-
-      LocalizationParams().setCode(combinedCodes);
-      context.read<LocalizationBloc>().add(
-          LocalizationEvent.onUpdateLocalizationIndex(
-              index: appConfiguration.languages!.indexWhere((element) =>
-                  element.value == AppSharedPreferences().getSelectedLocale),
-              code: AppSharedPreferences()
-                  .getSelectedLocale!));
-    }
+    // Localization codes + OnUpdateLocalizationIndexEvent are already handled
+    // by the BlocListener above on the same BoundaryBloc state change that
+    // triggers this rebuild — no need to duplicate here.
     for (int i = 0; i < labelList.length; i++) {
       final label = labelList[i];
       final isLastLevel = i == labelList.length - 1;
