@@ -30,6 +30,7 @@ import '../../services/face_auth_event_logger.dart';
 import '../../services/worker_registry_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/extensions/extensions.dart';
+import '../../utils/feature_flags.dart';
 import '../../utils/utils.dart';
 import '../../widgets/face_auth/reverification_popup.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -87,6 +88,13 @@ class _NonMobileUserListPageState
   }
 
   Future<void> _loadEnrollmentStatus({List<String>? individualIds}) async {
+    if (!kFaceAuthEnabled) {
+      // Face flow disabled: mark loaded so cards don't spin, leave IDs empty.
+      if (individualIds != null && mounted) {
+        setState(() => _enrollmentStatusLoaded = true);
+      }
+      return;
+    }
     try {
       final repository = context.read<FaceEmbeddingRepository>();
       final allEmbeddings = await repository.getAllEmbeddings();
@@ -144,6 +152,7 @@ class _NonMobileUserListPageState
 
   Future<void> _verifyCoWorker(
       BuildContext context, String individualId, String name) async {
+    if (!kFaceAuthEnabled) return;
     if (_isNavigating) return;
     _isNavigating = true;
     try {
@@ -363,6 +372,7 @@ class _NonMobileUserListPageState
                                         isEnrollmentLoading:
                                             !_enrollmentStatusLoaded,
                                         onFaceEnroll: () async {
+                                          if (!kFaceAuthEnabled) return;
                                           if (enrollmentId.isEmpty) return;
                                           if (_isNavigating) return;
                                           _isNavigating = true;
