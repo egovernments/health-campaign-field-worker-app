@@ -601,6 +601,16 @@ final dynamic sampleReferralFlows = {
                 "key": "projectId",
                 "value": "{{singleton.selectedProject.id}}",
                 "operation": "equals"
+              },
+              {
+                // Hide rejected referrals from the inbox — the field lives
+                // inside additionalFields.fields[], and the search layer
+                // doesn't have a deep-path operator, so we substring-match
+                // the serialised additionalFields blob for the exact
+                // referralStatus=REJECTED token.
+                "key": "additionalFields",
+                "value": "\"value\":\"REJECTED\"",
+                "operation": "notContains"
               }
             ],
             "name": "hFReferral",
