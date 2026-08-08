@@ -63,7 +63,7 @@ class FlowNavigationUtils {
       final prefs = await SharedPreferences.getInstance();
       final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-      if (schemaJsonRaw != null) {
+      if (false && schemaJsonRaw != null) {
         final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
         final moduleSchema = allSchemas[config.schemaKey];
 

@@ -25,6 +25,7 @@ import 'pages/error_boundary.dart';
 import 'router/app_router.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';
+import 'utils/localization_seeder.dart';
 import 'utils/utils.dart';
 import 'widgets/db_error_handler.dart';
 
@@ -107,6 +108,10 @@ void main() async {
 
   // Create the encrypted database instance
   _sql = LocalSqlDataStore(encryptionKey: encryptionKey);
+
+  // Dev-only seed for localization keys that aren't yet in MDMS.
+  // Uses upsert, so MDMS-fetched rows overwrite seed rows on later refresh.
+  await seedLocalLocalizations(_sql);
 
   await initializeService(_dio, _isar);
 

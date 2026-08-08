@@ -239,10 +239,11 @@ final dynamic sampleReferralFlows = {
                   {
                     "key": "name",
                     "value": "field.value",
-                    "operation": "contains"
+                    "operation": "contains",
+                    "root": "hFReferral"
                   }
                 ],
-                "name": "hFReferral",
+                "name": "hFReferralSearch",
                 "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
               }
             }
@@ -279,8 +280,10 @@ final dynamic sampleReferralFlows = {
                   },
                   {
                     "type": "template",
-                    "label": "Open",
+                    "label": "REFERRAL_INBOX_OPEN_LABEL",
                     "format": "button",
+                    "visible":
+                        "{{fn:getHFReferralActionState(item)}} != PENDING",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -321,7 +324,7 @@ final dynamic sampleReferralFlows = {
                 "children": [
                   {
                     "value":
-                        "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(itemData.additionalFields.fields.dateOfEvaluation, 'date', dd MMM yyyy) }}",
+                        "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(itemData.clientAuditDetails.createdTime, 'date', dd MMM yyyy) }}",
                     "format": "textTemplate",
                     "fieldName": "textTemplatetext"
                   }
@@ -331,6 +334,154 @@ final dynamic sampleReferralFlows = {
                   "mainAxisSize": "max",
                   "mainAxisAlignment": "start"
                 }
+              },
+              {
+                // Accept/Reject buttons: gated by getHFReferralActionState so
+                // they only render for pending inbound referrals
+                // (ccnInbound=true, referralStatus=RECEIVED). Prior attempts
+                // using getAdditionalFieldValue(itemData.additionalFields.
+                // fields, 'referralStatus') hid every button because deep-path
+                // fn args don't resolve inside a listView-item visibility
+                // eval — see fn registry.
+                "type": "template",
+                "format": "row",
+                "visible": "{{fn:getHFReferralActionState(item)}} == PENDING",
+                "children": [
+                  {
+                    // Accept: patch referralStatus=ACCEPTED, then run
+                    // REVERSE_TRANSFORM so the referralCreation config
+                    // hydrates the form controls, and finally NAVIGATE into
+                    // REFERRAL_CREATE with the full prefill payload
+                    // (nameOfChild/beneficiaryId/referralCode/ageInMonths/
+                    // gender/referralReason/startPage). This mirrors the
+                    // "Continue" button on referralOverview so the form
+                    // opens pre-filled with the referral's data.
+                    "type": "template",
+                    "label": "REFERRAL_INBOX_ACCEPT_LABEL",
+                    "format": "button",
+                    "onAction": [
+                      {
+                        // REVERSE_TRANSFORM must run BEFORE UPDATE_EVENT so
+                        // it populates `contextData.existingModels` from the
+                        // current search state. UPDATE_EVENT with
+                        // `source: existingModels` then has an entity list
+                        // to filter and patch. Reversing this order left
+                        // existingModels empty and the patch silently
+                        // no-op'd — the Accept button stayed visible.
+                        "actionType": "REVERSE_TRANSFORM",
+                        "properties": {
+                          "configName": "referralCreation",
+                          "entityTypes": ["HFReferralModel"]
+                        }
+                      },
+                      {
+                        "actionType": "UPDATE_EVENT",
+                        "properties": {
+                          "source": "existingModels",
+                          "entity": "HFReferralModel",
+                          "matchField": {
+                            "entityField": "clientReferenceId",
+                            "contextKey": "itemData.clientReferenceId"
+                          },
+                          "modify": [
+                            {
+                              "key":
+                                  "HFReferralModel.additionalFields.fields.referralStatus",
+                              "value": "ACCEPTED"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "data": [
+                            {
+                              "key": "clientReferenceId",
+                              "value": "{{ itemData.clientReferenceId }}"
+                            },
+                            {
+                              "key": "referralSymptom",
+                              "value": "{{ itemData.symptom }}"
+                            },
+                            {"key": "isEdit", "value": "true"},
+                            {
+                              "key": "rowVersion",
+                              "value": "{{ itemData.rowVersion }}"
+                            },
+                            {
+                              "key": "nameOfChild",
+                              "value": "{{ itemData.name }}"
+                            },
+                            {
+                              "key": "beneficiaryId",
+                              "value": "{{ itemData.beneficiaryId }}"
+                            },
+                            {
+                              "key": "referralCode",
+                              "value": "{{ itemData.referralCode }}"
+                            },
+                            {
+                              "key": "ageInMonths",
+                              "value":
+                                  "{{fn:getAdditionalFieldValue(itemData.additionalFields.fields, 'ageInMonths')}}"
+                            },
+                            {
+                              "key": "gender",
+                              "value":
+                                  "{{fn:getAdditionalFieldValue(itemData.additionalFields.fields, 'gender')}}"
+                            },
+                            {
+                              "key": "referralReason",
+                              "value": "{{ itemData.symptom }}"
+                            },
+                            {
+                              "key": "cycleIndex",
+                              "value":
+                                  "{{fn:getAdditionalFieldValue(itemData.additionalFields.fields, 'cycle')}}"
+                            },
+                            {"key": "startPage", "value": "referralDetails"}
+                          ],
+                          "name": "REFERRAL_CREATE",
+                          "type": "FORM"
+                        }
+                      }
+                    ],
+                    "fieldName": "acceptButton",
+                    "properties": {"size": "medium", "type": "primary"}
+                  },
+                  {
+                    "type": "template",
+                    "label": "REFERRAL_INBOX_REJECT_LABEL",
+                    "format": "button",
+                    "onAction": [
+                      {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "data": [
+                            {
+                              "key": "clientReferenceId",
+                              "value": "{{ itemData.clientReferenceId }}"
+                            },
+                            {
+                              "key": "referralSymptom",
+                              "value": "{{ itemData.symptom }}"
+                            }
+                          ],
+                          "name": "referralReject",
+                          "type": "TEMPLATE"
+                        }
+                      }
+                    ],
+                    "fieldName": "rejectButton",
+                    "properties": {"size": "medium", "type": "secondary"}
+                  }
+                ],
+                "fieldName": "actionRow",
+                "properties": {
+                  "mainAxisSize": "max",
+                  "mainAxisAlignment": "spaceBetween"
+                }
               }
             ],
             "fieldName": "templateCard"
@@ -338,7 +489,8 @@ final dynamic sampleReferralFlows = {
           "format": "listView",
           "hidden": false,
           "fieldName": "listView",
-          "dataSource": "HFReferralModel"
+          "dataSource": "HFReferralModel",
+          "properties": {"spacing": "spacer2"}
         }
       ],
       "name": "referralInbox",
@@ -440,7 +592,22 @@ final dynamic sampleReferralFlows = {
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "description": "REFERRAL_INBOX_DESCRIPTION",
-      "initActions": [],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "projectId",
+                "value": "{{singleton.selectedProject.id}}",
+                "operation": "equals"
+              }
+            ],
+            "name": "hFReferral",
+            "type": "SEARCH_EVENT"
+          }
+        }
+      ],
       "wrapperConfig": {
         "filters": [],
         "relations": [],
@@ -450,29 +617,194 @@ final dynamic sampleReferralFlows = {
         "searchConfig": {
           "select": ["hFReferral"],
           "primary": "hFReferral",
-          "pagination": {"limit": 5, "maxItems": 15}
+          "pagination": {"limit": 10, "maxItems": 30},
+          "orderBy": {"field": "clientModifiedTime", "order": "DESC"}
         }
       },
       "scrollListener": {
-        "debounceMs": 0,
-        "onScrollUp": [
-          {
-            "actionType": "REFRESH_SEARCH",
-            "properties": {
-              "pagination": {"limit": 5, "maxItems": 15}
-            }
-          }
-        ],
+        "debounceMs": 300,
         "triggerMode": "bidirectional",
         "onScrollDown": [
           {
             "actionType": "REFRESH_SEARCH",
             "properties": {
-              "pagination": {"limit": 5, "maxItems": 15}
+              "pagination": {"limit": 10, "maxItems": 30}
+            }
+          }
+        ],
+        "onScrollUp": [
+          {
+            "actionType": "REFRESH_SEARCH",
+            "properties": {
+              "pagination": {"limit": 10, "maxItems": 30}
             }
           }
         ],
         "showLoadingIndicator": true
+      },
+      "submitCondition": null,
+      "preventScreenCapture": false
+    },
+    {
+      // Reject-reason capture page. Navigated to from the inbox card's
+      // "Reject" button with clientReferenceId in navigation context.
+      // Confirm PATCHES referralStatus=REJECTED + referralStatusReason on
+      // the matched HFReferralModel via UPDATE_EVENT, then returns to the
+      // inbox. Reason list is a static dropdown; add MDMS wiring if the
+      // list needs to be tenant-driven later.
+      "name": "referralReject",
+      "order": 1.5,
+      "header": [
+        {
+          "type": "template",
+          "label": "REFERRAL_REJECT_BACK_BUTTON_LABEL",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"name": "referralInbox", "type": "TEMPLATE"}
+            }
+          ],
+          "fieldName": "backLinkNavigation"
+        }
+      ],
+      "body": [
+        {
+          "type": "template",
+          "format": "card",
+          "children": [
+            {
+              // dropdownTemplate is the flow-builder widget (see
+              // packages/digit_flow_builder/lib/widgets/implementations/
+              // dropdown_widget.dart). It reads options from `enums`, keys
+              // the selected code by `valueKey` and the label by
+              // `displayKey` (default 'name'), and writes the picked value
+              // into widgetData[fieldName] so `{{rejectReason}}` in the
+              // Confirm button's UPDATE_EVENT resolves. Required styling
+              // is expressed via `required: true` on the field; the widget
+              // renders the asterisk but does not enforce the check — the
+              // Confirm handler should gate on the value at submit time.
+              "type": "template",
+              "format": "dropdownTemplate",
+              "label": "REFERRAL_REJECT_REASON_LABEL",
+              "fieldName": "rejectReason",
+              "valueKey": "code",
+              "displayKey": "name",
+              "required": true,
+              "enums": [
+                {
+                  "code": "OUTSIDE_CATCHMENT",
+                  "name": "REFERRAL_REJECT_REASON_OUTSIDE_CATCHMENT"
+                },
+                {
+                  "code": "DUPLICATE",
+                  "name": "REFERRAL_REJECT_REASON_DUPLICATE"
+                },
+                {
+                  "code": "INCOMPLETE_INFO",
+                  "name": "REFERRAL_REJECT_REASON_INCOMPLETE_INFO"
+                },
+                {"code": "OTHER", "name": "REFERRAL_REJECT_REASON_OTHER"}
+              ]
+            }
+          ],
+          "fieldName": "rejectCard",
+          "properties": {"type": "primary", "cardType": "primary"}
+        }
+      ],
+      "footer": [
+        {
+          "type": "template",
+          "label": "REFERRAL_REJECT_CONFIRM_LABEL",
+          "format": "button",
+          "onAction": [
+            {
+              // REVERSE_TRANSFORM builds existingModels from the state
+              // loaded by initActions below; UPDATE_EVENT then filters +
+              // patches by clientReferenceId. Without REVERSE_TRANSFORM
+              // existingModels stays empty and the patch no-ops (that was
+              // the reject-failing symptom).
+              "actionType": "REVERSE_TRANSFORM",
+              "properties": {
+                "configName": "referralCreation",
+                "entityTypes": ["HFReferralModel"]
+              }
+            },
+            {
+              "actionType": "UPDATE_EVENT",
+              "properties": {
+                "source": "existingModels",
+                "entity": "HFReferralModel",
+                "matchField": {
+                  "entityField": "clientReferenceId",
+                  "contextKey": "navigation.clientReferenceId"
+                },
+                "modify": [
+                  {
+                    "key":
+                        "HFReferralModel.additionalFields.fields.referralStatus",
+                    "value": "REJECTED"
+                  },
+                  {
+                    "key":
+                        "HFReferralModel.additionalFields.fields.referralStatusReason",
+                    "value": "{{rejectReason}}"
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [],
+                "name": "referralInbox",
+                "type": "TEMPLATE"
+              }
+            }
+          ],
+          "fieldName": "confirmRejectButton",
+          "mandatory": true,
+          "properties": {
+            "size": "large",
+            "type": "primary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          }
+        }
+      ],
+      "heading": "REFERRAL_REJECT_HEADING",
+      "category": "HFREFERRAL",
+      "screenType": "TEMPLATE",
+      "description": "REFERRAL_REJECT_DESCRIPTION",
+      // Load the specific referral into state so REVERSE_TRANSFORM has an
+      // entity to hand to UPDATE_EVENT. Without this, the page has no data
+      // context and the patch's matchField filter returns 0 rows.
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.clientReferenceId}}",
+                "operation": "equals"
+              }
+            ],
+            "name": "hFReferral",
+            "type": "SEARCH_EVENT"
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "filters": [],
+        "relations": [],
+        "rootEntity": "HFReferralModel",
+        "groupByType": true,
+        "wrapperName": "hFReferral",
+        "searchConfig": {
+          "select": ["hFReferral"],
+          "primary": "hFReferral"
+        }
       },
       "submitCondition": null,
       "preventScreenCapture": false
@@ -1350,7 +1682,7 @@ final dynamic sampleReferralFlows = {
                 },
                 {
                   "type": "max",
-                  "value": 1800,
+                  "value": 1200,
                   "message":
                       "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_VALIDATION"
                 }
@@ -1358,13 +1690,7 @@ final dynamic sampleReferralFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "required.message":
-                  "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_REQUIRED_ERROR",
-              "autoFillCondition": [
-                {
-                  "value": "{{ageInMonths}}",
-                  "expression": "navigation.isEdit==true"
-                }
-              ]
+                  "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_REQUIRED_ERROR"
             },
             {
               "type": "string",
@@ -1532,6 +1858,27 @@ final dynamic sampleReferralFlows = {
             {
               "type": "custom",
               "condition":
+                  "navigation.isEdit==true&&navigation.referralSymptom==SICK,FEVER",
+              "navigateTo": {
+                "data": [
+                  {
+                    "key": "clientReferenceId",
+                    "value": "{{navigation.clientReferenceId}}"
+                  },
+                  {
+                    "key": "referralSymptom",
+                    "value": "{{navigation.referralSymptom}}"
+                  },
+                  {"key": "isEdit", "value": "true"},
+                  {"key": "rowVersion", "value": "{{navigation.rowVersion}}"}
+                ],
+                "name": "sideEffectFever",
+                "type": "form"
+              }
+            },
+            {
+              "type": "custom",
+              "condition":
                   "navigation.isEdit==true&&navigation.referralSymptom==SICK",
               "navigateTo": {
                 "data": [
@@ -1566,6 +1913,10 @@ final dynamic sampleReferralFlows = {
             },
             {
               "condition": "referralDetails.referralReason==FEVER",
+              "navigateTo": {"name": "sideEffectFever", "type": "form"}
+            },
+            {
+              "condition": "referralDetails.referralReason==SICK,FEVER",
               "navigateTo": {"name": "sideEffectFever", "type": "form"}
             },
             {
@@ -2432,6 +2783,7 @@ final dynamic sampleReferralFlows = {
                 }
               ],
               "errorMessage": "",
+              "displayPrefix": "FAC_",
               "isMultiSelect": false,
               "dropDownOptions": [],
               "required.message":
@@ -2474,7 +2826,6 @@ final dynamic sampleReferralFlows = {
       "disabled": false,
       "onAction": [
         {
-          "condition": {"type": "custom", "expression": "isEdit==true"},
           "actions": [
             {
               "actionType": "SEARCH_EVENT",
@@ -2507,10 +2858,10 @@ final dynamic sampleReferralFlows = {
                 "type": "TEMPLATE"
               }
             }
-          ]
+          ],
+          "condition": {"type": "custom", "expression": "isEdit==true"}
         },
         {
-          "condition": {"expression": "DEFAULT"},
           "actions": [
             {
               "actionType": "FETCH_TRANSFORMER_CONFIG",
@@ -2528,7 +2879,8 @@ final dynamic sampleReferralFlows = {
                 "type": "TEMPLATE"
               }
             }
-          ]
+          ],
+          "condition": {"expression": "DEFAULT"}
         }
       ],
       "isSelected": true,

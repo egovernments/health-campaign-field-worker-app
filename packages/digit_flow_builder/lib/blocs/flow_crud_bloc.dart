@@ -187,9 +187,17 @@ class FlowCrudBloc extends CrudBloc {
       }
 
     } else if (direction == 'down') {
-      // Append new items to the end
+      // Append new items to the end, filtering duplicates by
+      // clientReferenceId — paginated windows can overlap when rows shift
+      // between fetches (e.g. new inserts, changing sort keys).
       result = List<dynamic>.from(existingWrapper);
-      result.addAll(newWrapper);
+      final existingRefIds = _collectClientRefIds(existingWrapper);
+      for (final item in newWrapper) {
+        final refId = _refIdOf(item);
+        if (refId != null && existingRefIds.contains(refId)) continue;
+        if (refId != null) existingRefIds.add(refId);
+        result.add(item);
+      }
       totalBeforeTrim = result.length; // Capture before trimming
 
       // Trim from the start if exceeds max
@@ -198,9 +206,23 @@ class FlowCrudBloc extends CrudBloc {
         result = result.sublist(trimCount);
       }
     } else if (direction == 'up') {
-      // Prepend new items to the start
-      result = List<dynamic>.from(newWrapper);
-      result.addAll(existingWrapper);
+      // Prepend new items, filtering duplicates by clientReferenceId. Keep
+      // the FIRST occurrence (the incoming older row) since scroll-up loads
+      // pages older than what's already in view.
+      final seen = <String>{};
+      result = <dynamic>[];
+      for (final item in newWrapper) {
+        final refId = _refIdOf(item);
+        if (refId != null && seen.contains(refId)) continue;
+        if (refId != null) seen.add(refId);
+        result.add(item);
+      }
+      for (final item in existingWrapper) {
+        final refId = _refIdOf(item);
+        if (refId != null && seen.contains(refId)) continue;
+        if (refId != null) seen.add(refId);
+        result.add(item);
+      }
       totalBeforeTrim = result.length; // Capture before trimming
 
       // Trim from the end if exceeds max
@@ -245,18 +267,29 @@ class FlowCrudBloc extends CrudBloc {
       }
     }
 
-    // Merge new entities (append for down, prepend for up)
+    // Merge new entities (append for down, prepend for up) — filter out
+    // duplicates by clientReferenceId per type key. Paginated windows can
+    // overlap when a row is inserted between fetches or the sort key
+    // shifts, so the same entity can arrive on two consecutive pages.
     for (final item in newItems) {
       if (item is Map) {
         for (final entry in item.entries) {
           final key = entry.key.toString();
           typeMap.putIfAbsent(key, () => []);
-          if (entry.value is List) {
-            if (direction == 'up') {
-              typeMap[key] = [...(entry.value as List), ...typeMap[key]!];
-            } else {
-              typeMap[key]!.addAll(entry.value as List);
-            }
+          if (entry.value is! List) continue;
+          final incoming = entry.value as List;
+          final existingRefIds = _collectClientRefIds(typeMap[key]!);
+          final filtered = <dynamic>[];
+          for (final e in incoming) {
+            final refId = _refIdOf(e);
+            if (refId != null && existingRefIds.contains(refId)) continue;
+            if (refId != null) existingRefIds.add(refId);
+            filtered.add(e);
+          }
+          if (direction == 'up') {
+            typeMap[key] = [...filtered, ...typeMap[key]!];
+          } else {
+            typeMap[key]!.addAll(filtered);
           }
         }
       }
@@ -265,6 +298,46 @@ class FlowCrudBloc extends CrudBloc {
     return typeMap.entries
         .map((e) => <String, dynamic>{e.key: e.value})
         .toList();
+  }
+
+  /// Extract the clientReferenceId from a wrapper item or entity, handling
+  /// Map, EntityModel, and null-safe drill into wrapped {typeName: [entities]}
+  /// shapes. Returns null when no id can be extracted.
+  static String? _refIdOf(dynamic obj) {
+    if (obj == null) return null;
+    if (obj is Map) {
+      // Direct entity map with clientReferenceId key.
+      final direct = obj['clientReferenceId'];
+      if (direct is String && direct.isNotEmpty) return direct;
+      // Grouped-wrapper map {typeName: [entities]} — inspect first entity.
+      for (final v in obj.values) {
+        if (v is List && v.isNotEmpty) {
+          final id = _refIdOf(v.first);
+          if (id != null) return id;
+        }
+      }
+      return null;
+    }
+    // EntityModel or similar — try toMap() then read clientReferenceId.
+    try {
+      final map = (obj as dynamic).toMap();
+      if (map is Map) {
+        final v = map['clientReferenceId'];
+        if (v is String && v.isNotEmpty) return v;
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  /// Collect the clientReferenceIds already present in [items]. Used to
+  /// filter incoming duplicates during paginated merges.
+  static Set<String> _collectClientRefIds(List<dynamic> items) {
+    final ids = <String>{};
+    for (final item in items) {
+      final id = _refIdOf(item);
+      if (id != null) ids.add(id);
+    }
+    return ids;
   }
 
   /// Count total entities across all type groups.

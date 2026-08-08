@@ -2405,7 +2405,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
                 try {
-                  if (schemaJsonRaw != null) {
+                  if (false && schemaJsonRaw != null) {
                     final allSchemas =
                         json.decode(schemaJsonRaw) as Map<String, dynamic>;
                     final data = allSchemas['REGISTRATION'];

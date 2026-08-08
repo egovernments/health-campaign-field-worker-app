@@ -1532,8 +1532,11 @@ final jsonConfig = {
           "beneficiaryId": "__context:selectedIndividualIdentifierId",
           "referralCode": "__context:selectedIndividualClientReferenceId",
           "name": "__context:selectedIndividualName",
+          // symptom is now populated by the hidden `referBeneficiary.symptom`
+          // field (auto-computed from the symptom checkboxes). The old
+          // `referBeneficiary.referralReason` radio was removed.
           "symptom":
-              "__switch:__context:sourceFlow:{CHECKLIST:__context:referralReasons,default:referBeneficiary.referralReason}",
+              "__switch:__context:sourceFlow:{CHECKLIST:__context:referralReasons,default:referBeneficiary.symptom}",
           "nonRecoverableError": "referral.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "rowVersion": "meta.rowVersion",

@@ -359,76 +359,72 @@
       "name": "beneficiaryDetails",
       "order": 8,
       "footer": [
-        {
-          "type": "template",
-          "label": "RECORD_CYCLE_DOSE",
-          "format": "actionPopup",
-          "visible":
-              "{{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == false",
-          "fieldName": "insufficientStockPopUp",
-          "properties": {
-            "icon": "Warning",
-            "size": "large",
-            "type": "primary",
-            "suffixIcon": null,
-            "popupConfig": {
-              "body": [
-                {
-                  "type": "template",
-                  "value": "{{fn:getInsufficientStockMessage()}}",
-                  "format": "textTemplate",
-                  "fieldName": "insufficientStockMessageText",
-                  "properties": {
-                    "replaceAll": [
-                      {"searchValue": "::", "replaceValue": "\n"}
-                    ],
-                    "separatedBy": "::"
-                  }
-                }
-              ],
-              "type": "default",
-              "title": "INSUFFICIENT_STOCK_TITLE",
-              "titleIcon": "Warning",
-              "footerActions": [
-                {
-                  "type": "template",
-                  "label": "GO_BACK",
-                  "format": "button",
-                  "onAction": [
-                    {
-                      "actionType": "CLOSE_POPUP",
-                      "properties": {"parentScreenKey": "beneficiaryDetails"}
-                    }
-                  ],
-                  "fieldName": "closePopUp",
-                  "properties": {
-                    "size": "large",
-                    "type": "primary",
-                    "mainAxisSize": "max"
-                  }
-                }
-              ],
-              "showCloseButton": true,
-              "barrierDismissible": true
-            },
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "schemaCode": null,
-          "suffixIcon": null,
-          "labelPlaceHolders": [
-            {"key": "CYCLE", "value": "{{contextData.0.nextCycleId}}"},
-            {"key": "DOSE", "value": "{{contextData.0.nextDoseId}}"}
-          ]
-        },
+        // {
+        //   "type": "template",
+        //   "label": "RECORD_CYCLE_DOSE",
+        //   "format": "actionPopup",
+        //   "visible":
+        //       "{{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == false",
+        //   "fieldName": "insufficientStockPopUp",
+        //   "properties": {
+        //     "icon": "Warning",
+        //     "size": "large",
+        //     "type": "primary",
+        //     "suffixIcon": null,
+        //     "popupConfig": {
+        //       "body": [
+        //         {
+        //           "type": "template",
+        //           "value": "{{fn:getInsufficientStockMessage()}}",
+        //           "format": "textTemplate",
+        //           "fieldName": "insufficientStockMessageText",
+        //           "properties": {
+        //             "replaceAll": [
+        //               {"searchValue": "::", "replaceValue": "\n"}
+        //             ],
+        //             "separatedBy": "::"
+        //           }
+        //         }
+        //       ],
+        //       "type": "default",
+        //       "title": "INSUFFICIENT_STOCK_TITLE",
+        //       "titleIcon": "Warning",
+        //       "footerActions": [
+        //         {
+        //           "type": "template",
+        //           "label": "GO_BACK",
+        //           "format": "button",
+        //           "onAction": [
+        //             {
+        //               "actionType": "CLOSE_POPUP",
+        //               "properties": {"parentScreenKey": "beneficiaryDetails"}
+        //             }
+        //           ],
+        //           "fieldName": "closePopUp",
+        //           "properties": {
+        //             "size": "large",
+        //             "type": "primary",
+        //             "mainAxisSize": "max"
+        //           }
+        //         }
+        //       ],
+        //       "showCloseButton": true,
+        //       "barrierDismissible": true
+        //     },
+        //     "mainAxisSize": "max",
+        //     "mainAxisAlignment": "center"
+        //   },
+        //   "schemaCode": null,
+        //   "suffixIcon": null,
+        //   "labelPlaceHolders": [
+        //     {"key": "CYCLE", "value": "{{contextData.0.nextCycleId}}"},
+        //     {"key": "DOSE", "value": "{{contextData.0.nextDoseId}}"}
+        //   ]
+        // },
         {
           "type": "template",
           "label": "RECORD_CYCLE_DOSE",
           "format": "button",
-          "visible":
-              "{{fn:canRecordDelivery(contextData.0.nextCycleId)}}==true && {{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == true",
-          "disabled":
-              "{{fn:hasStockForDelivery(contextData.0.eligibleProductVariants)}} == false",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -989,7 +985,10 @@
                         "value": "{{ item.individual.0.name.givenName }}",
                         "format": "textTemplate",
                         "fieldName": "individualName",
-                        "properties": {"style": "headingM", "color": "inputBorder"}
+                        "properties": {
+                          "style": "headingM",
+                          "color": "inputBorder"
+                        }
                       },
                       {
                         "type": "template",
@@ -1163,6 +1162,15 @@
                             {
                               "key": "cycleIndex",
                               "value": "{{contextData.0.currentRunningCycle}}"
+                            },
+                            {
+                              // Symptom of the most-recent HF referral for this
+                              // beneficiary (empty when none). Used inside the
+                              // CHECKLIST flow to gate cycle-2 history-aware
+                              // questions (shown only when prior symptom==FEVER).
+                              "key": "previousReferralSymptom",
+                              "value":
+                                  "{{fn:getLastReferralSymptom(item.hFReferral)}}"
                             }
                           ],
                           "name": "CHECKLIST",
@@ -1525,7 +1533,11 @@
             }
           ],
           "fieldName": "card",
-          "properties": {"type": "primary", "cardType": "primary", "spacing": 12},
+          "properties": {
+            "type": "primary",
+            "cardType": "primary",
+            "spacing": 12
+          },
           "schemaCode": null
         }
       ],
@@ -1999,10 +2011,15 @@
                           ],
                           "onAction": [
                             {
-                              "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
+                              "actionType":
+                                  "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
                               "properties": {
                                 "data": [
-                                  {"key": "", "value": 5, "operation": "within"},
+                                  {
+                                    "key": "",
+                                    "value": 5,
+                                    "operation": "within"
+                                  },
                                   {
                                     "key": "localityBoundaryCode",
                                     "root": "address",
@@ -2011,7 +2028,8 @@
                                   }
                                 ],
                                 "name": "address",
-                                "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
+                                "type":
+                                    "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
                               }
                             }
                           ]
@@ -2047,8 +2065,14 @@
                     {
                       "type": "template",
                       "enums": [
-                        {"code": "ADMINISTRATION_SUCCESS", "name": "REGISTRATION_ADMINISTRATION_SUCCESS"},
-                        {"code": "BENEFICIARY_REFERRED", "name": "REGISTRATION_BENEFICIARY_REFERRED"},
+                        {
+                          "code": "ADMINISTRATION_SUCCESS",
+                          "name": "REGISTRATION_ADMINISTRATION_SUCCESS"
+                        },
+                        {
+                          "code": "BENEFICIARY_REFERRED",
+                          "name": "REGISTRATION_BENEFICIARY_REFERRED"
+                        },
                       ],
                       "format": "selectionCard",
                       "fieldName": "selectedStatus",
@@ -2063,48 +2087,179 @@
                   "footerActions": [
                     {
                       "type": "template",
-                      "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_CLEAR_LABEL",
+                      "label":
+                          "REGISTRATION_SEARCH_BENEFICIARY_FILTER_CLEAR_LABEL",
                       "format": "button",
                       "onAction": [
                         {
                           "actionType": "CLEAR_STATE",
                           "properties": {
                             "name": "task",
-                            "filterKeys": ["status","projectBeneficiary","projectId","proximitySearch","givenName","identifierId"],
-                            "widgetKeys": ["selectedStatus","proximitySearch","idSearch"],
+                            "filterKeys": [
+                              "status",
+                              "projectBeneficiary",
+                              "projectId",
+                              "proximitySearch",
+                              "givenName",
+                              "identifierId"
+                            ],
+                            "widgetKeys": [
+                              "selectedStatus",
+                              "proximitySearch",
+                              "idSearch"
+                            ],
                             "triggerSearch": true
                           }
                         }
                       ],
                       "fieldName": "clearFilter",
-                      "properties": {"size": "large", "type": "secondary", "mainAxisSize": "max"}
+                      "properties": {
+                        "size": "large",
+                        "type": "secondary",
+                        "mainAxisSize": "max"
+                      }
                     },
                     {
                       "type": "template",
-                      "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL",
+                      "label":
+                          "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL",
                       "format": "button",
                       "onAction": [
-                        {"actionType": "CLOSE_POPUP", "properties": {"parentScreenKey": "searchBeneficiary"}},
-                        {"actionType": "CLEAR_STATE", "properties": {"name": "task", "filterKeys": ["status","projectBeneficiary","projectId"], "triggerSearch": false}},
                         {
-                          "actions": [{"actionType": "SEARCH_EVENT", "properties": {"data": [{"key": "status", "value": "{{selectedStatus}}", "operation": "in"},{"key": "localityBoundaryCode", "root": "address", "value": "{{singleton.boundary.code}}", "operation": "equals"}], "name": "task"}}],
-                          "condition": {"expression": "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE"}
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {"parentScreenKey": "searchBeneficiary"}
                         },
                         {
-                          "actions": [{"actionType": "SEARCH_EVENT", "properties": {"data": [{"key": "projectId", "value": "{{singleton.selectedProject.id}}", "operation": "notEqual"},{"key": "localityBoundaryCode", "root": "address", "value": "{{singleton.boundary.code}}", "operation": "equals"}], "name": "projectBeneficiary"}}],
-                          "condition": {"expression": "selectedStatus == NOT_REGISTERED"}
+                          "actionType": "CLEAR_STATE",
+                          "properties": {
+                            "name": "task",
+                            "filterKeys": [
+                              "status",
+                              "projectBeneficiary",
+                              "projectId"
+                            ],
+                            "triggerSearch": false
+                          }
                         },
                         {
-                          "actions": [{"actionType": "SEARCH_EVENT", "properties": {"data": [{"key": "projectId", "root": "projectBeneficiary", "value": "{{singleton.selectedProject.id}}", "operation": "equals"},{"key": "status", "root": "task", "value": {"values": []}, "operation": "notExists"},{"key": "localityBoundaryCode", "root": "address", "value": "{{singleton.boundary.code}}", "operation": "equals"}]}}],
-                          "condition": {"expression": "selectedStatus == NOT_ADMINISTERED"}
+                          "actions": [
+                            {
+                              "actionType": "SEARCH_EVENT",
+                              "properties": {
+                                "data": [
+                                  {
+                                    "key": "status",
+                                    "value": "{{selectedStatus}}",
+                                    "operation": "in"
+                                  },
+                                  {
+                                    "key": "localityBoundaryCode",
+                                    "root": "address",
+                                    "value": "{{singleton.boundary.code}}",
+                                    "operation": "equals"
+                                  }
+                                ],
+                                "name": "task"
+                              }
+                            }
+                          ],
+                          "condition": {
+                            "expression":
+                                "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE"
+                          }
                         },
                         {
-                          "actions": [{"actionType": "SEARCH_EVENT", "properties": {"data": [{"key": "projectId", "root": "hFReferral", "value": "{{singleton.selectedProject.id}}", "operation": "equals"},{"key": "localityBoundaryCode", "root": "address", "value": "{{singleton.boundary.code}}", "operation": "equals"}]}}],
-                          "condition": {"expression": "selectedStatus == BENEFICIARY_REFERRED"}
+                          "actions": [
+                            {
+                              "actionType": "SEARCH_EVENT",
+                              "properties": {
+                                "data": [
+                                  {
+                                    "key": "projectId",
+                                    "value": "{{singleton.selectedProject.id}}",
+                                    "operation": "notEqual"
+                                  },
+                                  {
+                                    "key": "localityBoundaryCode",
+                                    "root": "address",
+                                    "value": "{{singleton.boundary.code}}",
+                                    "operation": "equals"
+                                  }
+                                ],
+                                "name": "projectBeneficiary"
+                              }
+                            }
+                          ],
+                          "condition": {
+                            "expression": "selectedStatus == NOT_REGISTERED"
+                          }
+                        },
+                        {
+                          "actions": [
+                            {
+                              "actionType": "SEARCH_EVENT",
+                              "properties": {
+                                "data": [
+                                  {
+                                    "key": "projectId",
+                                    "root": "projectBeneficiary",
+                                    "value": "{{singleton.selectedProject.id}}",
+                                    "operation": "equals"
+                                  },
+                                  {
+                                    "key": "status",
+                                    "root": "task",
+                                    "value": {"values": []},
+                                    "operation": "notExists"
+                                  },
+                                  {
+                                    "key": "localityBoundaryCode",
+                                    "root": "address",
+                                    "value": "{{singleton.boundary.code}}",
+                                    "operation": "equals"
+                                  }
+                                ]
+                              }
+                            }
+                          ],
+                          "condition": {
+                            "expression": "selectedStatus == NOT_ADMINISTERED"
+                          }
+                        },
+                        {
+                          "actions": [
+                            {
+                              "actionType": "SEARCH_EVENT",
+                              "properties": {
+                                "data": [
+                                  {
+                                    "key": "projectId",
+                                    "root": "hFReferral",
+                                    "value": "{{singleton.selectedProject.id}}",
+                                    "operation": "equals"
+                                  },
+                                  {
+                                    "key": "localityBoundaryCode",
+                                    "root": "address",
+                                    "value": "{{singleton.boundary.code}}",
+                                    "operation": "equals"
+                                  }
+                                ]
+                              }
+                            }
+                          ],
+                          "condition": {
+                            "expression":
+                                "selectedStatus == BENEFICIARY_REFERRED"
+                          }
                         }
                       ],
                       "fieldName": "saveFilter",
-                      "properties": {"size": "large", "type": "primary", "mainAxisSize": "max"}
+                      "properties": {
+                        "size": "large",
+                        "type": "primary",
+                        "mainAxisSize": "max"
+                      }
                     }
                   ],
                   "showCloseButton": true,
@@ -2467,7 +2622,8 @@
                           "data": [
                             {
                               "key": "HouseholdClientReferenceId",
-                              "value": "{{item.HouseholdModel.clientReferenceId}}"
+                              "value":
+                                  "{{item.HouseholdModel.clientReferenceId}}"
                             }
                           ],
                           "name": "householdOverview",
@@ -3724,6 +3880,170 @@
           "summary": false,
           "version": 1,
           "onAction": [
+            // ─── Cycle-2 + prior-FEVER branches (must precede the ec1/ec3/ec4
+            // branches — those fields are hidden in this state so their values
+            // are empty and the legacy conditions all evaluate false). ───
+            //
+            // Branch 1: no recent symptoms → child is well → SPAQ delivery.
+            {
+              "actions": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "selectedIndividualClientReferenceId",
+                        "value":
+                            "{{navigation.selectedIndividualClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualIdentifierId",
+                        "value": "{{navigation.selectedIndividualIdentifierId}}"
+                      },
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value": "{{ navigation.HouseholdClientReferenceId }}"
+                      },
+                      {
+                        "key": "ProjectBeneficiaryClientReferenceId",
+                        "value":
+                            "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                      }
+                    ],
+                    "name": "beneficiaryDetails",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE"
+                        }
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "householdOverview"
+                  }
+                }
+              ],
+              "condition": {
+                // Form-scope check is sufficient: these fields are gated by
+                // navigation.cycleIndex==2 && previousReferralSymptom==FEVER
+                // in their visibilityCondition, so they're hidden with empty
+                // ("") values outside that state. `""==NO` is always false,
+                // so cycle-1 / non-fever visits fall through to the legacy
+                // ec1/ec3/ec4 branches below — no need to re-check nav here.
+                "expression": "eligibilityChecklist.hadRecentSymptoms==NO"
+              }
+            },
+            // Branch 2: had symptoms, was treated → SPAQ delivery.
+            {
+              "actions": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "selectedIndividualClientReferenceId",
+                        "value":
+                            "{{navigation.selectedIndividualClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualIdentifierId",
+                        "value": "{{navigation.selectedIndividualIdentifierId}}"
+                      },
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value": "{{ navigation.HouseholdClientReferenceId }}"
+                      },
+                      {
+                        "key": "ProjectBeneficiaryClientReferenceId",
+                        "value":
+                            "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                      }
+                    ],
+                    "name": "beneficiaryDetails",
+                    "type": "TEMPLATE",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE"
+                        }
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "householdOverview"
+                  }
+                }
+              ],
+              "condition": {
+                "expression":
+                    "eligibilityChecklist.hadRecentSymptoms==YES && eligibilityChecklist.wasTreated==YES"
+              }
+            },
+            // Branch 3: had symptoms, NOT treated → new HF referral.
+            {
+              "actions": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "selectedIndividualClientReferenceId",
+                        "value":
+                            "{{navigation.selectedIndividualClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualIdentifierId",
+                        "value": "{{navigation.selectedIndividualIdentifierId}}"
+                      },
+                      {
+                        "key": "HouseholdClientReferenceId",
+                        "value": "{{ navigation.HouseholdClientReferenceId }}"
+                      },
+                      {
+                        "key": "ProjectBeneficiaryClientReferenceId",
+                        "value":
+                            "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualName",
+                        "value": "{{navigation.selectedIndividualName}}"
+                      },
+                      {
+                        "key": "selectedIndividualGender",
+                        "value": "{{navigation.selectedIndividualGender}}"
+                      },
+                      {
+                        "key": "selectedIndividualAgeInMonths",
+                        "value": "{{navigation.selectedIndividualAgeInMonths}}"
+                      },
+                      {
+                        "key": "cycleIndex",
+                        "value": "{{navigation.cycleIndex}}"
+                      }
+                    ],
+                    "name": "REFER_BENEFICIARY",
+                    "type": "FORM",
+                    "onError": [
+                      {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "REGISTRATION_REFER_BENEFICIARY_MESSAGE"
+                        }
+                      }
+                    ],
+                    "navigationMode": "popUntilAndPush",
+                    "popUntilPageName": "householdOverview"
+                  }
+                }
+              ],
+              "condition": {
+                "expression":
+                    "eligibilityChecklist.hadRecentSymptoms==YES && eligibilityChecklist.wasTreated==NO"
+              }
+            },
+            // ─── Legacy branches for cycle 1 (and cycle-2 non-fever) ───
             {
               "actions": [
                 {
@@ -4024,7 +4344,18 @@
               "includeInSummary": true,
               "required.message":
                   "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL_REQUIRED_MESSAGE",
-              "conditions": {"boldLabel": true}
+              "conditions": {"boldLabel": true},
+              // Hidden on cycle-2 revisits where the beneficiary had a prior
+              // FEVER referral — those visits use the history-aware question
+              // block below instead.
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex!=2 || navigation.previousReferralSymptom!=FEVER"
+                  }
+                ]
+              }
             },
             {
               "type": "string",
@@ -4115,7 +4446,15 @@
               "includeInSummary": true,
               "required.message":
                   "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL_REQUIRED_MESSAGE",
-              "conditions": {"boldLabel": true}
+              "conditions": {"boldLabel": true},
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex!=2 || navigation.previousReferralSymptom!=FEVER"
+                  }
+                ]
+              }
             },
             {
               "type": "string",
@@ -4158,7 +4497,349 @@
               "includeInSummary": true,
               "required.message":
                   "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL_REQUIRED_MESSAGE",
-              "conditions": {"boldLabel": true}
+              "conditions": {"boldLabel": true},
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex!=2 || navigation.previousReferralSymptom!=FEVER"
+                  }
+                ]
+              }
+            },
+            // ─── Cycle-2 history-aware questions ───
+            // Visible only when the beneficiary is returning for cycle 2 AND
+            // their most-recent HF referral was for FEVER (see DELIVERY button
+            // navigation in the household overview page — it passes
+            // previousReferralSymptom via {{fn:getLastReferralSymptom}}).
+            //
+            // Flow: "Did the child have symptoms since last visit?" → if YES,
+            // capture which symptoms + whether they were treated + which med.
+            // Routing (see onAction branches below):
+            //   hadRecentSymptoms=NO                             → delivery (SPAQ)
+            //   hadRecentSymptoms=YES && wasTreated=YES          → delivery (SPAQ)
+            //   hadRecentSymptoms=YES && wasTreated=NO           → new referral
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "APPONE_HAD_RECENT_SYMPTOMS_YES"},
+                {"code": "NO", "name": "APPONE_HAD_RECENT_SYMPTOMS_NO"}
+              ],
+              "label": "APPONE_ELIGIBILITYCHECKLIST_HAD_RECENT_SYMPTOMS_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "hadRecentSymptoms",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_ELIGIBILITYCHECKLIST_HAD_RECENT_SYMPTOMS_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage":
+                  "APPONE_ELIGIBILITYCHECKLIST_HAD_RECENT_SYMPTOMS_REQUIRED_ERROR",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "YES", "name": "APPONE_HAD_RECENT_SYMPTOMS_YES"},
+                {"code": "NO", "name": "APPONE_HAD_RECENT_SYMPTOMS_NO"}
+              ],
+              "includeInSummary": true,
+              "conditions": {"boldLabel": true},
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "boolean",
+              "label": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_FEVER_LABEL",
+              "order": 6,
+              "value": false,
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "recentSymptomFever",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER && eligibilityChecklist.hadRecentSymptoms==YES"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "boolean",
+              "label": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_VOMITING_LABEL",
+              "order": 7,
+              "value": false,
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "recentSymptomVomiting",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER && eligibilityChecklist.hadRecentSymptoms==YES"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "boolean",
+              "label": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_DIARRHEA_LABEL",
+              "order": 8,
+              "value": false,
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "recentSymptomDiarrhea",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER && eligibilityChecklist.hadRecentSymptoms==YES"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "boolean",
+              "label": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_CHILLS_LABEL",
+              "order": 9,
+              "value": false,
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "recentSymptomChills",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER && eligibilityChecklist.hadRecentSymptoms==YES"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "boolean",
+              "label": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_HEADACHE_LABEL",
+              "order": 10,
+              "value": false,
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "recentSymptomHeadache",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER && eligibilityChecklist.hadRecentSymptoms==YES"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "boolean",
+              "label": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_BODYPAIN_LABEL",
+              "order": 11,
+              "value": false,
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "recentSymptomBodyPain",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER && eligibilityChecklist.hadRecentSymptoms==YES"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "APPONE_WAS_TREATED_YES"},
+                {"code": "NO", "name": "APPONE_WAS_TREATED_NO"}
+              ],
+              "label": "APPONE_ELIGIBILITYCHECKLIST_WAS_TREATED_LABEL",
+              "order": 12,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "wasTreated",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_ELIGIBILITYCHECKLIST_WAS_TREATED_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage":
+                  "APPONE_ELIGIBILITYCHECKLIST_WAS_TREATED_REQUIRED_ERROR",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "YES", "name": "APPONE_WAS_TREATED_YES"},
+                {"code": "NO", "name": "APPONE_WAS_TREATED_NO"}
+              ],
+              "includeInSummary": true,
+              "conditions": {"boldLabel": true},
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER && eligibilityChecklist.hadRecentSymptoms==YES"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "ACT", "name": "APPONE_TREATMENT_MED_ACT"},
+                {"code": "SPAQ", "name": "APPONE_TREATMENT_MED_SPAQ"},
+                {"code": "OTHER", "name": "APPONE_TREATMENT_MED_OTHER"}
+              ],
+              "label": "APPONE_ELIGIBILITYCHECKLIST_TREATMENT_MED_LABEL",
+              "order": 13,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "treatmentMedication",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_ELIGIBILITYCHECKLIST_TREATMENT_MED_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage":
+                  "APPONE_ELIGIBILITYCHECKLIST_TREATMENT_MED_REQUIRED_ERROR",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "ACT", "name": "APPONE_TREATMENT_MED_ACT"},
+                {"code": "SPAQ", "name": "APPONE_TREATMENT_MED_SPAQ"},
+                {"code": "OTHER", "name": "APPONE_TREATMENT_MED_OTHER"}
+              ],
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER && eligibilityChecklist.wasTreated==YES"
+                  }
+                ]
+              }
             }
           ],
           "actionLabel":
@@ -4169,8 +4850,38 @@
           "showAlertPopUp": {
             "title": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
             "conditions": [
+              // ─── Cycle-2 + prior-FEVER alerts — match the routing branches
+              // above so the worker sees the right modal before submit. ───
               {
-                "title": "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_TITLE",
+                "title":
+                    "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_TITLE",
+                "description":
+                    "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_DESCRIPTION",
+                "value": "To Administer",
+                "expression":
+                    "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER && eligibilityChecklist.hadRecentSymptoms==NO"
+              },
+              {
+                "title":
+                    "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_TITLE",
+                "description":
+                    "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_DESCRIPTION",
+                "value": "To Administer",
+                "expression":
+                    "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER && eligibilityChecklist.hadRecentSymptoms==YES && eligibilityChecklist.wasTreated==YES"
+              },
+              {
+                "title": "APPONE_ELIGIBILITYCHECKLIST_REFERRAL_ALERT_TITLE",
+                "description":
+                    "APPONE_ELIGIBILITYCHECKLIST_REFERRAL_ALERT_DESCRIPTION",
+                "value": "referral flow",
+                "expression":
+                    "navigation.cycleIndex==2 && navigation.previousReferralSymptom==FEVER && eligibilityChecklist.hadRecentSymptoms==YES && eligibilityChecklist.wasTreated==NO"
+              },
+              // ─── Legacy cycle-1 / non-fever alerts ───
+              {
+                "title":
+                    "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_TITLE",
                 "description":
                     "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_DESCRIPTION",
                 "value": "To Administer",
@@ -4206,6 +4917,163 @@
       "category": "DELIVERY",
       "disabled": false,
       "onAction": [
+        // ─── Cycle-2 + prior-FEVER branches (must precede the ec1/ec3/ec4
+        // branches — those fields are hidden in this state so their values
+        // are empty and the legacy conditions all evaluate false).
+        //
+        // NOTE: onAction is read from flow-level (`widget.config['onAction']`
+        // in screen_builder.dart:139), not from pages[0].onAction. Keep
+        // routing logic here; the page-level onAction above is inert. ───
+        //
+        // Branch 1: no recent symptoms → child is well → SPAQ delivery.
+        {
+          "actions": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "selectedIndividualClientReferenceId",
+                    "value":
+                        "{{navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualIdentifierId",
+                    "value": "{{navigation.selectedIndividualIdentifierId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{ navigation.HouseholdClientReferenceId }}"
+                  },
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  }
+                ],
+                "name": "beneficiaryDetails",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE"
+                    }
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "householdOverview"
+              }
+            }
+          ],
+          "condition": {
+            "expression": "eligibilityChecklist.hadRecentSymptoms==NO"
+          }
+        },
+        // Branch 2: had symptoms, was treated → SPAQ delivery.
+        {
+          "actions": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "selectedIndividualClientReferenceId",
+                    "value":
+                        "{{navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualIdentifierId",
+                    "value": "{{navigation.selectedIndividualIdentifierId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{ navigation.HouseholdClientReferenceId }}"
+                  },
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  }
+                ],
+                "name": "beneficiaryDetails",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE"
+                    }
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "householdOverview"
+              }
+            }
+          ],
+          "condition": {
+            "expression":
+                "eligibilityChecklist.hadRecentSymptoms==YES && eligibilityChecklist.wasTreated==YES"
+          }
+        },
+        // Branch 3: had symptoms, NOT treated → new HF referral.
+        {
+          "actions": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "selectedIndividualClientReferenceId",
+                    "value":
+                        "{{navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualIdentifierId",
+                    "value": "{{navigation.selectedIndividualIdentifierId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{ navigation.HouseholdClientReferenceId }}"
+                  },
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualName",
+                    "value": "{{navigation.selectedIndividualName}}"
+                  },
+                  {
+                    "key": "selectedIndividualGender",
+                    "value": "{{navigation.selectedIndividualGender}}"
+                  },
+                  {
+                    "key": "selectedIndividualAgeInMonths",
+                    "value": "{{navigation.selectedIndividualAgeInMonths}}"
+                  },
+                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"}
+                ],
+                "name": "REFER_BENEFICIARY",
+                "type": "FORM",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Navigation failed."}
+                  }
+                ],
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "householdOverview"
+              }
+            }
+          ],
+          "condition": {
+            "expression":
+                "eligibilityChecklist.hadRecentSymptoms==YES && eligibilityChecklist.wasTreated==NO"
+          }
+        },
+        // ─── Legacy branches for cycle 1 (and cycle-2 non-fever) ───
         {
           "actions": [
             {
@@ -5403,41 +6271,219 @@
                   "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
             },
             {
-              "type": "string",
-              "enums": [
-                {"code": "FEVER", "name": "FEVER"}
-              ],
-              "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
+              "type": "boolean",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_FEVER",
               "order": 4,
               "value": "",
-              "format": "radio",
+              "format": "checkbox",
               "hidden": false,
-              "isMdms": true,
+              "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
+              "fieldName": "symptomFever",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "conditions": {"separateCard": true}
+            },
+            {
+              "type": "boolean",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_VOMITING",
+              "order": 5,
+              "value": "",
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "symptomVomiting",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "conditions": {"separateCard": true}
+            },
+            {
+              "type": "boolean",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_DIARRHEA",
+              "order": 6,
+              "value": "",
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "symptomDiarrhea",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "conditions": {"separateCard": true}
+            },
+            {
+              "type": "boolean",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_CHILLS",
+              "order": 7,
+              "value": "",
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "symptomChills",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "conditions": {"separateCard": true}
+            },
+            {
+              "type": "boolean",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_SEVERE_HEADACHE",
+              "order": 8,
+              "value": "",
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "symptomSevereHeadache",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "conditions": {"separateCard": true}
+            },
+            {
+              "type": "boolean",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_MUSCLE_BACK_PAIN",
+              "order": 9,
+              "value": "",
+              "format": "checkbox",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "symptomMuscleBackPain",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "conditions": {"separateCard": true}
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "MALARIA",
+                  "name": "HFREFERRAL_REFERRAL_DETAILS_DISEASE_MALARIA"
+                }
+              ],
+              "label": "HFREFERRAL_REFERRAL_DETAILS_diseaseType_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
               "required": true,
-              "fieldName": "referralReason",
+              "fieldName": "diseaseType",
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
-              "schemaCode": "HCM.REFERRAL_REASONS",
+              "schemaCode": null,
               "systemDate": false,
               "validations": [
                 {
                   "type": "required",
                   "value": true,
                   "message":
-                      "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR"
+                      "HFREFERRAL_REFERRAL_DETAILS_diseaseType_REQUIRED_ERROR"
                 }
               ],
-              "errorMessage":
-                  "REGISTRATION_REFER_BENEFICIARY_referralReason_ERROR",
+              "errorMessage": "",
               "isMultiSelect": false,
-              "required.message":
-                  "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
-              "conditions": {"separateCard": true}
+              "dropDownOptions": [
+                {
+                  "code": "MALARIA",
+                  "name": "HFREFERRAL_REFERRAL_DETAILS_DISEASE_MALARIA"
+                }
+              ],
+              "conditions": {
+                "separateCard": true,
+                "wrapInCard": true,
+                "boldLabel": true
+              },
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition":
+                        "referBeneficiary.symptomVomiting == true || referBeneficiary.symptomDiarrhea == true || referBeneficiary.symptomChills == true || referBeneficiary.symptomSevereHeadache == true || referBeneficiary.symptomMuscleBackPain == true"
+                  }
+                ]
+              }
+            },
+            {
+              // Hidden field consumed by transformer_config.dart to populate
+              // the top-level entity.symptom (server-required). Malaria-only
+              // configuration: every referral resolves to FEVER, which routes
+              // the HF worker to sideEffectFever on Accept.
+              "type": "string",
+              "label": "",
+              "order": 11,
+              "value": "FEVER",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "readOnly": true,
+              "fieldName": "symptom",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false
             }
           ],
           "actionLabel": "REFER_BENEFICIARY_SUBMIT_BUTTON",

@@ -115,12 +115,13 @@ FormControl buildFormControl(
         );
       } else if (format == PropertySchemaFormat.latLng) {
         return FormControl<String>(
-          value: getDefaultValue(name) ?? rawValue?.toString(),
+          value: getDefaultValue(name)?.toString() ?? rawValue?.toString(),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.locality) {
         return FormControl<String>(
-          value: getDefaultValue('administrativeArea') ?? rawValue?.toString(),
+          value: getDefaultValue('administrativeArea')?.toString() ??
+              rawValue?.toString(),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.numeric) {
@@ -129,8 +130,13 @@ FormControl buildFormControl(
           validators: validators,
         );
       } else {
+        // `defaultValues[name]` is `dynamic` — REVERSE_TRANSFORM writes ints
+        // (ageInMonths, dateOfEvaluation timestamps, referralCycle) straight
+        // through when the entity holds them as ints. Without a `.toString()`
+        // here the FormControl<String> constructor throws
+        // `type 'int' is not a subtype of type 'String?'` on load.
         return FormControl<String>(
-          value: getDefaultValue(name) ??
+          value: getDefaultValue(name)?.toString() ??
               (rawValue?.toString().isEmpty ?? true
                   ? null
                   : rawValue.toString()),
@@ -139,8 +145,9 @@ FormControl buildFormControl(
       }
 
     default:
+      // Same int→String coercion as above.
       return FormControl<String>(
-        value: getDefaultValue(name) ??
+        value: getDefaultValue(name)?.toString() ??
             (rawValue?.toString().isEmpty ?? true ? null : rawValue.toString()),
         validators: validators,
       );

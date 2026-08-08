@@ -180,6 +180,7 @@ flutter:
     - assets/audio/add.wav
     - assets/audio/buzzer.wav
     - assets/certificates/
+    - lib/utils/localization_strings.json
 
   fonts:
     - family: Roboto

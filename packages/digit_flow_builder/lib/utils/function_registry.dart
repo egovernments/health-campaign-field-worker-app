@@ -1760,6 +1760,50 @@ void initializeFunctionRegistry() {
     return false;
   });
 
+  /// Returns the symptom of the most-recent HF referral for an individual,
+  /// or empty string when the list is empty/absent. Used at overview → cycle-2
+  /// checklist navigation to gate history-aware questions (only shown when
+  /// the prior referral was for FEVER).
+  ///
+  /// - **Function Name**: `'getLastReferralSymptom'`
+  /// - **Arguments**: First argument is the hFReferral list.
+  /// - **Returns**: Symptom string of the newest referral (by clientModifiedTime),
+  ///   or `""` if unavailable.
+  FunctionRegistry.register("getLastReferralSymptom", (args, stateData) {
+    if (args.isEmpty || args.first == null) return "";
+
+    final referrals = args.first;
+    if (referrals is! List || referrals.isEmpty) return "";
+
+    Map<String, dynamic>? latest;
+    int latestTs = -1;
+    for (final item in referrals) {
+      Map<String, dynamic>? refMap;
+      if (item is Map<String, dynamic>) {
+        refMap = item;
+      } else if (item is Map) {
+        refMap = Map<String, dynamic>.from(item);
+      } else {
+        try {
+          refMap = (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          continue;
+        }
+      }
+
+      final ts = int.tryParse(refMap['clientModifiedTime']?.toString() ?? '') ??
+          int.tryParse(refMap['auditDetails']?['lastModifiedTime']?.toString() ??
+                  '') ??
+          0;
+      if (ts >= latestTs) {
+        latestTs = ts;
+        latest = refMap;
+      }
+    }
+
+    return latest?['symptom']?.toString() ?? "";
+  });
+
   /// Returns the current running cycle's id from the project configuration.
   /// Reuses the same cycle lookup logic as hasReferralForCurrentCycle.
   FunctionRegistry.register("getCurrentCycleIndex", (args, stateData) {
@@ -2008,6 +2052,64 @@ void initializeFunctionRegistry() {
 
     // If checklist exists → Go Back, otherwise → Continue
     return checklistExists ? 'HF_REFERRAL_GO_BACK' : 'HF_REFERRAL_CONTINUE';
+  });
+
+  /// Classifies an HF referral entity for inbox-card action gating.
+  ///
+  /// Deep-path fn args like `itemData.additionalFields.fields` don't resolve
+  /// reliably inside a listView-item's `visible` eval, so pass the whole
+  /// item (bare `item` in the config) and let this function walk the fields.
+  /// Returns a stable non-empty token so FormulaParser's unquoted string
+  /// comparison always has a well-formed left side.
+  ///
+  /// - **Function Name**: `'getHFReferralActionState'`
+  /// - **Arguments**: First argument is the HFReferral entity (Map or
+  ///   EntityModel). Extra args are ignored.
+  /// - **Returns**:
+  ///   - `'PENDING'`  — Accept/Reject buttons should show. Triggered when
+  ///     the `referralStatus` field is missing/empty, or its value is
+  ///     `RECEIVED`, `NONE`, or `COMPLETED`.
+  ///   - `'ACTIONED'` — Accept/Reject buttons hidden. Any other status
+  ///     (`ACCEPTED`, `REJECTED`, `CANCELLED`, unknown values).
+  ///
+  /// Visibility keys off `referralStatus` alone; `ccnInbound` is no longer
+  /// consulted since outbound entries without a status should also expose
+  /// Accept/Reject per the current spec.
+  FunctionRegistry.register('getHFReferralActionState', (args, stateData) {
+    // No entity → treat as fresh/pending so the buttons render.
+    if (args.isEmpty || args.first == null) return 'PENDING';
+    final input = args.first;
+    dynamic entity = input is List && input.isNotEmpty ? input.first : input;
+
+    Map<String, dynamic>? entityMap;
+    if (entity is Map<String, dynamic>) {
+      entityMap = entity;
+    } else if (entity is Map) {
+      entityMap = Map<String, dynamic>.from(entity);
+    } else {
+      try {
+        entityMap = (entity as dynamic).toMap() as Map<String, dynamic>;
+      } catch (_) {
+        return 'PENDING';
+      }
+    }
+
+    String? referralStatus;
+    final additionalFields = entityMap['additionalFields'];
+    if (additionalFields is Map && additionalFields['fields'] is List) {
+      for (final field in additionalFields['fields']) {
+        if (field is! Map) continue;
+        if (field['key']?.toString() == 'referralStatus') {
+          referralStatus = field['value']?.toString();
+          break;
+        }
+      }
+    }
+
+    const showFor = {'RECEIVED', 'NONE', 'COMPLETED'};
+    if (referralStatus == null || referralStatus.isEmpty) return 'PENDING';
+    if (showFor.contains(referralStatus.toUpperCase())) return 'PENDING';
+    return 'ACTIONED';
   });
 
   /// Registers a function to compute the referral status  based on symptom and checklist data.

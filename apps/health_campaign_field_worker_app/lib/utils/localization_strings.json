@@ -3154,5 +3154,245 @@
     "locale": "pt_DEMO",
     "message": "Rosto registado para",
     "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_INBOX_OPEN_LABEL",
+    "locale": "en_MZ",
+    "message": "Open",
+    "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_INBOX_ACCEPT_LABEL",
+    "locale": "en_MZ",
+    "message": "Accept",
+    "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_INBOX_REJECT_LABEL",
+    "locale": "en_MZ",
+    "message": "Reject",
+    "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_REJECT_HEADING",
+    "locale": "en_MZ",
+    "message": "Reject Referral",
+    "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_REJECT_DESCRIPTION",
+    "locale": "en_MZ",
+    "message": "Select a reason for rejecting this referral",
+    "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_REJECT_BACK_BUTTON_LABEL",
+    "locale": "en_MZ",
+    "message": "Back",
+    "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_REJECT_REASON_LABEL",
+    "locale": "en_MZ",
+    "message": "Reason for rejection",
+    "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_REJECT_CONFIRM_LABEL",
+    "locale": "en_MZ",
+    "message": "Confirm Reject",
+    "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_REJECT_REASON_OUTSIDE_CATCHMENT",
+    "locale": "en_MZ",
+    "message": "Patient outside facility catchment",
+    "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_REJECT_REASON_DUPLICATE",
+    "locale": "en_MZ",
+    "message": "Duplicate referral",
+    "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_REJECT_REASON_INCOMPLETE_INFO",
+    "locale": "en_MZ",
+    "message": "Insufficient information",
+    "module": "hcm-common"
+  },
+  {
+    "code": "REFERRAL_REJECT_REASON_OTHER",
+    "locale": "en_MZ",
+    "message": "Other",
+    "module": "hcm-common"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_FEVER",
+    "locale": "en_MZ",
+    "message": "Fever",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_VOMITING",
+    "locale": "en_MZ",
+    "message": "Vomiting",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_DIARRHEA",
+    "locale": "en_MZ",
+    "message": "Diarrhea",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_CHILLS",
+    "locale": "en_MZ",
+    "message": "Chills",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_SEVERE_HEADACHE",
+    "locale": "en_MZ",
+    "message": "Severe headache",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_SYMPTOM_MUSCLE_BACK_PAIN",
+    "locale": "en_MZ",
+    "message": "Muscle and back pain",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_diseaseType_LABEL",
+    "locale": "en_MZ",
+    "message": "Suspected disease",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_diseaseType_REQUIRED_ERROR",
+    "locale": "en_MZ",
+    "message": "Please select a disease type",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_DISEASE_MALARIA",
+    "locale": "en_MZ",
+    "message": "Malaria",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_HAD_RECENT_SYMPTOMS_LABEL",
+    "locale": "en_MZ",
+    "message": "Has the child had any symptoms since the last visit?",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_HAD_RECENT_SYMPTOMS_REQUIRED_ERROR",
+    "locale": "en_MZ",
+    "message": "Please answer this question",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_HAD_RECENT_SYMPTOMS_YES",
+    "locale": "en_MZ",
+    "message": "Yes",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_HAD_RECENT_SYMPTOMS_NO",
+    "locale": "en_MZ",
+    "message": "No",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_FEVER_LABEL",
+    "locale": "en_MZ",
+    "message": "Fever",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_VOMITING_LABEL",
+    "locale": "en_MZ",
+    "message": "Vomiting",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_DIARRHEA_LABEL",
+    "locale": "en_MZ",
+    "message": "Diarrhea",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_CHILLS_LABEL",
+    "locale": "en_MZ",
+    "message": "Chills",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_HEADACHE_LABEL",
+    "locale": "en_MZ",
+    "message": "Severe headache",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_SYMPTOM_BODYPAIN_LABEL",
+    "locale": "en_MZ",
+    "message": "Muscle and back pain",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_WAS_TREATED_LABEL",
+    "locale": "en_MZ",
+    "message": "Was the child treated with proper medication?",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_WAS_TREATED_REQUIRED_ERROR",
+    "locale": "en_MZ",
+    "message": "Please answer this question",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_WAS_TREATED_YES",
+    "locale": "en_MZ",
+    "message": "Yes",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_WAS_TREATED_NO",
+    "locale": "en_MZ",
+    "message": "No",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_TREATMENT_MED_LABEL",
+    "locale": "en_MZ",
+    "message": "Which medication was given?",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_TREATMENT_MED_REQUIRED_ERROR",
+    "locale": "en_MZ",
+    "message": "Please select a medication",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_TREATMENT_MED_ACT",
+    "locale": "en_MZ",
+    "message": "ACT (Artemisinin-based Combination Therapy)",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_TREATMENT_MED_SPAQ",
+    "locale": "en_MZ",
+    "message": "SP+AQ (Sulfadoxine-Pyrimethamine + Amodiaquine)",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "APPONE_TREATMENT_MED_OTHER",
+    "locale": "en_MZ",
+    "message": "Other",
+    "module": "hcm-registration"
   }
 ]
