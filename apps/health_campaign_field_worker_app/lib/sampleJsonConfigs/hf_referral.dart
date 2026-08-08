@@ -480,7 +480,8 @@ final dynamic sampleReferralFlows = {
                 "fieldName": "actionRow",
                 "properties": {
                   "mainAxisSize": "max",
-                  "mainAxisAlignment": "spaceBetween"
+                  "mainAxisAlignment": "end",
+                  "gap": 8
                 }
               }
             ],
