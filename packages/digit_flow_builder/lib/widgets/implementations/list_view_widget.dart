@@ -4,9 +4,20 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../layout_renderer.dart';
+import '../../utils/function_registry.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
 import '../resolved_flow_widget.dart';
+
+/// Carries an item plus its sort rank and original position so [ListViewWidget]
+/// can perform a stable priority sort (see `sortByFn` / `sortPriority`).
+class _RankedItem {
+  final int rank;
+  final int index;
+  final dynamic value;
+
+  const _RankedItem(this.rank, this.index, this.value);
+}
 
 class ListViewWidget extends ResolvedFlowWidget {
   @override
@@ -52,6 +63,47 @@ class ListViewWidget extends ResolvedFlowWidget {
     final properties = json['properties'] as Map<String, dynamic>?;
     final spacingKey = properties?['spacing']?.toString();
     final double spacing = _mapSpacingValue(context, spacingKey);
+
+    // Optional ordering. `sortByFn` names a FunctionRegistry entry invoked with
+    // each item; `sortPriority` lists the return values that should float to
+    // the top, in the order given. Items whose result isn't listed keep their
+    // original position, after all prioritised groups.
+    //
+    // Used by the referral inbox to surface un-actioned (PENDING) referrals
+    // above actioned ones — otherwise a worker has to scan past already
+    // handled rows to find the ones still needing a decision, and the rows
+    // needing action are exactly the ones that are easy to miss.
+    final sortByFn = properties?['sortByFn']?.toString();
+    final sortPriority = (properties?['sortPriority'] as List?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        const <String>[];
+
+    if (sortByFn != null &&
+        sortByFn.isNotEmpty &&
+        sortPriority.isNotEmpty &&
+        items is List &&
+        items.length > 1) {
+      int rankOf(dynamic item) {
+        final result =
+            FunctionRegistry.call(sortByFn, [item], stateData)?.toString();
+        final rank = sortPriority.indexOf(result ?? '');
+        return rank < 0 ? sortPriority.length : rank;
+      }
+
+      // Decorate-sort-undecorate: Dart's List.sort is NOT stable, so sorting
+      // on rank alone would let equal-rank rows swap order between rebuilds
+      // and make the list visibly jitter. Tie-breaking on the original index
+      // keeps the existing (server) ordering intact within each group.
+      final decorated = <_RankedItem>[];
+      for (var i = 0; i < items.length; i++) {
+        decorated.add(_RankedItem(rankOf(items[i]), i, items[i]));
+      }
+      decorated.sort((a, b) => a.rank != b.rank
+          ? a.rank.compareTo(b.rank)
+          : a.index.compareTo(b.index));
+      items = decorated.map((e) => e.value).toList();
+    }
 
     final widgets = <Widget>[];
 

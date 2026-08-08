@@ -69,8 +69,25 @@ class AppLocalizations {
       AppLocalizationsDelegate(config, sql);
 
   Future<bool> load() async {
-    final listOfLocalizations =
-        await LocalizationLocalRepository().returnLocalizationFromSQL(sql);
+    // Load every row for the ACTIVE LOCALE rather than only the modules
+    // currently in LocalizationParams(). `_messagesByCode` is a single flat
+    // code -> message map shared process-wide, and `load()` clears it before
+    // repopulating. Sourcing it from `returnLocalizationFromSQL` (which
+    // filters on LocalizationParams().module) meant that as soon as a flow
+    // dispatched onLoadLocalization for its own campaign modules — e.g.
+    // `hcm-permissionhandler-CMP-SL-SMC-001` — the module list was REPLACED
+    // (see LocalizationBloc._onLoadLocalization -> setModule) and the base
+    // modules (`hcm-common`, `hcm-beneficiary`, ...) dropped out of the
+    // query. Every key that lives only in a base module then became a
+    // permanent lookup miss and rendered as its raw code (e.g.
+    // CORE_COMMON_PERMISSION_NOTIFICATION_DESC, CORE_COMMON_ALLOW_ACCESS on
+    // the permission-handler page) while keys the campaign module happened to
+    // redefine still resolved — producing a half-translated screen.
+    // FlowBuilderLocalization already hydrates from fetchAllForLocale for
+    // this exact reason; keep both caches on the same locale-wide source.
+    final localeTag = '${locale.languageCode}_${locale.countryCode ?? ''}';
+    final listOfLocalizations = await LocalizationLocalRepository()
+        .fetchAllForLocale(sql: sql, locale: localeTag);
 
     _localizedStrings
       ..clear()

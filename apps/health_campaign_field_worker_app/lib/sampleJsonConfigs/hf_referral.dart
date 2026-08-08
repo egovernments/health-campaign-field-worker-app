@@ -448,7 +448,15 @@ final dynamic sampleReferralFlows = {
                       }
                     ],
                     "fieldName": "acceptButton",
-                    "properties": {"size": "medium", "type": "primary"}
+                    // flex + mainAxisSize:max makes Accept and Reject equal
+                    // halves of the card width instead of two intrinsically
+                    // sized buttons shoved to opposite edges by spaceBetween.
+                    "flex": 1,
+                    "properties": {
+                      "size": "medium",
+                      "type": "primary",
+                      "mainAxisSize": "max"
+                    }
                   },
                   {
                     "type": "template",
@@ -474,13 +482,25 @@ final dynamic sampleReferralFlows = {
                       }
                     ],
                     "fieldName": "rejectButton",
-                    "properties": {"size": "medium", "type": "secondary"}
+                    "flex": 1,
+                    "properties": {
+                      "size": "medium",
+                      "type": "secondary",
+                      "mainAxisSize": "max"
+                    }
                   }
                 ],
                 "fieldName": "actionRow",
+                // `spaceBetween` on a two-item row maximises the separation:
+                // it pinned Accept to the left edge and Reject to the right
+                // with a dead gap between them, and because each button sized
+                // to its own label the pair rendered at unequal widths. With
+                // flex:1 on both children we want `start` + an explicit gap so
+                // the two buttons read as one balanced action pair.
                 "properties": {
                   "mainAxisSize": "max",
-                  "mainAxisAlignment": "spaceBetween"
+                  "mainAxisAlignment": "start",
+                  "gap": 8
                 }
               }
             ],
@@ -490,7 +510,15 @@ final dynamic sampleReferralFlows = {
           "hidden": false,
           "fieldName": "listView",
           "dataSource": "HFReferralModel",
-          "properties": {"spacing": "spacer2"}
+          // sortByFn/sortPriority float un-actioned referrals to the top.
+          // getHFReferralActionState returns PENDING (Accept/Reject still to be
+          // decided) or ACTIONED; PENDING is listed first so those cards lead
+          // the list. Ordering within each group is preserved.
+          "properties": {
+            "spacing": "spacer2",
+            "sortByFn": "getHFReferralActionState",
+            "sortPriority": ["PENDING"]
+          }
         }
       ],
       "name": "referralInbox",
