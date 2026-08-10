@@ -65,7 +65,6 @@ class PerformSyncUp {
       (element) => element.type,
     );
 
-    // Sort the entries by DataModelType enum
     final entries = groupedEntries.entries.toList();
     entries.sort((a, b) => DataModelType.values
         .indexOf(a.key)

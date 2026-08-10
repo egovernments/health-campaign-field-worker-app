@@ -1,3 +1,13 @@
+## 0.0.4
+
+- Fix checkbox fields sending `null` instead of `false` in `additionalFields`
+- Fix bednet delivery eligibility, `additionalFields` null filtering, and IHM config updates
+- Added `add member` config; capture `dateTime` mapping in scanner builder
+- Added `indirect delivery` transformer config, `collect as` variation, and reverse mapping
+- Fix edit-flow update from `additionalFields`; duplicate mapping fix
+- Fix update for different project; multiple product-variant issue; per-project beneficiary lookup
+- Removed string `additionalDetail` mapping; renamed from form package
+
 ## 0.0.2
 
 - Added transformer support for the HF-Referral feature

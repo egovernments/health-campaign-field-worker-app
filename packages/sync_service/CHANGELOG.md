@@ -4,6 +4,10 @@
 * Updated background service stop to route through `invoke`
 * Improved sync bloc, `sync_down`, `sync_up`, and utils with extensive fixes; added tests
 * Removed unused test package dependency
+* Send `STOCK_BALANCE` oplog entries in `createdAt` ASC order
+* Implemented DB encryption; added new `db_error` page and localized button/text/tag widgets
+* Sync package now surfaces captured errors instead of swallowing them
+* Post-1.8 merge fixes to form config and merge-conflict resolution
 
 ## 1.0.4
 

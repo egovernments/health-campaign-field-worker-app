@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -1162,6 +1163,34 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
           });
   }
 
+  /// Parses a scanned QR payload as a JSON object. Returns null if the
+  /// payload isn't a JSON map so the caller can fall back to plain text
+  /// rendering. Bails without a decode attempt on payloads that clearly
+  /// aren't JSON so scanning arbitrary strings stays cheap.
+  Map<String, dynamic>? _tryParseJsonMap(String raw) {
+    final trimmed = raw.trim();
+    if (trimmed.length < 2 ||
+        !trimmed.startsWith('{') ||
+        !trimmed.endsWith('}')) {
+      return null;
+    }
+    try {
+      final decoded = jsonDecode(trimmed);
+      if (decoded is Map<String, dynamic>) return decoded;
+    } catch (_) {}
+    return null;
+  }
+
+  String _formatQrValue(dynamic value) {
+    if (value == null) return '--';
+    if (value is String) return value.isEmpty ? '--' : value;
+    if (value is List) {
+      return value.map((e) => e == null ? '--' : e.toString()).join(', ');
+    }
+    if (value is Map) return jsonEncode(value);
+    return value.toString();
+  }
+
   void _handleBackButtonPressed() {
     if (widget.isEditEnabled &&
         widget.initialQrCodes != null &&
@@ -1507,7 +1536,12 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                       );
                     }
 
-                    // QR code display
+                    // QR code display — render label:value pairs when the
+                    // scanned payload is a JSON object; otherwise fall back
+                    // to the trimmed raw string.
+                    final rawQr = effectiveQrCodes[index].toString();
+                    final qrPairs = _tryParseJsonMap(rawQr);
+                    final isPairView = qrPairs != null;
                     return ListTile(
                       shape: const Border(),
                       contentPadding: const EdgeInsets.symmetric(
@@ -1527,22 +1561,89 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                             Radius.circular(4.0),
                           ),
                         ),
-                        padding: const EdgeInsets.only(
-                            left: spacer4,
-                            right: spacer1,
-                            top: spacer3,
-                            bottom: spacer3),
+                        padding: isPairView
+                            ? const EdgeInsets.all(spacer3)
+                            : const EdgeInsets.only(
+                                left: spacer4,
+                                right: spacer1,
+                                top: spacer3,
+                                bottom: spacer3),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: isPairView
+                              ? CrossAxisAlignment.start
+                              : CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Flexible(
-                              child: Text(
-                                overflow: TextOverflow.ellipsis,
-                                DigitScannerUtils().trimString(
-                                    effectiveQrCodes[index].toString()),
+                            if (isPairView)
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    for (var i = 0;
+                                        i < qrPairs.entries.length;
+                                        i++)
+                                      Padding(
+                                        // No bottom padding on the last row —
+                                        // the card's own padding provides
+                                        // the trailing gap.
+                                        padding: EdgeInsets.only(
+                                          bottom:
+                                              i == qrPairs.entries.length - 1
+                                                  ? 0
+                                                  : spacer2,
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            // Flex-based label column so long
+                                            // JSON keys don't clip on narrow
+                                            // screens; value gets more room.
+                                            Expanded(
+                                              flex: 4,
+                                              child: Text(
+                                                localizations.translate(qrPairs
+                                                    .entries
+                                                    .elementAt(i)
+                                                    .key),
+                                                style: textTheme.bodyS.copyWith(
+                                                  color: theme.colorTheme.text
+                                                      .secondary,
+                                                ),
+                                                maxLines: 2,
+                                                overflow:
+                                                    TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            const SizedBox(width: spacer2),
+                                            Expanded(
+                                              flex: 6,
+                                              child: Text(
+                                                _formatQrValue(qrPairs.entries
+                                                    .elementAt(i)
+                                                    .value),
+                                                style: textTheme.bodyS.copyWith(
+                                                  color: theme.colorTheme.text
+                                                      .primary,
+                                                ),
+                                                maxLines: 3,
+                                                overflow:
+                                                    TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              )
+                            else
+                              Flexible(
+                                child: Text(
+                                  overflow: TextOverflow.ellipsis,
+                                  DigitScannerUtils().trimString(rawQr),
+                                ),
                               ),
-                            ),
                             SizedBox(
                               width: 24,
                               height: 24,

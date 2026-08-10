@@ -61,7 +61,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     final registers = await fetchNonMobileUsers(
         offSet: 0, limit: 10, fetchOnlyMobileUser: event.fetchOnlyMobileUser);
     add(AttendanceEvents.loadAttendanceRegisters(
-        registers: registers!, limit: 10, offset: 0));
+        registers: registers, limit: 10, offset: 0));
   }
 
   // Event handler for LoadAttendanceRegisterData event

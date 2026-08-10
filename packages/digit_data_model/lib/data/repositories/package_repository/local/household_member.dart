@@ -70,7 +70,7 @@ class HouseholdMemberLocalRepository
         final val = await (sql.select(sql.householdMemberRelationShip)
               ..where(
                 (tbl) => tbl.selfClientReferenceId.equals(
-                  householdMember.clientReferenceId ?? '',
+                  householdMember.clientReferenceId,
                 ),
               ))
             .get();
@@ -108,9 +108,7 @@ class HouseholdMemberLocalRepository
                         .fromJson(relation.additionalFields!)
                     : null,
               );
-              return null;
             })
-            .whereType<HouseholdMemberRelationShipModel>()
             .toList();
 
         householdMembers.add(

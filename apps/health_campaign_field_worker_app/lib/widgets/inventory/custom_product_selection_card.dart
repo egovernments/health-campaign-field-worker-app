@@ -164,6 +164,7 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
     }
 
     final tenantId = FlowBuilderSingleton().selectedProject?.tenantId;
+    final projectId = FlowBuilderSingleton().selectedProject?.id;
     if (tenantId == null) {
       debugPrint('ProductSelectionCard: ERROR - TenantId not found');
       return;
@@ -174,6 +175,10 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
         'products=${_selectedProducts.map((p) => p.id).toList()}');
 
     try {
+      // Scope stock to the current project via `referenceId`; without this
+      // filter, a facility (or distributor userUuid) used across multiple
+      // projects has its stocks summed cross-project and the max-quantity
+      // validation on the next page reflects the wrong balance.
       final filters = <SearchFilter>[
         SearchFilter(
           root: 'stock',
@@ -181,6 +186,13 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
           operator: 'equals',
           value: tenantId,
         ),
+        if (projectId != null)
+          SearchFilter(
+            root: 'stock',
+            field: 'referenceId',
+            operator: 'equals',
+            value: projectId,
+          ),
       ];
 
       final searchParams = GlobalSearchParameters(

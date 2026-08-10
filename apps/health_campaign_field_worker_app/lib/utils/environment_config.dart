@@ -125,6 +125,11 @@ class Variables {
     '$_minRamThresholdGbValue',
   );
 
+  static const _faceAuthEnabled = EnvEntry(
+    'FACE_AUTH_ENABLED',
+    'false',
+  );
+
   const Variables({
     this.useFallbackValues = false,
     required DotEnv dotEnv,
@@ -205,6 +210,13 @@ class Variables {
             fallback: _minRamThresholdGb.value,
           )) ??
           _minRamThresholdGbValue;
+
+  bool get faceAuthEnabled {
+    final raw = useFallbackValues
+        ? _faceAuthEnabled.value
+        : _dotEnv.get(_faceAuthEnabled.key, fallback: _faceAuthEnabled.value);
+    return raw.toLowerCase() == 'true';
+  }
 
   EnvType get envType {
     final envName = useFallbackValues

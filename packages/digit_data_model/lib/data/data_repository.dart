@@ -410,7 +410,7 @@ abstract class RemoteRepository<D extends EntityModel,
   }) async {
     try {
       return await future();
-    } on DioException catch (error, stackTrace) {
+    } on DioException catch (error) {
       const encoder = JsonEncoder.withIndent('  ');
 
       String errorResponse;

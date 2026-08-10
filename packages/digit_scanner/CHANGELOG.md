@@ -1,7 +1,17 @@
 ## 1.0.7+2
 
+* Scanned QR payloads that parse as JSON objects are now rendered as label:value pairs on the result card (mirroring the GS1 branch); non-JSON payloads fall back to the existing trimmed-text row
+* QR scanner page UI revamp aligned with Figma; added SVG flash-on icon
+* Added scanner pluralization and `sentenceCaseEnabled` prop
+* Added GS1 barcode edit support with helper serialize/deserialize methods
+* Added scroll for scanned-data UI; validation checks for scanned types
+* Fixed continuous-error display when scanning reaches quantity limit; removed second max-limit alert
+* Fixed back-state and permission-handler issues in scanner
+* Atomic localization cache swap; O(1) `translate()` lookup
 * Added duplicate-scanner check based on stock entry type, product variant, sender id and receiver id (`qr_scanner.dart`, `scanner_utils.dart`)
 * Surface duplicate-check errors via `debugPrint` instead of swallowing exceptions
+* Multiple scanner crash fixes and validation guards
+* Removed unused imports in `vision_detector_views/camera_view.dart` and `detector_view.dart`
 
 ## 1.0.7+1
 

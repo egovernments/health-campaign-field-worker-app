@@ -1,3 +1,14 @@
+## 0.1.1
+
+- Introduced the forms-engine package with schema-driven forms, MDMS schema fetch, and `BaseReactiveFieldWrapper` for auto-localized validation
+- Added GS1 barcode scan support: edit, deserialization helpers, non-empty-field serializer, duplicate-scan check, viewer, and scan-limit fix
+- Added multi-entity tab functionality mapping `_item_N_suffix` fields to base names; `ValueNotifier`-driven fit-or-scroll tab index
+- Added dependent-field / features-config support, dynamic tab change on errors, validation toast naming invalid fields, hidden/readonly/isActive handling
+- DOB validator with conditional values; min/max/length fallbacks; `DateFormat` regex check; alert-popup form submission; emoji blocker
+- Fix checkbox fields sending `null` instead of `false`; scanner issues; dependency handling; prefix conflicts in multi-tab views; edit-flow beneficiary-ID restoration
+- Added `preventScreenCapture` flag and `ScreenProtectionManager` for secure form pages; atomic localization cache swap; O(1) `translate()` lookups
+- Added `navigationParams`, custom widgets (facility, productVariant), multi-select dropdown, referral custom component, forms-engine visibility support
+
 ## 0.1.0
 
 - Added `navigationParams` on form control and JSON form schemas for richer inter-page data handoff

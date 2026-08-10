@@ -67,6 +67,7 @@ import '../utils/date_util_attendance.dart';
 import '../utils/debound.dart';
 import '../utils/eligibility_navigation_executor.dart';
 import '../utils/environment_config.dart';
+import '../utils/feature_flags.dart';
 import '../utils/flow_navigation_utils.dart';
 import '../utils/function_registries.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -122,6 +123,7 @@ class _HomePageState extends LocalizedState<HomePage> {
   /// Check if the logged-in user needs face enrollment (first time only).
   /// Routes to the face gate, which handles enrollment + verification.
   void _checkFaceEnrollment() async {
+    if (!kFaceAuthEnabled) return;
     try {
       final individualId = await LocalSecureStore.instance.userIndividualId;
       if (individualId == null || !mounted) return;
@@ -255,8 +257,10 @@ class _HomePageState extends LocalizedState<HomePage> {
     FlowWidgetFactory.register(GroupListViewWidget());
     FlowWidgetFactory.register(CustomRowWidget());
     FlowWidgetFactory.register(SignatureCompareWidget());
-    FlowWidgetFactory.register(FaceAuthEventDotsWidget());
-    FlowWidgetFactory.register(FaceAuthEventLegendWidget());
+    if (kFaceAuthEnabled) {
+      FlowWidgetFactory.register(FaceAuthEventDotsWidget());
+      FlowWidgetFactory.register(FaceAuthEventLegendWidget());
+    }
 
     // Register custom action executor for REDOSE eligibility check
     ActionExecutorRegistry().register(
@@ -1962,8 +1966,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       showcaseFor: showcaseKeys.toSet().toList(),
                     ),
                   ),
-                  if (context.loggedInUserRoles.any(
-                      (role) => role.code == RolesType.distributor.toValue()))
+                  if (kFaceAuthEnabled &&
+                      context.loggedInUserRoles.any((role) =>
+                          role.code == RolesType.distributor.toValue()))
                     const FaceAuthSessionCard(),
                   // Show stock balance card for users with stock management access (not for Polio)
                   if (!isPolio &&

@@ -318,9 +318,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.digitTextTheme(context);
-
     return widget.useScaffold
         ? WillPopScope(
       onWillPop: widget.hideBackAlert
@@ -725,13 +722,12 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               FormField<String>(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
-                    if (((controller[index].text == null ||
-                        controller[index].text == '') &&
-                        e.required == true)) {
+                    if (controller[index].text == '' &&
+                        e.required == true) {
                       return localizations.translate("${e.code}_REQUIRED");
                     }
                     if (e.regex != null) {
-                      return (RegExp(e.regex!).hasMatch(controller[index].text!))
+                      return (RegExp(e.regex!).hasMatch(controller[index].text))
                           ? null
                           : localizations.translate("${e.code}_REGEX");
                     }
@@ -775,15 +771,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               FormField<String>(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
-                    if (((controller[index].text == null ||
-                        controller[index].text == '') &&
-                        e.required == true)) {
+                    if (controller[index].text == '' &&
+                        e.required == true) {
                       return localizations.translate(
                         i18.common.corecommonRequired,
                       );
                     }
                     if (e.regex != null) {
-                      return (RegExp(e.regex!).hasMatch(controller[index].text!))
+                      return (RegExp(e.regex!).hasMatch(controller[index].text))
                           ? null
                           : localizations.translate("${e.code}_REGEX");
                     }
@@ -829,15 +824,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               FormField<String>(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
-                    if (((controller[index].text == null ||
-                        controller[index].text == '') &&
-                        e.required == true)) {
+                    if (controller[index].text == '' &&
+                        e.required == true) {
                       return localizations.translate(
                         i18.common.corecommonRequired,
                       );
                     }
                     if (e.regex != null) {
-                      return (RegExp(e.regex!).hasMatch(controller[index].text!))
+                      return (RegExp(e.regex!).hasMatch(controller[index].text))
                           ? null
                           : localizations.translate("${e.code}_REGEX");
                     }
@@ -981,8 +975,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             AutovalidateMode.onUserInteraction,
                             validator: (value) {
                               if (e.required == true &&
-                                  (controller[index].text == null ||
-                                      controller[index].text == '')) {
+                                  controller[index].text == '') {
                                 return localizations.translate(
                                   i18.common.coreCommonReasonRequired,
                                 );
@@ -1043,8 +1036,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             AutovalidateMode.onUserInteraction,
                             validator: (value) {
                               if (e.required == true &&
-                                  (controller[index].text == null ||
-                                      controller[index].text == '')) {
+                                  controller[index].text == '') {
                                 return localizations.translate(
                                   i18.common.coreCommonReasonRequired,
                                 );
@@ -1104,8 +1096,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
       ServiceDefinitionModel? selectedServiceDefinition,
       BuildContext context,
       String? description) {
-    final theme = Theme.of(context);
-    final textTheme = theme.digitTextTheme(context);
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
       final childItems = getNextQuestions(
@@ -1150,8 +1140,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value1) {
                             if (item.required == true &&
-                                (controller[index].text == null ||
-                                    controller[index].text == '')) {
+                                controller[index].text == '') {
                               return localizations.translate(
                                 i18.common.coreCommonReasonRequired,
                               );
@@ -1201,7 +1190,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                 controller[index].value =
                                     TextEditingController.fromValue(
                                       TextEditingValue(
-                                        text: value!.code,
+                                        text: value.code,
                                       ),
                                     ).value;
 
@@ -1243,8 +1232,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                       AutovalidateMode.onUserInteraction,
                       validator: (value1) {
                         if (item.required == true &&
-                            (additionalController[index].text == null ||
-                                additionalController[index].text == '')) {
+                            additionalController[index].text == '') {
                           return localizations.translate(
                             i18.common.coreCommonReasonRequired,
                           );
@@ -1297,13 +1285,12 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
       return FormField<String>(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (value) {
-            if (((controller[index].text == null ||
-                controller[index].text == '') &&
-                item.required == true)) {
+            if (controller[index].text == '' &&
+                item.required == true) {
               return localizations.translate("${item.code}_REQUIRED");
             }
             if (item.regex != null) {
-              return (RegExp(item.regex!).hasMatch(controller[index].text!))
+              return (RegExp(item.regex!).hasMatch(controller[index].text))
                   ? null
                   : localizations.translate("${item.code}_REGEX");
             }
@@ -1344,15 +1331,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
       return FormField<String>(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (value) {
-            if (((controller[index].text == null ||
-                controller[index].text == '') &&
-                item.required == true)) {
+            if (controller[index].text == '' &&
+                item.required == true) {
               return localizations.translate(
                 i18.common.corecommonRequired,
               );
             }
             if (item.regex != null) {
-              return (RegExp(item.regex!).hasMatch(controller[index].text!))
+              return (RegExp(item.regex!).hasMatch(controller[index].text))
                   ? null
                   : localizations.translate("${item.code}_REGEX");
             }
@@ -1392,15 +1378,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
       return FormField<String>(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (value) {
-            if (((controller[index].text == null ||
-                controller[index].text == '') &&
-                item.required == true)) {
+            if (controller[index].text == '' &&
+                item.required == true) {
               return localizations.translate(
                 i18.common.corecommonRequired,
               );
             }
             if (item.regex != null) {
-              return (RegExp(item.regex!).hasMatch(controller[index].text!))
+              return (RegExp(item.regex!).hasMatch(controller[index].text))
                   ? null
                   : localizations.translate("${item.code}_REGEX");
             }
@@ -1495,10 +1480,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
         ),
       );
     } else if (item.dataType == 'MultiValueList' && isSelectionCard(item)) {
-      final childItems = getNextQuestions(
-        item.code.toString(),
-        initialAttributes ?? [],
-      );
       List<int> excludedIndexes = [];
 
       // Ensure the current index is added to visible indexes and not excluded
@@ -1536,8 +1517,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
                     if (item.required == true &&
-                        (controller[index].text == null ||
-                            controller[index].text == '')) {
+                        controller[index].text == '') {
                       return localizations.translate(
                         i18.common.coreCommonReasonRequired,
                       );
@@ -1593,8 +1573,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
                     if (item.required == true &&
-                        (controller[index].text == null ||
-                            controller[index].text == '')) {
+                        controller[index].text == '') {
                       return localizations.translate(
                         i18.common.coreCommonReasonRequired,
                       );

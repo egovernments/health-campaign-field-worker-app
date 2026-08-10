@@ -20,9 +20,6 @@ class LivenessResult {
 /// Types of liveness challenges.
 enum LivenessChallenge { blink, turnLeft, turnRight }
 
-/// State of a single challenge.
-enum _ChallengePhase { waiting, inProgress, completed }
-
 /// Passive liveness detection using ML Kit face landmarks.
 /// Requires 2 challenges: 1 blink + 1 head turn.
 class LivenessDetectionService {
@@ -36,7 +33,6 @@ class LivenessDetectionService {
 
   final List<LivenessChallenge> _challenges;
   int _currentChallengeIndex = 0;
-  _ChallengePhase _blinkPhase = _ChallengePhase.waiting;
   bool _blinkEyesClosed = false;
 
   LivenessDetectionService({
@@ -48,7 +44,6 @@ class LivenessDetectionService {
   /// Reset state for a new liveness session.
   void reset() {
     _currentChallengeIndex = 0;
-    _blinkPhase = _ChallengePhase.waiting;
     _blinkEyesClosed = false;
   }
 
@@ -79,7 +74,6 @@ class LivenessDetectionService {
 
     if (challengePassed) {
       _currentChallengeIndex++;
-      _blinkPhase = _ChallengePhase.waiting;
       _blinkEyesClosed = false;
 
       if (_currentChallengeIndex >= _challenges.length) {

@@ -5,15 +5,23 @@
     * Centralized country-suffix stripping in `setHierarchyType`
     * Stopped splitting `hierarchyType` on first underscore
 * Search improvements
-    * Added `within`, `equalsAny`, and `containsAll` operators in SQL store
+    * Added `within`, `equalsAny`, `containsAll`, and `matches` operators in SQL store
     * Added indexes for `name`, `individual`, `household`, `address`, and `identifier` tables
     * Backfilled the same indexes in the schemaVersion 11 migration so upgrades get the perf benefit
+    * Cross-table search support with fresh-install seeding and on-open backfill of hot-path indexes; post-migration `ANALYZE`
 * Hardened SQLCipher `PRAGMA key` / `ATTACH DATABASE KEY` callsites via `_sqlCipherKeyPragma`/`_assertHexKey` helpers and hex-blob literal form
-* Added migration script for stock table
-* Added stock and referral API additions (`hf_referral` fields + mapper, stock model fields + mapper)
-* Added `listen` support and update-operation handling to UserAction oplog
+* Added pre-logout encryption backup for the SQLCipher key
+* Added attendance entities, repositories, and typedefs for attendance log and register
+* Moved registration-delivery entities into the data model package
+* Extended stock/referral APIs
+    * Migration script for stock table
+    * `hf_referral` fields + mapper, stock model fields + mapper
+    * `in-transit` handling and stock/referral downsync fixes
+    * `listen` support and update-operation handling on UserAction oplog
+    * `beneficiaryTag`/`resourceTag` on `user_action` model
 * Added notification unregister flow (oplog entry field)
 * Data repository `search` gained `lastChangedSince` propagation across attendance, hf_referral, pgr_service, stock, attendance_register remote repositories
+* Hardened Dio exception capture to preserve response payloads and endpoint context
 
 ## 1.3.0
 

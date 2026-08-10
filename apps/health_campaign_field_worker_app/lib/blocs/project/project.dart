@@ -1432,12 +1432,23 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       // Calculate balance for each facility × product variant combination
       for (final facilityId in facilityIds) {
         for (final productVariantId in productVariantIds) {
-          // Get all stocks for this facility and product
+          // Get all stocks for this facility and product, scoped to the
+          // current project via `referenceId`. Without this scope a facility
+          // (or distributor userUuid) used across multiple projects has all
+          // its stocks summed into every project's STOCK_BALANCE UserAction,
+          // so accepting stock in one project inflates the balance shown in
+          // the other. See stock_balance_card.dart's identical scope.
           final receivedStocks = await stockLocalRepository.search(
-            StockSearchModel(receiverId: facilityId),
+            StockSearchModel(
+              receiverId: facilityId,
+              referenceId: project.id,
+            ),
           );
           final sentStocks = await stockLocalRepository.search(
-            StockSearchModel(senderId: facilityId),
+            StockSearchModel(
+              senderId: facilityId,
+              referenceId: project.id,
+            ),
           );
 
           final allStocksMap = <String, StockModel>{};
