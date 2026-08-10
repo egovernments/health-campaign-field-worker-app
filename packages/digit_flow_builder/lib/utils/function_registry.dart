@@ -1898,6 +1898,11 @@ void initializeFunctionRegistry() {
       return true; // Default to true if can't parse
     }
 
+    // No active cycle (expired or not started) — hide delivery option
+    if (nextCycleId < 1) {
+      return false;
+    }
+
     // Check if nextCycleId exceeds total cycles (all cycles completed)
     if (nextCycleId > totalCycles) {
       return false;
