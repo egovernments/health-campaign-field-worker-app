@@ -156,8 +156,13 @@ class FlowBuilderNavigationService implements NavigationService {
   void navigateToHome() {
     try {
       context.router.popUntil((route) {
-        // Exit the entire flow by popping all FlowBuilderHomeRoute pages
-        return route.settings.name?.contains('FlowBuilderHomeRoute') != true;
+        // Exit the entire flow. A flow's stack interleaves FlowBuilderHomeRoute
+        // pages with the forms engine's FormsRenderRoute pages, so stopping at
+        // the first non-FlowBuilderHomeRoute would land on a form or summary
+        // page rather than Home. Pop past both.
+        final name = route.settings.name ?? '';
+        return !name.contains('FlowBuilderHomeRoute') &&
+            !name.contains('FormsRenderRoute');
       });
     } catch (e) {
       debugPrint('⚠️ Error navigating to HOME: $e');

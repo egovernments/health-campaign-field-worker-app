@@ -578,7 +578,25 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage>
                                 ],
                               );
                             }),
-                            const SizedBox(height: spacer4),
+                            // Only space below the heading block when it
+                            // actually renders something. On screens with no
+                            // heading or description (e.g. the success panels)
+                            // this spacer used to stack with the one above,
+                            // leaving a 32dp gap under the location tag instead
+                            // of the intended 16dp.
+                            if ((_resolveHeading(widget.config['heading'],
+                                            screenKey)
+                                        ?.isNotEmpty ??
+                                    false) ||
+                                (_resolveDescription(
+                                            widget.config['description'],
+                                            screenKey)
+                                        ?.isNotEmpty ??
+                                    false) ||
+                                ((widget.config['headingActions'] as List?)
+                                        ?.isNotEmpty ??
+                                    false))
+                              const SizedBox(height: spacer4),
                             // Build body widgets with trailing spacers, then
                             // drop the last spacer ONLY when the visible list
                             // is non-empty. The previous unconditional

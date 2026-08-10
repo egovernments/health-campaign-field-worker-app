@@ -58,6 +58,16 @@ class TagWidget extends ResolvedFlowWidget {
           themeData: TagThemeData(
             monochromeBackgroundColor: backgroundColor,
             monochromeColor: textColor,
+            // Opt-in per tag via `bold: true`. Identifier chips (the
+            // Beneficiary ID) want the bold body weight so the ID reads as the
+            // primary value on the card, but this branch is shared with status
+            // tags such as Not Administered, which must stay regular weight.
+            textStyle: properties?['bold'] == true
+                ? theme
+                    .digitTextTheme(context)
+                    .bodyS
+                    .copyWith(fontWeight: FontWeight.w700)
+                : null,
           ),
         ),
         properties,
