@@ -55,6 +55,11 @@ class _BoundarySelectionPageState
   late StreamSubscription syncSubscription;
   var leastLevelBoundaries;
 
+  /// Track the last boundary list length so the BlocListener only runs the
+  /// expensive localization reload when new boundaries are actually added
+  /// (drill-down), not on every BoundaryState change (e.g. selection change).
+  int _lastBoundaryListLength = 0;
+
   /// Codes we've already pulled localization for during this page's lifetime.
   /// `project_selection.dart` seeds boundary localization for the initial
   /// `BoundaryFindEvent` result, but as the user drills into hierarchy
@@ -244,7 +249,17 @@ class _BoundarySelectionPageState
                     initialized: (appConfiguration, _, __) =>
                         BlocListener<BoundaryBloc, BoundaryState>(
                       listener: (context, state) {
-                        if (state.boundaryList.isNotEmpty) {
+                        // Only run the expensive localization reload when
+                        // boundaryList actually grew (a drill-down added new
+                        // boundaries). Pure selection changes within the same
+                        // level only update selectedBoundaryMap and don't need
+                        // any localization work — matching the old branch
+                        // behavior that kept the dropdown snappy.
+                        final listChanged =
+                            state.boundaryList.length != _lastBoundaryListLength;
+                        if (state.boundaryList.isNotEmpty && listChanged) {
+                          _lastBoundaryListLength = state.boundaryList.length;
+
                           // Pull localization for any boundaries the user has
                           // just drilled into. Fire-and-forget — the local
                           // refresh below runs on stale data if this hasn't
@@ -264,16 +279,6 @@ class _BoundarySelectionPageState
                                   '${runtimeHierarchyType()}_$key')
                               .toList();
 
-                          // Every entry in this list must include *every* i18
-                          // key the page renders that lives outside the
-                          // `common` module rows this filter matches — the
-                          // BLoC handler below clears `_messagesByCode` on
-                          // reload, so any key omitted here disappears from
-                          // in-memory translation even if it was loaded on
-                          // initial page entry. `chooseBoundaries` was
-                          // missing, which is why it flashed correctly on
-                          // first frame (initState's setCode included it)
-                          // and then went raw on the boundary-state emit.
                           final combinedCodes = [
                             ...finalCodes,
                             ...labelCodeList,

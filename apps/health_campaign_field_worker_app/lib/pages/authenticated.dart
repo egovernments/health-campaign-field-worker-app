@@ -63,6 +63,7 @@ import '../notification_handlers/notification_handler.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
+import '../utils/feature_flags.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/runtime_hierarchy.dart';
 import '../utils/utils.dart';
@@ -433,6 +434,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper>
 
   Future<void> _startReVerificationScheduler(
       {bool immediateFirstTrigger = false}) async {
+    if (!kFaceAuthEnabled) return;
     if (_reVerificationScheduler != null) return;
 
     try {
