@@ -30,8 +30,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
+import 'package:recase/recase.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 import 'package:sync_service/data/sync_service.dart' show SyncLock;
+import 'package:sync_service/utils/utils.dart' as sync_utils;
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
@@ -961,4 +963,30 @@ Future<Set<String>> generateUniqueMaterialNoteNumber({
   return returnCombinedIds
       ? {formattedUniqueId, combinedId}
       : {formattedUniqueId};
+}
+
+/// Reports the entity currently being synced/downloaded so any open sync
+/// dialog listening on [sync_utils.SyncServiceSingleton.progressStream] can
+/// display it (e.g. the post-login project setup downloads).
+void reportSyncProgress(String entityType, {String operation = 'syncDown'}) {
+  sync_utils.SyncServiceSingleton().reportProgress(
+    sync_utils.SyncProgress(entityType: entityType, operation: operation),
+  );
+}
+
+/// Formats a [sync_utils.SyncProgress] event into a user-facing label for the
+/// sync dialogs, e.g. "Syncing Household Member (5)".
+///
+/// Entity types arrive as camelCase model names (`householdMember`), sometimes
+/// with a record count suffix (`task (5)`); multi-word phase banners from the
+/// sync service ("Downloading from server...") are shown as-is.
+String formatSyncProgressLabel(sync_utils.SyncProgress progress) {
+  final raw = progress.entityType;
+  final match = RegExp(r'^(\S+)( \(\d+\))?$').firstMatch(raw);
+  if (match == null) return raw;
+
+  final name = ReCase(match.group(1)!).titleCase;
+  final count = match.group(2) ?? '';
+
+  return 'Syncing $name$count';
 }
