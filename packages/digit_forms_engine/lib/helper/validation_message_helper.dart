@@ -28,6 +28,9 @@ Map<String, String Function(Object)> buildValidationMessages(
     switch (rule.type) {
       case 'required':
         messages['required'] = (_) => finalMessage;
+        // Boolean controls validate with Validators.requiredTrue, which
+        // reports errors under the 'requiredTrue' key.
+        messages['requiredTrue'] = (_) => finalMessage;
         break;
       case 'minLength':
         messages['minLength'] = (_) => finalMessage;
