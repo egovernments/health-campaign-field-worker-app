@@ -3282,6 +3282,24 @@
     "module": "hcm-referral"
   },
   {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_DISEASE_DENGUE",
+    "locale": "en_MZ",
+    "message": "Dengue",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_UNACTIONED_TOGGLE_ACTIVE_LABEL",
+    "locale": "en_MZ",
+    "message": "Pending only",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_UNACTIONED_TOGGLE_INACTIVE_LABEL",
+    "locale": "en_MZ",
+    "message": "All referrals",
+    "module": "hcm-referral"
+  },
+  {
     "code": "APPONE_ELIGIBILITYCHECKLIST_HAD_RECENT_SYMPTOMS_LABEL",
     "locale": "en_MZ",
     "message": "Has the child had any symptoms since the last visit?",
@@ -3393,6 +3411,156 @@
     "code": "APPONE_TREATMENT_MED_OTHER",
     "locale": "en_MZ",
     "message": "Other",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "REFERRAL_INBOX_STATUS_PENDING",
+    "locale": "en_MZ",
+    "message": "Pending",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_STATUS_ACCEPTED",
+    "locale": "en_MZ",
+    "message": "Accepted",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_STATUS_REJECTED",
+    "locale": "en_MZ",
+    "message": "Rejected",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_STATUS_CANCELLED",
+    "locale": "en_MZ",
+    "message": "Cancelled",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_STATUS_BOOKING_CONFIRMED",
+    "locale": "en_MZ",
+    "message": "Booking confirmed",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_STATUS_ACTIONED",
+    "locale": "en_MZ",
+    "message": "Actioned",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_STATUS_COMPLETED",
+    "locale": "en_MZ",
+    "message": "Completed",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_SCREEN_HEADING",
+    "locale": "en_MZ",
+    "message": "Post-Referral Follow-Up Checklist",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_SCREEN_DESCRIPTION",
+    "locale": "en_MZ",
+    "message": "For use when a patient returns after being referred to a health facility by a health worker.",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_PATIENT_LABEL",
+    "locale": "en_MZ",
+    "message": "Patient name / ID",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_DATE_LABEL",
+    "locale": "en_MZ",
+    "message": "Follow-up date",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_Q1_VISITED_FACILITY_LABEL",
+    "locale": "en_MZ",
+    "message": "Did you visit the health facility?",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_Q2_TESTS_CONDUCTED_LABEL",
+    "locale": "en_MZ",
+    "message": "Were any tests conducted?",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_Q2_TEST_NAMES_LABEL",
+    "locale": "en_MZ",
+    "message": "Name of test(s)",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_Q3_TEST_POSITIVE_LABEL",
+    "locale": "en_MZ",
+    "message": "Was the test result positive?",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_Q4_MEDS_PROVIDED_LABEL",
+    "locale": "en_MZ",
+    "message": "Were any medications provided?",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_Q4_MED_NAMES_LABEL",
+    "locale": "en_MZ",
+    "message": "Name of medication(s)",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_Q5_MED_COUNT_LABEL",
+    "locale": "en_MZ",
+    "message": "Count of medication provided",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_Q6_INSTRUCTIONS_LABEL",
+    "locale": "en_MZ",
+    "message": "Were the medication instructions followed properly?",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_OPTION_YES",
+    "locale": "en_MZ",
+    "message": "Yes",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_OPTION_NO",
+    "locale": "en_MZ",
+    "message": "No",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_OPTION_FULLY",
+    "locale": "en_MZ",
+    "message": "Yes, fully",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_OPTION_PARTIALLY",
+    "locale": "en_MZ",
+    "message": "Partially",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_SUBMIT_BUTTON",
+    "locale": "en_MZ",
+    "message": "Submit",
+    "module": "hcm-registration"
+  },
+  {
+    "code": "POST_REFERRAL_FOLLOWUP_SKIP_BUTTON",
+    "locale": "en_MZ",
+    "message": "Skip",
     "module": "hcm-registration"
   }
 ]

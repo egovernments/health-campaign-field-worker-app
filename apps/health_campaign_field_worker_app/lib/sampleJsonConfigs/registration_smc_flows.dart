@@ -427,9 +427,26 @@
           "format": "button",
           "onAction": [
             {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "data": [
+              // Post-referral follow-up gate.
+              //
+              // Shape copied from the proven conditional-action blocks in
+              // registration_flows.dart (~1794): each branch wraps its actions
+              // in a nested "actions" array, expressions use BARE identifiers
+              // (no {{ }} — ActionHandler merges formData + navigation +
+              // widgetData into the evaluation context), and the else-branch is
+              // the literal sentinel "DEFAULT".
+              //
+              // The DEFAULT branch matters: an earlier attempt used a
+              // hand-rolled truthy fallback which never matched, so when the
+              // first condition also failed to parse NOTHING executed and the
+              // Record Cycle Dose button went dead — blocking delivery
+              // entirely. With DEFAULT present, the worst case is that the
+              // checklist is skipped, never that delivery breaks.
+              "actions": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
@@ -483,9 +500,78 @@
                     "value": "{{contextData.0.futureDeliveries}}"
                   }
                 ],
-                "name": "DELIVERY",
-                "type": "FORM"
-              }
+                    "name": "POST_REFERRAL_FOLLOWUP",
+                    "type": "FORM"
+                  }
+                }
+              ],
+              "condition": {"expression": "previousReferralSymptom != ''"}
+            },
+            {
+              "actions": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{contextData.0.projectBeneficiaries.0.clientReferenceId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{contextData.0.household.0.clientReferenceId}}"
+                  },
+                  {
+                    "key": "memberCount",
+                    "value": "{{household.0.memberCount}}"
+                  },
+                  {
+                    "key": "individualClientReferenceId",
+                    "value":
+                        "{{navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "beneficiaryId",
+                    "value": "{{navigation.selectedIndividualIdentifierId}}"
+                  },
+                  {
+                    "key": "childName",
+                    "value":
+                        "{{contextData.0.individuals.IndividualModel.name.givenName}}"
+                  },
+                  {"key": "ageInMonths", "value": "{{navigation.ageInMonths}}"},
+                  {"key": "gender", "value": "{{navigation.gender}}"},
+                  {"key": "headName", "value": "{{navigation.headName}}"},
+                  {
+                    "key": "headMobileNumber",
+                    "value": "{{navigation.headMobileNumber}}"
+                  },
+                  {
+                    "key": "cycleIndex",
+                    "value": "{{contextData.0.nextCycleId}}"
+                  },
+                  {"key": "doseIndex", "value": "{{contextData.0.nextDoseId}}"},
+                  {
+                    "key": "deliveryStrategy",
+                    "value":
+                        "{{contextData.0.currentDelivery.0.deliveryStrategy}}"
+                  },
+                  {
+                    "key": "totalDosesInCycle",
+                    "value": "{{contextData.0.deliveryLength}}"
+                  },
+                  {
+                    "key": "futureDoses",
+                    "value": "{{contextData.0.futureDeliveries}}"
+                  }
+                ],
+                    "name": "DELIVERY",
+                    "type": "FORM"
+                  }
+                }
+              ],
+              "condition": {"expression": "DEFAULT"}
             }
           ],
           "fieldName": "recordCycle",
@@ -1171,6 +1257,14 @@
                               "key": "previousReferralSymptom",
                               "value":
                                   "{{fn:getLastReferralSymptom(item.hFReferral)}}"
+                            },
+                            {
+                              // clientReferenceId of that SAME referral, so the
+                              // post-referral follow-up checklist can patch its
+                              // answers back onto the referral record.
+                              "key": "previousReferralClientReferenceId",
+                              "value":
+                                  "{{fn:getLastReferralClientReferenceId(item.hFReferral)}}"
                             }
                           ],
                           "name": "CHECKLIST",
@@ -2791,6 +2885,495 @@
       },
       "submitCondition": null,
       "preventScreenCapture": false
+    },
+    {
+      // Post-Referral Follow-Up Checklist.
+      //
+      // Shown between the eligibility CHECKLIST and DELIVERY when the
+      // beneficiary has a prior HF referral (see the conditional NAVIGATION
+      // on the RECORD_CYCLE_DOSE button). Every field is optional and both
+      // footer buttons navigate to DELIVERY, so the checklist is skippable
+      // and can never block a delivery.
+      "name": "POST_REFERRAL_FOLLOWUP",
+      "order": 14,
+      // REQUIRED for the screen to be routable. navigation_service.dart builds
+      // its routeMap by iterating FlowRegistry.getAllConfigs() and registering
+      // an entry only when BOTH `screenType` and `name` are present at this
+      // (flow) level. Without it navigation resolved the flow and stored its
+      // params, then failed with "No route found for key:
+      // POST_REFERRAL_FOLLOWUP". It belongs here at the screen level — the
+      // page objects of working screens do not carry it.
+      "screenType": "FORM",
+      // The remaining screen-level keys below are what every working screen in
+      // this file declares (REFER_BENEFICIARY, DELIVERY, CHECKLIST all carry
+      // the same set). With only `screenType` and `pages` present the screen
+      // routed but then sat on a spinner forever — the builder never reached a
+      // ready state. `wrapperConfig` is `{}` on REFER_BENEFICIARY too, so it is
+      // the presence of these keys that matters here, not their contents.
+      "summary": false,
+      "version": 1,
+      "category": "HFREFERRAL",
+      "disabled": false,
+      "isSelected": true,
+      // SUBMIT chain. On FORM screens the rendered Submit button routes
+      // through FormSubmissionRegistry, whose handler executes THIS list —
+      // page-footer button actions are never run (the first version put the
+      // chain there and submit was a silent no-op). Form values resolve as
+      // bare {{fieldName}} tokens, same as {{rejectReason}} in the reject
+      // flow. All fields are optional, so submitting untouched answers is the
+      // skip path — unanswered keys simply patch as empty.
+      // wrapperConfig can NOT be {} on this screen: the search executor
+      // builds its query select/primary from wrapperConfig.searchConfig, so
+      // with an empty wrapper the initActions SEARCH_EVENT registered its
+      // filter but never dispatched a CrudEvent.search — the registry stayed
+      // empty and UPDATE_EVENT logged "No entities found in
+      // contextData[entities]". Shape copied from the referralInbox screen.
+      "wrapperConfig": {
+        "filters": [],
+        "relations": [],
+        "rootEntity": "HFReferralModel",
+        "groupByType": true,
+        "wrapperName": "hFReferral",
+        "searchConfig": {
+          "select": ["hFReferral"],
+          "primary": "hFReferral"
+        }
+      },
+      "onAction": [
+        {
+          "actionType": "UPDATE_EVENT",
+          "properties": {
+            "entity": "HFReferralModel",
+            "matchField": {
+              "entityField": "clientReferenceId",
+              "contextKey": "navigation.previousReferralClientReferenceId"
+            },
+            "modify": [
+              {
+                "key":
+                    "HFReferralModel.additionalFields.fields.followUpVisitedFacility",
+                "value": "{{visitedFacility}}"
+              },
+              {
+                "key":
+                    "HFReferralModel.additionalFields.fields.followUpTestsConducted",
+                "value": "{{testsConducted}}"
+              },
+              {
+                "key":
+                    "HFReferralModel.additionalFields.fields.followUpTestNames",
+                "value": "{{testNames}}"
+              },
+              {
+                "key":
+                    "HFReferralModel.additionalFields.fields.followUpTestResultPositive",
+                "value": "{{testResultPositive}}"
+              },
+              {
+                "key":
+                    "HFReferralModel.additionalFields.fields.followUpMedicationsProvided",
+                "value": "{{medicationsProvided}}"
+              },
+              {
+                "key":
+                    "HFReferralModel.additionalFields.fields.followUpMedicationNames",
+                "value": "{{medicationNames}}"
+              },
+              {
+                "key":
+                    "HFReferralModel.additionalFields.fields.followUpMedicationCount",
+                "value": "{{medicationCount}}"
+              },
+              {
+                "key":
+                    "HFReferralModel.additionalFields.fields.followUpInstructionsFollowed",
+                "value": "{{instructionsFollowed}}"
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {
+                "key": "HouseholdClientReferenceId",
+                "value": "{{navigation.HouseholdClientReferenceId}}"
+              },
+              {
+                "key": "memberCount",
+                "value": "{{navigation.memberCount}}"
+              },
+              {
+                "key": "individualClientReferenceId",
+                "value": "{{navigation.individualClientReferenceId}}"
+              },
+              {
+                "key": "beneficiaryId",
+                "value": "{{navigation.beneficiaryId}}"
+              },
+              {
+                "key": "childName",
+                "value": "{{navigation.childName}}"
+              },
+              {
+                "key": "ageInMonths",
+                "value": "{{navigation.ageInMonths}}"
+              },
+              {
+                "key": "gender",
+                "value": "{{navigation.gender}}"
+              },
+              {
+                "key": "headName",
+                "value": "{{navigation.headName}}"
+              },
+              {
+                "key": "headMobileNumber",
+                "value": "{{navigation.headMobileNumber}}"
+              },
+              {
+                "key": "cycleIndex",
+                "value": "{{navigation.cycleIndex}}"
+              },
+              {
+                "key": "doseIndex",
+                "value": "{{navigation.doseIndex}}"
+              },
+              {
+                "key": "deliveryStrategy",
+                "value": "{{navigation.deliveryStrategy}}"
+              },
+              {
+                "key": "totalDosesInCycle",
+                "value": "{{navigation.totalDosesInCycle}}"
+              },
+              {
+                "key": "futureDoses",
+                "value": "{{navigation.futureDoses}}"
+              }
+            ],
+            "name": "DELIVERY",
+            "type": "FORM"
+          }
+        }
+      ],
+      // Loads the referral this checklist belongs to into the screen's
+      // registry state. On FORM screens the submit handler
+      // (_handleFormSubmission in screen_builder.dart) passes these registry
+      // entities to the onAction chain as contextData['entities'] — which is
+      // exactly where UPDATE_EVENT (source default 'entities') looks.
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.previousReferralClientReferenceId}}",
+                "operation": "equals",
+                "root": "hFReferral"
+              }
+            ],
+            "name": "hFReferral",
+            "type": "SEARCH_EVENT",
+            "awaitResults": true
+          }
+        }
+      ],
+      "pages": [
+        {
+          "body": null,
+          // NOTE: on FORM screens this footer is decorative — the engine
+          // renders its own submit button and routes the tap through
+          // FormSubmissionRegistry to the screen-level onAction above. The
+          // real submit/patch chain lives there. Shape kept aligned with
+          // REFER_BENEFICIARY's footer.
+          "footer": [
+            {
+              "label": "POST_REFERRAL_FOLLOWUP_SUBMIT_BUTTON",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {"name": "DELIVERY", "type": "FORM"}
+                }
+              ],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          // These page-level keys are required by the screen builder — the
+          // first version of this screen only carried "body"/"footer" and threw
+          // on open. Values mirror REFER_BENEFICIARY, the closest working FORM
+          // screen: "flow" is the screen name, "page" is the form-state key
+          // (the same identifier the visibilityCondition expressions use as
+          // `postReferralFollowup.<field>`), and "type": "object" is what every
+          // form page in this config declares.
+          "flow": "POST_REFERRAL_FOLLOWUP",
+          "page": "postReferralFollowup",
+          "type": "object",
+          "label": "POST_REFERRAL_FOLLOWUP_SCREEN_HEADING",
+          "order": 1,
+          "showLabelOutsideCard": true,
+          "module": "REGISTRATION",
+          "heading": "POST_REFERRAL_FOLLOWUP_SCREEN_HEADING",
+          "description": "POST_REFERRAL_FOLLOWUP_SCREEN_DESCRIPTION",
+          "summary": false,
+          "version": 1,
+          "navigateTo": {"name": "DELIVERY", "type": "screen"},
+          // FORM screens keep their field definitions in `properties`;
+          // `body` is null (see REFER_BENEFICIARY / DELIVERY). These fields
+          // were originally placed in `body`, which left the form with no
+          // fields where the engine looks and blew up with
+          // "Bad state: No element".
+          "properties": [
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "POST_REFERRAL_FOLLOWUP_OPTION_YES"},
+                {"code": "NO", "name": "POST_REFERRAL_FOLLOWUP_OPTION_NO"}
+              ],
+              "label": "POST_REFERRAL_FOLLOWUP_Q1_VISITED_FACILITY_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "visitedFacility",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "YES", "name": "POST_REFERRAL_FOLLOWUP_OPTION_YES"},
+                {"code": "NO", "name": "POST_REFERRAL_FOLLOWUP_OPTION_NO"}
+              ],
+              "conditions": {"separateCard": true, "wrapInCard": true}
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "POST_REFERRAL_FOLLOWUP_OPTION_YES"},
+                {"code": "NO", "name": "POST_REFERRAL_FOLLOWUP_OPTION_NO"}
+              ],
+              "label": "POST_REFERRAL_FOLLOWUP_Q2_TESTS_CONDUCTED_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "testsConducted",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "YES", "name": "POST_REFERRAL_FOLLOWUP_OPTION_YES"},
+                {"code": "NO", "name": "POST_REFERRAL_FOLLOWUP_OPTION_NO"}
+              ],
+              "conditions": {"separateCard": true, "wrapInCard": true}
+            },
+            {
+              "type": "string",
+              "label": "POST_REFERRAL_FOLLOWUP_Q2_TEST_NAMES_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "testNames",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "visibilityCondition": {
+                "expression": [
+                  {"type": "custom", "condition": "postReferralFollowup.testsConducted == YES"}
+                ]
+              },
+              "conditions": {"separateCard": true, "wrapInCard": true}
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "POST_REFERRAL_FOLLOWUP_OPTION_YES"},
+                {"code": "NO", "name": "POST_REFERRAL_FOLLOWUP_OPTION_NO"}
+              ],
+              "label": "POST_REFERRAL_FOLLOWUP_Q3_TEST_POSITIVE_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "testResultPositive",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "YES", "name": "POST_REFERRAL_FOLLOWUP_OPTION_YES"},
+                {"code": "NO", "name": "POST_REFERRAL_FOLLOWUP_OPTION_NO"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"type": "custom", "condition": "postReferralFollowup.testsConducted == YES"}
+                ]
+              },
+              "conditions": {"separateCard": true, "wrapInCard": true}
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "POST_REFERRAL_FOLLOWUP_OPTION_YES"},
+                {"code": "NO", "name": "POST_REFERRAL_FOLLOWUP_OPTION_NO"}
+              ],
+              "label": "POST_REFERRAL_FOLLOWUP_Q4_MEDS_PROVIDED_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "medicationsProvided",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "YES", "name": "POST_REFERRAL_FOLLOWUP_OPTION_YES"},
+                {"code": "NO", "name": "POST_REFERRAL_FOLLOWUP_OPTION_NO"}
+              ],
+              "conditions": {"separateCard": true, "wrapInCard": true}
+            },
+            {
+              "type": "string",
+              "label": "POST_REFERRAL_FOLLOWUP_Q4_MED_NAMES_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "medicationNames",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "visibilityCondition": {
+                "expression": [
+                  {"type": "custom", "condition": "postReferralFollowup.medicationsProvided == YES"}
+                ]
+              },
+              "conditions": {"separateCard": true, "wrapInCard": true}
+            },
+            {
+              "type": "string",
+              "label": "POST_REFERRAL_FOLLOWUP_Q5_MED_COUNT_LABEL",
+              "order": 9,
+              "value": "",
+              "format": "number",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "medicationCount",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "visibilityCondition": {
+                "expression": [
+                  {"type": "custom", "condition": "postReferralFollowup.medicationsProvided == YES"}
+                ]
+              },
+              "conditions": {"separateCard": true, "wrapInCard": true}
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "FULLY", "name": "POST_REFERRAL_FOLLOWUP_OPTION_FULLY"},
+                {"code": "PARTIALLY", "name": "POST_REFERRAL_FOLLOWUP_OPTION_PARTIALLY"},
+                {"code": "NO", "name": "POST_REFERRAL_FOLLOWUP_OPTION_NO"}
+              ],
+              "label": "POST_REFERRAL_FOLLOWUP_Q6_INSTRUCTIONS_LABEL",
+              "order": 10,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "instructionsFollowed",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "FULLY", "name": "POST_REFERRAL_FOLLOWUP_OPTION_FULLY"},
+                {"code": "PARTIALLY", "name": "POST_REFERRAL_FOLLOWUP_OPTION_PARTIALLY"},
+                {"code": "NO", "name": "POST_REFERRAL_FOLLOWUP_OPTION_NO"}
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {"type": "custom", "condition": "postReferralFollowup.medicationsProvided == YES"}
+                ]
+              },
+              "conditions": {"separateCard": true, "wrapInCard": true}
+            }
+          ],
+          "onAction": [],
+          "submitCondition": null,
+          "preventScreenCapture": false
+        }
+      ]
     },
     {
       "name": "DELIVERY",
@@ -6232,8 +6815,15 @@
               ],
               "errorMessage": "REGISTRATION_REFER_BENEFICIARY_referredBy_ERROR",
               "required.message": "REFER_BENEFICIARY_REFERRED_BY_REQUIRED",
+              // Display the referrer's name rather than their UUID. This field
+              // is readOnly and user-facing, and previously auto-filled from
+              // {{loggedInUserUuid}}, which rendered a raw uuid
+              // (e.g. 978bc1e3-d47f-4eea-9003-c879c31f2dd6) in the form.
+              // {{loggedInUserName}} resolves from the same singleton
+              // (screen_builder.dart -> FlowBuilderSingleton().loggedInUser)
+              // and is already used by other flows.
               "autoFillCondition": [
-                {"value": "{{loggedInUserUuid}}", "expression": "true==true"}
+                {"value": "{{loggedInUserName}}", "expression": "true==true"}
               ]
             },
             {
@@ -6408,59 +6998,15 @@
               "isMultiSelect": false,
               "conditions": {"separateCard": true}
             },
-            {
-              "type": "string",
-              "enums": [
-                {
-                  "code": "MALARIA",
-                  "name": "HFREFERRAL_REFERRAL_DETAILS_DISEASE_MALARIA"
-                }
-              ],
-              "label": "HFREFERRAL_REFERRAL_DETAILS_diseaseType_LABEL",
-              "order": 10,
-              "value": "",
-              "format": "radio",
-              "hidden": false,
-              "isMdms": false,
-              "readOnly": false,
-              "required": true,
-              "fieldName": "diseaseType",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                      "HFREFERRAL_REFERRAL_DETAILS_diseaseType_REQUIRED_ERROR"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "dropDownOptions": [
-                {
-                  "code": "MALARIA",
-                  "name": "HFREFERRAL_REFERRAL_DETAILS_DISEASE_MALARIA"
-                }
-              ],
-              "conditions": {
-                "separateCard": true,
-                "wrapInCard": true,
-                "boldLabel": true
-              },
-              "visibilityCondition": {
-                "expression": [
-                  {
-                    "type": "custom",
-                    "condition":
-                        "referBeneficiary.symptomVomiting == true || referBeneficiary.symptomDiarrhea == true || referBeneficiary.symptomChills == true || referBeneficiary.symptomSevereHeadache == true || referBeneficiary.symptomMuscleBackPain == true"
-                  }
-                ]
-              }
-            },
+            // The "Suspected disease" radio (fieldName: diseaseType) was
+            // removed here. It was a required, card-wrapped field offering
+            // MALARIA / DENGUE, shown when any non-fever symptom was ticked.
+            // Nothing else referenced `diseaseType` — no transformer, model or
+            // downstream config read it — so removing the block is sufficient
+            // and no submit payload changes. Its localisation codes
+            // (HFREFERRAL_REFERRAL_DETAILS_diseaseType_LABEL /
+            // _REQUIRED_ERROR / _DISEASE_MALARIA / _DISEASE_DENGUE) are now
+            // unused but left in MDMS and the seed file, harmlessly.
             {
               // Hidden field consumed by transformer_config.dart to populate
               // the top-level entity.symptom (server-required). Malaria-only
