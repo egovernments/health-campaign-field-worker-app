@@ -318,8 +318,31 @@ class SearchStateManager {
             // on the same column with different operations (e.g. 'in' and
             // 'notExists') to coexist while still deduplicating identical
             // filters coming from different searchNames.
-            final dedupKey =
-                '${filter['key']}::${filter['operation'] ?? 'equals'}';
+            //
+            // Exclusion operators additionally key on the value. They are
+            // conjunctive by nature — "not A" and "not B" is a meaningful,
+            // strictly narrowing pair — so collapsing them to whichever ran
+            // last silently drops filters. That is what made the referral
+            // inbox's un-actioned filter impossible to express: its three
+            // `additionalFields notContains` entries (REJECTED / ACCEPTED /
+            // CANCELLED) all shared the `additionalFields::notContains`
+            // dedupKey and only one survived.
+            //
+            // Positive operators keep the old key+operation behaviour: two
+            // different values for the same column usually mean "replace the
+            // previous filter" (e.g. successive text searches), and ANDing
+            // them would yield an empty result set.
+            const exclusionOperators = {
+              'notContains',
+              'notEqual',
+              'notEquals',
+              'notIn',
+              'notExists',
+            };
+            final operation = (filter['operation'] ?? 'equals').toString();
+            final dedupKey = exclusionOperators.contains(operation)
+                ? '${filter['key']}::$operation::${filter['value']}'
+                : '${filter['key']}::$operation';
             filtersByKey[dedupKey] = filter;
           }
         }

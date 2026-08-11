@@ -1804,6 +1804,54 @@ void initializeFunctionRegistry() {
     return latest?['symptom']?.toString() ?? "";
   });
 
+  /// Returns the clientReferenceId of the most-recent HF referral for an
+  /// individual, or empty string when the list is empty/absent.
+  ///
+  /// - **Function Name**: `'getLastReferralClientReferenceId'`
+  /// - **Arguments**: First argument is the hFReferral list.
+  /// - **Returns**: clientReferenceId of the newest referral (by
+  ///   clientModifiedTime), or `""` if unavailable.
+  ///
+  /// Companion to [getLastReferralSymptom] — same list, same "newest wins"
+  /// rule, different field — so the two always describe the SAME referral.
+  /// The post-referral follow-up checklist needs the id (not just the
+  /// symptom) so its answers can be patched back onto that referral record.
+  FunctionRegistry.register("getLastReferralClientReferenceId",
+      (args, stateData) {
+    if (args.isEmpty || args.first == null) return "";
+
+    final referrals = args.first;
+    if (referrals is! List || referrals.isEmpty) return "";
+
+    Map<String, dynamic>? latest;
+    int latestTs = -1;
+    for (final item in referrals) {
+      Map<String, dynamic>? refMap;
+      if (item is Map<String, dynamic>) {
+        refMap = item;
+      } else if (item is Map) {
+        refMap = Map<String, dynamic>.from(item);
+      } else {
+        try {
+          refMap = (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          continue;
+        }
+      }
+
+      final ts = int.tryParse(refMap['clientModifiedTime']?.toString() ?? '') ??
+          int.tryParse(refMap['auditDetails']?['lastModifiedTime']?.toString() ??
+                  '') ??
+          0;
+      if (ts >= latestTs) {
+        latestTs = ts;
+        latest = refMap;
+      }
+    }
+
+    return latest?['clientReferenceId']?.toString() ?? "";
+  });
+
   /// Returns the current running cycle's id from the project configuration.
   /// Reuses the same cycle lookup logic as hasReferralForCurrentCycle.
   FunctionRegistry.register("getCurrentCycleIndex", (args, stateData) {
@@ -2106,10 +2154,89 @@ void initializeFunctionRegistry() {
       }
     }
 
-    const showFor = {'RECEIVED', 'NONE', 'COMPLETED'};
+    // COMPLETED is terminal: a completed referral exposes no Accept/Reject
+    // and is filtered out of the inbox's "Pending only" view (it remains
+    // visible under "All referrals"). Only a missing/empty status, RECEIVED
+    // and NONE still count as actionable.
+    const showFor = {'RECEIVED', 'NONE'};
     if (referralStatus == null || referralStatus.isEmpty) return 'PENDING';
     if (showFor.contains(referralStatus.toUpperCase())) return 'PENDING';
     return 'ACTIONED';
+  });
+
+  /// Returns the localisation code for an HF referral's status, for display
+  /// as a tag on the referral inbox cards.
+  ///
+  /// - **Function Name**: `'getHFReferralStatusLabel'`
+  /// - **Arguments**: First argument is the HFReferral entity (Map or
+  ///   EntityModel). Extra args are ignored.
+  /// - **Returns**: a `REFERRAL_INBOX_STATUS_*` localisation code.
+  ///
+  /// Buckets track [getHFReferralActionState]: missing/empty status, RECEIVED
+  /// and NONE render as PENDING; every other status is terminal for button
+  /// visibility and carries its own descriptive tag (COMPLETED included).
+  /// Statuses the app and server are known to produce get their own code;
+  /// anything unrecognised falls back to the generic ACTIONED code rather
+  /// than leaking a raw server token into the UI. Note BOOKING_CONFIRMED is
+  /// server-originated (CCN inbound) and is not written anywhere in this
+  /// codebase.
+  FunctionRegistry.register('getHFReferralStatusLabel', (args, stateData) {
+    if (args.isEmpty || args.first == null) {
+      return 'REFERRAL_INBOX_STATUS_PENDING';
+    }
+    final input = args.first;
+    dynamic entity = input is List && input.isNotEmpty ? input.first : input;
+
+    Map<String, dynamic>? entityMap;
+    if (entity is Map<String, dynamic>) {
+      entityMap = entity;
+    } else if (entity is Map) {
+      entityMap = Map<String, dynamic>.from(entity);
+    } else {
+      try {
+        entityMap = (entity as dynamic).toMap() as Map<String, dynamic>;
+      } catch (_) {
+        return 'REFERRAL_INBOX_STATUS_PENDING';
+      }
+    }
+
+    String? referralStatus;
+    final additionalFields = entityMap['additionalFields'];
+    if (additionalFields is Map && additionalFields['fields'] is List) {
+      for (final field in additionalFields['fields']) {
+        if (field is! Map) continue;
+        if (field['key']?.toString() == 'referralStatus') {
+          referralStatus = field['value']?.toString();
+          break;
+        }
+      }
+    }
+
+    if (referralStatus == null || referralStatus.isEmpty) {
+      return 'REFERRAL_INBOX_STATUS_PENDING';
+    }
+    switch (referralStatus.toUpperCase()) {
+      case 'RECEIVED':
+      case 'NONE':
+        return 'REFERRAL_INBOX_STATUS_PENDING';
+      case 'COMPLETED':
+        // Descriptive label only — COMPLETED still counts as PENDING for
+        // action availability in getHFReferralActionState, so a card tagged
+        // "Completed" may legitimately show Accept/Reject. Folding it into
+        // the Pending tag (as an earlier revision did) read as a bug: a
+        // completed referral visibly labelled "Pending".
+        return 'REFERRAL_INBOX_STATUS_COMPLETED';
+      case 'ACCEPTED':
+        return 'REFERRAL_INBOX_STATUS_ACCEPTED';
+      case 'REJECTED':
+        return 'REFERRAL_INBOX_STATUS_REJECTED';
+      case 'CANCELLED':
+        return 'REFERRAL_INBOX_STATUS_CANCELLED';
+      case 'BOOKING_CONFIRMED':
+        return 'REFERRAL_INBOX_STATUS_BOOKING_CONFIRMED';
+      default:
+        return 'REFERRAL_INBOX_STATUS_ACTIONED';
+    }
   });
 
   /// Registers a function to compute the referral status  based on symptom and checklist data.

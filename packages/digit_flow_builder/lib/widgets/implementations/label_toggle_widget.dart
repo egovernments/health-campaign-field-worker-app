@@ -18,8 +18,16 @@ class LabeledToggleWidget extends ResolvedFlowWidget {
   ) {
     final fieldKey = json['fieldKey'] as String? ?? 'labeledToggleValue';
     final value = json['value'] as bool? ?? true;
-    final activeLabel = json['activeLabel'] as String;
-    final inactiveLabel = json['inactiveLabel'] as String;
+    // Resolve through localization so configs can pass i18n codes. translate()
+    // returns the input unchanged when there's no matching row, so configs
+    // still passing literal labels (e.g. attendance's session toggle) keep
+    // rendering exactly as before.
+    final rawActiveLabel = json['activeLabel'] as String;
+    final rawInactiveLabel = json['inactiveLabel'] as String;
+    final activeLabel =
+        resolved.localization?.translate(rawActiveLabel) ?? rawActiveLabel;
+    final inactiveLabel =
+        resolved.localization?.translate(rawInactiveLabel) ?? rawInactiveLabel;
 
     return WidgetStateContext.reactive(context, (ctx, state) {
       // Initialize widgetData with today's date on first render

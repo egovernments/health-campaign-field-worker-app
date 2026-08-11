@@ -206,6 +206,71 @@ final dynamic sampleReferralFlows = {
               {
                 "actionType": "NAVIGATION",
                 "properties": {"name": "referralInbox", "type": "TEMPLATE"}
+              },
+              {
+                // Re-query the inbox on the way back from the success screen.
+                // Returning here does NOT remount the inbox — verified in the
+                // logs: after an accept/reject round trip there is no
+                // `getAllFilters for referralInbox` and no CrudEvent.search on
+                // hFReferral, so the list keeps rendering the result set it
+                // held before the record was actioned and the row still shows
+                // as pending. Repeating the inbox query here forces a fresh
+                // read so the actioned record drops out.
+                //
+                // Filters mirror referralInbox.initActions: the projectId +
+                // REJECTED pair under `hFReferral`, and the un-actioned
+                // exclusions under `hFReferralStatusFilter` (getAllFilters
+                // merges across searchNames).
+                "actionType": "SEARCH_EVENT",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "projectId",
+                      "value": "{{singleton.selectedProject.id}}",
+                      "operation": "equals",
+                      "root": "hFReferral"
+                    },
+                    {
+                      "key": "additionalFields",
+                      "value": "\"value\":\"REJECTED\"",
+                      "operation": "notContains",
+                      "root": "hFReferral"
+                    },
+                    {
+                      "key": "additionalFields",
+                      "value": "\"value\":\"ACCEPTED\"",
+                      "operation": "notContains",
+                      "root": "hFReferral",
+                      "applyIf": "unactionedOnly != false"
+                    },
+                    {
+                      "key": "additionalFields",
+                      "value": "\"value\":\"CANCELLED\"",
+                      "operation": "notContains",
+                      "root": "hFReferral",
+                      "applyIf": "unactionedOnly != false"
+                    },
+                    {
+                      "key": "additionalFields",
+                      "value": "\"value\":\"BOOKING_CONFIRMED\"",
+                      "operation": "notContains",
+                      "root": "hFReferral",
+                      "applyIf": "unactionedOnly != false"
+                    },
+                    {
+                      // COMPLETED is terminal (see getHFReferralActionState) and
+                      // belongs only in the "All referrals" view.
+                      "key": "additionalFields",
+                      "value": "\"value\":\"COMPLETED\"",
+                      "operation": "notContains",
+                      "root": "hFReferral",
+                      "applyIf": "unactionedOnly != false"
+                    }
+                  ],
+                  "name": "hFReferralStatusFilter",
+                  "type": "SEARCH_EVENT",
+                  "awaitResults": true
+                }
               }
             ],
             "fieldName": "back",
@@ -252,6 +317,92 @@ final dynamic sampleReferralFlows = {
           "mandatory": true,
           "validation": [
             {"key": "minSearchChars", "error": "", "value": 3}
+          ]
+        },
+        {
+          // Default-ON filter for un-actioned referrals. The exclusion
+          // happens in the QUERY rather than client-side — otherwise pending
+          // records stay behind pagination and only surface once the user
+          // scrolls (they sort older than the already-actioned ones).
+          //
+          // Deliberately NOT using `skipAccumulatedFilters`: SearchStateManager
+          // .updateFilters REPLACES the filter list for a searchName rather
+          // than merging it (see its comment on stale filters ANDing into
+          // empty results), so dropping the ACCEPTED / CANCELLED entries on
+          // the OFF pass is enough to bring actioned rows back. Setting the
+          // flag also skips resetPagination — it is gated behind the same
+          // condition — so the re-query would inherit whatever offset the
+          // list had scrolled to and return an empty page.
+          "type": "template",
+          "format": "labeledToggle",
+          "value": true,
+          "fieldKey": "unactionedOnly",
+          "fieldName": "unactionedOnlyToggle",
+          "activeLabel": "REFERRAL_INBOX_UNACTIONED_TOGGLE_ACTIVE_LABEL",
+          "inactiveLabel": "REFERRAL_INBOX_UNACTIONED_TOGGLE_INACTIVE_LABEL",
+          "onAction": [
+            {
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "data": [
+                  // Anchor filter. updateFilters only runs when at least one
+                  // filter resolves, so without an always-resolving entry the
+                  // OFF pass would resolve to nothing, skip the replace, and
+                  // strand the ACCEPTED / CANCELLED exclusions in the
+                  // accumulated set permanently.
+                  {
+                    "key": "projectId",
+                    "value": "{{singleton.selectedProject.id}}",
+                    "operation": "equals",
+                    "root": "hFReferral"
+                  },
+                  {
+                    "key": "additionalFields",
+                    "value": "\"value\":\"ACCEPTED\"",
+                    "operation": "notContains",
+                    "root": "hFReferral",
+                    "applyIf": "unactionedOnly == true"
+                  },
+                  {
+                    "key": "additionalFields",
+                    "value": "\"value\":\"CANCELLED\"",
+                    "operation": "notContains",
+                    "root": "hFReferral",
+                    "applyIf": "unactionedOnly == true"
+                  },
+                  {
+                    "key": "additionalFields",
+                    "value": "\"value\":\"BOOKING_CONFIRMED\"",
+                    "operation": "notContains",
+                    "root": "hFReferral",
+                    "applyIf": "unactionedOnly == true"
+                  },
+                  {
+                    // COMPLETED is terminal (see getHFReferralActionState) and
+                    // belongs only in the "All referrals" view.
+                    "key": "additionalFields",
+                    "value": "\"value\":\"COMPLETED\"",
+                    "operation": "notContains",
+                    "root": "hFReferral",
+                    "applyIf": "unactionedOnly == true"
+                  }
+                ],
+                // Dedicated searchName. `hFReferral` is reused by ~15 other
+                // SEARCH_EVENTs across the referral and registration flows,
+                // and updateFilters REPLACES a searchName's filter list — so
+                // any of those firing during navigation drops these
+                // exclusions and the inbox renders unfiltered while the
+                // toggle still shows ON. getAllFilters merges ACROSS
+                // searchNames, so parking them under their own name keeps
+                // them in the query no matter what else runs (same trick the
+                // searchBar uses with `hFReferralSearch`). Each filter
+                // carries root: hFReferral so it still targets the referral
+                // table.
+                "name": "hFReferralStatusFilter",
+                "type": "SEARCH_EVENT",
+                "awaitResults": true
+              }
+            }
           ]
         },
         {
@@ -316,6 +467,37 @@ final dynamic sampleReferralFlows = {
                 "properties": {
                   "mainAxisSize": "max",
                   "mainAxisAlignment": "spaceBetween"
+                }
+              },
+              {
+                // Status tag, on its own row directly under the name.
+                //
+                // It originally sat inline on the date row, which overflowed
+                // by 32px for the longer labels ("Booking confirmed") — the
+                // date text takes its natural width first and left the tag
+                // less than it needed. A dedicated row sidesteps the
+                // horizontal contention entirely and keeps every label
+                // length safe.
+                //
+                // getHFReferralStatusLabel buckets identically to
+                // getHFReferralActionState, so the tag can never contradict
+                // whether Accept/Reject is showing on the same card. It
+                // returns a REFERRAL_INBOX_STATUS_* code, resolved through
+                // localisation by the tag widget.
+                "type": "template",
+                "format": "row",
+                "children": [
+                  {
+                    "type": "template",
+                    "format": "tag",
+                    "label": "{{fn:getHFReferralStatusLabel(item)}}",
+                    "fieldName": "referralStatusTag"
+                  }
+                ],
+                "fieldName": "statusRow",
+                "properties": {
+                  "mainAxisSize": "max",
+                  "mainAxisAlignment": "start"
                 }
               },
               {
@@ -642,6 +824,81 @@ final dynamic sampleReferralFlows = {
               }
             ],
             "name": "hFReferral",
+            "type": "SEARCH_EVENT"
+          }
+        },
+        {
+          // Seeds the un-actioned exclusions so the FIRST paint is already
+          // filtered, matching the toggle's default of true.
+          //
+          // These live under their own searchName rather than on the search
+          // above because `hFReferral` is shared by ~15 SEARCH_EVENTs across
+          // the referral and registration flows, and updateFilters REPLACES
+          // a searchName's filter list — so navigating in via any of those
+          // paths wiped the exclusions and the inbox loaded unfiltered.
+          // getAllFilters merges across searchNames, so these survive.
+          //
+          // Deliberately NOT gated on `applyIf`: LabeledToggleWidget seeds
+          // `unactionedOnly` into widgetData from a postFrameCallback, so the
+          // key is still absent when initActions runs and the guard would
+          // evaluate false — the first paint would show everything, the exact
+          // opposite of default-on. The toggle's own onAction carries the
+          // applyIf-gated copies, and by the time it fires widgetData is
+          // populated.
+          //
+          // NOTE ON COMPLETENESS: getHFReferralActionState is allowlist-based
+          // — PENDING is a missing/empty status or RECEIVED / NONE /
+          // COMPLETED, and ANY other value is ACTIONED. A notContains query
+          // is blocklist-based, and statuses are not all authored here:
+          // BOOKING_CONFIRMED arrives from the server (CCN inbound) and
+          // exists nowhere in this codebase. So this list can only ever cover
+          // the values we have observed, and a new server-side status will
+          // leak into the Pending-only list until it is added here. The
+          // durable fixes are either an agreed status enum shared with the
+          // server, or promoting referralStatus out of the additionalFields
+          // blob into an addressable column so the query can allowlist.
+          //
+          // Excluding rather than matching keeps blank-status records visible
+          // (they are PENDING per the function above) and keeps the list in
+          // and keeps the list in agreement with which rows render
+          // Accept/Reject.
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "projectId",
+                "value": "{{singleton.selectedProject.id}}",
+                "operation": "equals",
+                "root": "hFReferral"
+              },
+              {
+                "key": "additionalFields",
+                "value": "\"value\":\"ACCEPTED\"",
+                "operation": "notContains",
+                "root": "hFReferral"
+              },
+              {
+                "key": "additionalFields",
+                "value": "\"value\":\"CANCELLED\"",
+                "operation": "notContains",
+                "root": "hFReferral"
+              },
+              {
+                "key": "additionalFields",
+                "value": "\"value\":\"BOOKING_CONFIRMED\"",
+                "operation": "notContains",
+                "root": "hFReferral"
+              },
+              {
+                // COMPLETED is terminal (see getHFReferralActionState) and
+                // belongs only in the "All referrals" view.
+                "key": "additionalFields",
+                "value": "\"value\":\"COMPLETED\"",
+                "operation": "notContains",
+                "root": "hFReferral"
+              }
+            ],
+            "name": "hFReferralStatusFilter",
             "type": "SEARCH_EVENT"
           }
         }
