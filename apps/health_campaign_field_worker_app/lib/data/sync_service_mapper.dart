@@ -7,7 +7,6 @@ import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
-import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:sync_service/data/repositories/sync/remote_type.dart';
 import 'package:sync_service/data/sync_entity_mapper_listener.dart';
@@ -35,22 +34,58 @@ class SyncServiceMapper extends SyncEntityMapperListener {
               entityResponse.whereType<Map<String, dynamic>>().toList();
 
           var key = response.keys.elementAt(i);
-          createDbRecords(local, entityList, key);
+          // AWAIT: previously fire-and-forget. `createDbRecords` was declared
+          // `void ... async` and called without await, so anything it threw
+          // became an unhandled async error that this try/catch could not see
+          // — the sync reported success while silently writing nothing. That
+          // is how 210 households landed while `individual` stayed at 0 rows.
+          await createDbRecords(local, entityList, key);
         }
       }
-    } catch (e) {
+    } catch (e, st) {
+      print('[DOWNSYNC][writeToEntityDB] FAILED: $e');
+      print(st);
       rethrow;
     }
   }
 
-  void createDbRecords(LocalRepository<EntityModel, EntitySearchModel> local,
-      List<Map<String, dynamic>> entityList, String key) async {
+  Future<void> createDbRecords(
+      LocalRepository<EntityModel, EntitySearchModel> local,
+      List<Map<String, dynamic>> entityList,
+      String key) async {
     switch (key) {
       case "Individuals":
-        final entity = entityList
-            .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
-            .toList();
-        await local.bulkCreate(entity);
+        // Instrumented: decode per-record so one malformed payload entry does
+        // not take down the whole batch, and so the offending record and the
+        // exact exception are printed instead of vanishing.
+        print('[DOWNSYNC][Individuals] received ${entityList.length} records');
+        final entity = <IndividualModel>[];
+        var failed = 0;
+        for (final e in entityList) {
+          try {
+            entity.add(IndividualModelMapper.fromJson(jsonEncode(e)));
+          } catch (err) {
+            failed++;
+            if (failed <= 2) {
+              print('[DOWNSYNC][Individuals] DECODE FAILED: $err');
+              print('[DOWNSYNC][Individuals] clientReferenceId='
+                  '${e['clientReferenceId']} id=${e['id']}');
+              print('[DOWNSYNC][Individuals] identifiers RAW='
+                  '${jsonEncode(e['identifiers'])}');
+              print('[DOWNSYNC][Individuals] FULL RECORD=${jsonEncode(e)}');
+            }
+          }
+        }
+        print('[DOWNSYNC][Individuals] decoded=${entity.length} '
+            'failed=$failed');
+        try {
+          await local.bulkCreate(entity);
+          print('[DOWNSYNC][Individuals] bulkCreate OK for ${entity.length}');
+        } catch (err, st) {
+          print('[DOWNSYNC][Individuals] bulkCreate FAILED: $err');
+          print(st);
+          rethrow;
+        }
       case "Households":
         final entity = entityList
             .map((e) => HouseholdModelMapper.fromJson(jsonEncode(e)))
@@ -915,15 +950,31 @@ class SyncServiceMapper extends SyncEntityMapperListener {
       //   break;
 
       case DataModelType.userAction:
-        var projectId = FlowBuilderSingleton().projectId;
-        if (projectId == null) return [];
-        responseEntities = await remote.search(UserActionSearchModel(
-          clientReferenceId: entities
-              .whereType<UserActionModel>()
-              .map((e) => e.clientReferenceId)
-              .toList(),
-          projectId: projectId,
-        ));
+        // Search per the entities' OWN projectId rather than
+        // FlowBuilderSingleton().projectId. The singleton is populated by
+        // foreground flow navigation and is null in the background-sync
+        // context, and the previous `if (projectId == null) return [];`
+        // skipped the server search entirely — BEFORE updateSyncDownRetry
+        // could bump the retry counter — so pending userAction entries could
+        // neither confirm their server id nor expire via the 3-retry cap.
+        // Every sync run then re-saw them (pendingDown stuck), looping the
+        // service through all 10 iterations, forever.
+        //
+        final pendingUserActions = entities.whereType<UserActionModel>();
+        final userActionsByProject = <String, List<UserActionModel>>{};
+        for (final userAction in pendingUserActions) {
+          userActionsByProject
+              .putIfAbsent(userAction.projectId, () => [])
+              .add(userAction);
+        }
+        responseEntities = [];
+        for (final group in userActionsByProject.entries) {
+          responseEntities.addAll(await remote.search(UserActionSearchModel(
+            clientReferenceId:
+                group.value.map((e) => e.clientReferenceId).toList(),
+            projectId: group.key,
+          )));
+        }
 
         for (var element in operationGroupedEntity.value) {
           if (element.id == null) continue;
