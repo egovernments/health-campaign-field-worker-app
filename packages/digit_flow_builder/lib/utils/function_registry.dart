@@ -73,6 +73,7 @@ class TaskStatus {
   static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
   static const String administrationFailed = 'ADMINISTRATION_FAILED';
   static const String visited = 'VISITED';
+  static const String noActiveCycle = 'NO_ACTIVE_CYCLE';
 }
 
 /// The signature for a function that can be registered in the [FunctionRegistry].
@@ -128,8 +129,7 @@ class FunctionRegistry {
     final fn = get(name);
     assert(() {
       if (fn == null) {
-        debugPrint(
-            'FunctionRegistry: no function registered for "$name" — '
+        debugPrint('FunctionRegistry: no function registered for "$name" — '
             'check the config or the registration call. Returning null.');
       }
       return true;
@@ -452,20 +452,17 @@ void initializeFunctionRegistry() {
                 // Extract only age-related sub-conditions since we only
                 // have age context here (height/weight checked at delivery)
                 final parts = sanitizedCondition.split('&&');
-                final ageParts = parts
-                    .where((p) => p.contains('age'))
-                    .toList();
+                final ageParts = parts.where((p) => p.contains('age')).toList();
                 if (ageParts.isEmpty) {
                   // No age constraint in condition — treat as age-eligible
                   ageEligibleByCondition = true;
                   break;
                 }
                 final ageOnlyCondition = ageParts.join('&&');
-                final parser = FormulaParser(
-                    ageOnlyCondition, {'age': totalAgeMonths});
+                final parser =
+                    FormulaParser(ageOnlyCondition, {'age': totalAgeMonths});
                 final result = parser.parse;
-                if (result['isSuccess'] == true &&
-                    result['value'] == true) {
+                if (result['isSuccess'] == true && result['value'] == true) {
                   ageEligibleByCondition = true;
                   break;
                 }
@@ -754,7 +751,7 @@ void initializeFunctionRegistry() {
         break;
       }
     }
-    if (currentCycle == null) return TaskStatus.ineligible;
+    if (currentCycle == null) return TaskStatus.noActiveCycle;
 
     final tasks = args.first;
 
@@ -2432,8 +2429,7 @@ void _extractAllFields(
         if (field is Map && field['key'] != null && field['value'] != null) {
           final key = field['key'].toString();
           final rawValue = field['value'];
-          target.putIfAbsent(
-              key, () => _tryParseNumeric(rawValue) ?? rawValue);
+          target.putIfAbsent(key, () => _tryParseNumeric(rawValue) ?? rawValue);
         }
       }
     }
@@ -2445,8 +2441,7 @@ void _extractAllFields(
     if (entry.key == 'additionalFields') continue;
     final val = entry.value;
     if (val is String || val is num || val is bool) {
-      target.putIfAbsent(
-          entry.key, () => _tryParseNumeric(val) ?? val);
+      target.putIfAbsent(entry.key, () => _tryParseNumeric(val) ?? val);
     }
   }
 }

@@ -153,7 +153,7 @@ class FunctionRegistries {
         'dispatch': 'ISSUED',
         'returned': 'RETURNED',
         'damage': 'DAMAGED',
-        'loss': 'LOSS',
+        'loss': 'LOST',
         'excess': 'EXCESS',
         'less': 'LESS',
       };
