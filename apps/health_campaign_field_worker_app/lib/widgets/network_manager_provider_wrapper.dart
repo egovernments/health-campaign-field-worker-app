@@ -331,6 +331,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       // INFO Need to add packages here
+      RepositoryProvider<UserActionLocalRepository>(
+        create: (_) => UserActionLocalRepository(
+          sql,
+          UserActionOpLogManager(isar),
+        ),
+      ),
 
       RepositoryProvider<
           LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(

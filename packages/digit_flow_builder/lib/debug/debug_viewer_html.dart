@@ -4,115 +4,329 @@ const String debugViewerHtml = r'''
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flow Debugger</title>
+<title>FlowBuilder Console v2.0</title>
 <style>
 :root {
-  --bg: #0d1117;
-  --surface: #161b22;
-  --surface2: #21262d;
-  --border: #30363d;
-  --text: #c9d1d9;
-  --text-muted: #8b949e;
-  --accent: #58a6ff;
-  --green: #3fb950;
-  --orange: #d29922;
-  --red: #f85149;
-  --purple: #bc8cff;
-  --pink: #f778ba;
-  --cyan: #39d2c0;
-  --str-color: #a5d6ff;
-  --num-color: #79c0ff;
-  --bool-color: #ff7b72;
-  --null-color: #8b949e;
-  --key-color: #d2a8ff;
-  --highlight: rgba(88,166,255,0.15);
+  /* Isar-inspector-like light palette */
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --panel-2: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text: #111827;
+  --text-2: #4b5563;
+  --text-muted: #9ca3af;
+  --accent: #2680eb;
+  --accent-2: #1c6cd0;
+  --accent-tint: #eaf2fd;
+
+  /* Event type accents (preserved) */
+  --green: #16a34a;   --green-tint: #dcfce7;
+  --orange: #d97706;  --orange-tint: #fef3c7;
+  --red: #dc2626;     --red-tint: #fee2e2;
+  --purple: #8b5cf6;  --purple-tint: #ede9fe;
+  --pink: #ec4899;    --pink-tint: #fce7f3;
+  --cyan: #0891b2;    --cyan-tint: #cffafe;
+
+  /* JSON tree */
+  --str-color: #0f766e;
+  --num-color: #1c6cd0;
+  --bool-color: #7c3aed;
+  --null-color: #9ca3af;
+  --key-color: #374151;
+
+  --highlight: rgba(38,128,235,0.10);
   --highlight-border: var(--accent);
+
+  --radius: 8px;
+  --radius-sm: 6px;
+  --shadow-sm: 0 1px 2px rgba(17,24,39,0.04);
+  --shadow-md: 0 4px 12px rgba(17,24,39,0.06);
+
+  --mono: ui-monospace, 'SF Mono', 'Fira Code', 'Cascadia Code', Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --topbar-h: 56px;
+  --sidebar-w: 232px;
+  --config-w: 440px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
-.app { display: flex; flex-direction: column; height: 100vh; }
-.header { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 16px; height: 48px; gap: 12px; flex-shrink: 0; }
-.header h1 { font-size: 14px; font-weight: 600; color: var(--purple); white-space: nowrap; }
-.header .status { font-size: 11px; display: flex; align-items: center; gap: 6px; }
-.header .status .dot { width: 8px; height: 8px; border-radius: 50%; }
-.header .status .dot.connected { background: var(--green); }
-.header .status .dot.disconnected { background: var(--red); }
-.header .actions { margin-left: auto; display: flex; gap: 8px; }
-.btn { padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; cursor: pointer; transition: all 0.15s; }
-.btn:hover { border-color: var(--accent); color: var(--accent); }
-.btn.danger:hover { border-color: var(--red); color: var(--red); }
-.btn.active { border-color: var(--accent); color: var(--accent); background: rgba(88,166,255,0.1); }
-.event-count { font-size: 11px; color: var(--text-muted); margin-left: auto; }
-.tab-bar { display: flex; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
-.tab { padding: 10px 18px; font-size: 12px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
-.tab:hover { color: var(--text); }
-.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-.tab .badge { display: inline-block; background: var(--surface2); color: var(--text-muted); font-size: 10px; padding: 1px 6px; border-radius: 10px; margin-left: 6px; }
+html, body { background: var(--bg); color: var(--text); font: 13.5px/1.5 var(--sans); height: 100vh; overflow: hidden; }
+button, input, select { font: inherit; color: inherit; }
 
-/* Split panel layout */
-.main-area { flex: 1; display: flex; overflow: hidden; }
-.events-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
-.config-panel { width: 0; border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; transition: width 0.2s ease; }
-.config-panel.open { width: 45%; }
-.config-panel .panel-header { padding: 8px 12px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.config-panel .panel-header .panel-title { font-size: 12px; font-weight: 600; color: var(--orange); }
-.config-panel .panel-header select { background: var(--surface2); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; font-size: 11px; flex: 1; }
-.config-panel .panel-body { flex: 1; overflow: auto; padding: 12px; }
-.config-panel .panel-body::-webkit-scrollbar { width: 8px; }
-.config-panel .panel-body::-webkit-scrollbar-track { background: var(--bg); }
-.config-panel .panel-body::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 4px; }
+/* ───────── Top bar ───────── */
+.topbar {
+  height: var(--topbar-h);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 0 20px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand .logo {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), #56a3f2);
+  color: white; font-weight: 700; font-size: 13px; letter-spacing: 0.5px;
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-sm);
+}
+.brand .brand-text { line-height: 1.15; }
+.brand .brand-title { font-weight: 600; font-size: 14px; }
+.brand .brand-sub { font-size: 11px; color: var(--text-muted); }
 
-.content { flex: 1; overflow: auto; padding: 12px; }
-.content::-webkit-scrollbar { width: 8px; }
-.content::-webkit-scrollbar-track { background: var(--bg); }
-.content::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 4px; }
+.status-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 28px; padding: 0 12px;
+  background: var(--panel-2); border: 1px solid var(--border);
+  border-radius: 999px; font-size: 12px; color: var(--text-2);
+}
+.status-pill .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--red);
+  transition: background 0.2s;
+}
+.status-pill .dot.connected { background: var(--green); }
+.status-pill .event-count {
+  color: var(--text-muted); font-size: 11px; margin-left: 6px;
+  padding-left: 8px; border-left: 1px solid var(--border);
+}
+.actions { display: flex; gap: 8px; }
+.btn {
+  height: 30px; padding: 0 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer; font-weight: 500; font-size: 12.5px;
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+.btn:hover { background: var(--panel-2); border-color: var(--border-strong); }
+.btn.primary { background: var(--accent); color: white; border-color: var(--accent-2); }
+.btn.primary:hover { background: var(--accent-2); }
+.btn.ghost { background: transparent; }
+.btn.danger:hover { color: var(--red); border-color: var(--red); }
+.btn.active { color: var(--accent-2); background: var(--accent-tint); border-color: transparent; }
 
-/* Event cards */
-.event-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.15s; }
-.event-card:hover { border-color: var(--accent); }
-.event-card.action { border-left: 3px solid var(--purple); }
-.event-card.condition { border-left: 3px solid var(--cyan); }
-.event-card.stateChange { border-left: 3px solid var(--orange); }
-.event-card.navigation { border-left: 3px solid var(--pink); }
-.event-card.resolver { border-left: 3px solid var(--green); }
+/* ───────── Workspace grid ───────── */
+.workspace {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr var(--config-w);
+  height: calc(100vh - var(--topbar-h));
+  transition: grid-template-columns 0.2s ease;
+}
+.workspace.no-config { grid-template-columns: var(--sidebar-w) 1fr 0; }
+.workspace.no-config .config-panel { display: none; }
+
+/* ───────── Sidebar ───────── */
+.sidebar {
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.side-heading {
+  padding: 14px 16px 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.side-nav { display: flex; flex-direction: column; padding: 4px 8px; flex: 1; overflow-y: auto; }
+.side-item {
+  display: grid; grid-template-columns: 26px 1fr auto; align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-2);
+  text-align: left;
+  font-size: 13px;
+}
+.side-item:hover { background: var(--panel-2); color: var(--text); }
+.side-item.active { background: var(--accent-tint); color: var(--accent-2); font-weight: 600; }
+.side-item .ic {
+  width: 22px; height: 22px; border-radius: 5px;
+  display: grid; place-items: center;
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  background: var(--panel-2); border: 1px solid var(--border); color: var(--text-2);
+}
+.side-item.active .ic { background: white; border-color: transparent; color: var(--accent-2); }
+.side-item[data-tab="actions"]   .ic { color: var(--purple); background: var(--purple-tint); border-color: transparent; }
+.side-item[data-tab="state"]     .ic { color: var(--orange); background: var(--orange-tint); border-color: transparent; }
+.side-item[data-tab="search"]    .ic { color: var(--cyan);   background: var(--cyan-tint);   border-color: transparent; }
+.side-item[data-tab="nav"]       .ic { color: var(--pink);   background: var(--pink-tint);   border-color: transparent; }
+.side-item[data-tab="resolvers"] .ic { color: var(--green);  background: var(--green-tint);  border-color: transparent; }
+.side-item .badge {
+  min-width: 22px; height: 20px; padding: 0 6px;
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px;
+  font-size: 11px; color: var(--text-2);
+  display: grid; place-items: center;
+}
+.side-item .badge:empty { display: none; }
+.side-item.active .badge { background: white; border-color: transparent; color: var(--accent-2); font-weight: 600; }
+.side-footer { padding: 10px 12px; border-top: 1px solid var(--border); }
+
+/* ───────── Main content ───────── */
+.main { display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+.main-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 20px;
+  gap: 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+.main-title { font-size: 16px; font-weight: 600; }
+.filter-bar {
+  display: flex; gap: 6px; padding: 8px 20px;
+  background: var(--panel); border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.filter-chip {
+  font-size: 12px; padding: 4px 12px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--panel-2);
+  color: var(--text-2); cursor: pointer; transition: all 0.1s;
+  white-space: nowrap;
+}
+.filter-chip:hover { color: var(--text); border-color: var(--border-strong); }
+.filter-chip.active {
+  border-color: transparent; color: var(--accent-2); background: var(--accent-tint); font-weight: 600;
+}
+.content { flex: 1; overflow: auto; padding: 16px 20px; }
+
+/* ───────── Config panel (right) ───────── */
+.config-panel {
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.config-panel .panel-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+.config-panel .panel-title {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.7px; color: var(--text-muted);
+}
+.config-panel select {
+  height: 28px; padding: 0 8px;
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  flex: 1; min-width: 0;
+}
+.config-panel select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
+.config-panel .panel-body { flex: 1; overflow: auto; padding: 12px 16px; }
+
+/* ───────── Event cards (type colors preserved) ───────── */
+.event-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color 0.1s, box-shadow 0.1s;
+  box-shadow: var(--shadow-sm);
+}
+.event-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); }
+.event-card.action     { border-left-color: var(--purple); }
+.event-card.condition  { border-left-color: var(--cyan); }
+.event-card.stateChange{ border-left-color: var(--orange); }
+.event-card.navigation { border-left-color: var(--pink); }
+.event-card.resolver   { border-left-color: var(--green); }
 .event-card .header-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.event-card .type-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; }
-.event-card .type-badge.action { background: rgba(188,140,255,0.15); color: var(--purple); }
-.event-card .type-badge.condition { background: rgba(57,210,192,0.15); color: var(--cyan); }
-.event-card .type-badge.stateChange { background: rgba(210,153,34,0.15); color: var(--orange); }
-.event-card .type-badge.navigation { background: rgba(247,120,186,0.15); color: var(--pink); }
-.event-card .type-badge.resolver { background: rgba(63,185,80,0.15); color: var(--green); }
-.event-card .summary { font-size: 13px; font-weight: 500; flex: 1; }
-.event-card .status-icon { font-size: 12px; }
+.event-card .type-badge {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.event-card .type-badge.action     { background: var(--purple-tint); color: var(--purple); }
+.event-card .type-badge.condition  { background: var(--cyan-tint);   color: var(--cyan); }
+.event-card .type-badge.stateChange{ background: var(--orange-tint); color: var(--orange); }
+.event-card .type-badge.navigation { background: var(--pink-tint);   color: var(--pink); }
+.event-card .type-badge.resolver   { background: var(--green-tint);  color: var(--green); }
+.event-card .summary { font-size: 13px; font-weight: 500; flex: 1; color: var(--text); word-break: break-word; }
+.event-card .status-icon { font-size: 13px; }
 .event-card .status-icon.success { color: var(--green); }
 .event-card .status-icon.failure { color: var(--red); }
 .event-card .status-icon.skipped { color: var(--text-muted); }
 .event-card .status-icon.started { color: var(--orange); animation: blink 1s infinite; }
-.event-card.started { border-color: var(--orange); background: rgba(210,153,34,0.05); }
-
-/* Context data snapshot */
-.context-snapshot { margin-top: 8px; padding: 8px 10px; background: rgba(88,166,255,0.05); border: 1px solid rgba(88,166,255,0.15); border-radius: 6px; }
-.context-snapshot .ctx-header { font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 4px; cursor: pointer; user-select: none; }
-.context-snapshot .ctx-header:hover { color: var(--text); }
-.context-snapshot .ctx-body { display: none; max-height: 250px; overflow: auto; }
-.context-snapshot .ctx-body.visible { display: block; }
-.event-card .time { font-size: 10px; color: var(--text-muted); }
-.event-card .config-path-badge { font-size: 9px; padding: 1px 6px; border-radius: 4px; background: rgba(210,153,34,0.15); color: var(--orange); font-family: 'SF Mono','Fira Code',monospace; cursor: pointer; }
-.event-card .config-path-badge:hover { background: rgba(210,153,34,0.3); }
-.event-card .details { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: none; }
+.event-card.started {
+  border-color: var(--orange); background: var(--orange-tint);
+}
+.event-card.has-error { border-color: var(--red); background: rgba(220,38,38,0.03); }
+.event-card .time { font-size: 10.5px; color: var(--text-muted); font-family: var(--mono); }
+.event-card .config-path-badge {
+  font-size: 10px; padding: 2px 7px; border-radius: 4px;
+  background: var(--orange-tint); color: var(--orange);
+  font-family: var(--mono); cursor: pointer;
+  transition: background 0.1s;
+}
+.event-card .config-path-badge:hover { background: var(--orange); color: white; }
+.event-card .details {
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--border);
+  display: none;
+}
 .event-card.expanded .details { display: block; }
 
-/* State sections */
-.state-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
-.state-section .section-header { padding: 10px 14px; background: var(--surface2); font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
-.state-section .section-header .arrow { transition: transform 0.15s; display: inline-block; font-size: 10px; color: var(--text-muted); }
+/* ───────── Context snapshot ───────── */
+.context-snapshot {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: var(--accent-tint);
+  border: 1px solid rgba(38,128,235,0.2);
+  border-radius: var(--radius-sm);
+}
+.context-snapshot .ctx-header {
+  font-size: 11px; font-weight: 600; color: var(--accent-2);
+  cursor: pointer; user-select: none;
+}
+.context-snapshot .ctx-header:hover { color: var(--accent); }
+.context-snapshot .ctx-body { display: none; max-height: 250px; overflow: auto; margin-top: 6px; }
+.context-snapshot .ctx-body.visible { display: block; }
+
+/* ───────── State sections ───────── */
+.state-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.state-section .section-header {
+  padding: 10px 14px;
+  background: var(--panel-2);
+  font-size: 12px; font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer; user-select: none;
+  border-bottom: 1px solid var(--border);
+}
+.state-section .section-header .arrow {
+  transition: transform 0.15s;
+  display: inline-block; font-size: 10px; color: var(--text-muted);
+}
 .state-section.expanded .section-header .arrow { transform: rotate(90deg); }
-.state-section .section-body { padding: 12px 14px; display: none; }
+.state-section .section-body { padding: 12px 14px; display: none; background: var(--panel); }
 .state-section.expanded .section-body { display: block; }
 
-/* JSON tree */
-.json-tree { font-family: 'SF Mono','Fira Code','Cascadia Code',monospace; font-size: 12px; line-height: 1.6; }
-.json-tree .jt-row { padding-left: 0; }
+/* ───────── JSON tree ───────── */
+.json-tree { font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--text); }
 .json-tree .jt-key { color: var(--key-color); }
 .json-tree .jt-str { color: var(--str-color); }
 .json-tree .jt-num { color: var(--num-color); }
@@ -126,80 +340,159 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .json-tree .jt-children { display: block; }
 .json-tree .jt-children.collapsed { display: none; }
 
-/* Config tree highlighting */
+/* ───────── Config tree highlighting ───────── */
 .cfg-node { position: relative; }
-.cfg-node.highlighted { background: var(--highlight); border-left: 2px solid var(--highlight-border); margin-left: -2px; }
+.cfg-node.highlighted {
+  background: var(--highlight);
+  border-left: 2px solid var(--highlight-border);
+  margin-left: -2px;
+}
 .cfg-node.highlighted > .jt-row:first-child::before { content: '\25B6'; color: var(--accent); font-size: 10px; margin-right: 4px; }
-.cfg-node.active-exec { background: rgba(210,153,34,0.15); border-left: 2px solid var(--orange); margin-left: -2px; animation: exec-pulse 1.5s infinite; }
+.cfg-node.active-exec {
+  background: var(--orange-tint);
+  border-left: 2px solid var(--orange);
+  margin-left: -2px;
+  animation: exec-pulse 1.5s infinite;
+}
 .cfg-node.active-exec > .jt-row:first-child::before { content: '\25B6'; color: var(--orange); font-size: 10px; margin-right: 4px; animation: blink 1s infinite; }
-@keyframes exec-pulse { 0%, 100% { background: rgba(210,153,34,0.15); } 50% { background: rgba(210,153,34,0.05); } }
-.cfg-pointer { display: inline-block; color: var(--accent); font-size: 10px; margin-right: 4px; animation: blink 1s infinite; }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes exec-pulse { 0%,100% { background: var(--orange-tint); } 50% { background: rgba(217,119,6,0.06); } }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-/* Subsection labels */
-.sub-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 12px 0 6px 0; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+/* ───────── Sub-label + error trace ───────── */
+.sub-label {
+  font-size: 11px; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin: 14px 0 6px 0; padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
 .sub-label:first-child { margin-top: 0; }
-
-/* Error trace */
-.error-trace { background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); border-radius: 6px; padding: 10px 12px; margin-top: 8px; }
+.error-trace {
+  background: var(--red-tint);
+  border: 1px solid rgba(220,38,38,0.25);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px; margin-top: 8px;
+}
 .error-trace .error-msg { color: var(--red); font-weight: 600; font-size: 12px; margin-bottom: 6px; }
-.error-trace .stack-toggle { font-size: 11px; color: var(--text-muted); cursor: pointer; user-select: none; }
+.error-trace .stack-toggle { font-size: 11px; color: var(--red); cursor: pointer; user-select: none; text-decoration: underline; }
 .error-trace .stack-toggle:hover { color: var(--accent); }
-.error-trace .stack-content { display: none; margin-top: 6px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 4px; font-family: 'SF Mono','Fira Code','Cascadia Code',monospace; font-size: 11px; line-height: 1.5; color: var(--text-muted); white-space: pre-wrap; word-break: break-all; max-height: 300px; overflow: auto; }
+.error-trace .stack-content {
+  display: none; margin-top: 6px; padding: 8px;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 4px;
+  font-family: var(--mono); font-size: 11px; line-height: 1.5;
+  color: var(--text-2); white-space: pre-wrap; word-break: break-all;
+  max-height: 300px; overflow: auto;
+}
 .error-trace .stack-content.visible { display: block; }
-.event-card.has-error { border-color: var(--red); background: rgba(248,81,73,0.05); }
 
-.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
-.empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
-.empty-state .message { font-size: 14px; }
-.filter-bar { display: flex; gap: 6px; padding: 8px 12px; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.filter-chip { font-size: 11px; padding: 3px 10px; border-radius: 12px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
-.filter-chip:hover, .filter-chip.active { border-color: var(--accent); color: var(--accent); background: rgba(88,166,255,0.1); }
+/* ───────── Empty state ───────── */
+.empty-state {
+  text-align: center; padding: 60px 20px; color: var(--text-muted);
+}
+.empty-state .icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--panel); border: 1px solid var(--border);
+  margin: 0 auto 12px; display: grid; place-items: center;
+  color: var(--text-muted); font-family: var(--mono);
+}
+.empty-state h3 { margin: 0 0 4px; color: var(--text-2); font-size: 14px; font-weight: 600; }
+.empty-state .message { font-size: 12.5px; }
+
+/* ───────── Scrollbars ───────── */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background: #d1d5db; border-radius: 10px;
+  border: 2px solid transparent; background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: #9ca3af; background-clip: padding-box; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ───────── Responsive ───────── */
+@media (max-width: 1200px) { :root { --sidebar-w: 200px; --config-w: 360px; } }
+@media (max-width: 900px) {
+  .workspace, .workspace.no-config { grid-template-columns: 1fr; grid-template-rows: auto auto 1fr; }
+  .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+  .config-panel { display: none; }
+}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="header">
-    <h1>Flow Debugger</h1>
-    <div class="status">
-      <div class="dot disconnected" id="statusDot"></div>
-      <span id="statusText" style="color:var(--text-muted);font-size:11px">Connecting...</span>
+<!-- Top bar -->
+<header class="topbar">
+  <div class="brand">
+    <span class="logo" aria-hidden="true">FB</span>
+    <div class="brand-text">
+      <div class="brand-title">FlowBuilder Console</div>
+      <div class="brand-sub">v2.0 &middot; debugger</div>
     </div>
+  </div>
+  <div class="status-pill">
+    <span class="dot disconnected" id="statusDot"></span>
+    <span id="statusText">Connecting&hellip;</span>
     <span class="event-count" id="eventCount">0 events</span>
-    <div class="actions">
-      <button class="btn" id="configToggleBtn" onclick="toggleConfigPanel()">Config</button>
-      <button class="btn" onclick="requestState()">Refresh State</button>
-      <button class="btn danger" onclick="clearEvents()">Clear</button>
-    </div>
   </div>
-  <div class="tab-bar">
-    <div class="tab active" data-tab="actions" onclick="switchTab('actions')">Actions <span class="badge" id="badge-actions">0</span></div>
-    <div class="tab" data-tab="state" onclick="switchTab('state')">State <span class="badge" id="badge-state">0</span></div>
-    <div class="tab" data-tab="search" onclick="switchTab('search')">Search <span class="badge" id="badge-search">0</span></div>
-    <div class="tab" data-tab="nav" onclick="switchTab('nav')">Nav <span class="badge" id="badge-nav">0</span></div>
-    <div class="tab" data-tab="resolvers" onclick="switchTab('resolvers')">Resolvers <span class="badge" id="badge-resolvers">0</span></div>
+  <div class="actions">
+    <button class="btn" id="configToggleBtn" onclick="toggleConfigPanel()">Config</button>
+    <button class="btn" onclick="requestState()">Refresh State</button>
+    <button class="btn danger" onclick="clearEvents()">Clear</button>
   </div>
-  <div class="main-area">
-    <div class="events-panel">
-      <div class="filter-bar" id="filterBar">
-        <div class="filter-chip active" data-filter="all" onclick="setFilter('all')">All</div>
-        <div class="filter-chip" data-filter="started" onclick="setFilter('started')">In-Progress</div>
-        <div class="filter-chip" data-filter="success" onclick="setFilter('success')">Success</div>
-        <div class="filter-chip" data-filter="failure" onclick="setFilter('failure')">Failure</div>
-        <div class="filter-chip" data-filter="skipped" onclick="setFilter('skipped')">Skipped</div>
-      </div>
-      <div class="content" id="content"></div>
+</header>
+
+<!-- Three-pane workspace -->
+<div class="workspace no-config" id="workspace">
+  <!-- Left sidebar -->
+  <aside class="sidebar">
+    <div class="side-heading">Streams</div>
+    <nav class="side-nav">
+      <button class="side-item active" data-tab="actions" onclick="switchTab('actions')">
+        <span class="ic">A</span><span class="label">Actions</span><span class="badge" id="badge-actions">0</span>
+      </button>
+      <button class="side-item" data-tab="state" onclick="switchTab('state')">
+        <span class="ic">S</span><span class="label">State</span><span class="badge" id="badge-state">0</span>
+      </button>
+      <button class="side-item" data-tab="search" onclick="switchTab('search')">
+        <span class="ic">Q</span><span class="label">Search</span><span class="badge" id="badge-search">0</span>
+      </button>
+      <button class="side-item" data-tab="nav" onclick="switchTab('nav')">
+        <span class="ic">N</span><span class="label">Navigation</span><span class="badge" id="badge-nav">0</span>
+      </button>
+      <button class="side-item" data-tab="resolvers" onclick="switchTab('resolvers')">
+        <span class="ic">R</span><span class="label">Resolvers</span><span class="badge" id="badge-resolvers">0</span>
+      </button>
+    </nav>
+    <div class="side-footer">
+      <button class="btn ghost" style="width:100%" onclick="clearEvents()">Clear events</button>
     </div>
-    <div class="config-panel" id="configPanel">
-      <div class="panel-header">
-        <span class="panel-title">Flow Config</span>
-        <select id="configSelect" onchange="renderConfigPanel()"></select>
-      </div>
-      <div class="panel-body" id="configBody">
-        <div class="empty-state"><div class="message">Select a flow config</div></div>
+  </aside>
+
+  <!-- Center pane -->
+  <section class="main">
+    <header class="main-head">
+      <h1 class="main-title" id="viewTitle">Actions</h1>
+    </header>
+    <div class="filter-bar" id="filterBar">
+      <div class="filter-chip active" data-filter="all" onclick="setFilter('all')">All</div>
+      <div class="filter-chip" data-filter="started" onclick="setFilter('started')">In-Progress</div>
+      <div class="filter-chip" data-filter="success" onclick="setFilter('success')">Success</div>
+      <div class="filter-chip" data-filter="failure" onclick="setFilter('failure')">Failure</div>
+      <div class="filter-chip" data-filter="skipped" onclick="setFilter('skipped')">Skipped</div>
+    </div>
+    <div class="content" id="content"></div>
+  </section>
+
+  <!-- Right config panel -->
+  <aside class="config-panel" id="configPanel">
+    <header class="panel-header">
+      <span class="panel-title">Flow config</span>
+      <select id="configSelect" onchange="renderConfigPanel()"></select>
+    </header>
+    <div class="panel-body" id="configBody">
+      <div class="empty-state">
+        <div class="icon">{ }</div>
+        <h3>No config selected</h3>
+        <div class="message">Pick a flow above, or click a config-path badge on any event.</div>
       </div>
     </div>
-  </div>
+  </aside>
 </div>
 
 <script>
@@ -337,6 +630,14 @@ const state = {
   selectedConfig: '',
 };
 
+const TAB_TITLES = {
+  actions: 'Actions',
+  state: 'State',
+  search: 'Search',
+  nav: 'Navigation',
+  resolvers: 'Resolvers',
+};
+
 let ws = null;
 let reconnectTimer = null;
 
@@ -402,7 +703,8 @@ function connect() {
 
 function switchTab(tab) {
   state.activeTab = tab;
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.side-item').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.getElementById('viewTitle').textContent = TAB_TITLES[tab] || tab;
   document.getElementById('filterBar').style.display = (tab === 'actions' || tab === 'nav' || tab === 'resolvers') ? 'flex' : 'none';
   render();
 }
@@ -427,7 +729,7 @@ function requestState() {
 
 function toggleConfigPanel() {
   state.configPanelOpen = !state.configPanelOpen;
-  document.getElementById('configPanel').classList.toggle('open', state.configPanelOpen);
+  document.getElementById('workspace').classList.toggle('no-config', !state.configPanelOpen);
   document.getElementById('configToggleBtn').classList.toggle('active', state.configPanelOpen);
   if (state.configPanelOpen) {
     updateConfigSelect();
@@ -454,7 +756,7 @@ function renderConfigPanel() {
   const body = document.getElementById('configBody');
   const config = state.flowConfigs[state.selectedConfig];
   if (!config) {
-    body.innerHTML = '<div class="empty-state"><div class="message">No config selected</div></div>';
+    body.innerHTML = '<div class="empty-state"><div class="icon">{ }</div><h3>No config selected</h3><div class="message">Pick a flow above, or click a config-path badge on any event.</div></div>';
     return;
   }
   _cfgId = 0;
@@ -499,7 +801,7 @@ function highlightConfigPath(screenKey, configPath, isStarted) {
       if (preview) preview.style.display = 'none';
       const bracket = parent.previousElementSibling;
       const toggle = bracket && bracket.previousElementSibling;
-      if (toggle && toggle.classList.contains('jt-toggle')) toggle.innerHTML = '\u25BC';
+      if (toggle && toggle.classList.contains('jt-toggle')) toggle.innerHTML = '▼';
     }
     parent = parent.parentElement;
   }
@@ -588,7 +890,7 @@ function restoreExpansionState(saved) {
       if (preview) preview.style.display = 'none';
       const bracket = el.previousElementSibling;
       const toggle = bracket && bracket.previousElementSibling;
-      if (toggle && toggle.classList.contains('jt-toggle')) toggle.innerHTML = '\u25BC';
+      if (toggle && toggle.classList.contains('jt-toggle')) toggle.innerHTML = '▼';
     }
   });
   saved.collapsedSections.forEach(i => {
@@ -676,12 +978,16 @@ function renderContextSnapshot(event) {
     </div>`;
 }
 
+function emptyState(icon, title, msg) {
+  return `<div class="empty-state"><div class="icon">${icon}</div><h3>${escHtml(title)}</h3><div class="message">${escHtml(msg)}</div></div>`;
+}
+
 // ─── Tab Renderers ───────────────────────────────────────────────
 
 function renderActions() {
   const events = state.events.filter(e => e.type === 'action' || e.type === 'condition');
   const filtered = state.filter === 'all' ? events : events.filter(e => e.status === state.filter);
-  if (!filtered.length) return '<div class="empty-state"><div class="icon">&#9881;</div><div class="message">No action events yet</div></div>';
+  if (!filtered.length) return emptyState('&#9881;', 'No action events yet', 'Actions & conditions will stream in as the app runs.');
   _stackId = 0;
   _ctxId = 0;
   return filtered.map(e => {
@@ -689,7 +995,7 @@ function renderActions() {
     return `
     <div class="event-card ${e.type}${errorClass(e)}${startedClass}" onclick="this.classList.toggle('expanded')">
       <div class="header-row">
-        <span class="type-badge ${e.type}">${e.type}${e.status === 'started' ? ' ▶' : ''}</span>
+        <span class="type-badge ${e.type}">${e.type}${e.status === 'started' ? ' &#9654;' : ''}</span>
         <span class="summary">${escHtml(e.summary)}</span>
         ${configPathBadge(e)}
         ${statusIcon(e.status)}
@@ -706,7 +1012,7 @@ function renderActions() {
 function renderNavEvents() {
   const events = state.events.filter(e => e.type === 'navigation');
   const filtered = state.filter === 'all' ? events : events.filter(e => e.status === state.filter);
-  if (!filtered.length) return '<div class="empty-state"><div class="icon">&#9654;</div><div class="message">No navigation events yet</div></div>';
+  if (!filtered.length) return emptyState('&#9654;', 'No navigation events yet', 'Route pushes/pops will appear here.');
   _stackId = 0;
   return filtered.map(e => `
     <div class="event-card navigation${errorClass(e)}" onclick="this.classList.toggle('expanded')">
@@ -725,7 +1031,7 @@ function renderCrudState() {
   const keys = Object.keys(state.crudStates);
   if (!keys.length) {
     const stateEvents = state.events.filter(e => e.type === 'stateChange');
-    if (!stateEvents.length) return '<div class="empty-state"><div class="icon">&#128202;</div><div class="message">No state data yet</div></div>';
+    if (!stateEvents.length) return emptyState('&#128202;', 'No state data yet', 'CrudState registries + stateChange events will show here.');
     return stateEvents.map(e => `
       <div class="event-card stateChange" onclick="this.classList.toggle('expanded')">
         <div class="header-row">
@@ -744,8 +1050,8 @@ function renderCrudState() {
     <div class="state-section expanded">
       <div class="section-header" onclick="this.parentElement.classList.toggle('expanded')">
         <span class="arrow">&#9654;</span>
-        <span style="color:var(--accent)">${escHtml(k)}</span>
-        ${s.isLoading ? '<span style="color:var(--orange);font-size:10px">loading...</span>' : ''}
+        <span style="color:var(--accent-2)">${escHtml(k)}</span>
+        ${s.isLoading ? '<span style="color:var(--orange);font-size:10px">loading&hellip;</span>' : ''}
         <span style="color:var(--text-muted);font-size:10px;margin-left:auto">wrapper: ${wrapperLen}</span>
       </div>
       <div class="section-body">
@@ -762,7 +1068,7 @@ function renderCrudState() {
 
 function renderSearchState() {
   const keys = Object.keys(state.searchStates);
-  if (!keys.length) return '<div class="empty-state"><div class="icon">&#128269;</div><div class="message">No search state yet</div></div>';
+  if (!keys.length) return emptyState('&#128269;', 'No search state yet', 'Filters, orderBy, and pagination windows will appear here.');
   return keys.map(k => {
     const s = state.searchStates[k];
     return `
@@ -781,7 +1087,7 @@ function renderSearchState() {
 function renderResolvers() {
   const events = state.events.filter(e => e.type === 'resolver');
   const filtered = state.filter === 'all' ? events : events.filter(e => e.status === state.filter);
-  if (!filtered.length) return '<div class="empty-state"><div class="icon">&#128270;</div><div class="message">No resolver events yet</div></div>';
+  if (!filtered.length) return emptyState('&#128270;', 'No resolver events yet', 'Template resolutions (navigation.*, item.*, formData.*) will show here.');
   _stackId = 0;
   _ctxId = 0;
   return filtered.map(e => {
@@ -791,7 +1097,7 @@ function renderResolvers() {
     <div class="event-card resolver${errorClass(e)}" onclick="this.classList.toggle('expanded')">
       <div class="header-row">
         <span class="type-badge resolver">${escHtml(e.matchedPrefix || 'resolve')}</span>
-        <span class="summary" style="font-family:'SF Mono','Fira Code',monospace;font-size:12px">
+        <span class="summary" style="font-family:var(--mono);font-size:12px">
           <span style="color:var(--cyan)">${escHtml(e.input)}</span>
           <span style="color:var(--text-muted)"> &rarr; </span>
           <span style="color:${hasError ? 'var(--red)' : isNull ? 'var(--red)' : 'var(--green)'}">${hasError ? 'ERROR' : escHtml(e.resolvedValue)}</span>

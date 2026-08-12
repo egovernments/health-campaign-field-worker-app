@@ -37,7 +37,13 @@ class DebugServer {
       final port = _server!.port;
       final ip = await _getDeviceIp();
       _debugUrl = 'http://$ip:$port';
-      debugPrint('FlowDebugServer: Listening at $_debugUrl');
+      // Match the FAB-tap banner so the URL is easy to spot in boot logs.
+      debugPrint('');
+      debugPrint('==========================================');
+      debugPrint('Flow Debugger: $_debugUrl');
+      debugPrint('Open this URL in a browser on the same WiFi.');
+      debugPrint('==========================================');
+      debugPrint('');
 
       _server!.listen(_handleRequest);
       _listenToEvents();

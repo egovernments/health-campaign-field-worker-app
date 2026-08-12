@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'debug_event.dart';
 
@@ -167,6 +168,23 @@ class FlowDebugger {
   }
 
   void _addEvent(FlowDebugEvent event) {
+    // Instrumentation fires from inside widget `build` (e.g. resolveTemplate
+    // called from ConditionalEvaluator during ResolvedFlowWidget.build).
+    // If we mutate `events.value` synchronously the FAB's
+    // ValueListenableBuilder<List<FlowDebugEvent>> tries to setState while the
+    // framework is still building, which throws
+    // "setState() or markNeedsBuild() called during build".
+    // Defer to a post-frame callback when we're mid-frame.
+    final phase = SchedulerBinding.instance.schedulerPhase;
+    if (phase == SchedulerPhase.idle ||
+        phase == SchedulerPhase.postFrameCallbacks) {
+      _applyEvent(event);
+    } else {
+      SchedulerBinding.instance.addPostFrameCallback((_) => _applyEvent(event));
+    }
+  }
+
+  void _applyEvent(FlowDebugEvent event) {
     final list = List<FlowDebugEvent>.from(events.value);
     list.add(event);
     if (list.length > maxEvents) {

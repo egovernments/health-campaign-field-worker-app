@@ -276,7 +276,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...DigitScannerPackageRoute().pagesMap,
     ...DashboardRoute().pagesMap,
     ...SurveyFormRoute().pagesMap,
-    // ...TransitPostRoute().pagesMap,
+    ...TransitPostRoute().pagesMap,
     ...FormsRoute().pagesMap,
     ...FlowBuilderRoute().pagesMap,
   };
