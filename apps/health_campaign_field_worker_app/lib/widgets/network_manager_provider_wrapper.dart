@@ -337,6 +337,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           UserActionOpLogManager(isar),
         ),
       ),
+
       RepositoryProvider<
           LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
         create: (_) => PgrServiceLocalRepository(

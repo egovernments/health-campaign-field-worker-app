@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
+import 'package:sync_service/utils/utils.dart' as sync_utils;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -152,9 +153,16 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                     type: PopUpType.simple,
                     title: "",
                     additionalWidgets: [
-                      DownloadSpinnerContent(
-                        title: localizations.translate(
-                          i18.projectSelection.syncInProgressTitleText,
+                      StreamBuilder<sync_utils.SyncProgress>(
+                        stream:
+                            sync_utils.SyncServiceSingleton().progressStream,
+                        builder: (ctx, snapshot) => DownloadSpinnerContent(
+                          title: localizations.translate(
+                            i18.projectSelection.syncInProgressTitleText,
+                          ),
+                          subtitle: snapshot.data == null
+                              ? null
+                              : formatSyncProgressLabel(snapshot.data!),
                         ),
                       ),
                     ],
@@ -282,9 +290,15 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           type: PopUpType.simple,
           title: "",
           additionalWidgets: [
-            DownloadSpinnerContent(
-              title: localizations.translate(
-                i18.projectSelection.syncInProgressTitleText,
+            StreamBuilder<sync_utils.SyncProgress>(
+              stream: sync_utils.SyncServiceSingleton().progressStream,
+              builder: (ctx, snapshot) => DownloadSpinnerContent(
+                title: localizations.translate(
+                  i18.projectSelection.syncInProgressTitleText,
+                ),
+                subtitle: snapshot.data == null
+                    ? null
+                    : formatSyncProgressLabel(snapshot.data!),
               ),
             ),
           ],

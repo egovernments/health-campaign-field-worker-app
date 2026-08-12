@@ -362,6 +362,8 @@ final dynamic sampleCloseHouseholdFlows = {
             "data": [],
             "name": "closeHouseholdSuccess",
             "type": "TEMPLATE",
+            "navigationMode": "popUntilAndReplace",
+            "popUntilPageName": "closeHouseholdRegistration",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",

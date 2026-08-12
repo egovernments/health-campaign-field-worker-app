@@ -183,6 +183,17 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         includeOnlyUpdatedByOthers: true,
       );
 
+      // No new stock rows to pull means the download handler (which owns
+      // the balance downsync + overstatement heal) never runs — refresh and
+      // heal the balance rows here so a plain "Sync Stock Data" tap still
+      // corrects balances written by pre-fix app versions.
+      if (totalCount == 0) {
+        await downSyncStockBalances(
+          event.projectModel.id,
+          projectReferenceID: event.projectModel.referenceID,
+        );
+      }
+
       emit(StockDownSyncState.dataFound(
         totalCount,
         event.batchSize,
@@ -376,7 +387,16 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
         UserActionSearchModel(clientReferenceId: balanceKeys.toList()),
       );
 
-      if (remoteBalances.isEmpty) return;
+      if (remoteBalances.isEmpty) {
+        await _healOverstatedBalances(
+          facilityIds: facilityIds,
+          productVariantIds: productVariantIds,
+          projectId: projectId,
+          isDistributor: isDistributor,
+          projectReferenceID: projectReferenceID,
+        );
+        return;
+      }
 
       // For each fetched balance, create or update locally
       for (final remoteBalance in remoteBalances) {
@@ -426,8 +446,107 @@ class StockDownSyncBloc extends Bloc<StockDownSyncEvent, StockDownSyncState> {
           );
         }
       }
+
+      await _healOverstatedBalances(
+        facilityIds: facilityIds,
+        productVariantIds: productVariantIds,
+        projectId: projectId,
+        isDistributor: isDistributor,
+        projectReferenceID: projectReferenceID,
+      );
     } catch (e) {
       debugPrint('Stock balance downsync error: $e');
+    }
+  }
+
+  /// Clamps stored STOCK_BALANCE rows that exceed the stock-derived ceiling.
+  ///
+  /// A stored balance can only sit at or below the stock-in-hand computed
+  /// from the local StockModel rows: deliveries and partial use subtract from
+  /// it, and nothing raises it outside a stock transaction (which itself
+  /// lands as a StockModel row first). A stored value above that ceiling is
+  /// therefore an artifact of the historical double-count — an inbound
+  /// `DISPATCHED + status=ACCEPTED` row summed next to its own RECEIVED row —
+  /// written by app versions that predate
+  /// [StockCalculationUtils.claimedInboundDispatchRefs]. Rewrite it to the
+  /// ceiling with an op-log entry so the correction also reaches the server
+  /// on the next upsync.
+  Future<void> _healOverstatedBalances({
+    required List<String> facilityIds,
+    required List<String> productVariantIds,
+    required String projectId,
+    required bool isDistributor,
+    String? projectReferenceID,
+  }) async {
+    for (final facilityId in facilityIds) {
+      final received = await stockLocalRepository.search(
+        StockSearchModel(receiverId: facilityId, referenceId: projectId),
+      );
+      final sent = await stockLocalRepository.search(
+        StockSearchModel(senderId: facilityId, referenceId: projectId),
+      );
+      final byRef = <String, StockModel>{};
+      for (final s in received) {
+        byRef[s.clientReferenceId] = s;
+      }
+      for (final s in sent) {
+        byRef[s.clientReferenceId] = s;
+      }
+      final stocks = byRef.values.toList();
+      if (stocks.isEmpty) continue;
+
+      for (final productVariantId in productVariantIds) {
+        final key = generateBalanceKey(
+          facilityId,
+          productVariantId,
+          projectReferenceID: projectReferenceID,
+        );
+        final rows = await userActionLocalRepository.search(
+          UserActionSearchModel(clientReferenceId: [key]),
+        );
+        if (rows.isEmpty) continue;
+        final row = rows.first;
+
+        final fields = row.additionalFields?.fields;
+        if (fields == null) continue;
+        String? storedStr;
+        for (final f in fields) {
+          if (f.key == 'balance') {
+            storedStr = f.value?.toString();
+            break;
+          }
+        }
+        final stored = double.tryParse(storedStr ?? '');
+        if (stored == null) continue;
+
+        final ceiling = StockCalculationUtils.getStockBalance(
+          stockList: stocks,
+          facilityId: facilityId,
+          productId: productVariantId,
+          isDistributor: isDistributor,
+        );
+        if (stored <= ceiling) continue;
+
+        final updatedFields = [
+          for (final f in fields)
+            if (f.key == 'balance')
+              AdditionalField('balance', ceiling.toString())
+            else
+              f,
+        ];
+        await userActionLocalRepository.update(
+          row.copyWith(
+            isSync: false,
+            additionalFields: UserActionAdditionalFields(
+              version: row.additionalFields?.version ?? 1,
+              fields: updatedFields,
+            ),
+          ),
+        );
+        debugPrint(
+          'STOCK_BALANCE heal: $key clamped $stored -> $ceiling',
+        );
+      }
     }
   }
 

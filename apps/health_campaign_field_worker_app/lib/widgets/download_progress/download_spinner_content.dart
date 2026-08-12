@@ -7,8 +7,9 @@ import '../../utils/constants.dart';
 
 class DownloadSpinnerContent extends StatelessWidget {
   final String title;
+  final String? subtitle;
 
-  const DownloadSpinnerContent({super.key, required this.title});
+  const DownloadSpinnerContent({super.key, required this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,16 @@ class DownloadSpinnerContent extends StatelessWidget {
                 ),
           ),
         ),
+        if (subtitle != null)
+          Center(
+            child: Text(
+              subtitle!,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).digitTextTheme(context).bodyS.copyWith(
+                    color: Theme.of(context).colorTheme.text.secondary,
+                  ),
+            ),
+          ),
       ],
     );
   }

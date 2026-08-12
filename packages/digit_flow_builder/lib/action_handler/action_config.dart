@@ -5,12 +5,20 @@ class ActionConfig {
   final Map<String, dynamic>? condition;
   final List<ActionConfig>? actions;
 
+  /// Debug-only: JSON path within the flow config, e.g. "initActions[2]"
+  final String? configPath;
+
+  /// Debug-only: screen key this action belongs to
+  final String? screenKey;
+
   ActionConfig({
     required this.action,
     required this.actionType,
     required this.properties,
     this.condition,
     this.actions,
+    this.configPath,
+    this.screenKey,
   });
 
   factory ActionConfig.fromJson(Map<String, dynamic> json) {
@@ -27,6 +35,19 @@ class ActionConfig {
       properties: json['properties'] ?? {},
       condition: json['condition'],
       actions: actions,
+    );
+  }
+
+  /// Create a copy with debug path information attached.
+  ActionConfig withDebugPath({String? configPath, String? screenKey}) {
+    return ActionConfig(
+      action: action,
+      actionType: actionType,
+      properties: properties,
+      condition: condition,
+      actions: actions,
+      configPath: configPath ?? this.configPath,
+      screenKey: screenKey ?? this.screenKey,
     );
   }
 }

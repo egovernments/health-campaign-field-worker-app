@@ -47,7 +47,7 @@ class CrudExecutor extends ActionExecutor {
       return contextData;
     }
 
-    final entities = rawEntities is List
+    var entities = rawEntities is List
         ? rawEntities.whereType<EntityModel>().toList()
         : [rawEntities as EntityModel];
 
@@ -56,9 +56,54 @@ class CrudExecutor extends ActionExecutor {
       return contextData;
     }
 
+    // Skip entity types listed in `excludeEntity`, so a flow can persist a
+    // subset of what the transformer produced — e.g. ADD_MEMBER in a
+    // HOUSEHOLD-beneficiary campaign excluding "PROJECTBENEFICIARY", since
+    // the individualRegistration transformer always emits one but the
+    // household already has its ProjectBeneficiary from registration.
+    // NOTE: the long-standing `entity` property is intentionally NOT
+    // honored as an include-filter: existing configs carry stale lists
+    // written while it was ignored (e.g. CLOSEHOUSEHOLD omits the TASK its
+    // transformer emits), so enforcing it would silently drop writes.
+    // Accepts shorthand ("MEMBER") and model-class ("HouseholdMemberModel")
+    // spellings.
+    final excludeFilter = action.properties['excludeEntity'] as String?;
+    if (excludeFilter != null && excludeFilter.trim().isNotEmpty) {
+      final excludedTypes = excludeFilter
+          .split(',')
+          .map(_normalizeEntityTypeName)
+          .where((e) => e.isNotEmpty)
+          .toSet();
+
+      final before = entities.length;
+      entities = entities
+          .where((e) => !excludedTypes
+              .contains(_normalizeEntityTypeName(getEntityTypeName(e))))
+          .toList();
+
+      debugPrint(
+          'CREATE_EVENT: excludeEntity "$excludeFilter" filtered '
+          '$before -> ${entities.length} entities');
+
+      if (entities.isEmpty) {
+        debugPrint('CREATE_EVENT: nothing left to create after excludeEntity');
+        return contextData;
+      }
+    }
+
     debugPrint('CREATE_EVENT: Creating ${entities.length} entities');
     context.read<CrudBloc>().add(CrudEventCreate(entities: entities));
     return contextData;
+  }
+
+  /// Normalizes an entity type spelling for filter comparison:
+  /// "INDIVIDUAL", "IndividualModel" -> "INDIVIDUAL";
+  /// "MEMBER", "HouseholdMemberModel" -> "HOUSEHOLDMEMBER".
+  static String _normalizeEntityTypeName(String raw) {
+    var s = raw.trim().toUpperCase().replaceAll('_', '');
+    if (s.endsWith('MODEL')) s = s.substring(0, s.length - 'MODEL'.length);
+    if (s == 'MEMBER') s = 'HOUSEHOLDMEMBER';
+    return s;
   }
 
   /// Evaluate condition like "navigation.isUpdate!=true"

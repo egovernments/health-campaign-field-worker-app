@@ -176,7 +176,17 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
 
         case 'required':
           if (rule.value == true) {
-            validators.add(Validators.required as Validator<T>);
+            // Checkbox controls default to `false`, which Validators.required
+            // treats as a present value — a required checkbox would never
+            // block submission. Require the value to be `true` instead.
+            // Scoped to checkboxes: boolean radios render `false` as a
+            // legitimate "No" answer.
+            if (schema.type == PropertySchemaType.boolean &&
+                schema.format == PropertySchemaFormat.checkbox) {
+              validators.add(Validators.requiredTrue as Validator<T>);
+            } else {
+              validators.add(Validators.required as Validator<T>);
+            }
           }
           break;
 

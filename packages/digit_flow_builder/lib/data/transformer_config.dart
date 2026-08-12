@@ -422,7 +422,7 @@ final jsonConfig = {
     "models": {
       "TaskModel": {
         "listSource": "__context:futureDoses",
-        "skipFirst": 0,
+        "skipFirst": 1,
         "mappings": {
           "id": "taskDetails.id",
           "projectId": "__context:projectId",
@@ -493,6 +493,7 @@ final jsonConfig = {
             // picked the 3-11 month bucket and debited the wrong stock.
             "listSource": "DeliveryDetails.resourceCard",
             "mappings": {
+              "id": "id",
               "clientReferenceId": "__generate:uuid",
               "taskId": "taskId",
               "productVariantId":

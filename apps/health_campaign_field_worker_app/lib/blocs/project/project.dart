@@ -211,6 +211,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     List<ProjectStaffModel> projectStaffList;
     try {
+      reportSyncProgress('projectStaff');
       projectStaffList = await projectStaffRemoteRepository.search(
         ProjectStaffSearchModel(staffId: [uuid.toString()]),
       );
@@ -240,6 +241,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     List<ProjectModel> projects = [];
+    reportSyncProgress('project');
     for (final projectStaff in projectStaffList) {
       await projectStaffLocalRepository.create(
         projectStaff,
@@ -285,6 +287,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       // the specific `facilityId`s returned there.
 
       try {
+        reportSyncProgress('productVariant');
         await _loadProductVariants(projects);
       } catch (_) {
         emit(
@@ -297,6 +300,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         return;
       }
       try {
+        reportSyncProgress('serviceDefinition');
         await _loadServiceDefinition(projects);
       } catch (_) {
         emit(
@@ -309,6 +313,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         return;
       }
       try {
+        reportSyncProgress('projectType');
         final projectTypes = await mdmsRepository.searchProjectType(
           envConfig.variables.mdmsApiPath,
           envConfig.variables.tenantId,
@@ -756,6 +761,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .toList()
             .isNotEmpty) {
           final loggedInIndividualId = await localSecureStore.userIndividualId;
+          reportSyncProgress('attendanceRegister');
           late final List<AttendanceRegisterModel> attendanceRegisters;
 
           if (context.loggedInUserRoles
@@ -787,6 +793,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             if (register.attendees != null &&
                 (register.attendees ?? []).isNotEmpty) {
               try {
+                reportSyncProgress('individual');
                 final individuals = await individualRemoteRepository.search(
                   IndividualSearchModel(
                     id: register.attendees!
@@ -934,6 +941,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }
 
       try {
+        reportSyncProgress('formConfig');
         final formConfigs = await mdmsRepository.searchMDMS(
           envConfig.variables.mdmsApiPath,
           tenantId: envConfig.variables.tenantId,
@@ -958,6 +966,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         return;
       }
 
+      reportSyncProgress('projectType');
       final configResult = await mdmsRepository.searchRowVersions(
         envConfig.variables.mdmsApiPath,
         envConfig.variables.tenantId,
@@ -1014,6 +1023,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ?.version;
       final boundaryRefetched = await localSecureStore.boundaryRefetched;
 
+      reportSyncProgress('boundary');
       if (rowversionList.firstOrNull?.version != serverVersion ||
           boundaryRefetched) {
         boundaries = await boundaryRemoteRepository.search(
@@ -1095,6 +1105,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     // Load project facilities after project selection
     try {
+      reportSyncProgress('projectFacility');
       await _loadProjectFacilities(event.model);
     } catch (_) {
       emit(state.copyWith(
@@ -1107,6 +1118,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     try {
       // Trigger silent stock downsync after project facilities are loaded
+      reportSyncProgress('stock');
       await _silentStockDownSync(event.model);
     } catch (_) {
       emit(state.copyWith(

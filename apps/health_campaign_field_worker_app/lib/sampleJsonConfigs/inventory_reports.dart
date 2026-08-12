@@ -343,7 +343,7 @@ final dynamic inventoryReportFlows = {
                         "key": "additionalFields",
                         "value":
                             "{{fn:getStockEntryType(navigation.reportType)}}",
-                        "operation": "contains"
+                        "operation": "matches"
                       },
                       {
                         "key":
@@ -391,7 +391,7 @@ final dynamic inventoryReportFlows = {
                         "key": "additionalFields",
                         "value":
                             "{{fn:getStockEntryType(navigation.reportType)}}",
-                        "operation": "contains"
+                        "operation": "matches"
                       },
                       {
                         "key":

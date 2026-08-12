@@ -37,6 +37,7 @@ import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 import 'package:sync_service/data/sync_service.dart';
+import 'package:sync_service/utils/utils.dart' as sync_utils;
 import 'package:transit_post/router/transit_post_router.gm.dart';
 import 'package:transit_post/utils/utils.dart';
 
@@ -2041,9 +2042,20 @@ class _HomePageState extends LocalizedState<HomePage> {
                               type: PopUpType.simple,
                               title: "",
                               additionalWidgets: [
-                                DownloadSpinnerContent(
-                                  title: localizations.translate(
-                                    i18.projectSelection.syncInProgressTitleText,
+                                StreamBuilder<sync_utils.SyncProgress>(
+                                  stream: sync_utils.SyncServiceSingleton()
+                                      .progressStream,
+                                  builder: (ctx, snapshot) =>
+                                      DownloadSpinnerContent(
+                                    title: localizations.translate(
+                                      i18.projectSelection
+                                          .syncInProgressTitleText,
+                                    ),
+                                    subtitle: snapshot.data == null
+                                        ? null
+                                        : formatSyncProgressLabel(
+                                            snapshot.data!,
+                                          ),
                                   ),
                                 ),
                               ],

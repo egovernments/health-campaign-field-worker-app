@@ -173,6 +173,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading":
               "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
+          "visible": "{{fn:hasRole('DISTRIBUTOR')}} == true",
           "description":
               "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_LOST_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
           "icon": 'Store',

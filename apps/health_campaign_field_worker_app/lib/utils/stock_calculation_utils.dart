@@ -105,6 +105,80 @@ String legacyBalanceKey(String facilityId, String productVariantId) =>
     'bal_$facilityId$productVariantId';
 
 class StockCalculationUtils {
+  /// ClientReferenceIds of inbound DISPATCHED rows considered "claimed" by a
+  /// receiver-owned RECEIVED row, so the legacy `DISPATCHED + status=ACCEPTED`
+  /// branches don't count an accepted consignment a second time next to the
+  /// RECEIVED row written by the two-write Accept / CDD scan flows.
+  ///
+  /// Two matching tiers:
+  ///  1. Explicit — the RECEIVED row carries
+  ///     `additionalFields.dispatchClientReferenceId` pointing at the
+  ///     DISPATCHED row (written by up-to-date `manage_stock` configs).
+  ///  2. Heuristic — campaign configs that predate the link field create the
+  ///     RECEIVED row without it. Each such unlinked receipt claims at most
+  ///     one inbound ACCEPTED dispatch with the same `senderId` +
+  ///     `productVariantId`, oldest dispatch first. Pairing is one-to-one, so
+  ///     genuinely distinct consignments (more accepted dispatches than
+  ///     receipts) keep their own count.
+  static Set<String> claimedInboundDispatchRefs({
+    required List<StockModel> stocks,
+    required String facilityId,
+  }) {
+    final receivedRows = stocks
+        .where((s) =>
+            s.receiverId == facilityId &&
+            (s.transactionType?.toUpperCase() ?? '') == 'RECEIVED')
+        .toList();
+
+    final claimed = receivedRows
+        .map((s) => _getAdditionalFieldRawValue(s, 'dispatchClientReferenceId'))
+        .where((v) => v.isNotEmpty)
+        .toSet();
+
+    // Pool of unlinked plain receipts available for heuristic pairing.
+    // Returns and reconciliation adjustments are not receipts of a dispatch,
+    // so they never claim one.
+    final unlinkedReceipts = <String, int>{};
+    for (final r in receivedRows) {
+      if (_getAdditionalFieldRawValue(r, 'dispatchClientReferenceId')
+          .isNotEmpty) {
+        continue;
+      }
+      final entryType = _getStockEntryType(r);
+      if (entryType == 'RETURNED' ||
+          entryType == 'EXCESS' ||
+          entryType == 'LESS') {
+        continue;
+      }
+      if ((r.transactionReason?.toUpperCase() ?? '') == 'RETURNED') continue;
+      final key = '${r.senderId}|${r.productVariantId}';
+      unlinkedReceipts[key] = (unlinkedReceipts[key] ?? 0) + 1;
+    }
+
+    if (unlinkedReceipts.isEmpty) return claimed;
+
+    final acceptedInbound = stocks
+        .where((s) =>
+            s.receiverId == facilityId &&
+            (s.transactionType?.toUpperCase() ?? '') == 'DISPATCHED' &&
+            _getAdditionalFieldValue(s, 'status') == 'ACCEPTED' &&
+            !claimed.contains(s.clientReferenceId))
+        .toList()
+      ..sort((a, b) => (a.auditDetails?.createdTime ?? 0)
+          .compareTo(b.auditDetails?.createdTime ?? 0));
+
+    for (final d in acceptedInbound) {
+      final key = '${d.senderId}|${d.productVariantId}';
+      final available = unlinkedReceipts[key] ?? 0;
+      if (available > 0) {
+        unlinkedReceipts[key] = available - 1;
+        claimed.add(d.clientReferenceId);
+      }
+    }
+
+    return claimed;
+  }
+
   static String _getAdditionalFieldValue(StockModel stock, String key) {
     final fields = stock.additionalFields?.fields;
     if (fields == null) return '';
@@ -148,9 +222,8 @@ class StockCalculationUtils {
     }).toList();
 
     // Set of inbound DISPATCHED clientReferenceIds that have already been
-    // "claimed" by a local RECEIVED row carrying
-    // additionalFields.dispatchClientReferenceId. Used below to skip the
-    // legacy `DISPATCHED + status=ACCEPTED` branch so it doesn't double-count
+    // "claimed" by a local RECEIVED row. Used below to skip the legacy
+    // `DISPATCHED + status=ACCEPTED` branch so it doesn't double-count
     // alongside the new RECEIVED row produced by the two-write Accept flow
     // and the CDD scan flow.
     //
@@ -160,11 +233,10 @@ class StockCalculationUtils {
     // `isReceiver + DISPATCHED + status=ACCEPTED` branches below and this
     // set can be deleted together, leaving the pure
     // "sum receiver-owned RECEIVED" rule from `stock-receive-flow.html`.
-    final dispatchRefsClaimedByReceived = filteredStock
-        .where((s) => (s.transactionType?.toUpperCase() ?? '') == 'RECEIVED')
-        .map((s) => _getAdditionalFieldRawValue(s, 'dispatchClientReferenceId'))
-        .where((v) => v.isNotEmpty)
-        .toSet();
+    final dispatchRefsClaimedByReceived = claimedInboundDispatchRefs(
+      stocks: filteredStock,
+      facilityId: facilityId,
+    );
 
     double stockReceived = 0;
     double stockIssued = 0;
