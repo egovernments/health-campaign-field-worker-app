@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
+import '../../blocs/search_state_manager.dart';
 import '../../utils/conditional_evaluator.dart';
 import '../localization_context.dart';
 import '../resolved_flow_widget.dart';
@@ -110,6 +111,15 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
   bool _syncingExternalValue = false;
   Timer? _debounceTimer;
 
+  /// Tracks the searchName of the currently active conditional branch.
+  ///
+  /// When the user switches from one branch to another (e.g. ID search →
+  /// name search), the previous branch's accumulated filters in
+  /// [SearchStateManager] are cleared so they don't AND into the new
+  /// search via [SearchStateManager.getAllFilters]. Cleanup only runs on
+  /// transition, not on every keystroke.
+  String? _activeSearchName;
+
   @override
   void initState() {
     super.initState();
@@ -211,7 +221,8 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
     final actionsList = List<Map<String, dynamic>>.from(widget.json['onAction']);
     final currentEvalContext = widget.resolved.getFreshEvalContext();
 
-    for (final raw in actionsList) {
+    for (int i = 0; i < actionsList.length; i++) {
+      final raw = actionsList[i];
       if (raw.containsKey('condition')) {
         final condition = raw['condition'] as Map<String, dynamic>?;
         final expression = condition?['expression'] as String?;
@@ -227,10 +238,21 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
         }
 
         if (conditionMet) {
-          final subActions = raw['actions'] as List<dynamic>? ?? [];
+          final subActions = raw['actions'] as List<dynamic>? ?? const [];
+
+          // Detect a mode switch and clear the previous branch's
+          // searchName entirely (filters + orderBy + pagination window).
+          // This is a no-op when the same branch fires again on a
+          // subsequent keystroke.
+          final newSearchName = _extractSearchName(subActions);
+          if (newSearchName != null) {
+            _switchSearchMode(newSearchName);
+          }
+
           for (final subActionJson in subActions) {
+            if (subActionJson is! Map) continue;
             final processedAction = _processAction(
-              subActionJson as Map<String, dynamic>,
+              Map<String, dynamic>.from(subActionJson),
               value,
             );
             widget.onAction(processedAction);
@@ -242,6 +264,38 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
         widget.onAction(processedAction);
       }
     }
+  }
+
+  /// Returns the first SEARCH_EVENT `searchName` inside [subActions], or
+  /// null if none is declared. Used to detect branch transitions.
+  String? _extractSearchName(List<dynamic> subActions) {
+    for (final action in subActions) {
+      if (action is! Map) continue;
+      final props = action['properties'];
+      if (props is! Map) continue;
+      final name = props['name'];
+      if (name is String && name.isNotEmpty) {
+        return name;
+      }
+    }
+    return null;
+  }
+
+  /// Called when the matched conditional branch's searchName differs from
+  /// the last one we dispatched. Clears the previous searchName's entire
+  /// bucket in [SearchStateManager] (filters + orderBy + pagination
+  /// window) so it doesn't AND into the new search via [getAllFilters].
+  void _switchSearchMode(String newSearchName) {
+    final compositeKey = widget.compositeKey;
+    if (compositeKey == null) {
+      _activeSearchName = newSearchName;
+      return;
+    }
+
+    if (_activeSearchName != null && _activeSearchName != newSearchName) {
+      SearchStateManager().clear(compositeKey, _activeSearchName!);
+    }
+    _activeSearchName = newSearchName;
   }
 
   void _executeClearActions(String value) {
@@ -269,6 +323,15 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
 
         if (conditionMet) {
           final subActions = raw['actions'] as List<dynamic>? ?? [];
+
+          // Mirror the mode-switch tracking from _executeSearchActions
+          // so that backspacing to empty and then switching branches on
+          // the next keystroke still clears the previous branch's state.
+          final newSearchName = _extractSearchName(subActions);
+          if (newSearchName != null) {
+            _switchSearchMode(newSearchName);
+          }
+
           _executeClearForActions(subActions, clearWidgetKey: value.isEmpty);
           break;
         }
