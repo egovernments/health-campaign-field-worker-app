@@ -6,7 +6,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
-import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -240,7 +240,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                     .map(
                       (element) => Padding(
                         padding: const EdgeInsets.all(spacer2),
-                        child: MenuCard(
+                        child: _ProjectMenuCard(
                           icon: Icons.article,
                           heading: element.name,
                           onTap: () {
@@ -547,5 +547,68 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     } else {
       context.read<LocationBloc>().add(const LocationEvent.requestPermission());
     }
+  }
+}
+
+/// Local drop-in for `MenuCard` that aligns the icon to the first line of the
+/// heading instead of the vertical center of the whole (potentially wrapped)
+/// text block. Fixes the "icon floats between wrapped lines" bug on long
+/// project names — pub-cache MenuCard uses CrossAxisAlignment.center on the
+/// Row, which centers the icon relative to the full wrapped Text.
+class _ProjectMenuCard extends StatelessWidget {
+  final IconData icon;
+  final String heading;
+  final VoidCallback? onTap;
+
+  const _ProjectMenuCard({
+    required this.icon,
+    required this.heading,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
+    final headingStyle = textTheme.headingM.copyWith(
+      color: theme.colorTheme.primary.primary2,
+    );
+    // Icon size = heading fontSize + spacer1 (24 / 26 / 28 across
+    // breakpoints). Same 24px as the original MenuCard on mobile; a
+    // touch smaller than its 32px on tab/desktop, which was overpowering.
+    final iconSize = (headingStyle.fontSize ?? spacer5) + spacer1;
+
+    return InkWell(
+      onTap: onTap,
+      child: DigitCard(
+        spacing: spacer3,
+        children: [
+          Row(
+            // Center the icon vertically against the whole (possibly
+            // wrapped) heading. On single-line names the icon sits on the
+            // text midline; on 2-line names it sits between the two lines
+            // — this is the design intent for a menu card with a wrapping
+            // label.
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: iconSize,
+                color: theme.colorTheme.primary.primary1,
+              ),
+              const SizedBox(width: spacer2),
+              Expanded(
+                child: Text(
+                  heading,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: headingStyle,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
