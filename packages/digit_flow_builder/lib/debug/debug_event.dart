@@ -269,6 +269,11 @@ class ResolverDebugEvent extends FlowDebugEvent {
   /// Full snapshot of the context data available during resolution (deep-sanitized).
   final Map<String, dynamic> contextDataSnapshot;
 
+  /// Human-readable fix suggestions produced by ResolverSuggester when
+  /// the resolver returned null/empty. Empty when the resolution succeeded
+  /// or no plausible fix could be inferred.
+  final List<String> suggestions;
+
   ResolverDebugEvent({
     required super.id,
     required super.timestamp,
@@ -278,6 +283,7 @@ class ResolverDebugEvent extends FlowDebugEvent {
     required this.resolverName,
     this.matchedPrefix,
     this.contextDataSnapshot = const {},
+    this.suggestions = const [],
     String? errorMessage,
     String? stackTrace,
   }) : super(
@@ -298,6 +304,7 @@ class ResolverDebugEvent extends FlowDebugEvent {
             'resolvedType': resolvedType,
             'resolverName': resolverName,
             if (matchedPrefix != null) 'matchedPrefix': matchedPrefix,
+            if (suggestions.isNotEmpty) 'suggestions': suggestions,
           },
         );
 
@@ -309,6 +316,7 @@ class ResolverDebugEvent extends FlowDebugEvent {
         'resolvedType': resolvedType,
         'resolverName': resolverName,
         if (matchedPrefix != null) 'matchedPrefix': matchedPrefix,
+        if (suggestions.isNotEmpty) 'suggestions': suggestions,
         if (contextDataSnapshot.isNotEmpty) 'contextData': contextDataSnapshot,
       };
 }

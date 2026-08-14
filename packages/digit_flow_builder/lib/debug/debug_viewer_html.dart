@@ -300,6 +300,32 @@ button, input, select { font: inherit; color: inherit; }
 .context-snapshot .ctx-body { display: none; max-height: 250px; overflow: auto; margin-top: 6px; }
 .context-snapshot .ctx-body.visible { display: block; }
 
+/* ───────── Resolver fix suggestions ───────── */
+.resolver-suggestions {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: var(--orange-tint);
+  border: 1px solid rgba(217,119,6,0.25);
+  border-left: 3px solid var(--orange);
+  border-radius: var(--radius-sm);
+}
+.resolver-suggestions .rs-header {
+  font-size: 11px; font-weight: 600; color: var(--orange);
+  margin-bottom: 6px; letter-spacing: 0.02em;
+}
+.resolver-suggestions ul { margin: 0; padding-left: 18px; }
+.resolver-suggestions li {
+  font-size: 12px; color: var(--text); line-height: 1.5;
+  margin-bottom: 4px;
+}
+.resolver-suggestions li:last-child { margin-bottom: 0; }
+.resolver-suggestions code {
+  font-family: var(--mono); font-size: 11px;
+  background: rgba(255,255,255,0.6);
+  padding: 1px 4px; border-radius: 3px;
+  color: var(--text);
+}
+
 /* ───────── State sections ───────── */
 .state-section {
   background: var(--panel);
@@ -944,6 +970,21 @@ function escHtml(s) {
 }
 
 let _stackId = 0;
+function renderResolverSuggestions(event) {
+  const s = event.suggestions;
+  if (!Array.isArray(s) || s.length === 0) return '';
+  const items = s.map(msg => {
+    // Highlight any `backticked` code spans so proposed templates stand out.
+    const html = escHtml(msg).replace(/`([^`]+)`/g, '<code>$1</code>');
+    return `<li>${html}</li>`;
+  }).join('');
+  return `
+    <div class="resolver-suggestions" onclick="event.stopPropagation()">
+      <div class="rs-header">&#128161; Fix suggestions</div>
+      <ul>${items}</ul>
+    </div>`;
+}
+
 function renderErrorTrace(event) {
   if (!event.error && !event.errorTrace) return '';
   const id = 'stack' + (_stackId++);
@@ -1105,6 +1146,7 @@ function renderResolvers() {
         </span>
         <span class="time">${formatTime(e.timestamp)}</span>
       </div>
+      ${renderResolverSuggestions(e)}
       ${renderContextSnapshot(e)}
       ${renderErrorTrace(e)}
       <div class="details"><div class="json-tree">${jsonTree(e, 0, false)}</div></div>

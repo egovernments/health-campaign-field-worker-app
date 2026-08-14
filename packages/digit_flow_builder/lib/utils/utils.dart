@@ -11,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../debug/flow_debugger.dart';
+import '../debug/resolver_suggester.dart';
 import 'function_registry.dart';
 
 class FlowBuilderSingleton {
@@ -327,10 +328,17 @@ String resolveTemplate(
     final finalResult = _translateWithLocalization(result, localization);
 
     if (kDebugMode && template.contains('{{')) {
+      final suggestions = _isResolutionEmpty(finalResult)
+          ? suggestResolverFixes(
+              input: template,
+              contextData: contextData,
+            )
+          : const <String>[];
       FlowDebugger().logResolver(
         input: template,
         resolvedValue: finalResult,
         resolverName: 'resolveTemplate',
+        suggestions: suggestions,
       );
     }
 
@@ -347,6 +355,20 @@ String resolveTemplate(
     }
     rethrow;
   }
+}
+
+/// A resolution is "empty" when the template survived unresolved (still
+/// contains `{{...}}`), was replaced with the literal string "null", or came
+/// back as an empty string. These are the cases where a suggester run adds
+/// signal; a resolved non-empty value is never worth suggesting against.
+bool _isResolutionEmpty(dynamic value) {
+  if (value == null) return true;
+  if (value is String) {
+    if (value.isEmpty) return true;
+    if (value == 'null') return true;
+    if (value.contains('{{') && value.contains('}}')) return true;
+  }
+  return false;
 }
 
 /// Helper to translate using localization (supports FlowBuilderLocalization)
@@ -405,6 +427,13 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         }
       }
 
+      final suggestions = _isResolutionEmpty(result)
+          ? suggestResolverFixes(
+              input: value,
+              contextData: contextData,
+              matchedPrefix: prefix,
+            )
+          : const <String>[];
       FlowDebugger().logResolver(
         input: value,
         resolvedValue: result,
@@ -413,6 +442,7 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         contextData: contextData is Map
             ? Map<String, dynamic>.from(contextData)
             : <String, dynamic>{},
+        suggestions: suggestions,
       );
     }
 
