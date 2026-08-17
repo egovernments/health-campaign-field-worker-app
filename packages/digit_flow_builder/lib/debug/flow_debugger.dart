@@ -142,6 +142,7 @@ class FlowDebugger {
     required String resolverName,
     String? matchedPrefix,
     Map<String, dynamic> contextData = const {},
+    List<String> suggestions = const [],
     String? errorMessage,
     String? stackTrace,
   }) {
@@ -156,6 +157,7 @@ class FlowDebugger {
       resolverName: resolverName,
       matchedPrefix: matchedPrefix,
       contextDataSnapshot: _deepSanitize(contextData),
+      suggestions: suggestions,
       errorMessage: errorMessage,
       stackTrace: stackTrace,
     ));

@@ -1664,7 +1664,22 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
       String displayValue;
 
-      if (rawValue is List) {
+      if (entry.value.format == PropertySchemaFormat.latLng &&
+          rawValue is String &&
+          rawValue.trim().isNotEmpty) {
+        // latLng form values are stored as "lat, lng[,accuracy]". On the
+        // summary page the field is labeled "GPS Accuracy" — show only the
+        // accuracy portion in meters. Fall back to the raw string when no
+        // accuracy segment is present.
+        final parts = rawValue.split(',').map((p) => p.trim()).toList();
+        if (parts.length >= 3 && double.tryParse(parts[2]) != null) {
+          final accuracy = double.parse(parts[2]).toStringAsFixed(2);
+          displayValue =
+              '$accuracy ${localizations.translate('CORE_COMMON_METERS')}';
+        } else {
+          displayValue = rawValue;
+        }
+      } else if (rawValue is List) {
         displayValue = rawValue
             .map((e) => localizations.translate(e.toString()))
             .join(', ');
