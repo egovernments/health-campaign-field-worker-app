@@ -625,9 +625,18 @@ List<dss_mappers.DashboardConfigSchema?> filterDashboardConfig(
 }
 
 getSelectedLanguage(AppInitialized state, int index) {
-  if (AppSharedPreferences().getSelectedLocale == null) {
-    AppSharedPreferences()
-        .setSelectedLocale(state.appConfiguration.languages!.last.value);
+  final languages = state.appConfiguration.languages!;
+  if (AppSharedPreferences().getSelectedLocale == null &&
+      languages.isNotEmpty) {
+    // Default to English when it's present in the configured language
+    // list; otherwise fall back to the first available language.
+    final defaultLanguage = languages.firstWhere(
+      (lang) =>
+          lang.label.toLowerCase() == 'english' ||
+          lang.value.toLowerCase().startsWith('en'),
+      orElse: () => languages.first,
+    );
+    AppSharedPreferences().setSelectedLocale(defaultLanguage.value);
   }
   final selectedLanguage = AppSharedPreferences().getSelectedLocale;
   final isSelected =
