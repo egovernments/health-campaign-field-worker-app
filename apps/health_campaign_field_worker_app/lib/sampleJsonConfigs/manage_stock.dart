@@ -2643,17 +2643,10 @@ final dynamic sampleInventoryFlows = {
           }
         },
         {
-          "actionType": "SHOW_TOAST",
-          "properties": {
-            "message": "INVENTORY_STOCK_ACCEPTED_SUCCESS",
-            "type": "success"
-          }
-        },
-        {
           "actionType": "NAVIGATION",
           "properties": {
             "type": "TEMPLATE",
-            "name": "manageStock",
+            "name": "stock-acknowledgement",
             "navigationMode": "popUntilAndReplace",
             "popUntilPageName": "manageStock"
           }
@@ -2850,6 +2843,46 @@ final dynamic sampleInventoryFlows = {
               "enums": null
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "stock-acknowledgement",
+      "screenType": "TEMPLATE",
+      "heading": "",
+      "description": "",
+      "header": [],
+      "footer": [],
+      "initActions": [],
+      "body": [
+        {
+          "type": "template",
+          "format": "panelCard",
+          "label": "INVENTORY_STOCK_ACCEPT_SUCCESS_HEADING",
+          "heading": "INVENTORY_STOCK_ACCEPT_SUCCESS_HEADING",
+          "description": "INVENTORY_STOCK_ACCEPT_SUCCESS_DESCRIPTION",
+          "fieldName": "stockAcknowledgement",
+          "mandatory": true,
+          "properties": {"type": "success"},
+          "primaryAction": {
+            "type": "template",
+            "format": "button",
+            "label": "INVENTORY_STOCK_ACCEPT_SUCCESS_GO_BACK_BUTTON",
+            "fieldName": "GoToManageStock",
+            "hidden": false,
+            "mandatory": true,
+            "properties": {"type": "primary"},
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "type": "TEMPLATE",
+                  "name": "manageStock",
+                  "navigationMode": "popAndPush"
+                }
+              }
+            ]
+          }
         }
       ]
     }
