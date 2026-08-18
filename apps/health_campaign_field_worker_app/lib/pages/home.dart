@@ -60,6 +60,7 @@ import '../sampleJsonConfigs/manage_stock.dart';
 import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
+import '../sampleJsonConfigs/registration_bednet_flows.dart';
 import '../sampleJsonConfigs/registration_smc_flows.dart';
 import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
@@ -156,6 +157,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       debugPrint('HomePage: _checkFaceEnrollment error: $e');
     }
   }
+
   // OverlayEntry-based loader shown while a module-open cascade is running
   // (localization fetch + schema decode + flow setup + router.push). We use
   // `OverlayEntry` (inserted into the ROOT `Overlay`) instead of
@@ -2445,12 +2447,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                           pageName: registrationDeliveryData["initialPage"]),
                     );
                   } else {
-                    FlowRegistry.setConfig(
-                        sampleSMCFlows["flows"] as List<Map<String, dynamic>>);
+                    FlowRegistry.setConfig(sampleBednetFlows["flows"]
+                        as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
                       FlowBuilderHomeRoute(
-                          pageName: sampleSMCFlows["initialPage"]),
+                          pageName: sampleBednetFlows["initialPage"]),
                     );
                   }
                 } catch (e) {
