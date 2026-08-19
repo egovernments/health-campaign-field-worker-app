@@ -268,19 +268,19 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
   /// branch's `actions` list. Non-SEARCH_EVENT action types (NAVIGATION,
   /// CLOSE_POPUP, etc.) are ignored so we never clear a name that isn't
   /// actually a search bucket.
-  Set<String> _searchEventNamesIn(List<dynamic> branchActions) {
-    final names = <String>{};
+  Set<String> _eventNamesInBranch(List<dynamic> branchActions) {
+    final searchModes = <String>{};
     for (final action in branchActions) {
       if (action is! Map) continue;
       if (action['actionType'] != 'SEARCH_EVENT') continue;
       final props = action['properties'];
       if (props is! Map) continue;
-      final name = props['name'];
-      if (name is String && name.isNotEmpty) {
-        names.add(name);
+      final searchMode = props['name'];
+      if (searchMode is String && searchMode.isNotEmpty) {
+        searchModes.add(searchMode);
       }
     }
-    return names;
+    return searchModes;
   }
 
   /// Clears every non-matching conditional branch's SEARCH_EVENT
@@ -297,7 +297,7 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
   ///
   /// **Filtering rules:**
   /// - Only `SEARCH_EVENT` actions contribute names (via
-  ///   [_searchEventNamesIn]).
+  ///   [_eventNamesInBranch]).
   /// - Names that ALSO appear in the matched branch's SEARCH_EVENTs are
   ///   preserved — clearing them would wipe the search we're about to
   ///   dispatch on this same keystroke.
@@ -314,11 +314,11 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
     // Names the matched branch will (re)populate this dispatch — never
     // clear these, or we'd erase the search we're about to fire.
     final matchedActions = actionsList[matchedIndex]['actions'];
-    final matchedNames = matchedActions is List
-        ? _searchEventNamesIn(matchedActions)
+    final matchedSearchModes = matchedActions is List
+        ? _eventNamesInBranch(matchedActions)
         : const <String>{};
 
-    final siblingSearchNames = <String>{};
+    final siblingSearchModes = <String>{};
     for (int j = 0; j < actionsList.length; j++) {
       if (j == matchedIndex) continue;
       final branch = actionsList[j];
@@ -327,14 +327,14 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
       final branchActions = branch['actions'];
       if (branchActions is! List) continue;
 
-      for (final name in _searchEventNamesIn(branchActions)) {
-        if (matchedNames.contains(name)) continue;
-        siblingSearchNames.add(name);
+      for (final searchMode in _eventNamesInBranch(branchActions)) {
+        if (matchedSearchModes.contains(searchMode)) continue;
+        siblingSearchModes.add(searchMode);
       }
     }
 
-    for (final name in siblingSearchNames) {
-      SearchStateManager().clear(compositeKey, name);
+    for (final searchMode in siblingSearchModes) {
+      SearchStateManager().clear(compositeKey, searchMode);
     }
   }
 
