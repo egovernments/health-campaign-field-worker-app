@@ -67,7 +67,15 @@ class RowWidget extends ResolvedFlowWidget {
       children: childrenWithGaps,
     );
 
-    if (useIntrinsicHeight) row = IntrinsicHeight(child: row);
+    // stretch cross-alignment requires a bounded height; when the row is
+    // hosted in an unbounded-height parent (SliverFillRemaining, unbounded
+    // Column, etc.) it would try to size children to infinite height and
+    // throw. IntrinsicHeight resolves the row's own height to the tallest
+    // child's intrinsic height, restoring a bounded box for stretch.
+    if (useIntrinsicHeight ||
+        crossAxisAlignment == CrossAxisAlignment.stretch) {
+      row = IntrinsicHeight(child: row);
+    }
 
     return WidgetParsers.wrapWithBottomGap(row, props);
   }
