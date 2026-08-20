@@ -240,8 +240,14 @@ class MainApplicationState extends State<MainApplication>
 
                       final localizationModulesList =
                           appConfig.backendInterface;
+                      // Default locale before the user picks one; keep in
+                      // sync with getSelectedLanguage() in utils.dart.
+                      final languagesList = appConfig.languages;
                       var firstLanguage;
-                      firstLanguage = appConfig.languages?.lastOrNull?.value;
+                      firstLanguage = (languagesList != null &&
+                              languagesList.isNotEmpty)
+                          ? getDefaultLanguage(languagesList).value
+                          : null;
                       final selectedLocale =
                           AppSharedPreferences().getSelectedLocale ??
                               firstLanguage;
