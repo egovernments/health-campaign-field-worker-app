@@ -182,17 +182,6 @@ DateTime parseDate(String input) {
   throw const FormatException('Unsupported date format');
 }
 
-bool isDotSeparatedKey(String input) {
-  // Match only things like 'enum.value.subvalue', not decimal numbers or lat/long
-  if (input.contains(',') && RegExp(r'\d+\.\d+').hasMatch(input)) {
-    // Looks like "12.45, 13.45" → treat as raw value
-    return false;
-  }
-
-  // Allow only alphabetic dot-separated keys like "enum.value.type"
-  return RegExp(r'^[a-zA-Z]+(\.[a-zA-Z]+)+$').hasMatch(input);
-}
-
 String formatDateLocalized(
     BuildContext context, DateTime date, String pattern) {
   final locale = Localizations.localeOf(context).toString();

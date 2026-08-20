@@ -1683,9 +1683,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         displayValue = rawValue
             .map((e) => localizations.translate(e.toString()))
             .join(', ');
-      } else if (rawValue is String && isDotSeparatedKey(rawValue)) {
+      } else if (rawValue is String && entry.value.isMultiSelect == true) {
         displayValue = rawValue
             .split('.')
+            .where((e) => e.trim().isNotEmpty)
             .map((e) => localizations.translate(e.trim()))
             .join(', ');
       } else if (rawValue is DateTime) {
