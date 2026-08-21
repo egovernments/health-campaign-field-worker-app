@@ -1192,6 +1192,7 @@ final jsonConfig = {
         "mappings": {
           "clientReferenceId": "__generate:uuid", // referenceId in code
           "tenantId": "__context:tenantId",
+          "hierarchyType": "__context:hierarchyType",
           "serviceCode": "complaintType.complaintType",
           "description": "complaintDetails.complaintDescription",
           "source": "__value:mobile",
