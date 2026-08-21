@@ -189,6 +189,11 @@ class TransformerExecutor extends ActionExecutor {
       "user": FlowBuilderSingleton().loggedInUser,
       "tenantId": FlowBuilderSingleton().selectedProject?.tenantId,
       "selectedBoundaryCode": FlowBuilderSingleton().boundary?.code,
+      "hierarchyType": DigitDataModelSingleton().hierarchyType ??
+          FlowBuilderSingleton()
+              .selectedProject
+              ?.additionalDetails
+              ?.hierarchyType,
       // converting in json format to match nested object value as passing model will cause issue
       'userUUID': FlowBuilderSingleton().loggedInUser?.uuid,
       'loggedInUserUuid': FlowBuilderSingleton().loggedInUserUuid,

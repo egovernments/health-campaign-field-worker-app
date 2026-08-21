@@ -245,6 +245,9 @@ class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
   static String? _$additionalDetail(PgrServiceModel v) => v.additionalDetail;
   static const Field<PgrServiceModel, String> _f$additionalDetail =
       Field('additionalDetail', _$additionalDetail, opt: true);
+  static String? _$hierarchyType(PgrServiceModel v) => v.hierarchyType;
+  static const Field<PgrServiceModel, String> _f$hierarchyType =
+      Field('hierarchyType', _$hierarchyType, opt: true);
   static AuditDetails? _$auditDetails(PgrServiceModel v) => v.auditDetails;
   static const Field<PgrServiceModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -271,6 +274,7 @@ class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
     #rowVersion: _f$rowVersion,
     #address: _f$address,
     #additionalDetail: _f$additionalDetail,
+    #hierarchyType: _f$hierarchyType,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
   };
@@ -294,6 +298,7 @@ class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
         rowVersion: data.dec(_f$rowVersion),
         address: data.dec(_f$address),
         additionalDetail: data.dec(_f$additionalDetail),
+        hierarchyType: data.dec(_f$hierarchyType),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails));
   }
@@ -376,6 +381,7 @@ abstract class PgrServiceModelCopyWith<$R, $In extends PgrServiceModel, $Out>
       int? rowVersion,
       PgrAddressModel? address,
       String? additionalDetail,
+      String? hierarchyType,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails});
   PgrServiceModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -420,6 +426,7 @@ class _PgrServiceModelCopyWithImpl<$R, $Out>
           int? rowVersion,
           PgrAddressModel? address,
           Object? additionalDetail = $none,
+          Object? hierarchyType = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none}) =>
       $apply(FieldCopyWithData({
@@ -438,6 +445,7 @@ class _PgrServiceModelCopyWithImpl<$R, $Out>
         if (rowVersion != null) #rowVersion: rowVersion,
         if (address != null) #address: address,
         if (additionalDetail != $none) #additionalDetail: additionalDetail,
+        if (hierarchyType != $none) #hierarchyType: hierarchyType,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none) #clientAuditDetails: clientAuditDetails
       }));
@@ -462,6 +470,7 @@ class _PgrServiceModelCopyWithImpl<$R, $Out>
       address: data.get(#address, or: $value.address),
       additionalDetail:
           data.get(#additionalDetail, or: $value.additionalDetail),
+      hierarchyType: data.get(#hierarchyType, or: $value.hierarchyType),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails));
