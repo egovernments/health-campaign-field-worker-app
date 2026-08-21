@@ -488,6 +488,18 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
     );
   }
 
+  /// Subclass hook: intercept the "Enter Manual Code" tap. Return false to
+  /// cancel entering manual-code mode (e.g. after cancelling a required
+  /// pre-entry dialog). Default: proceed.
+  Future<bool> onEnterManualCodePressed() async => true;
+
+  /// Subclass hook: additional widget rendered under the "Enter Manual Code"
+  /// link (e.g. a sibling "Mark Attendance Manually" action). Return null
+  /// to render nothing. Default: null.
+  Widget? extraManualEntryContent(
+          ThemeData theme, DigitTextTheme textTheme) =>
+      null;
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -1342,7 +1354,9 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                 ),
                 const SizedBox(height: spacer6),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    final proceed = await onEnterManualCodePressed();
+                    if (!proceed || !mounted) return;
                     setState(() {
                       manualCode = true;
                     });
@@ -1356,6 +1370,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                     ),
                   ),
                 ),
+                if (extraManualEntryContent(theme, textTheme) != null) ...[
+                  const SizedBox(height: spacer6),
+                  extraManualEntryContent(theme, textTheme)!,
+                ],
                 // Larger flex leaves room for the bottom sheet.
                 const Spacer(flex: 2),
               ],
