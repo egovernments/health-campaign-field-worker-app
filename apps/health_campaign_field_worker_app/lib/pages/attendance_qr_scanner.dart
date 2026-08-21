@@ -53,6 +53,12 @@ class AttendanceScannerPageState extends DigitScannerPageState {
   static const _reasonKey = 'reason';
   static const _reasonCommentKey = 'reasonComment';
 
+  /// Captured when the user picks a reason on "Enter Manual Code". Stashed
+  /// here because the scanner stays open while the user types the code; the
+  /// caller receives it via the pop return value once a manual code is
+  /// successfully processed.
+  Map<String, String>? _manualEntryReason;
+
   @override
   void initState() {
     final specificWidget = widget as AttendanceDigitScannerPage;
@@ -73,68 +79,47 @@ class AttendanceScannerPageState extends DigitScannerPageState {
   }
 
   @override
-  overlayForManualEntry(ThemeData theme, DigitTextTheme textTheme) {
-    return Align(
-      alignment: Alignment.center,
-      widthFactor: 2,
-      child: Padding(
-        padding: const EdgeInsets.only(top: spacer8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: spacer1),
-              child: Text(
-                  localizations.translate(
-                    i18.attendance.manualScanLabel,
-                  ),
-                  style: textTheme.bodyL
-                      .copyWith(color: theme.colorTheme.paper.primary)),
-            ),
-            DigitButton(
-                label: localizations.translate(
-                  i18.attendance.enterUniqueCode,
-                ),
-                onPressed: () {
-                  context.read<DigitScannerBloc>().add(
-                        const DigitScannerEvent.handleScanner(
-                          barCode: [],
-                          qrCode: [],
-                        ),
-                      );
-                  setState(() {
-                    manualCode = true;
-                  });
-                },
-                type: DigitButtonType.link,
-                size: DigitButtonSize.large),
-            Padding(
-              padding: const EdgeInsets.only(top: spacer1),
-              child: Text(
-                  localizations.translate(
-                    i18.common.coreCommonOr,
-                  ),
-                  style: textTheme.bodyL
-                      .copyWith(color: theme.colorTheme.paper.primary)),
-            ),
-            DigitButton(
-                label: localizations.translate(
-                  i18.attendance.markAttendanceManually,
-                ),
-                onPressed: () {
-                  showManualAttendanceReasonDialog(
-                      context: context,
-                      reasonList: AttendanceSingleton()
-                          .manualAttendanceReasons
-                          .reversed
-                          .toList());
-                },
-                type: DigitButtonType.link,
-                size: DigitButtonSize.large),
-          ],
+  Future<bool> onEnterManualCodePressed() async {
+    final result = await showManualAttendanceReasonDialog(
+      context: context,
+      reasonList:
+          AttendanceSingleton().manualAttendanceReasons.reversed.toList(),
+    );
+    if (result == null) return false;
+    _manualEntryReason = result;
+    return true;
+  }
+
+  @override
+  Widget? extraManualEntryContent(
+      ThemeData theme, DigitTextTheme textTheme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          localizations.translate(i18.common.coreCommonOr),
+          style: textTheme.bodyL
+              .copyWith(color: theme.colorTheme.paper.primary),
         ),
-      ),
+        DigitButton(
+          label: localizations.translate(i18.attendance.markAttendanceManually),
+          type: DigitButtonType.link,
+          size: DigitButtonSize.large,
+          onPressed: () async {
+            final result = await showManualAttendanceReasonDialog(
+              context: context,
+              reasonList: AttendanceSingleton()
+                  .manualAttendanceReasons
+                  .reversed
+                  .toList(),
+            );
+            if (result != null && mounted) {
+              Navigator.of(context).pop(result);
+            }
+          },
+        ),
+      ],
     );
   }
 
@@ -164,6 +149,14 @@ class AttendanceScannerPageState extends DigitScannerPageState {
         if (scannedData.manualEntry == null ||
             scannedData.manualEntry == false) {
           showAttendanceSuccessPopup(scannedData);
+        } else if (_manualEntryReason != null && mounted) {
+          // Manual code entry captured a reason before code entry. The
+          // attendee is already marked via onScanResult; now pop with the
+          // reason so the caller can persist it under attendanceManualData.
+          final reason = _manualEntryReason;
+          _manualEntryReason = null;
+          Navigator.of(context).pop(reason);
+          return;
         }
       } else {
         if (mounted) {
@@ -452,9 +445,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                           if (reason == 'OTHERS' && reasonComment != null)
                             _reasonCommentKey: reasonComment,
                         };
-                        Navigator.of(ctx).pop();
-
-                        Navigator.of(context).pop(result);
+                        Navigator.of(ctx).pop(result);
                       } else {
                         form.control(_reasonCommentKey).markAllAsTouched();
                       }
