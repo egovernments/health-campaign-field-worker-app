@@ -61,8 +61,9 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
   void initState() {
     super.initState();
 
-    /// Read default value from config
-    _value = widget.json['defaultValue'] == true;
+    /// Restore persisted widgetData value (e.g. popup reopened) so this
+    /// behaves like the plain switch widget; fall back to config default.
+    _value = widget.externalValue || widget.json['defaultValue'] == true;
 
     /// Fetch location immediately after mount (no dialog / no delay)
     WidgetsBinding.instance.addPostFrameCallback((_) {
