@@ -2,6 +2,7 @@ import 'package:digit_data_model/data_model.dart' show EntityModel;
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:digit_flow_builder/action_handler/action_config.dart';
 import 'package:digit_flow_builder/widget_registry.dart' show CrudItemContext;
+import 'package:digit_flow_builder/widgets/flow_widget_interface.dart';
 import 'package:digit_flow_builder/widgets/resolved_flow_widget.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
@@ -394,4 +395,23 @@ class FaceAuthEventLegendWidget extends ResolvedFlowWidget {
       ),
     );
   }
+}
+
+/// No-op stub used when [kFaceAuthEnabled] is false. Registered under the
+/// same format string as the real face-auth widget so configs referencing
+/// it render as empty space instead of tripping the "Unknown widget
+/// format" fallback in the widget factory.
+class NoOpFaceAuthWidget implements FlowWidget {
+  @override
+  final String format;
+
+  const NoOpFaceAuthWidget(this.format);
+
+  @override
+  Widget build(
+    Map<String, dynamic> json,
+    BuildContext context,
+    void Function(ActionConfig) onAction,
+  ) =>
+      const SizedBox.shrink();
 }
