@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
+import '../../blocs/search_state_manager.dart';
 import '../../utils/conditional_evaluator.dart';
 import '../localization_context.dart';
 import '../resolved_flow_widget.dart';
@@ -139,6 +140,12 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
     _lastHandledValue = value;
     _updateWidgetData(value);
 
+    // Debounce guarantee: every keystroke cancels the pending timer and
+    // schedules a fresh one. Dart's `Timer.cancel()` prevents an
+    // un-fired callback from running. `dispose()` also cancels the
+    // timer. Combined with the `mounted` + stale-value guards inside
+    // `_dispatchSearch`, only the latest keystroke's dispatch can
+    // reach the action layer.
     _debounceTimer?.cancel();
     if (widget.debounceMs <= 0) {
       _dispatchSearch(value);
@@ -152,6 +159,11 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
 
   void _dispatchSearch(String value) {
     if (!mounted) return;
+    // Defence in depth: if some external caller reset `_lastHandledValue`
+    // (e.g. programmatic clear) between schedule and fire, drop this
+    // callback — a fresh dispatch will follow.
+    if (value != _lastHandledValue) return;
+
     if (value.length >= widget.minSearchChars) {
       _executeSearchActions(value);
     } else {
@@ -211,7 +223,8 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
     final actionsList = List<Map<String, dynamic>>.from(widget.json['onAction']);
     final currentEvalContext = widget.resolved.getFreshEvalContext();
 
-    for (final raw in actionsList) {
+    for (int i = 0; i < actionsList.length; i++) {
+      final raw = actionsList[i];
       if (raw.containsKey('condition')) {
         final condition = raw['condition'] as Map<String, dynamic>?;
         final expression = condition?['expression'] as String?;
@@ -227,10 +240,17 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
         }
 
         if (conditionMet) {
-          final subActions = raw['actions'] as List<dynamic>? ?? [];
+          // Clear filters from every NON-matching branch so stale filters
+          // from a previously active branch don't AND into the current
+          // one via SearchStateManager.getAllFilters(). Generic across
+          // any set of searchNames declared in config.
+          _clearNonMatchingBranchFilters(actionsList, i);
+
+          final subActions = raw['actions'] as List<dynamic>? ?? const [];
           for (final subActionJson in subActions) {
+            if (subActionJson is! Map) continue;
             final processedAction = _processAction(
-              subActionJson as Map<String, dynamic>,
+              Map<String, dynamic>.from(subActionJson),
               value,
             );
             widget.onAction(processedAction);
@@ -244,6 +264,80 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
     }
   }
 
+  /// Extracts the set of `SEARCH_EVENT` searchNames declared inside a
+  /// branch's `actions` list. Non-SEARCH_EVENT action types (NAVIGATION,
+  /// CLOSE_POPUP, etc.) are ignored so we never clear a name that isn't
+  /// actually a search bucket.
+  Set<String> _eventNamesInBranch(List<dynamic> branchActions) {
+    final searchModes = <String>{};
+    for (final action in branchActions) {
+      if (action is! Map) continue;
+      if (action['actionType'] != 'SEARCH_EVENT') continue;
+      final props = action['properties'];
+      if (props is! Map) continue;
+      final searchMode = props['name'];
+      if (searchMode is String && searchMode.isNotEmpty) {
+        searchModes.add(searchMode);
+      }
+    }
+    return searchModes;
+  }
+
+  /// Clears every non-matching conditional branch's SEARCH_EVENT
+  /// searchName entirely (filters + orderBy + pagination window) from
+  /// [SearchStateManager].
+  ///
+  /// **Assumption (contract):** conditional branches inside a search
+  /// bar's `onAction` are treated as **mutually exclusive** — one and
+  /// only one branch's SEARCH_EVENTs represent the current search mode.
+  /// If a future config needs additive/independent branches, wire an
+  /// explicit config flag (e.g. `"exclusiveSearchBranches": false`) and
+  /// gate this call on it. Unconditional entries in the list are always
+  /// left alone (they're treated as additive side-effects like toasts).
+  ///
+  /// **Filtering rules:**
+  /// - Only `SEARCH_EVENT` actions contribute names (via
+  ///   [_eventNamesInBranch]).
+  /// - Names that ALSO appear in the matched branch's SEARCH_EVENTs are
+  ///   preserved — clearing them would wipe the search we're about to
+  ///   dispatch on this same keystroke.
+  ///
+  /// Called on each dispatch — idempotent when the same branch fires
+  /// repeatedly (clear on an already-empty bucket is a no-op).
+  void _clearNonMatchingBranchFilters(
+    List<Map<String, dynamic>> actionsList,
+    int matchedIndex,
+  ) {
+    final compositeKey = widget.compositeKey;
+    if (compositeKey == null) return;
+
+    // Names the matched branch will (re)populate this dispatch — never
+    // clear these, or we'd erase the search we're about to fire.
+    final matchedActions = actionsList[matchedIndex]['actions'];
+    final matchedSearchModes = matchedActions is List
+        ? _eventNamesInBranch(matchedActions)
+        : const <String>{};
+
+    final siblingSearchModes = <String>{};
+    for (int j = 0; j < actionsList.length; j++) {
+      if (j == matchedIndex) continue;
+      final branch = actionsList[j];
+      if (!branch.containsKey('condition')) continue;
+
+      final branchActions = branch['actions'];
+      if (branchActions is! List) continue;
+
+      for (final searchMode in _eventNamesInBranch(branchActions)) {
+        if (matchedSearchModes.contains(searchMode)) continue;
+        siblingSearchModes.add(searchMode);
+      }
+    }
+
+    for (final searchMode in siblingSearchModes) {
+      SearchStateManager().clear(compositeKey, searchMode);
+    }
+  }
+
   void _executeClearActions(String value) {
     if (widget.json['onAction'] == null) {
       return;
@@ -252,7 +346,8 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
     final actionsList = List<Map<String, dynamic>>.from(widget.json['onAction']);
     final currentEvalContext = widget.resolved.getFreshEvalContext();
 
-    for (final raw in actionsList) {
+    for (int i = 0; i < actionsList.length; i++) {
+      final raw = actionsList[i];
       if (raw.containsKey('condition')) {
         final condition = raw['condition'] as Map<String, dynamic>?;
         final expression = condition?['expression'] as String?;
@@ -268,6 +363,13 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
         }
 
         if (conditionMet) {
+          // Symmetric with _executeSearchActions: when the user drops
+          // below minSearchChars we still switched conditional modes,
+          // so drop the sibling branches' searchName state. Prevents
+          // "backspace to empty then switch mode → stale filters
+          // re-enter" regressions.
+          _clearNonMatchingBranchFilters(actionsList, i);
+
           final subActions = raw['actions'] as List<dynamic>? ?? [];
           _executeClearForActions(subActions, clearWidgetKey: value.isEmpty);
           break;
