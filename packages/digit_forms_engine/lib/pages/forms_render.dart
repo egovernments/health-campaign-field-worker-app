@@ -4,6 +4,8 @@ import 'package:digit_forms_engine/json_forms.dart';
 import 'package:digit_forms_engine/router/forms_router.dart';
 import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_header.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/enum/app_enums.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -206,8 +208,17 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                     enableFixedDigitButton: true,
                     header: const Column(
                       children: [
+                        // No top inset: the header widget already carries
+                        // spacer4 top/bottom, so this matches the back button
+                        // placement on the template (flow-builder) screens,
+                        // which sit at 16dp from both the app bar and the left
+                        // edge. The left/right spacer2 plus the widget's own
+                        // spacer2 gives the same 16dp gutter.
                         Padding(
-                          padding: EdgeInsets.all(spacer2),
+                          padding: EdgeInsets.only(
+                            left: spacer2,
+                            right: spacer2,
+                          ),
                           child: BackNavigationHelpHeaderWidget(
                             showBackNavigation: true,
                           ),
@@ -298,12 +309,64 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                 // control.updateValueAndValidity();
                               }
 
+                              // Build a display list of currently-invalid
+                              // fields so the toast can name them instead of
+                              // the generic "please fill required fields"
+                              // — a delivery-team scan on the wrong page
+                              // would otherwise leave the user guessing
+                              // which field is blocking submit.
+                              List<String> collectInvalidLabels() {
+                                final labels = <String>[];
+                                for (final key in currentKeys) {
+                                  final control = formGroup.control(key);
+                                  if (control.errors.isEmpty && control.valid) {
+                                    continue;
+                                  }
+                                  final prop = schema.properties?[key];
+                                  final raw = prop?.label ??
+                                      prop?.innerLabel ??
+                                      key;
+                                  final translated =
+                                      localizations.translate(raw);
+                                  labels.add(translated == raw &&
+                                          raw != key
+                                      ? raw
+                                      : translated);
+                                }
+                                return labels;
+                              }
+
+                              String buildValidationToast() {
+                                final labels = collectInvalidLabels();
+                                final base = localizations.translate(
+                                    'CORE_COMMON_VALIDATION_ERROR');
+                                final prefix =
+                                    base == 'CORE_COMMON_VALIDATION_ERROR'
+                                        ? 'Please fill required fields'
+                                        : base;
+                                if (labels.isEmpty) return prefix;
+                                return '$prefix: ${labels.join(", ")}';
+                              }
+
                               final hasErrors = currentKeys.any((key) {
                                 final control = formGroup.control(key);
                                 return control.errors.isNotEmpty;
                               });
 
                               if (hasErrors) {
+                                // Surface the failure — without this, the
+                                // button silently rejects and the user is
+                                // left wondering why nothing happened. The
+                                // per-field error text still renders on
+                                // each invalid widget (all controls were
+                                // just markAsTouched'd above); the toast
+                                // is the app-wide "we heard you, but the
+                                // form isn't ready" signal.
+                                Toast.showToast(
+                                  context,
+                                  message: buildValidationToast(),
+                                  type: ToastType.error,
+                                );
                                 _isSubmitting = false;
                                 setState(() {});
                                 return;
@@ -314,6 +377,11 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   .every((key) => formGroup.control(key).valid);
 
                               if (!isCurrentPageValid) {
+                                Toast.showToast(
+                                  context,
+                                  message: buildValidationToast(),
+                                  type: ToastType.error,
+                                );
                                 _isSubmitting = false;
                                 setState(() {});
                                 return;
@@ -496,23 +564,36 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                           context: context,
                                           builder: (BuildContext ctx) => Popup(
                                               title: localizations.translate(
-                                                  _resolveTemplate(
-                                                      schema.showAlertPopUp!
-                                                          .title,
-                                                      schema.showAlertPopUp
-                                                          ?.conditions,
-                                                      contextValue)!),
+                                                  _resolveAlertTemplate(
+                                                template: schema
+                                                    .showAlertPopUp!.title,
+                                                conditions: schema
+                                                    .showAlertPopUp?.conditions,
+                                                contextValues: contextValue,
+                                                conditionTemplate: (condition) =>
+                                                    condition.title,
+                                              )!),
                                               description: localizations
-                                                  .translate(_resolveTemplate(
-                                                          translateIfPresent(
+                                                  .translate(
+                                                      _resolveAlertTemplate(
+                                                            template:
+                                                                translateIfPresent(
                                                               schema
                                                                   .showAlertPopUp
                                                                   ?.description,
-                                                              localizations),
-                                                          schema.showAlertPopUp
-                                                              ?.conditions,
-                                                          contextValue) ??
-                                                      ""),
+                                                              localizations,
+                                                            ),
+                                                            conditions: schema
+                                                                .showAlertPopUp
+                                                                ?.conditions,
+                                                            contextValues:
+                                                                contextValue,
+                                                            conditionTemplate:
+                                                                (condition) =>
+                                                                    condition
+                                                                        .description,
+                                                          ) ??
+                                                          ""),
 
                                               /// FIXME: need to send null as empty string will take space
                                               actions: [
@@ -655,20 +736,30 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                       context: context,
                                       builder: (BuildContext ctx) => Popup(
                                           title: localizations.translate(
-                                              _resolveTemplate(
-                                                  schema.showAlertPopUp!.title,
-                                                  schema.showAlertPopUp
-                                                      ?.conditions,
-                                                  contextValue)!),
+                                              _resolveAlertTemplate(
+                                            template:
+                                                schema.showAlertPopUp!.title,
+                                            conditions: schema
+                                                .showAlertPopUp?.conditions,
+                                            contextValues: contextValue,
+                                            conditionTemplate: (condition) =>
+                                                condition.title,
+                                          )!),
                                           description: localizations.translate(
-                                              _resolveTemplate(
-                                                      translateIfPresent(
-                                                          schema.showAlertPopUp
-                                                              ?.description,
-                                                          localizations),
+                                              _resolveAlertTemplate(
+                                                    template: translateIfPresent(
                                                       schema.showAlertPopUp
-                                                          ?.conditions,
-                                                      contextValue) ??
+                                                          ?.description,
+                                                      localizations,
+                                                    ),
+                                                    conditions: schema
+                                                        .showAlertPopUp
+                                                        ?.conditions,
+                                                    contextValues: contextValue,
+                                                    conditionTemplate:
+                                                        (condition) => condition
+                                                            .description,
+                                                  ) ??
                                                   ""),
 
                                           /// FIXME: need to send null as empty string will take space
@@ -775,68 +866,184 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           height: spacer4,
                         )
                       ],
-                      DigitCard(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: spacer2,
-                        ),
-                        children: [
-                          Column(
+                      if (schema.showLabelOutsideCard == true &&
+                          schema.label != null) ...[
+                        Padding(
+                          // 16dp below the heading so the card sits at the
+                          // same distance as on screens that render their
+                          // heading inside the card, and as on the template
+                          // screens. This was spacer1, leaving the title
+                          // almost touching the card.
+                          padding: const EdgeInsets.only(
+                              left: spacer4, right: spacer4, bottom: spacer4),
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: 0,
+                              Text(
+                                _resolvePageLabel(schema),
+                                style: Theme.of(context)
+                                    .digitTextTheme(context)
+                                    .headingXl
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorTheme
+                                            .primary
+                                            .primary2),
                               ),
-                              if (schema.label != null) ...[
+                              if (schema.description != null &&
+                                  translateIfPresent(schema.description,
+                                          localizations) !=
+                                      null &&
+                                  _resolvePageDescription(schema)
+                                      .trim()
+                                      .isNotEmpty) ...[
+                                const SizedBox(height: spacer2),
                                 Text(
-                                  _resolvePageLabel(schema),
+                                  _resolvePageDescription(schema),
                                   style: Theme.of(context)
                                       .digitTextTheme(context)
-                                      .headingXl
+                                      .bodyS
                                       .copyWith(
                                           color: Theme.of(context)
                                               .colorTheme
-                                              .primary
-                                              .primary2),
+                                              .text
+                                              .secondary),
                                 ),
-                                if (schema.description != null &&
-                                    translateIfPresent(schema.description,
-                                            localizations) !=
-                                        null &&
-                                    _resolvePageDescription(schema)
-                                        .trim()
-                                        .isNotEmpty) ...[
-                                  const SizedBox(
-                                    height: spacer1,
-                                  ),
-                                  Text(
-                                    _resolvePageDescription(schema),
-                                    style: Theme.of(context)
-                                        .digitTextTheme(context)
-                                        .bodyS
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorTheme
-                                                .text
-                                                .secondary),
-                                  ),
-                                ],
                               ],
                             ],
                           ),
-                          JsonForms(
-                            propertySchema: schema,
-                            pageName: widget.pageName,
-                            currentSchemaKey: widget.currentSchemaKey,
-                            childrens: widget.customComponents,
-                            navigationParams: widget.navigationParams,
-                            defaultValues: const {
-                              // 'locality': context.boundary.code,
-                            },
-                          )
+                        ),
+                      ],
+                      if (schema.showLabelOutsideCard != true ||
+                          _hasMainCardFields(
+                              _excludeSeparateCardFields(schema))) ...[
+                        DigitCard(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: spacer4,
+                          ),
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 0,
+                                ),
+                                if (schema.showLabelOutsideCard != true &&
+                                    schema.label != null) ...[
+                                  Text(
+                                    _resolvePageLabel(schema),
+                                    style: Theme.of(context)
+                                        .digitTextTheme(context)
+                                        .headingXl
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorTheme
+                                                .primary
+                                                .primary2),
+                                  ),
+                                  if (schema.description != null &&
+                                      translateIfPresent(schema.description,
+                                              localizations) !=
+                                          null &&
+                                      _resolvePageDescription(schema)
+                                          .trim()
+                                          .isNotEmpty) ...[
+                                    const SizedBox(
+                                      height: spacer1,
+                                    ),
+                                    Text(
+                                      _resolvePageDescription(schema),
+                                      style: Theme.of(context)
+                                          .digitTextTheme(context)
+                                          .bodyS
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorTheme
+                                                  .text
+                                                  .secondary),
+                                    ),
+                                  ],
+                                  if (schema.conditions?['infoCardText'] !=
+                                      null) ...[
+                                    const SizedBox(height: spacer2),
+                                    InfoCard(
+                                      type: InfoType.info,
+                                      title: localizations
+                                          .translate('CORE_COMMON_INFO'),
+                                      description: localizations.translate(
+                                        schema.conditions!['infoCardText']
+                                            .toString(),
+                                      ),
+                                      // The copy is already sentence-cased
+                                      // server-side and spans two sentences;
+                                      // InfoCard's default transform lowercases
+                                      // every word after the first, turning
+                                      // "... village. Your GPS location" into
+                                      // "... village. your gps location".
+                                      capitalizedLetter: false,
+                                    ),
+                                  ],
+                                ],
+                              ],
+                            ),
+                            JsonForms(
+                              propertySchema: _excludeCardGroupFields(
+                                  _excludeSeparateCardFields(schema)),
+                              pageName: widget.pageName,
+                              currentSchemaKey: widget.currentSchemaKey,
+                              childrens: widget.customComponents,
+                              navigationParams: widget.navigationParams,
+                              defaultValues: const {
+                                // 'locality': context.boundary.code,
+                              },
+                            )
+                          ],
+                        ),
+                      ],
+                      if (_cardGroupSchemas(schema) != null)
+                        for (final groupSchema
+                            in _cardGroupSchemas(schema)!) ...[
+                          const SizedBox(height: spacer4),
+                          DigitCard(
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: spacer4,
+                            ),
+                            children: [
+                              JsonForms(
+                                propertySchema: groupSchema,
+                                pageName: widget.pageName,
+                                currentSchemaKey: widget.currentSchemaKey,
+                                childrens: widget.customComponents,
+                                navigationParams: widget.navigationParams,
+                                defaultValues: const {},
+                              )
+                            ],
+                          ),
                         ],
-                      ),
+                      if (_separateCardFields(schema) != null) ...[
+                        const SizedBox(
+                          height: spacer4,
+                        ),
+                        DigitCard(
+                          width: double.infinity,
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: spacer4,
+                          ),
+                          children: [
+                            JsonForms(
+                              propertySchema: _separateCardFields(schema)!,
+                              pageName: widget.pageName,
+                              currentSchemaKey: widget.currentSchemaKey,
+                              childrens: widget.customComponents,
+                              navigationParams: widget.navigationParams,
+                              defaultValues: const {},
+                            )
+                          ],
+                        ),
+                      ],
                       const SizedBox(
                         height: spacer2,
                       ),
@@ -862,33 +1069,29 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     );
   }
 
-  String? _resolveTemplate(
-    String? template,
-    List<AlertCondition>? conditions,
-    Map<String, dynamic> contextValues,
-  ) {
+  String? _resolveAlertTemplate({
+    required String? template,
+    required List<AlertCondition>? conditions,
+    required Map<String, dynamic> contextValues,
+    required String? Function(AlertCondition condition) conditionTemplate,
+  }) {
     if (conditions == null || conditions.isEmpty) {
       return template;
     }
 
-    // Find matching condition
     for (final condition in conditions) {
-      // simple check: if contextValues contain a truthy match
       final isConditionTrue =
           evaluateSingleCondition(condition.expression, contextValues);
 
-      if (isConditionTrue) {
-        return template?.replaceAll(
-            "{value}", localizations.translate(condition.value));
-      }
-
-      if (condition.expression == "DEFAULT") {
-        return template?.replaceAll(
-            "{value}", localizations.translate(condition.value));
+      if (isConditionTrue || condition.expression == "DEFAULT") {
+        final selectedTemplate = conditionTemplate(condition);
+        return (selectedTemplate?.isNotEmpty == true
+                ? selectedTemplate
+                : template)
+            ?.replaceAll("{value}", localizations.translate(condition.value));
       }
     }
 
-    // fallback: return template unchanged
     return template;
   }
 
@@ -934,7 +1137,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               header: const Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(spacer2),
+                    padding: EdgeInsets.only(
+                      left: spacer2,
+                      right: spacer2,
+                    ),
                     child: BackNavigationHelpHeaderWidget(
                       showBackNavigation: true,
                     ),
@@ -1363,8 +1569,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
     return ScrollableContent(
         enableFixedDigitButton: true,
+        // Same inset as the form pages' back header (no bottom padding), so
+        // the gap between Back and the first card matches the previous page.
         header: const Padding(
-          padding: EdgeInsets.all(spacer2),
+          padding: EdgeInsets.only(
+                      left: spacer2,
+                      right: spacer2,
+                    ),
           child: BackNavigationHelpHeaderWidget(showBackNavigation: true),
         ),
         footer: DigitCard(
@@ -1403,7 +1614,15 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         children: [
           for (final entry in shownPages)
             DigitCard(
-              margin: const EdgeInsets.all(spacer2),
+              // 16px side gutters like the form pages. Vertical spacing is
+              // bottom-only so the first card sits flush under the back header
+              // (as on the form pages) while consecutive summary cards still
+              // get the same 16px separation.
+              margin: const EdgeInsets.only(
+                left: spacer4,
+                right: spacer4,
+                bottom: spacer4,
+              ),
               children: [
                 LabelValueSummary(
                   padding: EdgeInsets.zero,
@@ -1445,13 +1664,29 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
       String displayValue;
 
-      if (rawValue is List) {
+      if (entry.value.format == PropertySchemaFormat.latLng &&
+          rawValue is String &&
+          rawValue.trim().isNotEmpty) {
+        // latLng form values are stored as "lat, lng[,accuracy]". On the
+        // summary page the field is labeled "GPS Accuracy" — show only the
+        // accuracy portion in meters. Fall back to the raw string when no
+        // accuracy segment is present.
+        final parts = rawValue.split(',').map((p) => p.trim()).toList();
+        if (parts.length >= 3 && double.tryParse(parts[2]) != null) {
+          final accuracy = double.parse(parts[2]).toStringAsFixed(2);
+          displayValue =
+              '$accuracy ${localizations.translate('CORE_COMMON_METERS')}';
+        } else {
+          displayValue = rawValue;
+        }
+      } else if (rawValue is List) {
         displayValue = rawValue
             .map((e) => localizations.translate(e.toString()))
             .join(', ');
-      } else if (rawValue is String && isDotSeparatedKey(rawValue)) {
+      } else if (rawValue is String && entry.value.isMultiSelect == true) {
         displayValue = rawValue
             .split('.')
+            .where((e) => e.trim().isNotEmpty)
             .map((e) => localizations.translate(e.trim()))
             .join(', ');
       } else if (rawValue is DateTime) {
@@ -1579,6 +1814,67 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
   bool _hasDisplayOnlyProperties(PropertySchema schema) {
     return schema.properties?.values.any((p) => p.displayOnly == true) ?? false;
+  }
+
+  /// Fields flagged with `conditions.separateCard` are rendered in their own
+  /// card below the main form card. Returns null when no field is flagged.
+  PropertySchema? _separateCardFields(PropertySchema schema) {
+    final entries = schema.properties?.entries
+            .where((e) => e.value.conditions?['separateCard'] == true)
+            .toList() ??
+        [];
+    if (entries.isEmpty) return null;
+    return schema.copyWith(properties: Map.fromEntries(entries));
+  }
+
+  PropertySchema _excludeSeparateCardFields(PropertySchema schema) {
+    final props = schema.properties;
+    if (props == null || _separateCardFields(schema) == null) return schema;
+    return schema.copyWith(
+      properties: Map.fromEntries(
+        props.entries
+            .where((e) => e.value.conditions?['separateCard'] != true),
+      ),
+    );
+  }
+
+  /// Groups properties by `conditions.cardGroup`. Each unique cardGroup value
+  /// becomes one PropertySchema (one card) in ascending numeric order.
+  /// Returns null if no field defines a cardGroup.
+  List<PropertySchema>? _cardGroupSchemas(PropertySchema schema) {
+    final props = schema.properties;
+    if (props == null) return null;
+    final grouped = <int, List<MapEntry<String, PropertySchema>>>{};
+    for (final entry in props.entries) {
+      final raw = entry.value.conditions?['cardGroup'];
+      if (raw == null) continue;
+      final groupId =
+          raw is int ? raw : int.tryParse(raw.toString());
+      if (groupId == null) continue;
+      grouped.putIfAbsent(groupId, () => []).add(entry);
+    }
+    if (grouped.isEmpty) return null;
+    final sortedKeys = grouped.keys.toList()..sort();
+    return sortedKeys
+        .map((k) => schema.copyWith(properties: Map.fromEntries(grouped[k]!)))
+        .toList();
+  }
+
+  /// Returns a schema with only fields NOT assigned to a cardGroup — these go
+  /// in the "main" (first) card.
+  PropertySchema _excludeCardGroupFields(PropertySchema schema) {
+    final props = schema.properties;
+    if (props == null) return schema;
+    return schema.copyWith(
+      properties: Map.fromEntries(
+        props.entries.where((e) => e.value.conditions?['cardGroup'] == null),
+      ),
+    );
+  }
+
+  bool _hasMainCardFields(PropertySchema schema) {
+    final props = _excludeCardGroupFields(schema).properties;
+    return props != null && props.isNotEmpty;
   }
 
   Widget _buildDisplayOnlyCard(BuildContext context, PropertySchema schema) {

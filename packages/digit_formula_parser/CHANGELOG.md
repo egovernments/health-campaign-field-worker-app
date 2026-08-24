@@ -1,3 +1,11 @@
+## 1.2.1
+
+- NTD Oncho: fix delivery-rule parsing for boolean types with safe defaults for missing fields
+- Modified `formula_parser_base.dart` to support `contains` visibility conditions on lists
+- Added `preventScreenCapture` flag hooks used by forms engine
+- Support for dependent fields; fixed dependency handling
+- Update autofill condition for product data
+
 ## 1.2.0
 
 - Added `contains` and `notcontains` list check functions for validating values in lists and multi-select fields

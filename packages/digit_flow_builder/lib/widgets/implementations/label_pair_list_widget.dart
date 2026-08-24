@@ -19,7 +19,6 @@ class LabelPairListWidget extends ResolvedFlowWidget {
   ) {
     final List<dynamic> data = json['data'] ?? [];
     final localization = resolved.localization;
-
     // Filter out null items if hideIfNull is true
     final filteredItems = <LabelValueItem>[];
 
@@ -36,6 +35,7 @@ class LabelPairListWidget extends ResolvedFlowWidget {
       final value = e['value'];
       final defaultValue = e['defaultValue'];
       final hideIfNull = e['hideIfNull'] == true;
+      final isMultiSelect = e['isMultiSelect'] == true;
 
       // Resolve template using evalContext
       final keyText = resolveTemplate(
@@ -68,12 +68,26 @@ class LabelPairListWidget extends ResolvedFlowWidget {
         );
       }
 
+      // Localize the display value. For multi-select fields, split
+      // dot-separated codes and translate each individually.
+      String? displayValue;
+      if (valueText == null || valueText == 'null') {
+        displayValue = '--';
+      } else if (isMultiSelect && valueText.contains('.')) {
+        displayValue = valueText
+            .split('.')
+            .map((part) => localization?.translate(part) ?? part)
+            .join(', ');
+      } else {
+        displayValue = localization?.translate(valueText) ?? valueText;
+      }
+
       // Add the item to the list
       filteredItems.add(
         LabelValueItem(
           maxLines: 5,
           label: keyText,
-          value: valueText != "null" ? localization?.translate(valueText)  : "--",
+          value: displayValue,
           labelFlex: 7,
         ),
       );

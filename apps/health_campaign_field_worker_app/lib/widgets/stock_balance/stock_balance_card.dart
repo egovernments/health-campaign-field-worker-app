@@ -66,9 +66,15 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
 
   Future<void> _loadData() async {
     try {
-      // Check if user is a distributor
-      final isDistributor = context.loggedInUserRoles
-          .any((role) => role.code == RolesType.distributor.toValue());
+      // Include communityDistributor here — StockBalanceExecutor treats both
+      // roles as "distributor" (executor lines 320-322) and writes balances
+      // under the user's UUID. If the card checked only `distributor`, a CDD
+      // would look up balances under a facility ID while the executor stored
+      // them under the user UUID, and every CDD would silently see empty
+      // stock balances.
+      final isDistributor = context.loggedInUserRoles.any((role) =>
+          role.code == RolesType.distributor.toValue() ||
+          role.code == RolesType.communityDistributor.toValue());
 
       // Get project facilities
       final projectFacilityRepo = context.read<
@@ -167,9 +173,17 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         .map((pv) => generateBalanceKey(effectiveFacilityId, pv.id))
         .toList();
 
-    // Listen to StockModel changes
+    // Listen to StockModel changes for this facility, scoped to the
+    // current project via `referenceId`. Without the project scope this
+    // listener — keyed by the stable user UUID for distributors — would
+    // fire on every project's stock changes and pull cross-project rows
+    // into the balance calculation.
+    final projectId = context.projectId;
     stockRepo.listenToChanges(
-      query: StockSearchModel(receiverId: facilityId),
+      query: StockSearchModel(
+        receiverId: facilityId,
+        referenceId: projectId,
+      ),
       listener: (receivedStocks) async {
         if (!mounted) return;
         await _refreshBalances(stockRepo, userActionRepo, effectiveFacilityId);
@@ -204,12 +218,25 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
   ) async {
     if (!mounted) return;
 
-    // Fetch all stocks for this facility
+    // Scope stock reads to the current project via `referenceId`. Stock
+    // rows carry the project id in that field (with `referenceIdType =
+    // 'Project'`). Distributor queries use the stable user UUID as
+    // `receiverId` / `senderId`, so without the project scope every
+    // project's stocks would sum into the current-project balance and
+    // Project B would show Project A's data on cross-project product
+    // variants.
+    final projectId = context.projectId;
     final receivedStocks = await stockRepo.search(
-      StockSearchModel(receiverId: effectiveFacilityId),
+      StockSearchModel(
+        receiverId: effectiveFacilityId,
+        referenceId: projectId,
+      ),
     );
     final sentStocks = await stockRepo.search(
-      StockSearchModel(senderId: effectiveFacilityId),
+      StockSearchModel(
+        senderId: effectiveFacilityId,
+        referenceId: projectId,
+      ),
     );
 
     // Deduplicate by clientReferenceId
@@ -291,8 +318,8 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
     return balances;
   }
 
-  Color _getColorForBalance(double balance) {
-    if (balance < _minThreshold) return Colors.red;
+  Color _getColorForBalance(double balance, Color errorColor) {
+    if (balance < _minThreshold) return errorColor;
     if (balance > _maxThreshold) return const Color(0xFF0B6623);
     return Colors.blue;
   }
@@ -306,7 +333,13 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
     }
 
     return DigitCard(
-      margin: const EdgeInsets.all(spacer2),
+      // Aligned with home tiles' visible edge at 12px from the device edge
+      // (tiles: spacer2 grid padding + 4px showcase wrapper). Bottom is 2px
+      // larger to widen the gap to the progress bar card below.
+      margin: const EdgeInsets.symmetric(horizontal: spacer3, vertical: spacer2)
+          .copyWith(bottom: spacer2 + 2),
+      padding: const EdgeInsets.all(spacer4),
+      borderRadius: BorderRadius.circular(radius1),
       children: [
         // Facility selector (only show if multiple facilities and not distributor)
         if (_facilities.length > 1 && !_isDistributor)
@@ -341,28 +374,26 @@ class _StockBalanceCardState extends LocalizedState<StockBalanceCard> {
         // Title
         Padding(
           padding: const EdgeInsets.only(bottom: spacer1),
-          child: Center(
-            child: Text(
-              localizations.translate(i18.home.stockBalanceLabel),
-              style: theme
-                  .digitTextTheme(context)
-                  .bodyL
-                  .copyWith(color: theme.colorTheme.text.primary),
-            ),
+          child: Text(
+            localizations.translate(i18.home.stockBalanceLabel),
+            style: theme
+                .digitTextTheme(context)
+                .headingS
+                .copyWith(color: theme.colorTheme.primary.primary2),
           ),
         ),
 
         // Per-commodity stock balance bars
         ..._productVariants.map((product) {
           final balance = max(_stockBalances[product.id] ?? 0.0, 0.0);
-          final color = _getColorForBalance(balance);
+          final color = _getColorForBalance(balance, theme.colorTheme.alert.error);
           final progress =
               _maxThreshold > 0 ? min(balance / _maxThreshold, 1.0) : 0.0;
           final displayName =
               localizations.translate(product.sku ?? product.id);
 
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: spacer1),
+            padding: const EdgeInsets.symmetric(vertical: spacer2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

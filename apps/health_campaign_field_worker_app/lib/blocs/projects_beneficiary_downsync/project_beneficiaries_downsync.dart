@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
-import 'package:health_campaign_field_worker_app/utils/disk_space.dart';
+import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -27,27 +27,27 @@ typedef BeneficiaryDownSyncEmitter = Emitter<BeneficiaryDownSyncState>;
 class BeneficiaryDownSyncBloc
     extends Bloc<BeneficiaryDownSyncEvent, BeneficiaryDownSyncState> {
   final LocalRepository<IndividualModel, IndividualSearchModel>
-  individualLocalRepository;
+      individualLocalRepository;
   final RemoteRepository<DownsyncModel, DownsyncSearchModel>
-  downSyncRemoteRepository;
+      downSyncRemoteRepository;
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
-  downSyncLocalRepository;
+      downSyncLocalRepository;
   final BandwidthCheckRepository bandwidthCheckRepository;
   final LocalRepository<HouseholdModel, HouseholdSearchModel>
-  householdLocalRepository;
+      householdLocalRepository;
   final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-  householdMemberLocalRepository;
+      householdMemberLocalRepository;
   final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-  projectBeneficiaryLocalRepository;
+      projectBeneficiaryLocalRepository;
   final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
   final LocalRepository<SideEffectModel, SideEffectSearchModel>
-  sideEffectLocalRepository;
+      sideEffectLocalRepository;
   final LocalRepository<ReferralModel, ReferralSearchModel>
-  referralLocalRepository;
+      referralLocalRepository;
   final LocalRepository<HFReferralModel, HFReferralSearchModel>
-  hfReferralLocalRepository;
+      hfReferralLocalRepository;
   final LocalRepository<ServiceModel, ServiceSearchModel>
-  serviceLocalRepository;
+      serviceLocalRepository;
 
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
@@ -62,7 +62,7 @@ class BeneficiaryDownSyncBloc
     required this.referralLocalRepository,
     required this.hfReferralLocalRepository,
     required this.serviceLocalRepository,
-  }) : super(const BeneficiaryDownSyncState.resetState()) {
+  }) : super(const BeneficiaryDownSyncState._()) {
     on(_handleDownSyncOfBeneficiaries);
     on(_handleCheckTotalCount);
     on(_handleDownSyncResetState);
@@ -98,14 +98,12 @@ class BeneficiaryDownSyncBloc
         event.appConfiguration,
         isDownSync: true,
       );
-      emit(
-        BeneficiaryDownSyncState.getBatchSize(
-          configuredBatchSize,
-          event.projectModel,
-          event.boundaries,
-          event.pendingSyncCount,
-        ),
-      );
+      emit(BeneficiaryDownSyncState.getBatchSize(
+        configuredBatchSize,
+        event.projectModel,
+        event.boundaries,
+        event.pendingSyncCount,
+      ));
     } catch (e) {
       emit(const BeneficiaryDownSyncState.resetState());
       emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
@@ -122,9 +120,10 @@ class BeneficiaryDownSyncBloc
     } else {
       emit(const BeneficiaryDownSyncState.loading(true));
       await LocalSecureStore.instance.setManualSyncTrigger(true);
-      final existingDownSyncData = await downSyncLocalRepository.search(
-        DownsyncSearchModel(locality: event.boundaryCode),
-      );
+      final existingDownSyncData =
+          await downSyncLocalRepository.search(DownsyncSearchModel(
+        locality: event.boundaryCode,
+      ));
 
       int? lastSyncedTime = existingDownSyncData.isEmpty
           ? null
@@ -147,13 +146,11 @@ class BeneficiaryDownSyncBloc
         //[TODO: Need to move the dynamic keys to constants
         int serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
 
-        emit(
-          BeneficiaryDownSyncState.dataFound(
-            serverTotalCount,
-            event.batchSize,
-            {event.boundaryCode: serverTotalCount},
-          ),
-        );
+        emit(BeneficiaryDownSyncState.dataFound(
+          serverTotalCount,
+          event.batchSize,
+          {event.boundaryCode: serverTotalCount},
+        ));
       } else {
         await LocalSecureStore.instance.setManualSyncTrigger(false);
         emit(const BeneficiaryDownSyncState.resetState());
@@ -178,9 +175,10 @@ class BeneficiaryDownSyncBloc
       try {
         while (true) {
           // Check each time, till the loop runs the offset, limit, totalCount, lastSyncTime from Local DB of DownSync Model
-          final existingDownSyncData = await downSyncLocalRepository.search(
-            DownsyncSearchModel(locality: event.boundaryCode),
-          );
+          final existingDownSyncData =
+              await downSyncLocalRepository.search(DownsyncSearchModel(
+            locality: event.boundaryCode,
+          ));
 
           int offset = existingDownSyncData.isEmpty
               ? 0
@@ -190,16 +188,14 @@ class BeneficiaryDownSyncBloc
               ? null
               : existingDownSyncData.first.lastSyncedTime;
           if (existingDownSyncData.isEmpty) {
-            await downSyncLocalRepository.create(
-              DownsyncModel(
-                offset: offset,
-                limit: event.batchSize,
-                lastSyncedTime: lastSyncedTime,
-                totalCount: totalCount,
-                locality: event.boundaryCode,
-                boundaryName: event.boundaryName,
-              ),
-            );
+            await downSyncLocalRepository.create(DownsyncModel(
+              offset: offset,
+              limit: event.batchSize,
+              lastSyncedTime: lastSyncedTime,
+              totalCount: totalCount,
+              locality: event.boundaryCode,
+              boundaryName: event.boundaryName,
+            ));
           }
 
           if (offset < totalCount) {
@@ -217,46 +213,47 @@ class BeneficiaryDownSyncBloc
                 isDeleted: true,
               ),
             );
-            emit(
-              BeneficiaryDownSyncState.inProgress(
-                offset,
-                downSyncResults["DownsyncCriteria"]["totalCount"],
-              ),
-            );
+            emit(BeneficiaryDownSyncState.inProgress(
+                offset, downSyncResults["DownsyncCriteria"]["totalCount"]));
 
             // check if the API response is there or it failed
             if (downSyncResults.isNotEmpty) {
-              await writeToFile(
-                event.projectModel.id,
-                event.boundaryCode,
-                event.boundaryName,
-                downSyncResults,
-              );
-              await SyncServiceSingleton().entityMapper
+              await writeToFile(event.projectModel.id, event.boundaryCode,
+                  event.boundaryName, downSyncResults);
+              await SyncServiceSingleton()
+                  .entityMapper
                   ?.writeToEntityDB(downSyncResults, [
-                    individualLocalRepository,
-                    householdLocalRepository,
-                    householdMemberLocalRepository,
-                    projectBeneficiaryLocalRepository,
-                    taskLocalRepository,
-                    sideEffectLocalRepository,
-                    referralLocalRepository,
-                    hfReferralLocalRepository,
-                    serviceLocalRepository,
-                  ]);
+                individualLocalRepository,
+                householdLocalRepository,
+                householdMemberLocalRepository,
+                projectBeneficiaryLocalRepository,
+                taskLocalRepository,
+                sideEffectLocalRepository,
+                referralLocalRepository,
+                hfReferralLocalRepository,
+                serviceLocalRepository,
+              ]);
               // Update the local downSync data for the boundary with the new values
               totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];
 
-              await downSyncLocalRepository.update(
-                DownsyncModel(
-                  offset: offset + event.batchSize,
-                  limit: event.batchSize,
-                  lastSyncedTime: lastSyncedTime,
-                  totalCount: totalCount,
-                  locality: event.boundaryCode,
-                  boundaryName: event.boundaryName,
-                ),
-              );
+              await downSyncLocalRepository.update(DownsyncModel(
+                offset: offset + event.batchSize,
+                limit: event.batchSize,
+                lastSyncedTime: lastSyncedTime,
+                totalCount: totalCount,
+                locality: event.boundaryCode,
+                boundaryName: event.boundaryName,
+              ));
+
+              // Emit progress with the updated synced count so the bar
+              // advances after each batch (not just at batch start).
+              final syncedSoFar = (offset + event.batchSize) > totalCount
+                  ? totalCount
+                  : (offset + event.batchSize);
+              emit(BeneficiaryDownSyncState.inProgress(
+                syncedSoFar,
+                totalCount,
+              ));
             }
             // When API response failed
             else {
@@ -283,6 +280,9 @@ class BeneficiaryDownSyncBloc
               boundaryName: event.boundaryName,
             );
             await LocalSecureStore.instance.setManualSyncTrigger(false);
+            // Briefly hold the completed (100%) bar so the user can see the
+            // download finished before navigating to the acknowledgement page.
+            await Future.delayed(const Duration(milliseconds: 800));
             emit(BeneficiaryDownSyncState.success(result));
             break; // If offset is greater than or equal to totalCount, exit the loop
           }
@@ -314,9 +314,10 @@ class BeneficiaryDownSyncBloc
       for (final boundary in event.boundaries) {
         final boundaryCode = boundary.code.toString();
 
-        final existingDownSyncData = await downSyncLocalRepository.search(
-          DownsyncSearchModel(locality: boundaryCode),
-        );
+        final existingDownSyncData =
+            await downSyncLocalRepository.search(DownsyncSearchModel(
+          locality: boundaryCode,
+        ));
 
         int? lastSyncedTime = existingDownSyncData.isEmpty
             ? null
@@ -343,13 +344,11 @@ class BeneficiaryDownSyncBloc
         }
       }
 
-      emit(
-        BeneficiaryDownSyncState.dataFound(
-          totalServerCount,
-          event.batchSize,
-          boundaryCounts,
-        ),
-      );
+      emit(BeneficiaryDownSyncState.dataFound(
+        totalServerCount,
+        event.batchSize,
+        boundaryCounts,
+      ));
     } catch (e) {
       await LocalSecureStore.instance.setManualSyncTrigger(false);
       emit(const BeneficiaryDownSyncState.resetState());
@@ -387,41 +386,37 @@ class BeneficiaryDownSyncBloc
         }
 
         while (true) {
-          final loopDownSyncData = await downSyncLocalRepository.search(
-            DownsyncSearchModel(locality: boundaryCode),
-          );
+          final loopDownSyncData =
+              await downSyncLocalRepository.search(DownsyncSearchModel(
+            locality: boundaryCode,
+          ));
 
-          int offset = loopDownSyncData.isEmpty
-              ? 0
-              : loopDownSyncData.first.offset ?? 0;
+          int offset =
+              loopDownSyncData.isEmpty ? 0 : loopDownSyncData.first.offset ?? 0;
           int totalCount = boundaryTotalCount;
           int? loopLastSyncedTime = loopDownSyncData.isEmpty
               ? null
               : loopDownSyncData.first.lastSyncedTime;
 
           if (loopDownSyncData.isEmpty) {
-            await downSyncLocalRepository.create(
-              DownsyncModel(
-                offset: offset,
-                limit: event.batchSize,
-                lastSyncedTime: loopLastSyncedTime,
-                totalCount: totalCount,
-                locality: boundaryCode,
-                boundaryName: boundaryName,
-              ),
-            );
+            await downSyncLocalRepository.create(DownsyncModel(
+              offset: offset,
+              limit: event.batchSize,
+              lastSyncedTime: loopLastSyncedTime,
+              totalCount: totalCount,
+              locality: boundaryCode,
+              boundaryName: boundaryName,
+            ));
           }
 
           if (offset < totalCount) {
-            emit(
-              BeneficiaryDownSyncState.multiBoundaryInProgress(
-                i,
-                boundaries.length,
-                boundaryName,
-                offset,
-                totalCount,
-              ),
-            );
+            emit(BeneficiaryDownSyncState.multiBoundaryInProgress(
+              i,
+              boundaries.length,
+              boundaryName,
+              offset,
+              totalCount,
+            ));
 
             final downSyncResults = await downSyncRemoteRepository.downSync(
               DownsyncSearchModel(
@@ -438,36 +433,44 @@ class BeneficiaryDownSyncBloc
 
             if (downSyncResults.isNotEmpty) {
               await writeToFile(
-                event.projectModel.id,
-                boundaryCode,
-                boundaryName,
-                downSyncResults,
-              );
-              await SyncServiceSingleton().entityMapper
+                  event.projectModel.id, boundaryCode, boundaryName, downSyncResults);
+              await SyncServiceSingleton()
+                  .entityMapper
                   ?.writeToEntityDB(downSyncResults, [
-                    individualLocalRepository,
-                    householdLocalRepository,
-                    householdMemberLocalRepository,
-                    projectBeneficiaryLocalRepository,
-                    taskLocalRepository,
-                    sideEffectLocalRepository,
-                    referralLocalRepository,
-                    hfReferralLocalRepository,
-                    serviceLocalRepository,
-                  ]);
+                individualLocalRepository,
+                householdLocalRepository,
+                householdMemberLocalRepository,
+                projectBeneficiaryLocalRepository,
+                taskLocalRepository,
+                sideEffectLocalRepository,
+                referralLocalRepository,
+                hfReferralLocalRepository,
+                serviceLocalRepository,
+              ]);
 
               totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];
 
-              await downSyncLocalRepository.update(
-                DownsyncModel(
-                  offset: offset + event.batchSize,
-                  limit: event.batchSize,
-                  lastSyncedTime: loopLastSyncedTime,
-                  totalCount: totalCount,
-                  locality: boundaryCode,
-                  boundaryName: boundaryName,
-                ),
-              );
+              await downSyncLocalRepository.update(DownsyncModel(
+                offset: offset + event.batchSize,
+                limit: event.batchSize,
+                lastSyncedTime: loopLastSyncedTime,
+                totalCount: totalCount,
+                locality: boundaryCode,
+                boundaryName: boundaryName,
+              ));
+
+              // Emit progress with the updated synced count so the bar
+              // advances after each batch (not just at batch start).
+              final syncedSoFar = (offset + event.batchSize) > totalCount
+                  ? totalCount
+                  : (offset + event.batchSize);
+              emit(BeneficiaryDownSyncState.multiBoundaryInProgress(
+                i,
+                boundaries.length,
+                boundaryName,
+                syncedSoFar,
+                totalCount,
+              ));
             } else {
               emit(const BeneficiaryDownSyncState.failed());
               await LocalSecureStore.instance.setManualSyncTrigger(false);
@@ -485,21 +488,22 @@ class BeneficiaryDownSyncBloc
               ),
             );
 
-            completedResults.add(
-              DownsyncModel(
-                offset: totalCount,
-                lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
-                totalCount: totalCount,
-                locality: boundaryCode,
-                boundaryName: boundaryName,
-              ),
-            );
+            completedResults.add(DownsyncModel(
+              offset: totalCount,
+              lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
+              totalCount: totalCount,
+              locality: boundaryCode,
+              boundaryName: boundaryName,
+            ));
             break;
           }
         }
       }
 
       await LocalSecureStore.instance.setManualSyncTrigger(false);
+      // Briefly hold the completed (100%) bar so the user can see the
+      // download finished before navigating to the acknowledgement page.
+      await Future.delayed(const Duration(milliseconds: 800));
       emit(BeneficiaryDownSyncState.multiBoundarySuccess(completedResults));
     } catch (e) {
       await LocalSecureStore.instance.setManualSyncTrigger(false);
@@ -544,7 +548,7 @@ class BeneficiaryDownSyncBloc
     Map<String, dynamic> boundaryData = {
       "boundaryCode": selectedBoundaryCode,
       "boundaryName": selectedBoundaryName,
-      "response": DataMapEncryptor().encryptWithRandomKey(response),
+      "response": DataMapEncryptor().encryptWithRandomKey(response)
     };
 
     // Initialize the offset entry if it doesn't exist
@@ -557,9 +561,8 @@ class BeneficiaryDownSyncBloc
     List<dynamic> boundaries = storedData[offsetKey]["boundaries"];
 
     // Check if boundary already exists
-    bool exists = boundaries.any(
-      (entry) => entry["boundaryCode"] == selectedBoundaryCode,
-    );
+    bool exists = boundaries
+        .any((entry) => entry["boundaryCode"] == selectedBoundaryCode);
 
     if (!exists) {
       boundaries.add(boundaryData);
@@ -567,14 +570,12 @@ class BeneficiaryDownSyncBloc
 
       if (kDebugMode) {
         print(
-          "Added new boundary: $selectedBoundaryCode under offset: $offsetKey",
-        );
+            "Added new boundary: $selectedBoundaryCode under offset: $offsetKey");
       }
     } else {
       if (kDebugMode) {
         print(
-          "Boundary '$selectedBoundaryCode' already exists under offset $offsetKey.",
-        );
+            "Boundary '$selectedBoundaryCode' already exists under offset $offsetKey.");
       }
     }
 
@@ -600,7 +601,7 @@ class BeneficiaryDownSyncBloc
 }
 
 @freezed
-abstract class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
+class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
   const factory BeneficiaryDownSyncEvent.downSync({
     required ProjectModel projectModel,
     required String boundaryCode,
@@ -644,7 +645,7 @@ abstract class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
 }
 
 @freezed
-abstract class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
+class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
   const BeneficiaryDownSyncState._();
 
   const factory BeneficiaryDownSyncState.inProgress(
@@ -652,8 +653,9 @@ abstract class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int totalCount,
   ) = _DownSyncInProgressState;
 
-  const factory BeneficiaryDownSyncState.success(DownsyncModel downSyncResult) =
-      _DownSyncSuccessState;
+  const factory BeneficiaryDownSyncState.success(
+    DownsyncModel downSyncResult,
+  ) = _DownSyncSuccessState;
 
   const factory BeneficiaryDownSyncState.getBatchSize(
     int batchSize,

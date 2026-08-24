@@ -189,6 +189,11 @@ class TransformerExecutor extends ActionExecutor {
       "user": FlowBuilderSingleton().loggedInUser,
       "tenantId": FlowBuilderSingleton().selectedProject?.tenantId,
       "selectedBoundaryCode": FlowBuilderSingleton().boundary?.code,
+      "hierarchyType": DigitDataModelSingleton().hierarchyType ??
+          FlowBuilderSingleton()
+              .selectedProject
+              ?.additionalDetails
+              ?.hierarchyType,
       // converting in json format to match nested object value as passing model will cause issue
       'userUUID': FlowBuilderSingleton().loggedInUser?.uuid,
       'loggedInUserUuid': FlowBuilderSingleton().loggedInUserUuid,
@@ -306,6 +311,14 @@ class TransformerExecutor extends ActionExecutor {
       }
     }
 
+    // Bridge for manage_stock configs that create a RECEIVED row on Accept
+    // but don't thread `dispatchClientReferenceId` through the
+    // FETCH_TRANSFORMER_CONFIG data list. The Accept action chain carries the
+    // inbound DISPATCHED rows as existingModels, so the link can be stamped
+    // here at creation time — without it, stock-in-hand calculations cannot
+    // pair the two writes and would count the consignment twice.
+    entities = _stampDispatchRefOnReceipts(entities, existingModels);
+
     contextData['entities'] = entities;
 
     // Pass existingModels to contextData even for forceCreate,
@@ -335,6 +348,62 @@ class TransformerExecutor extends ActionExecutor {
     }
 
     return contextData;
+  }
+
+  /// Stamps `additionalFields.dispatchClientReferenceId` on newly created
+  /// RECEIVED StockModels that lack it, pairing each with one un-consumed
+  /// DISPATCHED StockModel of the same productVariantId from existingModels.
+  /// Leaves every other entity untouched.
+  List<EntityModel> _stampDispatchRefOnReceipts(
+    List<EntityModel> entities,
+    List<EntityModel>? existingModels,
+  ) {
+    final dispatches = existingModels
+            ?.whereType<StockModel>()
+            .where(
+                (s) => (s.transactionType?.toUpperCase() ?? '') == 'DISPATCHED')
+            .toList() ??
+        const <StockModel>[];
+    if (dispatches.isEmpty) return entities;
+
+    final consumed = <String>{};
+    return entities.map<EntityModel>((entity) {
+      if (entity is! StockModel) return entity;
+      if ((entity.transactionType?.toUpperCase() ?? '') != 'RECEIVED') {
+        return entity;
+      }
+      final fields = entity.additionalFields?.fields ?? const [];
+      final hasRef = fields.any((f) =>
+          f.key == 'dispatchClientReferenceId' &&
+          (f.value?.toString().isNotEmpty ?? false));
+      if (hasRef) return entity;
+
+      StockModel? match;
+      for (final d in dispatches) {
+        if (consumed.contains(d.clientReferenceId)) continue;
+        if (d.productVariantId == entity.productVariantId) {
+          match = d;
+          break;
+        }
+      }
+      if (match == null) return entity;
+      consumed.add(match.clientReferenceId);
+      debugPrint(
+          'TRANSFORMER: Stamped dispatchClientReferenceId=${match.clientReferenceId} '
+          'on RECEIVED ${entity.clientReferenceId}');
+      return entity.copyWith(
+        additionalFields: StockAdditionalFields(
+          version: entity.additionalFields?.version ?? 1,
+          fields: [
+            ...fields,
+            AdditionalField(
+              'dispatchClientReferenceId',
+              match.clientReferenceId,
+            ),
+          ],
+        ),
+      );
+    }).toList();
   }
 
   /// Helper method to get a nested value from a map using dot notation

@@ -341,7 +341,6 @@ final dynamic sampleFlows = {
       "category": "DELIVERY",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "HCM_DELIVERY_BENEFICIARY_DETAILS_DESCRIPTION",
       "initActions": [
         {
           "actionType": "SEARCH_EVENT",
@@ -1231,6 +1230,7 @@ final dynamic sampleFlows = {
                 "popupConfig": {
                   "body": [],
                   "type": "alert",
+                  "titleIcon": "Warning",
                   "title": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
                   "description": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
                   "footerActions": [
@@ -1595,8 +1595,28 @@ final dynamic sampleFlows = {
         },
         {
           "type": "template",
-          "label": "HCM_SEARCH_NAME_LABEL",
+          "label": "ID_SEARCH_REGISTRATION",
+          "format": "switch",
+          "onAction": [
+            {
+              "actionType": "CLEAR_STATE",
+              "properties": {
+                "filterKeys": ["givenName", "identifierId"],
+                "widgetKeys": ["searchBar"],
+                "triggerSearch": true
+              }
+            }
+          ],
+          "fieldName": "idSearch",
+          "mandatory": true,
+          "schemaCode": null,
+          "validations": []
+        },
+        {
+          "type": "template",
+          "label": "SEARCH_BY_NAME",
           "format": "searchBar",
+          "visible": "{{idSearch}} != true",
           "onAction": [
             {
               "actionType": "SEARCH_EVENT",
@@ -1613,7 +1633,7 @@ final dynamic sampleFlows = {
               }
             }
           ],
-          "fieldName": "searchName",
+          "fieldName": "searchByName",
           "mandatory": true,
           "validations": [
             {
@@ -1622,6 +1642,37 @@ final dynamic sampleFlows = {
             }
           ],
           "minSearchChars": 2
+        },
+        {
+          "type": "template",
+          "label": "SEARCH_BY_ID",
+          "format": "searchBar",
+          "visible": "{{idSearch}} == true",
+          "onAction": [
+            {
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "data": [
+                  {
+                    "key": "identifierId",
+                    "value": "field.value",
+                    "operation": "contains"
+                  }
+                ],
+                "name": "identifier",
+                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+              }
+            }
+          ],
+          "fieldName": "idSearchBar",
+          "mandatory": true,
+          "validations": [
+            {
+              "type": "minSearchChars",
+              "value": 3
+            }
+          ],
+          "minSearchChars": 3
         },
         {
           "icon": "FilterAlt",
@@ -1891,6 +1942,14 @@ final dynamic sampleFlows = {
           "suffixIcon": "FilterAlt"
         },
         {
+          "type": "template",
+          "label": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
+          "format": "noResultCard",
+          "fieldName": "beneficiaryNotFound",
+          "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
+          "showOnEmptySearch": true
+        },
+        {
           "data": "members",
           "type": "template",
           "child": {
@@ -2047,7 +2106,6 @@ final dynamic sampleFlows = {
           "label": "DOWNLOAD_BENEFICIARY_IDS",
           "format": "actionPopup",
           "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "fieldName": "beneficiaryIdMinCheck",
           "properties": {
             "icon": "FilterAlt",
@@ -2056,6 +2114,7 @@ final dynamic sampleFlows = {
             "popupConfig": {
               "body": [],
               "type": "alert",
+              "titleIcon": "Warning",
               "title": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
               "description": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
               "footerActions": [
@@ -2136,7 +2195,6 @@ final dynamic sampleFlows = {
           "label": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
           "format": "button",
           "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
-          "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -2247,7 +2305,6 @@ final dynamic sampleFlows = {
       "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
-      "description": "HCM_SEARCH_BENEFICIARY_DESCRIPTION",
       "initActions": [
         {
           "actionType": "LOAD_UNIQUE_ID_POOL"
@@ -2687,7 +2744,7 @@ final dynamic sampleFlows = {
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": true,
+              "hidden": false,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -2702,9 +2759,9 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
-              "includeInForm": false,
+              "includeInForm": true,
               "isMultiSelect": false,
-              "includeInSummary": false
+              "includeInSummary": true
             },
             {
               "type": "string",
@@ -2783,6 +2840,7 @@ final dynamic sampleFlows = {
           "actionLabel": "HCM_DELIVERY_SAVE_BUTTON",
           "description": "HCM_DELIVERY_DETAILS_DESCRIPTION",
           "showTabView": false,
+          "showLabelOutsideCard": true,
           "submitCondition": null,
           "preventScreenCapture": false
         }
@@ -3344,7 +3402,7 @@ final dynamic sampleFlows = {
               "order": 8,
               "value": "",
               "format": "scanner",
-              "hidden": true,
+              "hidden": false,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -3359,9 +3417,9 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
-              "includeInForm": false,
+              "includeInForm": true,
               "isMultiSelect": false,
-              "includeInSummary": false
+              "includeInSummary": true
             }
           ],
           "actionLabel": "HCM_ADD_MEMBER_SAVE_BUTTON",
@@ -4110,7 +4168,7 @@ final dynamic sampleFlows = {
               "order": 8,
               "value": "",
               "format": "scanner",
-              "hidden": true,
+              "hidden": false,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -4125,9 +4183,9 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
-              "includeInForm": false,
+              "includeInForm": true,
               "isMultiSelect": false,
-              "includeInSummary": false
+              "includeInSummary": true
             }
           ],
           "actionLabel": "HCM_REGISTRATION_SAVE_BENEFICIARY_BUTTON",
@@ -6148,7 +6206,7 @@ final dynamic sampleFlows = {
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": true,
+              "hidden": false,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -6163,9 +6221,9 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
-              "includeInForm": false,
+              "includeInForm": true,
               "isMultiSelect": false,
-              "includeInSummary": false
+              "includeInSummary": true
             },
             {
               "type": "string",

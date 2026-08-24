@@ -1,6 +1,5 @@
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/digit_tab_bar_theme.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_tab.dart';
 import 'package:flutter/material.dart';
 
 import '../models/property_schema/property_schema.dart';
@@ -33,20 +32,22 @@ class MultiEntityTabView extends StatefulWidget {
 }
 
 class MultiEntityTabViewState extends State<MultiEntityTabView> {
-  int selectedIndex = 0;
+  final ValueNotifier<int> _selectedIndex = ValueNotifier<int>(0);
+
+  /// Current tab index — kept for backwards compatibility with any
+  /// external caller that used to read the old `selectedIndex` field.
+  int get selectedIndex => _selectedIndex.value;
 
   @override
-  void initState() {
-    super.initState();
-    selectedIndex = 0;
+  void dispose() {
+    _selectedIndex.dispose();
+    super.dispose();
   }
 
   /// Navigate to a specific tab by index
   void goToTab(int index) {
     if (index >= 0 && index < widget.entities.length) {
-      setState(() {
-        selectedIndex = index;
-      });
+      _selectedIndex.value = index;
     }
   }
 
@@ -78,49 +79,176 @@ class MultiEntityTabViewState extends State<MultiEntityTabView> {
 
   @override
   Widget build(BuildContext context) {
-    // Create tab labels
-    final tabs = widget.entities.asMap().entries.map((entry) {
-      final entity = entry.value;
-      final entityName = _getEntityName(entity);
-      return entityName;
-    }).toList();
+    // Build the entity forms once per parent build, not on every tab
+    // selection. The ValueListenableBuilder below rebuilds on every
+    // _selectedIndex change; keeping the map() inside that builder
+    // reconstructed every form widget (and re-ran `_createSchemaForEntity`
+    // for every entity) on each tap. IndexedStack already keeps offstage
+    // children alive, so hoisting the list preserves state and cuts the
+    // rebuild cost to the tab bar only.
+    final entityForms = widget.entities
+        .asMap()
+        .entries
+        .map((entry) => _buildEntityForm(entry.key, entry.value))
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Scrollable DigitTabBar
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DigitTabBar(
-            key: ValueKey('tab_bar_$selectedIndex'),
-            tabBarThemeData: const DigitTabBarThemeData(
-              tabWidth: 220, // Fixed width for scrolling
-            ),
-            initialIndex: selectedIndex,
-            tabs: tabs,
-            onTabSelected: (index) {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-          ),
+        ValueListenableBuilder<int>(
+          valueListenable: _selectedIndex,
+          builder: (context, selected, _) => _buildTabBar(context, selected),
         ),
-
         const SizedBox(height: spacer2),
-
-        // Tab Content with IndexedStack
         Expanded(
-          child: IndexedStack(
-            index: selectedIndex,
-            children: widget.entities.asMap().entries.map((entry) {
-              final index = entry.key;
-              final entity = entry.value;
-
-              return _buildEntityForm(index, entity);
-            }).toList(),
+          child: ValueListenableBuilder<int>(
+            valueListenable: _selectedIndex,
+            builder: (context, selected, _) => IndexedStack(
+              index: selected,
+              children: entityForms,
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  /// Horizontally-scrollable tab bar where the selected tab expands to fit
+  /// its full entity name and the others collapse to a compact ellipsized
+  /// preview. Keeps four+ product tabs readable on narrow screens where the
+  /// default equal-width layout truncates every label.
+  ///
+  /// All colors, text styles, heights, and padding come from
+  /// [DigitTabBarThemeData] so the tabs remain visually identical to the
+  /// shared `DigitTabBar`; only the per-tab width behavior is customised.
+  Widget _buildTabBar(BuildContext context, int selected) {
+    final defaults = DigitTabBarThemeData.defaultTheme(context);
+    final tabBarTheme =
+        Theme.of(context).extension<DigitTabBarThemeData>() ?? defaults;
+
+    final selectedPadding = tabBarTheme.padding ?? defaults.padding!;
+    const unselectedPadding =
+        EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+    final selectedTabHeight =
+        tabBarTheme.selectedTabHeight ?? defaults.selectedTabHeight!;
+    final tabHeight = tabBarTheme.tabHeight ?? defaults.tabHeight!;
+    final selectedTextStyle =
+        tabBarTheme.selectedTextStyle ?? defaults.selectedTextStyle!;
+    final unselectedTextStyle =
+        tabBarTheme.unselectedTextStyle ?? defaults.unselectedTextStyle!;
+    final maxLine = tabBarTheme.maxLine ?? defaults.maxLine!;
+
+    // Layout branches on whether the tab strip fits in the available width:
+    //   - fits  → non-scrolling Row with Expanded tabs so 2-3 short labels
+    //             stretch to fill the width instead of leaving a right-side
+    //             gap.
+    //   - overflows → horizontal scroll; unselected tabs get a 96px cap so
+    //             `TextOverflow.ellipsis` can clip long labels while the
+    //             selected tab keeps its full name.
+    // The overflow decision is heuristic (approximate per-tab budget vs.
+    // available width) — precise TextPainter measurement per frame isn't
+    // worth the cost for this UI.
+    return LayoutBuilder(
+      builder: (context, layoutConstraints) {
+        // Rough per-tab budget: 96px label + 24px horizontal padding.
+        const approxUnselectedTabWidth = 120.0;
+        final availableWidth = layoutConstraints.maxWidth;
+        final fits = availableWidth.isFinite &&
+            widget.entities.length * approxUnselectedTabWidth <=
+                availableWidth;
+
+        Widget buildTab(int index, dynamic entity) {
+          final name = _getEntityName(entity);
+          final isSelected = index == selected;
+          return GestureDetector(
+            onTap: () => _selectedIndex.value = index,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOut,
+              height: isSelected ? selectedTabHeight : tabHeight,
+              padding: isSelected ? selectedPadding : unselectedPadding,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? const DigitColors().light.paperPrimary
+                    : const DigitColors().light.paperSecondary,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
+                ),
+                border: Border(
+                  top: BorderSide(
+                    color: isSelected
+                        ? const DigitColors().light.primary1
+                        : const DigitColors().light.genericInputBorder,
+                    width: isSelected ? 2 : 1,
+                  ),
+                  left: BorderSide(
+                    color: isSelected
+                        ? const DigitColors().light.primary1
+                        : const DigitColors().light.genericInputBorder,
+                    width: isSelected ? 2 : 1,
+                  ),
+                  right: BorderSide(
+                    color: isSelected
+                        ? const DigitColors().light.primary1
+                        : const DigitColors().light.genericInputBorder,
+                    width: isSelected ? 2 : 1,
+                  ),
+                  bottom: BorderSide(
+                    color: isSelected
+                        ? const DigitColors().light.primary1
+                        : const DigitColors().light.genericInputBorder,
+                    width: isSelected ? 4 : 1,
+                  ),
+                ),
+              ),
+              // Ellipsis cap only kicks in on the overflow branch. Constraint
+              // lives on the child, not on AnimatedContainer.constraints,
+              // because lerping between finite and unbounded blows up
+              // BoxConstraints.lerp on tab switch.
+              child: ConstrainedBox(
+                constraints: (!fits && !isSelected)
+                    ? const BoxConstraints(maxWidth: 96)
+                    : const BoxConstraints(),
+                child: Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: maxLine,
+                  style: isSelected ? selectedTextStyle : unselectedTextStyle,
+                ),
+              ),
+            ),
+          );
+        }
+
+        if (fits) {
+          // Distribute available width across tabs so there's no dead space
+          // on the right when the label count is small.
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: widget.entities
+                .asMap()
+                .entries
+                .map((e) => Expanded(child: buildTab(e.key, e.value)))
+                .toList(),
+          );
+        }
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: widget.entities
+                .asMap()
+                .entries
+                .map((e) => buildTab(e.key, e.value))
+                .toList(),
+          ),
+        );
+      },
     );
   }
 

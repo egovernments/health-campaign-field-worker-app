@@ -3,11 +3,15 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_flow_builder/action_handler/action_handler.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_flow_builder/flow_builder.dart'
+    hide FlowBuilderContextUtilityExtensions;
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -213,10 +217,22 @@ class MainApplicationState extends State<MainApplication>
                   child: BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, authState) {
                       if (appConfigState is! AppInitialized) {
-                        return const MaterialApp(
+                        return MaterialApp(
+                          debugShowCheckedModeBanner: false,
                           home: Scaffold(
                             body: Center(
-                              child: Text('Loading'),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    'assets/icons/app_icon.png',
+                                    width: 140,
+                                    height: 140,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  DigitLoaders.inlineLoader(size: 48),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -361,6 +377,24 @@ class MainApplicationState extends State<MainApplication>
                                   ctx.read<UserActionLocalRepository>(),
                               userActionRemoteRepository:
                                   ctx.read<UserActionRemoteRepository>(),
+                              faceAuthEventRemoteRepository: (() {
+                                try {
+                                  return ctx.read<
+                                      RemoteRepository<FaceAuthEventModel,
+                                          FaceAuthEventSearchModel>>();
+                                } catch (_) {
+                                  return null;
+                                }
+                              }()),
+                              faceAuthEventLocalRepository: (() {
+                                try {
+                                  return ctx.read<
+                                      LocalRepository<FaceAuthEventModel,
+                                          FaceAuthEventSearchModel>>();
+                                } catch (_) {
+                                  return null;
+                                }
+                              }()),
                               context: context,
                             ),
                           ),
@@ -462,20 +496,23 @@ class MainApplicationState extends State<MainApplication>
                                     return wrapped;
                                   }
 
-                                  return Banner(
-                                    message: envConfig.variables.envType.name,
-                                    location: BannerLocation.topEnd,
-                                    color: () {
-                                      switch (envConfig.variables.envType) {
-                                        case EnvType.uat || EnvType.demo:
-                                          return Colors.green;
-                                        case EnvType.qa:
-                                          return Colors.pink;
-                                        default:
-                                          return Colors.red;
-                                      }
-                                    }(),
-                                    child: wrapped,
+                                  return FlowDebugOverlay(
+                                    child: Banner(
+                                      message:
+                                          envConfig.variables.envType.name,
+                                      location: BannerLocation.topEnd,
+                                      color: () {
+                                        switch (envConfig.variables.envType) {
+                                          case EnvType.uat || EnvType.demo:
+                                            return Colors.green;
+                                          case EnvType.qa:
+                                            return Colors.pink;
+                                          default:
+                                            return Colors.red;
+                                        }
+                                      }(),
+                                      child: wrapped,
+                                    ),
                                   );
                                 },
                                 supportedLocales: languages != null
@@ -550,13 +587,11 @@ class _LogoutLoaderListener extends StatelessWidget {
           children: [
             child,
             if (showLoader)
-              const Positioned.fill(
+              Positioned.fill(
                 child: ColoredBox(
-                  color: Color(0x99000000),
+                  color: const Color(0x99000000),
                   child: Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
+                    child: DigitLoaders.inlineLoader(size: 80),
                   ),
                 ),
               ),

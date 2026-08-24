@@ -54,7 +54,10 @@ mixin _$PropertySchema {
   String? get prefixText => throw _privateConstructorUsedError;
   String? get suffixText => throw _privateConstructorUsedError;
   String? get innerLabel => throw _privateConstructorUsedError;
-  String? get label => throw _privateConstructorUsedError;
+  String? get label =>
+      throw _privateConstructorUsedError; // Auto-capitalization for text inputs: "words" capitalizes the first
+// letter of every word as the user types
+  String? get textCapitalization => throw _privateConstructorUsedError;
   bool? get isMultiSelect => throw _privateConstructorUsedError;
   dynamic get value => throw _privateConstructorUsedError;
   DisplayBehavior? get displayBehavior => throw _privateConstructorUsedError;
@@ -100,7 +103,8 @@ mixin _$PropertySchema {
       throw _privateConstructorUsedError; // Named placeholder substitution for descriptions
   @JsonKey(fromJson: _labelPlaceHoldersOrNull)
   List<LabelPlaceHolder>? get descriptionPlaceHolders =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // Render page label/description outside the card (before it)
+  bool? get showLabelOutsideCard => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -141,6 +145,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
       String? suffixText,
       String? innerLabel,
       String? label,
+      String? textCapitalization,
       bool? isMultiSelect,
       dynamic value,
       DisplayBehavior? displayBehavior,
@@ -172,7 +177,8 @@ abstract class $PropertySchemaCopyWith<$Res> {
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
-      List<LabelPlaceHolder>? descriptionPlaceHolders});
+      List<LabelPlaceHolder>? descriptionPlaceHolders,
+      bool? showLabelOutsideCard});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
@@ -221,6 +227,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? suffixText = freezed,
     Object? innerLabel = freezed,
     Object? label = freezed,
+    Object? textCapitalization = freezed,
     Object? isMultiSelect = freezed,
     Object? value = freezed,
     Object? displayBehavior = freezed,
@@ -244,6 +251,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? comparisonConfig = freezed,
     Object? labelPlaceHolders = freezed,
     Object? descriptionPlaceHolders = freezed,
+    Object? showLabelOutsideCard = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -342,6 +350,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
               as String?,
+      textCapitalization: freezed == textCapitalization
+          ? _value.textCapitalization
+          : textCapitalization // ignore: cast_nullable_to_non_nullable
+              as String?,
       isMultiSelect: freezed == isMultiSelect
           ? _value.isMultiSelect
           : isMultiSelect // ignore: cast_nullable_to_non_nullable
@@ -434,6 +446,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.descriptionPlaceHolders
           : descriptionPlaceHolders // ignore: cast_nullable_to_non_nullable
               as List<LabelPlaceHolder>?,
+      showLabelOutsideCard: freezed == showLabelOutsideCard
+          ? _value.showLabelOutsideCard
+          : showLabelOutsideCard // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 
@@ -571,6 +587,7 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       String? suffixText,
       String? innerLabel,
       String? label,
+      String? textCapitalization,
       bool? isMultiSelect,
       dynamic value,
       DisplayBehavior? displayBehavior,
@@ -602,7 +619,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
-      List<LabelPlaceHolder>? descriptionPlaceHolders});
+      List<LabelPlaceHolder>? descriptionPlaceHolders,
+      bool? showLabelOutsideCard});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -657,6 +675,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? suffixText = freezed,
     Object? innerLabel = freezed,
     Object? label = freezed,
+    Object? textCapitalization = freezed,
     Object? isMultiSelect = freezed,
     Object? value = freezed,
     Object? displayBehavior = freezed,
@@ -680,6 +699,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? comparisonConfig = freezed,
     Object? labelPlaceHolders = freezed,
     Object? descriptionPlaceHolders = freezed,
+    Object? showLabelOutsideCard = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -778,6 +798,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
               as String?,
+      textCapitalization: freezed == textCapitalization
+          ? _value.textCapitalization
+          : textCapitalization // ignore: cast_nullable_to_non_nullable
+              as String?,
       isMultiSelect: freezed == isMultiSelect
           ? _value.isMultiSelect
           : isMultiSelect // ignore: cast_nullable_to_non_nullable
@@ -870,6 +894,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value._descriptionPlaceHolders
           : descriptionPlaceHolders // ignore: cast_nullable_to_non_nullable
               as List<LabelPlaceHolder>?,
+      showLabelOutsideCard: freezed == showLabelOutsideCard
+          ? _value.showLabelOutsideCard
+          : showLabelOutsideCard // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -905,6 +933,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.suffixText,
       this.innerLabel,
       this.label,
+      this.textCapitalization,
       this.isMultiSelect,
       this.value,
       this.displayBehavior,
@@ -932,7 +961,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       final List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
-      final List<LabelPlaceHolder>? descriptionPlaceHolders})
+      final List<LabelPlaceHolder>? descriptionPlaceHolders,
+      this.showLabelOutsideCard})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
@@ -1019,6 +1049,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
   final String? innerLabel;
   @override
   final String? label;
+// Auto-capitalization for text inputs: "words" capitalizes the first
+// letter of every word as the user types
+  @override
+  final String? textCapitalization;
   @override
   final bool? isMultiSelect;
   @override
@@ -1140,9 +1174,13 @@ class _$PropertySchemaImpl implements _PropertySchema {
     return EqualUnmodifiableListView(value);
   }
 
+// Render page label/description outside the card (before it)
+  @override
+  final bool? showLabelOutsideCard;
+
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, showSecondaryAlertPopUp: $showSecondaryAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig, labelPlaceHolders: $labelPlaceHolders, descriptionPlaceHolders: $descriptionPlaceHolders)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, textCapitalization: $textCapitalization, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, showSecondaryAlertPopUp: $showSecondaryAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig, labelPlaceHolders: $labelPlaceHolders, descriptionPlaceHolders: $descriptionPlaceHolders, showLabelOutsideCard: $showLabelOutsideCard)';
   }
 
   @override
@@ -1189,6 +1227,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.innerLabel, innerLabel) ||
                 other.innerLabel == innerLabel) &&
             (identical(other.label, label) || other.label == label) &&
+            (identical(other.textCapitalization, textCapitalization) ||
+                other.textCapitalization == textCapitalization) &&
             (identical(other.isMultiSelect, isMultiSelect) ||
                 other.isMultiSelect == isMultiSelect) &&
             const DeepCollectionEquality().equals(other.value, value) &&
@@ -1233,7 +1273,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
             const DeepCollectionEquality()
                 .equals(other._labelPlaceHolders, _labelPlaceHolders) &&
             const DeepCollectionEquality().equals(
-                other._descriptionPlaceHolders, _descriptionPlaceHolders));
+                other._descriptionPlaceHolders, _descriptionPlaceHolders) &&
+            (identical(other.showLabelOutsideCard, showLabelOutsideCard) ||
+                other.showLabelOutsideCard == showLabelOutsideCard));
   }
 
   @JsonKey(ignore: true)
@@ -1264,6 +1306,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
         suffixText,
         innerLabel,
         label,
+        textCapitalization,
         isMultiSelect,
         const DeepCollectionEquality().hash(value),
         displayBehavior,
@@ -1286,7 +1329,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         secondaryActionLabel,
         comparisonConfig,
         const DeepCollectionEquality().hash(_labelPlaceHolders),
-        const DeepCollectionEquality().hash(_descriptionPlaceHolders)
+        const DeepCollectionEquality().hash(_descriptionPlaceHolders),
+        showLabelOutsideCard
       ]);
 
   @JsonKey(ignore: true)
@@ -1332,6 +1376,7 @@ abstract class _PropertySchema implements PropertySchema {
       final String? suffixText,
       final String? innerLabel,
       final String? label,
+      final String? textCapitalization,
       final bool? isMultiSelect,
       final dynamic value,
       final DisplayBehavior? displayBehavior,
@@ -1364,8 +1409,8 @@ abstract class _PropertySchema implements PropertySchema {
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       final List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
-      final List<LabelPlaceHolder>?
-          descriptionPlaceHolders}) = _$PropertySchemaImpl;
+      final List<LabelPlaceHolder>? descriptionPlaceHolders,
+      final bool? showLabelOutsideCard}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -1428,6 +1473,9 @@ abstract class _PropertySchema implements PropertySchema {
   String? get innerLabel;
   @override
   String? get label;
+  @override // Auto-capitalization for text inputs: "words" capitalizes the first
+// letter of every word as the user types
+  String? get textCapitalization;
   @override
   bool? get isMultiSelect;
   @override
@@ -1485,6 +1533,8 @@ abstract class _PropertySchema implements PropertySchema {
   @override // Named placeholder substitution for descriptions
   @JsonKey(fromJson: _labelPlaceHoldersOrNull)
   List<LabelPlaceHolder>? get descriptionPlaceHolders;
+  @override // Render page label/description outside the card (before it)
+  bool? get showLabelOutsideCard;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
@@ -3548,7 +3598,10 @@ AlertCondition _$AlertConditionFromJson(Map<String, dynamic> json) {
 mixin _$AlertCondition {
   String get expression =>
       throw _privateConstructorUsedError; // e.g., condition or "DEFAULT"
-  String get value => throw _privateConstructorUsedError;
+  String get value =>
+      throw _privateConstructorUsedError; // e.g., "To Administer"
+  String? get title => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -3562,7 +3615,8 @@ abstract class $AlertConditionCopyWith<$Res> {
           AlertCondition value, $Res Function(AlertCondition) then) =
       _$AlertConditionCopyWithImpl<$Res, AlertCondition>;
   @useResult
-  $Res call({String expression, String value});
+  $Res call(
+      {String expression, String value, String? title, String? description});
 }
 
 /// @nodoc
@@ -3580,6 +3634,8 @@ class _$AlertConditionCopyWithImpl<$Res, $Val extends AlertCondition>
   $Res call({
     Object? expression = null,
     Object? value = null,
+    Object? title = freezed,
+    Object? description = freezed,
   }) {
     return _then(_value.copyWith(
       expression: null == expression
@@ -3590,6 +3646,14 @@ class _$AlertConditionCopyWithImpl<$Res, $Val extends AlertCondition>
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as String,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -3602,7 +3666,8 @@ abstract class _$$AlertConditionImplCopyWith<$Res>
       __$$AlertConditionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String expression, String value});
+  $Res call(
+      {String expression, String value, String? title, String? description});
 }
 
 /// @nodoc
@@ -3618,6 +3683,8 @@ class __$$AlertConditionImplCopyWithImpl<$Res>
   $Res call({
     Object? expression = null,
     Object? value = null,
+    Object? title = freezed,
+    Object? description = freezed,
   }) {
     return _then(_$AlertConditionImpl(
       expression: null == expression
@@ -3628,6 +3695,14 @@ class __$$AlertConditionImplCopyWithImpl<$Res>
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as String,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -3635,7 +3710,11 @@ class __$$AlertConditionImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$AlertConditionImpl implements _AlertCondition {
-  const _$AlertConditionImpl({required this.expression, required this.value});
+  const _$AlertConditionImpl(
+      {required this.expression,
+      required this.value,
+      this.title,
+      this.description});
 
   factory _$AlertConditionImpl.fromJson(Map<String, dynamic> json) =>
       _$$AlertConditionImplFromJson(json);
@@ -3645,10 +3724,15 @@ class _$AlertConditionImpl implements _AlertCondition {
 // e.g., condition or "DEFAULT"
   @override
   final String value;
+// e.g., "To Administer"
+  @override
+  final String? title;
+  @override
+  final String? description;
 
   @override
   String toString() {
-    return 'AlertCondition(expression: $expression, value: $value)';
+    return 'AlertCondition(expression: $expression, value: $value, title: $title, description: $description)';
   }
 
   @override
@@ -3658,12 +3742,16 @@ class _$AlertConditionImpl implements _AlertCondition {
             other is _$AlertConditionImpl &&
             (identical(other.expression, expression) ||
                 other.expression == expression) &&
-            (identical(other.value, value) || other.value == value));
+            (identical(other.value, value) || other.value == value) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.description, description) ||
+                other.description == description));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, expression, value);
+  int get hashCode =>
+      Object.hash(runtimeType, expression, value, title, description);
 
   @JsonKey(ignore: true)
   @override
@@ -3683,7 +3771,9 @@ class _$AlertConditionImpl implements _AlertCondition {
 abstract class _AlertCondition implements AlertCondition {
   const factory _AlertCondition(
       {required final String expression,
-      required final String value}) = _$AlertConditionImpl;
+      required final String value,
+      final String? title,
+      final String? description}) = _$AlertConditionImpl;
 
   factory _AlertCondition.fromJson(Map<String, dynamic> json) =
       _$AlertConditionImpl.fromJson;
@@ -3692,6 +3782,10 @@ abstract class _AlertCondition implements AlertCondition {
   String get expression;
   @override // e.g., condition or "DEFAULT"
   String get value;
+  @override // e.g., "To Administer"
+  String? get title;
+  @override
+  String? get description;
   @override
   @JsonKey(ignore: true)
   _$$AlertConditionImplCopyWith<_$AlertConditionImpl> get copyWith =>

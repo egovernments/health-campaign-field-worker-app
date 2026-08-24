@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
-import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -10,7 +9,6 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 class CameraView extends LocalizedStatefulWidget {
@@ -51,6 +49,10 @@ class _CameraViewState extends State<CameraView> {
   double _minAvailableExposureOffset = 0.0;
   double _maxAvailableExposureOffset = 0.0;
   bool _changingCameraLens = false;
+
+  // Zoom slider, camera-flip and gallery controls are kept in the code but
+  // intentionally hidden from the scanner UI. Flip to true to re-enable them.
+  static const bool _showAdvancedCameraControls = false;
 
   @override
   void initState() {
@@ -113,34 +115,15 @@ class _CameraViewState extends State<CameraView> {
                     child: widget.customPaint,
                   ),
           ),
-          _backButton(context),
-          _switchLiveCameraToggle(),
-          _detectionViewModeToggle(),
-          _zoomControl(),
-          _exposureControl(context),
+          if (_showAdvancedCameraControls) ...[
+            _switchLiveCameraToggle(),
+            _detectionViewModeToggle(),
+            _zoomControl(),
+          ],
         ],
       ),
     );
   }
-
-  Widget _backButton(context) => Positioned(
-        top: 40,
-        left: 8,
-        child: SizedBox(
-          height: 50.0,
-          width: 50.0,
-          child: FloatingActionButton(
-            heroTag: Object(),
-            onPressed: widget.onBackButtonPressed,
-            backgroundColor: Theme.of(context).colorTheme.generic.background,
-            child: Icon(
-              Icons.arrow_back_ios_outlined,
-              size: 20,
-              color: Theme.of(context).colorTheme.text.primary,
-            ),
-          ),
-        ),
-      );
 
   Widget _detectionViewModeToggle() => Positioned(
         bottom: 8,
@@ -227,32 +210,6 @@ class _CameraViewState extends State<CameraView> {
               ],
             ),
           ),
-        ),
-      );
-
-  Widget _exposureControl(context) => Positioned(
-        top: 80,
-        left: MediaQuery.of(context).size.width / 14,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxHeight: 250,
-          ),
-          child: Column(children: [
-            Expanded(
-              child: Container(
-                width: MediaQuery.of(context).size.width / 1.2,
-                margin: const EdgeInsets.all(15.0),
-                padding: const EdgeInsets.all(3.0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: spacer1,
-                    color: DigitTheme.instance.colorScheme.error,
-                  ),
-                ),
-              ),
-            ),
-            // TODO : Need to add the Scanner Box
-          ]),
         ),
       );
 

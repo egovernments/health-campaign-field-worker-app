@@ -317,6 +317,9 @@ final dynamic sampleCloseHouseholdFlows = {
           "systemDate": null,
           "actionLabel": "HCM_COMMON_NEXT_BUTTON",
           "description": "HCM_CLOSE_HOUSEHOLD_DETAILS_DESCRIPTION",
+          "conditions": {
+            "infoCardText": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT"
+          },
           "validations": null,
           "includeInForm": null,
           "isMultiSelect": null,
@@ -359,6 +362,8 @@ final dynamic sampleCloseHouseholdFlows = {
             "data": [],
             "name": "closeHouseholdSuccess",
             "type": "TEMPLATE",
+            "navigationMode": "popUntilAndReplace",
+            "popUntilPageName": "closeHouseholdRegistration",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",

@@ -622,6 +622,12 @@ class _StockReconciliationCardState
       return;
     }
 
+    // Scope to the current project. Without this, facilities / distributor
+    // userUuids reused across projects have their stocks summed into every
+    // project's reconciliation view. Matches downSyncStockBalances in
+    // project.dart and _computeBalanceFromLocalStocks in stock_balance_executor.dart.
+    final projectId = FlowBuilderSingleton().projectId;
+
     final facilityId = _selectedFacility!.id;
 
     try {
@@ -646,6 +652,13 @@ class _StockReconciliationCardState
           operator: 'equalsAny',
           value: facilityId,
         ),
+        if (projectId != null && projectId.isNotEmpty)
+          SearchFilter(
+            root: 'stock',
+            field: 'referenceId',
+            operator: 'equals',
+            value: projectId,
+          ),
       ];
 
       final searchParams = GlobalSearchParameters(

@@ -1,0 +1,36 @@
+sequenceDiagram
+    autonumber
+    actor U as Field worker
+    participant FG as FaceGatePage
+    participant EV as FaceEnrollmentView<br/>(package)
+    participant ML as FaceModelService<br/>(TFLite)
+    participant ER as FaceEmbeddingRepository<br/>(Isar)
+    participant PIN as PinService
+    participant WR as WorkerRegistryService
+    participant LOG as FaceAuthEventLogger
+    participant SRV as Server
+
+    U->>FG: first login (no enrollment)
+    FG->>EV: open enrollment
+    loop 5 angles (straight, L, R, up, down)
+        U->>EV: hold pose
+        EV->>ML: infer(112×112 crop)
+        ML-->>EV: 192-d embedding
+    end
+    U->>EV: liveness (blink + head turn)
+    EV->>ER: compare vs stored profiles
+    alt similarity ≥ 0.75 with another profile
+        EV-->>U: duplicateDetected — abort
+    else unique
+        EV->>PIN: generate PIN + salt, SHA-256
+        EV-->>U: show backup PIN (once)
+        EV->>ER: save profile (embeddings + pinHash/salt)
+        FG->>WR: updateWorkerWithFaceEnrollment
+        WR->>SRV: POST /worker/v1/_search
+        WR->>SRV: POST /worker/v1/bulk/_update (face fields)
+        alt offline / network failure
+            WR-->>FG: false → queue 'face_registry_sync_pending'
+        end
+        FG->>LOG: logEnrollment(+GPS)
+        LOG->>ER: FaceAuthEvent(ENROLLMENT) → oplog (syncs later, §7.1)
+    end

@@ -24,13 +24,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:isar_community/isar.dart';
+import '../widgets/download_progress/download_progress_content.dart';
+import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
+import 'package:recase/recase.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 import 'package:sync_service/data/sync_service.dart' show SyncLock;
+import 'package:sync_service/utils/utils.dart' as sync_utils;
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
@@ -238,8 +242,7 @@ void showDownloadDialog(
   required DownloadBeneficiary model,
   required DigitProgressDialogType dialogType,
   bool isPop = true,
-  StreamController<DownloadProgressData>? downloadProgressController,
-  DownloadProgressData? initialProgressData,
+  ValueNotifier<DownloadProgressData?>? downloadProgressController,
 }) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
@@ -248,39 +251,176 @@ void showDownloadDialog(
   switch (dialogType) {
     case DigitProgressDialogType.failed:
     case DigitProgressDialogType.checkFailed:
-      DigitSyncDialog.show(
-        context,
-        type: DialogType.failed,
-        label: model.title,
-        primaryAction: DigitDialogActions(
-          label: model.primaryButtonLabel ?? '',
-          action: (ctx) {
-            if (dialogType == DigitProgressDialogType.failed ||
-                dialogType == DigitProgressDialogType.checkFailed) {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncGetBatchSizeEvent(
-                      appConfiguration: [model.appConfiguartion!],
-                      projectModel: model.projectModel,
-                      boundaries: model.boundaries,
-                      pendingSyncCount: model.pendingSyncCount ?? 0,
-                    ),
-                  );
-            } else {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.router.replaceAll([HomeRoute()]);
-            }
-          },
-        ),
-        secondaryAction: DigitDialogActions(
-          label: model.secondaryButtonLabel ?? '',
-          action: (ctx) {
+      showCustomPopup(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => Popup(
+          type: PopUpType.alert,
+          title: AppLocalizations.of(context)
+              .translate(i18.common.coreCommonFailedToCheckData),
+          titleIcon: Icon(
+            Icons.warning,
+            size: spacer8,
+            color: Theme.of(context).colorTheme.alert.error,
+          ),
+          description: AppLocalizations.of(context)
+              .translate(i18.common.coreCommonFailedToCheckDataDesc),
+          onCrossTap: () {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.replaceAll([HomeRoute()]);
+            context.read<BeneficiaryDownSyncBloc>().add(
+                  const DownSyncResetStateEvent(),
+                );
           },
+          actions: [
+            DigitButton(
+              label: model.primaryButtonLabel ?? '',
+              capitalizeLetters: false,
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
+              mainAxisSize: MainAxisSize.max,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.read<BeneficiaryDownSyncBloc>().add(
+                      DownSyncGetBatchSizeEvent(
+                        appConfiguration: [model.appConfiguartion!],
+                        projectModel: model.projectModel,
+                        boundaries: model.boundaries,
+                        pendingSyncCount: model.pendingSyncCount ?? 0,
+                      ),
+                    );
+              },
+            ),
+            DigitButton(
+              label: model.secondaryButtonLabel ?? '',
+              capitalizeLetters: false,
+              type: DigitButtonType.secondary,
+              size: DigitButtonSize.large,
+              mainAxisSize: MainAxisSize.max,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.replaceAll([HomeRoute()]);
+              },
+            ),
+          ],
         ),
       );
     case DigitProgressDialogType.dataFound:
+      if ((model.totalCount ?? 0) == 0) {
+        showCustomPopup(
+          barrierDismissible: false,
+          context: context,
+          builder: (ctx) => Popup(
+            type: PopUpType.alert,
+            title: model.title,
+            description: model.content,
+            onCrossTap: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.read<BeneficiaryDownSyncBloc>().add(
+                    const DownSyncResetStateEvent(),
+                  );
+            },
+            titleIcon: Icon(
+              Icons.warning,
+              size: spacer8,
+              color: Theme.of(context).colorTheme.alert.error,
+            ),
+            actions: [
+              DigitButton(
+                label: model.primaryButtonLabel ?? '',
+                capitalizeLetters: false,
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () async {
+                  await LocalSecureStore.instance
+                      .setManualSyncTrigger(false);
+                  if (context.mounted) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.replaceAll([HomeRoute()]);
+                  }
+                },
+              ),
+              DigitButton(
+                label: model.secondaryButtonLabel ?? '',
+                capitalizeLetters: false,
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        const DownSyncResetStateEvent(),
+                      );
+                },
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+      showCustomPopup(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => Popup(
+          title: model.title,
+          titleIcon: Icon(
+            Icons.info_outline_rounded,
+            size: spacer8,
+            color: Theme.of(context).colorTheme.alert.error,
+          ),
+          titleIconAlignment: CrossAxisAlignment.center,
+          onCrossTap: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            context.read<BeneficiaryDownSyncBloc>().add(
+                  const DownSyncResetStateEvent(),
+                );
+          },
+          description: model.content,
+          additionalWidgets: (model.infoCardTitle != null &&
+                  model.infoCardDescription != null)
+              ? [
+                  InfoCard(
+                    type: InfoType.info,
+                    title: model.infoCardTitle!,
+                    description: model.infoCardDescription!,
+                    // The description is already sentence-cased server-side and
+                    // spans two sentences; InfoCard's default sentence-case
+                    // transform lowercases every word after the first, which
+                    // would turn "... records. Keep the app open" into "keep".
+                    capitalizedLetter: false,
+                  ),
+                ]
+              : null,
+          actions: [
+            DigitButton(
+                label: model.primaryButtonLabel ?? '',
+                onPressed: () {
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        DownSyncDownloadAllEvent(
+                          projectModel: model.projectModel,
+                          boundaries: model.boundaries,
+                          batchSize: model.batchSize ?? 1,
+                          boundaryCounts: model.boundaryCounts,
+                        ),
+                      );
+                },
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.medium),
+            if (model.secondaryButtonLabel != null)
+              DigitButton(
+                  label: model.secondaryButtonLabel ?? '',
+                  onPressed: () async {
+                    await LocalSecureStore.instance.setManualSyncTrigger(false);
+                    if (context.mounted) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.replaceAll([HomeRoute()]);
+                    }
+                  },
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.medium),
+          ],
+        ),
+      );
     case DigitProgressDialogType.pendingSync:
     case DigitProgressDialogType.insufficientStorage:
       showCustomPopup(
@@ -292,35 +432,17 @@ void showDownloadDialog(
             dialogType == DigitProgressDialogType.insufficientStorage
                 ? Icons.warning
                 : Icons.info_outline_rounded,
-            color: dialogType == DigitProgressDialogType.insufficientStorage
-                ? Theme.of(context).colorTheme.alert.error
-                : Theme.of(context).colorTheme.text.primary,
+            size: spacer8,
+            color: Theme.of(context).colorTheme.alert.error,
           ),
+          titleIconAlignment: CrossAxisAlignment.center,
           description: model.content,
           actions: [
             DigitButton(
                 label: model.primaryButtonLabel ?? '',
                 onPressed: () {
-                  if (dialogType == DigitProgressDialogType.pendingSync) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    context.router.replaceAll([HomeRoute()]);
-                  } else {
-                    if ((model.totalCount ?? 0) > 0) {
-                      context.read<BeneficiaryDownSyncBloc>().add(
-                            DownSyncDownloadAllEvent(
-                              projectModel: model.projectModel,
-                              boundaries: model.boundaries,
-                              batchSize: model.batchSize ?? 1,
-                              boundaryCounts: model.boundaryCounts,
-                            ),
-                          );
-                    } else {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      context.read<BeneficiaryDownSyncBloc>().add(
-                            const DownSyncResetStateEvent(),
-                          );
-                    }
-                  }
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.router.replaceAll([HomeRoute()]);
                 },
                 type: DigitButtonType.primary,
                 size: DigitButtonSize.medium),
@@ -344,29 +466,17 @@ void showDownloadDialog(
         barrierDismissible: false,
         context: context,
         builder: (ctx) => Popup(title: "", additionalWidgets: [
-          StreamBuilder<DownloadProgressData>(
-            stream: downloadProgressController?.stream,
-            initialData: initialProgressData,
-            builder: (context, snapshot) {
-              final data = snapshot.data;
+          ValueListenableBuilder<DownloadProgressData?>(
+            valueListenable: downloadProgressController!,
+            builder: (context, data, _) {
               final progress = data?.progress ?? 0;
               final totalCount = data?.totalCount ?? model.totalCount ?? 0;
               final syncedCount = data?.syncedCount ?? 0;
-              final boundaryName = data?.boundaryName ?? '';
-              final currentIndex = data?.currentIndex ?? 0;
-              final totalBoundaries = data?.totalBoundaries ?? 1;
 
-              return ProgressIndicatorContainer(
-                label: boundaryName.isNotEmpty
-                    ? '$boundaryName (${currentIndex + 1}/$totalBoundaries)'
-                    : '',
-                prefixLabel: '$syncedCount',
-                suffixLabel: '$totalCount',
-                value: progress,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).colorTheme.primary.primary1,
-                ),
-                subLabel: model.title,
+              return DownloadProgressContent(
+                title: model.title,
+                progress: progress,
+                countLabel: '$syncedCount/$totalCount',
               );
             },
           ),
@@ -399,15 +509,11 @@ void showHFReferralProgressDialog(
           final totalCount = data?.totalCount ?? 0;
           final syncedCount = data?.syncedCount ?? 0;
 
-          return ProgressIndicatorContainer(
-            label: '',
-            prefixLabel: '$syncedCount',
-            suffixLabel: '$totalCount',
-            value: progress,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).colorTheme.primary.primary1,
-            ),
-            subLabel: title,
+          return DownloadProgressContent(
+            title: title,
+            progress: progress,
+            countLabel: '$syncedCount/$totalCount',
+            showProgressBar: false,
           );
         },
       ),
@@ -621,6 +727,9 @@ void attemptSyncUp(BuildContext context) async {
                   LocalRepository<AttendanceLogModel,
                       AttendanceLogSearchModel>>(),
               context.read<UserActionLocalRepository>(),
+              context.read<
+                  LocalRepository<FaceAuthEventModel,
+                      FaceAuthEventSearchModel>>(),
             ],
             remoteRepositories: [
               // INFO : Need to add repo repo of package Here
@@ -653,6 +762,9 @@ void attemptSyncUp(BuildContext context) async {
                   RemoteRepository<AttendanceLogModel,
                       AttendanceLogSearchModel>>(),
               context.read<UserActionRemoteRepository>(),
+              context.read<
+                  RemoteRepository<FaceAuthEventModel,
+                      FaceAuthEventSearchModel>>(),
             ],
           ),
         );
@@ -851,4 +963,30 @@ Future<Set<String>> generateUniqueMaterialNoteNumber({
   return returnCombinedIds
       ? {formattedUniqueId, combinedId}
       : {formattedUniqueId};
+}
+
+/// Reports the entity currently being synced/downloaded so any open sync
+/// dialog listening on [sync_utils.SyncServiceSingleton.progressStream] can
+/// display it (e.g. the post-login project setup downloads).
+void reportSyncProgress(String entityType, {String operation = 'syncDown'}) {
+  sync_utils.SyncServiceSingleton().reportProgress(
+    sync_utils.SyncProgress(entityType: entityType, operation: operation),
+  );
+}
+
+/// Formats a [sync_utils.SyncProgress] event into a user-facing label for the
+/// sync dialogs, e.g. "Syncing Household Member (5)".
+///
+/// Entity types arrive as camelCase model names (`householdMember`), sometimes
+/// with a record count suffix (`task (5)`); multi-word phase banners from the
+/// sync service ("Downloading from server...") are shown as-is.
+String formatSyncProgressLabel(sync_utils.SyncProgress progress) {
+  final raw = progress.entityType;
+  final match = RegExp(r'^(\S+)( \(\d+\))?$').firstMatch(raw);
+  if (match == null) return raw;
+
+  final name = ReCase(match.group(1)!).titleCase;
+  final count = match.group(2) ?? '';
+
+  return 'Syncing $name$count';
 }

@@ -4,6 +4,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   final TextInputType inputType;
   final String? prefixText;
   final String? suffixText;
+  final bool capitalizeWords;
 
   const JsonSchemaStringBuilder({
     required super.formControlName,
@@ -22,6 +23,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     super.helpText,
     super.tooltipText,
     super.charCount,
+    this.capitalizeWords = false,
   });
 
   @override
@@ -35,6 +37,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     final formatters = [
       noEmojiFilter,
       if (patternFormatter != null) patternFormatter,
+      if (capitalizeWords) _CapitalizeWordsFormatter(),
     ];
 
     return ReactiveFormConsumer(
@@ -69,5 +72,20 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
         );
       },
     );
+  }
+}
+
+class _CapitalizeWordsFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+    final newText = newValue.text.replaceAllMapped(
+      RegExp(r'(^|\s)\S'),
+      (match) => match.group(0)!.toUpperCase(),
+    );
+    return newValue.copyWith(text: newText, selection: newValue.selection);
   }
 }

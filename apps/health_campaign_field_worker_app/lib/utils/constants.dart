@@ -30,6 +30,7 @@ import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
     as firebase_services;
 import 'package:digit_location_tracker/location_tracker.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,9 @@ import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
+import 'package:digit_face_verification/data/repositories/local/face_auth_event.dart';
+import 'package:digit_face_verification/data/repositories/oplog/face_auth_event_oplog.dart';
+import 'package:digit_face_verification/data/repositories/remote/face_auth_event.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/oplog/oplog.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
@@ -96,6 +100,8 @@ class Constants {
           RowVersionListSchema,
           DashboardConfigSchemaListSchema,
           DashboardResponseSchema,
+          FaceEmbeddingSchema,
+          FaceEnrollmentProfileSchema,
         ],
         name: 'HCM',
         inspector: true,
@@ -249,6 +255,7 @@ class Constants {
       LocationTrackerLocalBaseRepository(
           sql, LocationTrackerOpLogManager(isar)),
       UserActionLocalRepository(sql, UserActionOpLogManager(isar)),
+      FaceAuthEventLocalRepository(sql, FaceAuthEventOpLogManager(isar)),
     ];
   }
 
@@ -347,6 +354,8 @@ class Constants {
           LocationTrackerRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.userAction)
           UserActionRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.faceAuthEvent)
+          FaceAuthEventRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -515,6 +524,8 @@ class DownloadBeneficiary {
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
   Map<String, int> boundaryCounts;
+  String? infoCardTitle;
+  String? infoCardDescription;
 
   DownloadBeneficiary({
     required this.title,
@@ -531,5 +542,7 @@ class DownloadBeneficiary {
     this.prefixLabel,
     this.suffixLabel,
     this.boundaryCounts = const {},
+    this.infoCardTitle,
+    this.infoCardDescription,
   });
 }

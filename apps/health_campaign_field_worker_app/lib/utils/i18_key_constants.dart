@@ -221,15 +221,27 @@ const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
 const nonMobileUser = NonMobileUser();
+const faceAuth = FaceAuth();
 const databaseError = DatabaseError();
 
 class Common {
   const Common();
 
+  String get proceed => 'PROCEED_BUTTON';
+
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get permissionContinue => 'PERMISSION_CONTINUE';
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
+
+  String get coreCommonInfo => 'CORE_COMMON_INFO';
+
+  String get coreCommonNoValue => 'CORE_COMMON_NO_VALUE';
+
+  String get coreCommonInfoDescInternetConnection =>
+      'CORE_COMMON_INFO_DESC_INTERNET_CONNECTION';
   String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
+  String get logoutConfirmationHeading => 'HCM_LOGOUT_CONFIRMATION_HEADING';
+  String get logoutConfirmationDescription => 'HCM_LOGOUT_CONFIRMATION_DESCRIPTION';
 
   String get coreCommonOr => 'CORE_COMMON_OR';
   String get commentKey => 'COMMENT_KEY';
@@ -256,7 +268,11 @@ class Common {
   String get coreCommonQuantityDistributed =>
       'CORE_COMMON_QUANTITY_DISTRIBUTED';
 
+  String get coreCommonResource => 'CORE_COMMON_RESOURCE';
+
   String get coreCommonDeleteResource => 'CORE_COMMON_DELETE_RESOURCE';
+
+  String get coreCommonAddResource => 'CORE_COMMON_ADD_RESOURCE';
 
   String get coreCommonDeleteResourceConfirmation =>
       'CORE_COMMON_DELETE_RESOURCE_CONFIRMATION';
@@ -292,6 +308,8 @@ class Common {
   String get coreCommonViewDownloadedData => 'CORE_COMMON_VIEW_DOWNLOADED_DATA';
 
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
+
+  String get chooseLanguage => 'CORE_COMMON_CHOOSE_LANGUAGE';
 
   String get coreCommonSyncProgress => 'CORE_COMMON_SYNC_PROGRESS';
 
@@ -338,6 +356,11 @@ class Common {
 
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 
+  String get coreCommonFailedToCheckData => 'CORE_COMMON_FAILED_TO_CHECK_DATA';
+
+  String get coreCommonFailedToCheckDataDesc =>
+      'CORE_COMMON_FAILED_TO_CHECK_DATA_DESC';
+
   String get coreCommonDownloadCompleted => 'CORE_COMMON_DOWNLOAD_COMPLETED';
 
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
@@ -351,6 +374,8 @@ class Common {
       'CORE_COMMON_WANT_TO_CHOOSE_ANOTHER_BOUNDARY';
 
   String get chooseAnotherBoundary => 'CORE_COMMON_CHOOSE_ANOTHER_BOUNDARY';
+
+  String get chooseBoundaries => 'CORE_COMMON_CHOOSE_BOUNDARIES';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
 
@@ -626,6 +651,11 @@ class StockDetailsIssuedShowcase {
   String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
 
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
+
+  String get coreCommonFailedToCheckData => 'CORE_COMMON_FAILED_TO_CHECK_DATA';
+
+  String get coreCommonFailedToCheckDataDesc =>
+      'CORE_COMMON_FAILED_TO_CHECK_DATA_DESC';
 }
 
 class AdverseEvents {
@@ -878,6 +908,8 @@ class Home {
 
   String get progressIndicatorTitle => 'PROGRESS_INDICATOR_TITLE';
 
+  String get homeMyProgress => 'HOME_MY_PROGRESS';
+
   String get progressIndicatorHelp => 'PROGRESS_INDICATOR_HELP';
 
   String get progressIndicatorPrefixLabel => 'PROGRESS_INDICATOR_PREFIX_LABEL';
@@ -963,6 +995,16 @@ class BeneficiaryID {
   String get beneficiaryIdsReFetch => 'BENEFICIARY_IDS_RE_FETCH';
 
   String get totalBeneficiaryIds => 'TOTAL_BENEFICIARY_IDS';
+
+  String get fetchingBeneficiaryIds => 'FETCHING_BENEFICIARY_IDS';
+
+  String get dataFoundBeneficiaryIds => 'DATA_FOUND_BENEFICIARY_IDS';
+
+  String get dataFoundBeneficiaryIdsContent => 'DATA_FOUND_BENEFICIARY_IDS_CONTENT';
+
+  String get dataNotFoundBeneficiaryIds => 'DATA_NOT_FOUND_BENEFICIARY_IDS';
+
+  String get dataNotFoundBeneficiaryIdsContent => 'DATA_NOT_FOUND_BENEFICIARY_IDS_CONTENT';
 }
 
 class DataShare {
@@ -1038,13 +1080,17 @@ class AcknowledgementSuccess {
   String get acknowledgementDescriptionText =>
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
 
-  String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
+  String get acknowledgementLabelText => 'CORE_COMMON_DATA_DOWNLOAD_SUCCESS';
 
   String get goToHome => 'GO_TO_HOME_SCREEN';
 
   String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
 
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
+
+  String get dataDownloadedSuccessDesc => 'DATA_DOWNLOADED_SUCCESS_DESC';
+
+  String get backToBoundarySelection => 'BACK_TO_BOUNDARY_SELECTION';
 }
 
 class ProjectSelection {
@@ -1192,7 +1238,13 @@ class SyncDialog {
 
   String get dataSyncedTitle => 'SYNC_DIALOG_DATA_SYNCED_TITLE';
 
+  String get dataSyncedSuccessTitle => 'DATA_SYNCED_SUCCESS_TITLE';
+
+  String get dataSyncedSuccessDescription => 'DATA_SYNCED_SUCCESS_DESCRIPTION';
+
   String get noDataToSyncTitle => 'SYNC_DIALOG_NO_DATA_TO_SYNC_TITLE';
+
+  String get allSyncedDescription => 'SYNC_DIALOG_ALL_SYNCED_DESCRIPTION';
 
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
@@ -1209,6 +1261,8 @@ class SyncDialog {
   String get serverError => 'SYNC_DIALOG_SERVER_ERROR';
 
   String get networkError => 'SYNC_DIALOG_NETWORK_ERROR';
+
+  String get sessionExpired => 'SYNC_DIALOG_SESSION_EXPIRED';
 }
 
 class StockReconciliationShowcase {
@@ -1480,19 +1534,30 @@ class BeneficiaryDetails {
 
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
-  String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
+  String get proceedWithoutDownloading => 'CORE_COMMON_PROCEED_WITHOUT_DOWNLOAD';
 
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
 
+  String get unableToCheckDataInServerDescription =>
+      'FAILED_TO_CHECK_DATA_IN_SERVER_DESCRIPTION';
+
   String get dataFound => 'DATA_FOUND';
+
+  String get downloadBeneficiaryData => 'DOWNLOAD_BENEFICIARY_DATA';
+
+  String get continueWithoutDownloading => 'CONTINUE_WITHOUT_DOWNLOADING';
+
+  String get changeBoundaries => 'CHANGE_BOUNDARIES';
 
   String get noDataFound => 'NO_DATA_FOUND';
 
   String get dataFoundContent => 'DATA_FOUND_CONTENT';
 
-  String get noDataFoundContent => 'NO_DATA_FOUND_CONTENT';
+  String get noDataFoundContent => 'BENEFICIARY_NO_DATA_FOUND_DESC';
 
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
+
+  String get fetchingData => 'CORE_COMMON_FETCHING_DATA';
 
   String get insufficientStorage => 'INSUFFICIENT_STORAGE_WARNING';
 
@@ -1558,6 +1623,122 @@ class NonMobileUser {
   String get showQrCodeBtnLabel => 'NON_MOBILE_USER_QR_BTN_LABEL';
 
   String get showQrCodeLabel => 'NON_MOBILE_USER_QR_LABEL';
+}
+
+class FaceAuth {
+  const FaceAuth();
+
+  String get enrollmentTitle => 'FACE_AUTH_ENROLLMENT_TITLE';
+  String get enrollmentDescription => 'FACE_AUTH_ENROLLMENT_DESCRIPTION';
+  String get enrollmentStart => 'FACE_AUTH_ENROLLMENT_START';
+  String get enrollmentComplete => 'FACE_AUTH_ENROLLMENT_COMPLETE';
+  String get enrollmentAngleInstruction =>
+      'FACE_AUTH_ENROLLMENT_ANGLE_INSTRUCTION';
+  String get enrollmentLivenessCheck => 'FACE_AUTH_ENROLLMENT_LIVENESS_CHECK';
+  String get enrollmentPinAssigned => 'FACE_AUTH_ENROLLMENT_PIN_ASSIGNED';
+  String get enrollmentPinNote => 'FACE_AUTH_ENROLLMENT_PIN_NOTE';
+  String get enrollmentDuplicateDetected =>
+      'FACE_AUTH_ENROLLMENT_DUPLICATE_DETECTED';
+  String get enrollmentMaxUsers => 'FACE_AUTH_ENROLLMENT_MAX_USERS';
+  String get enrollmentQualityLow => 'FACE_AUTH_ENROLLMENT_QUALITY_LOW';
+
+  String get gateTitle => 'FACE_AUTH_GATE_TITLE';
+  String get gateScanning => 'FACE_AUTH_GATE_SCANNING';
+  String get gateVerified => 'FACE_AUTH_GATE_VERIFIED';
+  String get gateRejected => 'FACE_AUTH_GATE_REJECTED';
+  String get gateFallbackRequired => 'FACE_AUTH_GATE_FALLBACK_REQUIRED';
+  String get gateAttemptCounter => 'FACE_AUTH_GATE_ATTEMPT_COUNTER';
+
+  String get pinTitle => 'FACE_AUTH_PIN_TITLE';
+  String get pinEnter => 'FACE_AUTH_PIN_ENTER';
+  String get pinVerify => 'FACE_AUTH_PIN_VERIFY';
+  String get pinInvalid => 'FACE_AUTH_PIN_INVALID';
+  String get pinSelectProfile => 'FACE_AUTH_PIN_SELECT_PROFILE';
+
+  String get livenessBlinkInstruction => 'FACE_AUTH_LIVENESS_BLINK';
+  String get livenessTurnLeftInstruction => 'FACE_AUTH_LIVENESS_TURN_LEFT';
+  String get livenessTurnRightInstruction => 'FACE_AUTH_LIVENESS_TURN_RIGHT';
+  String get livenessPassed => 'FACE_AUTH_LIVENESS_PASSED';
+  String get livenessFailed => 'FACE_AUTH_LIVENESS_FAILED';
+  String get livenessTimeout => 'FACE_AUTH_LIVENESS_TIMEOUT';
+
+  String get reVerificationTitle => 'FACE_AUTH_REVERIFICATION_TITLE';
+  String get reVerificationPrompt => 'FACE_AUTH_REVERIFICATION_PROMPT';
+  String get reVerificationVerified => 'FACE_AUTH_REVERIFICATION_VERIFIED';
+  String get reVerificationMissed => 'FACE_AUTH_REVERIFICATION_MISSED';
+  String get reVerificationUsePinInstead => 'FACE_AUTH_REVERIFICATION_USE_PIN';
+
+  String get lightingTooLow => 'FACE_AUTH_LIGHTING_TOO_LOW';
+  String get lightingGood => 'FACE_AUTH_LIGHTING_GOOD';
+  String get noGpsAvailable => 'FACE_AUTH_NO_GPS_AVAILABLE';
+
+  // Gate / dialog
+  String get logoutConfirm => 'FACE_AUTH_LOGOUT_CONFIRM';
+  String get positionFace => 'FACE_AUTH_POSITION_FACE';
+  String get verificationFailed => 'FACE_AUTH_VERIFICATION_FAILED';
+  String get faceMatch => 'FACE_AUTH_FACE_MATCH';
+  String get pinVerified => 'FACE_AUTH_PIN_VERIFIED';
+  String get workerNotFound => 'FACE_AUTH_WORKER_NOT_FOUND';
+  String get workerNotFoundMessage => 'FACE_AUTH_WORKER_NOT_FOUND_MESSAGE';
+  String get somethingWentWrong => 'FACE_AUTH_SOMETHING_WENT_WRONG';
+  String get capturingGps => 'FACE_AUTH_CAPTURING_GPS';
+  String get deviceCapacityReached => 'FACE_AUTH_DEVICE_CAPACITY_REACHED';
+  String get deviceCapacityMessage => 'FACE_AUTH_DEVICE_CAPACITY_MESSAGE';
+  String get continueAnyway => 'FACE_AUTH_CONTINUE_ANYWAY';
+  String get enterYourPin => 'FACE_AUTH_ENTER_YOUR_PIN';
+  String get pinSubtitle => 'FACE_AUTH_PIN_SUBTITLE';
+  String get tryAgainLookCamera => 'FACE_AUTH_TRY_AGAIN_LOOK_CAMERA';
+  String get later => 'FACE_AUTH_LATER';
+  String get remindMeLater => 'FACE_AUTH_REMIND_ME_LATER';
+  String get enrolledFor => 'FACE_AUTH_ENROLLED_FOR';
+  String get verifyNow => 'FACE_AUTH_VERIFY_NOW';
+  String get verify => 'FACE_AUTH_VERIFY';
+
+  // PIN fallback
+  String get pinVerificationTitle => 'FACE_AUTH_PIN_VERIFICATION_TITLE';
+  String get pinFallbackEnter => 'FACE_AUTH_PIN_FALLBACK_ENTER';
+  String get selectProfileLabel => 'FACE_AUTH_SELECT_PROFILE_LABEL';
+
+  // History
+  String get historyTitle => 'FACE_AUTH_HISTORY_TITLE';
+  String get historyLabel => 'FACE_AUTH_HISTORY_LABEL';
+  String get historyTabVerification => 'FACE_AUTH_HISTORY_TAB_VERIFICATION';
+  String get historyTabEnrollment => 'FACE_AUTH_HISTORY_TAB_ENROLLMENT';
+  String get searchHint => 'FACE_AUTH_SEARCH_HINT';
+  String get historyEmpty => 'FACE_AUTH_HISTORY_EMPTY';
+  String get unknown => 'FACE_AUTH_UNKNOWN';
+  String get eventLoginVerification => 'FACE_AUTH_EVENT_LOGIN_VERIFICATION';
+  String get eventReverification => 'FACE_AUTH_EVENT_REVERIFICATION';
+  String get eventCheckIn => 'FACE_AUTH_EVENT_CHECK_IN';
+  String get eventEnrollment => 'FACE_AUTH_EVENT_ENROLLMENT';
+  String get outcomeVerified => 'FACE_AUTH_OUTCOME_VERIFIED';
+  String get outcomePinUsed => 'FACE_AUTH_OUTCOME_PIN_USED';
+  String get outcomeHcmFallback => 'FACE_AUTH_OUTCOME_HCM_FALLBACK';
+  String get outcomeMissed => 'FACE_AUTH_OUTCOME_MISSED';
+  String get outcomeFailed => 'FACE_AUTH_OUTCOME_FAILED';
+  String get methodEnrollmentPin => 'FACE_AUTH_METHOD_ENROLLMENT_PIN';
+  String get methodFacialRecognition => 'FACE_AUTH_METHOD_FACIAL_RECOGNITION';
+  String get methodFaceShort => 'FACE_AUTH_METHOD_FACE_SHORT';
+  String get methodPinShort => 'FACE_AUTH_METHOD_PIN_SHORT';
+  String get justNow => 'FACE_AUTH_JUST_NOW';
+  String get activeSession => 'FACE_AUTH_ACTIVE_SESSION';
+
+  // Non-mobile enrollment
+  String get internetRequired => 'FACE_AUTH_INTERNET_REQUIRED';
+  String get enrollmentOfflineNote => 'FACE_AUTH_ENROLLMENT_OFFLINE_NOTE';
+  String get enrollmentSuccessful => 'FACE_AUTH_ENROLLMENT_SUCCESSFUL';
+  String get doneButton => 'FACE_AUTH_DONE';
+
+  // Re-verification popup / overlay
+  String get scanToProceed => 'FACE_AUTH_SCAN_TO_PROCEED';
+  String get verifyToContinue => 'FACE_AUTH_VERIFY_TO_CONTINUE';
+  String get verifyToContinueWorking =>
+      'FACE_AUTH_VERIFY_TO_CONTINUE_WORKING';
+  String get systemUserVerifyFirst => 'FACE_AUTH_SYSTEM_USER_VERIFY_FIRST';
+  String get coWorkerVerification => 'FACE_AUTH_COWORKER_VERIFICATION';
+  String get scanEachFace => 'FACE_AUTH_SCAN_EACH_FACE';
+  String get viewAll => 'FACE_AUTH_VIEW_ALL';
+  String get gateMatchLabel => 'FACE_AUTH_GATE_MATCH_LABEL';
 }
 
 class DatabaseError {

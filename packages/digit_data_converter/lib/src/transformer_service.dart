@@ -272,9 +272,6 @@ class FormEntityMapper {
             applyUpdate(nestedTarget, formData, sourcePath, fullPath);
             target[targetKey] = nestedTarget;
           } else if (target[targetKey] is List) {
-            // 🔥 handle structured list logic
-            final modelList = target[targetKey] as List;
-
             final listMappingConfig = modelConfig['listMappings']?[targetKey];
             if (listMappingConfig is Map<String, dynamic>) {
               final updatedList = _updateListWithMatchingStrategy(
@@ -382,7 +379,10 @@ class FormEntityMapper {
     updateMapping.forEach((customKey, path) {
       if (containsPathInFormData(path, formValues)) {
         final value = getStrictValueFromFormDataOnly(path, formValues);
-        updatedFields[customKey] = value;
+        // Only include non-null, non-empty values in additionalFields
+        if (value != null && value.toString().trim().isNotEmpty) {
+          updatedFields[customKey] = value;
+        }
 
         // Track the path as used so it's not treated as unmapped
         usedPaths.add(path.split('.').last.split('[').first);
@@ -404,6 +404,10 @@ class FormEntityMapper {
     updatedFields.forEach((key, value) {
       existingFields[key] = value;
     });
+
+    // Filter out entries with null or empty string values
+    existingFields.removeWhere((key, value) =>
+        value == null || value.toString().trim().isEmpty);
 
     final mergedFields = existingFields.entries
         .map((e) => {'key': e.key, 'value': e.value})
@@ -753,10 +757,14 @@ class FormEntityMapper {
       if (value != null && value.toString().trim().isNotEmpty) {
         fieldsList.add({
           'key': customKey,
-          'value': value is DateTime ? value.millisecondsSinceEpoch : value
+          'value': value is DateTime ? value.millisecondsSinceEpoch : value,
         });
       }
     });
+
+    // Remove any entries where value is null or empty string (safety net)
+    fieldsList.removeWhere((f) =>
+        f['value'] == null || f['value'].toString().trim().isEmpty);
 
     if (fieldsList.isEmpty) return null;
 
@@ -1296,6 +1304,10 @@ class FormEntityMapper {
           mergedFields.add({'key': entry.key, 'value': entry.value});
         }
       }
+
+      // Filter out entries with null or empty string values
+      mergedFields.removeWhere((f) =>
+          f['value'] == null || f['value'].toString().trim().isEmpty);
 
       mergedData['additionalFields'] = {
         'schema': modelName.replaceAll('Model', ''),

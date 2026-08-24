@@ -1,3 +1,13 @@
+## 1.0.5
+
+* Bottom-fixed cards: right/left padding set to zero
+* Atomic localization cache swap; O(1) `translate()` lookup
+* Point `survey_form` (and example) at local `digit_data_model` path
+* Localize face screens via app-level translate; renamed locales to `_DEMO`
+* Added code filter while searching for service definition
+* Checklist sort order and card-view UI/UX fix
+* Validation checks for scanned types
+
 ## 1.0.4
 
 * Bug fix:

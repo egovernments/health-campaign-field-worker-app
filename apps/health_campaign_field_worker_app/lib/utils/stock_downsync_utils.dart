@@ -7,12 +7,12 @@ import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/download_progress/download_progress_content.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/stock_downsync/stock_downsync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
-import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
 import 'extensions/extensions.dart';
 
@@ -70,38 +70,105 @@ void showStockDownloadDialog(
         ),
       );
     case DigitProgressDialogType.dataFound:
+      if ((model.totalCount ?? 0) == 0) {
+        showCustomPopup(
+          context: context,
+          builder: (ctx) => Popup(
+            type: PopUpType.alert,
+            title: model.title,
+            description: model.content,
+            titleIcon: Icon(
+              Icons.warning_amber_rounded,
+              size: spacer8,
+              color: Theme.of(context).colorTheme.alert.error,
+            ),
+            actions: [
+              DigitButton(
+                label: model.primaryButtonLabel ?? '',
+                capitalizeLetters: false,
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.router.replaceAll([HomeRoute()]);
+                },
+              ),
+              DigitButton(
+                label: model.secondaryButtonLabel ?? '',
+                capitalizeLetters: false,
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.read<StockDownSyncBloc>().add(
+                        const StockDownSyncResetStateEvent(),
+                      );
+                },
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+      showCustomPopup(
+        context: context,
+        builder: (ctx) => Popup(
+          title: model.title,
+          titleIcon: Icon(
+            Icons.info_outline_rounded,
+            size: spacer8,
+            color: Theme.of(context).colorTheme.alert.error,
+          ),
+          titleIconAlignment: CrossAxisAlignment.center,
+          description: model.content,
+          actions: [
+            DigitButton(
+              label: model.primaryButtonLabel ?? '',
+              onPressed: () {
+                context.read<StockDownSyncBloc>().add(
+                      StockDownSyncDownloadEvent(
+                        projectModel: model.projectModel,
+                        batchSize: model.batchSize ?? 1,
+                        initialServerCount: model.totalCount ?? 0,
+                      ),
+                    );
+              },
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.medium,
+            ),
+            if (model.secondaryButtonLabel != null)
+              DigitButton(
+                label: model.secondaryButtonLabel ?? '',
+                onPressed: () {
+                  if (context.mounted) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.replaceAll([HomeRoute()]);
+                  }
+                },
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.medium,
+              ),
+          ],
+        ),
+      );
     case DigitProgressDialogType.insufficientStorage:
       showCustomPopup(
         context: context,
         builder: (ctx) => Popup(
           title: model.title,
           titleIcon: Icon(
-            dialogType == DigitProgressDialogType.insufficientStorage
-                ? Icons.warning
-                : Icons.info_outline_rounded,
-            color: dialogType == DigitProgressDialogType.insufficientStorage
-                ? Theme.of(context).colorTheme.alert.error
-                : Theme.of(context).colorTheme.text.primary,
+            Icons.warning,
+            color: Theme.of(context).colorTheme.alert.error,
           ),
           description: model.content,
           actions: [
             DigitButton(
               label: model.primaryButtonLabel ?? '',
               onPressed: () {
-                if ((model.totalCount ?? 0) > 0) {
-                  context.read<StockDownSyncBloc>().add(
-                        StockDownSyncDownloadEvent(
-                          projectModel: model.projectModel,
-                          batchSize: model.batchSize ?? 1,
-                          initialServerCount: model.totalCount ?? 0,
-                        ),
-                      );
-                } else {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  context.read<StockDownSyncBloc>().add(
-                        const StockDownSyncResetStateEvent(),
-                      );
-                }
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.replaceAll([HomeRoute()]);
               },
               type: DigitButtonType.primary,
               size: DigitButtonSize.medium,
@@ -130,16 +197,14 @@ void showStockDownloadDialog(
             StreamBuilder<double>(
               stream: downloadProgressController?.stream,
               builder: (context, snapshot) {
-                return ProgressIndicatorContainer(
-                  label: '',
-                  prefixLabel: '',
-                  suffixLabel:
-                      '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
-                  value: snapshot.data ?? 0,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).colorTheme.primary.primary1,
-                  ),
-                  subLabel: model.title,
+                final progress = snapshot.data ?? 0;
+                final currentCount =
+                    (progress * (model.totalCount ?? 0)).toInt();
+
+                return DownloadProgressContent(
+                  title: model.title,
+                  progress: progress,
+                  countLabel: '$currentCount/${model.suffixLabel}',
                 );
               },
             ),

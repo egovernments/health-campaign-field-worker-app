@@ -37,6 +37,7 @@ import 'package:digit_location_tracker/data/oplog/oplog.dart';
 import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
 import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar_community/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
+import 'package:digit_face_verification/data/repositories/local/face_auth_event.dart';
+import 'package:digit_face_verification/data/repositories/oplog/face_auth_event_oplog.dart';
+import 'package:digit_face_verification/data/repositories/remote/face_auth_event.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/oplog/oplog.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
@@ -80,16 +85,37 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         final actionMap = state.entityActionMapping;
         if (actionMap.isEmpty) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             theme: DigitTheme.instance.mobileTheme,
             home: Scaffold(
-              appBar: AppBar(),
+              // AppBar is intentionally omitted for the loading branch so the
+              // pre-init view reads as a splash. Non-loading branches (the
+              // maybeWhen falls through to orElse/failed) get an AppBar via
+              // the per-branch Scaffold below.
+              appBar: state.maybeWhen<PreferredSizeWidget?>(
+                orElse: () => AppBar(),
+                loading: () => null,
+              ),
               body: state.maybeWhen(
                 orElse: () => const Center(
                   child: Text('Unable to initialize the application'),
                 ),
-                /*Returns Loading state while app initialization is in progress*/
-                loading: () => const Center(
-                  child: Text('Loading'),
+                /*Splash-style placeholder while AppInitializationBloc runs —
+                  matches the native splash so the transition doesn't flash
+                  a bare 'Loading' text.*/
+                loading: () => Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'assets/icons/app_icon.png',
+                        width: 140,
+                        height: 140,
+                      ),
+                      const SizedBox(height: 24),
+                      DigitLoaders.inlineLoader(size: 48),
+                    ],
+                  ),
                 ),
                 /*Returns No Internet Connection warning if its failed to initialize after all retries
                   and shows a button to close the app*/
@@ -311,11 +337,19 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           UserActionOpLogManager(isar),
         ),
       ),
+
       RepositoryProvider<
           LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
         create: (_) => PgrServiceLocalRepository(
           sql,
           PgrServiceOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>>(
+        create: (_) => FaceAuthEventLocalRepository(
+          sql,
+          FaceAuthEventOpLogManager(isar),
         ),
       ),
     ];
@@ -543,6 +577,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                 LocationTrackerRemoteRepository(dio, actionMap: actions),
           ),
         // INFO Need to add packages here
+        if (value == DataModelType.faceAuthEvent)
+          RepositoryProvider<
+              RemoteRepository<FaceAuthEventModel, FaceAuthEventSearchModel>>(
+            create: (_) =>
+                FaceAuthEventRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.userAction)
           RepositoryProvider<UserActionRemoteRepository>(
             create: (_) => UserActionRemoteRepository(dio, actionMap: actions),

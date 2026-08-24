@@ -422,7 +422,7 @@ final jsonConfig = {
     "models": {
       "TaskModel": {
         "listSource": "__context:futureDoses",
-        "skipFirst": 0,
+        "skipFirst": 1,
         "mappings": {
           "id": "taskDetails.id",
           "projectId": "__context:projectId",
@@ -493,6 +493,7 @@ final jsonConfig = {
             // picked the 3-11 month bucket and debited the wrong stock.
             "listSource": "DeliveryDetails.resourceCard",
             "mappings": {
+              "id": "id",
               "clientReferenceId": "__generate:uuid",
               "taskId": "taskId",
               "productVariantId":
@@ -1191,6 +1192,7 @@ final jsonConfig = {
         "mappings": {
           "clientReferenceId": "__generate:uuid", // referenceId in code
           "tenantId": "__context:tenantId",
+          "hierarchyType": "__context:hierarchyType",
           "serviceCode": "complaintType.complaintType",
           "description": "complaintDetails.complaintDescription",
           "source": "__value:mobile",
@@ -1964,7 +1966,6 @@ final jsonConfig = {
           "additionalFields": {
             "form": "__value:POLIO_INSIDE_MONITORING",
             "formType": "__value:INSIDE_HOUSEHOLD_DATA",
-            "settlementType": "__context:settlementType",
             "gpsFirstHouseholdLat":
                 "firstHouseholdLocation.gpsFirstHousehold[0]",
             "gpsFirstHouseholdLng":

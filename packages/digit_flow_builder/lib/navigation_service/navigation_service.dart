@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../router/flow_builder_routes.dart';
@@ -156,8 +157,13 @@ class FlowBuilderNavigationService implements NavigationService {
   void navigateToHome() {
     try {
       context.router.popUntil((route) {
-        // Exit the entire flow by popping all FlowBuilderHomeRoute pages
-        return route.settings.name?.contains('FlowBuilderHomeRoute') != true;
+        // Exit the entire flow. A flow's stack interleaves FlowBuilderHomeRoute
+        // pages with the forms engine's FormsRenderRoute pages, so stopping at
+        // the first non-FlowBuilderHomeRoute would land on a form or summary
+        // page rather than Home. Pop past both.
+        final name = route.settings.name ?? '';
+        return !name.contains('FlowBuilderHomeRoute') &&
+            !name.contains('FormsRenderRoute');
       });
     } catch (e) {
       debugPrint('⚠️ Error navigating to HOME: $e');
@@ -183,6 +189,12 @@ class NavigationRegistry {
 
     // Special handling for HOME navigation
     if (name == 'HOME') {
+      if (kDebugMode) {
+        FlowDebugger().logNavigation(
+          toPage: 'HOME',
+          navigationMode: 'popUntilRoot',
+        );
+      }
       _service.navigateToHome();
       return;
     }
@@ -216,6 +228,15 @@ class NavigationRegistry {
     final navigationModeStr = properties['navigationMode'] as String?;
     final popUntilPageName = properties['popUntilPageName'] as String?;
     final navigationMode = _parseNavigationMode(navigationModeStr);
+
+    if (kDebugMode) {
+      FlowDebugger().logNavigation(
+        toPage: name,
+        navigationMode: navigationModeStr ?? 'push',
+        params: data.map((k, v) => MapEntry(k, v?.toString() ?? 'null')),
+        popUntilPageName: popUntilPageName,
+      );
+    }
 
     _service.navigateTo(
       type: type,

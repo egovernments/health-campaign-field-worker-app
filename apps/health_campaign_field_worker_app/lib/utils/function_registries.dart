@@ -153,7 +153,7 @@ class FunctionRegistries {
         'dispatch': 'ISSUED',
         'returned': 'RETURNED',
         'damage': 'DAMAGED',
-        'loss': 'LOSS',
+        'loss': 'LOST',
         'excess': 'EXCESS',
         'less': 'LESS',
       };
@@ -557,6 +557,61 @@ class FunctionRegistries {
         }
       }
       return '';
+    });
+
+    // Per-field accessors for the Insufficient Stock popup. The flattened
+    // string above can't be laid out as label/value rows, so expose the
+    // individual fields. All read the same StockBalanceCache result that
+    // `hasStockForDelivery` populates.
+    List<Map<String, dynamic>> insufficientStockProducts() {
+      final result = StockBalanceCache.instance.stockCheckResult;
+      if (result is Map && result['key'] == 'INSUFFICIENT_STOCK') {
+        final products = result['products'];
+        if (products is List) {
+          return products
+              .whereType<Map>()
+              .map((e) => Map<String, dynamic>.from(e))
+              .toList();
+        }
+      }
+      return const [];
+    }
+
+    /// Renders whole numbers without a trailing `.0`.
+    String formatQty(num value) => value == value.roundToDouble()
+        ? value.toInt().toString()
+        : value.toString();
+
+    num sumField(String field) {
+      num total = 0;
+      for (final p in insufficientStockProducts()) {
+        total += num.tryParse(p[field]?.toString() ?? '') ?? 0;
+      }
+      return total;
+    }
+
+    FunctionRegistry.register('getInsufficientStockResourceNames',
+        (args, stateData) {
+      final names = insufficientStockProducts()
+          .map((p) => (p['name'] ?? '').toString())
+          .where((s) => s.isNotEmpty && s != 'null')
+          .toList();
+      // Comma-joined so a multi-product shortfall names every resource
+      // rather than silently reporting only the first.
+      return names.join(', ');
+    });
+
+    FunctionRegistry.register('getInsufficientStockRequired', (args, stateData) {
+      final products = insufficientStockProducts();
+      if (products.isEmpty) return '';
+      return formatQty(sumField('required'));
+    });
+
+    FunctionRegistry.register('getInsufficientStockAvailable',
+        (args, stateData) {
+      final products = insufficientStockProducts();
+      if (products.isEmpty) return '';
+      return formatQty(sumField('available'));
     });
 
     // Encodes a stock item into the JSON payload the CDD-side scan flow

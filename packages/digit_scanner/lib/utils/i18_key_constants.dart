@@ -139,7 +139,9 @@ class Scanner {
 
   String get enterManualCode => 'ENTER_MANUAL_CODE';
 
-  String get resourcesScanned => 'RESOURCE_SCANNED';
+  String get resourceScanned => 'RESOURCE_SCANNED';
+
+  String get resourcesScanned => 'RESOURCES_SCANNED';
 
   String get resourcesScanFailed => 'RESOURCE_SCAN_FAILED';
 
@@ -149,7 +151,7 @@ class Scanner {
 
   String get invalidBarcode => 'INVALID_BARCODE';
 
-  String get manualCodeDescription => 'MANUAL_CODE_DESC';
+  String get manualCodeDescription => 'SCANNER_MANUAL_CODE_DESCRIPTION';
 
   String get resourceCode => 'RESOURCE_CODE';
 

@@ -120,14 +120,13 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           if (mounted) {
             context.router.replace(BoundarySelectionRoute());
           }
-          return; // Skip loading config when disabled
-        } else {
-          final flows = permission_handler_config['flows'] as List<dynamic>?;
-          if (flows != null && flows.isNotEmpty) {
-            screenConfig = flows[0] as Map<String, dynamic>;
-            bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
-            footerConfig = screenConfig?['footer'] as List<dynamic>? ?? [];
-          }
+          return;
+        }
+        final flows = permission_handler_config['flows'] as List<dynamic>?;
+        if (flows != null && flows.isNotEmpty) {
+          screenConfig = flows[0] as Map<String, dynamic>;
+          bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+          footerConfig = screenConfig?['footer'] as List<dynamic>? ?? [];
         }
       }
     } catch (e) {
@@ -471,9 +470,9 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         titleIcon: Icon(
           Icons.warning,
           color: Theme.of(context).colorTheme.alert.error,
-          size: spacer12,
+          size: spacer8,
         ),
-        subHeading:
+        description:
             localizations.translate(i18.common.accessPermissionDialogDesc),
         onCrossTap: () => Navigator.pop(context),
         // width: 10,
@@ -515,8 +514,12 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                 // Header from config
                 if (screenConfig?['heading'] != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: spacer4, horizontal: spacer3),
+                    padding: const EdgeInsets.only(
+                      left: spacer4,
+                      right: spacer4,
+                      top: spacer6,
+                      bottom: spacer1,
+                    ),
                     child: Text(
                       localizations.translate(screenConfig!['heading']),
                       style: textTheme.headingXl.copyWith(
@@ -530,7 +533,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                 if (screenConfig?['description'] != null)
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: spacer1, horizontal: spacer3),
+                        vertical: spacer1, horizontal: spacer4),
                     child: Text(
                       localizations.translate(screenConfig!['description']),
                       style: textTheme.captionS.copyWith(
@@ -540,7 +543,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                     ),
                   ),
                 const SizedBox(
-                  height: spacer4,
+                  height: spacer3,
                 ),
                 // Build body widgets from config
                 ...bodyConfig.map(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
@@ -68,6 +69,7 @@ class SearchBarWidget extends ResolvedFlowWidget {
       initialValue: initialValue,
       onAction: onAction,
       resolved: resolved,
+      capitalizeWords: json['textCapitalization'] == 'words',
     );
   }
 }
@@ -82,6 +84,7 @@ class _ReactiveSearchBar extends StatefulWidget {
   final String initialValue;
   final void Function(ActionConfig) onAction;
   final ResolvedWidgetContext resolved;
+  final bool capitalizeWords;
 
   const _ReactiveSearchBar({
     super.key,
@@ -94,6 +97,7 @@ class _ReactiveSearchBar extends StatefulWidget {
     required this.initialValue,
     required this.onAction,
     required this.resolved,
+    this.capitalizeWords = false,
   });
 
   @override
@@ -359,10 +363,20 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
   @override
   Widget build(BuildContext context) {
     final compositeKey = widget.compositeKey;
+    final pattern = widget.json['pattern'];
+    final formatters = [
+      if (pattern is String && pattern.isNotEmpty)
+        FilteringTextInputFormatter.allow(RegExp(pattern)),
+      if (widget.capitalizeWords) _CapitalizeWordsFormatter(),
+    ];
     if (compositeKey == null) {
       return DigitSearchBar(
         hintText: widget.hintText,
         controller: _controller,
+        textCapitalization: widget.capitalizeWords
+            ? TextCapitalization.words
+            : TextCapitalization.none,
+        inputFormatters: formatters,
       );
     }
 
@@ -391,8 +405,27 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
         return DigitSearchBar(
           hintText: widget.hintText,
           controller: _controller,
+          textCapitalization: widget.capitalizeWords
+              ? TextCapitalization.words
+              : TextCapitalization.none,
+          inputFormatters: formatters,
         );
       },
     );
+  }
+}
+
+class _CapitalizeWordsFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+    final newText = newValue.text.replaceAllMapped(
+      RegExp(r'(^|\s)\S'),
+      (match) => match.group(0)!.toUpperCase(),
+    );
+    return newValue.copyWith(text: newText, selection: newValue.selection);
   }
 }

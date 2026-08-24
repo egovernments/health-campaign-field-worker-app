@@ -1,4 +1,3 @@
-// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -9,6 +8,279 @@
 // coverage:ignore-file
 
 part of 'app_router.dart';
+
+abstract class _$AppRouter extends RootStackRouter {
+  // ignore: unused_element
+  _$AppRouter({super.navigatorKey});
+
+  @override
+  final Map<String, PageFactory> pagesMap = {
+    AcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<AcknowledgementRouteArgs>(
+          orElse: () => const AcknowledgementRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isDataRecordSuccess: args.isDataRecordSuccess,
+          label: args.label,
+          description: args.description,
+          descriptionTableData: args.descriptionTableData,
+        ),
+      );
+    },
+    AttendanceDigitScannerRoute.name: (routeData) {
+      final args = routeData.argsAs<AttendanceDigitScannerRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AttendanceDigitScannerPage(
+          key: args.key,
+          enableDynamicQRScanning: args.enableDynamicQRScanning,
+          attendees: args.attendees,
+          onScanResult: args.onScanResult,
+          quantity: args.quantity,
+          singleValue: args.singleValue,
+          isGS1code: args.isGS1code,
+        ),
+      );
+    },
+    AuthenticatedRouteWrapper.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AuthenticatedPageWrapper(),
+      );
+    },
+    BeneficiariesReportRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BeneficiariesReportPage(),
+      );
+    },
+    BeneficiaryIdDownSyncRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryIdDownSyncRouteArgs>(
+          orElse: () => const BeneficiaryIdDownSyncRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BeneficiaryIdDownSyncPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    BoundarySelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<BoundarySelectionRouteArgs>(
+          orElse: () => const BoundarySelectionRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BoundarySelectionPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CurrentBoundaryRoute.name: (routeData) {
+      final args = routeData.argsAs<CurrentBoundaryRouteArgs>(
+          orElse: () => const CurrentBoundaryRouteArgs());
+      return AutoRoutePage<BoundaryModel>(
+        routeData: routeData,
+        child: CurrentBoundaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          onBoundarySelected: args.onBoundarySelected,
+        ),
+      );
+    },
+    DataReceiverRoute.name: (routeData) {
+      final args = routeData.argsAs<DataReceiverRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DataReceiverPage(
+          key: args.key,
+          connectedDevice: args.connectedDevice,
+          nearbyService: args.nearbyService,
+        ),
+      );
+    },
+    DataShareHomeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const DataShareHomePage(),
+      );
+    },
+    DataTransferRoute.name: (routeData) {
+      final args = routeData.argsAs<DataTransferRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DataTransferPage(
+          key: args.key,
+          nearbyService: args.nearbyService,
+          connectedDevices: args.connectedDevices,
+        ),
+      );
+    },
+    DeviceChangeReasonRoute.name: (routeData) {
+      final args = routeData.argsAs<DeviceChangeReasonRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DeviceChangeReasonPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          username: args.username,
+          password: args.password,
+        ),
+      );
+    },
+    DevicesListRoute.name: (routeData) {
+      final args = routeData.argsAs<DevicesListRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DevicesListPage(
+          key: args.key,
+          deviceType: args.deviceType,
+        ),
+      );
+    },
+    FaceAuthHistoryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const FaceAuthHistoryPage(),
+      );
+    },
+    FaceGateRoute.name: (routeData) {
+      final args = routeData.argsAs<FaceGateRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: FaceGatePage(
+          key: args.key,
+          onVerified: args.onVerified,
+        ),
+      );
+    },
+    HomeRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: HomePage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    LanguageSelectionRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LanguageSelectionPage(),
+      );
+    },
+    LoginRoute.name: (routeData) {
+      final args = routeData.argsAs<LoginRouteArgs>(
+          orElse: () => const LoginRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: LoginPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    NonMobileFaceEnrollRoute.name: (routeData) {
+      final args = routeData.argsAs<NonMobileFaceEnrollRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: NonMobileFaceEnrollPage(
+          key: args.key,
+          individualId: args.individualId,
+          individualName: args.individualName,
+        ),
+      );
+    },
+    NonMobileUserListRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NonMobileUserListPage(),
+      );
+    },
+    PeerToPeerWrapperRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(child: const PeerToPeerWrapperPage()),
+      );
+    },
+    PermissionsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PermissionsPage(),
+      );
+    },
+    PinFallbackRoute.name: (routeData) {
+      final args = routeData.argsAs<PinFallbackRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PinFallbackPage(
+          key: args.key,
+          onVerified: args.onVerified,
+        ),
+      );
+    },
+    ProfileRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileRouteArgs>(
+          orElse: () => const ProfileRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProfilePage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ProjectFacilitySelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<ProjectFacilitySelectionRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProjectFacilitySelectionPage(
+          key: args.key,
+          projectFacilities: args.projectFacilities,
+        ),
+      );
+    },
+    ProjectSelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<ProjectSelectionRouteArgs>(
+          orElse: () => const ProjectSelectionRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProjectSelectionPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    UnauthenticatedRouteWrapper.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const UnauthenticatedPageWrapper(),
+      );
+    },
+    UserQRDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<UserQRDetailsRouteArgs>(
+          orElse: () => const UserQRDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: UserQRDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ...DigitScannerPackageRoute().pagesMap,
+    ...DashboardRoute().pagesMap,
+    ...SurveyFormRoute().pagesMap,
+    ...TransitPostRoute().pagesMap,
+    ...FormsRoute().pagesMap,
+    ...FlowBuilderRoute().pagesMap,
+  };
+}
 
 /// generated route for
 /// [AcknowledgementPage]
@@ -22,36 +294,22 @@ class AcknowledgementRoute extends PageRouteInfo<AcknowledgementRouteArgs> {
     Map<String, dynamic>? descriptionTableData,
     List<PageRouteInfo>? children,
   }) : super(
-         AcknowledgementRoute.name,
-         args: AcknowledgementRouteArgs(
-           key: key,
-           appLocalizations: appLocalizations,
-           isDataRecordSuccess: isDataRecordSuccess,
-           label: label,
-           description: description,
-           descriptionTableData: descriptionTableData,
-         ),
-         initialChildren: children,
-       );
+          AcknowledgementRoute.name,
+          args: AcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isDataRecordSuccess: isDataRecordSuccess,
+            label: label,
+            description: description,
+            descriptionTableData: descriptionTableData,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'AcknowledgementRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<AcknowledgementRouteArgs>(
-        orElse: () => const AcknowledgementRouteArgs(),
-      );
-      return AcknowledgementPage(
-        key: args.key,
-        appLocalizations: args.appLocalizations,
-        isDataRecordSuccess: args.isDataRecordSuccess,
-        label: args.label,
-        description: args.description,
-        descriptionTableData: args.descriptionTableData,
-      );
-    },
-  );
+  static const PageInfo<AcknowledgementRouteArgs> page =
+      PageInfo<AcknowledgementRouteArgs>(name);
 }
 
 class AcknowledgementRouteArgs {
@@ -80,30 +338,6 @@ class AcknowledgementRouteArgs {
   String toString() {
     return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isDataRecordSuccess: $isDataRecordSuccess, label: $label, description: $description, descriptionTableData: $descriptionTableData}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! AcknowledgementRouteArgs) return false;
-    return key == other.key &&
-        appLocalizations == other.appLocalizations &&
-        isDataRecordSuccess == other.isDataRecordSuccess &&
-        label == other.label &&
-        description == other.description &&
-        const MapEquality<String, dynamic>().equals(
-          descriptionTableData,
-          other.descriptionTableData,
-        );
-  }
-
-  @override
-  int get hashCode =>
-      key.hashCode ^
-      appLocalizations.hashCode ^
-      isDataRecordSuccess.hashCode ^
-      label.hashCode ^
-      description.hashCode ^
-      const MapEquality<String, dynamic>().hash(descriptionTableData);
 }
 
 /// generated route for
@@ -117,43 +351,29 @@ class AttendanceDigitScannerRoute
     required void Function(
       ScannedIndividualDataModel,
       AttendanceValidationResult,
-    )
-    onScanResult,
+    ) onScanResult,
     int quantity = 1,
     bool singleValue = false,
     bool isGS1code = false,
     List<PageRouteInfo>? children,
   }) : super(
-         AttendanceDigitScannerRoute.name,
-         args: AttendanceDigitScannerRouteArgs(
-           key: key,
-           enableDynamicQRScanning: enableDynamicQRScanning,
-           attendees: attendees,
-           onScanResult: onScanResult,
-           quantity: quantity,
-           singleValue: singleValue,
-           isGS1code: isGS1code,
-         ),
-         initialChildren: children,
-       );
+          AttendanceDigitScannerRoute.name,
+          args: AttendanceDigitScannerRouteArgs(
+            key: key,
+            enableDynamicQRScanning: enableDynamicQRScanning,
+            attendees: attendees,
+            onScanResult: onScanResult,
+            quantity: quantity,
+            singleValue: singleValue,
+            isGS1code: isGS1code,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'AttendanceDigitScannerRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<AttendanceDigitScannerRouteArgs>();
-      return AttendanceDigitScannerPage(
-        key: args.key,
-        enableDynamicQRScanning: args.enableDynamicQRScanning,
-        attendees: args.attendees,
-        onScanResult: args.onScanResult,
-        quantity: args.quantity,
-        singleValue: args.singleValue,
-        isGS1code: args.isGS1code,
-      );
-    },
-  );
+  static const PageInfo<AttendanceDigitScannerRouteArgs> page =
+      PageInfo<AttendanceDigitScannerRouteArgs>(name);
 }
 
 class AttendanceDigitScannerRouteArgs {
@@ -173,8 +393,10 @@ class AttendanceDigitScannerRouteArgs {
 
   final List<AttendeeModel> attendees;
 
-  final void Function(ScannedIndividualDataModel, AttendanceValidationResult)
-  onScanResult;
+  final void Function(
+    ScannedIndividualDataModel,
+    AttendanceValidationResult,
+  ) onScanResult;
 
   final int quantity;
 
@@ -186,62 +408,34 @@ class AttendanceDigitScannerRouteArgs {
   String toString() {
     return 'AttendanceDigitScannerRouteArgs{key: $key, enableDynamicQRScanning: $enableDynamicQRScanning, attendees: $attendees, onScanResult: $onScanResult, quantity: $quantity, singleValue: $singleValue, isGS1code: $isGS1code}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! AttendanceDigitScannerRouteArgs) return false;
-    return key == other.key &&
-        enableDynamicQRScanning == other.enableDynamicQRScanning &&
-        const ListEquality<AttendeeModel>().equals(
-          attendees,
-          other.attendees,
-        ) &&
-        quantity == other.quantity &&
-        singleValue == other.singleValue &&
-        isGS1code == other.isGS1code;
-  }
-
-  @override
-  int get hashCode =>
-      key.hashCode ^
-      enableDynamicQRScanning.hashCode ^
-      const ListEquality<AttendeeModel>().hash(attendees) ^
-      quantity.hashCode ^
-      singleValue.hashCode ^
-      isGS1code.hashCode;
 }
 
 /// generated route for
 /// [AuthenticatedPageWrapper]
 class AuthenticatedRouteWrapper extends PageRouteInfo<void> {
   const AuthenticatedRouteWrapper({List<PageRouteInfo>? children})
-    : super(AuthenticatedRouteWrapper.name, initialChildren: children);
+      : super(
+          AuthenticatedRouteWrapper.name,
+          initialChildren: children,
+        );
 
   static const String name = 'AuthenticatedRouteWrapper';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const AuthenticatedPageWrapper();
-    },
-  );
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
 /// [BeneficiariesReportPage]
 class BeneficiariesReportRoute extends PageRouteInfo<void> {
   const BeneficiariesReportRoute({List<PageRouteInfo>? children})
-    : super(BeneficiariesReportRoute.name, initialChildren: children);
+      : super(
+          BeneficiariesReportRoute.name,
+          initialChildren: children,
+        );
 
   static const String name = 'BeneficiariesReportRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const BeneficiariesReportPage();
-    },
-  );
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -253,32 +447,25 @@ class BeneficiaryIdDownSyncRoute
     AppLocalizations? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
-         BeneficiaryIdDownSyncRoute.name,
-         args: BeneficiaryIdDownSyncRouteArgs(
-           key: key,
-           appLocalizations: appLocalizations,
-         ),
-         initialChildren: children,
-       );
+          BeneficiaryIdDownSyncRoute.name,
+          args: BeneficiaryIdDownSyncRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'BeneficiaryIdDownSyncRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<BeneficiaryIdDownSyncRouteArgs>(
-        orElse: () => const BeneficiaryIdDownSyncRouteArgs(),
-      );
-      return BeneficiaryIdDownSyncPage(
-        key: args.key,
-        appLocalizations: args.appLocalizations,
-      );
-    },
-  );
+  static const PageInfo<BeneficiaryIdDownSyncRouteArgs> page =
+      PageInfo<BeneficiaryIdDownSyncRouteArgs>(name);
 }
 
 class BeneficiaryIdDownSyncRouteArgs {
-  const BeneficiaryIdDownSyncRouteArgs({this.key, this.appLocalizations});
+  const BeneficiaryIdDownSyncRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
 
   final Key? key;
 
@@ -288,16 +475,6 @@ class BeneficiaryIdDownSyncRouteArgs {
   String toString() {
     return 'BeneficiaryIdDownSyncRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! BeneficiaryIdDownSyncRouteArgs) return false;
-    return key == other.key && appLocalizations == other.appLocalizations;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ appLocalizations.hashCode;
 }
 
 /// generated route for
@@ -308,32 +485,25 @@ class BoundarySelectionRoute extends PageRouteInfo<BoundarySelectionRouteArgs> {
     AppLocalizations? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
-         BoundarySelectionRoute.name,
-         args: BoundarySelectionRouteArgs(
-           key: key,
-           appLocalizations: appLocalizations,
-         ),
-         initialChildren: children,
-       );
+          BoundarySelectionRoute.name,
+          args: BoundarySelectionRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'BoundarySelectionRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<BoundarySelectionRouteArgs>(
-        orElse: () => const BoundarySelectionRouteArgs(),
-      );
-      return BoundarySelectionPage(
-        key: args.key,
-        appLocalizations: args.appLocalizations,
-      );
-    },
-  );
+  static const PageInfo<BoundarySelectionRouteArgs> page =
+      PageInfo<BoundarySelectionRouteArgs>(name);
 }
 
 class BoundarySelectionRouteArgs {
-  const BoundarySelectionRouteArgs({this.key, this.appLocalizations});
+  const BoundarySelectionRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
 
   final Key? key;
 
@@ -343,16 +513,6 @@ class BoundarySelectionRouteArgs {
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! BoundarySelectionRouteArgs) return false;
-    return key == other.key && appLocalizations == other.appLocalizations;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ appLocalizations.hashCode;
 }
 
 /// generated route for
@@ -364,30 +524,19 @@ class CurrentBoundaryRoute extends PageRouteInfo<CurrentBoundaryRouteArgs> {
     dynamic Function(BuildContext)? onBoundarySelected,
     List<PageRouteInfo>? children,
   }) : super(
-         CurrentBoundaryRoute.name,
-         args: CurrentBoundaryRouteArgs(
-           key: key,
-           appLocalizations: appLocalizations,
-           onBoundarySelected: onBoundarySelected,
-         ),
-         initialChildren: children,
-       );
+          CurrentBoundaryRoute.name,
+          args: CurrentBoundaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            onBoundarySelected: onBoundarySelected,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'CurrentBoundaryRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<CurrentBoundaryRouteArgs>(
-        orElse: () => const CurrentBoundaryRouteArgs(),
-      );
-      return CurrentBoundaryPage(
-        key: args.key,
-        appLocalizations: args.appLocalizations,
-        onBoundarySelected: args.onBoundarySelected,
-      );
-    },
-  );
+  static const PageInfo<CurrentBoundaryRouteArgs> page =
+      PageInfo<CurrentBoundaryRouteArgs>(name);
 }
 
 class CurrentBoundaryRouteArgs {
@@ -407,16 +556,6 @@ class CurrentBoundaryRouteArgs {
   String toString() {
     return 'CurrentBoundaryRouteArgs{key: $key, appLocalizations: $appLocalizations, onBoundarySelected: $onBoundarySelected}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! CurrentBoundaryRouteArgs) return false;
-    return key == other.key && appLocalizations == other.appLocalizations;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ appLocalizations.hashCode;
 }
 
 /// generated route for
@@ -428,28 +567,19 @@ class DataReceiverRoute extends PageRouteInfo<DataReceiverRouteArgs> {
     required NearbyService nearbyService,
     List<PageRouteInfo>? children,
   }) : super(
-         DataReceiverRoute.name,
-         args: DataReceiverRouteArgs(
-           key: key,
-           connectedDevice: connectedDevice,
-           nearbyService: nearbyService,
-         ),
-         initialChildren: children,
-       );
+          DataReceiverRoute.name,
+          args: DataReceiverRouteArgs(
+            key: key,
+            connectedDevice: connectedDevice,
+            nearbyService: nearbyService,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'DataReceiverRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<DataReceiverRouteArgs>();
-      return DataReceiverPage(
-        key: args.key,
-        connectedDevice: args.connectedDevice,
-        nearbyService: args.nearbyService,
-      );
-    },
-  );
+  static const PageInfo<DataReceiverRouteArgs> page =
+      PageInfo<DataReceiverRouteArgs>(name);
 }
 
 class DataReceiverRouteArgs {
@@ -469,35 +599,20 @@ class DataReceiverRouteArgs {
   String toString() {
     return 'DataReceiverRouteArgs{key: $key, connectedDevice: $connectedDevice, nearbyService: $nearbyService}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! DataReceiverRouteArgs) return false;
-    return key == other.key &&
-        connectedDevice == other.connectedDevice &&
-        nearbyService == other.nearbyService;
-  }
-
-  @override
-  int get hashCode =>
-      key.hashCode ^ connectedDevice.hashCode ^ nearbyService.hashCode;
 }
 
 /// generated route for
 /// [DataShareHomePage]
 class DataShareHomeRoute extends PageRouteInfo<void> {
   const DataShareHomeRoute({List<PageRouteInfo>? children})
-    : super(DataShareHomeRoute.name, initialChildren: children);
+      : super(
+          DataShareHomeRoute.name,
+          initialChildren: children,
+        );
 
   static const String name = 'DataShareHomeRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const DataShareHomePage();
-    },
-  );
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -509,28 +624,19 @@ class DataTransferRoute extends PageRouteInfo<DataTransferRouteArgs> {
     required List<Device> connectedDevices,
     List<PageRouteInfo>? children,
   }) : super(
-         DataTransferRoute.name,
-         args: DataTransferRouteArgs(
-           key: key,
-           nearbyService: nearbyService,
-           connectedDevices: connectedDevices,
-         ),
-         initialChildren: children,
-       );
+          DataTransferRoute.name,
+          args: DataTransferRouteArgs(
+            key: key,
+            nearbyService: nearbyService,
+            connectedDevices: connectedDevices,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'DataTransferRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<DataTransferRouteArgs>();
-      return DataTransferPage(
-        key: args.key,
-        nearbyService: args.nearbyService,
-        connectedDevices: args.connectedDevices,
-      );
-    },
-  );
+  static const PageInfo<DataTransferRouteArgs> page =
+      PageInfo<DataTransferRouteArgs>(name);
 }
 
 class DataTransferRouteArgs {
@@ -550,24 +656,6 @@ class DataTransferRouteArgs {
   String toString() {
     return 'DataTransferRouteArgs{key: $key, nearbyService: $nearbyService, connectedDevices: $connectedDevices}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! DataTransferRouteArgs) return false;
-    return key == other.key &&
-        nearbyService == other.nearbyService &&
-        const ListEquality<Device>().equals(
-          connectedDevices,
-          other.connectedDevices,
-        );
-  }
-
-  @override
-  int get hashCode =>
-      key.hashCode ^
-      nearbyService.hashCode ^
-      const ListEquality<Device>().hash(connectedDevices);
 }
 
 /// generated route for
@@ -581,30 +669,20 @@ class DeviceChangeReasonRoute
     required String password,
     List<PageRouteInfo>? children,
   }) : super(
-         DeviceChangeReasonRoute.name,
-         args: DeviceChangeReasonRouteArgs(
-           key: key,
-           appLocalizations: appLocalizations,
-           username: username,
-           password: password,
-         ),
-         initialChildren: children,
-       );
+          DeviceChangeReasonRoute.name,
+          args: DeviceChangeReasonRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            username: username,
+            password: password,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'DeviceChangeReasonRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<DeviceChangeReasonRouteArgs>();
-      return DeviceChangeReasonPage(
-        key: args.key,
-        appLocalizations: args.appLocalizations,
-        username: args.username,
-        password: args.password,
-      );
-    },
-  );
+  static const PageInfo<DeviceChangeReasonRouteArgs> page =
+      PageInfo<DeviceChangeReasonRouteArgs>(name);
 }
 
 class DeviceChangeReasonRouteArgs {
@@ -627,23 +705,6 @@ class DeviceChangeReasonRouteArgs {
   String toString() {
     return 'DeviceChangeReasonRouteArgs{key: $key, appLocalizations: $appLocalizations, username: $username, password: $password}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! DeviceChangeReasonRouteArgs) return false;
-    return key == other.key &&
-        appLocalizations == other.appLocalizations &&
-        username == other.username &&
-        password == other.password;
-  }
-
-  @override
-  int get hashCode =>
-      key.hashCode ^
-      appLocalizations.hashCode ^
-      username.hashCode ^
-      password.hashCode;
 }
 
 /// generated route for
@@ -654,24 +715,25 @@ class DevicesListRoute extends PageRouteInfo<DevicesListRouteArgs> {
     required DeviceType deviceType,
     List<PageRouteInfo>? children,
   }) : super(
-         DevicesListRoute.name,
-         args: DevicesListRouteArgs(key: key, deviceType: deviceType),
-         initialChildren: children,
-       );
+          DevicesListRoute.name,
+          args: DevicesListRouteArgs(
+            key: key,
+            deviceType: deviceType,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'DevicesListRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<DevicesListRouteArgs>();
-      return DevicesListPage(key: args.key, deviceType: args.deviceType);
-    },
-  );
+  static const PageInfo<DevicesListRouteArgs> page =
+      PageInfo<DevicesListRouteArgs>(name);
 }
 
 class DevicesListRouteArgs {
-  const DevicesListRouteArgs({this.key, required this.deviceType});
+  const DevicesListRouteArgs({
+    this.key,
+    required this.deviceType,
+  });
 
   final Key? key;
 
@@ -681,16 +743,58 @@ class DevicesListRouteArgs {
   String toString() {
     return 'DevicesListRouteArgs{key: $key, deviceType: $deviceType}';
   }
+}
+
+/// generated route for
+/// [FaceAuthHistoryPage]
+class FaceAuthHistoryRoute extends PageRouteInfo<void> {
+  const FaceAuthHistoryRoute({List<PageRouteInfo>? children})
+      : super(
+          FaceAuthHistoryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'FaceAuthHistoryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [FaceGatePage]
+class FaceGateRoute extends PageRouteInfo<FaceGateRouteArgs> {
+  FaceGateRoute({
+    Key? key,
+    required void Function() onVerified,
+    List<PageRouteInfo>? children,
+  }) : super(
+          FaceGateRoute.name,
+          args: FaceGateRouteArgs(
+            key: key,
+            onVerified: onVerified,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'FaceGateRoute';
+
+  static const PageInfo<FaceGateRouteArgs> page =
+      PageInfo<FaceGateRouteArgs>(name);
+}
+
+class FaceGateRouteArgs {
+  const FaceGateRouteArgs({
+    this.key,
+    required this.onVerified,
+  });
+
+  final Key? key;
+
+  final void Function() onVerified;
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! DevicesListRouteArgs) return false;
-    return key == other.key && deviceType == other.deviceType;
+  String toString() {
+    return 'FaceGateRouteArgs{key: $key, onVerified: $onVerified}';
   }
-
-  @override
-  int get hashCode => key.hashCode ^ deviceType.hashCode;
 }
 
 /// generated route for
@@ -701,26 +805,24 @@ class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
     AppLocalizations? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
-         HomeRoute.name,
-         args: HomeRouteArgs(key: key, appLocalizations: appLocalizations),
-         initialChildren: children,
-       );
+          HomeRoute.name,
+          args: HomeRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'HomeRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<HomeRouteArgs>(
-        orElse: () => const HomeRouteArgs(),
-      );
-      return HomePage(key: args.key, appLocalizations: args.appLocalizations);
-    },
-  );
+  static const PageInfo<HomeRouteArgs> page = PageInfo<HomeRouteArgs>(name);
 }
 
 class HomeRouteArgs {
-  const HomeRouteArgs({this.key, this.appLocalizations});
+  const HomeRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
 
   final Key? key;
 
@@ -730,32 +832,20 @@ class HomeRouteArgs {
   String toString() {
     return 'HomeRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! HomeRouteArgs) return false;
-    return key == other.key && appLocalizations == other.appLocalizations;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ appLocalizations.hashCode;
 }
 
 /// generated route for
 /// [LanguageSelectionPage]
 class LanguageSelectionRoute extends PageRouteInfo<void> {
   const LanguageSelectionRoute({List<PageRouteInfo>? children})
-    : super(LanguageSelectionRoute.name, initialChildren: children);
+      : super(
+          LanguageSelectionRoute.name,
+          initialChildren: children,
+        );
 
   static const String name = 'LanguageSelectionRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const LanguageSelectionPage();
-    },
-  );
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -766,26 +856,24 @@ class LoginRoute extends PageRouteInfo<LoginRouteArgs> {
     AppLocalizations? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
-         LoginRoute.name,
-         args: LoginRouteArgs(key: key, appLocalizations: appLocalizations),
-         initialChildren: children,
-       );
+          LoginRoute.name,
+          args: LoginRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'LoginRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<LoginRouteArgs>(
-        orElse: () => const LoginRouteArgs(),
-      );
-      return LoginPage(key: args.key, appLocalizations: args.appLocalizations);
-    },
-  );
+  static const PageInfo<LoginRouteArgs> page = PageInfo<LoginRouteArgs>(name);
 }
 
 class LoginRouteArgs {
-  const LoginRouteArgs({this.key, this.appLocalizations});
+  const LoginRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
 
   final Key? key;
 
@@ -795,64 +883,130 @@ class LoginRouteArgs {
   String toString() {
     return 'LoginRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [NonMobileFaceEnrollPage]
+class NonMobileFaceEnrollRoute
+    extends PageRouteInfo<NonMobileFaceEnrollRouteArgs> {
+  NonMobileFaceEnrollRoute({
+    Key? key,
+    required String individualId,
+    required String individualName,
+    List<PageRouteInfo>? children,
+  }) : super(
+          NonMobileFaceEnrollRoute.name,
+          args: NonMobileFaceEnrollRouteArgs(
+            key: key,
+            individualId: individualId,
+            individualName: individualName,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'NonMobileFaceEnrollRoute';
+
+  static const PageInfo<NonMobileFaceEnrollRouteArgs> page =
+      PageInfo<NonMobileFaceEnrollRouteArgs>(name);
+}
+
+class NonMobileFaceEnrollRouteArgs {
+  const NonMobileFaceEnrollRouteArgs({
+    this.key,
+    required this.individualId,
+    required this.individualName,
+  });
+
+  final Key? key;
+
+  final String individualId;
+
+  final String individualName;
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! LoginRouteArgs) return false;
-    return key == other.key && appLocalizations == other.appLocalizations;
+  String toString() {
+    return 'NonMobileFaceEnrollRouteArgs{key: $key, individualId: $individualId, individualName: $individualName}';
   }
-
-  @override
-  int get hashCode => key.hashCode ^ appLocalizations.hashCode;
 }
 
 /// generated route for
 /// [NonMobileUserListPage]
 class NonMobileUserListRoute extends PageRouteInfo<void> {
   const NonMobileUserListRoute({List<PageRouteInfo>? children})
-    : super(NonMobileUserListRoute.name, initialChildren: children);
+      : super(
+          NonMobileUserListRoute.name,
+          initialChildren: children,
+        );
 
   static const String name = 'NonMobileUserListRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const NonMobileUserListPage();
-    },
-  );
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
 /// [PeerToPeerWrapperPage]
 class PeerToPeerWrapperRoute extends PageRouteInfo<void> {
   const PeerToPeerWrapperRoute({List<PageRouteInfo>? children})
-    : super(PeerToPeerWrapperRoute.name, initialChildren: children);
+      : super(
+          PeerToPeerWrapperRoute.name,
+          initialChildren: children,
+        );
 
   static const String name = 'PeerToPeerWrapperRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return WrappedRoute(child: const PeerToPeerWrapperPage());
-    },
-  );
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
 /// [PermissionsPage]
 class PermissionsRoute extends PageRouteInfo<void> {
   const PermissionsRoute({List<PageRouteInfo>? children})
-    : super(PermissionsRoute.name, initialChildren: children);
+      : super(
+          PermissionsRoute.name,
+          initialChildren: children,
+        );
 
   static const String name = 'PermissionsRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const PermissionsPage();
-    },
-  );
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PinFallbackPage]
+class PinFallbackRoute extends PageRouteInfo<PinFallbackRouteArgs> {
+  PinFallbackRoute({
+    Key? key,
+    required void Function() onVerified,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PinFallbackRoute.name,
+          args: PinFallbackRouteArgs(
+            key: key,
+            onVerified: onVerified,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PinFallbackRoute';
+
+  static const PageInfo<PinFallbackRouteArgs> page =
+      PageInfo<PinFallbackRouteArgs>(name);
+}
+
+class PinFallbackRouteArgs {
+  const PinFallbackRouteArgs({
+    this.key,
+    required this.onVerified,
+  });
+
+  final Key? key;
+
+  final void Function() onVerified;
+
+  @override
+  String toString() {
+    return 'PinFallbackRouteArgs{key: $key, onVerified: $onVerified}';
+  }
 }
 
 /// generated route for
@@ -863,29 +1017,25 @@ class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
     AppLocalizations? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
-         ProfileRoute.name,
-         args: ProfileRouteArgs(key: key, appLocalizations: appLocalizations),
-         initialChildren: children,
-       );
+          ProfileRoute.name,
+          args: ProfileRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'ProfileRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<ProfileRouteArgs>(
-        orElse: () => const ProfileRouteArgs(),
-      );
-      return ProfilePage(
-        key: args.key,
-        appLocalizations: args.appLocalizations,
-      );
-    },
-  );
+  static const PageInfo<ProfileRouteArgs> page =
+      PageInfo<ProfileRouteArgs>(name);
 }
 
 class ProfileRouteArgs {
-  const ProfileRouteArgs({this.key, this.appLocalizations});
+  const ProfileRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
 
   final Key? key;
 
@@ -895,16 +1045,6 @@ class ProfileRouteArgs {
   String toString() {
     return 'ProfileRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! ProfileRouteArgs) return false;
-    return key == other.key && appLocalizations == other.appLocalizations;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ appLocalizations.hashCode;
 }
 
 /// generated route for
@@ -916,26 +1056,18 @@ class ProjectFacilitySelectionRoute
     required List<ProjectFacilityModel> projectFacilities,
     List<PageRouteInfo>? children,
   }) : super(
-         ProjectFacilitySelectionRoute.name,
-         args: ProjectFacilitySelectionRouteArgs(
-           key: key,
-           projectFacilities: projectFacilities,
-         ),
-         initialChildren: children,
-       );
+          ProjectFacilitySelectionRoute.name,
+          args: ProjectFacilitySelectionRouteArgs(
+            key: key,
+            projectFacilities: projectFacilities,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'ProjectFacilitySelectionRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<ProjectFacilitySelectionRouteArgs>();
-      return ProjectFacilitySelectionPage(
-        key: args.key,
-        projectFacilities: args.projectFacilities,
-      );
-    },
-  );
+  static const PageInfo<ProjectFacilitySelectionRouteArgs> page =
+      PageInfo<ProjectFacilitySelectionRouteArgs>(name);
 }
 
 class ProjectFacilitySelectionRouteArgs {
@@ -952,22 +1084,6 @@ class ProjectFacilitySelectionRouteArgs {
   String toString() {
     return 'ProjectFacilitySelectionRouteArgs{key: $key, projectFacilities: $projectFacilities}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! ProjectFacilitySelectionRouteArgs) return false;
-    return key == other.key &&
-        const ListEquality<ProjectFacilityModel>().equals(
-          projectFacilities,
-          other.projectFacilities,
-        );
-  }
-
-  @override
-  int get hashCode =>
-      key.hashCode ^
-      const ListEquality<ProjectFacilityModel>().hash(projectFacilities);
 }
 
 /// generated route for
@@ -978,32 +1094,25 @@ class ProjectSelectionRoute extends PageRouteInfo<ProjectSelectionRouteArgs> {
     AppLocalizations? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
-         ProjectSelectionRoute.name,
-         args: ProjectSelectionRouteArgs(
-           key: key,
-           appLocalizations: appLocalizations,
-         ),
-         initialChildren: children,
-       );
+          ProjectSelectionRoute.name,
+          args: ProjectSelectionRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'ProjectSelectionRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<ProjectSelectionRouteArgs>(
-        orElse: () => const ProjectSelectionRouteArgs(),
-      );
-      return ProjectSelectionPage(
-        key: args.key,
-        appLocalizations: args.appLocalizations,
-      );
-    },
-  );
+  static const PageInfo<ProjectSelectionRouteArgs> page =
+      PageInfo<ProjectSelectionRouteArgs>(name);
 }
 
 class ProjectSelectionRouteArgs {
-  const ProjectSelectionRouteArgs({this.key, this.appLocalizations});
+  const ProjectSelectionRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
 
   final Key? key;
 
@@ -1013,32 +1122,20 @@ class ProjectSelectionRouteArgs {
   String toString() {
     return 'ProjectSelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! ProjectSelectionRouteArgs) return false;
-    return key == other.key && appLocalizations == other.appLocalizations;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ appLocalizations.hashCode;
 }
 
 /// generated route for
 /// [UnauthenticatedPageWrapper]
 class UnauthenticatedRouteWrapper extends PageRouteInfo<void> {
   const UnauthenticatedRouteWrapper({List<PageRouteInfo>? children})
-    : super(UnauthenticatedRouteWrapper.name, initialChildren: children);
+      : super(
+          UnauthenticatedRouteWrapper.name,
+          initialChildren: children,
+        );
 
   static const String name = 'UnauthenticatedRouteWrapper';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const UnauthenticatedPageWrapper();
-    },
-  );
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -1049,32 +1146,25 @@ class UserQRDetailsRoute extends PageRouteInfo<UserQRDetailsRouteArgs> {
     AppLocalizations? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
-         UserQRDetailsRoute.name,
-         args: UserQRDetailsRouteArgs(
-           key: key,
-           appLocalizations: appLocalizations,
-         ),
-         initialChildren: children,
-       );
+          UserQRDetailsRoute.name,
+          args: UserQRDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'UserQRDetailsRoute';
 
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<UserQRDetailsRouteArgs>(
-        orElse: () => const UserQRDetailsRouteArgs(),
-      );
-      return UserQRDetailsPage(
-        key: args.key,
-        appLocalizations: args.appLocalizations,
-      );
-    },
-  );
+  static const PageInfo<UserQRDetailsRouteArgs> page =
+      PageInfo<UserQRDetailsRouteArgs>(name);
 }
 
 class UserQRDetailsRouteArgs {
-  const UserQRDetailsRouteArgs({this.key, this.appLocalizations});
+  const UserQRDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
 
   final Key? key;
 
@@ -1084,14 +1174,4 @@ class UserQRDetailsRouteArgs {
   String toString() {
     return 'UserQRDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! UserQRDetailsRouteArgs) return false;
-    return key == other.key && appLocalizations == other.appLocalizations;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ appLocalizations.hashCode;
 }

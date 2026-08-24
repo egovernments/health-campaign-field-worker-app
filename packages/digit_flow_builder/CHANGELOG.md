@@ -1,3 +1,13 @@
+## 0.1.1
+
+- Introduced the flow-builder package: dynamic layout rendering, `FlowRegistry`, `FlowCrudBloc`, `state_wrapper_builder`, widget registry, navigation registry, singleton, and JSON-driven screen composition
+- Attendance flow suite: mark-attendance card, QR scanner flow, signature capture/compare, session entry/exit time, missed-days popup, `AttendanceLogModel`, group-by-teams, `CustomDataExecutor`
+- Stock less/excess and unable-to-deliver flows with recon calculations, indirect-delivery config, accept/reject flows, project-facility mapping, and duplicate-scanner checks
+- Polio/SMC registration & delivery flows: redose, eligibility checks (age/height/weight/dose criteria), unique beneficiary ID pool loader, caregiver consent, computed field/dose/cycle resolution
+- New widgets/executors: QR scanner, proximity search, multi-select dropdown, selection card, expandable widget, labeled toggle, panel/tag/table widgets with `@condition` cells, action popup, no-result card
+- Core engine: multi-entity tabs, `contains`/`notContains`, nested-path field access, `notExists` wrapper filter, `matches` JSON substring operator, `groupByType` wrapper filters, function registry, navigation params, dependent-page logic, `preventScreenCapture` flag
+- Numerous fixes across state clearing, filter application, transformer config, visibility conditions, edit-flow additional fields, scroll/pagination refresh, cache invalidation, and boundary-scoped searches
+
 ## 0.1.0
 
 - Flow builder: apply `wrapperConfig` filters in `groupByType` mode; support nested-path field access and `notExists` wrapper filter

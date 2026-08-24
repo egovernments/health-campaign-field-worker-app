@@ -25,12 +25,10 @@ if (flutterVersionName == null) {
 
 
 android {
-    namespace "com.digit.hcm"
-    compileSdk = 36
+    compileSdk = 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
@@ -92,7 +90,11 @@ configurations.all {
 }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+    // Fix: Gradle 7.4 + AGP 7.3.0 cannot resolve lifecycle-process as a
+    // transitive constraint (pulled in by CameraX/ML Kit from the face-auth
+    // packages) — fails with "Corrupt serialized resolution result" on
+    // :app:processDebugResources. Declaring it directly resolves it.
+    implementation 'androidx.lifecycle:lifecycle-process:2.6.2'
 }
 
 flutter {

@@ -244,52 +244,6 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
             },
             {
               "type": "string",
-              "enums": [
-                {"code": "URBAN", "name": "IHM_ENUM_URBAN"},
-                {"code": "RURAL", "name": "IHM_ENUM_RURAL"},
-                {"code": "SLUMS", "name": "IHM_ENUM_SLUMS"},
-                {"code": "REFUGEES_IDPS", "name": "IHM_ENUM_REFUGEES_IDPS"},
-                {"code": "HARD_TO_REACH", "name": "IHM_ENUM_HARD_TO_REACH"},
-                {"code": "NOMADS", "name": "IHM_ENUM_NOMADS"},
-                {
-                  "code": "SECURITY_COMPROMISED",
-                  "name": "IHM_ENUM_SECURITY_COMPROMISED"
-                },
-                {"code": "IMMIGRANTS", "name": "IHM_ENUM_IMMIGRANTS"},
-                {"code": "CROSS_BORDER", "name": "IHM_ENUM_CROSS_BORDER"}
-              ],
-              "label": "IHM_SETTLEMENT_TYPE_LABEL",
-              "order": 7,
-              "value": "",
-              "format": "dropdown",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "settlementType",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "IHM_VALIDATION_REQUIRED"
-                }
-              ],
-              "errorMessage":
-                  "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_settlementType_ERROR",
-              "isMultiSelect": false,
-              "autoFillCondition": [
-                {
-                  "value": "{{singleton.settlementType}}",
-                  "expression": "true==true"
-                }
-              ]
-            },
-            {
-              "type": "string",
               "label": "IHM_MONITOR_NAME_LABEL",
               "order": 8,
               "value": "",
@@ -888,8 +842,9 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "label": "IHM_CAREGIVER_PHONE_LABEL",
               "order": 28,
               "value": "",
-              "format": "phone",
+              "format": "mobileNumber",
               "hidden": false,
+              "pattern": "^\\d+\$",
               "tooltip": "",
               "helpText": "",
               "infoText": "",
@@ -898,7 +853,28 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "validations": [],
+              "lengthRange": {
+                "maxLength": 8,
+                "minLength": 8,
+                "errorMessage": "IHM_PHONE_LENGTH_ERROR"
+              },
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[1-9]\\d*\$",
+                  "message": "IHM_PHONE_NO_LEADING_ZERO"
+                },
+                {
+                  "type": "minLength",
+                  "value": 8,
+                  "message": "IHM_PHONE_LENGTH_ERROR"
+                },
+                {
+                  "type": "maxLength",
+                  "value": 8,
+                  "message": "IHM_PHONE_LENGTH_ERROR"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false
             }
@@ -1096,12 +1072,6 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "isActive": true
                 },
                 {
-                  "key": "IHM_SUMMARY_SETTLEMENT_TYPE",
-                  "value":
-                      "{{contextData.0.session.UserActionModel.additionalFields.fields.settlementType}}",
-                  "isActive": true
-                },
-                {
                   "key": "IHM_SUMMARY_MONITOR_DESIGNATION",
                   "value":
                       "{{contextData.0.session.UserActionModel.additionalFields.fields.monitorDesignation}}",
@@ -1162,6 +1132,13 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
                   "isActive": true
                 },
                 {
+                  "key": "IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+                  "value":
+                      "{{contextData.0.session.UserActionModel.additionalFields.fields.campaignInfoSource}}",
+                  "isActive": true,
+                  "isMultiSelect": true
+                },
+                {
                   "key": "IHM_SUMMARY_POORLY_COVERED",
                   "value":
                       "{{contextData.0.session.UserActionModel.additionalFields.fields.poorlyCoveredAreas}}",
@@ -1176,7 +1153,8 @@ final dynamic samplePolioInsideHouseholdMonitoringFlows = {
               ],
               "type": "template",
               "format": "labelPairList",
-              "fieldName": "sessionSummary"
+              "fieldName": "sessionSummary",
+              "valueLocalizationPrefix": "IHM_ENUM_"
             }
           ],
           "fieldName": "summaryCard",

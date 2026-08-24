@@ -7,8 +7,11 @@ import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../debug/flow_debugger.dart';
+import '../debug/resolver_suggester.dart';
 import 'function_registry.dart';
 
 class FlowBuilderSingleton {
@@ -165,12 +168,14 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
             : null,
         'visibilityCondition': pageMap['visibilityCondition'],
         'conditionalNavigateTo': pageMap['conditionalNavigateTo'],
+        'conditions': pageMap['conditions'],
         'showAlertPopUp': pageMap['showAlertPopUp'],
         'showSecondaryAlertPopUp': pageMap['showSecondaryAlertPopUp'],
         'multiEntityConfig': pageMap['multiEntityConfig'],
         'preventScreenCapture': pageMap['preventScreenCapture'],
         'submitCondition': pageMap['submitCondition'],
         'secondaryActionLabel': pageMap['secondaryActionLabel'],
+        'showLabelOutsideCard': pageMap['showLabelOutsideCard'],
       };
 
       if (type == 'template') {
@@ -305,21 +310,65 @@ String resolveTemplate(
   }
 
   // Now resolve all placeholders
-  for (final match in matches) {
-    final fullPlaceholder = match.group(0)!;
-    final placeholder = match.group(1)!.trim();
+  try {
+    for (final match in matches) {
+      final fullPlaceholder = match.group(0)!;
+      final placeholder = match.group(1)!.trim();
 
-    // Use existing resolveValueRaw to resolve the individual placeholder
-    final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData,
-        screenKey: screenKey, stateData: stateData, widgetData: widgetData);
+      // Use existing resolveValueRaw to resolve the individual placeholder
+      final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData,
+          screenKey: screenKey, stateData: stateData, widgetData: widgetData);
 
-    // Replace the placeholder in the result string
-    // For null values, use the string "null" so expressions like "x != null" work
-    final valueStr = resolvedValue == null ? 'null' : resolvedValue.toString();
-    result = result.replaceAll(fullPlaceholder, valueStr);
+      // Replace the placeholder in the result string
+      // For null values, use the string "null" so expressions like "x != null" work
+      final valueStr = resolvedValue == null ? 'null' : resolvedValue.toString();
+      result = result.replaceAll(fullPlaceholder, valueStr);
+    }
+
+    final finalResult = _translateWithLocalization(result, localization);
+
+    if (kDebugMode && template.contains('{{')) {
+      final suggestions = _isResolutionEmpty(finalResult)
+          ? suggestResolverFixes(
+              input: template,
+              contextData: contextData,
+            )
+          : const <String>[];
+      FlowDebugger().logResolver(
+        input: template,
+        resolvedValue: finalResult,
+        resolverName: 'resolveTemplate',
+        suggestions: suggestions,
+      );
+    }
+
+    return finalResult;
+  } catch (e, stackTrace) {
+    if (kDebugMode) {
+      FlowDebugger().logResolver(
+        input: template,
+        resolvedValue: null,
+        resolverName: 'resolveTemplate',
+        errorMessage: e.toString(),
+        stackTrace: stackTrace.toString(),
+      );
+    }
+    rethrow;
   }
+}
 
-  return _translateWithLocalization(result, localization);
+/// A resolution is "empty" when the template survived unresolved (still
+/// contains `{{...}}`), was replaced with the literal string "null", or came
+/// back as an empty string. These are the cases where a suggester run adds
+/// signal; a resolved non-empty value is never worth suggesting against.
+bool _isResolutionEmpty(dynamic value) {
+  if (value == null) return true;
+  if (value is String) {
+    if (value.isEmpty) return true;
+    if (value == 'null') return true;
+    if (value.contains('{{') && value.contains('}}')) return true;
+  }
+  return false;
 }
 
 /// Helper to translate using localization (supports FlowBuilderLocalization)
@@ -342,7 +391,78 @@ String _translateWithLocalization(String text, dynamic localization) {
 }
 
 /// New method: returns actual type (int, double, bool, list, map, entity, etc.)
+/// Logs each resolution to [FlowDebugger] when running in debug mode.
 dynamic resolveValueRaw(dynamic value, dynamic contextData,
+    {Map<String, dynamic>? widgetData,
+    String? screenKey,
+    CrudStateData? stateData}) {
+  // Only log templates in debug mode
+  final isTemplate = kDebugMode &&
+      value is String &&
+      value.startsWith('{{') &&
+      value.endsWith('}}');
+
+  try {
+    final result = _resolveValueRawImpl(value, contextData,
+        widgetData: widgetData, screenKey: screenKey, stateData: stateData);
+
+    if (isTemplate) {
+      String? prefix;
+      final path = value.replaceAll(RegExp(r'^\{\{|\}\}$'), '').trim();
+      for (final p in [
+        'itemData.',
+        'parentData.',
+        'formData.',
+        'currentItem.',
+        'contextData.',
+        'item.',
+        'widgetData.',
+        'singleton.',
+        'fn',
+        'navigation.',
+      ]) {
+        if (path.startsWith(p)) {
+          prefix = p;
+          break;
+        }
+      }
+
+      final suggestions = _isResolutionEmpty(result)
+          ? suggestResolverFixes(
+              input: value,
+              contextData: contextData,
+              matchedPrefix: prefix,
+            )
+          : const <String>[];
+      FlowDebugger().logResolver(
+        input: value,
+        resolvedValue: result,
+        resolverName: 'resolveValueRaw',
+        matchedPrefix: prefix,
+        contextData: contextData is Map
+            ? Map<String, dynamic>.from(contextData)
+            : <String, dynamic>{},
+        suggestions: suggestions,
+      );
+    }
+
+    return result;
+  } catch (e, stackTrace) {
+    if (isTemplate) {
+      FlowDebugger().logResolver(
+        input: value,
+        resolvedValue: null,
+        resolverName: 'resolveValueRaw',
+        errorMessage: e.toString(),
+        stackTrace: stackTrace.toString(),
+      );
+    }
+    rethrow;
+  }
+}
+
+/// Core implementation of resolveValueRaw (no logging).
+dynamic _resolveValueRawImpl(dynamic value, dynamic contextData,
     {Map<String, dynamic>? widgetData,
     String? screenKey,
     CrudStateData? stateData}) {
@@ -466,8 +586,6 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
                   }
 
                   // Otherwise, treat as a variable/path to resolve
-                  // This includes: simple variables (selectedFacility),
-                  // dotted paths (item.field), and prefixed paths (navigation.x)
                   final placeholder = '{{ $trimmed }}';
                   final resolved = resolveValueRaw(placeholder, contextData,
                       widgetData: widgetData,
@@ -485,8 +603,6 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
       }
 
       // Check widgetData for unprefixed simple variables first
-      // This handles cases like {{fn:isEmpty(selectedReconFacility)}} where
-      // selectedReconFacility is a widget data field (dropdown selection)
       if (widgetData != null && !path.contains('.')) {
         final widgetValue = widgetData[path];
         if (widgetValue != null) {

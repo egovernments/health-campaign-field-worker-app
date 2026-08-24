@@ -11,24 +11,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_ui_components:
-   path: ../../../digit_eco/digit_components
-
+  digit_ui_components: ^0.3.2
   flutter_bloc: ^8.1.5
-  freezed_annotation: ^3.1.0
+  freezed_annotation: ^2.4.1
   dart_mappable: ^4.2.0
-  drift: ^2.29.0
+  drift: ^2.18.0
   sqlcipher_flutter_libs: ^0.6.4
   sqlite3: ^2.4.0
   path_provider: ^2.1.3
   path: ^1.9.0
   uuid: ^4.4.0
   recase: ^4.1.0
-  isar_community: ^3.3.0
-  isar_community_flutter_libs: ^3.3.0
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
   dio: ^5.4.3+1
   mocktail: ^1.0.3
-  collection: ^1.19.0
+  collection: ^1.18.0
   encrypt: ^5.0.3
   archive: ^3.3.8
 
@@ -36,15 +34,17 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  freezed: ^3.1.0
-  build_runner: ^2.7.1
-  frontend_server_client: ^4.0.0
+  freezed: ^2.1.0+1
+  build_runner: ^2.4.11
   json_serializable: ^6.4.0
-  drift_dev: ^2.29.0
+  drift_dev: ^2.18.0
   bloc_test: ^9.1.0
   dart_mappable_builder:
-   path: ../dart_mappable_builder
-  isar_community_generator: ^3.3.0
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: master
+      path: ./packages/dart_mappable_builder
+  isar_generator: ^3.0.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

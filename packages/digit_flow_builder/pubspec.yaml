@@ -1,6 +1,6 @@
 name: digit_flow_builder
 description: "A new Flutter package project."
-version: 0.1.0
+version: 0.1.1
 homepage:
 
 environment:
@@ -10,23 +10,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_crud_bloc:
-   path: ../digit_crud_bloc
-  digit_data_converter: 
-   path: ../digit_data_converter
-  digit_forms_engine: 
-   path: ../digit_forms_engine
-  digit_ui_components:
-   path: ../../../digit_eco/digit_components
-
+  digit_crud_bloc: ^0.1.0
+  digit_data_converter: ^0.0.4
+  digit_forms_engine: ^0.1.1
+  digit_ui_components: ^0.3.2
   flutter_bloc: ^8.1.5
-  auto_route: ^10.0.1
-  digit_data_model:
-   path: ../digit_data_model
-  digit_formula_parser:
-   path: ../../../digit_eco/digit_formula_parser
-  collection: ^1.19.0
-  intl: ^0.20.2
+  auto_route: ^8.1.3
+  digit_data_model: ^1.4.0
+  digit_formula_parser: ^1.0.0
+  collection: ^1.18.0
+  intl: ^0.19.0
   qr_flutter: ^4.1.0
   screen_protector: 1.4.1
 
@@ -34,21 +27,19 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  freezed: ^3.1.0
+  freezed: ^2.1.0+1
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
   bloc_test: ^9.1.0
   mocktail: ^1.0.2
   build_runner: ^2.4.11
-  digit_scanner: 
-   path: ../digit_scanner
-  auto_route_generator: ^10.0.1
-
-dependency_overrides:
-  digit_scanner:
-    path: ../digit_scanner
-  digit_data_model:
-    path: ../digit_data_model
+  digit_scanner: ^1.0.6
+  dart_mappable_builder:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: master
+      path: ./packages/dart_mappable_builder
+  auto_route_generator: ^8.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

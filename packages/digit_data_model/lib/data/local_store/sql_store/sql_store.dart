@@ -1,6 +1,7 @@
 // Importing necessary packages and files.
 import 'dart:io';
 
+import 'package:digit_data_model/data/local_store/sql_store/tables/face_auth_event.dart';
 import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
 import 'package:digit_data_model/data/local_store/sql_store/tables/user_action.dart';
 import 'package:drift/drift.dart';
@@ -125,26 +126,21 @@ enum DatabaseMigrationResult {
   Referral,
   Localization,
   UserAction,
+  FaceAuthEvent,
   UniqueIdPool
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
-  /// The encryption key for the database.
-  /// If null, the database will not be encrypted.
-  static String? _encryptionKey;
-
   /// The constructor for `LocalSqlDataStore`.
   /// It calls the superclass constructor with `_openConnection()` as the argument.
   ///
   /// [encryptionKey] - Optional encryption key for SQLCipher encryption.
   /// If provided, the database will be encrypted using AES-256.
   LocalSqlDataStore({String? encryptionKey})
-      : super(_openConnection(encryptionKey: encryptionKey)) {
-    _encryptionKey = encryptionKey;
-  }
+      : super(_openConnection(encryptionKey: encryptionKey));
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 11; // Increment schema version
+  int get schemaVersion => 12; // Increment schema version
 
   Future<void> _createTaskSearchIndexes() async {
     await customStatement('''
@@ -161,8 +157,67 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
     ''');
   }
 
+  /// v12 hot-path indexes. Each of these columns is a WHERE-clause target
+  /// somewhere in the app but the table had no matching index — meaning
+  /// SQLite was doing full-table SCAN + SQLCipher page decrypt on every
+  /// filter. The composite `(locale, module)` on localization is the
+  /// biggest win (measured ~1000× speedup on cacheProbe). The rest are
+  /// preventative — the tables are small today but will grow. Idempotent
+  /// via `IF NOT EXISTS` so this is safe to call on fresh installs and
+  /// upgrades alike.
+  Future<void> _createV12HotPathIndexes() async {
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS localization_locale_module
+      ON localization (locale, module);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS pgr_service_tenantid
+      ON pgr_service (tenant_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS product_variant_productid
+      ON product_variant (product_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS project_facility_projectid
+      ON project_facility (project_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS project_facility_facilityid
+      ON project_facility (facility_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS project_resource_projectid
+      ON project_resource (project_id);
+    ''');
+  }
+
   @override
   MigrationStrategy get migration => MigrationStrategy(
+        // Fresh installs at the current schemaVersion never run onUpgrade,
+        // so any index we only add inside a `from < N` block never appears
+        // on a fresh install. Drift's default onCreate runs
+        // migrator.createAll() which materializes tables + @TableIndex
+        // annotations only — every CREATE INDEX statement we invoke
+        // manually below (task_search_*, name/entity clientRef, v12
+        // hot-path) has to be re-run here too. Symptom without this: a
+        // 2-row lookup on project_facility takes 2+ seconds because
+        // `WHERE project_id = ?` falls back to a full-table SCAN + per-page
+        // SQLCipher decrypt. ANALYZE afterwards seeds sqlite_stat1 with
+        // real row counts so the planner actually picks the new indexes.
+        onCreate: (migrator) async {
+          await migrator.createAll();
+          try {
+            await _createTaskSearchIndexes();
+            await _createNameAndEntityClientRefIndexes();
+            await _createV12HotPathIndexes();
+            await customStatement('ANALYZE');
+          } catch (e) {
+            if (kDebugMode) {
+              print('Failed to seed hot-path indexes onCreate: $e');
+            }
+          }
+        },
         onUpgrade: (migrator, from, to) async {
           if (from < 5) {
             //Add column for projectType in Project Table
@@ -405,6 +460,104 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               }
             }
           }
+          if (from < 12) {
+            try {
+              await migrator.createTable(faceAuthEvent);
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to create FaceAuthEvent table in v12 migration: $e");
+              }
+            }
+          }
+
+          if (from < 12) {
+            // v12: add hot-path indexes that were previously missing on
+            // localization (composite locale+module), pgr_service,
+            // product_variant, project_facility, and project_resource.
+            // See _createV12HotPathIndexes for rationale.
+            try {
+              await _createV12HotPathIndexes();
+              await customStatement('ANALYZE');
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to create hot-path indexes in v12 migration: $e");
+              }
+            }
+          }
+        },
+        // Runs AFTER onCreate / onUpgrade complete, but BEFORE the app
+        // executes its first user query. This is the right hook for a
+        // stats refresh: the ANALYZE in `setup` fires before migrations,
+        // so on a fresh install it runs against empty tables and produces
+        // useless stats — that's why the planner keeps picking SCAN over
+        // our indexes for hot lookups (project_facility, identifier, etc.).
+        // Running ANALYZE here guarantees stats reflect the actual row
+        // counts every table has at the moment queries start firing.
+        beforeOpen: (details) async {
+          // One-line marker so field traces can confirm this hook fired at
+          // all — the perf fixes below (index backfill, ANALYZE, hot-table
+          // warm-up) only work if `beforeOpen` runs, and Drift's lazy DB
+          // open means it doesn't fire until the first application query.
+          debugPrint('[DBBoot] beforeOpen start '
+              '(schema=${details.versionNow}, wasCreated=${details.wasCreated}, '
+              'hadUpgrade=${details.hadUpgrade})');
+          final beforeOpenSw = Stopwatch()..start();
+
+          // Backfill for devices already at schemaVersion=12 before the
+          // onCreate handler existed — for them onUpgrade doesn't fire
+          // (from == to), onCreate doesn't fire (DB already created), so
+          // the v12 hot-path indexes never materialize and hot queries
+          // like `SELECT * FROM project_facility WHERE project_id = ?`
+          // fall to full-table SCAN (measured at 2.5s for 2 rows on such
+          // a device). Every statement below is `CREATE INDEX IF NOT
+          // EXISTS`, so this is a no-op on freshly-created DBs and on
+          // subsequent opens — cheap enough to run every launch.
+          final indexSw = Stopwatch()..start();
+          try {
+            await _createTaskSearchIndexes();
+            await _createNameAndEntityClientRefIndexes();
+            await _createV12HotPathIndexes();
+          } catch (e) {
+            if (kDebugMode) {
+              print("beforeOpen index backfill failed: $e");
+            }
+          }
+          indexSw.stop();
+
+          final analyzeSw = Stopwatch()..start();
+          try {
+            await customStatement('PRAGMA analysis_limit = 400;');
+            await customStatement('ANALYZE');
+            // PRAGMA optimize is SQLite's built-in "auto-refresh stats
+            // when needed" mechanism. Cheap when stats are current,
+            // rescans specific tables when significant change is detected.
+            await customStatement('PRAGMA optimize');
+          } catch (e) {
+            if (kDebugMode) {
+              print("beforeOpen ANALYZE failed: $e");
+            }
+          }
+          analyzeSw.stop();
+
+          // Note: an eager multi-table page warm-up used to live here
+          // (walking every project-scoped lookup + a b-tree root touch on
+          // downsync tables). Removed because:
+          //   • The primary hot-page eviction driver was the localization
+          //     bloc's `_loadLocale` running unnecessarily on every event
+          //     — with that skip in place, small tables stay resident in
+          //     the 20 MB decrypted cache across normal workloads.
+          //   • The remaining eviction risk is covered by
+          //     `_warmProjectHotTables` in `LocalizationBloc._loadLocale`'s
+          //     finally block, which re-pins hot pages before any user-
+          //     visible module search.
+          // If field traces show cold-decrypt spikes on hot lookups after
+          // a big cross-table write, restoring an explicit warm-up here
+          // (`SELECT COUNT(*)` on tiny tables) is the right knob.
+
+          debugPrint('[DBBoot] beforeOpen done '
+              'total=${beforeOpenSw.elapsedMilliseconds}ms '
+              'indexes=${indexSw.elapsedMilliseconds}ms '
+              'analyze=${analyzeSw.elapsedMilliseconds}ms');
         },
       );
 
@@ -471,11 +624,24 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
           if (encryptionKey != null && encryptionKey.isNotEmpty) {
             database.execute(_sqlCipherKeyPragma(encryptionKey));
           }
-          // Enable WAL mode for concurrent reads/writes across isolates
+          // WAL lets background sync + interactive queries share the DB
+          // without one blocking the other.
           database.execute('PRAGMA journal_mode = WAL;');
-          // Wait up to 5 seconds when the DB is locked by another isolate
+          // Wait up to 5 seconds when the DB is locked by another isolate.
           database.execute('PRAGMA busy_timeout = 5000;');
-          // Read-path tuning for large local datasets (120K+ rows).
+          // Read-path tuning for large local datasets.
+          //
+          // Traced regression: without an explicit cache_size, SQLCipher
+          // defaults to ~8 MB (2000 pages × 4 KB). Between the
+          // `_warmProjectHotTables` warm-up in the localization bloc and
+          // the first user-triggered module search, Drift touches enough
+          // metadata / schema pages during `CrudService` + `FlowCrudBloc`
+          // init that the hot pages get evicted from an 8 MB LRU and
+          // `project_facility` pays a ~2.5 s cold decrypt again.
+          //
+          // 20 MB is enough headroom to survive that init churn without
+          // meaningfully bloating app RAM. If field traces regress, bump
+          // to -50000 (~50 MB) — measured that as the stable ceiling.
           database.execute('PRAGMA cache_size = -20000;'); // ~20 MB page cache
           database.execute('PRAGMA temp_store = MEMORY;');
           database.execute('PRAGMA mmap_size = 30000000;'); // 30 MB mmap

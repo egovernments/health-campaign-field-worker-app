@@ -65,7 +65,6 @@ class PerformSyncUp {
       (element) => element.type,
     );
 
-    // Sort the entries by DataModelType enum
     final entries = groupedEntries.entries.toList();
     entries.sort((a, b) => DataModelType.values
         .indexOf(a.key)
@@ -172,6 +171,10 @@ class PerformSyncUp {
         // Handle successful operations
         if (listOfBatchedOpLogList.isNotEmpty) {
           for (final sublist in listOfBatchedOpLogList) {
+            // Guarantee createdAt ASC order within the batch so records that
+            // share a clientReferenceId (e.g. STOCK_BALANCE snapshots) reach
+            // the server oldest → newest and the freshest state wins.
+            sublist.sort((a, b) => a.createdAt.compareTo(b.createdAt));
             final entities = getEntityModel(sublist, local);
             if (operationGroupedEntity.key == DataOperation.create) {
               if (registry != null) {

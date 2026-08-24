@@ -18,6 +18,16 @@ class FlowBuilderLocalization {
 
   static final List<dynamic> _localizedStrings = <dynamic>[];
 
+  // O(1) code → message lookup rebuilt on every load(). translate() and
+  // translateStatic() used to indexWhere across _localizedStrings which is
+  // O(N) per call — the flow-builder runtime resolves labels for every
+  // property schema and validation on mount, so a form with hundreds of
+  // fields against a localization table of thousands of rows was the
+  // dominant mount cost and produced a visible 2–3s UI freeze on module
+  // open. Keep the list around for existing external reads; the fast path
+  // is the map.
+  static final Map<String, String> _messagesByCode = <String, String>{};
+
   // Method to get the delegate for localization
   static LocalizationsDelegate<FlowBuilderLocalization> getDelegate(
           Future<dynamic> localizedStrings, List<dynamic> languages) =>
@@ -29,37 +39,30 @@ class FlowBuilderLocalization {
     // where _localizedStrings is empty during the await (which causes
     // translate() to return raw keys instead of translated values).
     final newStrings = <dynamic>[];
+    final newMessages = <String, String>{};
     for (var element in await localizedStrings) {
       if (element.locale == '${locale.languageCode}_${locale.countryCode}') {
         newStrings.add(element);
+        newMessages[element.code] = element.message;
       }
     }
     _localizedStrings.clear();
     _localizedStrings.addAll(newStrings);
+    _messagesByCode
+      ..clear()
+      ..addAll(newMessages);
 
     return true;
   }
 
   // Method to translate a given localized value
   String translate(String localizedValues) {
-    if (_localizedStrings.isEmpty) {
-      return localizedValues;
-    } else {
-      final index = _localizedStrings.indexWhere(
-        (medium) => medium.code == localizedValues,
-      );
-
-      return index != -1 ? _localizedStrings[index].message : localizedValues;
-    }
+    return _messagesByCode[localizedValues] ?? localizedValues;
   }
 
   /// Static translate that does not require a [BuildContext].
-  /// Uses the already-loaded [_localizedStrings] list.
+  /// Uses the already-loaded [_messagesByCode] map.
   static String translateStatic(String key) {
-    if (_localizedStrings.isEmpty) return key;
-    final index = _localizedStrings.indexWhere(
-      (medium) => medium.code == key,
-    );
-    return index != -1 ? _localizedStrings[index].message : key;
+    return _messagesByCode[key] ?? key;
   }
 }
