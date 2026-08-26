@@ -71,6 +71,13 @@ class CrudStateData {
 
 /// Try to extract the screenKey from Navigator args
 String? getScreenKeyFromArgs(BuildContext context) {
+  // Guard against a deactivated context: `ModalRoute.of` performs an
+  // InheritedWidget lookup that asserts the element is active. When an
+  // action chain fires from a button whose captured `context` has been
+  // deactivated by a `WidgetStateContext.reactive` rebuild, calling this
+  // from `ActionHandler.executeActions` crashes debug builds. Callers
+  // already tolerate a null screenKey.
+  if (!context.mounted) return null;
   final args = ModalRoute.of(context)?.settings.arguments;
 
   if (args is Map<String, dynamic>) {
@@ -86,6 +93,8 @@ String? getScreenKeyFromArgs(BuildContext context) {
 
 /// Try to extract the instanceId from Navigator args
 String? getInstanceIdFromArgs(BuildContext context) {
+  // See getScreenKeyFromArgs for why this guard is here.
+  if (!context.mounted) return null;
   final args = ModalRoute.of(context)?.settings.arguments;
 
   if (args is FlowBuilderHomeRouteArgs) {

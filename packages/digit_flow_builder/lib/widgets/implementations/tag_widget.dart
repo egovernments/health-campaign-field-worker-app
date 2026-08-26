@@ -20,6 +20,22 @@ class TagWidget extends ResolvedFlowWidget {
     ResolvedWidgetContext resolved,
   ) {
     final properties = json['properties'] as Map<String, dynamic>?;
+
+    // Auto-hide the tag when any `{{path}}` placeholder in the raw label
+    // resolves to null. Keeps configs free of per-tag `hidden` filters
+    // (e.g., grouped list items with a null groupKey) without depending
+    // on the resolver's null-to-string behavior.
+    final rawLabel = json['label'] as String?;
+    if (rawLabel != null) {
+      final placeholderRegex = RegExp(r'\{\{([^}]+)\}\}');
+      for (final match in placeholderRegex.allMatches(rawLabel)) {
+        final path = match.group(1)!.trim();
+        if (resolved.resolveField(path) == null) {
+          return const SizedBox.shrink();
+        }
+      }
+    }
+
     final resolveValue = json['labelPlaceHolders'] != null
         ? resolved.resolveTextWithPlaceHolders(
             json['label'], json['labelPlaceHolders'])

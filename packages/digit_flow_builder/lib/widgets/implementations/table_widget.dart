@@ -188,7 +188,12 @@ class TableWidget extends ResolvedFlowWidget {
       child: DigitTable(
         enableBorder: true,
         withRowDividers: false,
-        withColumnDividers: false,
+        // withColumnDividers must be `true` to avoid a header-cell width
+        // miscalculation in `digit_ui_components` table_header.dart: when
+        // false, the inner container adds an extra 8 px right padding that
+        // the header Text's width does not account for, so long headers
+        // spill 8 px into the neighbouring column and read as overlap.
+        withColumnDividers: true,
         showSelectedState: false,
         showPagination: false,
         columns: columns,

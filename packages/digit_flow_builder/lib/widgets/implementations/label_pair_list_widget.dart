@@ -19,7 +19,8 @@ class LabelPairListWidget extends ResolvedFlowWidget {
   ) {
     final List<dynamic> data = json['data'] ?? [];
     final localization = resolved.localization;
-    // Filter out null items if hideIfNull is true
+    // Pairs with an empty/null value are always hidden (unless a
+    // defaultValue is provided) — the widget decides, not the JSON.
     final filteredItems = <LabelValueItem>[];
 
     for (var e in data) {
@@ -34,7 +35,6 @@ class LabelPairListWidget extends ResolvedFlowWidget {
       final key = e['key'] ?? '';
       final value = e['value'];
       final defaultValue = e['defaultValue'];
-      final hideIfNull = e['hideIfNull'] == true;
       final isMultiSelect = e['isMultiSelect'] == true;
 
       // Resolve template using evalContext
@@ -54,11 +54,6 @@ class LabelPairListWidget extends ResolvedFlowWidget {
       final isValueEmpty =
           valueText == null || valueText.isEmpty || valueText == 'null';
 
-      // If hideIfNull is true and value is empty, skip this item
-      if (hideIfNull && isValueEmpty) {
-        continue;
-      }
-
       // If value is empty and defaultValue is provided, use defaultValue
       if (isValueEmpty && defaultValue != null) {
         valueText = resolveTemplate(
@@ -66,6 +61,9 @@ class LabelPairListWidget extends ResolvedFlowWidget {
           resolved.evalContext,
           localization: localization,
         );
+      } else if (isValueEmpty) {
+        // Hide the pair when value is empty and no default is provided
+        continue;
       }
 
       // Localize the display value. For multi-select fields, split
@@ -114,7 +112,6 @@ class LabelPairListWidget extends ResolvedFlowWidget {
             ?.map((e) => e.toString())
             .toSet() ??
         {};
-    final hideIfNull = config['hideIfNull'] == true;
 
     // Resolve the iterate path to get the list using evalContext
     final resolvedList = resolveValue(iteratePath, contextData as Map<String, dynamic>);
@@ -137,7 +134,8 @@ class LabelPairListWidget extends ResolvedFlowWidget {
       final valueStr = fieldValue?.toString() ?? '';
       final isValueEmpty = valueStr.isEmpty || valueStr == 'null';
 
-      if (hideIfNull && isValueEmpty) {
+      // Hide the pair when value is empty (matches non-iterate default)
+      if (isValueEmpty) {
         continue;
       }
 

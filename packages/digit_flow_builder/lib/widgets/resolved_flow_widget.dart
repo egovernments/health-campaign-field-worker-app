@@ -287,10 +287,15 @@ class ResolvedWidgetContext {
   /// 2. Resolve nav data and conditions for all actions
   /// 3. Build initial context with navigation params
   /// 4. Call ActionHandler.executeActions
+  ///
+  /// [preCaptured] carries handles the caller resolved at build time
+  /// (Navigator, blocs) so executors don't need the possibly-deactivated
+  /// button context. Merged into contextData under `_preCaptured`.
   Future<void> executeActions(
     List<Map<String, dynamic>>? actionsJson,
-    BuildContext context,
-  ) async {
+    BuildContext context, {
+    Map<String, Object>? preCaptured,
+  }) async {
     if (actionsJson == null || actionsJson.isEmpty) return;
 
     final currentEvalContext = getFreshEvalContext();
@@ -348,6 +353,8 @@ class ResolvedWidgetContext {
       ...currentEvalContext,
       'navigation': navigationParams,
       if (entities.isNotEmpty) 'entities': entities,
+      if (preCaptured != null && preCaptured.isNotEmpty)
+        '_preCaptured': preCaptured,
     };
 
     await ActionHandler.executeActions(

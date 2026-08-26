@@ -263,6 +263,13 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (kFaceAuthEnabled) {
       FlowWidgetFactory.register(FaceAuthEventDotsWidget());
       FlowWidgetFactory.register(FaceAuthEventLegendWidget());
+    } else {
+      // Face auth disabled via env: register no-op stubs so configs
+      // referencing these formats render as empty space instead of the
+      // "Unknown widget format" error placeholder.
+      FlowWidgetFactory.register(const NoOpFaceAuthWidget('faceAuthEventDots'));
+      FlowWidgetFactory
+          .register(const NoOpFaceAuthWidget('faceAuthEventLegend'));
     }
 
     // Register custom action executor for REDOSE eligibility check
