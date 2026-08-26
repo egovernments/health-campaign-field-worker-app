@@ -20,9 +20,19 @@ class NavigationExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    context
-        .read<DigitScannerBloc>()
-        .add(const DigitScannerEvent.handleScanner());
+    // Prefer the DigitScannerBloc captured at build time — the button's
+    // context may be deactivated here. Clearing the scanner is best-effort;
+    // if we can't reach the bloc either way, silently skip it.
+    final preCaptured =
+        contextData['_preCaptured'] as Map<String, Object>?;
+    DigitScannerBloc? scannerBloc =
+        preCaptured?['scannerBloc'] as DigitScannerBloc?;
+    if (scannerBloc == null) {
+      try {
+        scannerBloc = context.read<DigitScannerBloc>();
+      } catch (_) {}
+    }
+    scannerBloc?.add(const DigitScannerEvent.handleScanner());
     final targetPageName = action.properties['name'] as String?;
     final targetType = action.properties['type'] as String?;
 
@@ -33,14 +43,21 @@ class NavigationExecutor extends ActionExecutor {
       return contextData;
     }
 
-    // Get current screen's state data for resolving navigation values
-    final screenKey =
-        getScreenKeyFromArgs(context) ?? context.router.currentPath;
+    // Get current screen's state data for resolving navigation values.
+    // context.router / getScreenKeyFromArgs both walk the widget tree —
+    // guard against a deactivated button context and rely on the
+    // registered-instance fallback below.
+    String? screenKey;
+    try {
+      screenKey = getScreenKeyFromArgs(context) ?? context.router.currentPath;
+    } catch (_) {
+      screenKey = null;
+    }
 
     // Get composite key for current screen's FlowCrudStateRegistry operations
     final currentCompositeKey = getCompositeKey(context, screenKey: screenKey);
     var currentState =
-        FlowCrudStateRegistry().get(currentCompositeKey ?? screenKey);
+        FlowCrudStateRegistry().get(currentCompositeKey ?? screenKey ?? '');
 
     // Fallback: getCompositeKey may return a stale/missing key when NAV fires
     // from a chain triggered outside the current screen's widget tree (e.g.

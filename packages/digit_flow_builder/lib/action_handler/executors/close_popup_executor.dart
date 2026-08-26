@@ -16,9 +16,23 @@ class ClosePopupExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    // Close the popup if navigator can pop
-    if (Navigator.of(context, rootNavigator: true).canPop()) {
-      Navigator.of(context, rootNavigator: true).pop();
+    // Prefer the Navigator captured by the calling widget at build time.
+    // The button's own context may be deactivated by the time this runs
+    // (e.g. an ancestor rebuild during the action chain), which would
+    // make `Navigator.of(context)` throw a null-check error.
+    final preCaptured =
+        contextData['_preCaptured'] as Map<String, Object>?;
+    NavigatorState? navigator = preCaptured?['navigator'] as NavigatorState?;
+    if (navigator == null) {
+      try {
+        navigator = Navigator.of(context, rootNavigator: true);
+      } catch (_) {
+        // Context deactivated and no captured handle — popup is likely
+        // already dismissed; treat as a no-op.
+      }
+    }
+    if (navigator != null && navigator.canPop()) {
+      navigator.pop();
     }
 
     // Pass any properties from action to contextData for subsequent actions

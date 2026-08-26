@@ -92,8 +92,24 @@ class CrudExecutor extends ActionExecutor {
     }
 
     debugPrint('CREATE_EVENT: Creating ${entities.length} entities');
-    context.read<CrudBloc>().add(CrudEventCreate(entities: entities));
+    // Prefer the CrudBloc captured by the calling widget at build time.
+    // The button's own context may be deactivated by the time this runs,
+    // making `context.read<CrudBloc>()` throw the "deactivated widget's
+    // ancestor" error.
+    final preCaptured =
+        contextData['_preCaptured'] as Map<String, Object>?;
+    final crudBloc = (preCaptured?['crudBloc'] as CrudBloc?) ??
+        _tryReadCrudBloc(context);
+    crudBloc?.add(CrudEventCreate(entities: entities));
     return contextData;
+  }
+
+  static CrudBloc? _tryReadCrudBloc(BuildContext context) {
+    try {
+      return context.read<CrudBloc>();
+    } catch (_) {
+      return null;
+    }
   }
 
   /// Normalizes an entity type spelling for filter comparison:

@@ -1,6 +1,9 @@
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../utils/widget_parsers.dart';
@@ -30,6 +33,23 @@ class ButtonWidget extends ResolvedFlowWidget {
 
     final bool alignCenter = props['align'] == 'center';
 
+    // Capture context-dependent handles at BUILD time (context is guaranteed
+    // live here). An ancestor rebuild triggered by a sibling widget between
+    // build and tap — e.g. a text input writing to widgetData on every
+    // keystroke — can deactivate this button's Element, breaking
+    // `context.read` and `Navigator.of(context)` inside the async action chain.
+    // Executors prefer these captured handles over the button's context.
+    final NavigatorState? capturedNavigator =
+        Navigator.maybeOf(context, rootNavigator: true);
+    CrudBloc? capturedCrudBloc;
+    DigitScannerBloc? capturedScannerBloc;
+    try {
+      capturedCrudBloc = context.read<CrudBloc>();
+    } catch (_) {}
+    try {
+      capturedScannerBloc = context.read<DigitScannerBloc>();
+    } catch (_) {}
+
     final button = DigitButton(
       crossAxisAlignment: CrossAxisAlignment.center,
         capitalizeLetters: false,
@@ -39,7 +59,16 @@ class ButtonWidget extends ResolvedFlowWidget {
           if (json['onAction'] != null) {
             final actionsList =
                 List<Map<String, dynamic>>.from(json['onAction']);
-            await resolved.executeActions(actionsList, context);
+            await resolved.executeActions(
+              actionsList,
+              context,
+              preCaptured: {
+                if (capturedNavigator != null) 'navigator': capturedNavigator,
+                if (capturedCrudBloc != null) 'crudBloc': capturedCrudBloc,
+                if (capturedScannerBloc != null)
+                  'scannerBloc': capturedScannerBloc,
+              },
+            );
           }
         },
         type: type,

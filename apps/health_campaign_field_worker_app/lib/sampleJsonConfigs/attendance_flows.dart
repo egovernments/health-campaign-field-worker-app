@@ -417,7 +417,6 @@ final dynamic attendanceFlows = {
                     "mainAxisAlignment": "center"
                   },
                   "onAction": [
-                    {"actionType": "CLOSE_POPUP", "properties": {}},
                     {
                       "actionType": "CUSTOM_DATA",
                       "properties": {
@@ -425,6 +424,7 @@ final dynamic attendanceFlows = {
                             "{{fn:createAttendanceLog(widgetData, contextData.0.AttendanceRegisterModel, contextData.0.attendanceLog, 1)}}"
                       }
                     },
+                    {"actionType": "CLOSE_POPUP", "properties": {}},
                     {
                       "actionType": "CREATE_EVENT",
                       "properties": {"entity": "AttendanceLogModel"}
