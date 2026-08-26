@@ -23,36 +23,39 @@ class EntityGrouper {
   /// (e.g., "additionalFields.fields.mrnNumber").
   /// Returns a list of group objects:
   /// [{"groupKey": "value1", "items": [entity1, entity2]}, ...]
+  ///
+  /// When an entity is missing the field, `groupKey` is emitted as `null`
+  /// (rather than a synthesised placeholder like "null_0") so display
+  /// configs can hide the group cleanly with `item.groupKey == null`.
+  /// Internally each field-less entity still lands in its own bucket so
+  /// unrelated null-keyed entities aren't merged.
   List<Map<String, dynamic>> groupEntitiesByCustomField(
     List<dynamic> entities,
     String fieldPath,
   ) {
     final Map<String, List<dynamic>> groupedByField = {};
+    final Map<String, dynamic> originalKeys = {};
     int nullCounter = 0;
 
     for (final entity in entities) {
       try {
-        // Resolve the field value for this entity
         final fieldValue = _resolver.resolveValue(fieldPath, entity, {});
-
-        // Create unique keys for null values instead of grouping them together
-        final groupKey = fieldValue?.toString() ?? 'null_${nullCounter++}';
-
-        groupedByField.putIfAbsent(groupKey, () => []).add(entity);
+        final bucketKey =
+            fieldValue?.toString() ?? '__nullGroup_${nullCounter++}';
+        groupedByField.putIfAbsent(bucketKey, () => []).add(entity);
+        originalKeys.putIfAbsent(bucketKey, () => fieldValue);
       } catch (e) {
         debugPrint('Error grouping entity by field $fieldPath: $e');
-        // Put ungroupable entities in unique 'null' groups
-        groupedByField
-            .putIfAbsent('null_${nullCounter++}', () => [])
-            .add(entity);
+        final bucketKey = '__nullGroup_${nullCounter++}';
+        groupedByField.putIfAbsent(bucketKey, () => []).add(entity);
+        originalKeys.putIfAbsent(bucketKey, () => null);
       }
     }
 
-    // Convert to list of group objects with groupKey and items
     final result = <Map<String, dynamic>>[];
     for (final entry in groupedByField.entries) {
       result.add({
-        'groupKey': entry.key,
+        'groupKey': originalKeys[entry.key],
         'items': entry.value,
       });
     }
