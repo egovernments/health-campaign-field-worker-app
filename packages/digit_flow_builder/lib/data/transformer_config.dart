@@ -1219,7 +1219,7 @@ final jsonConfig = {
             "pincode": "locationDetails.pincode",
             "type": "locationDetails.typeOfAddress",
             "locality": {
-              "code": "__context:selectedBoundaryCode",
+              "code": "__context:selectedBoundaryHierarchyCode",
               "name": "__context:selectedBoundaryName",
               "tenantId": "__context:tenantId",
               "rowVersion": "meta.rowVersion"

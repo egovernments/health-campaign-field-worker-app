@@ -1026,10 +1026,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       reportSyncProgress('boundary');
       if (rowversionList.firstOrNull?.version != serverVersion ||
           boundaryRefetched) {
+        // Fetch the full tree (no `codes` scope) so materializedPath is
+        // computed from the true root, not the project's assigned boundary.
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
             boundaryType: event.model.address?.boundaryType,
-            codes: event.model.address?.boundary,
           ),
         );
         await boundaryLocalRepository.bulkCreate(boundaries);
@@ -1059,10 +1060,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         );
         if (boundaries.isEmpty) {
+          // Same full-tree fetch as above.
           boundaries = await boundaryRemoteRepository.search(
             BoundarySearchModel(
               boundaryType: event.model.address?.boundaryType,
-              codes: event.model.address?.boundary,
             ),
           );
           if (boundaries.isEmpty) {
