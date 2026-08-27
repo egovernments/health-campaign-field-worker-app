@@ -1,3 +1,8 @@
+## 1.0.6
+
+* Send `STOCK_BALANCE` oplog entries in `createdAt` ASC order so downstream reconciliation sees them in the order they were recorded
+* Restore enum-index sort on sync-up type buckets so buckets flush in the intended sequence
+
 ## 1.0.5
 
 * Added background sync lock check in `SyncService` to prevent overlapping runs

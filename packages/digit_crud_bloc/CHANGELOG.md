@@ -1,3 +1,8 @@
+## 0.1.1
+
+- `SearchEntityRepository`: add hot-path indexes and run `ANALYZE` after migrations to prime the SQLite query planner; skip redundant `COUNT` queries on the read path
+- Refresh `sqlite_stat1` once per session so cardinality estimates stay current without paying the cost on every query
+
 ## 0.1.0
 
 - Added `matches` operator for JSON substring lookups

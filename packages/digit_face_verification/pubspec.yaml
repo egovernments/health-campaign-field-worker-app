@@ -1,6 +1,6 @@
 name: digit_face_verification
 description: Offline face verification for field worker attendance using MobileFaceNet + Google ML Kit.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_face_verification
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 issue_tracker: https://github.com/egovernments/health-campaign-field-worker-app/issues
@@ -24,7 +24,7 @@ dependencies:
   crypto: ^3.0.3
   audioplayers: ^5.2.1
   digit_ui_components: ^0.3.2
-  digit_data_model: ^1.4.0
+  digit_data_model: ^1.5.0
   dio: ^5.4.3+1
   drift: ^2.18.0
 

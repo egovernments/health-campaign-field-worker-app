@@ -1,3 +1,10 @@
+## 1.1.0
+
+* Add two subclass hooks on `DigitScannerPageState` for host apps that need a prerequisite step or extra UI on the manual-entry surface:
+    * `onEnterManualCodePressed()` — intercept the "Enter Manual Code" tap; return `false` to cancel entering manual-code mode (e.g. after cancelling a required pre-entry dialog). Default: proceed.
+    * `extraManualEntryContent(theme, textTheme)` — inject an additional widget beneath the manual-code link (e.g. a sibling manual-marking action). Default: `null`.
+* Both hooks are non-breaking; existing subclasses inherit the no-op defaults.
+
 ## 1.0.7+2
 
 * Scanned QR payloads that parse as JSON objects are now rendered as label:value pairs on the result card (mirroring the GS1 branch); non-JSON payloads fall back to the existing trimmed-text row
