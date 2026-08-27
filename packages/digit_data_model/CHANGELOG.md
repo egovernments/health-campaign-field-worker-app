@@ -1,3 +1,11 @@
+## 1.5.1
+
+* `StockModel`: accept the server's `wayBillNumber` (capital B) response key without changing what the mobile client sends. A class-level `MappingHook` on `StockModel` copies `wayBillNumber` → `waybillNumber` in the JSON map before decoding; `toJson` and every Dart caller, DB column, and `{{item.waybillNumber}}` template are unchanged. `stock.mapper.dart` regenerated.
+
+## 1.5.0
+
+* Add `hierarchyType` field to `PgrServiceModel` so the mobile PGR create request can include the project's hierarchy at the top level of the `service` object (matches the web client's payload)
+
 ## 1.4.0
 
 * Multi-hierarchy support

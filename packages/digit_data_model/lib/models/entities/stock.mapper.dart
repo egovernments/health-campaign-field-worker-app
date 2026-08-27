@@ -483,6 +483,8 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   late final ClassMapperBase superMapper =
       EntityModelMapper.ensureInitialized();
 
+  @override
+  final MappingHook hook = const _WayBillNumberAliasHook();
   static StockModel _instantiate(DecodingData data) {
     return StockModel(
         dateOfEntry: data.dec(_f$dateOfEntry),
