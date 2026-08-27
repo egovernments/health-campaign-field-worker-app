@@ -1,3 +1,7 @@
+## 0.0.2
+
+* `LivenessDetectionService`: default challenge sequence reduced to `[blink]` alone. The previous `[blink, turnLeft]` default forced the user to turn left during the liveness step, colliding with the subsequent step-3 left-angle capture during enrollment and reading as "look left" twice. The four head-turn angle captures that follow already provide sufficient liveness evidence. Relaxed the `challenges.length >= 2` guard to `challenges.isNotEmpty` so single-challenge configurations are honoured.
+
 ## 0.0.1
 
 * Initial release — offline face verification for field worker attendance using MobileFaceNet + Google ML Kit

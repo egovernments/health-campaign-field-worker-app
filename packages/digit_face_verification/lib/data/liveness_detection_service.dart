@@ -21,14 +21,17 @@ class LivenessResult {
 enum LivenessChallenge { blink, turnLeft, turnRight }
 
 /// Passive liveness detection using ML Kit face landmarks.
-/// Requires 2 challenges: 1 blink + 1 head turn.
+/// Requires a single blink. The head-turn angle captures that follow
+/// the liveness step (left/right/up/down during enrollment) provide
+/// additional evidence of a live subject, so a second "turnLeft"
+/// liveness challenge would collide with the step-3 left-angle capture
+/// and force the user to turn left twice.
 class LivenessDetectionService {
   static const double _blinkClosedThreshold = 0.3;
   static const double _blinkOpenThreshold = 0.7;
   static const double _headTurnAngleThreshold = 25.0;
   static const List<LivenessChallenge> _defaultChallenges = [
     LivenessChallenge.blink,
-    LivenessChallenge.turnLeft,
   ];
 
   final List<LivenessChallenge> _challenges;
@@ -37,7 +40,7 @@ class LivenessDetectionService {
 
   LivenessDetectionService({
     List<LivenessChallenge>? challenges,
-  }) : _challenges = (challenges != null && challenges.length >= 2)
+  }) : _challenges = (challenges != null && challenges.isNotEmpty)
             ? challenges
             : _defaultChallenges;
 

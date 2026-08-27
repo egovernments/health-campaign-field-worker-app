@@ -1722,6 +1722,8 @@ class FaceAuth {
   String get methodPinShort => 'FACE_AUTH_METHOD_PIN_SHORT';
   String get justNow => 'FACE_AUTH_JUST_NOW';
   String get activeSession => 'FACE_AUTH_ACTIVE_SESSION';
+  String get statusEnrolled => 'FACE_AUTH_STATUS_ENROLLED';
+  String get statusNotEnrolled => 'FACE_AUTH_STATUS_NOT_ENROLLED';
 
   // Non-mobile enrollment
   String get internetRequired => 'FACE_AUTH_INTERNET_REQUIRED';

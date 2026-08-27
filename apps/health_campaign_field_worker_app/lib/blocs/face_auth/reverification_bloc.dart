@@ -69,12 +69,24 @@ class ReVerificationBloc
   FutureOr<void> _onTriggered(
     ReVerificationTriggeredEvent event,
     ReVerificationEmitter emit,
-  ) {
+  ) async {
     // Ignore if already prompted or verifying
     if (state is ReVerificationPromptedState ||
         state is ReVerificationScanningState ||
         state is ReVerificationPinFallbackState) {
       return null;
+    }
+
+    // Do not start the countdown/verification ticker for a user that
+    // hasn't enrolled yet. Without this guard the periodic scheduler
+    // still surfaces the countdown state once the window elapses, so
+    // unenrolled users saw a "verification due" banner even though
+    // the popup's own listener would later short-circuit. The popup
+    // listener stays as a defence-in-depth against races where a
+    // profile is deleted mid-countdown.
+    if (currentUserIndividualId.isEmpty ||
+        !await repository.hasEmbedding(currentUserIndividualId)) {
+      return;
     }
 
     _currentIteration = 1;

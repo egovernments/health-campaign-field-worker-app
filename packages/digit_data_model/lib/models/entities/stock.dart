@@ -78,7 +78,29 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   int? get dateOfEntry => dateOfEntryTime?.millisecondsSinceEpoch;
 }
 
-@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+/// Server returns the waybill field as `wayBillNumber` (capital B) but the
+/// mobile client sends and stores it as `waybillNumber`. Copy the server key
+/// onto the Dart field's key only on decode so response deserialisation
+/// picks up the value; encoding stays untouched.
+class _WayBillNumberAliasHook extends MappingHook {
+  const _WayBillNumberAliasHook();
+
+  @override
+  Object? beforeDecode(Object? value) {
+    if (value is Map &&
+        value.containsKey('wayBillNumber') &&
+        !value.containsKey('waybillNumber')) {
+      value['waybillNumber'] = value['wayBillNumber'];
+    }
+    return value;
+  }
+}
+
+@MappableClass(
+  ignoreNull: true,
+  discriminatorValue: MappableClass.useAsDefault,
+  hook: _WayBillNumberAliasHook(),
+)
 class StockModel extends EntityModel with StockModelMappable {
   static const schemaName = 'Stock';
 

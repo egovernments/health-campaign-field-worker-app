@@ -493,7 +493,6 @@ final jsonConfig = {
             // picked the 3-11 month bucket and debited the wrong stock.
             "listSource": "DeliveryDetails.resourceCard",
             "mappings": {
-              "id": "id",
               "clientReferenceId": "__generate:uuid",
               "taskId": "taskId",
               "productVariantId":
@@ -581,7 +580,6 @@ final jsonConfig = {
           "TaskResourceModel": {
             "listSource": "DeliveryDetails.resourceCard",
             "mappings": {
-              "id": "id",
               "clientReferenceId": "__generate:uuid",
               "taskId": "taskId",
               "productVariantId":
@@ -880,7 +878,6 @@ final jsonConfig = {
           "TaskResourceModel": {
             "listSource": "RedoseDetails.resourceCard",
             "mappings": {
-              "id": "id",
               "clientReferenceId": "__generate:uuid",
               "taskId": "taskId",
               "productVariantId":
@@ -1700,7 +1697,6 @@ final jsonConfig = {
           "TaskResourceModel": {
             "listSource": "vaccinatedElsewhere.resourceCard",
             "mappings": {
-              "id": "id",
               "clientReferenceId": "__generate:uuid",
               "taskId": "taskId",
               "productVariantId":

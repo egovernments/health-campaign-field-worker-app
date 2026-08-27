@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Fix multi-select summary rendering: gate the dot-split on the `isMultiSelect` schema flag instead of a regex that only accepted purely alphabetic dot-joined tokens, so enum codes with underscores or digits (e.g. `MOB_VAN`, `HEALTH_WORKER`) now localize instead of being shown raw with dots. Remove the now-unused `isDotSeparatedKey` helper.
+
 ## 0.1.1
 
 - Introduced the forms-engine package with schema-driven forms, MDMS schema fetch, and `BaseReactiveFieldWrapper` for auto-localized validation
