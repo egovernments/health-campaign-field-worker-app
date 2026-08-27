@@ -778,6 +778,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
 
     List<BoundaryModel> boundaries;
+    List<BoundaryModel> fullBoundaryTree = [];
     try {
       try {
         if (context.loggedInUserRoles
@@ -1059,7 +1060,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       // fetch below with the assigned boundary's real ancestor path, and
       // (2) _loadProjectFacilities' parent/child boundary-type lookup —
       // avoids sending this (potentially large) full-tree request twice.
-      List<BoundaryModel> fullBoundaryTree = [];
       try {
         fullBoundaryTree = await boundaryRemoteRepository.search(
           BoundarySearchModel(),
