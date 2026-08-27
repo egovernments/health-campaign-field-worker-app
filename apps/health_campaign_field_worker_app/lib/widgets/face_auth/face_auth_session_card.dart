@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,45 +23,85 @@ class FaceAuthSessionCard extends StatefulWidget {
 
 class _FaceAuthSessionCardState extends State<FaceAuthSessionCard> {
   FaceAuthEventModel? _lastEvent;
+  bool _isEnrolled = false;
   bool _loaded = false;
 
   @override
   void initState() {
     super.initState();
-    _loadLastEvent();
+    _loadSessionState();
   }
 
-  Future<void> _loadLastEvent() async {
-    try {
-      final individualId = context.loggedInIndividualIdOrNull;
-      if (individualId == null) {
-        if (mounted) setState(() => _loaded = true);
-        return;
-      }
-      final repo = context.read<
-          LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>>();
-      final events = await repo.search(
-        FaceAuthEventSearchModel(individualId: individualId),
-      );
-      events.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      final last = events
-          .where((e) =>
-              e.outcome == 'FACE_SUCCESS' || e.outcome == 'PIN_FALLBACK')
-          .firstOrNull;
-      if (mounted) {
-        setState(() {
-          _lastEvent = last;
-          _loaded = true;
-        });
-      }
-    } catch (_) {
+  Future<void> _loadSessionState() async {
+    final individualId = context.loggedInIndividualIdOrNull;
+    if (individualId == null) {
+      debugPrint('FaceAuthSessionCard: no loggedInIndividualId; skipping load');
       if (mounted) setState(() => _loaded = true);
+      return;
+    }
+
+    // Capture providers up-front — after an await, `context` may be
+    // deactivated during rebuild and `context.read` would throw.
+    LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>? eventsRepo;
+    FaceEmbeddingRepository? embeddingRepo;
+    try {
+      eventsRepo = context.read<
+          LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>>();
+    } catch (e) {
+      debugPrint('FaceAuthSessionCard: no event repo in scope: $e');
+    }
+    try {
+      embeddingRepo = context.read<FaceEmbeddingRepository>();
+    } catch (e) {
+      debugPrint('FaceAuthSessionCard: no embedding repo in scope: $e');
+    }
+
+    // Isolate the two lookups so one failing does not wipe the other.
+    FaceAuthEventModel? last;
+    if (eventsRepo != null) {
+      try {
+        final events = await eventsRepo.search(
+          FaceAuthEventSearchModel(individualId: individualId),
+        );
+        events.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        last = events
+            .where((e) =>
+                e.outcome == 'FACE_SUCCESS' || e.outcome == 'PIN_FALLBACK')
+            .firstOrNull;
+      } catch (e) {
+        debugPrint('FaceAuthSessionCard: event lookup failed: $e');
+      }
+    }
+
+    bool isEnrolled = false;
+    if (embeddingRepo != null) {
+      try {
+        isEnrolled = await embeddingRepo.hasEmbedding(individualId);
+        debugPrint(
+            'FaceAuthSessionCard: individualId=$individualId isEnrolled=$isEnrolled');
+      } catch (e) {
+        debugPrint('FaceAuthSessionCard: enrollment lookup failed: $e');
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _lastEvent = last;
+        _isEnrolled = isEnrolled;
+        _loaded = true;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_loaded || _lastEvent == null) return const SizedBox.shrink();
+    // Always render for eligible users once loaded — feature-flag + role
+    // gating happens one level up in home.dart. Rendering here even when
+    // the user isn't enrolled surfaces an actionable "Not Enrolled"
+    // badge instead of an empty spot.
+    if (!_loaded) {
+      return const SizedBox.shrink();
+    }
 
     final theme = Theme.of(context);
     final colorTheme = theme.colorTheme;
@@ -91,7 +132,9 @@ class _FaceAuthSessionCardState extends State<FaceAuthSessionCard> {
                 height: 10,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: colorTheme.alert.success,
+                  color: _isEnrolled
+                      ? colorTheme.alert.success
+                      : colorTheme.text.secondary,
                 ),
               ),
               const SizedBox(width: 8),
@@ -102,6 +145,37 @@ class _FaceAuthSessionCardState extends State<FaceAuthSessionCard> {
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: colorTheme.text.primary,
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Enrollment status badge — surfaces whether the current
+              // user has a stored face embedding so the card is
+              // meaningful before any verification event exists.
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: (_isEnrolled
+                          ? colorTheme.alert.success
+                          : colorTheme.text.secondary)
+                      .withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  AppLocalizations.of(context).translate(
+                    _isEnrolled
+                        ? i18.faceAuth.statusEnrolled
+                        : i18.faceAuth.statusNotEnrolled,
+                  ),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: _isEnrolled
+                        ? colorTheme.alert.success
+                        : colorTheme.text.secondary,
+                  ),
                 ),
               ),
               const Spacer(),

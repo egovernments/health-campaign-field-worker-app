@@ -1908,6 +1908,30 @@
     "module": "hcm-common"
   },
   {
+    "code": "FACE_AUTH_STATUS_ENROLLED",
+    "locale": "en_DEMO",
+    "message": "Enrolled",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_STATUS_ENROLLED",
+    "locale": "pt_DEMO",
+    "message": "Inscrito",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_STATUS_NOT_ENROLLED",
+    "locale": "en_DEMO",
+    "message": "Not Enrolled",
+    "module": "hcm-common"
+  },
+  {
+    "code": "FACE_AUTH_STATUS_NOT_ENROLLED",
+    "locale": "pt_DEMO",
+    "message": "Não inscrito",
+    "module": "hcm-common"
+  },
+  {
     "code": "FACE_AUTH_INTERNET_REQUIRED",
     "locale": "en_DEMO",
     "message": "Internet Required",
