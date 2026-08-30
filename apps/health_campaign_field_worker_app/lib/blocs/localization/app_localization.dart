@@ -72,6 +72,14 @@ class AppLocalizations {
     final listOfLocalizations =
         await LocalizationLocalRepository().returnLocalizationFromSQL(sql);
 
+    // This query is filtered by the mutable LocalizationParams singleton, so a
+    // stale or narrowed filter can legitimately match nothing. Clearing on that
+    // result would leave every translate() falling through to the raw code for
+    // the whole app, so keep the strings already in memory instead.
+    if (listOfLocalizations.isEmpty && _messagesByCode.isNotEmpty) {
+      return true;
+    }
+
     _localizedStrings
       ..clear()
       ..addAll(listOfLocalizations);
