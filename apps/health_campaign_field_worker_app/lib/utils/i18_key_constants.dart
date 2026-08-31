@@ -12,6 +12,7 @@ const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
 const complaints = Complaints();
 const syncDialog = SyncDialog();
+const syncEntity = SyncEntity();
 const homeShowcase = HomeShowcase();
 const privacyPolicy = PrivacyPolicy();
 const dashBoard = Dashboard();
@@ -1263,6 +1264,98 @@ class SyncDialog {
   String get networkError => 'SYNC_DIALOG_NETWORK_ERROR';
 
   String get sessionExpired => 'SYNC_DIALOG_SESSION_EXPIRED';
+
+  /// Template for the sync-progress subtitle, e.g. "Syncing {}" — the `{}`
+  /// placeholder is replaced with the localized entity name from
+  /// [SyncEntity]. See [formatSyncProgressLabel] in utils.dart.
+  String get syncingModuleTemplate => 'SYNC_DIALOG_SYNCING_MODULE';
+
+  String get downloadingFromServer => 'SYNC_DIALOG_DOWNLOADING_FROM_SERVER';
+
+  String get uploadingToServer => 'SYNC_DIALOG_UPLOADING_TO_SERVER';
+}
+
+/// Localized labels for each [DataModelType] entity name (plus a couple of
+/// ad-hoc entity strings reported directly via `reportSyncProgress`), shown
+/// in the sync-progress dialog subtitle. See [formatSyncProgressLabel].
+class SyncEntity {
+  const SyncEntity();
+
+  String get user => 'SYNC_ENTITY_USER';
+
+  String get facility => 'SYNC_ENTITY_FACILITY';
+
+  String get address => 'SYNC_ENTITY_ADDRESS';
+
+  String get household => 'SYNC_ENTITY_HOUSEHOLD';
+
+  String get individual => 'SYNC_ENTITY_INDIVIDUAL';
+
+  String get projectBeneficiary => 'SYNC_ENTITY_PROJECT_BENEFICIARY';
+
+  String get householdMember => 'SYNC_ENTITY_HOUSEHOLD_MEMBER';
+
+  String get product => 'SYNC_ENTITY_PRODUCT';
+
+  String get productVariant => 'SYNC_ENTITY_PRODUCT_VARIANT';
+
+  String get project => 'SYNC_ENTITY_PROJECT';
+
+  String get projectFacility => 'SYNC_ENTITY_PROJECT_FACILITY';
+
+  String get projectProductVariant => 'SYNC_ENTITY_PROJECT_PRODUCT_VARIANT';
+
+  String get projectStaff => 'SYNC_ENTITY_PROJECT_STAFF';
+
+  String get projectResource => 'SYNC_ENTITY_PROJECT_RESOURCE';
+
+  String get projectType => 'SYNC_ENTITY_PROJECT_TYPE';
+
+  String get stock => 'SYNC_ENTITY_STOCK';
+
+  String get stockReconciliation => 'SYNC_ENTITY_STOCK_RECONCILIATION';
+
+  String get task => 'SYNC_ENTITY_TASK';
+
+  String get sideEffect => 'SYNC_ENTITY_SIDE_EFFECT';
+
+  String get referral => 'SYNC_ENTITY_REFERRAL';
+
+  String get serviceDefinition => 'SYNC_ENTITY_SERVICE_DEFINITION';
+
+  String get service => 'SYNC_ENTITY_SERVICE';
+
+  String get complaints => 'SYNC_ENTITY_COMPLAINTS';
+
+  String get attributes => 'SYNC_ENTITY_ATTRIBUTES';
+
+  String get boundary => 'SYNC_ENTITY_BOUNDARY';
+
+  String get serviceAttributes => 'SYNC_ENTITY_SERVICE_ATTRIBUTES';
+
+  String get locality => 'SYNC_ENTITY_LOCALITY';
+
+  String get downsync => 'SYNC_ENTITY_DOWNSYNC';
+
+  String get downsyncCriteria => 'SYNC_ENTITY_DOWNSYNC_CRITERIA';
+
+  String get hFReferral => 'SYNC_ENTITY_HF_REFERRAL';
+
+  String get attendanceRegister => 'SYNC_ENTITY_ATTENDANCE_REGISTER';
+
+  String get attendance => 'SYNC_ENTITY_ATTENDANCE';
+
+  String get userLocation => 'SYNC_ENTITY_USER_LOCATION';
+
+  String get userAction => 'SYNC_ENTITY_USER_ACTION';
+
+  String get faceAuthEvent => 'SYNC_ENTITY_FACE_AUTH_EVENT';
+
+  String get uniqueId => 'SYNC_ENTITY_UNIQUE_ID';
+
+  /// Not a [DataModelType] value — reported directly via `reportSyncProgress`
+  /// in blocs/project/project.dart.
+  String get formConfig => 'SYNC_ENTITY_FORM_CONFIG';
 }
 
 class StockReconciliationShowcase {

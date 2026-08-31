@@ -162,7 +162,10 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                           ),
                           subtitle: snapshot.data == null
                               ? null
-                              : formatSyncProgressLabel(snapshot.data!),
+                              : formatSyncProgressLabel(
+                                  snapshot.data!,
+                                  localizations,
+                                ),
                         ),
                       ),
                     ],
@@ -298,7 +301,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 ),
                 subtitle: snapshot.data == null
                     ? null
-                    : formatSyncProgressLabel(snapshot.data!),
+                    : formatSyncProgressLabel(snapshot.data!, localizations),
               ),
             ),
           ],

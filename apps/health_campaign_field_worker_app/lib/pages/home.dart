@@ -2064,6 +2064,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                                         ? null
                                         : formatSyncProgressLabel(
                                             snapshot.data!,
+                                            localizations,
                                           ),
                                   ),
                                 ),
