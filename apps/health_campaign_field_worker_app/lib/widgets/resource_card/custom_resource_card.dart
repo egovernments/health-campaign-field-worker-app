@@ -217,12 +217,19 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                 // Attach listeners when form changes
                 _attachListenersIfNeeded(form, field);
 
+                // Showing or dismissing a toast calls setState on the toast
+                // overlay, which throws if it runs while this widget is still
+                // building. Both have to be deferred to after the frame.
+
                 // Show toast when field is invalid and touched (via ReactiveWrapperField)
                 if (field.control.invalid &&
                     field.control.touched &&
                     !_toastShown) {
                   _toastShown = true;
-                  _validateAndShowToast(form, context);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (!mounted) return;
+                    _validateAndShowToast(form, context);
+                  });
                   // Reset flag after delay to allow showing toast on next submission
                   Future.delayed(const Duration(milliseconds: 500), () {
                     if (mounted) {
@@ -234,7 +241,10 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                 // Reset toast flag and dismiss any active toast when field becomes valid
                 if (!field.control.invalid) {
                   _toastShown = false;
-                  ToastManager().dismissAll(showAnim: false);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (!mounted) return;
+                    ToastManager().dismissAll(showAnim: false);
+                  });
                 }
 
                 return Column(

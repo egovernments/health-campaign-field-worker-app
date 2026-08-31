@@ -42,6 +42,12 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
         .where((m) => m.isNotEmpty)
         .toList();
 
+    // Callers build this list by intersecting the server-supplied interface
+    // list against a hard-coded allow-list, so it can come out empty. There is
+    // nothing to fetch in that case, and falling through would set the shared
+    // module filter to "" and re-run _loadLocale against a degenerate query.
+    if (allModules.isEmpty) return;
+
     // Detect missing modules PER MODULE rather than as a batch. The previous
     // implementation did `fetchLocalization(module: allModules.join(','))`
     // and treated any non-empty result as "cached" — so once any module
