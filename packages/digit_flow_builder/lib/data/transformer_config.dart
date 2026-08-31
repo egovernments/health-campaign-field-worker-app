@@ -1231,7 +1231,8 @@ final jsonConfig = {
             "supervisorName": "complaintDetails.supervisorName",
             "supervisorContactNumber":
                 "complaintDetails.supervisorContactNumber ",
-            "otherComplaintDescription": "complaintType.otherReason"
+            "otherComplaintDescription": "complaintType.otherReason",
+            "boundaryCode": "__context:selectedBoundaryHierarchyCode"
           },
           "clientAuditDetails": "__generate:clientAudit"
         }

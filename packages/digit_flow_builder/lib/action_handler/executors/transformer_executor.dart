@@ -189,6 +189,9 @@ class TransformerExecutor extends ActionExecutor {
       "user": FlowBuilderSingleton().loggedInUser,
       "tenantId": FlowBuilderSingleton().selectedProject?.tenantId,
       "selectedBoundaryCode": FlowBuilderSingleton().boundary?.code,
+      // Friendly display name for the selected boundary (used for
+      // locality.name — display only, not sent to any backend hierarchy field).
+      "selectedBoundaryName": FlowBuilderSingleton().boundary?.name,
       // Dot-separated top-to-current-level boundary path, e.g. for PGR
       // complaint address.locality.code. Falls back to the leaf code.
       "selectedBoundaryHierarchyCode":
