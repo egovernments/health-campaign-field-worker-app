@@ -275,6 +275,20 @@ void initializeFunctionRegistry() {
     return a + b;
   });
 
+  /// Registers a function to localize a raw enum/code value (e.g. gender).
+  ///
+  /// - **Function Name**: `'localize'`
+  /// - **Arguments**: The raw value to localize (looked up as-is, uppercased,
+  ///   via [FlowBuilderLocalization]).
+  /// - **Returns**: The localized string, or the original raw value
+  ///   (uppercased) if no translation is found.
+  FunctionRegistry.register('localize', (args, stateData) {
+    if (args.isEmpty || args.first == null) return '';
+    final raw = args.first.toString().toUpperCase();
+    if (raw.isEmpty) return '';
+    return FlowBuilderLocalization.translateStatic(raw);
+  });
+
   /// Registers a function to calculate age from a date of birth.
   ///
   /// - **Function Name**: `'calculateAge'`
