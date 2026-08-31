@@ -308,6 +308,10 @@ class _NonMobileFaceEnrollPageState extends State<NonMobileFaceEnrollPage> {
           individualId: widget.individualId,
           isSystemUser: false,
           enrolledBy: context.loggedInUserUuid,
+          // Co-worker enrollment is operated by a second person holding the
+          // device, so each angle is taken on an explicit tap rather than
+          // firing by itself — same as the worker verification screen.
+          autoCapture: false,
           onResult: _onResult,
           onCancel: () {
             if (mounted) Navigator.of(context).pop();

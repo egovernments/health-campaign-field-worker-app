@@ -29,6 +29,12 @@ class FaceEnrollmentView extends StatefulWidget {
   /// enrollment intro screen so a user can sign out instead of enrolling.
   final VoidCallback? onLogout;
 
+  /// When false, each angle step waits for an explicit tap on the capture
+  /// button instead of firing on its own once the face is in position —
+  /// matching the worker face-verification screen. Defaults to true so the
+  /// self-enrollment face gate keeps its existing hands-free behaviour.
+  final bool autoCapture;
+
   const FaceEnrollmentView({
     super.key,
     required this.faceModelService,
@@ -38,6 +44,7 @@ class FaceEnrollmentView extends StatefulWidget {
     required this.onResult,
     required this.onCancel,
     this.onLogout,
+    this.autoCapture = true,
   });
 
   @override
@@ -115,6 +122,7 @@ class _FaceEnrollmentViewState extends State<FaceEnrollmentView> {
               current: current,
               total: total,
               instruction: instruction,
+              autoCapture: widget.autoCapture,
               resetTrigger: _captureResetTrigger,
               onCaptured: (embedding, quality, {faceImageBytes}) {
                 context.read<FaceEnrollmentBloc>().add(
@@ -393,6 +401,7 @@ class _AngleCaptureScreen extends StatefulWidget {
   final String instruction;
   final void Function(List<double> embedding, double quality, {Uint8List? faceImageBytes}) onCaptured;
   final int resetTrigger;
+  final bool autoCapture;
 
   const _AngleCaptureScreen({
     required this.faceModelService,
@@ -401,6 +410,7 @@ class _AngleCaptureScreen extends StatefulWidget {
     required this.instruction,
     required this.onCaptured,
     this.resetTrigger = 0,
+    this.autoCapture = true,
   });
 
   /// Maps display step number to expected head pose.
@@ -461,7 +471,7 @@ class _AngleCaptureScreenState extends State<_AngleCaptureScreen> {
           guidanceText: widget.instruction,
           minQuality: 0.6,
           expectedAngle: _AngleCaptureScreen._expectedAngleForStep(widget.current),
-          autoCapture: true,
+          autoCapture: widget.autoCapture,
           resetTrigger: widget.resetTrigger,
           onLensChanged: (lens) {
             setState(() {
