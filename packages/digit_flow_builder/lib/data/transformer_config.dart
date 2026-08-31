@@ -422,7 +422,6 @@ final jsonConfig = {
     "models": {
       "TaskModel": {
         "listSource": "__context:futureDoses",
-        "skipFirst": 1,
         "mappings": {
           "id": "taskDetails.id",
           "projectId": "__context:projectId",
