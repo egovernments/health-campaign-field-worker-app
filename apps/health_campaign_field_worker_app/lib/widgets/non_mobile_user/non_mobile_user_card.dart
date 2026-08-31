@@ -12,7 +12,6 @@ class NonMobileUserCard extends LocalizedStatefulWidget {
   final String userName;
   final String individualId;
   final String gender;
-  final String age;
   final String mobileNumber;
   final void Function() onScanMe;
   final void Function() onFaceEnroll;
@@ -27,7 +26,6 @@ class NonMobileUserCard extends LocalizedStatefulWidget {
     required this.userName,
     required this.individualId,
     required this.gender,
-    required this.age,
     required this.mobileNumber,
     required this.onScanMe,
     required this.onFaceEnroll,
@@ -51,7 +49,7 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
     return DigitCard(
       margin: const EdgeInsets.all(spacer2),
       children: [
-        _buildCenteredTextBlock(widget.userName, "${widget.gender}, ${widget.age}", widget.mobileNumber, context),
+        _buildCenteredTextBlock(widget.userName, widget.gender.trim(), widget.mobileNumber, context),
         _buildIdContainer(context, textTheme),
         _buildFaceEnrollButton(context),
         _buildQRButton(context),
@@ -67,8 +65,12 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
         children: [
           Text(userName,style:  textTheme.headingS.copyWith(color: theme.colorTheme.text.primary)),
           const SizedBox(height: spacer2,),
-          Text(description, style: textTheme.bodyXS.copyWith(color: theme.colorTheme.text.secondary),),
-          const SizedBox(height: spacer2,),
+          // Skipped entirely when blank — an individual with no gender
+          // recorded would otherwise render an empty line plus its spacer.
+          if (description.isNotEmpty) ...[
+            Text(description, style: textTheme.bodyXS.copyWith(color: theme.colorTheme.text.secondary),),
+            const SizedBox(height: spacer2,),
+          ],
           Text(mobileNumber, style: textTheme.bodyXS.copyWith(color: theme.colorTheme.text.secondary),),
         ],
       )
