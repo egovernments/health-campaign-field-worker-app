@@ -359,6 +359,28 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     projects.removeDuplicates((element) => element.id);
     final selectedProject = await localSecureStore.selectedProject;
 
+    // Logout never clears the cached `project` rows, so this offline read
+    // returns leftover projects from previous users too. Same-campaign
+    // projects share a name (different id/boundary) and look like duplicates
+    // on screen. Collapse by name — keeping the selected project on a clash,
+    // else the first seen. Different campaigns (different names) are kept.
+    if (projects.length > 1) {
+      final byName = <String, ProjectModel>{};
+      for (final project in projects) {
+        final key = project.name ?? project.id;
+        final existing = byName[key];
+        if (existing == null) {
+          byName[key] = project;
+        } else if (selectedProject != null &&
+            project.id == selectedProject.id) {
+          byName[key] = project;
+        }
+      }
+      projects
+        ..clear()
+        ..addAll(byName.values);
+    }
+
     // Cold-restart restore: rehydrate the runtime hierarchy from the persisted
     // selected project before any boundary / MDMS work runs.
     if (selectedProject != null) {
