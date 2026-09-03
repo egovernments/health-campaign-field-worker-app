@@ -475,7 +475,12 @@ class _HomePageState extends LocalizedState<HomePage> {
       String markAsPresent = 'MARK_AS_PRESENT';
       String markedAsAbsent = 'MARK_AS_ABSENT';
 
-      final individualId = attendee?["individualId"];
+      // Different wrapper configs surface the attendee's individualId at
+      // different nesting depths; try the flat key first, then the entity
+      // path (matches face_auth_event_dots_widget.dart:_resolveIndividualId).
+      final entity = attendee is Map ? attendee['entity'] : null;
+      final individualId = (attendee is Map ? attendee['individualId'] : null) ??
+          (entity is Map ? entity['individualId'] : null);
 
       var attendanceCollectionData =
           widgetData?["attendanceCollection"]?[individualId];
@@ -504,7 +509,9 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       double? currentStatus;
 
-      final individualId = attendee?["individualId"];
+      final entity = attendee is Map ? attendee['entity'] : null;
+      final individualId = (attendee is Map ? attendee['individualId'] : null) ??
+          (entity is Map ? entity['individualId'] : null);
 
       var attendanceCollectionData =
           widgetData["attendanceCollection"]?[individualId];

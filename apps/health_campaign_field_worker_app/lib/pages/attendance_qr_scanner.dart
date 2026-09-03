@@ -78,6 +78,13 @@ class AttendanceScannerPageState extends DigitScannerPageState {
     return super.handleErrorWrapper(i18.attendance.qrAlreadyScanned);
   }
 
+  /// Attendance surfaces its own manual-entry affordance via the
+  /// "Mark attendance manually" button rendered by [extraManualEntryContent],
+  /// so hide the base scanner's "Enter Manual Code" link to avoid duplicate
+  /// entry points that lead to different flows.
+  @override
+  bool get showEnterManualCodeLink => false;
+
   @override
   Future<bool> onEnterManualCodePressed() async {
     final result = await showManualAttendanceReasonDialog(
@@ -93,33 +100,26 @@ class AttendanceScannerPageState extends DigitScannerPageState {
   @override
   Widget? extraManualEntryContent(
       ThemeData theme, DigitTextTheme textTheme) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          localizations.translate(i18.common.coreCommonOr),
-          style: textTheme.bodyL
-              .copyWith(color: theme.colorTheme.paper.primary),
-        ),
-        DigitButton(
-          label: localizations.translate(i18.attendance.markAttendanceManually),
-          type: DigitButtonType.link,
-          size: DigitButtonSize.large,
-          onPressed: () async {
-            final result = await showManualAttendanceReasonDialog(
-              context: context,
-              reasonList: AttendanceSingleton()
-                  .manualAttendanceReasons
-                  .reversed
-                  .toList(),
-            );
-            if (result != null && mounted) {
-              Navigator.of(context).pop(result);
-            }
-          },
-        ),
-      ],
+    // No "OR" separator: the base scanner's "Enter Manual Code" link is
+    // hidden for attendance (see showEnterManualCodeLink override), so
+    // "Mark attendance manually" is the only entry option under the
+    // "Couldn't scan the QR code?" prompt.
+    return DigitButton(
+      label: localizations.translate(i18.attendance.markAttendanceManually),
+      type: DigitButtonType.link,
+      size: DigitButtonSize.large,
+      onPressed: () async {
+        final result = await showManualAttendanceReasonDialog(
+          context: context,
+          reasonList: AttendanceSingleton()
+              .manualAttendanceReasons
+              .reversed
+              .toList(),
+        );
+        if (result != null && mounted) {
+          Navigator.of(context).pop(result);
+        }
+      },
     );
   }
 

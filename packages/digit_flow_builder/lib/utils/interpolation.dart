@@ -264,6 +264,15 @@ String interpolateWithCrudStates({
               return numValue;
             }
 
+            // Bareword identifiers referring to the scope's underlying maps.
+            // Without this, `fn(widgetData, item)` looked up a KEY literally
+            // named 'widgetData'/'item' in various maps and always resolved
+            // to null — breaking every function that takes a whole scope map
+            // as an argument (e.g. attendanceStatus, buttonType).
+            if (trimmed == 'widgetData') return widgetData;
+            if (trimmed == 'item') return item;
+            if (trimmed == 'rowItem') return rowItem;
+
             // Try to resolve from item first (for member-level data like "task")
             if (item != null && item.containsKey(trimmed)) {
               return item[trimmed];

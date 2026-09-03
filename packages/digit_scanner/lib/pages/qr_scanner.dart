@@ -500,6 +500,11 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
           ThemeData theme, DigitTextTheme textTheme) =>
       null;
 
+  /// Subclass hook: whether to show the "Enter Manual Code" link on the
+  /// scan screen. Default: true. Attendance overrides to false because it
+  /// exposes its own manual-entry affordance via [extraManualEntryContent].
+  bool get showEnterManualCodeLink => true;
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -1352,24 +1357,26 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                   style: textTheme.bodyL
                       .copyWith(color: theme.colorTheme.paper.primary),
                 ),
-                const SizedBox(height: spacer6),
-                GestureDetector(
-                  onTap: () async {
-                    final proceed = await onEnterManualCodePressed();
-                    if (!proceed || !mounted) return;
-                    setState(() {
-                      manualCode = true;
-                    });
-                  },
-                  child: Text(
-                    localizations.translate(i18.scanner.enterManualCode),
-                    style: textTheme.bodyL.copyWith(
-                      color: theme.colorScheme.secondary,
-                      decoration: TextDecoration.underline,
-                      decorationColor: theme.colorScheme.secondary,
+                if (showEnterManualCodeLink) ...[
+                  const SizedBox(height: spacer6),
+                  GestureDetector(
+                    onTap: () async {
+                      final proceed = await onEnterManualCodePressed();
+                      if (!proceed || !mounted) return;
+                      setState(() {
+                        manualCode = true;
+                      });
+                    },
+                    child: Text(
+                      localizations.translate(i18.scanner.enterManualCode),
+                      style: textTheme.bodyL.copyWith(
+                        color: theme.colorScheme.secondary,
+                        decoration: TextDecoration.underline,
+                        decorationColor: theme.colorScheme.secondary,
+                      ),
                     ),
                   ),
-                ),
+                ],
                 if (extraManualEntryContent(theme, textTheme) != null) ...[
                   const SizedBox(height: spacer6),
                   extraManualEntryContent(theme, textTheme)!,

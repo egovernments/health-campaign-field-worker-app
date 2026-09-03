@@ -130,6 +130,7 @@ class ResolvedWidgetContext {
         template: template,
         stateData: stateData!,
         item: state.itemData,
+        widgetData: state.widgetData,
       );
       if (!resolved.contains('{{')) {
         return localization?.translate(resolved) ?? resolved;
@@ -445,6 +446,7 @@ abstract class ResolvedFlowWidget implements FlowWidget {
           template: labelText,
           stateData: state.stateData!,
           item: state.itemData,
+          widgetData: state.widgetData,
         );
         if (!resolvedLabel.contains('{{')) {
           resolvedLabel =
